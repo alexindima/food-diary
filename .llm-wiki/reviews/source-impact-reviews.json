@@ -64,14 +64,14 @@
       "pageSha256": "ebc1bbcb6c7df9755cfe613efcf8d31e9904b961c9081fb9aa2b808c32d2f944",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "d7bc230fcd25655ab3cea465e11ffec6f5346f5315ea6d661e04e450d6c2ffb9"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "c5ad5716837a24cb37d9c867ba44e486ac308f9c09d5239f0abc8a145f1b9462"
         }
       ],
-      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
+      "reason": "Parallel module integration verified the canonical manifest after Lessons abstraction ownership moved into Modules/Lessons; DailyAdvices and WeeklyCheckIn solution folders now match their physical module ownership.",
       "baseRef": "HEAD",
-      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
-      "reviewedAtUtc": "2026-08-30T01:50:29.7492593Z"
+      "gitHead": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
+      "reviewedAtUtc": "2026-08-30T02:43:30.8199675Z"
     },
     {
       "pageId": "system.architecture",
@@ -79,14 +79,14 @@
       "pageSha256": "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
       "sources": [
         {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "aff6a99bfe06304d81e8909019c9d8c7a2104e262cd154964219b0eaa060bed7"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "c5ad5716837a24cb37d9c867ba44e486ac308f9c09d5239f0abc8a145f1b9462"
         }
       ],
-      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
+      "reason": "Parallel module integration verified the canonical manifest after Lessons abstraction ownership moved into Modules/Lessons; DailyAdvices and WeeklyCheckIn solution folders now match their physical module ownership.",
       "baseRef": "HEAD",
-      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
-      "reviewedAtUtc": "2026-08-30T02:10:16.3126577Z"
+      "gitHead": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
+      "reviewedAtUtc": "2026-08-30T02:43:31.4008361Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -140,13 +140,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "7929e128e1159eba5ba3b680c5db54c0183b90ab13ea4cd5953fae0a3c9d91ff"
+          "sha256": "c5ad5716837a24cb37d9c867ba44e486ac308f9c09d5239f0abc8a145f1b9462"
         }
       ],
-      "reason": "Reviewed the merged WeeklyGoals Domain and TDEE Application relocations against scoped AGENTS, backend maps and ownership, the project dependency matrix, regenerated catalog/contract/quality/runtime/sensitive indexes, and corrected context-search expected paths; CLR namespaces, HTTP contracts, runtime behavior, persistence schema, and security/privacy boundaries remain unchanged, while the source-session builds, focused tests, architecture tests, and Wiki evals passed.",
+      "reason": "Parallel module integration verified the canonical manifest after Lessons abstraction ownership moved into Modules/Lessons; DailyAdvices and WeeklyCheckIn solution folders now match their physical module ownership.",
       "baseRef": "HEAD",
-      "gitHead": "ad38e95c712fa2b5dbf858b9249a8acd9b4eda1f",
-      "reviewedAtUtc": "2026-08-30T00:31:08.8552506Z"
+      "gitHead": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
+      "reviewedAtUtc": "2026-08-30T02:43:31.9676366Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -203,18 +203,14 @@
       "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "e31a3ed38ccc003f54231503e5d77119a7f6ca2b4121a161156a16af3075dcaa"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "aff6a99bfe06304d81e8909019c9d8c7a2104e262cd154964219b0eaa060bed7"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "c5ad5716837a24cb37d9c867ba44e486ac308f9c09d5239f0abc8a145f1b9462"
         }
       ],
-      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
+      "reason": "Parallel module integration verified the canonical manifest after Lessons abstraction ownership moved into Modules/Lessons; DailyAdvices and WeeklyCheckIn solution folders now match their physical module ownership.",
       "baseRef": "HEAD",
-      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
-      "reviewedAtUtc": "2026-08-30T02:10:16.8914877Z"
+      "gitHead": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
+      "reviewedAtUtc": "2026-08-30T02:43:32.6481350Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
