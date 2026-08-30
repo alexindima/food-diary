@@ -1,7 +1,6 @@
-using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Meals.Common;
+namespace FoodDiary.Application.Abstractions.Meals.Common;
 
 public interface IMealActivityReadService {
     Task<int> GetCountAsync(UserId userId, MealQueryFilters filters, CancellationToken cancellationToken);

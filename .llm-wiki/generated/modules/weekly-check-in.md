@@ -15,17 +15,17 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj`
+- Extracted project: `Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Dashboard, Meals, Users, WaistEntries, WeightEntries
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application.WeeklyCheckIn`
 - `FoodDiary.Presentation.Api/Features/WeeklyCheckIn`
+- `Modules/WeeklyCheckIn/Application`
 
 ## HTTP Surface
 
@@ -42,7 +42,7 @@ Source: `FoodDiary.Presentation.Api/Features/WeeklyCheckIn/WeeklyCheckInControll
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 0
-- Observed external consumer groups: 4
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -59,8 +59,9 @@ Source: `FoodDiary.Presentation.Api/Features/WeeklyCheckIn/WeeklyCheckInControll
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs`
+- [behavioral-or-text-match] `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WeeklyCheckInModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/WeeklyCheckInHttpMappingsTests.cs`
 

@@ -4,23 +4,30 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class WeeklyCheckInModuleExtractionTests {
     [Fact]
     public void WeeklyCheckInApplicationSource_LivesOnlyInExtractedAssembly() {
-        string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "WeeklyCheckIn");
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.WeeklyCheckIn");
-        Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
+        string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.WeeklyCheckIn");
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "WeeklyCheckIn", "Application");
+        Assert.False(Directory.Exists(legacyRoot), $"Legacy project directory still exists: {legacyRoot}");
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
     }
 
     [Fact]
     public void ExtractedWeeklyCheckInAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj");
+            "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
-            "FoodDiary.Application.Meals",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
             "FoodDiary.Modules.Hydration.Contracts",
         ], references);
+    }
+
+    [Fact]
+    public void WeeklyCheckInModule_DoesNotCreateUnownedLayers() {
+        string moduleRoot = ArchitectureTestPaths.FromRoot("Modules", "WeeklyCheckIn");
+        Assert.False(Directory.Exists(Path.Combine(moduleRoot, "Contracts")));
+        Assert.False(Directory.Exists(Path.Combine(moduleRoot, "Domain")));
+        Assert.False(Directory.Exists(Path.Combine(moduleRoot, "Infrastructure")));
     }
 
     [Theory]

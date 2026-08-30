@@ -168,8 +168,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Modules.Lessons.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Lessons.Domain": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
+          "FoodDiary.Modules.Lessons.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.lessons.contracts": {

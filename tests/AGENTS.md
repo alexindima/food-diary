@@ -20,6 +20,7 @@ Rules for `tests/`.
 - `FoodDiary.Infrastructure.IntegrationTests`: PostgreSQL/Testcontainers infrastructure behavior.
 - Extracted-module tests: module-owned Application, Domain (when owned), and Infrastructure adapter behavior lives under `Modules/<Module>/tests/`; central projects retain HTTP, host, shared DbContext/migration, architecture, orchestration, and cross-module coverage.
 - WeeklyGoals aggregate/id/enum invariants live in `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests`; the central donor project must not retain duplicate WeeklyGoals-only tests.
+- WeeklyCheckIn query, calculation, and application-service tests live in `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests`; central test projects retain HTTP, host, architecture, and cross-module coverage.
 - `FoodDiary.Testing`: shared test-only helpers reused by multiple test projects, such as Docker availability attributes.
 - `FoodDiary.Results.Tests`: shared result and error primitive behavior.
 - Mail relay/inbox tests: split by domain, application, client, infrastructure, initializer, presentation, and integration behavior.

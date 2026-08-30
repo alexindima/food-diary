@@ -1,19 +1,15 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Application.Hydration.Common;
-using FoodDiary.Application.Hydration.Models;
-using FoodDiary.Application.BodyMetrics.WaistEntries.Services;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Services;
-using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Application.BodyMetrics.WeightEntries.Services;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -161,8 +157,8 @@ public class WeeklyCheckInFeatureTests {
             new(thisWeekStart, thisWeekStart, TotalCalories: 700, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: 0, TotalProteins: 35, TotalFats: 20, TotalCarbs: 90),
             new(Today, Today, TotalCalories: 900, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: 0, TotalProteins: 45, TotalFats: 30, TotalCarbs: 110),
         ];
-        IMealRepository mealRepo = CreateMealRepository();
-        mealRepo
+        IMealActivityReadService mealActivityReadService = CreateMealActivityReadService();
+        mealActivityReadService
             .GetCountAsync(
                 userId,
                 Arg.Is<MealQueryFilters>(filters => filters!.DateFrom == thisWeekStart && filters.DateTo == Today),
@@ -177,7 +173,7 @@ public class WeeklyCheckInFeatureTests {
             .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([])));
 
         GetWeeklyCheckInQueryHandler handler = CreateHandler(
-            mealRepo: mealRepo,
+            mealActivityReadService: mealActivityReadService,
             statisticsReadService: statisticsReadService,
             profileService: CreateProfileService(user));
 
@@ -336,28 +332,28 @@ public class WeeklyCheckInFeatureTests {
     }
 
     private static GetWeeklyCheckInQueryHandler CreateHandler(
-        IMealRepository? mealRepo = null,
+        IMealActivityReadService? mealActivityReadService = null,
         IDashboardStatisticsReadService? statisticsReadService = null,
-        IWeightEntryRepository? weightRepo = null,
-        IWaistEntryRepository? waistRepo = null,
-        IHydrationEntryReadModelRepository? hydrationRepo = null,
+        IWeightEntryReadService? weightEntryReadService = null,
+        IWaistEntryReadService? waistEntryReadService = null,
+        IHydrationEntryReadService? hydrationEntryReadService = null,
         IWeeklyCheckInUserProfileService? profileService = null) =>
         new(
             new WeeklyCheckInReadService(
-                new MealActivityReadService(mealRepo ?? CreateMealRepository()),
+                mealActivityReadService ?? CreateMealActivityReadService(),
                 statisticsReadService ?? CreateStatisticsReadService(),
-                new WeightEntryReadService(weightRepo ?? CreateWeightEntryRepository()),
-                new WaistEntryReadService(waistRepo ?? CreateWaistEntryRepository()),
-                new HydrationReadServiceAdapter(hydrationRepo ?? CreateHydrationEntryRepository())),
+                weightEntryReadService ?? CreateWeightEntryReadService(),
+                waistEntryReadService ?? CreateWaistEntryReadService(),
+                hydrationEntryReadService ?? CreateHydrationEntryReadService()),
             profileService ?? CreateProfileService(user: null),
             new StubDateTimeProvider());
 
-    private static IMealRepository CreateMealRepository() {
-        IMealRepository repository = Substitute.For<IMealRepository>();
-        repository
+    private static IMealActivityReadService CreateMealActivityReadService() {
+        IMealActivityReadService service = Substitute.For<IMealActivityReadService>();
+        service
             .GetCountAsync(Arg.Any<UserId>(), Arg.Any<MealQueryFilters>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(0));
-        return repository;
+        return service;
     }
 
     private static IDashboardStatisticsReadService CreateStatisticsReadService(
@@ -369,28 +365,28 @@ public class WeeklyCheckInFeatureTests {
         return service;
     }
 
-    private static IWeightEntryRepository CreateWeightEntryRepository() {
-        IWeightEntryRepository repository = Substitute.For<IWeightEntryRepository>();
-        repository
-            .GetByPeriodAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<IReadOnlyList<WeightEntry>>([]));
-        return repository;
+    private static IWeightEntryReadService CreateWeightEntryReadService() {
+        IWeightEntryReadService service = Substitute.For<IWeightEntryReadService>();
+        service
+            .GetEntriesAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int?>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<WeightEntryModel>>([]));
+        return service;
     }
 
-    private static IWaistEntryRepository CreateWaistEntryRepository() {
-        IWaistEntryRepository repository = Substitute.For<IWaistEntryRepository>();
-        repository
-            .GetByPeriodAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<IReadOnlyList<WaistEntry>>([]));
-        return repository;
+    private static IWaistEntryReadService CreateWaistEntryReadService() {
+        IWaistEntryReadService service = Substitute.For<IWaistEntryReadService>();
+        service
+            .GetEntriesAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int?>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<WaistEntryModel>>([]));
+        return service;
     }
 
-    private static IHydrationEntryReadModelRepository CreateHydrationEntryRepository() {
-        IHydrationEntryReadModelRepository repository = Substitute.For<IHydrationEntryReadModelRepository>();
-        repository
+    private static IHydrationEntryReadService CreateHydrationEntryReadService() {
+        IHydrationEntryReadService service = Substitute.For<IHydrationEntryReadService>();
+        service
             .GetDailyTotalsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<(DateTime Date, int TotalMl)>>([]));
-        return repository;
+        return service;
     }
 
     private static IUserContextService CreateUserContextService(User? user) {
@@ -430,25 +426,4 @@ public class WeeklyCheckInFeatureTests {
         public override DateTimeOffset GetUtcNow() => new(Today);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class HydrationReadServiceAdapter(IHydrationEntryReadModelRepository repository) : IHydrationEntryReadService {
-        public Task<IReadOnlyList<HydrationEntryModel>> GetEntriesByDateAsync(
-            UserId userId,
-            DateTime dateUtc,
-            CancellationToken cancellationToken) =>
-            Task.FromResult<IReadOnlyList<HydrationEntryModel>>([]);
-
-        public Task<int> GetDailyTotalAsync(
-            UserId userId,
-            DateTime dateUtc,
-            CancellationToken cancellationToken) =>
-            repository.GetDailyTotalAsync(userId, dateUtc, cancellationToken);
-
-        public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
-            UserId userId,
-            DateTime dateFrom,
-            DateTime dateTo,
-            CancellationToken cancellationToken) =>
-            repository.GetDailyTotalsAsync(userId, dateFrom, dateTo, cancellationToken);
-    }
 }

@@ -2645,6 +2645,13 @@
       "line": 4
     },
     {
+      "name": "IMealActivityReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs",
+      "line": 4
+    },
+    {
       "name": "IMealFavoriteReadService",
       "kind": "interface",
       "role": "Service",
@@ -9393,13 +9400,6 @@
       "line": 7
     },
     {
-      "name": "IMealActivityReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs",
-      "line": 5
-    },
-    {
       "name": "IMealExportReadService",
       "kind": "interface",
       "role": "Service",
@@ -9509,7 +9509,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Meals/DependencyInjection.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "MealMappings",
@@ -9621,7 +9621,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Application.Meals/Services/MealActivityReadService.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "MealAiSessionAppender",
@@ -11917,90 +11917,6 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Application.Wearables/Services/WearableReadService.cs",
-      "line": 8
-    },
-    {
-      "name": "IWeeklyCheckInReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IWeeklyCheckInUserProfileService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInUserProfileService.cs",
-      "line": 6
-    },
-    {
-      "name": "WeeklyCheckInUserProfile",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Common/WeeklyCheckInUserProfile.cs",
-      "line": 2
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.WeeklyCheckIn/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "WeeklyCheckInModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeeklyCheckInModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WeekSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WeekTrendModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekTrendModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetWeeklyCheckInQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWeeklyCheckInQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "WeeklyCheckInCalculator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs",
-      "line": 7
-    },
-    {
-      "name": "WeeklyCheckInReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
-      "line": 16
-    },
-    {
-      "name": "WeeklyCheckInUserProfileService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInUserProfileService.cs",
       "line": 8
     },
     {
@@ -24184,6 +24100,90 @@
       "line": 8
     },
     {
+      "name": "IWeeklyCheckInReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IWeeklyCheckInUserProfileService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInUserProfileService.cs",
+      "line": 6
+    },
+    {
+      "name": "WeeklyCheckInUserProfile",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/WeeklyCheckIn/Application/Common/WeeklyCheckInUserProfile.cs",
+      "line": 2
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/WeeklyCheckIn/Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "WeeklyCheckInModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeeklyCheckInModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WeekSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WeekTrendModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekTrendModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetWeeklyCheckInQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWeeklyCheckInQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "WeeklyCheckInCalculator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInCalculator.cs",
+      "line": 7
+    },
+    {
+      "name": "WeeklyCheckInReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
+      "line": 15
+    },
+    {
+      "name": "WeeklyCheckInUserProfileService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInUserProfileService.cs",
+      "line": 8
+    },
+    {
       "name": "IWeeklyGoalRepository",
       "kind": "interface",
       "role": "Repository",
@@ -25468,7 +25468,7 @@
     },
     {
       "interface": "IMealActivityReadService",
-      "interfacePath": "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs",
+      "interfacePath": "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs",
       "implementation": "MealActivityReadService",
       "implementationPath": "FoodDiary.Application.Meals/Services/MealActivityReadService.cs",
       "confidence": "naming-convention"
@@ -26140,16 +26140,16 @@
     },
     {
       "interface": "IWeeklyCheckInReadService",
-      "interfacePath": "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInReadService.cs",
+      "interfacePath": "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInReadService.cs",
       "implementation": "WeeklyCheckInReadService",
-      "implementationPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
+      "implementationPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IWeeklyCheckInUserProfileService",
-      "interfacePath": "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInUserProfileService.cs",
+      "interfacePath": "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInUserProfileService.cs",
       "implementation": "WeeklyCheckInUserProfileService",
-      "implementationPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInUserProfileService.cs",
+      "implementationPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInUserProfileService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26607,35 +26607,35 @@
       "implementation": "MealReadService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Meals/DependencyInjection.cs",
-      "line": 15
+      "line": 16
     },
     {
       "service": "IMealActivityReadService",
       "implementation": "MealActivityReadService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Meals/DependencyInjection.cs",
-      "line": 19
+      "line": 20
     },
     {
       "service": "IMealExportReadService",
       "implementation": "MealExportReadService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Meals/DependencyInjection.cs",
-      "line": 20
+      "line": 21
     },
     {
       "service": "IMealProductNutritionReadService",
       "implementation": "MealProductNutritionReadService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Meals/DependencyInjection.cs",
-      "line": 21
+      "line": 22
     },
     {
       "service": "IMealNutritionService",
       "implementation": "MealNutritionService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Meals/DependencyInjection.cs",
-      "line": 22
+      "line": 23
     },
     {
       "service": "INotificationCleanupService",
@@ -26853,20 +26853,6 @@
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Wearables/DependencyInjection.cs",
       "line": 14
-    },
-    {
-      "service": "IWeeklyCheckInUserProfileService",
-      "implementation": "WeeklyCheckInUserProfileService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.WeeklyCheckIn/DependencyInjection.cs",
-      "line": 14
-    },
-    {
-      "service": "IWeeklyCheckInReadService",
-      "implementation": "WeeklyCheckInReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.WeeklyCheckIn/DependencyInjection.cs",
-      "line": 15
     },
     {
       "service": "IWikiContextSearch",
@@ -27805,6 +27791,20 @@
       "lifetime": "Scoped",
       "path": "Modules/Tdee/Application/DependencyInjection.cs",
       "line": 14
+    },
+    {
+      "service": "IWeeklyCheckInUserProfileService",
+      "implementation": "WeeklyCheckInUserProfileService",
+      "lifetime": "Scoped",
+      "path": "Modules/WeeklyCheckIn/Application/DependencyInjection.cs",
+      "line": 14
+    },
+    {
+      "service": "IWeeklyCheckInReadService",
+      "implementation": "WeeklyCheckInReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/WeeklyCheckIn/Application/DependencyInjection.cs",
+      "line": 15
     },
     {
       "service": "IWeeklyGoalReadService",

@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7543,
+    "consumerEdges": 7542,
     "productionConsumerEdges": 4559,
-    "testConsumerEdges": 2984,
+    "testConsumerEdges": 2983,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -6295,7 +6295,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
+        "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -10171,7 +10171,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -13847,7 +13847,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInReadService.cs"
+        "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -13864,7 +13864,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInUserProfileService.cs"
+        "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInUserProfileService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -42289,20 +42289,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetWeeklyCheckInQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
+        "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/Mappings/WeeklyCheckInHttpMappings.cs",
@@ -42315,10 +42302,23 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
+        "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetWeeklyCheckInQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
       "referenceCount": 12
     },
@@ -42328,7 +42328,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
+        "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -42341,7 +42341,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
+        "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/WeeklyCheckInHttpMappingsTests.cs",
@@ -55357,32 +55357,6 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInUserProfileService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInUserProfileService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -55682,6 +55656,32 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInUserProfileService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInUserProfileService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/Application/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -55789,6 +55789,19 @@
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -56218,19 +56231,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -57424,19 +57424,6 @@
         "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Dashboard.cs",
       "isTest": false,
       "referenceCount": 2
@@ -57489,9 +57476,35 @@
         "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
       "isTest": true,
       "referenceCount": 7
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 13
     },
     {
       "contract": "IDashboardStatisticsReadService",
@@ -57557,19 +57570,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
       "isTest": true,
       "referenceCount": 9
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 13
     },
     {
       "contract": "IDashboardStatisticsReadService",
@@ -65289,19 +65289,6 @@
         "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 5
-    },
-    {
-      "contract": "IHydrationEntryReadModelRepository",
-      "roles": [
-        "ReadModelRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryReadModelRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -65342,19 +65329,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Services/RepositoryDashboardBodyReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IHydrationEntryReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Hydration/Contracts/Common/IHydrationEntryReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65419,6 +65393,19 @@
         "Modules/Hydration/Contracts/Common/IHydrationEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IHydrationEntryReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Contracts/Common/IHydrationEntryReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
       "referenceCount": 8
@@ -65432,9 +65419,9 @@
         "Modules/Hydration/Contracts/Common/IHydrationEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 4
     },
     {
       "contract": "IHydrationEntryWriteRepository",
@@ -68991,7 +68978,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Gamification/Services/AchievementReconciliationHandler.cs",
@@ -69004,7 +68991,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Gamification/Services/GamificationReadService.cs",
@@ -69017,7 +69004,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/DependencyInjection.cs",
@@ -69030,7 +69017,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/Services/MealActivityReadService.cs",
@@ -69043,10 +69030,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -69056,7 +69043,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/Application/Common/WeeklyGoalProgressReader.cs",
@@ -69069,7 +69056,20 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "IMealActivityReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
@@ -69082,7 +69082,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
+        "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
@@ -70180,19 +70180,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
       "isTest": true,
       "referenceCount": 4
-    },
-    {
-      "contract": "IMealRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Meals/Common/IMealRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 5
     },
     {
       "contract": "IMealRepository",
@@ -78041,19 +78028,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -78198,6 +78172,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -79523,19 +79510,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -79680,6 +79654,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -90625,6 +90612,19 @@
         "FoodDiary.Application.Users/Common/IUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IUserContextService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Users/Common/IUserContextService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
       "isTest": true,
       "referenceCount": 7
@@ -90771,19 +90771,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
       "isTest": true,
       "referenceCount": 10
-    },
-    {
-      "contract": "IUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Users/Common/IUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 3
     },
     {
       "contract": "IUserContextService",
@@ -94473,19 +94460,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -94734,6 +94708,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -95123,9 +95110,22 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserWeeklyCheckInProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInUserProfileService.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInUserProfileService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IUserWeeklyCheckInProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserWeeklyCheckInProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "IUserWeeklyCheckInProfileReadService",
@@ -95139,19 +95139,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Users/UsersDependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 2
-    },
-    {
-      "contract": "IUserWeeklyCheckInProfileReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/IUserWeeklyCheckInProfileReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 5
     },
     {
       "contract": "IUserWriteRepository",
@@ -95682,9 +95669,22 @@
         "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IWaistEntryReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IWaistEntryReadService",
@@ -95789,19 +95789,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 4
     },
     {
       "contract": "IWaistEntryRepository",
@@ -97564,10 +97551,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInReadService.cs"
+        "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/DependencyInjection.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97577,10 +97564,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInReadService.cs"
+        "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97590,10 +97577,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInReadService.cs"
+        "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97603,10 +97590,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInUserProfileService.cs"
+        "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInUserProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/DependencyInjection.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97616,10 +97603,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInUserProfileService.cs"
+        "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInUserProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97629,10 +97616,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInUserProfileService.cs"
+        "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInUserProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInUserProfileService.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInUserProfileService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97642,10 +97629,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInUserProfileService.cs"
+        "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInUserProfileService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
       "referenceCount": 6
     },
@@ -98113,7 +98100,7 @@
         "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
+      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -98126,9 +98113,22 @@
         "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
+      "consumerPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IWeightEntryReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IWeightEntryReadService",
@@ -98233,19 +98233,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 2
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 4
     },
     {
       "contract": "IWeightEntryRepository",

@@ -16,7 +16,6 @@ public sealed class GamificationModuleExtractionTests {
             "FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
-            "FoodDiary.Application.Meals",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
         ], references);

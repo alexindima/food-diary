@@ -16,7 +16,6 @@ public sealed class WeeklyGoalsModuleExtractionTests {
             "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
-            "FoodDiary.Application.Meals",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
             "FoodDiary.Modules.WeeklyGoals.Application.Abstractions",

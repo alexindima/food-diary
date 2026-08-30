@@ -1,5 +1,6 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Meals.Services;
 using FoodDiary.Mediator;

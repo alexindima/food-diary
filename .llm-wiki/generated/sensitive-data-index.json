@@ -3995,90 +3995,6 @@
     },
     {
       "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
-      "name": "AvgDailyCalories",
-      "type": "double",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "WeightStart",
-      "type": "double?",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
-      "line": 11
-    },
-    {
-      "category": "health",
-      "name": "WeightEnd",
-      "type": "double?",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "WaistStart",
-      "type": "double?",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "WaistEnd",
-      "type": "double?",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
-      "line": 14
-    },
-    {
-      "category": "health",
-      "name": "TotalHydrationMl",
-      "type": "int",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
-      "line": 15
-    },
-    {
-      "category": "health",
-      "name": "AvgDailyHydrationMl",
-      "type": "int",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
-      "line": 16
-    },
-    {
-      "category": "health",
-      "name": "WeightChange",
-      "type": "double?",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekTrendModel.cs",
-      "line": 8
-    },
-    {
-      "category": "health",
-      "name": "WaistChange",
-      "type": "double?",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekTrendModel.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "HydrationChange",
-      "type": "int",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekTrendModel.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs",
-      "line": 65
-    },
-    {
-      "category": "health",
       "name": "ShareWeight",
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
@@ -6498,6 +6414,90 @@
       "type": "double",
       "path": "Modules/Tdee/Application/Services/TdeeCalculator.cs",
       "line": 174
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekSummaryModel.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "AvgDailyCalories",
+      "type": "double",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekSummaryModel.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "WeightStart",
+      "type": "double?",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekSummaryModel.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "WeightEnd",
+      "type": "double?",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekSummaryModel.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "WaistStart",
+      "type": "double?",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekSummaryModel.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "WaistEnd",
+      "type": "double?",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekSummaryModel.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "TotalHydrationMl",
+      "type": "int",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekSummaryModel.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
+      "name": "AvgDailyHydrationMl",
+      "type": "int",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekSummaryModel.cs",
+      "line": 16
+    },
+    {
+      "category": "health",
+      "name": "WeightChange",
+      "type": "double?",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekTrendModel.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "WaistChange",
+      "type": "double?",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekTrendModel.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "HydrationChange",
+      "type": "int",
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekTrendModel.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double",
+      "path": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInCalculator.cs",
+      "line": 65
     },
     {
       "category": "identity",

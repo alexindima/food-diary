@@ -19,7 +19,7 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Achievements, FavoriteMeals, Images, Nutrition, Products, RecentItems, Recipes, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Application.Dashboard, FoodDiary.Application.Export, FoodDiary.Application.Gamification, FoodDiary.Application.Usda, FoodDiary.Application.WeeklyCheckIn, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.WeeklyGoals.Application, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Application.Dashboard, FoodDiary.Application.Export, FoodDiary.Application.Usda, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
@@ -51,20 +51,21 @@ Source: `FoodDiary.Presentation.Api/Features/Meals/MealsController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Meal, MealItem, MealAiSession, MealAiItem
-- Public contract files: 15
-- Observed external consumer groups: 10
+- Public contract files: 16
+- Observed external consumer groups: 7
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 15
-- Interfaces: 7
+- Public contract types: 16
+- Interfaces: 8
 - DTO/read-model/projection types: 6
 - Enums: 0
 - Exported repository-shaped contracts: 6
 - Contracts referencing domain entities: 2
 - `class MealErrors`
 - `interface IMealActivityReadRepository`
+- `interface IMealActivityReadService`
 - `interface IMealFavoriteReadService`
 - `interface IMealProductNutritionReadRepository`
 - `interface IMealProjectionReadRepository`

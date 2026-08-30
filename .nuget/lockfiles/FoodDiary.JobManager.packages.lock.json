@@ -880,7 +880,6 @@
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Application.Meals": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
@@ -1066,26 +1065,12 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
-      "fooddiary.application.weeklycheckin": {
-        "type": "Project",
-        "dependencies": {
-          "FluentValidation": "[12.1.1, )",
-          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Application.Meals": "[1.0.0, )",
-          "FoodDiary.Domain": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
-        }
-      },
       "FoodDiary.Application.WeeklyGoals": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Application.Meals": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Application.Abstractions": "[1.0.0, )",

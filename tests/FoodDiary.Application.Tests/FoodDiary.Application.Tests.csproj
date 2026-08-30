@@ -53,7 +53,6 @@
     <ProjectReference Include="..\..\FoodDiary.Application.Statistics\FoodDiary.Application.Statistics.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Usda\FoodDiary.Application.Usda.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Application.WeeklyCheckIn\FoodDiary.Application.WeeklyCheckIn.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.ContentReports\FoodDiary.Application.ContentReports.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Gamification\FoodDiary.Application.Gamification.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Export\FoodDiary.Application.Export.csproj" />

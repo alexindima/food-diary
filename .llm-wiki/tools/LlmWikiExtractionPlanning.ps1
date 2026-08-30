@@ -108,7 +108,10 @@ function Get-LlmWikiSupplementalAcceptanceCriteria([string]$Objective, [string[]
         $criteria.Add('Notification delivery remains retry-safe.')
         $criteria.Add('Focused tests cover notification delivery.')
     }
-    if (@($Paths | Where-Object { $_ -match '(?i)JobManager|HostedService|Recurring' }).Count -gt 0) {
+    if (@($Paths | Where-Object {
+                $_ -match '(?i)(?:^|/)FoodDiary\.JobManager/.+\.cs$' -or
+                $_ -match '(?i)HostedService|Recurring'
+            }).Count -gt 0) {
         $criteria.Add('The background job is registered.')
         $criteria.Add('The background job is configured.')
         $criteria.Add('The background job supports cancellation.')

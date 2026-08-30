@@ -19,7 +19,8 @@
     <Project Path="FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj" />
     <Project Path="FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj" />
     <Project Path="FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj" />
-    <Project Path="FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj" />
+    <Project Path="Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj" />
+    <Project Path="Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests.csproj" />
   </Folder>
   <Folder Name="/Application/Users and Access/">
     <Project Path="FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj" />

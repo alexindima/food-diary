@@ -50,7 +50,7 @@
     <ProjectReference Include="..\..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
     <ProjectReference Include="..\..\Modules\WeeklyGoals\Application\FoodDiary.Modules.WeeklyGoals.Application.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Usda\FoodDiary.Application.Usda.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Application.WeeklyCheckIn\FoodDiary.Application.WeeklyCheckIn.csproj" />
+    <ProjectReference Include="..\..\Modules\WeeklyCheckIn\Application\FoodDiary.Modules.WeeklyCheckIn.Application.csproj" />
     <ProjectReference Include="..\..\Modules\DailyAdvices\Application\FoodDiary.Modules.DailyAdvices.Application.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.ContentReports\FoodDiary.Application.ContentReports.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Gamification\FoodDiary.Application.Gamification.csproj" />

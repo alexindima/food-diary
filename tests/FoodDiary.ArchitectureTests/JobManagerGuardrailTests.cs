@@ -90,7 +90,6 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application.Usda",
             "FoodDiary.Application.Users",
             "FoodDiary.Application.Wearables",
-            "FoodDiary.Application.WeeklyCheckIn",
             "FoodDiary.Infrastructure",
             "FoodDiary.Integrations",
             "FoodDiary.Modules.DailyAdvices.Application",

@@ -1658,11 +1658,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiExtractionPlanning.ps1",
-      "nonBlankLines": 130,
+      "nonBlankLines": 133,
       "decisionPoints": 26,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 43.6
+      "structuralRiskScore": 43.66
     },
     {
       "path": ".llm-wiki/tools/LlmWikiGeneratedArtifacts.ps1",
@@ -5159,6 +5159,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.32
+    },
+    {
+      "path": "FoodDiary.Application.Abstractions/Meals/Common/IMealActivityReadService.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "FoodDiary.Application.Abstractions/Meals/Common/IMealFavoriteReadService.cs",
@@ -13009,14 +13017,6 @@
       "structuralRiskScore": 0.26
     },
     {
-      "path": "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
       "path": "FoodDiary.Application.Meals/Common/IMealExportReadService.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
@@ -13138,11 +13138,11 @@
     },
     {
       "path": "FoodDiary.Application.Meals/DependencyInjection.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 24,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.96
+      "structuralRiskScore": 1.98
     },
     {
       "path": "FoodDiary.Application.Meals/Mappings/MealMappings.cs",
@@ -13266,11 +13266,11 @@
     },
     {
       "path": "FoodDiary.Application.Meals/Services/MealActivityReadService.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.3
     },
     {
       "path": "FoodDiary.Application.Meals/Services/MealAiSessionAppender.cs",
@@ -15967,110 +15967,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 17.24
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/AssemblyInfo.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInReadService.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/Common/IWeeklyCheckInUserProfileService.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/Common/WeeklyCheckInUserProfile.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/DependencyInjection.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeekTrendModel.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/Models/WeeklyCheckInModel.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
-      "nonBlankLines": 73,
-      "decisionPoints": 8,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.46
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs",
-      "nonBlankLines": 109,
-      "decisionPoints": 17,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.68
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
-      "nonBlankLines": 57,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.64
-    },
-    {
-      "path": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInUserProfileService.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.92
     },
     {
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshot.cs",
@@ -38113,6 +38009,110 @@
       "structuralRiskScore": 1.96
     },
     {
+      "path": "Modules/WeeklyCheckIn/Application/AssemblyInfo.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInReadService.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/WeeklyCheckIn/Application/Common/IWeeklyCheckInUserProfileService.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/WeeklyCheckIn/Application/Common/WeeklyCheckInUserProfile.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/WeeklyCheckIn/Application/DependencyInjection.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekSummaryModel.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeekTrendModel.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/WeeklyCheckIn/Application/Models/WeeklyCheckInModel.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
+      "nonBlankLines": 73,
+      "decisionPoints": 8,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.46
+    },
+    {
+      "path": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInCalculator.cs",
+      "nonBlankLines": 109,
+      "decisionPoints": 17,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 27.68
+    },
+    {
+      "path": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
+      "nonBlankLines": 56,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.62
+    },
+    {
+      "path": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInUserProfileService.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.92
+    },
+    {
       "path": "Modules/WeeklyGoals/Application/Abstractions/Common/IWeeklyGoalRepository.cs",
       "nonBlankLines": 17,
       "decisionPoints": 0,
@@ -43168,11 +43168,11 @@
     {
       "name": "GetWeeklyCheckInQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
+      "path": "Modules/WeeklyCheckIn/Application/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
       "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
+        "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",

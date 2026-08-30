@@ -107,7 +107,7 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] calculatorFiles = [
             Path.Combine(root, "Modules", "Tdee", "Application", "Services", "TdeeCalculator.cs"),
-            Path.Combine(root, "FoodDiary.Application.WeeklyCheckIn", "Services", "WeeklyCheckInCalculator.cs"),
+            Path.Combine(root, "Modules", "WeeklyCheckIn", "Application", "Services", "WeeklyCheckInCalculator.cs"),
             Path.Combine(root, "FoodDiary.Application.Gamification", "Services", "GamificationCalculator.cs"),
         ];
         string[] forbiddenPatterns = [
@@ -1127,7 +1127,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Usda", "Commands", "LinkProductToUsdaFood", "LinkProductToUsdaFoodCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Usda", "Commands", "UnlinkProductFromUsdaFood", "UnlinkProductFromUsdaFoodCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Usda", "Queries", "GetDailyMicronutrients", "GetDailyMicronutrientsQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.WeeklyCheckIn", "Queries", "GetWeeklyCheckIn", "GetWeeklyCheckInQueryHandler.cs"),
+            Path.Combine(root, "Modules", "WeeklyCheckIn", "Application", "Queries", "GetWeeklyCheckIn", "GetWeeklyCheckInQueryHandler.cs"),
         ];
 
         string[] directParseViolations = [
@@ -1225,7 +1225,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void WeeklyCheckInQueries_UseStatisticsReadServiceInsteadOfMealAggregates() {
         string root = GetRepositoryRoot();
-        string weeklyCheckInQueriesRoot = Path.Combine(root, "FoodDiary.Application.WeeklyCheckIn", "Queries");
+        string weeklyCheckInQueriesRoot = Path.Combine(root, "Modules", "WeeklyCheckIn", "Application", "Queries");
         string[] weeklyCheckInQueryFiles = [.. SourceScanner.SourceFiles(weeklyCheckInQueriesRoot)];
 
         string[] violations = [
@@ -1295,7 +1295,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Export", "Services", "ExportDiaryReadService.cs"),
             Path.Combine(root, "FoodDiary.Application.Gamification", "Services", "GamificationReadService.cs"),
             Path.Combine(root, "FoodDiary.Application.Usda", "Services", "UsdaDailyMicronutrientReadService.cs"),
-            Path.Combine(root, "FoodDiary.Application.WeeklyCheckIn", "Services", "WeeklyCheckInReadService.cs"),
+            Path.Combine(root, "Modules", "WeeklyCheckIn", "Application", "Services", "WeeklyCheckInReadService.cs"),
         ];
 
         string[] violations = FindReferencesInFiles(root, serviceFiles, "IMealReadRepository");
@@ -3004,7 +3004,7 @@ public sealed class ApplicationGuardrailTests {
             (Path.Combine(root, "FoodDiary.Application.Gamification"), Path.Combine("Services", "GamificationUserProfileService.cs")),
             (Path.Combine(root, "Modules", "Hydration", "Application"), Path.Combine("Services", "HydrationGoalService.cs")),
             (Path.Combine(root, "Modules", "Tdee", "Application"), Path.Combine("Services", "TdeeUserProfileService.cs")),
-            (Path.Combine(root, "FoodDiary.Application.WeeklyCheckIn"), Path.Combine("Services", "WeeklyCheckInUserProfileService.cs")),
+            (Path.Combine(root, "Modules", "WeeklyCheckIn", "Application"), Path.Combine("Services", "WeeklyCheckInUserProfileService.cs")),
         ];
 
         string[] violations = [.. slices.SelectMany(slice => {

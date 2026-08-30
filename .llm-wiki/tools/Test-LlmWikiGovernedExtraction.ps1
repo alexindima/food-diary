@@ -56,6 +56,13 @@ $supplementalCriteria = @(Get-LlmWikiSupplementalAcceptanceCriteria `
 if (@($supplementalCriteria | Where-Object { -not (Test-LlmWikiCriterionAtomic ([string]$_) $requirementPolicy) }).Count -gt 0) {
     throw 'Development start generated a compound supplemental acceptance criterion.'
 }
+$compositionOnlyCriteria = @(Get-LlmWikiSupplementalAcceptanceCriteria `
+    'Extract WeeklyCheckIn application ownership without changing background processing' `
+    @('Backend') `
+    @('FoodDiary.JobManager/FoodDiary.JobManager.csproj', 'Modules/WeeklyCheckIn/Application/DependencyInjection.cs'))
+if (@($compositionOnlyCriteria | Where-Object { $_ -match '(?i)background job' }).Count -gt 0) {
+    throw 'A composition-only JobManager project reference generated false background-job acceptance criteria.'
+}
 foreach ($expectedCriterion in @(
     'HTTP routes match the intended behavior.'
     'HTTP payloads match the intended behavior.'

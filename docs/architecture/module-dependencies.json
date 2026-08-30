@@ -15,7 +15,7 @@
     "Export": ["Meals", "Cycles"],
     "Fasting": [],
     "Favorites": [],
-    "Gamification": ["Meals"],
+    "Gamification": [],
     "Hydration": [],
     "Identity": [],
     "Images": [],
@@ -31,8 +31,8 @@
     "Usda": ["Meals"],
     "Users": [],
     "Wearables": [],
-    "WeeklyCheckIn": ["Meals", "Hydration"],
-    "WeeklyGoals": ["Meals"]
+    "WeeklyCheckIn": ["Hydration"],
+    "WeeklyGoals": []
   },
   "knownCycles": []
 }

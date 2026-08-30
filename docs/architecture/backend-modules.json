@@ -606,7 +606,8 @@
       "enforcement": "project-reference-matrix",
       "ownedEntities": [],
       "sourceMappings": {
-        "applicationProjects": ["FoodDiary.Application.WeeklyCheckIn"]
+        "logicalRoot": "Modules/WeeklyCheckIn",
+        "applicationProjects": ["Modules/WeeklyCheckIn/Application"]
       }
     },
     "WeeklyGoals": {
