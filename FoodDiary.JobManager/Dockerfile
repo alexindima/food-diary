@@ -72,7 +72,7 @@ COPY Modules/Images/Application/Abstractions/*.csproj Modules/Images/Application
 COPY Modules/Images/Infrastructure/*.csproj Modules/Images/Infrastructure/
 COPY Modules/Images/Infrastructure/Model/*.csproj Modules/Images/Infrastructure/Model/
 COPY FoodDiary.Application.Ai/*.csproj FoodDiary.Application.Ai/
-COPY FoodDiary.Application.Statistics/*.csproj FoodDiary.Application.Statistics/
+COPY Modules/Statistics/Application/*.csproj Modules/Statistics/Application/
 COPY FoodDiary.Application.Meals/*.csproj FoodDiary.Application.Meals/
 COPY Modules/WeeklyGoals/Application/*.csproj Modules/WeeklyGoals/Application/
 COPY Modules/WeeklyGoals/Application/Abstractions/*.csproj Modules/WeeklyGoals/Application/Abstractions/
@@ -176,7 +176,7 @@ COPY Modules/Images/Application/Abstractions/ Modules/Images/Application/Abstrac
 COPY Modules/Images/Infrastructure/ Modules/Images/Infrastructure/
 COPY Modules/Images/Infrastructure/Model/ Modules/Images/Infrastructure/Model/
 COPY FoodDiary.Application.Ai/ FoodDiary.Application.Ai/
-COPY FoodDiary.Application.Statistics/ FoodDiary.Application.Statistics/
+COPY Modules/Statistics/Application/ Modules/Statistics/Application/
 COPY FoodDiary.Application.Meals/ FoodDiary.Application.Meals/
 COPY Modules/WeeklyGoals/ Modules/WeeklyGoals/
 COPY Modules/WeeklyGoals/Application/ Modules/WeeklyGoals/Application/

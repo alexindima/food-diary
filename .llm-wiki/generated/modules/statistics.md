@@ -15,9 +15,9 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj`
+- Extracted project: `Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Dashboard, Users, WaistEntries, WeightEntries
+- Abstraction-contract dependencies: Dashboard, WaistEntries, WeightEntries
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Application.Dashboard, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -93,8 +93,10 @@ Source: `FoodDiary.Presentation.Api/Features/Statistics/StatisticsController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Statistics/StatisticsFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/StatisticsFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/UtcDateNormalizerTests.cs`
+- [behavioral-or-text-match] `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Support/ResultAssert.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/StatisticsModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/StatisticsControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/StatisticsHttpMappingsTests.cs`

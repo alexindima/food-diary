@@ -48,7 +48,9 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Products application module: `FoodDiary.Application.Products/AGENTS.md`
 - Recipe community application module: `FoodDiary.Application.RecipeCommunity/AGENTS.md`
 - Recipes application module: `FoodDiary.Application.Recipes/AGENTS.md`
-- Statistics application module: `FoodDiary.Application.Statistics/AGENTS.md`
+- Statistics logical module: `Modules/Statistics/AGENTS.md`
+- Statistics application: `Modules/Statistics/Application/AGENTS.md`
+- Statistics application tests: `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/AGENTS.md`
 - TDEE logical module: `Modules/Tdee/AGENTS.md`
 - Wearables logical module: `Modules/Wearables/AGENTS.md`
 - Wearables application: `Modules/Wearables/Application/AGENTS.md`

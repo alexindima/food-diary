@@ -3407,34 +3407,6 @@
     },
     {
       "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "FoodDiary.Application.Statistics/Models/AggregatedStatisticsModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "Nutrition",
-      "type": "IReadOnlyList<AggregatedStatisticsModel>",
-      "path": "FoodDiary.Application.Statistics/Models/StatisticsSummaryModel.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "Weight",
-      "type": "IReadOnlyList<WeightEntrySummaryModel>",
-      "path": "FoodDiary.Application.Statistics/Models/StatisticsSummaryModel.cs",
-      "line": 8
-    },
-    {
-      "category": "health",
-      "name": "Waist",
-      "type": "IReadOnlyList<WaistEntrySummaryModel>",
-      "path": "FoodDiary.Application.Statistics/Models/StatisticsSummaryModel.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
       "name": "DesiredWaistCm",
       "type": "double?",
       "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
@@ -6337,6 +6309,34 @@
       "type": "double?",
       "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
       "line": 15
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Statistics/Application/Models/AggregatedStatisticsModel.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "Nutrition",
+      "type": "IReadOnlyList<AggregatedStatisticsModel>",
+      "path": "Modules/Statistics/Application/Models/StatisticsSummaryModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "Weight",
+      "type": "IReadOnlyList<WeightEntrySummaryModel>",
+      "path": "Modules/Statistics/Application/Models/StatisticsSummaryModel.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "Waist",
+      "type": "IReadOnlyList<WaistEntrySummaryModel>",
+      "path": "Modules/Statistics/Application/Models/StatisticsSummaryModel.cs",
+      "line": 9
     },
     {
       "category": "health",

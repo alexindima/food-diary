@@ -1159,7 +1159,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void StatisticsQueries_UseDedicatedStatisticsReadServiceInsteadOfMealAggregates() {
         string root = GetRepositoryRoot();
-        string statisticsRoot = Path.Combine(root, "FoodDiary.Application.Statistics");
+        string statisticsRoot = Path.Combine(root, "Modules", "Statistics", "Application");
         string[] statisticsFiles = [.. SourceScanner.SourceFiles(statisticsRoot)];
 
         string[] violations = [

@@ -19,13 +19,13 @@ public sealed class DashboardModuleExtractionTests {
             "FoodDiary.Application.Cycles",
             "FoodDiary.Application.Exercises",
             "FoodDiary.Application.Meals",
-            "FoodDiary.Application.Statistics",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
             "FoodDiary.Modules.DailyAdvices.Application",
             "FoodDiary.Modules.Dietologist.Application.Abstractions",
             "FoodDiary.Modules.Fasting.Contracts",
             "FoodDiary.Modules.Hydration.Contracts",
+            "FoodDiary.Modules.Statistics.Application",
             "FoodDiary.Modules.Tdee.Application",
         ], references);
     }

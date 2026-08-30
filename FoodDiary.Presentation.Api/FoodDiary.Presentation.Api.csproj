@@ -37,7 +37,7 @@
     <ProjectReference Include="..\FoodDiary.Application.Products\FoodDiary.Application.Products.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.RecipeCommunity\FoodDiary.Application.RecipeCommunity.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Recipes\FoodDiary.Application.Recipes.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Statistics\FoodDiary.Application.Statistics.csproj" />
+    <ProjectReference Include="..\Modules\Statistics\Application\FoodDiary.Modules.Statistics.Application.csproj" />
     <ProjectReference Include="..\Modules\Tdee\Application\FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Usda\FoodDiary.Application.Usda.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Users\FoodDiary.Application.Users.csproj" />

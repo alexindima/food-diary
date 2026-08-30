@@ -8252,76 +8252,6 @@
       "line": 8
     },
     {
-      "name": "UtcDateNormalizer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Statistics/Common/UtcDateNormalizer.cs",
-      "line": 2
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Statistics/DependencyInjection.cs",
-      "line": 6
-    },
-    {
-      "name": "AggregatedStatisticsModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Statistics/Models/AggregatedStatisticsModel.cs",
-      "line": 2
-    },
-    {
-      "name": "StatisticsSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Statistics/Models/StatisticsSummaryModel.cs",
-      "line": 5
-    },
-    {
-      "name": "GetStatisticsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetStatisticsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "GetStatisticsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "GetStatisticsSummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetStatisticsSummaryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
-      "line": 17
-    },
-    {
-      "name": "GetStatisticsSummaryQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
-      "line": 5
-    },
-    {
       "name": "LinkProductToUsdaFoodCommand",
       "kind": "record",
       "role": "Command",
@@ -23713,6 +23643,76 @@
       "role": "Repository",
       "path": "Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsProductCacheRepository.cs",
       "line": 9
+    },
+    {
+      "name": "UtcDateNormalizer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Statistics/Application/Common/UtcDateNormalizer.cs",
+      "line": 2
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Statistics/Application/DependencyInjection.cs",
+      "line": 6
+    },
+    {
+      "name": "AggregatedStatisticsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Statistics/Application/Models/AggregatedStatisticsModel.cs",
+      "line": 2
+    },
+    {
+      "name": "StatisticsSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Statistics/Application/Models/StatisticsSummaryModel.cs",
+      "line": 5
+    },
+    {
+      "name": "GetStatisticsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetStatisticsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "GetStatisticsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "GetStatisticsSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetStatisticsSummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
+      "line": 17
+    },
+    {
+      "name": "GetStatisticsSummaryQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
+      "line": 5
     },
     {
       "name": "ITdeeUserProfileService",
