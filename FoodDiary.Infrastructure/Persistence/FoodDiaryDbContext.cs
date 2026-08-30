@@ -4,6 +4,7 @@ using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
+using FoodDiary.Modules.ContentReports.Infrastructure.Persistence;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
 
 namespace FoodDiary.Infrastructure.Persistence;
@@ -18,6 +19,7 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         modelBuilder.ApplyHydrationPersistenceModel();
         modelBuilder.ApplyDailyAdvicesPersistenceModel();
         modelBuilder.ApplyLessonsPersistenceModel();
+        modelBuilder.ApplyContentReportsPersistenceModel();
         modelBuilder.ApplyWeeklyGoalsPersistenceModel();
     }
 }

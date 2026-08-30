@@ -178,13 +178,14 @@
     },
     "ContentReports": {
       "role": "aggregate-owner",
-      "physicalIsolation": "project",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": [],
+      "ownedEntities": ["ContentReport"],
       "sourceMappings": {
-        "applicationProjects": ["FoodDiary.Application.ContentReports"],
-        "abstractionAreas": ["ContentReports"],
-        "persistenceAreas": ["ContentReports"]
+        "applicationProjects": ["Modules/ContentReports/Application"],
+        "abstractionAreas": ["Modules/ContentReports/Application/Abstractions"],
+        "domainAreas": ["Modules/ContentReports/Domain"],
+        "persistenceAreas": ["Modules/ContentReports/Infrastructure"]
       }
     },
     "Cycles": {

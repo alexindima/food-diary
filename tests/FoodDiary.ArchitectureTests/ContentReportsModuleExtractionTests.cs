@@ -5,7 +5,7 @@ public sealed class ContentReportsModuleExtractionTests {
     [Fact]
     public void ContentReportsApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "ContentReports");
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.ContentReports");
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "ContentReports", "Application");
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
     }
@@ -13,11 +13,13 @@ public sealed class ContentReportsModuleExtractionTests {
     [Fact]
     public void ExtractedContentReportsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.ContentReports/FoodDiary.Application.ContentReports.csproj");
+            "Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
-            "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.ContentReports.Application.Abstractions",
+            "FoodDiary.Modules.ContentReports.Contracts",
+            "FoodDiary.Modules.ContentReports.Domain",
         ], references);
     }
 

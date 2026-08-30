@@ -27,15 +27,25 @@
     <Project Path="FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj" />
     <Project Path="FoodDiary.Application.Users/FoodDiary.Application.Users.csproj" />
   </Folder>
+  <Folder Name="/Application/" />
   <Folder Name="/Application/Content and Engagement/">
     <Project Path="FoodDiary.Application.Admin/FoodDiary.Application.Admin.csproj" />
     <Project Path="FoodDiary.Application.Ai/FoodDiary.Application.Ai.csproj" />
-    <Project Path="FoodDiary.Application.ContentReports/FoodDiary.Application.ContentReports.csproj" />
     <Project Path="FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj" />
     <Project Path="FoodDiary.Application.Export/FoodDiary.Application.Export.csproj" />
     <Project Path="FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj" />
     <Project Path="FoodDiary.Application.Images/FoodDiary.Application.Images.csproj" />
     <Project Path="FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj" />
+  </Folder>
+  <Folder Name="/Modules/" />
+  <Folder Name="/Modules/ContentReports/">
+    <Project Path="Modules/ContentReports/Application/Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
+    <Project Path="Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj" />
+    <Project Path="Modules/ContentReports/Contracts/FoodDiary.Modules.ContentReports.Contracts.csproj" />
+    <Project Path="Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
+    <Project Path="Modules/ContentReports/Infrastructure/FoodDiary.Modules.ContentReports.Infrastructure.csproj" />
+    <Project Path="Modules/ContentReports/Infrastructure/Model/FoodDiary.Modules.ContentReports.PersistenceModel.csproj" />
+    <Project Path="Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/FoodDiary.Modules.ContentReports.Application.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/DailyAdvices/">
     <Project Path="Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />
@@ -109,6 +119,7 @@
     <Project Path="FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj" />
     <Project Path="FoodDiary.Web.Api/FoodDiary.Web.Api.csproj" />
   </Folder>
+  <Folder Name="/Services/" />
   <Folder Name="/Services/MailInbox/">
     <Project Path="MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj" />
     <Project Path="MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj" />
@@ -136,6 +147,7 @@
     <Project Path="FoodDiary.Analyzers/FoodDiary.Analyzers.csproj" />
     <Project Path="FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj" />
   </Folder>
+  <Folder Name="/Tests/" />
   <Folder Name="/Tests/Core/">
     <Project Path="tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj" />
     <Project Path="tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj" />

@@ -31,7 +31,7 @@ using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Application.Usda;
 using FoodDiary.Application.WeeklyCheckIn;
 using FoodDiary.Modules.DailyAdvices.Infrastructure;
-using FoodDiary.Application.ContentReports;
+using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Application.Gamification;
 using FoodDiary.Application.Export;
 using FoodDiary.Application.Abstractions.Authentication.Common;

@@ -67,7 +67,6 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application.Ai",
             "FoodDiary.Application.Billing",
             "FoodDiary.Application.BodyMetrics",
-            "FoodDiary.Application.ContentReports",
             "FoodDiary.Application.Cycles",
             "FoodDiary.Application.Dashboard",
             "FoodDiary.Application.Dietologist",

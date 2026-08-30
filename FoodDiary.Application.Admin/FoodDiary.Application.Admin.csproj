@@ -2,7 +2,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Ai\FoodDiary.Application.Ai.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.ContentReports\FoodDiary.Application.ContentReports.csproj" />
+    <ProjectReference Include="..\Modules\ContentReports\Contracts\FoodDiary.Modules.ContentReports.Contracts.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Gamification\FoodDiary.Application.Gamification.csproj" />
     <ProjectReference Include="..\Modules\Lessons\Contracts\FoodDiary.Modules.Lessons.Contracts.csproj" />
     <ProjectReference Include="..\FoodDiary.Domain\FoodDiary.Domain.csproj" />

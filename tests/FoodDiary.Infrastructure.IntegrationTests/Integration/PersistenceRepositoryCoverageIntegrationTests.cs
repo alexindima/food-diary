@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.ContentReports.Models;
+using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Application.Abstractions.Cycles.Models;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
@@ -36,7 +36,7 @@ using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Admin;
 using FoodDiary.Infrastructure.Persistence.Billing;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.ContentReports;
+using FoodDiary.Modules.ContentReports.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.FavoriteMeals;

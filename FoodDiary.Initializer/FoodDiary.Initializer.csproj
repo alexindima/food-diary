@@ -38,7 +38,7 @@
     <ProjectReference Include="..\FoodDiary.Application.Usda\FoodDiary.Application.Usda.csproj" />
     <ProjectReference Include="..\Modules\WeeklyCheckIn\Application\FoodDiary.Modules.WeeklyCheckIn.Application.csproj" />
     <ProjectReference Include="..\Modules\DailyAdvices\Infrastructure\FoodDiary.Modules.DailyAdvices.Infrastructure.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.ContentReports\FoodDiary.Application.ContentReports.csproj" />
+    <ProjectReference Include="..\Modules\ContentReports\Infrastructure\FoodDiary.Modules.ContentReports.Infrastructure.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Gamification\FoodDiary.Application.Gamification.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Export\FoodDiary.Application.Export.csproj" />
   </ItemGroup>

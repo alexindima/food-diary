@@ -5,13 +5,13 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4713,
+    "productionFiles": 4716,
     "wikiToolFiles": 201,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 781,
     "criticalSymbolsWithTestReferences": 763,
     "criticalSymbolsWithoutTestReferences": 18,
-    "debtMarkers": 10
+    "debtMarkers": 11
   },
   "hotspots": [
     {
@@ -3721,14 +3721,6 @@
       "structuralRiskScore": 6.84
     },
     {
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.ContentReport.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Cycle.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -3991,46 +3983,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.9
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/ContentReports/Common/ContentReportErrors.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportReadModelRepository.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportTargetReadService.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportWriteRepository.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/ContentReports/Models/ContentReportAdminReadModel.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
     },
     {
       "path": "FoodDiary.Application.Abstractions/Cycles/Common/CycleDayErrors.cs",
@@ -8983,86 +8935,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.ContentReports/Commands/CreateContentReport/CreateContentReportCommand.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.ContentReports/Commands/CreateContentReport/CreateContentReportCommandHandler.cs",
-      "nonBlankLines": 58,
-      "decisionPoints": 4,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.16
-    },
-    {
-      "path": "FoodDiary.Application.ContentReports/Commands/CreateContentReport/CreateContentReportCommandValidator.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.48
-    },
-    {
-      "path": "FoodDiary.Application.ContentReports/Common/ContentReportTargetTypeParser.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.ContentReports/Common/IContentReportAdministrationReadService.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.ContentReports/Common/IContentReportAdministrationService.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "FoodDiary.Application.ContentReports/DependencyInjection.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.ContentReports/Models/ContentReportModel.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.ContentReports/Services/ContentReportAdministrationReadService.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.ContentReports/Services/ContentReportAdministrationService.cs",
-      "nonBlankLines": 41,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.82
     },
     {
       "path": "FoodDiary.Application.Cycles/AssemblyInfo.cs",
@@ -16681,14 +16553,6 @@
       "structuralRiskScore": 15.54
     },
     {
-      "path": "FoodDiary.Domain/Entities/Social/ContentReport.cs",
-      "nonBlankLines": 76,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.02
-    },
-    {
       "path": "FoodDiary.Domain/Entities/Social/RecipeLike.cs",
       "nonBlankLines": 26,
       "decisionPoints": 2,
@@ -17458,14 +17322,6 @@
     },
     {
       "path": "FoodDiary.Domain/ValueObjects/Ids/ClientTaskId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ContentReportId.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -18338,11 +18194,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Moderation.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.12
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Notifications.cs",
@@ -18865,14 +18721,6 @@
       "structuralRiskScore": 0.36
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/ContentReports/ContentReportConfiguration.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/BleedingEntryConfiguration.cs",
       "nonBlankLines": 21,
       "decisionPoints": 0,
@@ -19321,14 +19169,6 @@
       "structuralRiskScore": 0.56
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/ContentReports/ContentReportRepository.cs",
-      "nonBlankLines": 80,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.6
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
       "nonBlankLines": 70,
       "decisionPoints": 0,
@@ -19602,11 +19442,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 20,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.44
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -36081,6 +35921,190 @@
       "structuralRiskScore": 3.42
     },
     {
+      "path": "Modules/ContentReports/Application/Abstractions/Common/ContentReportErrors.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/ContentReports/Application/Abstractions/Common/IContentReportReadModelRepository.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/ContentReports/Application/Abstractions/Common/IContentReportTargetReadService.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/ContentReports/Application/Abstractions/Common/IContentReportWriteRepository.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
+      "path": "Modules/ContentReports/Application/Commands/CreateContentReport/CreateContentReportCommand.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/ContentReports/Application/Commands/CreateContentReport/CreateContentReportCommandHandler.cs",
+      "nonBlankLines": 57,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.14
+    },
+    {
+      "path": "Modules/ContentReports/Application/Commands/CreateContentReport/CreateContentReportCommandValidator.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.48
+    },
+    {
+      "path": "Modules/ContentReports/Application/Common/ContentReportTargetTypeParser.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/ContentReports/Application/DependencyInjection.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/ContentReports/Application/Models/ContentReportModel.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/ContentReports/Application/Services/ContentReportAdministrationReadService.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/ContentReports/Application/Services/ContentReportAdministrationService.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.8
+    },
+    {
+      "path": "Modules/ContentReports/Contracts/Common/IContentReportAdministrationReadService.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/ContentReports/Contracts/Common/IContentReportAdministrationService.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/ContentReports/Contracts/Models/ContentReportAdminReadModel.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
+      "nonBlankLines": 77,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.04
+    },
+    {
+      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReportsDomainGuard.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.34
+    },
+    {
+      "path": "Modules/ContentReports/Domain/ValueObjects/Ids/ContentReportId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/ContentReports/Infrastructure/AssemblyInfo.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/ContentReports/Infrastructure/Model/Configurations/ContentReportConfiguration.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.66
+    },
+    {
+      "path": "Modules/ContentReports/Infrastructure/Model/ContentReportsPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/ContentReports/Infrastructure/ModuleRegistration.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs",
+      "nonBlankLines": 81,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.62
+    },
+    {
       "path": "Modules/DailyAdvices/Application/Abstractions/Common/IDailyAdviceReadModelRepository.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -38863,11 +38887,11 @@
     {
       "name": "CreateContentReportCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.ContentReports/Commands/CreateContentReport/CreateContentReportCommandHandler.cs",
-      "line": 13,
+      "path": "Modules/ContentReports/Application/Commands/CreateContentReport/CreateContentReportCommandHandler.cs",
+      "line": 12,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/ContentReports/ContentReportsFeatureTests.cs",
+        "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReports/ContentReportsFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43644,11 +43668,11 @@
     {
       "name": "CreateContentReportCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.ContentReports/Commands/CreateContentReport/CreateContentReportCommandValidator.cs",
+      "path": "Modules/ContentReports/Application/Commands/CreateContentReport/CreateContentReportCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/ContentReports/ContentReportsValidatorTests.cs"
+        "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReports/ContentReportsValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -48526,6 +48550,11 @@
       "path": "FoodDiary.JobManager/Services/JobExecutionObserver.cs",
       "line": 33,
       "marker": "SuppressMessage"
+    },
+    {
+      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
+      "line": 13,
+      "marker": "#pragma warning disable"
     }
   ]
 }

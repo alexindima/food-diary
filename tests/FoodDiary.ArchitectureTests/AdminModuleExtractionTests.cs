@@ -17,10 +17,10 @@ public sealed class AdminModuleExtractionTests {
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Application.Ai",
-            "FoodDiary.Application.ContentReports",
             "FoodDiary.Application.Gamification",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.ContentReports.Contracts",
             "FoodDiary.Modules.Lessons.Contracts",
         ], references);
     }

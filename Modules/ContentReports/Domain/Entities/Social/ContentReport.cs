@@ -1,0 +1,94 @@
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Domain.Entities.Social;
+
+public sealed class ContentReport : AggregateRoot<ContentReportId> {
+    private const int ReasonMaxLength = 1000;
+    private const int AdminNoteMaxLength = 2000;
+
+    public UserId UserId { get; private set; }
+#pragma warning disable RCS1170 // EF Core navigation property requires a private setter.
+    public User User { get; private set; } = null!;
+#pragma warning restore RCS1170
+    public ReportTargetType TargetType { get; private set; }
+    public Guid TargetId { get; private set; }
+    public string Reason { get; private set; } = string.Empty;
+    public ReportStatus Status { get; private set; }
+    public string? AdminNote { get; private set; }
+    public UserId? ReviewedByUserId { get; private set; }
+    public DateTime? ReviewedAtUtc { get; private set; }
+
+    private ContentReport() {
+    }
+
+    public static ContentReport Create(UserId userId, ReportTargetType targetType, Guid targetId, string reason) {
+        if (userId == UserId.Empty) {
+            throw new ArgumentException("UserId is required.", nameof(userId));
+        }
+
+        if (targetId == Guid.Empty) {
+            throw new ArgumentException("TargetId is required.", nameof(targetId));
+        }
+
+        ContentReportsDomainGuard.Defined(targetType, nameof(targetType));
+
+        string normalizedReason = NormalizeReason(reason);
+
+        var report = new ContentReport {
+            Id = ContentReportId.New(),
+            UserId = userId,
+            TargetType = targetType,
+            TargetId = targetId,
+            Reason = normalizedReason,
+            Status = ReportStatus.Pending,
+        };
+        report.SetCreated();
+        return report;
+    }
+
+    public void MarkReviewed(UserId reviewerUserId, string? adminNote) {
+        EnsurePending(reviewerUserId);
+        string? normalizedAdminNote = ContentReportsDomainGuard.OptionalText(adminNote, AdminNoteMaxLength, nameof(adminNote));
+
+        Status = ReportStatus.Reviewed;
+        AdminNote = normalizedAdminNote;
+        ReviewedByUserId = reviewerUserId;
+        ReviewedAtUtc = DomainTime.UtcNow;
+        SetModified();
+    }
+
+    public void MarkDismissed(UserId reviewerUserId, string? adminNote) {
+        EnsurePending(reviewerUserId);
+        string? normalizedAdminNote = ContentReportsDomainGuard.OptionalText(adminNote, AdminNoteMaxLength, nameof(adminNote));
+
+        Status = ReportStatus.Dismissed;
+        AdminNote = normalizedAdminNote;
+        ReviewedByUserId = reviewerUserId;
+        ReviewedAtUtc = DomainTime.UtcNow;
+        SetModified();
+    }
+
+    private void EnsurePending(UserId reviewerUserId) {
+        if (reviewerUserId == UserId.Empty) {
+            throw new ArgumentException("ReviewerUserId is required.", nameof(reviewerUserId));
+        }
+
+        if (Status != ReportStatus.Pending) {
+            throw new InvalidOperationException("Only pending content reports can be resolved.");
+        }
+    }
+
+    private static string NormalizeReason(string reason) {
+        if (string.IsNullOrWhiteSpace(reason)) {
+            throw new ArgumentException("Reason is required.", nameof(reason));
+        }
+
+        string normalized = reason.Trim();
+        return normalized.Length > ReasonMaxLength
+            ? throw new ArgumentOutOfRangeException(nameof(reason), $"Reason must be at most {ReasonMaxLength} characters.")
+            : normalized;
+    }
+}

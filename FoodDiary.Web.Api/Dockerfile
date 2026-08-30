@@ -59,7 +59,12 @@ COPY Modules/DailyAdvices/Application/Abstractions/*.csproj Modules/DailyAdvices
 COPY Modules/DailyAdvices/Domain/*.csproj Modules/DailyAdvices/Domain/
 COPY Modules/DailyAdvices/Infrastructure/*.csproj Modules/DailyAdvices/Infrastructure/
 COPY Modules/DailyAdvices/Infrastructure/Model/*.csproj Modules/DailyAdvices/Infrastructure/Model/
-COPY FoodDiary.Application.ContentReports/*.csproj FoodDiary.Application.ContentReports/
+COPY Modules/ContentReports/Application/*.csproj Modules/ContentReports/Application/
+COPY Modules/ContentReports/Application/Abstractions/*.csproj Modules/ContentReports/Application/Abstractions/
+COPY Modules/ContentReports/Contracts/*.csproj Modules/ContentReports/Contracts/
+COPY Modules/ContentReports/Domain/*.csproj Modules/ContentReports/Domain/
+COPY Modules/ContentReports/Infrastructure/*.csproj Modules/ContentReports/Infrastructure/
+COPY Modules/ContentReports/Infrastructure/Model/*.csproj Modules/ContentReports/Infrastructure/Model/
 COPY FoodDiary.Application.Gamification/*.csproj FoodDiary.Application.Gamification/
 COPY FoodDiary.Application.Export/*.csproj FoodDiary.Application.Export/
 COPY Modules/Hydration/Application/*.csproj Modules/Hydration/Application/
@@ -135,7 +140,12 @@ COPY Modules/DailyAdvices/Application/Abstractions/ Modules/DailyAdvices/Applica
 COPY Modules/DailyAdvices/Domain/ Modules/DailyAdvices/Domain/
 COPY Modules/DailyAdvices/Infrastructure/ Modules/DailyAdvices/Infrastructure/
 COPY Modules/DailyAdvices/Infrastructure/Model/ Modules/DailyAdvices/Infrastructure/Model/
-COPY FoodDiary.Application.ContentReports/ FoodDiary.Application.ContentReports/
+COPY Modules/ContentReports/Application/ Modules/ContentReports/Application/
+COPY Modules/ContentReports/Application/Abstractions/ Modules/ContentReports/Application/Abstractions/
+COPY Modules/ContentReports/Contracts/ Modules/ContentReports/Contracts/
+COPY Modules/ContentReports/Domain/ Modules/ContentReports/Domain/
+COPY Modules/ContentReports/Infrastructure/ Modules/ContentReports/Infrastructure/
+COPY Modules/ContentReports/Infrastructure/Model/ Modules/ContentReports/Infrastructure/Model/
 COPY FoodDiary.Application.Gamification/ FoodDiary.Application.Gamification/
 COPY FoodDiary.Application.Export/ FoodDiary.Application.Export/
 COPY Modules/Hydration/ Modules/Hydration/

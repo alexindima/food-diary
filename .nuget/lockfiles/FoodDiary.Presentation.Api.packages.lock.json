@@ -52,10 +52,10 @@
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Application.Ai": "[1.0.0, )",
-          "FoodDiary.Application.ContentReports": "[1.0.0, )",
           "FoodDiary.Application.Gamification": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Lessons.Contracts": "[1.0.0, )"
         }
       },
@@ -89,14 +89,16 @@
           "FoodDiary.Mediator": "[1.0.0, )"
         }
       },
-      "fooddiary.application.contentreports": {
+      "FoodDiary.Application.ContentReports": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Domain": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )"
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.application.cycles": {
@@ -415,6 +417,26 @@
       },
       "fooddiary.mediator": {
         "type": "Project"
+      },
+      "fooddiary.modules.contentreports.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.ContentReports.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.contentreports.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.contentreports.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
       },
       "fooddiary.modules.dailyadvices.application.abstractions": {
         "type": "Project"

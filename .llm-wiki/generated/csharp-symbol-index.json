@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3492,
-    "symbols": 3499,
+    "sourceFiles": 3495,
+    "symbols": 3500,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 234,
     "kinds": {
-      "class": 1826,
+      "class": 1827,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -24,7 +24,7 @@
       "CommandHandler": 159,
       "Configuration": 90,
       "Controller": 92,
-      "Entity": 86,
+      "Entity": 87,
       "Event": 19,
       "Factory": 11,
       "Handler": 9,
@@ -1206,20 +1206,6 @@
       "name": "Errors",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.ContentReport.cs",
-      "line": 6
-    },
-    {
-      "name": "ContentReport",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.ContentReport.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.cs",
       "line": 2
     },
@@ -1620,41 +1606,6 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Validation/UserIdParser.cs",
-      "line": 6
-    },
-    {
-      "name": "ContentReportErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/ContentReports/Common/ContentReportErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "IContentReportReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IContentReportTargetReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportTargetReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IContentReportWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportWriteRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "ContentReportAdminReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/ContentReports/Models/ContentReportAdminReadModel.cs",
       "line": 6
     },
     {
@@ -5954,76 +5905,6 @@
       "role": "Service",
       "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
       "line": 8
-    },
-    {
-      "name": "CreateContentReportCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.ContentReports/Commands/CreateContentReport/CreateContentReportCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateContentReportCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.ContentReports/Commands/CreateContentReport/CreateContentReportCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "CreateContentReportCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.ContentReports/Commands/CreateContentReport/CreateContentReportCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "ContentReportTargetTypeParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.ContentReports/Common/ContentReportTargetTypeParser.cs",
-      "line": 6
-    },
-    {
-      "name": "IContentReportAdministrationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.ContentReports/Common/IContentReportAdministrationReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IContentReportAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.ContentReports/Common/IContentReportAdministrationService.cs",
-      "line": 5
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.ContentReports/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "ContentReportModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.ContentReports/Models/ContentReportModel.cs",
-      "line": 2
-    },
-    {
-      "name": "ContentReportAdministrationReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.ContentReports/Services/ContentReportAdministrationReadService.cs",
-      "line": 7
-    },
-    {
-      "name": "ContentReportAdministrationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.ContentReports/Services/ContentReportAdministrationService.cs",
-      "line": 9
     },
     {
       "name": "ClearCycleDayCommand",
@@ -12529,13 +12410,6 @@
       "line": 7
     },
     {
-      "name": "ContentReport",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Social/ContentReport.cs",
-      "line": 8
-    },
-    {
       "name": "RecipeLike",
       "kind": "class",
       "role": "Entity",
@@ -13212,13 +13086,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/ClientTaskId.cs",
-      "line": 4
-    },
-    {
-      "name": "ContentReportId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ContentReportId.cs",
       "line": 4
     },
     {
@@ -13989,7 +13856,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Moderation.cs",
-      "line": 6
+      "line": 4
     },
     {
       "name": "DependencyInjection",
@@ -14440,13 +14307,6 @@
       "line": 7
     },
     {
-      "name": "ContentReportConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/ContentReports/ContentReportConfiguration.cs",
-      "line": 7
-    },
-    {
       "name": "BleedingEntryConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -14839,13 +14699,6 @@
       "line": 7
     },
     {
-      "name": "ContentReportRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/ContentReports/ContentReportRepository.cs",
-      "line": 10
-    },
-    {
       "name": "StronglyTypedIdConverters",
       "kind": "class",
       "role": "ValueObject",
@@ -15130,7 +14983,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "FoodDiaryDbContext",
@@ -22448,6 +22301,160 @@
       "line": 28
     },
     {
+      "name": "ContentReportErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/ContentReports/Application/Abstractions/Common/ContentReportErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "IContentReportReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/ContentReports/Application/Abstractions/Common/IContentReportReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IContentReportTargetReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/ContentReports/Application/Abstractions/Common/IContentReportTargetReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IContentReportWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/ContentReports/Application/Abstractions/Common/IContentReportWriteRepository.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateContentReportCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/ContentReports/Application/Commands/CreateContentReport/CreateContentReportCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateContentReportCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/ContentReports/Application/Commands/CreateContentReport/CreateContentReportCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "CreateContentReportCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/ContentReports/Application/Commands/CreateContentReport/CreateContentReportCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "ContentReportTargetTypeParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/ContentReports/Application/Common/ContentReportTargetTypeParser.cs",
+      "line": 6
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/ContentReports/Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "ContentReportModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/ContentReports/Application/Models/ContentReportModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ContentReportAdministrationReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/ContentReports/Application/Services/ContentReportAdministrationReadService.cs",
+      "line": 7
+    },
+    {
+      "name": "ContentReportAdministrationService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/ContentReports/Application/Services/ContentReportAdministrationService.cs",
+      "line": 8
+    },
+    {
+      "name": "IContentReportAdministrationReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/ContentReports/Contracts/Common/IContentReportAdministrationReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IContentReportAdministrationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/ContentReports/Contracts/Common/IContentReportAdministrationService.cs",
+      "line": 5
+    },
+    {
+      "name": "ContentReportAdminReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/ContentReports/Contracts/Models/ContentReportAdminReadModel.cs",
+      "line": 6
+    },
+    {
+      "name": "ContentReport",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
+      "line": 7
+    },
+    {
+      "name": "ContentReportsDomainGuard",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReportsDomainGuard.cs",
+      "line": 2
+    },
+    {
+      "name": "ContentReportId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/ContentReports/Domain/ValueObjects/Ids/ContentReportId.cs",
+      "line": 4
+    },
+    {
+      "name": "ContentReportConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/ContentReports/Infrastructure/Model/Configurations/ContentReportConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "ContentReportsPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/ContentReports/Infrastructure/Model/ContentReportsPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/ContentReports/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "ContentReportRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs",
+      "line": 11
+    },
+    {
       "name": "IDailyAdviceReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -24824,16 +24831,16 @@
     },
     {
       "interface": "IContentReportAdministrationReadService",
-      "interfacePath": "FoodDiary.Application.ContentReports/Common/IContentReportAdministrationReadService.cs",
+      "interfacePath": "Modules/ContentReports/Contracts/Common/IContentReportAdministrationReadService.cs",
       "implementation": "ContentReportAdministrationReadService",
-      "implementationPath": "FoodDiary.Application.ContentReports/Services/ContentReportAdministrationReadService.cs",
+      "implementationPath": "Modules/ContentReports/Application/Services/ContentReportAdministrationReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IContentReportAdministrationService",
-      "interfacePath": "FoodDiary.Application.ContentReports/Common/IContentReportAdministrationService.cs",
+      "interfacePath": "Modules/ContentReports/Contracts/Common/IContentReportAdministrationService.cs",
       "implementation": "ContentReportAdministrationService",
-      "implementationPath": "FoodDiary.Application.ContentReports/Services/ContentReportAdministrationService.cs",
+      "implementationPath": "Modules/ContentReports/Application/Services/ContentReportAdministrationService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26309,20 +26316,6 @@
       "line": 18
     },
     {
-      "service": "IContentReportAdministrationService",
-      "implementation": "ContentReportAdministrationService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.ContentReports/DependencyInjection.cs",
-      "line": 14
-    },
-    {
-      "service": "IContentReportAdministrationReadService",
-      "implementation": "ContentReportAdministrationReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.ContentReports/DependencyInjection.cs",
-      "line": 15
-    },
-    {
       "service": "ICycleReadService",
       "implementation": "CycleReadService",
       "lifetime": "Scoped",
@@ -27707,6 +27700,20 @@
       "lifetime": "Singleton",
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
       "line": 76
+    },
+    {
+      "service": "IContentReportAdministrationService",
+      "implementation": "ContentReportAdministrationService",
+      "lifetime": "Scoped",
+      "path": "Modules/ContentReports/Application/DependencyInjection.cs",
+      "line": 14
+    },
+    {
+      "service": "IContentReportAdministrationReadService",
+      "implementation": "ContentReportAdministrationReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/ContentReports/Application/DependencyInjection.cs",
+      "line": 15
     },
     {
       "service": "IDailyAdviceReadService",

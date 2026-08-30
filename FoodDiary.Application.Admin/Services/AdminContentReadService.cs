@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Abstractions.ContentReports.Models;
+using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Modules.Lessons.Contracts.Models;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Mappings;

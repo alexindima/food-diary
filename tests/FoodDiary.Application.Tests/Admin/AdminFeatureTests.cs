@@ -24,7 +24,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Services;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
-using FoodDiary.Application.Abstractions.ContentReports.Models;
+using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Ai;

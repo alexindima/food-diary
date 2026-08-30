@@ -918,7 +918,7 @@ public sealed class DependencyInjectionTests {
 
     public static TheoryData<string, string[]> SplitRepositoryRegistrationCases() => new() {
         {
-            "FoodDiary.Infrastructure.Persistence.ContentReports.ContentReportRepository",
+            "FoodDiary.Modules.ContentReports.Infrastructure.Persistence.ContentReportRepository",
             [
                 "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportReadModelRepository",
                 "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportWriteRepository",

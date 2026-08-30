@@ -8,21 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "8086ac6f2f15614e239b419f17b302d0f49c3d3d12471c5bd847d4e9f4926f54"
-        },
-        {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "92fe320501a88581bae93c7cf7f7fc1fb5474232bbc90eab30642f33338a0549"
+          "sha256": "7f55c6b66ee64f68dff8758165e8d2fe81c9fd526f4ba01b3f8409a1d72387ba"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "d7bc230fcd25655ab3cea465e11ffec6f5346f5315ea6d661e04e450d6c2ffb9"
+          "sha256": "84f5a54bcbe1ac48f57ba4596d9540c8bd14456d02ff421877065c257cfc2e8b"
         }
       ],
-      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
-      "reviewedAtUtc": "2026-08-30T01:50:29.1553212Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:45.0287028Z"
     },
     {
       "pageId": "module.frontend",
@@ -45,18 +41,14 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "92fe320501a88581bae93c7cf7f7fc1fb5474232bbc90eab30642f33338a0549"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "d7bc230fcd25655ab3cea465e11ffec6f5346f5315ea6d661e04e450d6c2ffb9"
+          "sha256": "84f5a54bcbe1ac48f57ba4596d9540c8bd14456d02ff421877065c257cfc2e8b"
         }
       ],
-      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
-      "reviewedAtUtc": "2026-08-30T01:50:29.4812477Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:45.6610166Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -65,13 +57,17 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "c5ad5716837a24cb37d9c867ba44e486ac308f9c09d5239f0abc8a145f1b9462"
+          "sha256": "525a28ded1d27df969545f36d287ce8631f2ac429bcbe10d6679a77f5156e003"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "84f5a54bcbe1ac48f57ba4596d9540c8bd14456d02ff421877065c257cfc2e8b"
         }
       ],
-      "reason": "Parallel module integration verified the canonical manifest after Lessons abstraction ownership moved into Modules/Lessons; DailyAdvices and WeeklyCheckIn solution folders now match their physical module ownership.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
-      "reviewedAtUtc": "2026-08-30T02:43:30.8199675Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:46.4847569Z"
     },
     {
       "pageId": "system.architecture",
@@ -80,13 +76,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "c5ad5716837a24cb37d9c867ba44e486ac308f9c09d5239f0abc8a145f1b9462"
+          "sha256": "525a28ded1d27df969545f36d287ce8631f2ac429bcbe10d6679a77f5156e003"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "84f5a54bcbe1ac48f57ba4596d9540c8bd14456d02ff421877065c257cfc2e8b"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "2215e78e0d4e139f07ddc33ea99180d8037c01a976ef4e1ac225005b301800e5"
         }
       ],
-      "reason": "Parallel module integration verified the canonical manifest after Lessons abstraction ownership moved into Modules/Lessons; DailyAdvices and WeeklyCheckIn solution folders now match their physical module ownership.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
-      "reviewedAtUtc": "2026-08-30T02:43:31.4008361Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:46.9850350Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -125,13 +129,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "8086ac6f2f15614e239b419f17b302d0f49c3d3d12471c5bd847d4e9f4926f54"
+          "sha256": "7f55c6b66ee64f68dff8758165e8d2fe81c9fd526f4ba01b3f8409a1d72387ba"
         }
       ],
-      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
-      "reviewedAtUtc": "2026-08-30T01:50:30.3514019Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:47.6037030Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -140,13 +144,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "c5ad5716837a24cb37d9c867ba44e486ac308f9c09d5239f0abc8a145f1b9462"
+          "sha256": "525a28ded1d27df969545f36d287ce8631f2ac429bcbe10d6679a77f5156e003"
         }
       ],
-      "reason": "Parallel module integration verified the canonical manifest after Lessons abstraction ownership moved into Modules/Lessons; DailyAdvices and WeeklyCheckIn solution folders now match their physical module ownership.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
-      "reviewedAtUtc": "2026-08-30T02:43:31.9676366Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:48.4908986Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -203,14 +207,22 @@
       "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "fa0de800e3c4a6e3f30917b91a7a029b5729e5702995a8fd099563f6e06b58d1"
+        },
+        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "c5ad5716837a24cb37d9c867ba44e486ac308f9c09d5239f0abc8a145f1b9462"
+          "sha256": "525a28ded1d27df969545f36d287ce8631f2ac429bcbe10d6679a77f5156e003"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "2215e78e0d4e139f07ddc33ea99180d8037c01a976ef4e1ac225005b301800e5"
         }
       ],
-      "reason": "Parallel module integration verified the canonical manifest after Lessons abstraction ownership moved into Modules/Lessons; DailyAdvices and WeeklyCheckIn solution folders now match their physical module ownership.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
-      "reviewedAtUtc": "2026-08-30T02:43:32.6481350Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:49.4272711Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -219,13 +231,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "efc51ad5365371bc3a9a77c43291b22e8b9f20ff98727ad0d68ab6ee6f057a2d"
+          "sha256": "813a75a4469a20742cfd144f6495b65ebbb2fec1af09e1ab39cd434b08d4e6a1"
         }
       ],
-      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
-      "reviewedAtUtc": "2026-08-30T01:50:31.3992579Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:50.8414619Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -486,13 +498,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "cd01f0a4ef6f05c113b549689fc876d61e25fb64330f50dea7025f1ad8023e28"
+          "sha256": "e10412a3aee0ccdf5b25cedbfcc50bba27e6b2671149715607c1e5aa63b56389"
         }
       ],
-      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
-      "reviewedAtUtc": "2026-08-30T02:10:17.4911501Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:52.1354542Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -817,13 +829,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6051086c0fc8fb82c17882bb478277c1455b55daae4305475c423067738e6c60"
+          "sha256": "406b37c1da2eb9165e99d872a58b433313dea152f0a5a453fcdb26ae2fe9b07a"
         }
       ],
-      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
-      "reviewedAtUtc": "2026-08-30T02:10:18.4327808Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:52.9006746Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -900,13 +912,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "56c02bce1a7e7ad262c7b39792878cdf684db4a54aec4d58a92e887ddda7d1ff"
+          "sha256": "186de768bd8dcd0784260ef8246a74d6f57ae0dfbbe05290a2b8121d1809944e"
         }
       ],
-      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
-      "reviewedAtUtc": "2026-08-30T02:10:19.7296561Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:55.0260574Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -915,17 +927,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6051086c0fc8fb82c17882bb478277c1455b55daae4305475c423067738e6c60"
+          "sha256": "406b37c1da2eb9165e99d872a58b433313dea152f0a5a453fcdb26ae2fe9b07a"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "56c02bce1a7e7ad262c7b39792878cdf684db4a54aec4d58a92e887ddda7d1ff"
+          "sha256": "186de768bd8dcd0784260ef8246a74d6f57ae0dfbbe05290a2b8121d1809944e"
         }
       ],
-      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
-      "reviewedAtUtc": "2026-08-30T02:10:20.4664762Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:55.7119133Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1103,13 +1115,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "8086ac6f2f15614e239b419f17b302d0f49c3d3d12471c5bd847d4e9f4926f54"
+          "sha256": "7f55c6b66ee64f68dff8758165e8d2fe81c9fd526f4ba01b3f8409a1d72387ba"
         }
       ],
-      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
-      "reviewedAtUtc": "2026-08-30T01:50:31.7301432Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:51.4238156Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1163,13 +1175,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "e3af97ce4d196d84ff871378b05000b790977ddcbbcb3acc3b43d79188c67486"
+          "sha256": "5fd7ad1d1acbc563fbb8022cba1e7bb8492c1ee28d37ad16e21b32e744187791"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "7f55c6b66ee64f68dff8758165e8d2fe81c9fd526f4ba01b3f8409a1d72387ba"
         }
       ],
-      "reason": "Lessons domain-test ownership now matches the extracted module boundary and dependency matrix.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "ef5e9a63bfa1f034a99886757d2c366732a41022",
-      "reviewedAtUtc": "2026-08-30T02:10:19.1259848Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:53.4969392Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1177,18 +1193,14 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "c42d1ff50c3e1f2e5c15c5b515c58e87907cc94246f8eef8cf4de9d86c0d2526"
-        },
-        {
           "path": "AGENTS.md",
-          "sha256": "8086ac6f2f15614e239b419f17b302d0f49c3d3d12471c5bd847d4e9f4926f54"
+          "sha256": "7f55c6b66ee64f68dff8758165e8d2fe81c9fd526f4ba01b3f8409a1d72387ba"
         }
       ],
-      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
+      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
       "baseRef": "HEAD",
-      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
-      "reviewedAtUtc": "2026-08-30T01:50:34.4393091Z"
+      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
+      "reviewedAtUtc": "2026-08-30T03:31:54.3895413Z"
     }
   ]
 }

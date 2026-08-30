@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 362,
+    "productionProjectEdges": 374,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -14,7 +14,7 @@
     "routedStandaloneComponents": 55,
     "componentsWithoutDirectSpecs": 128,
     "criticalSymbolsWithoutTestReferences": 18,
-    "explicitDebtMarkers": 10
+    "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
   "unusedProjectAllowances": [],
@@ -5018,6 +5018,11 @@
       "path": "FoodDiary.JobManager/Services/JobExecutionObserver.cs",
       "line": 33,
       "marker": "SuppressMessage"
+    },
+    {
+      "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
+      "line": 13,
+      "marker": "#pragma warning disable"
     }
   ]
 }

@@ -41,6 +41,7 @@ Use this file when deciding where backend code belongs.
 | Daily Advices use cases | `Modules/DailyAdvices/Application` | Query, model, selection, application registration | Persistence implementation and HTTP transport |
 | Daily Advices persistence model | `Modules/DailyAdvices/Infrastructure/Model` | EF configuration and model-builder seam | Shared `DbContext`, migrations, repository behavior |
 | Daily Advices infrastructure | `Modules/DailyAdvices/Infrastructure` | Repository and complete module registration | HTTP transport and central migrations |
+| Content Reports module | `Modules/ContentReports` | Creation, moderation contracts, aggregate, persistence model/adapter, and module tests | Central `DbContext`, migrations, HTTP transport, Admin orchestration |
 | Billing use cases | `FoodDiary.Application.Billing` | Billing commands, queries, validators, renewal and webhook orchestration | Core Application dependencies, persistence, HTTP DTOs |
 | Marketing use cases | `FoodDiary.Application.Marketing` | Attribution commands, queries and conversion recording | Core Application dependencies, persistence, HTTP DTOs |
 | Notification use cases | `FoodDiary.Application.Notifications` | Notification feed, preferences, web-push subscription and delivery orchestration | Core Application dependencies, persistence implementations, HTTP DTOs |

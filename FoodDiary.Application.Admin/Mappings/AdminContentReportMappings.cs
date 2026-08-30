@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.ContentReports.Models;
+using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Domain.Entities.Social;
 

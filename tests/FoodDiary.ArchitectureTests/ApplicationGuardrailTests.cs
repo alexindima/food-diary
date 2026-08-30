@@ -565,7 +565,6 @@ public sealed class ApplicationGuardrailTests {
         string[] migratedFacadeFiles = [
             "Errors.Ai.cs",
             "Errors.Meal.cs",
-            "Errors.ContentReport.cs",
             "Errors.Cycle.cs",
             "Errors.CycleDay.cs",
             "Errors.DailyAdvice.cs",
@@ -623,7 +622,6 @@ public sealed class ApplicationGuardrailTests {
     [InlineData("Errors.Usda.cs", "Usda", "Common", "UsdaErrors.cs", "UsdaErrors.", "Usda.")]
     [InlineData("Errors.FavoriteMeal.cs", "FavoriteMeals", "Common", "FavoriteMealErrors.cs", "FavoriteMealErrors.", "FavoriteMeal.")]
     [InlineData("Errors.Recipe.cs", "Recipes", "Common", "RecipeErrors.cs", "RecipeErrors.", "Recipe.")]
-    [InlineData("Errors.ContentReport.cs", "ContentReports", "Common", "ContentReportErrors.cs", "ContentReportErrors.", "ContentReport.")]
     [InlineData("Errors.Ai.cs", "Ai", "Common", "AiErrors.cs", "AiErrors.", "Ai.")]
     [InlineData("Errors.Dietologist.cs", "Dietologist", "Common", "DietologistErrors.cs", "DietologistErrors.", "Dietologist.")]
     [InlineData("Errors.User.cs", "Users", "Common", "UserErrors.cs", "UserErrors.", "User.")]
@@ -1098,7 +1096,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Ai", "Commands", "ParseFoodText", "ParseFoodTextCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Meals", "Commands", "DeleteMeal", "DeleteMealCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Meals", "Queries", "GetMealById", "GetMealByIdQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.ContentReports", "Commands", "CreateContentReport", "CreateContentReportCommandHandler.cs"),
+            Path.Combine(root, "Modules", "ContentReports", "Application", "Commands", "CreateContentReport", "CreateContentReportCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dashboard", "Queries", "GetDashboardSnapshot", "GetDashboardSnapshotQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "AcceptInvitation", "AcceptInvitationCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "AcceptInvitationForCurrentUser", "AcceptInvitationForCurrentUserCommandHandler.cs"),
@@ -1405,7 +1403,7 @@ public sealed class ApplicationGuardrailTests {
         string[] contractFiles = [
             Path.Combine(root, "Modules", "Lessons", "Application", "Abstractions", "Common", "INutritionLessonReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Admin", "Common", "IEmailTemplateReadRepository.cs"),
-            Path.Combine(root, "FoodDiary.Application.Abstractions", "ContentReports", "Common", "IContentReportReadModelRepository.cs"),
+            Path.Combine(root, "Modules", "ContentReports", "Application", "Abstractions", "Common", "IContentReportReadModelRepository.cs"),
         ];
 
         string[] violations = [

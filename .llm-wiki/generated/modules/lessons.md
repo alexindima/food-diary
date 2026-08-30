@@ -24,7 +24,6 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Lessons`
 - `FoodDiary.Domain/Entities/Content`
 - `FoodDiary.Presentation.Api/Features/Lessons`
 

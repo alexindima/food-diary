@@ -519,6 +519,20 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.contentreports.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.contentreports.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
       "fooddiary.modules.dailyadvices.domain": {
         "type": "Project",
         "dependencies": {

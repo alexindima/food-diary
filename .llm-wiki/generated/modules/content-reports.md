@@ -15,20 +15,17 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.ContentReports/FoodDiary.Application.ContentReports.csproj`
+- Extracted project: `Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Application.Admin, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/ContentReports`
-- `FoodDiary.Application.ContentReports`
-- `FoodDiary.Infrastructure/Persistence/Configurations/ContentReports`
-- `FoodDiary.Infrastructure/Persistence/ContentReports`
 - `FoodDiary.Presentation.Api/Features/ContentReports`
+- `Modules/ContentReports/Application`
 
 ## HTTP Surface
 
@@ -41,33 +38,30 @@ Source: `FoodDiary.Presentation.Api/Features/ContentReports/ContentReportsContro
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: project
+- Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
-- Declared owned entities: not yet enumerated
-- Public contract files: 5
-- Observed external consumer groups: 5
+- Declared owned entities: ContentReport
+- Public contract files: 0
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 5
-- Interfaces: 3
-- DTO/read-model/projection types: 1
+- Public contract types: 0
+- Interfaces: 0
+- DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 2
-- Contracts referencing domain entities: 1
-- `class ContentReportErrors`
-- `interface IContentReportReadModelRepository`
-- `interface IContentReportTargetReadService`
-- `interface IContentReportWriteRepository`
-- `record ContentReportAdminReadModel`
+- Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ContentReports/ContentReportsFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ContentReports/ContentReportsValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReports/ContentReportsFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/ContentReports/ContentReportsValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/Support/ResultAssert.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ContentReportsModuleExtractionTests.cs`
 
 ## Working Rule

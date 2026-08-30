@@ -30,6 +30,9 @@ COPY Modules/Lessons/Application/Abstractions/*.csproj Modules/Lessons/Applicati
 COPY Modules/Lessons/Application/*.csproj Modules/Lessons/Application/
 COPY Modules/Lessons/Infrastructure/*.csproj Modules/Lessons/Infrastructure/
 COPY Modules/Lessons/Infrastructure/Model/*.csproj Modules/Lessons/Infrastructure/Model/
+COPY Modules/ContentReports/Domain/*.csproj Modules/ContentReports/Domain/
+COPY Modules/ContentReports/Contracts/*.csproj Modules/ContentReports/Contracts/
+COPY Modules/ContentReports/Infrastructure/Model/*.csproj Modules/ContentReports/Infrastructure/Model/
 COPY FoodDiary.Application.Favorites/*.csproj FoodDiary.Application.Favorites/
 COPY FoodDiary.Application.Identity/*.csproj FoodDiary.Application.Identity/
 COPY FoodDiary.Application.MealPlanning/*.csproj FoodDiary.Application.MealPlanning/
@@ -59,7 +62,6 @@ COPY Modules/DailyAdvices/Application/*.csproj Modules/DailyAdvices/Application/
 COPY Modules/DailyAdvices/Application/Abstractions/*.csproj Modules/DailyAdvices/Application/Abstractions/
 COPY Modules/DailyAdvices/Domain/*.csproj Modules/DailyAdvices/Domain/
 COPY Modules/DailyAdvices/Infrastructure/Model/*.csproj Modules/DailyAdvices/Infrastructure/Model/
-COPY FoodDiary.Application.ContentReports/*.csproj FoodDiary.Application.ContentReports/
 COPY FoodDiary.Application.Gamification/*.csproj FoodDiary.Application.Gamification/
 COPY FoodDiary.Application.Export/*.csproj FoodDiary.Application.Export/
 COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
@@ -98,6 +100,9 @@ COPY Modules/Lessons/Application/Abstractions/ Modules/Lessons/Application/Abstr
 COPY Modules/Lessons/Application/ Modules/Lessons/Application/
 COPY Modules/Lessons/Infrastructure/ Modules/Lessons/Infrastructure/
 COPY Modules/Lessons/Infrastructure/Model/ Modules/Lessons/Infrastructure/Model/
+COPY Modules/ContentReports/Domain/ Modules/ContentReports/Domain/
+COPY Modules/ContentReports/Contracts/ Modules/ContentReports/Contracts/
+COPY Modules/ContentReports/Infrastructure/Model/ Modules/ContentReports/Infrastructure/Model/
 COPY FoodDiary.Application.Favorites/ FoodDiary.Application.Favorites/
 COPY FoodDiary.Application.Identity/ FoodDiary.Application.Identity/
 COPY FoodDiary.Application.MealPlanning/ FoodDiary.Application.MealPlanning/
@@ -128,7 +133,6 @@ COPY Modules/DailyAdvices/Application/ Modules/DailyAdvices/Application/
 COPY Modules/DailyAdvices/Application/Abstractions/ Modules/DailyAdvices/Application/Abstractions/
 COPY Modules/DailyAdvices/Domain/ Modules/DailyAdvices/Domain/
 COPY Modules/DailyAdvices/Infrastructure/Model/ Modules/DailyAdvices/Infrastructure/Model/
-COPY FoodDiary.Application.ContentReports/ FoodDiary.Application.ContentReports/
 COPY FoodDiary.Application.Gamification/ FoodDiary.Application.Gamification/
 COPY FoodDiary.Application.Export/ FoodDiary.Application.Export/
 COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/

@@ -14,7 +14,7 @@
     <ProjectReference Include="..\FoodDiary.Application.Ai\FoodDiary.Application.Ai.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Billing\FoodDiary.Application.Billing.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.BodyMetrics\FoodDiary.Application.BodyMetrics.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.ContentReports\FoodDiary.Application.ContentReports.csproj" />
+    <ProjectReference Include="..\Modules\ContentReports\Application\FoodDiary.Modules.ContentReports.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Cycles\FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="..\Modules\DailyAdvices\Application\FoodDiary.Modules.DailyAdvices.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Dashboard\FoodDiary.Application.Dashboard.csproj" />
