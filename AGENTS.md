@@ -13,7 +13,8 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - AI application module: `FoodDiary.Application.Ai/AGENTS.md`
 - Body metrics application module: `FoodDiary.Application.BodyMetrics/AGENTS.md`
 - Cycles application module: `FoodDiary.Application.Cycles/AGENTS.md`
-- Dietologist application module: `FoodDiary.Application.Dietologist/AGENTS.md`
+- Dietologist logical module: `Modules/Dietologist/AGENTS.md`
+- Dietologist application: `Modules/Dietologist/Application/AGENTS.md`
 - Exercises application module: `FoodDiary.Application.Exercises/AGENTS.md`
 - Fasting logical module: `Modules/Fasting/AGENTS.md`
 - Fasting application abstractions: `Modules/Fasting/Application/Abstractions/AGENTS.md`

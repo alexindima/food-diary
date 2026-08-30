@@ -22,7 +22,6 @@
   </Folder>
   <Folder Name="/Application/Users and Access/">
     <Project Path="FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj" />
-    <Project Path="FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj" />
     <Project Path="FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj" />
     <Project Path="FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj" />
     <Project Path="FoodDiary.Application.Users/FoodDiary.Application.Users.csproj" />
@@ -62,6 +61,16 @@
     <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/FoodDiary.Modules.DailyAdvices.Application.Tests.csproj" />
     <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Domain.Tests/FoodDiary.Modules.DailyAdvices.Domain.Tests.csproj" />
     <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Dietologist/">
+    <Project Path="Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj" />
+    <Project Path="Modules/Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
+    <Project Path="Modules/Dietologist/Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
+    <Project Path="Modules/Dietologist/Infrastructure/FoodDiary.Modules.Dietologist.Infrastructure.csproj" />
+    <Project Path="Modules/Dietologist/Infrastructure/Model/FoodDiary.Modules.Dietologist.PersistenceModel.csproj" />
+    <Project Path="Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/FoodDiary.Modules.Dietologist.Application.Tests.csproj" />
+    <Project Path="Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/FoodDiary.Modules.Dietologist.Domain.Tests.csproj" />
+    <Project Path="Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Fasting/">
     <Project Path="Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj" />

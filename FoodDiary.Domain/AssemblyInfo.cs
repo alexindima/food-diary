@@ -5,3 +5,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("FoodDiary.Domain.Tests")]
 [assembly: InternalsVisibleTo("FoodDiary.Application.Tests")]
 [assembly: InternalsVisibleTo("FoodDiary.Infrastructure.IntegrationTests")]
+[assembly: InternalsVisibleTo("FoodDiary.Modules.Dietologist.Domain")]

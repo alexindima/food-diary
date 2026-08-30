@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4718,
+    "productionFiles": 4721,
     "wikiToolFiles": 201,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 781,
@@ -4247,278 +4247,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.8
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/DietologistInvitationMessage.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IAttentionSignalMetricsReadService.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IClientTaskReadModelRepository.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IClientTaskRepository.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IClientTaskWriteRepository.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistEmailSender.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistInvitationReadModelRepository.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistInvitationReadRepository.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.6
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistInvitationRepository.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistInvitationWriteRepository.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationBulkDispatchLookupRepository.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationBulkDispatchRepository.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationBulkDispatchWriteRepository.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationCommentReadModelRepository.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationCommentRepository.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationCommentWriteRepository.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationReadModelRepository.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationReadRepository.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationRepository.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationTemplateReadModelRepository.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationTemplateRepository.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationTemplateWriteRepository.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/IRecommendationWriteRepository.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Models/AttentionSignalDailyCaloriesReadModel.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Models/AttentionSignalMetricsReadModel.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Models/AttentionSignalWeightPointReadModel.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Models/ClientTaskReadModel.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Models/DietologistInvitationReadModel.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Models/DietologistPermissionsReadModel.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Models/RecommendationBulkDispatchReadModel.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Models/RecommendationCommentReadModel.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Models/RecommendationReadModel.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Models/RecommendationTemplateReadModel.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
     },
     {
       "path": "FoodDiary.Application.Abstractions/Email/Common/ApplicationEmailTelemetry.cs",
@@ -9607,950 +9335,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.04
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/AssemblyInfo.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/AcceptInvitation/AcceptInvitationCommand.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
-      "nonBlankLines": 86,
-      "decisionPoints": 9,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.22
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/AcceptInvitation/AcceptInvitationCommandValidator.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.96
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommand.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommandHandler.cs",
-      "nonBlankLines": 77,
-      "decisionPoints": 8,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.54
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommand.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommandHandler.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 4,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.76
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommand.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
-      "nonBlankLines": 90,
-      "decisionPoints": 4,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.8
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandValidator.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.28
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CancelClientTask/CancelClientTaskCommand.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CancelClientTask/CancelClientTaskCommandHandler.cs",
-      "nonBlankLines": 62,
-      "decisionPoints": 6,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.24
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommand.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandHandler.cs",
-      "nonBlankLines": 77,
-      "decisionPoints": 9,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.04
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandValidator.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.72
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateClientTask/CreateClientTaskCommand.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateClientTask/CreateClientTaskCommandHandler.cs",
-      "nonBlankLines": 58,
-      "decisionPoints": 3,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.66
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateClientTask/CreateClientTaskCommandValidator.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.74
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendation/CreateRecommendationCommand.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendation/CreateRecommendationCommandHandler.cs",
-      "nonBlankLines": 53,
-      "decisionPoints": 5,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.56
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendation/CreateRecommendationCommandValidator.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.94
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommand.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
-      "nonBlankLines": 115,
-      "decisionPoints": 8,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.3
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandValidator.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.88
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommand.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandHandler.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.02
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandValidator.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.16
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommand.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommandHandler.cs",
-      "nonBlankLines": 50,
-      "decisionPoints": 4,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommandValidator.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.96
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommand.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommandHandler.cs",
-      "nonBlankLines": 73,
-      "decisionPoints": 7,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.96
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/DisconnectDietologist/DisconnectDietologistCommand.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/DisconnectDietologist/DisconnectDietologistCommandHandler.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 3,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.26
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/InviteDietologist/InviteDietologistCommand.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
-      "nonBlankLines": 102,
-      "decisionPoints": 6,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.04
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/InviteDietologist/InviteDietologistCommandValidator.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.94
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/MarkRecommendationRead/MarkRecommendationReadCommand.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/MarkRecommendationRead/MarkRecommendationReadCommandHandler.cs",
-      "nonBlankLines": 40,
-      "decisionPoints": 4,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.8
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/RevokeInvitation/RevokeInvitationCommand.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/RevokeInvitation/RevokeInvitationCommandHandler.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 3,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.26
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommand.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
-      "nonBlankLines": 61,
-      "decisionPoints": 5,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.72
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandValidator.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.8
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommand.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommandHandler.cs",
-      "nonBlankLines": 40,
-      "decisionPoints": 3,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.3
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommand.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
-      "nonBlankLines": 40,
-      "decisionPoints": 4,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.8
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandValidator.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.18
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/ClientTaskMapping.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.16
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/DietologistAccessPolicy.cs",
-      "nonBlankLines": 80,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.1
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/DietologistInvitationClientNotifier.cs",
-      "nonBlankLines": 53,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.06
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/DietologistInvitationTokenGenerator.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.76
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/DietologistNotificationFactory.cs",
-      "nonBlankLines": 64,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.78
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/DietologistNotificationPostCommitActions.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/IDietologistClientReadService.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/IDietologistInvitationReadService.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/IDietologistRecommendationReadService.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/IDietologistUserContextService.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/IDietologistUserLookupService.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/IRecommendationDiscussionReadService.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/IRecommendationTemplateReadService.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Common/RecommendationTemplateMapping.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/DependencyInjection.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/EventHandlers/RecommendationCreatedEventHandler.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.28
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Mappings/DietologistMappings.cs",
-      "nonBlankLines": 112,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.24
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/AttentionSignalModel.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/BulkRecommendationRecipientResultModel.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/BulkRecommendationResultModel.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/ClientSummaryModel.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/ClientTaskModel.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/DietologistInfoModel.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/DietologistInvitationForCurrentUserModel.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/DietologistPermissionsInput.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/DietologistPermissionsModel.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/DietologistRelationshipModel.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/InvitationModel.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/RecommendationCommentModel.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/RecommendationModel.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Models/RecommendationTemplateModel.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQuery.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQueryHandler.cs",
-      "nonBlankLines": 215,
-      "decisionPoints": 23,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.8
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetClientGoals/GetClientGoalsQuery.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetClientGoals/GetClientGoalsQueryHandler.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.98
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQuery.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQueryHandler.cs",
-      "nonBlankLines": 40,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.8
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetInvitationByToken/GetInvitationByTokenQuery.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetInvitationByToken/GetInvitationByTokenQueryHandler.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.94
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQueryHandler.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyClientTasks/GetMyClientTasksQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyClientTasks/GetMyClientTasksQueryHandler.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.08
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyClients/GetMyClientsQuery.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyClients/GetMyClientsQueryHandler.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.96
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyDietologist/GetMyDietologistQuery.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyDietologist/GetMyDietologistQueryHandler.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.96
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyDietologistRelationship/GetMyDietologistRelationshipQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyDietologistRelationship/GetMyDietologistRelationshipQueryHandler.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyRecommendations/GetMyRecommendationsQuery.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyRecommendations/GetMyRecommendationsQueryHandler.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.98
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetRecommendationComments/GetRecommendationCommentsQuery.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetRecommendationsForClient/GetRecommendationsForClientQuery.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetRecommendationsForClient/GetRecommendationsForClientQueryHandler.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.98
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQuery.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.04
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryValidator.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.22
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Services/ClientTaskDueReminderProcessor.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.04
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Services/DietologistClientReadService.cs",
-      "nonBlankLines": 43,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.86
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Services/DietologistDashboardAccessService.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.6
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Services/DietologistEmailSender.cs",
-      "nonBlankLines": 135,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.7
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Services/DietologistInvitationReadService.cs",
-      "nonBlankLines": 203,
-      "decisionPoints": 18,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 31.06
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Services/DietologistRecommendationReadService.cs",
-      "nonBlankLines": 64,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.28
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Services/DietologistUserContextService.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.78
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Services/DietologistUserLookupService.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Services/RecommendationDiscussionReadService.cs",
-      "nonBlankLines": 49,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.98
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Services/RecommendationTemplateReadService.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
     },
     {
       "path": "FoodDiary.Application.Exercises/AssemblyInfo.cs",
@@ -15986,11 +14770,11 @@
     },
     {
       "path": "FoodDiary.Domain/AssemblyInfo.cs",
-      "nonBlankLines": 6,
+      "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
+      "structuralRiskScore": 0.14
     },
     {
       "path": "FoodDiary.Domain/Common/DomainConstants.cs",
@@ -16103,54 +14887,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 12.1
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Dietologist/ClientTask.cs",
-      "nonBlankLines": 98,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.96
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "nonBlankLines": 111,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.72
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Dietologist/Recommendation.cs",
-      "nonBlankLines": 60,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.7
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
-      "nonBlankLines": 42,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.34
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationComment.cs",
-      "nonBlankLines": 43,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.36
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationTemplate.cs",
-      "nonBlankLines": 47,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.44
     },
     {
       "path": "FoodDiary.Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
@@ -16657,14 +15393,6 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "FoodDiary.Domain/Enums/ClientTaskStatus.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
       "path": "FoodDiary.Domain/Enums/CycleConfidence.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -16735,14 +15463,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/DietologistInvitationStatus.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
     },
     {
       "path": "FoodDiary.Domain/Enums/ExerciseType.cs",
@@ -16905,22 +15625,6 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "FoodDiary.Domain/Events/DietologistInvitationAcceptedDomainEvent.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.88
-    },
-    {
-      "path": "FoodDiary.Domain/Events/DietologistInvitationDeclinedDomainEvent.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.88
-    },
-    {
       "path": "FoodDiary.Domain/Events/MealNutritionAppliedDomainEvent.cs",
       "nonBlankLines": 34,
       "decisionPoints": 1,
@@ -16943,14 +15647,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.72
-    },
-    {
-      "path": "FoodDiary.Domain/Events/RecommendationCreatedDomainEvent.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.88
     },
     {
       "path": "FoodDiary.Domain/Events/ShoppingListItemAddedDomainEvent.cs",
@@ -17007,14 +15703,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.34
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/DietologistPermissions.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
     },
     {
       "path": "FoodDiary.Domain/ValueObjects/EmailAddress.cs",
@@ -17105,14 +15793,6 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ClientTaskId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
       "path": "FoodDiary.Domain/ValueObjects/Ids/CycleConsentId.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
@@ -17154,14 +15834,6 @@
     },
     {
       "path": "FoodDiary.Domain/ValueObjects/Ids/CycleSymptomEntryId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/DietologistInvitationId.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17354,38 +16026,6 @@
     },
     {
       "path": "FoodDiary.Domain/ValueObjects/Ids/RecipeStepId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecommendationBulkDispatchId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecommendationCommentId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecommendationId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecommendationTemplateId.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -17889,6 +16529,14 @@
       "structuralRiskScore": 0.34
     },
     {
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Audit.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
       "nonBlankLines": 28,
       "decisionPoints": 0,
@@ -17911,14 +16559,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.4
-    },
-    {
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Dietologist.cs",
-      "nonBlankLines": 35,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
@@ -18561,54 +17201,6 @@
       "structuralRiskScore": 0.4
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/ClientTaskConfiguration.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.6
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/DietologistInvitationConfiguration.cs",
-      "nonBlankLines": 43,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.86
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.74
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationCommentConfiguration.cs",
-      "nonBlankLines": 28,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationConfiguration.cs",
-      "nonBlankLines": 34,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.68
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationTemplateConfiguration.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Email/EmailOutboxMessageConfiguration.cs",
       "nonBlankLines": 22,
       "decisionPoints": 0,
@@ -19033,22 +17625,6 @@
       "structuralRiskScore": 14.14
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Dietologist/AttentionSignalMetricsReadService.cs",
-      "nonBlankLines": 85,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.2
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Dietologist/DietologistInvitationRepository.cs",
-      "nonBlankLines": 174,
-      "decisionPoints": 15,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.98
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/EfUnitOfWork.cs",
       "nonBlankLines": 20,
       "decisionPoints": 0,
@@ -19210,11 +17786,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 24,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.48
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -19471,46 +18047,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 29.38
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs",
-      "nonBlankLines": 66,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.82
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Recommendations/RecommendationBulkDispatchRepository.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.66
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Recommendations/RecommendationCommentRepository.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Recommendations/RecommendationRepository.cs",
-      "nonBlankLines": 86,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.72
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Recommendations/RecommendationTemplateRepository.cs",
-      "nonBlankLines": 63,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.76
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/RecipeCompositionTransactionLock.cs",
@@ -35977,6 +34513,1494 @@
       "structuralRiskScore": 2.12
     },
     {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/DietologistInvitationMessage.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IAttentionSignalMetricsReadService.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IClientTaskReadModelRepository.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IClientTaskRepository.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IClientTaskWriteRepository.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistEmailSender.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistInvitationReadModelRepository.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.46
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistInvitationReadRepository.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.6
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistInvitationRepository.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistInvitationWriteRepository.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.5
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationBulkDispatchLookupRepository.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationBulkDispatchRepository.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationBulkDispatchWriteRepository.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationCommentReadModelRepository.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationCommentRepository.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationCommentWriteRepository.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationReadModelRepository.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationReadRepository.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationRepository.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationTemplateReadModelRepository.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationTemplateRepository.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationTemplateWriteRepository.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IRecommendationWriteRepository.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/AttentionSignalDailyCaloriesReadModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/AttentionSignalMetricsReadModel.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/AttentionSignalWeightPointReadModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/ClientTaskReadModel.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistInvitationReadModel.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.46
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/DietologistPermissionsReadModel.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/RecommendationBulkDispatchReadModel.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/RecommendationCommentReadModel.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/RecommendationReadModel.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Models/RecommendationTemplateReadModel.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dietologist/Application/AssemblyInfo.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/AcceptInvitation/AcceptInvitationCommand.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
+      "nonBlankLines": 86,
+      "decisionPoints": 9,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 17.22
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/AcceptInvitation/AcceptInvitationCommandValidator.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.96
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommandHandler.cs",
+      "nonBlankLines": 77,
+      "decisionPoints": 8,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.54
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommandHandler.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.76
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommand.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
+      "nonBlankLines": 90,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.8
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandValidator.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.28
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CancelClientTask/CancelClientTaskCommand.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CancelClientTask/CancelClientTaskCommandHandler.cs",
+      "nonBlankLines": 62,
+      "decisionPoints": 6,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.24
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommand.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandHandler.cs",
+      "nonBlankLines": 77,
+      "decisionPoints": 9,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 17.04
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandValidator.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.72
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CreateClientTask/CreateClientTaskCommand.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CreateClientTask/CreateClientTaskCommandHandler.cs",
+      "nonBlankLines": 58,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.66
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CreateClientTask/CreateClientTaskCommandValidator.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.74
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendation/CreateRecommendationCommand.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendation/CreateRecommendationCommandHandler.cs",
+      "nonBlankLines": 53,
+      "decisionPoints": 5,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.56
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendation/CreateRecommendationCommandValidator.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.94
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommand.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
+      "nonBlankLines": 115,
+      "decisionPoints": 8,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 16.3
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandValidator.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.88
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommand.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandHandler.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.02
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandValidator.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.16
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/DeclineInvitation/DeclineInvitationCommand.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/DeclineInvitation/DeclineInvitationCommandHandler.cs",
+      "nonBlankLines": 50,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/DeclineInvitation/DeclineInvitationCommandValidator.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.96
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommandHandler.cs",
+      "nonBlankLines": 73,
+      "decisionPoints": 7,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.96
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/DisconnectDietologist/DisconnectDietologistCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/DisconnectDietologist/DisconnectDietologistCommandHandler.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.26
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommand.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
+      "nonBlankLines": 102,
+      "decisionPoints": 6,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.04
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandValidator.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.94
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/MarkRecommendationRead/MarkRecommendationReadCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/MarkRecommendationRead/MarkRecommendationReadCommandHandler.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.8
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/RevokeInvitation/RevokeInvitationCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/RevokeInvitation/RevokeInvitationCommandHandler.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.26
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/SetAttentionSignalState/SetAttentionSignalStateCommand.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
+      "nonBlankLines": 61,
+      "decisionPoints": 5,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.72
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandValidator.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.8
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommand.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommandHandler.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.3
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommand.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.8
+    },
+    {
+      "path": "Modules/Dietologist/Application/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandValidator.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/ClientTaskMapping.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.16
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/DietologistAccessPolicy.cs",
+      "nonBlankLines": 80,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.1
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/DietologistInvitationClientNotifier.cs",
+      "nonBlankLines": 53,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.06
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/DietologistInvitationTokenGenerator.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.76
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/DietologistNotificationFactory.cs",
+      "nonBlankLines": 64,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.78
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/DietologistNotificationPostCommitActions.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/IDietologistClientReadService.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/IDietologistInvitationReadService.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.46
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/IDietologistRecommendationReadService.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/IDietologistUserContextService.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/IDietologistUserLookupService.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/IRecommendationDiscussionReadService.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/IRecommendationTemplateReadService.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Common/RecommendationTemplateMapping.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.44
+    },
+    {
+      "path": "Modules/Dietologist/Application/DependencyInjection.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.54
+    },
+    {
+      "path": "Modules/Dietologist/Application/EventHandlers/RecommendationCreatedEventHandler.cs",
+      "nonBlankLines": 39,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.28
+    },
+    {
+      "path": "Modules/Dietologist/Application/Mappings/DietologistMappings.cs",
+      "nonBlankLines": 112,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.24
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/AttentionSignalModel.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/BulkRecommendationRecipientResultModel.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/BulkRecommendationResultModel.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/ClientSummaryModel.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/ClientTaskModel.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/DietologistInfoModel.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/DietologistInvitationForCurrentUserModel.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/DietologistPermissionsInput.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/DietologistPermissionsModel.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/DietologistRelationshipModel.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/InvitationModel.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/RecommendationCommentModel.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/RecommendationModel.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Dietologist/Application/Models/RecommendationTemplateModel.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetAttentionSignals/GetAttentionSignalsQuery.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetAttentionSignals/GetAttentionSignalsQueryHandler.cs",
+      "nonBlankLines": 215,
+      "decisionPoints": 23,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 40.8
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetClientGoals/GetClientGoalsQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetClientGoals/GetClientGoalsQueryHandler.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.98
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQueryHandler.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.8
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetInvitationByToken/GetInvitationByTokenQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetInvitationByToken/GetInvitationByTokenQueryHandler.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.94
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQueryHandler.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetMyClientTasks/GetMyClientTasksQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetMyClientTasks/GetMyClientTasksQueryHandler.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.08
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetMyClients/GetMyClientsQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetMyClients/GetMyClientsQueryHandler.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.96
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetMyDietologist/GetMyDietologistQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetMyDietologist/GetMyDietologistQueryHandler.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.96
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetMyDietologistRelationship/GetMyDietologistRelationshipQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetMyDietologistRelationship/GetMyDietologistRelationshipQueryHandler.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetMyRecommendations/GetMyRecommendationsQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetMyRecommendations/GetMyRecommendationsQueryHandler.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.98
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetRecommendationsForClient/GetRecommendationsForClientQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/GetRecommendationsForClient/GetRecommendationsForClientQueryHandler.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.98
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQuery.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.04
+    },
+    {
+      "path": "Modules/Dietologist/Application/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryValidator.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.22
+    },
+    {
+      "path": "Modules/Dietologist/Application/Services/ClientTaskDueReminderProcessor.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.04
+    },
+    {
+      "path": "Modules/Dietologist/Application/Services/DietologistClientReadService.cs",
+      "nonBlankLines": 43,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.86
+    },
+    {
+      "path": "Modules/Dietologist/Application/Services/DietologistDashboardAccessService.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.6
+    },
+    {
+      "path": "Modules/Dietologist/Application/Services/DietologistEmailSender.cs",
+      "nonBlankLines": 135,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.7
+    },
+    {
+      "path": "Modules/Dietologist/Application/Services/DietologistInvitationReadService.cs",
+      "nonBlankLines": 203,
+      "decisionPoints": 18,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 31.06
+    },
+    {
+      "path": "Modules/Dietologist/Application/Services/DietologistRecommendationReadService.cs",
+      "nonBlankLines": 64,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.28
+    },
+    {
+      "path": "Modules/Dietologist/Application/Services/DietologistUserContextService.cs",
+      "nonBlankLines": 39,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.78
+    },
+    {
+      "path": "Modules/Dietologist/Application/Services/DietologistUserLookupService.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Dietologist/Application/Services/RecommendationDiscussionReadService.cs",
+      "nonBlankLines": 49,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.98
+    },
+    {
+      "path": "Modules/Dietologist/Application/Services/RecommendationTemplateReadService.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.42
+    },
+    {
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/ClientTask.cs",
+      "nonBlankLines": 98,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.96
+    },
+    {
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
+      "nonBlankLines": 111,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.72
+    },
+    {
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/Recommendation.cs",
+      "nonBlankLines": 60,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.7
+    },
+    {
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
+      "nonBlankLines": 42,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.34
+    },
+    {
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationComment.cs",
+      "nonBlankLines": 43,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.36
+    },
+    {
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationTemplate.cs",
+      "nonBlankLines": 47,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.44
+    },
+    {
+      "path": "Modules/Dietologist/Domain/Enums/ClientTaskStatus.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Dietologist/Domain/Enums/DietologistInvitationStatus.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dietologist/Domain/Events/DietologistInvitationAcceptedDomainEvent.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.88
+    },
+    {
+      "path": "Modules/Dietologist/Domain/Events/DietologistInvitationDeclinedDomainEvent.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.88
+    },
+    {
+      "path": "Modules/Dietologist/Domain/Events/RecommendationCreatedDomainEvent.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.88
+    },
+    {
+      "path": "Modules/Dietologist/Domain/ValueObjects/DietologistPermissions.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Dietologist/Domain/ValueObjects/Ids/ClientTaskId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Dietologist/Domain/ValueObjects/Ids/DietologistInvitationId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Dietologist/Domain/ValueObjects/Ids/RecommendationBulkDispatchId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Dietologist/Domain/ValueObjects/Ids/RecommendationCommentId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Dietologist/Domain/ValueObjects/Ids/RecommendationId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Dietologist/Domain/ValueObjects/Ids/RecommendationTemplateId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/AssemblyInfo.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/ClientTaskConfiguration.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.6
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/DietologistInvitationConfiguration.cs",
+      "nonBlankLines": 43,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.86
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.74
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationCommentConfiguration.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.56
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationConfiguration.cs",
+      "nonBlankLines": 34,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.68
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationTemplateConfiguration.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.42
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Model/DietologistPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/ModuleRegistration.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.66
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/AttentionSignalMetricsReadService.cs",
+      "nonBlankLines": 85,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.2
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/DietologistInvitationRepository.cs",
+      "nonBlankLines": 174,
+      "decisionPoints": 15,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 25.98
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs",
+      "nonBlankLines": 66,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.82
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationBulkDispatchRepository.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.66
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationCommentRepository.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.66
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationRepository.cs",
+      "nonBlankLines": 86,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.72
+    },
+    {
+      "path": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationTemplateRepository.cs",
+      "nonBlankLines": 63,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.76
+    },
+    {
       "path": "Modules/Fasting/Application/Abstractions/Common/FastingTelemetryEventRecord.cs",
       "nonBlankLines": 20,
       "decisionPoints": 0,
@@ -38578,12 +38602,12 @@
     {
       "name": "AcceptInvitationCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
       "line": 17,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.AcceptInvitationCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.AcceptInvitationCommandTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -38592,12 +38616,12 @@
     {
       "name": "AcceptInvitationForCurrentUserCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommandHandler.cs",
       "line": 16,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.AcceptInvitationCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.AcceptInvitationCommandTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -38693,11 +38717,11 @@
     {
       "name": "ArchiveRecommendationTemplateCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommandHandler.cs",
       "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -38717,12 +38741,12 @@
     {
       "name": "BulkCreateRecommendationsCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
       "line": 12,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/BulkCreateRecommendationsHandlerTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/BulkCreateRecommendationsHandlerTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -38742,11 +38766,11 @@
     {
       "name": "CancelClientTaskCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/CancelClientTask/CancelClientTaskCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/CancelClientTask/CancelClientTaskCommandHandler.cs",
       "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -38754,11 +38778,11 @@
     {
       "name": "ChangeClientTaskStatusCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandHandler.cs",
       "line": 15,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -38891,11 +38915,11 @@
     {
       "name": "CreateClientTaskCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateClientTask/CreateClientTaskCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/CreateClientTask/CreateClientTaskCommandHandler.cs",
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39029,12 +39053,12 @@
     {
       "name": "CreateRecommendationCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendation/CreateRecommendationCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendation/CreateRecommendationCommandHandler.cs",
       "line": 15,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RecommendationCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.RecommendationCommandTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -39043,11 +39067,11 @@
     {
       "name": "CreateRecommendationCommentCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
       "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39055,11 +39079,11 @@
     {
       "name": "CreateRecommendationTemplateCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandHandler.cs",
       "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39105,12 +39129,12 @@
     {
       "name": "DeclineInvitationCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/DeclineInvitation/DeclineInvitationCommandHandler.cs",
       "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.DeclineInvitationCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.DeclineInvitationCommandTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39118,12 +39142,12 @@
     {
       "name": "DeclineInvitationForCurrentUserCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommandHandler.cs",
       "line": 16,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.DeclineInvitationCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.DeclineInvitationCommandTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -39325,11 +39349,11 @@
     {
       "name": "DisconnectDietologistCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/DisconnectDietologist/DisconnectDietologistCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/DisconnectDietologist/DisconnectDietologistCommandHandler.cs",
       "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RelationshipCommandTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.RelationshipCommandTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39510,12 +39534,12 @@
     {
       "name": "InviteDietologistCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
       "line": 19,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.InviteCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.InviteCommandTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -39653,11 +39677,11 @@
     {
       "name": "MarkRecommendationReadCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/MarkRecommendationRead/MarkRecommendationReadCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/MarkRecommendationRead/MarkRecommendationReadCommandHandler.cs",
       "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RecommendationCommandTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.RecommendationCommandTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39919,11 +39943,11 @@
     {
       "name": "RevokeInvitationCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/RevokeInvitation/RevokeInvitationCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/RevokeInvitation/RevokeInvitationCommandHandler.cs",
       "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RelationshipCommandTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.RelationshipCommandTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40000,11 +40024,11 @@
     {
       "name": "SetAttentionSignalStateCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/AttentionSignalTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/AttentionSignalTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40255,11 +40279,11 @@
     {
       "name": "UpdateDietologistPermissionsCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommandHandler.cs",
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RelationshipCommandTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.RelationshipCommandTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40401,11 +40425,11 @@
     {
       "name": "UpdateRecommendationTemplateCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
+      "path": "Modules/Dietologist/Application/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41804,12 +41828,12 @@
     {
       "name": "RecommendationCreatedEventHandler",
       "role": "Handler",
-      "path": "FoodDiary.Application.Dietologist/EventHandlers/RecommendationCreatedEventHandler.cs",
+      "path": "Modules/Dietologist/Application/EventHandlers/RecommendationCreatedEventHandler.cs",
       "line": 10,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RecommendationCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.RecommendationCommandTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42130,12 +42154,12 @@
     {
       "name": "GetAttentionSignalsQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/GetAttentionSignals/GetAttentionSignalsQueryHandler.cs",
       "line": 14,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/AttentionSignalTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/AttentionSignalTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42157,12 +42181,12 @@
     {
       "name": "GetClientGoalsQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/GetClientGoals/GetClientGoalsQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/GetClientGoals/GetClientGoalsQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42171,11 +42195,11 @@
     {
       "name": "GetClientTasksForDietologistQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQueryHandler.cs",
       "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42314,8 +42338,8 @@
       "line": 15,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42496,12 +42520,12 @@
     {
       "name": "GetInvitationByTokenQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/GetInvitationByToken/GetInvitationByTokenQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/GetInvitationByToken/GetInvitationByTokenQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42510,12 +42534,12 @@
     {
       "name": "GetInvitationForCurrentUserQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42711,11 +42735,11 @@
     {
       "name": "GetMyClientTasksQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyClientTasks/GetMyClientTasksQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/GetMyClientTasks/GetMyClientTasksQueryHandler.cs",
       "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42723,12 +42747,12 @@
     {
       "name": "GetMyClientsQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyClients/GetMyClientsQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/GetMyClients/GetMyClientsQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42737,12 +42761,12 @@
     {
       "name": "GetMyDietologistQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyDietologist/GetMyDietologistQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/GetMyDietologist/GetMyDietologistQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42751,12 +42775,12 @@
     {
       "name": "GetMyDietologistRelationshipQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyDietologistRelationship/GetMyDietologistRelationshipQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/GetMyDietologistRelationship/GetMyDietologistRelationshipQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42765,12 +42789,12 @@
     {
       "name": "GetMyRecommendationsQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/GetMyRecommendations/GetMyRecommendationsQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/GetMyRecommendations/GetMyRecommendationsQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42952,12 +42976,12 @@
     {
       "name": "GetRecommendationCommentsQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42965,12 +42989,12 @@
     {
       "name": "GetRecommendationsForClientQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/GetRecommendationsForClient/GetRecommendationsForClientQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/GetRecommendationsForClient/GetRecommendationsForClientQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43358,11 +43382,11 @@
     {
       "name": "SearchRecommendationTemplatesQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
+      "path": "Modules/Dietologist/Application/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43383,12 +43407,12 @@
     {
       "name": "AcceptInvitationCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Dietologist/Commands/AcceptInvitation/AcceptInvitationCommandValidator.cs",
+      "path": "Modules/Dietologist/Application/Commands/AcceptInvitation/AcceptInvitationCommandValidator.cs",
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistValidatorTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistValidatorTests.cs",
+        "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43523,11 +43547,11 @@
     {
       "name": "BulkCreateRecommendationsCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandValidator.cs",
+      "path": "Modules/Dietologist/Application/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43547,11 +43571,11 @@
     {
       "name": "ChangeClientTaskStatusCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandValidator.cs",
+      "path": "Modules/Dietologist/Application/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43672,11 +43696,11 @@
     {
       "name": "CreateClientTaskCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateClientTask/CreateClientTaskCommandValidator.cs",
+      "path": "Modules/Dietologist/Application/Commands/CreateClientTask/CreateClientTaskCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/ClientTaskHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43794,11 +43818,11 @@
     {
       "name": "CreateRecommendationCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendation/CreateRecommendationCommandValidator.cs",
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendation/CreateRecommendationCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistValidatorTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43806,11 +43830,11 @@
     {
       "name": "CreateRecommendationCommentCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandValidator.cs",
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43818,11 +43842,11 @@
     {
       "name": "CreateRecommendationTemplateCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandValidator.cs",
+      "path": "Modules/Dietologist/Application/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43868,7 +43892,7 @@
     {
       "name": "DeclineInvitationCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommandValidator.cs",
+      "path": "Modules/Dietologist/Application/Commands/DeclineInvitation/DeclineInvitationCommandValidator.cs",
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
@@ -44837,11 +44861,11 @@
     {
       "name": "InviteDietologistCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Dietologist/Commands/InviteDietologist/InviteDietologistCommandValidator.cs",
+      "path": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/DietologistValidatorTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45335,11 +45359,11 @@
     {
       "name": "SearchRecommendationTemplatesQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryValidator.cs",
+      "path": "Modules/Dietologist/Application/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45396,11 +45420,11 @@
     {
       "name": "SetAttentionSignalStateCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandValidator.cs",
+      "path": "Modules/Dietologist/Application/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/AttentionSignalTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/AttentionSignalTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45793,11 +45817,11 @@
     {
       "name": "UpdateRecommendationTemplateCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandValidator.cs",
+      "path": "Modules/Dietologist/Application/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

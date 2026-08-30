@@ -274,9 +274,11 @@ Image EF configuration and object-deletion outbox configuration live in `Configu
 
 Dietologist Relationships owns invitations, relationship permissions and recommendations. Users profile composition consumes `IDietologistInvitationReadService`; it no longer queries the Dietologist read-model repository directly. Notification production uses Notifications writer/refresh capabilities, while role changes use the Users role-membership capability.
 
+Its owned Domain, Application, Application Abstractions, EF configuration model, persistence adapters, and focused tests are physically isolated under `Modules/Dietologist`. The shared `FoodDiaryDbContext`, historical migrations, model snapshot, HTTP transport, and genuine cross-module integration tests remain central. Relationship authorization continues to flow through current-user access plus explicit relationship permissions; extraction does not expose repository implementations or broaden client-health-data access.
+
 RecipeCommunity is the physical application module for the separate RecipeComments and RecipeLikes logical feature areas. Both may use `IRecipeAccessService` to validate the target recipe, but neither owns or loads the Recipe repository directly. Other modules consume their read services and commands rather than comment/like repositories.
 
-Dietologist invitation/recommendation configurations live in `Configurations/Dietologist`. Recipe comment/like configurations live in `Configurations/RecipeSocial`; repository ownership remains separated in the corresponding persistence folders.
+Dietologist invitation/recommendation configurations live in `Modules/Dietologist/Infrastructure/Model/Configurations`. Recipe comment/like configurations live in `Configurations/RecipeSocial`; repository ownership remains separated in the corresponding persistence folders.
 
 ## Health Tracking boundaries
 

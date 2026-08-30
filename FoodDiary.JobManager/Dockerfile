@@ -15,7 +15,11 @@ COPY FoodDiary.Application.Runtime/*.csproj FoodDiary.Application.Runtime/
 COPY FoodDiary.Application.Billing/*.csproj FoodDiary.Application.Billing/
 COPY FoodDiary.Application.Marketing/*.csproj FoodDiary.Application.Marketing/
 COPY FoodDiary.Application.Users/*.csproj FoodDiary.Application.Users/
-COPY FoodDiary.Application.Dietologist/*.csproj FoodDiary.Application.Dietologist/
+COPY Modules/Dietologist/Application/*.csproj Modules/Dietologist/Application/
+COPY Modules/Dietologist/Application/Abstractions/*.csproj Modules/Dietologist/Application/Abstractions/
+COPY Modules/Dietologist/Domain/*.csproj Modules/Dietologist/Domain/
+COPY Modules/Dietologist/Infrastructure/*.csproj Modules/Dietologist/Infrastructure/
+COPY Modules/Dietologist/Infrastructure/Model/*.csproj Modules/Dietologist/Infrastructure/Model/
 COPY Modules/Fasting/Application/*.csproj Modules/Fasting/Application/
 COPY Modules/Fasting/Application/Abstractions/*.csproj Modules/Fasting/Application/Abstractions/
 COPY Modules/Fasting/Contracts/*.csproj Modules/Fasting/Contracts/
@@ -87,7 +91,11 @@ COPY FoodDiary.Application.Runtime/ FoodDiary.Application.Runtime/
 COPY FoodDiary.Application.Billing/ FoodDiary.Application.Billing/
 COPY FoodDiary.Application.Marketing/ FoodDiary.Application.Marketing/
 COPY FoodDiary.Application.Users/ FoodDiary.Application.Users/
-COPY FoodDiary.Application.Dietologist/ FoodDiary.Application.Dietologist/
+COPY Modules/Dietologist/Application/ Modules/Dietologist/Application/
+COPY Modules/Dietologist/Application/Abstractions/ Modules/Dietologist/Application/Abstractions/
+COPY Modules/Dietologist/Domain/ Modules/Dietologist/Domain/
+COPY Modules/Dietologist/Infrastructure/ Modules/Dietologist/Infrastructure/
+COPY Modules/Dietologist/Infrastructure/Model/ Modules/Dietologist/Infrastructure/Model/
 COPY Modules/Fasting/ Modules/Fasting/
 COPY Modules/Fasting/Application/ Modules/Fasting/Application/
 COPY Modules/Fasting/Application/Abstractions/ Modules/Fasting/Application/Abstractions/

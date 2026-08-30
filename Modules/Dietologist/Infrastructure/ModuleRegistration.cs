@@ -1,14 +1,14 @@
-using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Dietologist;
 using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Infrastructure.Persistence.Recommendations;
-using FoodDiary.Infrastructure.Persistence.Audit;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Dietologist.Infrastructure;
 
-public static partial class DependencyInjection {
-    private static void AddDietologistPersistence(this IServiceCollection services) {
+public static class ModuleRegistration {
+    public static IServiceCollection AddDietologistModule(this IServiceCollection services) {
+        services.AddDietologistApplication();
         services.AddScoped<IDietologistInvitationRepository, DietologistInvitationRepository>();
         services.AddScoped<IDietologistInvitationReadRepository>(static provider => provider.GetRequiredService<IDietologistInvitationRepository>());
         services.AddScoped<IDietologistInvitationReadModelRepository>(static provider => provider.GetRequiredService<IDietologistInvitationRepository>());
@@ -30,9 +30,6 @@ public static partial class DependencyInjection {
         services.AddScoped<IRecommendationBulkDispatchLookupRepository>(static provider => provider.GetRequiredService<IRecommendationBulkDispatchRepository>());
         services.AddScoped<IRecommendationBulkDispatchWriteRepository>(static provider => provider.GetRequiredService<IRecommendationBulkDispatchRepository>());
         services.AddScoped<IAttentionSignalMetricsReadService, AttentionSignalMetricsReadService>();
-        services.AddScoped<AuditEntryService>();
-        services.AddScoped<IAuditEntryReadService>(services => services.GetRequiredService<AuditEntryService>());
-        services.AddScoped<IAuditEntryWriter>(services => services.GetRequiredService<AuditEntryService>());
-
+        return services;
     }
 }

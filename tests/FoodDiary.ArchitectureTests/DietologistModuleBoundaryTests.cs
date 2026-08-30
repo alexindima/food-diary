@@ -8,11 +8,11 @@ public sealed class DietologistModuleBoundaryTests {
     [Fact]
     public void DietologistApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Dietologist");
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Dietologist");
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Dietologist", "Application");
 
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
-        Assert.True(File.Exists(Path.Combine(extractedRoot, "FoodDiary.Application.Dietologist.csproj")));
+        Assert.True(File.Exists(Path.Combine(extractedRoot, "FoodDiary.Modules.Dietologist.Application.csproj")));
     }
 
     [Fact]
@@ -20,17 +20,19 @@ public sealed class DietologistModuleBoundaryTests {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
-        Assert.DoesNotContain("FoodDiary.Application.Dietologist", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.Dietologist.Application", references, StringComparer.Ordinal);
     }
 
     [Fact]
     public void ExtractedDietologistAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj");
+            "Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj");
         string[] expectedReferences = [
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Dietologist.Application.Abstractions",
+            "FoodDiary.Modules.Dietologist.Domain",
         ];
 
         Assert.Equal(expectedReferences, references);
@@ -48,7 +50,7 @@ public sealed class DietologistModuleBoundaryTests {
 
     [Fact]
     public void Dietologist_DoesNotDependOnAuthenticationOrNotificationImplementationNamespaces() {
-        string root = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Dietologist");
+        string root = ArchitectureTestPaths.FromRoot("Modules", "Dietologist", "Application");
         string[] forbiddenPrefixes = [
             "FoodDiary.Application.Authentication",
             "FoodDiary.Application.Notifications",
@@ -70,7 +72,7 @@ public sealed class DietologistModuleBoundaryTests {
 
     [Fact]
     public void Dietologist_DoesNotDependOnOtherApplicationFeatures() {
-        string root = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Dietologist");
+        string root = ArchitectureTestPaths.FromRoot("Modules", "Dietologist", "Application");
         string[] allowedPrefixes = [
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Application.Dietologist",

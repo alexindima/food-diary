@@ -548,6 +548,20 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.dietologist.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.dietologist.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Dietologist.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
       "fooddiary.modules.fasting.domain": {
         "type": "Project",
         "dependencies": {

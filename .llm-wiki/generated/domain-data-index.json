@@ -21,14 +21,14 @@
       "area": "FoodDiary",
       "name": "DietologistInvitationAcceptedDomainEvent",
       "role": "domain-type",
-      "path": "FoodDiary.Domain/Events/DietologistInvitationAcceptedDomainEvent.cs",
+      "path": "Modules/Dietologist/Domain/Events/DietologistInvitationAcceptedDomainEvent.cs",
       "line": 5
     },
     {
       "area": "FoodDiary",
       "name": "DietologistInvitationDeclinedDomainEvent",
       "role": "domain-type",
-      "path": "FoodDiary.Domain/Events/DietologistInvitationDeclinedDomainEvent.cs",
+      "path": "Modules/Dietologist/Domain/Events/DietologistInvitationDeclinedDomainEvent.cs",
       "line": 5
     },
     {
@@ -63,7 +63,7 @@
       "area": "FoodDiary",
       "name": "RecommendationCreatedDomainEvent",
       "role": "domain-type",
-      "path": "FoodDiary.Domain/Events/RecommendationCreatedDomainEvent.cs",
+      "path": "Modules/Dietologist/Domain/Events/RecommendationCreatedDomainEvent.cs",
       "line": 5
     },
     {
@@ -161,7 +161,7 @@
       "area": "FoodDiary",
       "name": "ClientTask",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Dietologist/ClientTask.cs",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/ClientTask.cs",
       "line": 6
     },
     {
@@ -231,7 +231,7 @@
       "area": "FoodDiary",
       "name": "DietologistInvitation",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
       "line": 10
     },
     {
@@ -469,28 +469,28 @@
       "area": "FoodDiary",
       "name": "Recommendation",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Dietologist/Recommendation.cs",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/Recommendation.cs",
       "line": 7
     },
     {
       "area": "FoodDiary",
       "name": "RecommendationBulkDispatch",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
       "line": 5
     },
     {
       "area": "FoodDiary",
       "name": "RecommendationComment",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationComment.cs",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationComment.cs",
       "line": 6
     },
     {
       "area": "FoodDiary",
       "name": "RecommendationTemplate",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationTemplate.cs",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationTemplate.cs",
       "line": 5
     },
     {
@@ -679,7 +679,7 @@
       "area": "FoodDiary",
       "name": "ClientTaskStatus",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/ClientTaskStatus.cs",
+      "path": "Modules/Dietologist/Domain/Enums/ClientTaskStatus.cs",
       "line": 2
     },
     {
@@ -742,7 +742,7 @@
       "area": "FoodDiary",
       "name": "DietologistInvitationStatus",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/DietologistInvitationStatus.cs",
+      "path": "Modules/Dietologist/Domain/Enums/DietologistInvitationStatus.cs",
       "line": 2
     },
     {
@@ -980,7 +980,7 @@
       "area": "FoodDiary",
       "name": "ClientTaskId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ClientTaskId.cs",
+      "path": "Modules/Dietologist/Domain/ValueObjects/Ids/ClientTaskId.cs",
       "line": 4
     },
     {
@@ -1057,14 +1057,14 @@
       "area": "FoodDiary",
       "name": "DietologistInvitationId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/DietologistInvitationId.cs",
+      "path": "Modules/Dietologist/Domain/ValueObjects/Ids/DietologistInvitationId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "DietologistPermissions",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/DietologistPermissions.cs",
+      "path": "Modules/Dietologist/Domain/ValueObjects/DietologistPermissions.cs",
       "line": 2
     },
     {
@@ -1463,28 +1463,28 @@
       "area": "FoodDiary",
       "name": "RecommendationBulkDispatchId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecommendationBulkDispatchId.cs",
+      "path": "Modules/Dietologist/Domain/ValueObjects/Ids/RecommendationBulkDispatchId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "RecommendationCommentId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecommendationCommentId.cs",
+      "path": "Modules/Dietologist/Domain/ValueObjects/Ids/RecommendationCommentId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "RecommendationId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecommendationId.cs",
+      "path": "Modules/Dietologist/Domain/ValueObjects/Ids/RecommendationId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "RecommendationTemplateId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecommendationTemplateId.cs",
+      "path": "Modules/Dietologist/Domain/ValueObjects/Ids/RecommendationTemplateId.cs",
       "line": 4
     },
     {
@@ -2307,202 +2307,6 @@
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength.Value} characters.\"))",
       "path": "FoodDiary.Domain/Entities/Content/EmailTemplate.cs",
       "line": 89
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Dietologist id is required.\", nameof(dietologistUserId))",
-      "path": "FoodDiary.Domain/Entities/Dietologist/ClientTask.cs",
-      "line": 30
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Client id is required.\", nameof(clientUserId))",
-      "path": "FoodDiary.Domain/Entities/Dietologist/ClientTask.cs",
-      "line": 34
-    },
-    {
-      "area": "FoodDiary",
-      "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException(\"A cancelled task cannot be changed by the client.\")",
-      "path": "FoodDiary.Domain/Entities/Dietologist/ClientTask.cs",
-      "line": 77
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Task title is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Dietologist/ClientTask.cs",
-      "line": 91
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, maxLength, \"Value is too long.\")",
-      "path": "FoodDiary.Domain/Entities/Dietologist/ClientTask.cs",
-      "line": 96
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, maxLength, \"Value is too long.\")",
-      "path": "FoodDiary.Domain/Entities/Dietologist/ClientTask.cs",
-      "line": 107
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\")",
-      "path": "FoodDiary.Domain/Entities/Dietologist/ClientTask.cs",
-      "line": 113
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(permissions)",
-      "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 45
-    },
-    {
-      "area": "FoodDiary",
-      "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException($\"Cannot revoke invitation in status {Status}.\")",
-      "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 86
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(permissions)",
-      "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 95
-    },
-    {
-      "area": "FoodDiary",
-      "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException($\"Invitation is not pending (current status: {Status}).\")",
-      "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 119
-    },
-    {
-      "area": "FoodDiary",
-      "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException(\"Invitation has expired.\")",
-      "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 123
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 129
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Recommendation text is required.\", nameof(value))",
-      "path": "FoodDiary.Domain/Entities/Dietologist/Recommendation.cs",
-      "line": 58
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Recommendation text must be at most {TextMaxLength} characters.\")",
-      "path": "FoodDiary.Domain/Entities/Dietologist/Recommendation.cs",
-      "line": 63
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Dietologist/Recommendation.cs",
-      "line": 69
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Dietologist user id is required.\", nameof(dietologistUserId))",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
-      "line": 21
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Client user id is required.\", nameof(clientUserId))",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
-      "line": 25
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Recommendation id is required.\", nameof(recommendationId))",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
-      "line": 29
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Idempotency key is required.\", nameof(idempotencyKey))",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
-      "line": 33
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(idempotencyKey), normalizedKey.Length, \"Idempotency key is too long.\")",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
-      "line": 38
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"RecommendationId is required.\", nameof(recommendationId))",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationComment.cs",
-      "line": 25
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"AuthorUserId is required.\", nameof(authorUserId))",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationComment.cs",
-      "line": 29
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Comment text is required.\", nameof(text))",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationComment.cs",
-      "line": 45
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(text), $\"Comment text must be at most {TextMaxLength} characters.\")",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationComment.cs",
-      "line": 50
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Dietologist id is required.\", nameof(dietologistUserId))",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationTemplate.cs",
-      "line": 17
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationTemplate.cs",
-      "line": 50
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, maxLength, \"Value is too long.\")",
-      "path": "FoodDiary.Domain/Entities/Dietologist/RecommendationTemplate.cs",
-      "line": 55
     },
     {
       "area": "FoodDiary",
@@ -4719,6 +4523,202 @@
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Dietologist id is required.\", nameof(dietologistUserId))",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/ClientTask.cs",
+      "line": 30
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Client id is required.\", nameof(clientUserId))",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/ClientTask.cs",
+      "line": 34
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"A cancelled task cannot be changed by the client.\")",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/ClientTask.cs",
+      "line": 77
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Task title is required.\", paramName)",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/ClientTask.cs",
+      "line": 91
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, maxLength, \"Value is too long.\")",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/ClientTask.cs",
+      "line": 96
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, maxLength, \"Value is too long.\")",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/ClientTask.cs",
+      "line": 107
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\")",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/ClientTask.cs",
+      "line": 113
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(permissions)",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
+      "line": 45
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException($\"Cannot revoke invitation in status {Status}.\")",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
+      "line": 86
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(permissions)",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
+      "line": 95
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException($\"Invitation is not pending (current status: {Status}).\")",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
+      "line": 119
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Invitation has expired.\")",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
+      "line": 123
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
+      "line": 129
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Recommendation text is required.\", nameof(value))",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/Recommendation.cs",
+      "line": 58
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Recommendation text must be at most {TextMaxLength} characters.\")",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/Recommendation.cs",
+      "line": 63
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", paramName)",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/Recommendation.cs",
+      "line": 69
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Dietologist user id is required.\", nameof(dietologistUserId))",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
+      "line": 21
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Client user id is required.\", nameof(clientUserId))",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
+      "line": 25
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Recommendation id is required.\", nameof(recommendationId))",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
+      "line": 29
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Idempotency key is required.\", nameof(idempotencyKey))",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
+      "line": 33
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(idempotencyKey), normalizedKey.Length, \"Idempotency key is too long.\")",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationBulkDispatch.cs",
+      "line": 38
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"RecommendationId is required.\", nameof(recommendationId))",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationComment.cs",
+      "line": 25
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"AuthorUserId is required.\", nameof(authorUserId))",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationComment.cs",
+      "line": 29
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Comment text is required.\", nameof(text))",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationComment.cs",
+      "line": 45
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(text), $\"Comment text must be at most {TextMaxLength} characters.\")",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationComment.cs",
+      "line": 50
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Dietologist id is required.\", nameof(dietologistUserId))",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationTemplate.cs",
+      "line": 17
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationTemplate.cs",
+      "line": 50
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, maxLength, \"Value is too long.\")",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationTemplate.cs",
+      "line": 55
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
       "message": "throw new ArgumentException(\"OccurrenceId is required.\", nameof(occurrenceId))",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingCheckIn.cs",
       "line": 60
@@ -5515,7 +5515,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/ClientTaskConfiguration.cs"
+      "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/ClientTaskConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5683,7 +5683,7 @@
           "expression": "e => e.DietologistUser)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/DietologistInvitationConfiguration.cs"
+      "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/DietologistInvitationConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6320,7 +6320,7 @@
           "expression": "e => e.ClientUser)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationConfiguration.cs"
+      "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6346,7 +6346,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs"
+      "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6367,7 +6367,7 @@
           "expression": "e => e.AuthorUser)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationCommentConfiguration.cs"
+      "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationCommentConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6383,7 +6383,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationTemplateConfiguration.cs"
+      "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationTemplateConfiguration.cs"
     },
     {
       "area": "FoodDiary",

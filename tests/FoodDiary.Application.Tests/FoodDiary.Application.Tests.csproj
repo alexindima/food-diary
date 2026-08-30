@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Dietologist\Application\FoodDiary.Modules.Dietologist.Application.csproj" />
     <ProjectReference Include="..\..\Modules\Lessons\Application\FoodDiary.Modules.Lessons.Application.csproj" />
     <ProjectReference Include="..\..\Modules\ContentReports\Application\FoodDiary.Modules.ContentReports.Application.csproj" />
     <ProjectReference Include="..\..\Modules\ContentReports\Application\Abstractions\FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
@@ -31,7 +32,6 @@
     <ProjectReference Include="..\..\FoodDiary.Application.Runtime\FoodDiary.Application.Runtime.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Products\FoodDiary.Application.Products.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Recipes\FoodDiary.Application.Recipes.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Application.Dietologist\FoodDiary.Application.Dietologist.csproj" />
     <ProjectReference Include="..\..\Modules\Fasting\Contracts\FoodDiary.Modules.Fasting.Contracts.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Favorites\FoodDiary.Application.Favorites.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Identity\FoodDiary.Application.Identity.csproj" />

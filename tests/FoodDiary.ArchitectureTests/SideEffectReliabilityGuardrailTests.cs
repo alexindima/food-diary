@@ -301,7 +301,9 @@ public sealed class SideEffectReliabilityGuardrailTests {
             "Services",
             "EmailSender.cs");
         string dietologistEmailSenderPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application.Dietologist",
+            "Modules",
+            "Dietologist",
+            "Application",
             "Services",
             "DietologistEmailSender.cs");
         string notificationWriterPath = ArchitectureTestPaths.FromRoot(

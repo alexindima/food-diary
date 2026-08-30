@@ -355,12 +355,12 @@ public class LayeringTests {
         string dependencyInjectionPath = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "DependencyInjection.Repositories.cs");
         string[] expectedRegistrations = [
             "services.AddUserPersistence();",
+            "services.AddAuditPersistence();",
             "services.AddFoodPersistence();",
             "services.AddDashboardReadServices();",
             "services.AddShoppingListPersistence();",
             "services.AddTrackingPersistence();",
             "services.AddAiPersistence();",
-            "services.AddDietologistPersistence();",
             "services.AddNotificationPersistence();",
             "services.AddProviderCachePersistence();",
             "services.AddMarketingPersistence();",

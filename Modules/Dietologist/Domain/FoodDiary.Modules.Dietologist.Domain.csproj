@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><AssemblyName>FoodDiary.Modules.Dietologist.Domain</AssemblyName><RootNamespace>FoodDiary.Domain</RootNamespace><NoWarn>$(NoWarn);RCS1170</NoWarn></PropertyGroup>
+  <ItemGroup><ProjectReference Include="..\..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" /></ItemGroup>
+</Project>

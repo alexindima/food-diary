@@ -22,5 +22,6 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         modelBuilder.ApplyContentReportsPersistenceModel();
         modelBuilder.ApplyWeeklyGoalsPersistenceModel();
         modelBuilder.ApplyImagesPersistenceModel();
+        modelBuilder.ApplyDietologistPersistenceModel();
     }
 }

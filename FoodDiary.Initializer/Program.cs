@@ -8,7 +8,7 @@ using FoodDiary.Application.BodyMetrics;
 using FoodDiary.Application.Cycles;
 using FoodDiary.Application.Dashboard;
 using FoodDiary.Modules.Hydration.Infrastructure;
-using FoodDiary.Application.Dietologist;
+using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Application.Exercises;
 using FoodDiary.Modules.Fasting.Infrastructure;
 using FoodDiary.Application.Favorites;

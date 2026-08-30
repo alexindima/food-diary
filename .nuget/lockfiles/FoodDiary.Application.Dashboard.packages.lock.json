@@ -161,6 +161,19 @@
           "FoodDiary.Domain": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.dietologist.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Dietologist.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.dietologist.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.fasting.contracts": {
         "type": "Project",
         "dependencies": {

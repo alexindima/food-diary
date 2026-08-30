@@ -23,6 +23,7 @@ public sealed class DashboardModuleExtractionTests {
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
             "FoodDiary.Modules.DailyAdvices.Application",
+            "FoodDiary.Modules.Dietologist.Application.Abstractions",
             "FoodDiary.Modules.Fasting.Contracts",
             "FoodDiary.Modules.Hydration.Contracts",
             "FoodDiary.Modules.Tdee.Application",

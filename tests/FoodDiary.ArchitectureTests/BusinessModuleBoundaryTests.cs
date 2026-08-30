@@ -937,12 +937,14 @@ public sealed class BusinessModuleBoundaryTests {
     public void DietologistAndRecipeSocialConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {
-        string expectedPath = Path.Combine(
-            ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Infrastructure",
-            "Persistence",
-            expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar),
-            fileName);
+        string expectedPath = string.Equals(expectedRelativeDirectory, "Configurations/Dietologist", StringComparison.Ordinal)
+            ? Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Dietologist", "Infrastructure", "Model", "Configurations", "Dietologist", fileName)
+            : Path.Combine(
+                ArchitectureTestPaths.RepositoryRoot,
+                "FoodDiary.Infrastructure",
+                "Persistence",
+                expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar),
+                fileName);
 
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in {expectedRelativeDirectory}.");
     }

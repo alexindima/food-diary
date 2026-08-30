@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><AssemblyName>FoodDiary.Infrastructure.Tests</AssemblyName><RootNamespace>FoodDiary.Infrastructure.Tests</RootNamespace><IsPackable>false</IsPackable></PropertyGroup>
+  <ItemGroup><PackageReference Include="coverlet.collector" /><PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" /><PackageReference Include="Microsoft.NET.Test.Sdk" /><PackageReference Include="NSubstitute" /><PackageReference Include="xunit" /><PackageReference Include="xunit.runner.visualstudio" /></ItemGroup>
+  <ItemGroup><Using Include="System.Diagnostics.CodeAnalysis" /><Using Include="NSubstitute" /><Using Include="Xunit" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.Dietologist.Infrastructure.csproj" /></ItemGroup>
+</Project>
