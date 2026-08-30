@@ -41,7 +41,7 @@
     <ProjectReference Include="..\Modules\Tdee\Application\FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Usda\FoodDiary.Application.Usda.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Users\FoodDiary.Application.Users.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Wearables\FoodDiary.Application.Wearables.csproj" />
+    <ProjectReference Include="..\Modules\Wearables\Application\FoodDiary.Application.Wearables.csproj" />
     <ProjectReference Include="..\Modules\WeeklyCheckIn\Application\FoodDiary.Modules.WeeklyCheckIn.Application.csproj" />
     <ProjectReference Include="..\Modules\WeeklyGoals\Application\FoodDiary.Modules.WeeklyGoals.Application.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />

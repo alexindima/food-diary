@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Application.Wearables;
 
 public static class DependencyInjection {
-    public static IServiceCollection AddWearablesModule(this IServiceCollection services) {
+    public static IServiceCollection AddWearablesApplication(this IServiceCollection services) {
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);

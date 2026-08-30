@@ -1027,8 +1027,8 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("MealPlanConfiguration.cs", "Configurations/MealPlans")]
     [InlineData("MealPlanDayConfiguration.cs", "Configurations/MealPlans")]
     [InlineData("MealPlanMealConfiguration.cs", "Configurations/MealPlans")]
-    [InlineData("WearableConnectionConfiguration.cs", "Configurations/Wearables")]
-    [InlineData("WearableSyncEntryConfiguration.cs", "Configurations/Wearables")]
+    [InlineData("WearableConnectionConfiguration.cs", "Modules/Wearables/Infrastructure/Model/Configurations/Wearables")]
+    [InlineData("WearableSyncEntryConfiguration.cs", "Modules/Wearables/Infrastructure/Model/Configurations/Wearables")]
     [InlineData("MarketingAttributionEventConfiguration.cs", "Modules/Marketing/Infrastructure/Model/Configurations")]
     public void PlanningWearablesAndMarketingConfigurations_StayInOwnedFolders(
         string fileName,

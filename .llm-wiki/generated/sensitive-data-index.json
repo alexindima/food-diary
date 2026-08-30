@@ -124,20 +124,6 @@
     },
     {
       "category": "credential",
-      "name": "AccessToken",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableTokenResult.cs",
-      "line": 4
-    },
-    {
-      "category": "credential",
-      "name": "RefreshToken",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableTokenResult.cs",
-      "line": 5
-    },
-    {
-      "category": "credential",
       "name": "TemporaryPassword",
       "type": "string?",
       "path": "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
@@ -415,20 +401,6 @@
       "type": "DateTime?",
       "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
       "line": 17
-    },
-    {
-      "category": "credential",
-      "name": "AccessToken",
-      "type": "ProtectedWearableToken",
-      "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 17
-    },
-    {
-      "category": "credential",
-      "name": "RefreshToken",
-      "type": "ProtectedWearableToken?",
-      "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 18
     },
     {
       "category": "credential",
@@ -1038,6 +1010,34 @@
       "type": "tokenHash,",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
       "line": 49
+    },
+    {
+      "category": "credential",
+      "name": "AccessToken",
+      "type": "string",
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableTokenResult.cs",
+      "line": 4
+    },
+    {
+      "category": "credential",
+      "name": "RefreshToken",
+      "type": "string?",
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableTokenResult.cs",
+      "line": 5
+    },
+    {
+      "category": "credential",
+      "name": "AccessToken",
+      "type": "ProtectedWearableToken",
+      "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
+      "line": 17
+    },
+    {
+      "category": "credential",
+      "name": "RefreshToken",
+      "type": "ProtectedWearableToken?",
+      "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
+      "line": 18
     },
     {
       "category": "financial",
@@ -2704,13 +2704,6 @@
       "type": "double?",
       "path": "FoodDiary.Application.Abstractions/Users/Models/WeightHistoryProfileModel.cs",
       "line": 4
-    },
-    {
-      "category": "health",
-      "name": "CaloriesBurned",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableDailySummaryModel.cs",
-      "line": 7
     },
     {
       "category": "health",
@@ -6414,6 +6407,13 @@
       "type": "double",
       "path": "Modules/Tdee/Application/Services/TdeeCalculator.cs",
       "line": 174
+    },
+    {
+      "category": "health",
+      "name": "CaloriesBurned",
+      "type": "double?",
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableDailySummaryModel.cs",
+      "line": 7
     },
     {
       "category": "health",

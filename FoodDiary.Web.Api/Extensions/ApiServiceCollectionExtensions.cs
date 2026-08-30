@@ -24,7 +24,7 @@ using FoodDiary.Application.Products;
 using FoodDiary.Application.Recipes;
 using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Application.Users;
-using FoodDiary.Application.Wearables;
+using FoodDiary.Modules.Wearables.Infrastructure;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Application.Usda;
 using FoodDiary.Application.WeeklyCheckIn;
@@ -37,9 +37,7 @@ using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Infrastructure;
-using FoodDiary.Infrastructure.Services;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Resources.Notifications;
@@ -61,7 +59,6 @@ public static class ApiServiceCollectionExtensions {
                 .AddApiAuthentication()
                 .AddApiHostServices()
                 .AddApiDataProtection(configuration)
-                .AddSingleton<IWearableTokenProtector, WearableTokenProtector>()
                 .AddApiSwagger()
                 .AddConfiguredOpenTelemetry(configuration)
                 .AddApiHealthChecks();

@@ -15,22 +15,18 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj`
+- Extracted project: `Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Wearables`
-- `FoodDiary.Application.Wearables`
-- `FoodDiary.Domain/Entities/Wearables`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Wearables`
-- `FoodDiary.Infrastructure/Persistence/Wearables`
 - `FoodDiary.Integrations/Wearables`
 - `FoodDiary.Presentation.Api/Features/Wearables`
+- `Modules/Wearables/Application`
 
 ## HTTP Surface
 
@@ -51,43 +47,33 @@ Source: `FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs`
 - Physical isolation: project
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: WearableConnection, WearableSyncEntry
-- Public contract files: 18
-- Observed external consumer groups: 5
+- Public contract files: 0
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 18
-- Interfaces: 11
-- DTO/read-model/projection types: 3
+- Public contract types: 0
+- Interfaces: 0
+- DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 7
-- Contracts referencing domain entities: 4
-- `class WearableErrors`
-- `class WearableInputLimits`
-- `interface IWearableClient`
-- `interface IWearableConnectionReadRepository`
-- `interface IWearableConnectionRepository`
-- `interface IWearableConnectionWriteRepository`
-- `interface IWearableOAuthStateService`
-- `interface IWearableSyncReadModelRepository`
-- `interface IWearableSyncReadRepository`
-- `interface IWearableSyncRepository`
-- `interface IWearableSyncWriteRepository`
-- `interface IWearableTokenProtector`
-- `interface IWearableTransactionRunner`
-- `record WearableConnectionModel`
-- `record WearableDailySummaryModel`
-- `record WearableDataPoint`
-- `record WearableSyncEntryReadModel`
-- `record WearableTokenResult`
+- Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Wearables/WearableDateValidatorTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearableDateValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/Domain/WearableInvariantTests.cs`
+- [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/PostgresDatabaseCollection.cs`
+- [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/PostgresDatabaseFixture.cs`
+- [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/WearableTransactionRunnerIntegrationTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Authentication/WearableOAuthStateServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Services/WearableTokenProtectorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs`

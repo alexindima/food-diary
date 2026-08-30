@@ -1,12 +1,15 @@
 using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Application.Wearables;
 using FoodDiary.Infrastructure.Authentication;
 using FoodDiary.Infrastructure.Persistence.Wearables;
+using FoodDiary.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Wearables.Infrastructure;
 
-public static partial class DependencyInjection {
-    private static void AddWearablesInfrastructure(this IServiceCollection services) {
+public static class ModuleRegistration {
+    public static IServiceCollection AddWearablesModule(this IServiceCollection services) {
+        services.AddWearablesApplication();
         services.AddScoped<IWearableConnectionRepository, WearableConnectionRepository>();
         services.AddScoped<IWearableConnectionReadRepository>(static provider => provider.GetRequiredService<IWearableConnectionRepository>());
         services.AddScoped<IWearableConnectionWriteRepository>(static provider => provider.GetRequiredService<IWearableConnectionRepository>());
@@ -16,6 +19,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IWearableSyncReadModelRepository>(static provider => provider.GetRequiredService<IWearableSyncRepository>());
         services.AddScoped<IWearableSyncWriteRepository>(static provider => provider.GetRequiredService<IWearableSyncRepository>());
         services.AddSingleton<IWearableOAuthStateService, WearableOAuthStateService>();
-
+        services.AddSingleton<IWearableTokenProtector, WearableTokenProtector>();
+        return services;
     }
 }

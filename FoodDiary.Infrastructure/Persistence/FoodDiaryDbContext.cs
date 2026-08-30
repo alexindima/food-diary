@@ -19,6 +19,7 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.HasPostgresExtension("pg_trgm");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(FoodDiaryDbContext).Assembly);
+        modelBuilder.ApplyWearablesPersistenceModel();
         modelBuilder.ApplyFastingPersistenceModel();
         modelBuilder.ApplyHydrationPersistenceModel();
         modelBuilder.ApplyDailyAdvicesPersistenceModel();

@@ -2,7 +2,7 @@
 
 ## Scope
 
-Rules for `FoodDiary.Application.Wearables/`.
+Rules for `Modules/Wearables/Application/`.
 
 ## Role
 
@@ -12,5 +12,5 @@ Rules for `FoodDiary.Application.Wearables/`.
 ## Boundaries
 
 - Do not reference the core `FoodDiary.Application` project.
-- Register handlers and internal read services through `AddWearablesModule`.
+- Register handlers and internal read services through `AddWearablesApplication`; complete module registration belongs to Infrastructure.
 - Keep provider clients, persistence implementations, token protection, HTTP transport, and host configuration outside this project.

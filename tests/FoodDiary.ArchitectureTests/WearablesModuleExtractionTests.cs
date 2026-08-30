@@ -12,7 +12,7 @@ public sealed class WearablesModuleExtractionTests {
     [Fact]
     public void WearablesProject_DoesNotReferenceCoreApplicationProject() {
         string projectFile = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application.Wearables",
+            "Modules", "Wearables", "Application",
             "FoodDiary.Application.Wearables.csproj");
         string references = File.ReadAllText(projectFile);
 

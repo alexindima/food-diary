@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3509,
-    "symbols": 3510,
+    "sourceFiles": 3512,
+    "symbols": 3511,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 216,
+    "dependencyInjectionRegistrations": 211,
     "kinds": {
-      "class": 1837,
+      "class": 1838,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1362,
+      "Other": 1363,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -3461,132 +3461,6 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/WaistEntries/Models/WaistEntrySummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "IWearableClient",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableClient.cs",
-      "line": 6
-    },
-    {
-      "name": "IWearableConnectionReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableConnectionReadRepository.cs",
-      "line": 7
-    },
-    {
-      "name": "IWearableConnectionRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableConnectionRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IWearableConnectionWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableConnectionWriteRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "IWearableOAuthStateService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableOAuthStateService.cs",
-      "line": 5
-    },
-    {
-      "name": "IWearableSyncReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableSyncReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IWearableSyncReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableSyncReadRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "IWearableSyncRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableSyncRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IWearableSyncWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableSyncWriteRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "IWearableTokenProtector",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTokenProtector.cs",
-      "line": 4
-    },
-    {
-      "name": "IWearableTransactionRunner",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTransactionRunner.cs",
-      "line": 2
-    },
-    {
-      "name": "WearableErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/WearableErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "WearableInputLimits",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/WearableInputLimits.cs",
-      "line": 2
-    },
-    {
-      "name": "WearableConnectionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableConnectionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WearableDailySummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableDailySummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WearableDataPoint",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableDataPoint.cs",
-      "line": 4
-    },
-    {
-      "name": "WearableSyncEntryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableSyncEntryReadModel.cs",
-      "line": 4
-    },
-    {
-      "name": "WearableTokenResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableTokenResult.cs",
       "line": 2
     },
     {
@@ -9204,160 +9078,6 @@
       "line": 10
     },
     {
-      "name": "ConnectWearableCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "ConnectWearableCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "ConnectWearableCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Commands/ConnectWearable/ConnectWearableCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "DisconnectWearableCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DisconnectWearableCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "DisconnectWearableCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Commands/DisconnectWearable/DisconnectWearableCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "SyncWearableDataCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "SyncWearableDataCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "SyncWearableDataCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "IWearableReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Wearables/Common/IWearableReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "WearableDateRules",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Wearables/Common/WearableDateRules.cs",
-      "line": 2
-    },
-    {
-      "name": "WearableProviderParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Wearables/Common/WearableProviderParser.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Wearables/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "GetWearableAuthUrlQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
-      "line": 5
-    },
-    {
-      "name": "GetWearableAuthUrlQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "GetWearableAuthUrlQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "GetWearableConnectionsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWearableConnectionsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetWearableDailySummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWearableDailySummaryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetWearableDailySummaryQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "WearableReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Wearables/Services/WearableReadService.cs",
-      "line": 8
-    },
-    {
       "name": "ChangeSetSnapshot",
       "kind": "record",
       "role": "Other",
@@ -10051,20 +9771,6 @@
       "line": 7
     },
     {
-      "name": "WearableConnection",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 9
-    },
-    {
-      "name": "WearableSyncEntry",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Wearables/WearableSyncEntry.cs",
-      "line": 8
-    },
-    {
       "name": "ActivityLevel",
       "kind": "enum",
       "role": "Other",
@@ -10209,20 +9915,6 @@
       "kind": "enum",
       "role": "Other",
       "path": "FoodDiary.Domain/Enums/WaistGoalStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "WearableDataType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/WearableDataType.cs",
-      "line": 2
-    },
-    {
-      "name": "WearableProvider",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/WearableProvider.cs",
       "line": 2
     },
     {
@@ -10548,20 +10240,6 @@
       "line": 4
     },
     {
-      "name": "WearableConnectionId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WearableConnectionId.cs",
-      "line": 4
-    },
-    {
-      "name": "WearableSyncEntryId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WearableSyncEntryId.cs",
-      "line": 4
-    },
-    {
       "name": "WebPushSubscriptionId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -10671,13 +10349,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/ProfileWeightKg.cs",
-      "line": 4
-    },
-    {
-      "name": "ProtectedWearableToken",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/ProtectedWearableToken.cs",
       "line": 4
     },
     {
@@ -10905,13 +10576,6 @@
       "line": 12
     },
     {
-      "name": "WearableOAuthStateService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Authentication/WearableOAuthStateService.cs",
-      "line": 10
-    },
-    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
@@ -11071,13 +10735,6 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
       "line": 9
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Wearables.cs",
-      "line": 7
     },
     {
       "name": "DomainEventNotification",
@@ -11616,20 +11273,6 @@
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/UserRoleConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "WearableConnectionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Wearables/WearableConnectionConfiguration.cs",
-      "line": 8
-    },
-    {
-      "name": "WearableSyncEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Wearables/WearableSyncEntryConfiguration.cs",
       "line": 7
     },
     {
@@ -12249,27 +11892,6 @@
       "line": 7
     },
     {
-      "name": "EfWearableTransactionRunner",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Wearables/EfWearableTransactionRunner.cs",
-      "line": 7
-    },
-    {
-      "name": "WearableConnectionRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Wearables/WearableConnectionRepository.cs",
-      "line": 9
-    },
-    {
-      "name": "WearableSyncRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Wearables/WearableSyncRepository.cs",
-      "line": 9
-    },
-    {
       "name": "DatabaseCommandTelemetryInterceptor",
       "kind": "class",
       "role": "Other",
@@ -12421,13 +12043,6 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Services/StructuredAuditLogger.cs",
-      "line": 6
-    },
-    {
-      "name": "WearableTokenProtector",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/WearableTokenProtector.cs",
       "line": 6
     },
     {
@@ -17062,7 +16677,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 54
+      "line": 52
     },
     {
       "name": "ApiTelemetry",
@@ -24177,6 +23792,398 @@
       "line": 8
     },
     {
+      "name": "IWearableClient",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs",
+      "line": 6
+    },
+    {
+      "name": "IWearableConnectionReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableConnectionReadRepository.cs",
+      "line": 7
+    },
+    {
+      "name": "IWearableConnectionRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableConnectionRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IWearableConnectionWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableConnectionWriteRepository.cs",
+      "line": 6
+    },
+    {
+      "name": "IWearableOAuthStateService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableOAuthStateService.cs",
+      "line": 5
+    },
+    {
+      "name": "IWearableSyncReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableSyncReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IWearableSyncReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableSyncReadRepository.cs",
+      "line": 6
+    },
+    {
+      "name": "IWearableSyncRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableSyncRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IWearableSyncWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableSyncWriteRepository.cs",
+      "line": 6
+    },
+    {
+      "name": "IWearableTokenProtector",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableTokenProtector.cs",
+      "line": 4
+    },
+    {
+      "name": "IWearableTransactionRunner",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableTransactionRunner.cs",
+      "line": 2
+    },
+    {
+      "name": "WearableErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Abstractions/Common/WearableErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "WearableInputLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Abstractions/Common/WearableInputLimits.cs",
+      "line": 2
+    },
+    {
+      "name": "WearableConnectionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableConnectionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WearableDailySummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableDailySummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WearableDataPoint",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableDataPoint.cs",
+      "line": 4
+    },
+    {
+      "name": "WearableSyncEntryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableSyncEntryReadModel.cs",
+      "line": 4
+    },
+    {
+      "name": "WearableTokenResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableTokenResult.cs",
+      "line": 2
+    },
+    {
+      "name": "ConnectWearableCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Wearables/Application/Commands/ConnectWearable/ConnectWearableCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ConnectWearableCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Wearables/Application/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "ConnectWearableCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Wearables/Application/Commands/ConnectWearable/ConnectWearableCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "DisconnectWearableCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DisconnectWearableCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "DisconnectWearableCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "SyncWearableDataCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "SyncWearableDataCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "SyncWearableDataCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "IWearableReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Wearables/Application/Common/IWearableReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "WearableDateRules",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Common/WearableDateRules.cs",
+      "line": 2
+    },
+    {
+      "name": "WearableProviderParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/Common/WearableProviderParser.cs",
+      "line": 6
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Wearables/Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "GetWearableAuthUrlQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Wearables/Application/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetWearableAuthUrlQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Wearables/Application/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "GetWearableAuthUrlQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Wearables/Application/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "GetWearableConnectionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Wearables/Application/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWearableConnectionsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Wearables/Application/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetWearableDailySummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Wearables/Application/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWearableDailySummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Wearables/Application/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetWearableDailySummaryQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Wearables/Application/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "WearableReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Wearables/Application/Services/WearableReadService.cs",
+      "line": 8
+    },
+    {
+      "name": "WearableConnection",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
+      "line": 9
+    },
+    {
+      "name": "WearableSyncEntry",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs",
+      "line": 8
+    },
+    {
+      "name": "WearableDataType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Wearables/Domain/Enums/WearableDataType.cs",
+      "line": 2
+    },
+    {
+      "name": "WearableProvider",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Wearables/Domain/Enums/WearableProvider.cs",
+      "line": 2
+    },
+    {
+      "name": "WearableConnectionId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Wearables/Domain/ValueObjects/Ids/WearableConnectionId.cs",
+      "line": 4
+    },
+    {
+      "name": "WearableSyncEntryId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Wearables/Domain/ValueObjects/Ids/WearableSyncEntryId.cs",
+      "line": 4
+    },
+    {
+      "name": "ProtectedWearableToken",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Wearables/Domain/ValueObjects/ProtectedWearableToken.cs",
+      "line": 4
+    },
+    {
+      "name": "WearableOAuthStateService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Wearables/Infrastructure/Authentication/WearableOAuthStateService.cs",
+      "line": 10
+    },
+    {
+      "name": "WearableConnectionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Wearables/Infrastructure/Model/Configurations/Wearables/WearableConnectionConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "WearableSyncEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Wearables/Infrastructure/Model/Configurations/Wearables/WearableSyncEntryConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "WearablesPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Wearables/Infrastructure/Model/WearablesPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Wearables/Infrastructure/ModuleRegistration.cs",
+      "line": 9
+    },
+    {
+      "name": "EfWearableTransactionRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs",
+      "line": 7
+    },
+    {
+      "name": "WearableConnectionRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs",
+      "line": 9
+    },
+    {
+      "name": "WearableSyncRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Wearables/Infrastructure/Persistence/WearableSyncRepository.cs",
+      "line": 9
+    },
+    {
+      "name": "WearableTokenProtector",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Wearables/Infrastructure/Services/WearableTokenProtector.cs",
+      "line": 6
+    },
+    {
       "name": "IWeeklyCheckInReadService",
       "kind": "interface",
       "role": "Service",
@@ -26147,37 +26154,37 @@
     },
     {
       "interface": "IWearableConnectionRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableConnectionRepository.cs",
+      "interfacePath": "Modules/Wearables/Application/Abstractions/Common/IWearableConnectionRepository.cs",
       "implementation": "WearableConnectionRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Wearables/WearableConnectionRepository.cs",
+      "implementationPath": "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IWearableOAuthStateService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableOAuthStateService.cs",
+      "interfacePath": "Modules/Wearables/Application/Abstractions/Common/IWearableOAuthStateService.cs",
       "implementation": "WearableOAuthStateService",
-      "implementationPath": "FoodDiary.Infrastructure/Authentication/WearableOAuthStateService.cs",
+      "implementationPath": "Modules/Wearables/Infrastructure/Authentication/WearableOAuthStateService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IWearableReadService",
-      "interfacePath": "FoodDiary.Application.Wearables/Common/IWearableReadService.cs",
+      "interfacePath": "Modules/Wearables/Application/Common/IWearableReadService.cs",
       "implementation": "WearableReadService",
-      "implementationPath": "FoodDiary.Application.Wearables/Services/WearableReadService.cs",
+      "implementationPath": "Modules/Wearables/Application/Services/WearableReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IWearableSyncRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableSyncRepository.cs",
+      "interfacePath": "Modules/Wearables/Application/Abstractions/Common/IWearableSyncRepository.cs",
       "implementation": "WearableSyncRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Wearables/WearableSyncRepository.cs",
+      "implementationPath": "Modules/Wearables/Infrastructure/Persistence/WearableSyncRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IWearableTokenProtector",
-      "interfacePath": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTokenProtector.cs",
+      "interfacePath": "Modules/Wearables/Application/Abstractions/Common/IWearableTokenProtector.cs",
       "implementation": "WearableTokenProtector",
-      "implementationPath": "FoodDiary.Infrastructure/Services/WearableTokenProtector.cs",
+      "implementationPath": "Modules/Wearables/Infrastructure/Services/WearableTokenProtector.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26750,13 +26757,6 @@
       "line": 35
     },
     {
-      "service": "IWearableReadService",
-      "implementation": "WearableReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Wearables/DependencyInjection.cs",
-      "line": 14
-    },
-    {
       "service": "IWikiContextSearch",
       "implementation": "SqliteWikiContextSearch",
       "lifetime": "Singleton",
@@ -27191,34 +27191,6 @@
       "line": 40
     },
     {
-      "service": "IWearableConnectionRepository",
-      "implementation": "WearableConnectionRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Wearables.cs",
-      "line": 10
-    },
-    {
-      "service": "IWearableTransactionRunner",
-      "implementation": "EfWearableTransactionRunner",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Wearables.cs",
-      "line": 13
-    },
-    {
-      "service": "IWearableSyncRepository",
-      "implementation": "WearableSyncRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Wearables.cs",
-      "line": 14
-    },
-    {
-      "service": "IWearableOAuthStateService",
-      "implementation": "WearableOAuthStateService",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Wearables.cs",
-      "line": 18
-    },
-    {
       "service": "IEmailVerificationNotifier",
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
@@ -27380,32 +27352,25 @@
       "line": 39
     },
     {
-      "service": "IWearableTokenProtector",
-      "implementation": "WearableTokenProtector",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 64
-    },
-    {
       "service": "INotificationTextRenderer",
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 108
+      "line": 105
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 109
+      "line": 106
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 141
+      "line": 138
     },
     {
       "service": "IMailInboxReadinessChecker",
@@ -27741,6 +27706,13 @@
       "implementation": "TdeeUserProfileService",
       "lifetime": "Scoped",
       "path": "Modules/Tdee/Application/DependencyInjection.cs",
+      "line": 14
+    },
+    {
+      "service": "IWearableReadService",
+      "implementation": "WearableReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Wearables/Application/DependencyInjection.cs",
       "line": 14
     },
     {

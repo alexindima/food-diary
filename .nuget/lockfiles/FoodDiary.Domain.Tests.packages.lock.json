@@ -155,6 +155,12 @@
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )"
         }
+      },
+      "fooddiary.modules.wearables.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
       }
     }
   }

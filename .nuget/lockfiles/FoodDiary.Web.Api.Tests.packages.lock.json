@@ -415,6 +415,7 @@
           "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
@@ -773,7 +774,9 @@
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )"
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )"
         }
       },
       "FoodDiary.Application.WeeklyCheckIn": {
@@ -839,6 +842,7 @@
           "FoodDiary.Modules.Marketing.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Domain": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.PersistenceModel": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.PersistenceModel": "[1.0.0, )",
           "Microsoft.CodeAnalysis.CSharp.Workspaces": "[5.9.0, )",
@@ -862,6 +866,8 @@
           "FoodDiary.MailRelay.Client": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )",
           "Microsoft.Extensions.Http.Resilience": "[10.9.0, )",
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "[8.22.0, )",
           "SkiaSharp": "[4.151.1, )",
@@ -1249,6 +1255,38 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
+      "fooddiary.modules.wearables.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.wearables.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.wearables.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Wearables": "[1.0.0, )",
+          "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.PersistenceModel": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )",
+          "System.IdentityModel.Tokens.Jwt": "[8.22.0, )"
+        }
+      },
+      "fooddiary.modules.wearables.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
       "fooddiary.modules.weeklygoals.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -1360,7 +1398,6 @@
           "FoodDiary.Application.Tdee": "[1.0.0, )",
           "FoodDiary.Application.Usda": "[1.0.0, )",
           "FoodDiary.Application.Users": "[1.0.0, )",
-          "FoodDiary.Application.Wearables": "[1.0.0, )",
           "FoodDiary.Application.WeeklyCheckIn": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Integrations": "[1.0.0, )",
@@ -1376,6 +1413,7 @@
           "FoodDiary.Modules.Lessons.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Infrastructure": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )",
           "FoodDiary.Resources": "[1.0.0, )",

@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
+    <ProjectReference Include="..\..\Modules\Wearables\Domain\FoodDiary.Modules.Wearables.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Favorites\Domain\FoodDiary.Modules.Favorites.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Dietologist\Domain\FoodDiary.Modules.Dietologist.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Fasting\Domain\FoodDiary.Modules.Fasting.Domain.csproj" />

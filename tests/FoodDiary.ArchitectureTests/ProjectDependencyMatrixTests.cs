@@ -262,6 +262,23 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Domain",
                 "FoodDiary.Mediator",
+                "FoodDiary.Modules.Wearables.Application.Abstractions",
+                "FoodDiary.Modules.Wearables.Domain",
+            ],
+            ["FoodDiary.Modules.Wearables.Application.Abstractions"] = [
+                "FoodDiary.Modules.Wearables.Domain",
+                "FoodDiary.Results",
+            ],
+            ["FoodDiary.Modules.Wearables.Domain"] = [
+                "FoodDiary.Domain",
+            ],
+            ["FoodDiary.Modules.Wearables.PersistenceModel"] = [
+                "FoodDiary.Modules.Wearables.Domain",
+            ],
+            ["FoodDiary.Modules.Wearables.Infrastructure"] = [
+                "FoodDiary.Application.Wearables",
+                "FoodDiary.Infrastructure",
+                "FoodDiary.Modules.Wearables.PersistenceModel",
             ],
             ["FoodDiary.Application.Identity"] = [
                 "FoodDiary.Application.Abstractions",
@@ -417,6 +434,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Cycles.Application.Abstractions",
                 "FoodDiary.Modules.Images.Application.Abstractions",
                 "FoodDiary.Modules.Marketing.Application.Abstractions",
+                "FoodDiary.Modules.Wearables.Application.Abstractions",
                 "FoodDiary.Results",
             ],
             ["FoodDiary.Domain"] = [
@@ -451,6 +469,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Marketing.PersistenceModel",
                 "FoodDiary.Modules.WeeklyGoals.Domain",
                 "FoodDiary.Modules.WeeklyGoals.PersistenceModel",
+                "FoodDiary.Modules.Wearables.PersistenceModel",
             ],
             ["FoodDiary.Initializer"] = [
                 "FoodDiary.Application.Runtime",
@@ -485,7 +504,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Statistics",
                 "FoodDiary.Modules.Tdee.Application",
                 "FoodDiary.Application.Users",
-                "FoodDiary.Application.Wearables",
+                "FoodDiary.Modules.Wearables.Infrastructure",
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Modules.ContentReports.Infrastructure",
                 "FoodDiary.Modules.DailyAdvices.Infrastructure",
@@ -497,6 +516,8 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.MailRelay.Client",
                 "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions",
                 "FoodDiary.Modules.OpenFoodFacts.Contracts",
+                "FoodDiary.Modules.Wearables.Application.Abstractions",
+                "FoodDiary.Modules.Wearables.Domain",
             ],
             ["FoodDiary.JobManager"] = [
                 "FoodDiary.Application.Runtime",
@@ -529,7 +550,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Statistics",
                 "FoodDiary.Modules.Tdee.Application",
                 "FoodDiary.Application.Users",
-                "FoodDiary.Application.Wearables",
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Integrations",
                 "FoodDiary.Modules.DailyAdvices.Application",
@@ -664,7 +684,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Statistics",
                 "FoodDiary.Modules.Tdee.Application",
                 "FoodDiary.Application.Users",
-                "FoodDiary.Application.Wearables",
+                "FoodDiary.Modules.Wearables.Infrastructure",
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Integrations",
                 "FoodDiary.Presentation.Api",
@@ -712,7 +732,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.RecipeCommunity",
                 "FoodDiary.Application.Statistics",
                 "FoodDiary.Application.Users",
-                "FoodDiary.Application.Wearables",
                 "FoodDiary.Domain",
             ],
             ["FoodDiary.ArchitectureTests"] = [
@@ -731,6 +750,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Favorites.Domain",
                 "FoodDiary.Modules.Gamification.Domain",
                 "FoodDiary.Modules.OpenFoodFacts.Domain",
+                "FoodDiary.Modules.Wearables.Domain",
             ],
             ["FoodDiary.Modules.Favorites.Application.Tests"] = [
                 "FoodDiary.Application.Favorites",
@@ -882,6 +902,19 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.WeeklyGoals.Infrastructure",
                 "FoodDiary.Testing",
             ],
+            ["FoodDiary.Modules.Wearables.Application.Tests"] = [
+                "FoodDiary.Application.Wearables",
+            ],
+            ["FoodDiary.Modules.Wearables.Domain.Tests"] = [
+                "FoodDiary.Modules.Wearables.Domain",
+            ],
+            ["FoodDiary.Modules.Wearables.Infrastructure.Tests"] = [
+                "FoodDiary.Modules.Wearables.Infrastructure",
+            ],
+            ["FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests"] = [
+                "FoodDiary.Modules.Wearables.Infrastructure",
+                "FoodDiary.Testing",
+            ],
             ["FoodDiary.Modules.WeeklyCheckIn.Application.Tests"] = [
                 "FoodDiary.Application.Users",
                 "FoodDiary.Modules.WeeklyCheckIn.Application",
@@ -902,6 +935,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Lessons.Infrastructure",
                 "FoodDiary.Modules.OpenFoodFacts.Infrastructure",
                 "FoodDiary.Modules.WeeklyGoals.Infrastructure",
+                "FoodDiary.Modules.Wearables.Infrastructure",
                 "FoodDiary.Testing",
             ],
             ["FoodDiary.Infrastructure.Tests"] = [

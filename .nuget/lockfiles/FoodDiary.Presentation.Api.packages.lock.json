@@ -46,6 +46,7 @@
           "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
@@ -396,7 +397,9 @@
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )"
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )"
         }
       },
       "FoodDiary.Application.WeeklyCheckIn": {
@@ -581,6 +584,19 @@
       },
       "fooddiary.modules.openfoodfacts.contracts": {
         "type": "Project"
+      },
+      "fooddiary.modules.wearables.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.wearables.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
       },
       "fooddiary.modules.weeklygoals.application.abstractions": {
         "type": "Project",

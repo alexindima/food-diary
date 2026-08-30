@@ -37,6 +37,7 @@
     <ProjectReference Include="..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Gamification\Infrastructure\FoodDiary.Modules.Gamification.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\WeeklyGoals\Infrastructure\FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Wearables\Infrastructure\FoodDiary.Modules.Wearables.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Fasting\Infrastructure\FoodDiary.Modules.Fasting.Infrastructure.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Initializer\FoodDiary.Initializer.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Integrations\FoodDiary.Integrations.csproj" />

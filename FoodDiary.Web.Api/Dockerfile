@@ -37,7 +37,11 @@ COPY Modules/Favorites/Infrastructure/Model/*.csproj Modules/Favorites/Infrastru
 COPY FoodDiary.Application.Identity/*.csproj FoodDiary.Application.Identity/
 COPY FoodDiary.Application.MealPlanning/*.csproj FoodDiary.Application.MealPlanning/
 COPY FoodDiary.Application.RecipeCommunity/*.csproj FoodDiary.Application.RecipeCommunity/
-COPY FoodDiary.Application.Wearables/*.csproj FoodDiary.Application.Wearables/
+COPY Modules/Wearables/Application/*.csproj Modules/Wearables/Application/
+COPY Modules/Wearables/Application/Abstractions/*.csproj Modules/Wearables/Application/Abstractions/
+COPY Modules/Wearables/Domain/*.csproj Modules/Wearables/Domain/
+COPY Modules/Wearables/Infrastructure/*.csproj Modules/Wearables/Infrastructure/
+COPY Modules/Wearables/Infrastructure/Model/*.csproj Modules/Wearables/Infrastructure/Model/
 COPY FoodDiary.Application.Notifications/*.csproj FoodDiary.Application.Notifications/
 COPY FoodDiary.Application.BodyMetrics/*.csproj FoodDiary.Application.BodyMetrics/
 COPY Modules/Cycles/Application/*.csproj Modules/Cycles/Application/
@@ -145,7 +149,12 @@ COPY Modules/Favorites/Infrastructure/Model/ Modules/Favorites/Infrastructure/Mo
 COPY FoodDiary.Application.Identity/ FoodDiary.Application.Identity/
 COPY FoodDiary.Application.MealPlanning/ FoodDiary.Application.MealPlanning/
 COPY FoodDiary.Application.RecipeCommunity/ FoodDiary.Application.RecipeCommunity/
-COPY FoodDiary.Application.Wearables/ FoodDiary.Application.Wearables/
+COPY Modules/Wearables/ Modules/Wearables/
+COPY Modules/Wearables/Application/ Modules/Wearables/Application/
+COPY Modules/Wearables/Application/Abstractions/ Modules/Wearables/Application/Abstractions/
+COPY Modules/Wearables/Domain/ Modules/Wearables/Domain/
+COPY Modules/Wearables/Infrastructure/ Modules/Wearables/Infrastructure/
+COPY Modules/Wearables/Infrastructure/Model/ Modules/Wearables/Infrastructure/Model/
 COPY FoodDiary.Application.Notifications/ FoodDiary.Application.Notifications/
 COPY FoodDiary.Application.BodyMetrics/ FoodDiary.Application.BodyMetrics/
 COPY Modules/Cycles/Application/ Modules/Cycles/Application/

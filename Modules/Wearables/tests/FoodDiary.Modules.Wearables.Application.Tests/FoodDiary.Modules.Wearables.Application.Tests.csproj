@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><RootNamespace>FoodDiary.Application.Tests</RootNamespace></PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="NSubstitute" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup><ProjectReference Include="..\..\Application\FoodDiary.Application.Wearables.csproj" /></ItemGroup>
+</Project>

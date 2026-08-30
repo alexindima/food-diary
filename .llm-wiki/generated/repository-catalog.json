@@ -13,16 +13,16 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 187,
-    "testProjects": 68,
+    "dotnetProjects": 195,
+    "testProjects": 72,
     "frontendProjects": 4,
     "applicationModules": 0,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 33,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 109,
-    "documentationPages": 69
+    "agentGuides": 114,
+    "documentationPages": 70
   },
   "dotnet": {
     "projects": [
@@ -60,6 +60,7 @@
           "Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj",
           "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
           "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+          "Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
@@ -640,36 +641,6 @@
         ]
       },
       {
-        "name": "FoodDiary.Application.Wearables",
-        "assemblyName": "FoodDiary.Application.Wearables",
-        "path": "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
-          "FoodDiary.Domain/FoodDiary.Domain.csproj",
-          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "FluentValidation",
-            "version": null
-          },
-          {
-            "name": "FluentValidation.DependencyInjectionExtensions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          }
-        ]
-      },
-      {
         "name": "FoodDiary.Development.Mcp",
         "assemblyName": "FoodDiary.Development.Mcp",
         "path": "FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj",
@@ -746,6 +717,7 @@
           "Modules/Marketing/Infrastructure/Model/FoodDiary.Modules.Marketing.PersistenceModel.csproj",
           "Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj",
           "Modules/OpenFoodFacts/Infrastructure/Model/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj",
+          "Modules/Wearables/Infrastructure/Model/FoodDiary.Modules.Wearables.PersistenceModel.csproj",
           "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj",
           "Modules/WeeklyGoals/Infrastructure/Model/FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
@@ -850,7 +822,6 @@
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
           "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
           "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
-          "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "Modules/ContentReports/Infrastructure/FoodDiary.Modules.ContentReports.Infrastructure.csproj",
           "Modules/Cycles/Infrastructure/FoodDiary.Modules.Cycles.Infrastructure.csproj",
@@ -866,6 +837,7 @@
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
           "Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj",
           "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
+          "Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj",
           "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj",
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj"
         ],
@@ -900,7 +872,9 @@
           "MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj",
           "MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj",
           "Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
-          "Modules/OpenFoodFacts/Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj"
+          "Modules/OpenFoodFacts/Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj",
+          "Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj",
+          "Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj"
         ],
         "packageReferences": [
           {
@@ -982,7 +956,6 @@
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
           "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
           "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
-          "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
           "FoodDiary.Resources/FoodDiary.Resources.csproj",
@@ -1080,7 +1053,6 @@
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
           "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
           "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
-          "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
           "Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj",
           "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj",
           "Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj",
@@ -1095,6 +1067,7 @@
           "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj",
           "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
           "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
+          "Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj",
           "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj",
           "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
@@ -1177,7 +1150,6 @@
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
           "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
           "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
-          "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
@@ -1196,6 +1168,7 @@
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
           "Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj",
           "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
+          "Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj",
           "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj",
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj"
         ],
@@ -4842,6 +4815,280 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Wearables.Application.Abstractions",
+        "assemblyName": "FoodDiary.Modules.Wearables.Application.Abstractions",
+        "path": "Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.Application.Wearables",
+        "assemblyName": "FoodDiary.Application.Wearables",
+        "path": "Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+          "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj",
+          "Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "FluentValidation",
+            "version": null
+          },
+          {
+            "name": "FluentValidation.DependencyInjectionExtensions",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Wearables.Domain",
+        "assemblyName": "FoodDiary.Modules.Wearables.Domain",
+        "path": "Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.Modules.Wearables.Infrastructure",
+        "assemblyName": "FoodDiary.Modules.Wearables.Infrastructure",
+        "path": "Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
+          "Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj",
+          "Modules/Wearables/Infrastructure/Model/FoodDiary.Modules.Wearables.PersistenceModel.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.AspNetCore.DataProtection",
+            "version": null
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": null
+          },
+          {
+            "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          },
+          {
+            "name": "System.IdentityModel.Tokens.Jwt",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Wearables.PersistenceModel",
+        "assemblyName": "FoodDiary.Modules.Wearables.PersistenceModel",
+        "path": "Modules/Wearables/Infrastructure/Model/FoodDiary.Modules.Wearables.PersistenceModel.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.EntityFrameworkCore",
+            "version": null
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Wearables.Application.Tests",
+        "assemblyName": "FoodDiary.Modules.Wearables.Application.Tests",
+        "path": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/FoodDiary.Modules.Wearables.Application.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "NSubstitute",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Wearables.Domain.Tests",
+        "assemblyName": "FoodDiary.Modules.Wearables.Domain.Tests",
+        "path": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/FoodDiary.Modules.Wearables.Domain.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests",
+        "assemblyName": "FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests",
+        "path": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj",
+          "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          },
+          {
+            "name": "SSH.NET",
+            "version": null
+          },
+          {
+            "name": "Testcontainers.PostgreSql",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Wearables.Infrastructure.Tests",
+        "assemblyName": "FoodDiary.Modules.Wearables.Infrastructure.Tests",
+        "path": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/FoodDiary.Modules.Wearables.Infrastructure.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.AspNetCore.DataProtection",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.WeeklyCheckIn.Application",
         "assemblyName": "FoodDiary.Application.WeeklyCheckIn",
         "path": "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj",
@@ -5261,7 +5508,6 @@
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
           "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
           "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
-          "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "Modules/ContentReports/Application/Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj",
           "Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj",
@@ -5430,7 +5676,8 @@
           "Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj",
           "Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj",
           "Modules/Gamification/Domain/FoodDiary.Modules.Gamification.Domain.csproj",
-          "Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj"
+          "Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj",
+          "Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj"
         ],
         "packageReferences": [
           {
@@ -5476,6 +5723,7 @@
           "Modules/Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj",
           "Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj",
           "Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj",
+          "Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj",
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -5720,7 +5968,6 @@
           "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
           "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
           "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
-          "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
           "Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj",
@@ -5736,6 +5983,7 @@
           "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj",
           "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
           "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
+          "Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj",
           "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj",
           "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj"
         ],
@@ -6051,6 +6299,10 @@
       "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Domain.Tests/FoodDiary.Modules.OpenFoodFacts.Domain.Tests.csproj",
       "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests.csproj",
       "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/FoodDiary.Modules.Tdee.Application.Tests.csproj",
+      "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/FoodDiary.Modules.Wearables.Application.Tests.csproj",
+      "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/FoodDiary.Modules.Wearables.Domain.Tests.csproj",
+      "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests.csproj",
+      "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/FoodDiary.Modules.Wearables.Infrastructure.Tests.csproj",
       "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests.csproj",
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj",
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests.csproj",
@@ -6247,7 +6499,7 @@
     },
     {
       "name": "Wearables",
-      "project": "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj"
+      "project": "Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj"
     },
     {
       "name": "WeeklyCheckIn",
@@ -8335,7 +8587,6 @@
       "FoodDiary.Application.Statistics/AGENTS.md",
       "FoodDiary.Application.Usda/AGENTS.md",
       "FoodDiary.Application.Users/AGENTS.md",
-      "FoodDiary.Application.Wearables/AGENTS.md",
       "FoodDiary.Development.Mcp/AGENTS.md",
       "FoodDiary.Domain/AGENTS.md",
       "FoodDiary.Infrastructure/AGENTS.md",
@@ -8409,6 +8660,12 @@
       "Modules/OpenFoodFacts/Infrastructure/AGENTS.md",
       "Modules/OpenFoodFacts/Infrastructure/Model/AGENTS.md",
       "Modules/Tdee/AGENTS.md",
+      "Modules/Wearables/AGENTS.md",
+      "Modules/Wearables/Application/AGENTS.md",
+      "Modules/Wearables/Application/Abstractions/AGENTS.md",
+      "Modules/Wearables/Domain/AGENTS.md",
+      "Modules/Wearables/Infrastructure/AGENTS.md",
+      "Modules/Wearables/Infrastructure/Model/AGENTS.md",
       "Modules/WeeklyCheckIn/AGENTS.md",
       "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/AGENTS.md",
       "Modules/WeeklyGoals/AGENTS.md",
@@ -8456,6 +8713,7 @@
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/CODE_REVIEW.md",
+      "docs/ai/WEARABLES_WIKI_EVIDENCE_REPORT.md",
       "docs/ai/WEEKLY_CHECKIN_EXTRACTION_WIKI_EVALUATION.md",
       "docs/backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md",
       "docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md",

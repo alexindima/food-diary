@@ -4,7 +4,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class WearablesModuleBoundaryTests {
     [Fact]
     public void WearablesApplicationSource_DoesNotDependOnRootApplicationCommon() {
-        string wearableRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Wearables");
+        string wearableRoot = ArchitectureTestPaths.FromRoot("Modules", "Wearables", "Application");
         string[] violations = [.. SourceScanner.SourceFiles(wearableRoot)
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, line, index }))
@@ -31,7 +31,7 @@ public sealed class WearablesModuleBoundaryTests {
     [Fact]
     public void WearablesReadServiceContract_RemainsInternalToFeature() {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application.Wearables",
+            "Modules", "Wearables", "Application",
             "Common",
             "IWearableReadService.cs"));
 
@@ -44,7 +44,7 @@ public sealed class WearablesModuleBoundaryTests {
     [InlineData("GetWearableDailySummary", "GetWearableDailySummaryQueryHandler.cs")]
     public void WearablesReadHandlers_RemainInternalToFeature(string query, string fileName) {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application.Wearables",
+            "Modules", "Wearables", "Application",
             "Queries",
             query,
             fileName));

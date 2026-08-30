@@ -50,7 +50,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Recipes application module: `FoodDiary.Application.Recipes/AGENTS.md`
 - Statistics application module: `FoodDiary.Application.Statistics/AGENTS.md`
 - TDEE logical module: `Modules/Tdee/AGENTS.md`
-- Wearables application module: `FoodDiary.Application.Wearables/AGENTS.md`
+- Wearables logical module: `Modules/Wearables/AGENTS.md`
+- Wearables application: `Modules/Wearables/Application/AGENTS.md`
+- Wearables application abstractions: `Modules/Wearables/Application/Abstractions/AGENTS.md`
+- Wearables domain: `Modules/Wearables/Domain/AGENTS.md`
+- Wearables infrastructure: `Modules/Wearables/Infrastructure/AGENTS.md`
+- Wearables persistence model: `Modules/Wearables/Infrastructure/Model/AGENTS.md`
 - Frontend app: `FoodDiary.Web.Client/AGENTS.md`
 - Frontend application shell: `FoodDiary.Web.Client/src/app/AGENTS.md`
 - Frontend feature folders: `FoodDiary.Web.Client/src/app/features/AGENTS.md`

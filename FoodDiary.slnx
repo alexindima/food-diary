@@ -15,7 +15,6 @@
     <Project Path="FoodDiary.Application.BodyMetrics/FoodDiary.Application.BodyMetrics.csproj" />
     <Project Path="FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj" />
     <Project Path="FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj" />
-    <Project Path="FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj" />
   </Folder>
   <Folder Name="/Application/Users and Access/">
     <Project Path="FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj" />
@@ -166,6 +165,23 @@
     <Project Path="Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj" />
     <Project Path="Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests.csproj" />
     <Project Path="Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Wearables/">
+    <Project Path="Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Wearables/Application/">
+    <Project Path="Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj" />
+    <Project Path="Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj" />
+    <Project Path="Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Wearables/Infrastructure/">
+    <Project Path="Modules/Wearables/Infrastructure/Model/FoodDiary.Modules.Wearables.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Wearables/tests/">
+    <Project Path="Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/FoodDiary.Modules.Wearables.Application.Tests.csproj" />
+    <Project Path="Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/FoodDiary.Modules.Wearables.Domain.Tests.csproj" />
+    <Project Path="Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests.csproj" />
+    <Project Path="Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/FoodDiary.Modules.Wearables.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/WeeklyCheckIn/">
     <Project Path="Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj" />

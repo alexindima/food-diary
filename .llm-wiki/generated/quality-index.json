@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4730,
+    "productionFiles": 4733,
     "wikiToolFiles": 201,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 781,
@@ -6103,150 +6103,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableClient.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableConnectionReadRepository.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableConnectionRepository.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableConnectionWriteRepository.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableOAuthStateService.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableSyncReadModelRepository.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableSyncReadRepository.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableSyncRepository.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableSyncWriteRepository.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTokenProtector.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTransactionRunner.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/WearableErrors.cs",
-      "nonBlankLines": 32,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.14
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Common/WearableInputLimits.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableConnectionModel.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableDailySummaryModel.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableDataPoint.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableSyncEntryReadModel.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Wearables/Models/WearableTokenResult.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
     },
     {
       "path": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs",
@@ -12817,190 +12673,6 @@
       "structuralRiskScore": 2.46
     },
     {
-      "path": "FoodDiary.Application.Wearables/AssemblyInfo.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
-      "nonBlankLines": 95,
-      "decisionPoints": 8,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.9
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Commands/ConnectWearable/ConnectWearableCommandValidator.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.52
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 3,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.28
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Commands/DisconnectWearable/DisconnectWearableCommandValidator.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.24
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
-      "nonBlankLines": 146,
-      "decisionPoints": 25,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 42.42
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommandValidator.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.34
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Common/IWearableReadService.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Common/WearableDateRules.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.66
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Common/WearableProviderParser.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/DependencyInjection.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 3,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.26
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryValidator.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.3
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.04
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.04
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryValidator.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.22
-    },
-    {
-      "path": "FoodDiary.Application.Wearables/Services/WearableReadService.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 11,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.24
-    },
-    {
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshot.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -13362,11 +13034,11 @@
     },
     {
       "path": "FoodDiary.Domain/AssemblyInfo.cs",
-      "nonBlankLines": 8,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
+      "structuralRiskScore": 0.18
     },
     {
       "path": "FoodDiary.Domain/Common/DomainConstants.cs",
@@ -13809,22 +13481,6 @@
       "structuralRiskScore": 7.18
     },
     {
-      "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "nonBlankLines": 118,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.36
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Wearables/WearableSyncEntry.cs",
-      "nonBlankLines": 55,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.1
-    },
-    {
       "path": "FoodDiary.Domain/Enums/ActivityLevel.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -13986,22 +13642,6 @@
     },
     {
       "path": "FoodDiary.Domain/Enums/WaistGoalStatus.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/WearableDataType.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/WearableProvider.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -14377,22 +14017,6 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WearableConnectionId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WearableSyncEntryId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
       "path": "FoodDiary.Domain/ValueObjects/Ids/WebPushSubscriptionId.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -14519,14 +14143,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.84
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/ProtectedWearableToken.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.94
     },
     {
       "path": "FoodDiary.Domain/ValueObjects/RecipeDetailsState.cs",
@@ -14785,14 +14401,6 @@
       "structuralRiskScore": 20.62
     },
     {
-      "path": "FoodDiary.Infrastructure/Authentication/WearableOAuthStateService.cs",
-      "nonBlankLines": 49,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.98
-    },
-    {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
       "nonBlankLines": 17,
       "decisionPoints": 0,
@@ -14969,20 +14577,12 @@
       "structuralRiskScore": 0.8
     },
     {
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Wearables.cs",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
       "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.36
-    },
-    {
-      "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
     },
     {
       "path": "FoodDiary.Infrastructure/Events/DomainEventNotification.cs",
@@ -15601,22 +15201,6 @@
       "structuralRiskScore": 0.48
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Wearables/WearableConnectionConfiguration.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.76
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Wearables/WearableSyncEntryConfiguration.cs",
-      "nonBlankLines": 28,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
       "nonBlankLines": 70,
       "decisionPoints": 0,
@@ -15850,11 +15434,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 33,
+      "nonBlankLines": 34,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
+      "structuralRiskScore": 0.68
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -16217,36 +15801,12 @@
       "structuralRiskScore": 13.8
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Wearables/EfWearableTransactionRunner.cs",
-      "nonBlankLines": 28,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.06
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Wearables/WearableConnectionRepository.cs",
-      "nonBlankLines": 47,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Wearables/WearableSyncRepository.cs",
-      "nonBlankLines": 45,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.4
-    },
-    {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.08
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DatabaseCommandTelemetryInterceptor.cs",
@@ -16423,14 +15983,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 4.86
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/WearableTokenProtector.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Initializer/InitialAdminBootstrapOptions.cs",
@@ -21746,11 +21298,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 142,
+      "nonBlankLines": 139,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.84
+      "structuralRiskScore": 5.78
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -38145,6 +37697,478 @@
       "structuralRiskScore": 1.96
     },
     {
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableConnectionReadRepository.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableConnectionRepository.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableConnectionWriteRepository.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableOAuthStateService.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableSyncReadModelRepository.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableSyncReadRepository.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableSyncRepository.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableSyncWriteRepository.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.44
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableTokenProtector.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Common/IWearableTransactionRunner.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Common/WearableErrors.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.14
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Common/WearableInputLimits.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableConnectionModel.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableDailySummaryModel.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableDataPoint.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableSyncEntryReadModel.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Wearables/Application/Abstractions/Models/WearableTokenResult.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Wearables/Application/AssemblyInfo.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Wearables/Application/Commands/ConnectWearable/ConnectWearableCommand.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Wearables/Application/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+      "nonBlankLines": 95,
+      "decisionPoints": 8,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.9
+    },
+    {
+      "path": "Modules/Wearables/Application/Commands/ConnectWearable/ConnectWearableCommandValidator.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.52
+    },
+    {
+      "path": "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
+      "nonBlankLines": 39,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.28
+    },
+    {
+      "path": "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommandValidator.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.24
+    },
+    {
+      "path": "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommand.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+      "nonBlankLines": 146,
+      "decisionPoints": 25,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 42.42
+    },
+    {
+      "path": "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommandValidator.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.34
+    },
+    {
+      "path": "Modules/Wearables/Application/Common/IWearableReadService.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Wearables/Application/Common/WearableDateRules.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.66
+    },
+    {
+      "path": "Modules/Wearables/Application/Common/WearableProviderParser.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Wearables/Application/DependencyInjection.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/Wearables/Application/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Wearables/Application/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.26
+    },
+    {
+      "path": "Modules/Wearables/Application/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryValidator.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.3
+    },
+    {
+      "path": "Modules/Wearables/Application/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Wearables/Application/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.04
+    },
+    {
+      "path": "Modules/Wearables/Application/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Wearables/Application/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.04
+    },
+    {
+      "path": "Modules/Wearables/Application/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryValidator.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.22
+    },
+    {
+      "path": "Modules/Wearables/Application/Services/WearableReadService.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 11,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 17.24
+    },
+    {
+      "path": "Modules/Wearables/Domain/AssemblyInfo.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
+      "nonBlankLines": 118,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.36
+    },
+    {
+      "path": "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs",
+      "nonBlankLines": 55,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.1
+    },
+    {
+      "path": "Modules/Wearables/Domain/Enums/WearableDataType.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Wearables/Domain/Enums/WearableProvider.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Wearables/Domain/ValueObjects/Ids/WearableConnectionId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Wearables/Domain/ValueObjects/Ids/WearableSyncEntryId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Wearables/Domain/ValueObjects/ProtectedWearableToken.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.94
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/AssemblyInfo.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/Authentication/WearableOAuthStateService.cs",
+      "nonBlankLines": 49,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.98
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/Model/Configurations/Wearables/WearableConnectionConfiguration.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.76
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/Model/Configurations/Wearables/WearableSyncEntryConfiguration.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.56
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/Model/WearablesPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/ModuleRegistration.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.46
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.06
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs",
+      "nonBlankLines": 47,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.44
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/Persistence/WearableSyncRepository.cs",
+      "nonBlankLines": 45,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.4
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/Services/WearableTokenProtector.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
       "path": "Modules/WeeklyCheckIn/Application/AssemblyInfo.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -38925,11 +38949,11 @@
     {
       "name": "ConnectWearableCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+      "path": "Modules/Wearables/Application/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
       "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -39433,11 +39457,11 @@
     {
       "name": "DisconnectWearableCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
+      "path": "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
       "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40170,11 +40194,11 @@
     {
       "name": "SyncWearableDataCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+      "path": "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
       "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43239,11 +43263,11 @@
     {
       "name": "GetWearableAuthUrlQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
+      "path": "Modules/Wearables/Application/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
       "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43252,11 +43276,11 @@
     {
       "name": "GetWearableConnectionsQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
+      "path": "Modules/Wearables/Application/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
         "tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs"
       ],
@@ -43266,11 +43290,11 @@
     {
       "name": "GetWearableDailySummaryQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
+      "path": "Modules/Wearables/Application/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
         "tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs"
       ],
@@ -43706,11 +43730,11 @@
     {
       "name": "ConnectWearableCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Commands/ConnectWearable/ConnectWearableCommandValidator.cs",
+      "path": "Modules/Wearables/Application/Commands/ConnectWearable/ConnectWearableCommandValidator.cs",
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs"
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44086,11 +44110,11 @@
     {
       "name": "DisconnectWearableCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Commands/DisconnectWearable/DisconnectWearableCommandValidator.cs",
+      "path": "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommandValidator.cs",
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs"
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44796,11 +44820,11 @@
     {
       "name": "GetWearableAuthUrlQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryValidator.cs",
+      "path": "Modules/Wearables/Application/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryValidator.cs",
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs"
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44808,11 +44832,11 @@
     {
       "name": "GetWearableDailySummaryQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryValidator.cs",
+      "path": "Modules/Wearables/Application/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryValidator.cs",
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Wearables/WearableDateValidatorTests.cs"
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearableDateValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45574,12 +45598,12 @@
     {
       "name": "SyncWearableDataCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Wearables/Commands/SyncWearableData/SyncWearableDataCommandValidator.cs",
+      "path": "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommandValidator.cs",
       "line": 6,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Wearables/WearableDateValidatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs"
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearableDateValidatorTests.cs",
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

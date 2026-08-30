@@ -47,7 +47,6 @@
     "Usda": "Usda",
     "Users": "Users",
     "WaistEntries": "BodyMetrics",
-    "Wearables": "Wearables",
     "WeightEntries": "BodyMetrics"
   },
   "modules": {
@@ -594,17 +593,18 @@
         "WearableSyncEntry"
       ],
       "sourceMappings": {
+        "logicalRoot": "Modules/Wearables",
         "applicationProjects": [
-          "FoodDiary.Application.Wearables"
+          "Modules/Wearables/Application"
         ],
         "abstractionAreas": [
-          "Wearables"
+          "Modules/Wearables/Application/Abstractions"
         ],
         "domainAreas": [
-          "Wearables"
+          "Modules/Wearables/Domain"
         ],
         "persistenceAreas": [
-          "Wearables"
+          "Modules/Wearables/Infrastructure"
         ],
         "adapterAreas": [
           "FoodDiary.Integrations/Wearables"

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Modules.Wearables.Application.Abstractions</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Abstractions.Wearables</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\FoodDiary.Modules.Wearables.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -26,7 +26,7 @@ using FoodDiary.Application.Products;
 using FoodDiary.Application.Recipes;
 using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Application.Users;
-using FoodDiary.Application.Wearables;
+using FoodDiary.Modules.Wearables.Infrastructure;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Application.Usda;
 using FoodDiary.Application.WeeklyCheckIn;

@@ -27,7 +27,6 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Application.Statistics",
             "FoodDiary.Application.Usda",
             "FoodDiary.Application.Users",
-            "FoodDiary.Application.Wearables",
             "FoodDiary.Infrastructure",
             "FoodDiary.Modules.ContentReports.Infrastructure",
             "FoodDiary.Modules.Cycles.Infrastructure",
@@ -42,6 +41,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Modules.OpenFoodFacts.Infrastructure",
             "FoodDiary.Modules.Marketing.Infrastructure",
             "FoodDiary.Modules.Tdee.Application",
+            "FoodDiary.Modules.Wearables.Infrastructure",
             "FoodDiary.Modules.WeeklyCheckIn.Application",
             "FoodDiary.Modules.WeeklyGoals.Infrastructure",
         ];

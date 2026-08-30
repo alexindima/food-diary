@@ -48,6 +48,6 @@ are reported separately; `none observed` never means proven isolation.
 | [Tdee](tdee.md) | read-composer | 0 | 3 | 0 | 5 | project-reference-matrix |
 | [Usda](usda.md) | adapter | 0 | 3 | 0 | 6 | project-reference-matrix |
 | [Users](users.md) | aggregate-owner | 0 | 0 | 0 | 4 | explicit-boundary-tests |
-| [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |
+| [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 4 | assembly-isolated |
 | [WeeklyCheckIn](weekly-check-in.md) | read-composer | 0 | 5 | 0 | 3 | project-reference-matrix |
 | [WeeklyGoals](weekly-goals.md) | aggregate-owner | 0 | 3 | 0 | 4 | project-reference-matrix |

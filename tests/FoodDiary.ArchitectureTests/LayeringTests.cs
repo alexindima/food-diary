@@ -317,7 +317,6 @@ public class LayeringTests {
             "services.AddAuthenticationInfrastructure();",
             "services.AddBillingInfrastructure();",
             "services.AddExportInfrastructure();",
-            "services.AddWearablesInfrastructure();",
         ];
 
         string[] actualRegistrations = [.. File.ReadLines(dependencyInjectionPath)

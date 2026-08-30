@@ -609,14 +609,14 @@
       "area": "FoodDiary",
       "name": "WearableConnection",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
+      "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
       "line": 9
     },
     {
       "area": "FoodDiary",
       "name": "WearableSyncEntry",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Wearables/WearableSyncEntry.cs",
+      "path": "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs",
       "line": 8
     },
     {
@@ -924,14 +924,14 @@
       "area": "FoodDiary",
       "name": "WearableDataType",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/WearableDataType.cs",
+      "path": "Modules/Wearables/Domain/Enums/WearableDataType.cs",
       "line": 2
     },
     {
       "area": "FoodDiary",
       "name": "WearableProvider",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/WearableProvider.cs",
+      "path": "Modules/Wearables/Domain/Enums/WearableProvider.cs",
       "line": 2
     },
     {
@@ -1379,7 +1379,7 @@
       "area": "FoodDiary",
       "name": "ProtectedWearableToken",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/ProtectedWearableToken.cs",
+      "path": "Modules/Wearables/Domain/ValueObjects/ProtectedWearableToken.cs",
       "line": 4
     },
     {
@@ -1715,14 +1715,14 @@
       "area": "FoodDiary",
       "name": "WearableConnectionId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WearableConnectionId.cs",
+      "path": "Modules/Wearables/Domain/ValueObjects/Ids/WearableConnectionId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "WearableSyncEntryId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WearableSyncEntryId.cs",
+      "path": "Modules/Wearables/Domain/ValueObjects/Ids/WearableSyncEntryId.cs",
       "line": 4
     },
     {
@@ -3549,34 +3549,6 @@
     },
     {
       "area": "FoodDiary",
-      "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException(\"Tokens cannot be updated for an inactive wearable connection.\")",
-      "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 61
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 125
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Wearable token must be protected before persistence.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 131
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Wearables/WearableSyncEntry.cs",
-      "line": 55
-    },
-    {
-      "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Desired waist must be a finite number.\")",
       "path": "FoodDiary.Domain/ValueObjects/DesiredWaistCm.cs",
@@ -3776,13 +3748,6 @@
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"Profile weight must be in range (0, {MaxValue}].\"))",
       "path": "FoodDiary.Domain/ValueObjects/ProfileWeightKg.cs",
-      "line": 20
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Wearable token must be protected before persistence.\", nameof(value))",
-      "path": "FoodDiary.Domain/ValueObjects/ProtectedWearableToken.cs",
       "line": 20
     },
     {
@@ -5205,6 +5170,41 @@
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\")",
       "path": "Modules/OpenFoodFacts/Domain/OpenFoodFactsDomainGuard.cs",
       "line": 42
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Tokens cannot be updated for an inactive wearable connection.\")",
+      "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
+      "line": 61
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+      "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
+      "line": 125
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Wearable token must be protected before persistence.\", paramName)",
+      "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
+      "line": 131
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+      "path": "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs",
+      "line": 55
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Wearable token must be protected before persistence.\", nameof(value))",
+      "path": "Modules/Wearables/Domain/ValueObjects/ProtectedWearableToken.cs",
+      "line": 20
     },
     {
       "area": "FoodDiary",
@@ -6749,7 +6749,7 @@
           "expression": "e => e.User)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Wearables/WearableConnectionConfiguration.cs"
+      "path": "Modules/Wearables/Infrastructure/Model/Configurations/Wearables/WearableConnectionConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6766,7 +6766,7 @@
           "expression": "e => e.User)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Wearables/WearableSyncEntryConfiguration.cs"
+      "path": "Modules/Wearables/Infrastructure/Model/Configurations/Wearables/WearableSyncEntryConfiguration.cs"
     },
     {
       "area": "FoodDiary",

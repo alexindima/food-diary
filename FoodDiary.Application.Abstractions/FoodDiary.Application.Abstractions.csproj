@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Modules\Marketing\Application\Abstractions\FoodDiary.Modules.Marketing.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\Modules\Wearables\Application\Abstractions\FoodDiary.Modules.Wearables.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Modules\Favorites\Domain\FoodDiary.Modules.Favorites.Domain.csproj" />
     <ProjectReference Include="..\Modules\Cycles\Application\Abstractions\FoodDiary.Modules.Cycles.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Modules\Images\Application\Abstractions\FoodDiary.Modules.Images.Application.Abstractions.csproj" />

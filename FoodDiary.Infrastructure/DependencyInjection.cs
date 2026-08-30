@@ -15,7 +15,6 @@ public static partial class DependencyInjection {
         services.AddAuthenticationInfrastructure();
         services.AddBillingInfrastructure();
         services.AddExportInfrastructure();
-        services.AddWearablesInfrastructure();
 
         return services;
     }

@@ -2,7 +2,7 @@ using FoodDiary.Infrastructure.Services;
 using Microsoft.AspNetCore.DataProtection;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Web.Api.Tests.Services;
+namespace FoodDiary.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class WearableTokenProtectorTests {
