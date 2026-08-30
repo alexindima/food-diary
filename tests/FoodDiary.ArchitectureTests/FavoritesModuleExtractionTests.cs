@@ -8,7 +8,7 @@ public sealed class FavoritesModuleExtractionTests {
     [InlineData("FavoriteRecipes")]
     public void FavoritesApplicationSource_LivesOnlyInExtractedAssembly(string feature) {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", feature);
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Favorites", feature);
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Favorites", "Application", feature);
 
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
@@ -25,11 +25,12 @@ public sealed class FavoritesModuleExtractionTests {
     [Fact]
     public void ExtractedFavoritesAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj");
+            "Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj");
         string[] expectedReferences = [
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Favorites.Domain",
         ];
 
         Assert.Equal(expectedReferences, references);

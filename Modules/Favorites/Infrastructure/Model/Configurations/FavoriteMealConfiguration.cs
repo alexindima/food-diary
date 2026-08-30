@@ -1,25 +1,25 @@
-using FoodDiary.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.Favorites;
+namespace FoodDiary.Modules.Favorites.Infrastructure.Persistence.Configurations;
 
-internal sealed class FavoriteRecipeConfiguration : IEntityTypeConfiguration<FavoriteRecipe> {
-    public void Configure(EntityTypeBuilder<FavoriteRecipe> builder) {
+internal sealed class FavoriteMealConfiguration : IEntityTypeConfiguration<FavoriteMeal> {
+    public void Configure(EntityTypeBuilder<FavoriteMeal> builder) {
         builder.Property(e => e.Id)
             .HasConversion(
                 id => id.Value,
-                value => new FavoriteRecipeId(value))
+                value => new FavoriteMealId(value))
             .ValueGeneratedNever();
 
         builder.Property(e => e.UserId).HasConversion(
             id => id.Value,
             value => new UserId(value));
 
-        builder.Property(e => e.RecipeId).HasConversion(
+        builder.Property(e => e.MealId).HasConversion(
             id => id.Value,
-            value => new RecipeId(value));
+            value => new MealId(value));
 
         builder.Property(e => e.Name)
             .HasMaxLength(500);
@@ -32,12 +32,12 @@ internal sealed class FavoriteRecipeConfiguration : IEntityTypeConfiguration<Fav
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(e => e.Recipe)
+        builder.HasOne(e => e.Meal)
             .WithMany()
-            .HasForeignKey(e => e.RecipeId)
+            .HasForeignKey(e => e.MealId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(e => new { e.UserId, e.RecipeId })
+        builder.HasIndex(e => new { e.UserId, e.MealId })
             .IsUnique();
 
         builder.HasIndex(e => e.UserId);

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Favorites\Infrastructure\FoodDiary.Modules.Favorites.Infrastructure.csproj" />
     <PackageReference Include="AWSSDK.S3" PrivateAssets="all" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />

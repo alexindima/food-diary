@@ -37,7 +37,10 @@ COPY Modules/Lessons/Infrastructure/Model/*.csproj Modules/Lessons/Infrastructur
 COPY Modules/ContentReports/Domain/*.csproj Modules/ContentReports/Domain/
 COPY Modules/ContentReports/Contracts/*.csproj Modules/ContentReports/Contracts/
 COPY Modules/ContentReports/Infrastructure/Model/*.csproj Modules/ContentReports/Infrastructure/Model/
-COPY FoodDiary.Application.Favorites/*.csproj FoodDiary.Application.Favorites/
+COPY Modules/Favorites/Application/*.csproj Modules/Favorites/Application/
+COPY Modules/Favorites/Domain/*.csproj Modules/Favorites/Domain/
+COPY Modules/Favorites/Infrastructure/*.csproj Modules/Favorites/Infrastructure/
+COPY Modules/Favorites/Infrastructure/Model/*.csproj Modules/Favorites/Infrastructure/Model/
 COPY FoodDiary.Application.Identity/*.csproj FoodDiary.Application.Identity/
 COPY FoodDiary.Application.MealPlanning/*.csproj FoodDiary.Application.MealPlanning/
 COPY FoodDiary.Application.RecipeCommunity/*.csproj FoodDiary.Application.RecipeCommunity/
@@ -114,7 +117,11 @@ COPY Modules/Lessons/Infrastructure/Model/ Modules/Lessons/Infrastructure/Model/
 COPY Modules/ContentReports/Domain/ Modules/ContentReports/Domain/
 COPY Modules/ContentReports/Contracts/ Modules/ContentReports/Contracts/
 COPY Modules/ContentReports/Infrastructure/Model/ Modules/ContentReports/Infrastructure/Model/
-COPY FoodDiary.Application.Favorites/ FoodDiary.Application.Favorites/
+COPY Modules/Favorites/ Modules/Favorites/
+COPY Modules/Favorites/Application/ Modules/Favorites/Application/
+COPY Modules/Favorites/Domain/ Modules/Favorites/Domain/
+COPY Modules/Favorites/Infrastructure/ Modules/Favorites/Infrastructure/
+COPY Modules/Favorites/Infrastructure/Model/ Modules/Favorites/Infrastructure/Model/
 COPY FoodDiary.Application.Identity/ FoodDiary.Application.Identity/
 COPY FoodDiary.Application.MealPlanning/ FoodDiary.Application.MealPlanning/
 COPY FoodDiary.Application.RecipeCommunity/ FoodDiary.Application.RecipeCommunity/

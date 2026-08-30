@@ -22,6 +22,10 @@ Use this file when deciding where backend code belongs.
 | Hydration use cases | `Modules/Hydration/Application` | Hydration commands, queries, handlers, validators, services, and registration | Persistence implementations and HTTP transport |
 | Hydration persistence model | `Modules/Hydration/Infrastructure/Model` | Hydration EF configuration and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
 | Hydration infrastructure | `Modules/Hydration/Infrastructure` | Hydration repository implementation and complete module registration | HTTP transport and central migrations |
+| Favorites domain | `Modules/Favorites/Domain` | Favorite meal, product, and recipe aggregates and identifiers with preserved CLR namespaces | Application orchestration, EF mappings, transport |
+| Favorites use cases | `Modules/Favorites/Application` | Favorite commands, queries, validators, mappings, read services, and application registration with preserved assembly identity | Persistence implementations and HTTP transport |
+| Favorites persistence model | `Modules/Favorites/Infrastructure/Model` | Favorites EF configurations and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
+| Favorites infrastructure | `Modules/Favorites/Infrastructure` | Favorites repositories and complete module registration | HTTP transport and central migrations |
 | WeeklyGoals contracts | `Modules/WeeklyGoals/Contracts` | Stable weekly-goal read model and read-service contract | Repositories, handlers, EF, HTTP transport |
 | WeeklyGoals domain | `Modules/WeeklyGoals/Domain` | Weekly-goal aggregate, enum, identifier, invariants, and stable CLR namespace/EF identity | Application orchestration, EF mappings, transport, shared `User` ownership |
 | WeeklyGoals application ports | `Modules/WeeklyGoals/Application/Abstractions` | Weekly-goal repository and serialized-transaction ports | EF implementations and host concerns |

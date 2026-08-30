@@ -9,7 +9,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
         string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
         string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
 
-        Assert.Equal(["FoodDiary.Domain", "FoodDiary.Domain.Primitives", "FoodDiary.Mediator", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Results"], projectReferences);
+        Assert.Equal(["FoodDiary.Domain", "FoodDiary.Domain.Primitives", "FoodDiary.Mediator", "FoodDiary.Modules.Favorites.Domain", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Results"], projectReferences);
         Assert.Empty(packageReferences);
     }
 

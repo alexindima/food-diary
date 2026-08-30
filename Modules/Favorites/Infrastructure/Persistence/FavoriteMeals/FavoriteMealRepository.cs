@@ -2,10 +2,11 @@ using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.FavoriteMeals;
+namespace FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteMeals;
 
 public sealed class FavoriteMealRepository(FoodDiaryDbContext context) : IFavoriteMealRepository {
     public Task<FavoriteMeal> AddAsync(FavoriteMeal favorite, CancellationToken cancellationToken = default) {

@@ -1,30 +1,28 @@
-using FoodDiary.Domain.Entities.FavoriteProducts;
+using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.Favorites;
+namespace FoodDiary.Modules.Favorites.Infrastructure.Persistence.Configurations;
 
-internal sealed class FavoriteProductConfiguration : IEntityTypeConfiguration<FavoriteProduct> {
-    public void Configure(EntityTypeBuilder<FavoriteProduct> builder) {
+internal sealed class FavoriteRecipeConfiguration : IEntityTypeConfiguration<FavoriteRecipe> {
+    public void Configure(EntityTypeBuilder<FavoriteRecipe> builder) {
         builder.Property(e => e.Id)
             .HasConversion(
                 id => id.Value,
-                value => new FavoriteProductId(value))
+                value => new FavoriteRecipeId(value))
             .ValueGeneratedNever();
 
         builder.Property(e => e.UserId).HasConversion(
             id => id.Value,
             value => new UserId(value));
 
-        builder.Property(e => e.ProductId).HasConversion(
+        builder.Property(e => e.RecipeId).HasConversion(
             id => id.Value,
-            value => new ProductId(value));
+            value => new RecipeId(value));
 
         builder.Property(e => e.Name)
             .HasMaxLength(500);
-
-        builder.Property(e => e.PreferredPortionAmount);
 
         builder.Property(e => e.CreatedAtUtc)
             .HasColumnType("timestamp with time zone");
@@ -34,12 +32,12 @@ internal sealed class FavoriteProductConfiguration : IEntityTypeConfiguration<Fa
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(e => e.Product)
+        builder.HasOne(e => e.Recipe)
             .WithMany()
-            .HasForeignKey(e => e.ProductId)
+            .HasForeignKey(e => e.RecipeId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(e => new { e.UserId, e.ProductId })
+        builder.HasIndex(e => new { e.UserId, e.RecipeId })
             .IsUnique();
 
         builder.HasIndex(e => e.UserId);

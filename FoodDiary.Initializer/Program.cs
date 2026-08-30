@@ -11,7 +11,7 @@ using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;
 using FoodDiary.Application.Exercises;
 using FoodDiary.Modules.Fasting.Infrastructure;
-using FoodDiary.Application.Favorites;
+using FoodDiary.Modules.Favorites.Infrastructure;
 using FoodDiary.Application.Identity;
 using FoodDiary.Application.Images;
 using FoodDiary.Modules.Lessons.Infrastructure;

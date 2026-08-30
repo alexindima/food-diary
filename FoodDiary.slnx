@@ -4,7 +4,6 @@
     <Project Path="FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj" />
   </Folder>
   <Folder Name="/Application/Food and Diary/">
-    <Project Path="FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj" />
     <Project Path="FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj" />
     <Project Path="FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj" />
     <Project Path="FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj" />
@@ -61,6 +60,14 @@
     <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/FoodDiary.Modules.DailyAdvices.Application.Tests.csproj" />
     <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Domain.Tests/FoodDiary.Modules.DailyAdvices.Domain.Tests.csproj" />
     <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Favorites/">
+    <Project Path="Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj" />
+    <Project Path="Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj" />
+    <Project Path="Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj" />
+    <Project Path="Modules/Favorites/Infrastructure/Model/FoodDiary.Modules.Favorites.PersistenceModel.csproj" />
+    <Project Path="Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FoodDiary.Modules.Favorites.Application.Tests.csproj" />
+    <Project Path="Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FoodDiary.Modules.Favorites.Domain.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Dietologist/">
     <Project Path="Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj" />

@@ -703,9 +703,7 @@ public sealed class BusinessModuleBoundaryTests {
     public void CatalogAggregateConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {
-        string expectedPath = string.Equals(fileName, "ImageAssetConfiguration.cs", StringComparison.Ordinal)
-            ? Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Images", "Infrastructure", "Model", "Configurations", fileName)
-            : Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Infrastructure", "Persistence", expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar), fileName);
+        string expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Infrastructure", "Persistence", expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar), fileName);
 
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in {expectedRelativeDirectory}.");
     }
@@ -893,9 +891,14 @@ public sealed class BusinessModuleBoundaryTests {
     public void ImageAndFavoriteConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {
-        string expectedPath = string.Equals(fileName, "ImageAssetConfiguration.cs", StringComparison.Ordinal)
-            ? Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Images", "Infrastructure", "Model", "Configurations", fileName)
-            : Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Infrastructure", "Persistence", expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar), fileName);
+        string expectedPath;
+        if (fileName.StartsWith("Favorite", StringComparison.Ordinal)) {
+            expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Favorites", "Infrastructure", "Model", "Configurations", fileName);
+        } else if (string.Equals(fileName, "ImageAssetConfiguration.cs", StringComparison.Ordinal)) {
+            expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Images", "Infrastructure", "Model", "Configurations", fileName);
+        } else {
+            expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Infrastructure", "Persistence", expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar), fileName);
+        }
 
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in {expectedRelativeDirectory}.");
     }

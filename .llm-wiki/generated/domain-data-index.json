@@ -287,21 +287,21 @@
       "area": "FoodDiary",
       "name": "FavoriteMeal",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
       "line": 8
     },
     {
       "area": "FoodDiary",
       "name": "FavoriteProduct",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
       "line": 8
     },
     {
       "area": "FoodDiary",
       "name": "FavoriteRecipe",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
       "line": 8
     },
     {
@@ -1120,21 +1120,21 @@
       "area": "FoodDiary",
       "name": "FavoriteMealId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/FavoriteMealId.cs",
+      "path": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteMealId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "FavoriteProductId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/FavoriteProductId.cs",
+      "path": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteProductId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "FavoriteRecipeId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/FavoriteRecipeId.cs",
+      "path": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteRecipeId.cs",
       "line": 4
     },
     {
@@ -2307,76 +2307,6 @@
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength.Value} characters.\"))",
       "path": "FoodDiary.Domain/Entities/Content/EmailTemplate.cs",
       "line": 89
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId cannot be empty.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
-      "line": 23
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"MealId cannot be empty.\", nameof(mealId))",
-      "path": "FoodDiary.Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
-      "line": 27
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Name exceeds the maximum length.\")",
-      "path": "FoodDiary.Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
-      "line": 59
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId cannot be empty.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
-      "line": 24
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"ProductId cannot be empty.\", nameof(productId))",
-      "path": "FoodDiary.Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
-      "line": 28
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Name exceeds the maximum length.\")",
-      "path": "FoodDiary.Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
-      "line": 71
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Preferred portion amount must be a positive finite number.\")",
-      "path": "FoodDiary.Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
-      "line": 81
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId cannot be empty.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
-      "line": 23
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"RecipeId cannot be empty.\", nameof(recipeId))",
-      "path": "FoodDiary.Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
-      "line": 27
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Name exceeds the maximum length.\")",
-      "path": "FoodDiary.Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
-      "line": 59
     },
     {
       "area": "FoodDiary",
@@ -5117,6 +5047,76 @@
     },
     {
       "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId cannot be empty.\", nameof(userId))",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
+      "line": 23
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"MealId cannot be empty.\", nameof(mealId))",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
+      "line": 27
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Name exceeds the maximum length.\")",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
+      "line": 59
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId cannot be empty.\", nameof(userId))",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
+      "line": 24
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"ProductId cannot be empty.\", nameof(productId))",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
+      "line": 28
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Name exceeds the maximum length.\")",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
+      "line": 71
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Preferred portion amount must be a positive finite number.\")",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
+      "line": 81
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId cannot be empty.\", nameof(userId))",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
+      "line": 23
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"RecipeId cannot be empty.\", nameof(recipeId))",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
+      "line": 27
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Name exceeds the maximum length.\")",
+      "path": "Modules/Favorites/Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
+      "line": 59
+    },
+    {
+      "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName)",
       "path": "Modules/Lessons/Domain/Entities/Content/LessonsDomainGuard.cs",
@@ -5824,7 +5824,7 @@
           "expression": "e => e.Meal)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Favorites/FavoriteMealConfiguration.cs"
+      "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteMealConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5846,7 +5846,7 @@
           "expression": "e => e.Product)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Favorites/FavoriteProductConfiguration.cs"
+      "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteProductConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5868,7 +5868,7 @@
           "expression": "e => e.Recipe)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Favorites/FavoriteRecipeConfiguration.cs"
+      "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteRecipeConfiguration.cs"
     },
     {
       "area": "FoodDiary",

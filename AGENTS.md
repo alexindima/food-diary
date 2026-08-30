@@ -22,7 +22,8 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Fasting domain: `Modules/Fasting/Domain/AGENTS.md`
 - Fasting infrastructure: `Modules/Fasting/Infrastructure/AGENTS.md`
 - Fasting persistence model: `Modules/Fasting/Infrastructure/Model/AGENTS.md`
-- Favorites application module: `FoodDiary.Application.Favorites/AGENTS.md`
+- Favorites logical module: `Modules/Favorites/AGENTS.md`
+- Favorites application: `Modules/Favorites/Application/AGENTS.md`
 - Hydration logical module: `Modules/Hydration/AGENTS.md`
 - Hydration application abstractions: `Modules/Hydration/Application/Abstractions/AGENTS.md`
 - Hydration contracts: `Modules/Hydration/Contracts/AGENTS.md`

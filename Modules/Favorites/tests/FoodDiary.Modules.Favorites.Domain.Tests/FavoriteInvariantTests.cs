@@ -3,7 +3,7 @@ using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Domain.Tests.Domain;
+namespace FoodDiary.Domain.Tests;
 
 [ExcludeFromCodeCoverage]
 public class FavoriteInvariantTests {

@@ -8,17 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "7f55c6b66ee64f68dff8758165e8d2fe81c9fd526f4ba01b3f8409a1d72387ba"
+          "sha256": "f0715276b5263ede5b4cd6c1b1147c87bb1622b73ab36f13c4c922d385bee07d"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "84f5a54bcbe1ac48f57ba4596d9540c8bd14456d02ff421877065c257cfc2e8b"
+          "sha256": "8e169ce9c25e23544df9aae70446b6116756808c8edd4ff7da707f48bf49b362"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:45.0287028Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:20.8848746Z"
     },
     {
       "pageId": "module.frontend",
@@ -42,13 +42,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "84f5a54bcbe1ac48f57ba4596d9540c8bd14456d02ff421877065c257cfc2e8b"
+          "sha256": "8e169ce9c25e23544df9aae70446b6116756808c8edd4ff7da707f48bf49b362"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:45.6610166Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:21.2106981Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -56,14 +56,14 @@
       "pageSha256": "ebc1bbcb6c7df9755cfe613efcf8d31e9904b961c9081fb9aa2b808c32d2f944",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "291ff3776df095b0a89c365641af5db061029321ad7865a322b46c68cf3669c6"
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "8e169ce9c25e23544df9aae70446b6116756808c8edd4ff7da707f48bf49b362"
         }
       ],
-      "reason": "Integrated ContentReports, Images, and Dietologist module ownership was verified against the final solution project graph, module-local abstractions, central compatibility seams, passing ArchitectureTests, and unchanged EF model.",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
-      "reviewedAtUtc": "2026-08-30T04:02:21.9934123Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:21.4813836Z"
     },
     {
       "pageId": "system.architecture",
@@ -71,18 +71,18 @@
       "pageSha256": "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "291ff3776df095b0a89c365641af5db061029321ad7865a322b46c68cf3669c6"
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "8e169ce9c25e23544df9aae70446b6116756808c8edd4ff7da707f48bf49b362"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "32e766a5066cb42abdd1d51d5d22c0b8da011d65e546f9b2279604ce1fe02941"
+          "sha256": "abdfabbcc6b6398d367f47b8c0abefba62534336f0a306c9ac143410dbdb2bf0"
         }
       ],
-      "reason": "Integrated ContentReports, Images, and Dietologist module ownership was verified against the final solution project graph, module-local abstractions, central compatibility seams, passing ArchitectureTests, and unchanged EF model.",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
-      "reviewedAtUtc": "2026-08-30T04:02:22.4429106Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:21.7427197Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -121,13 +121,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "7f55c6b66ee64f68dff8758165e8d2fe81c9fd526f4ba01b3f8409a1d72387ba"
+          "sha256": "f0715276b5263ede5b4cd6c1b1147c87bb1622b73ab36f13c4c922d385bee07d"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:47.6037030Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:22.0518869Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -199,18 +199,18 @@
       "pageSha256": "b7914894ce3f6dda55057a93baf55364c9aa9c5e4c127a3fc9bddaa89743e4aa",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "291ff3776df095b0a89c365641af5db061029321ad7865a322b46c68cf3669c6"
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "9d5ecfe2e5bbdbddc2e59ad104f6eb0f78bdef169ee332583248f95b09ab0a41"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "32e766a5066cb42abdd1d51d5d22c0b8da011d65e546f9b2279604ce1fe02941"
+          "sha256": "abdfabbcc6b6398d367f47b8c0abefba62534336f0a306c9ac143410dbdb2bf0"
         }
       ],
-      "reason": "Integrated ContentReports, Images, and Dietologist module ownership was verified against the final solution project graph, module-local abstractions, central compatibility seams, passing ArchitectureTests, and unchanged EF model.",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
-      "reviewedAtUtc": "2026-08-30T04:02:23.5164346Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:22.3272933Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -219,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "813a75a4469a20742cfd144f6495b65ebbb2fec1af09e1ab39cd434b08d4e6a1"
+          "sha256": "b082c363e71c5a3396651a24b0d761a78b9491780e12e7bed5e41421b7da61ae"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:50.8414619Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:22.9597467Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -486,13 +486,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "e10412a3aee0ccdf5b25cedbfcc50bba27e6b2671149715607c1e5aa63b56389"
+          "sha256": "05017b6b69c26d80898e9250dc9a99dd9c92036d22e268cd72e8c2eca9add55c"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:52.1354542Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:23.5513203Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -817,13 +817,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "406b37c1da2eb9165e99d872a58b433313dea152f0a5a453fcdb26ae2fe9b07a"
+          "sha256": "799b39cb8ff96ab2f6ac0322098ebf39fff57be7eb74bf212c47e409f5cd0562"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:52.9006746Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:24.1620559Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -900,13 +900,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "186de768bd8dcd0784260ef8246a74d6f57ae0dfbbe05290a2b8121d1809944e"
+          "sha256": "ce8ccad97646fc1f30742709a32e8dce386516610d6b4b6aea570e811d47ff33"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:55.0260574Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:25.3096785Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -915,17 +915,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "406b37c1da2eb9165e99d872a58b433313dea152f0a5a453fcdb26ae2fe9b07a"
+          "sha256": "799b39cb8ff96ab2f6ac0322098ebf39fff57be7eb74bf212c47e409f5cd0562"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "186de768bd8dcd0784260ef8246a74d6f57ae0dfbbe05290a2b8121d1809944e"
+          "sha256": "ce8ccad97646fc1f30742709a32e8dce386516610d6b4b6aea570e811d47ff33"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:55.7119133Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:25.8521736Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1103,13 +1103,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "7f55c6b66ee64f68dff8758165e8d2fe81c9fd526f4ba01b3f8409a1d72387ba"
+          "sha256": "f0715276b5263ede5b4cd6c1b1147c87bb1622b73ab36f13c4c922d385bee07d"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:51.4238156Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:23.2279666Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1163,17 +1163,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "5fd7ad1d1acbc563fbb8022cba1e7bb8492c1ee28d37ad16e21b32e744187791"
+          "sha256": "31fa4b382ceb55744f0074757d2ef7ec164760aa8941d4ecc379fa4bb9b5b423"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "7f55c6b66ee64f68dff8758165e8d2fe81c9fd526f4ba01b3f8409a1d72387ba"
+          "sha256": "f0715276b5263ede5b4cd6c1b1147c87bb1622b73ab36f13c4c922d385bee07d"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:53.4969392Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:24.6125494Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1182,13 +1182,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "7f55c6b66ee64f68dff8758165e8d2fe81c9fd526f4ba01b3f8409a1d72387ba"
+          "sha256": "f0715276b5263ede5b4cd6c1b1147c87bb1622b73ab36f13c4c922d385bee07d"
         }
       ],
-      "reason": "ContentReports extraction was reviewed against current source, project graph, generated indexes, tests, API boundary, EF model, and architecture guardrails; no semantic changes are required in these compiled guidance pages",
+      "reason": "Reviewed Favorites module extraction impacts against current source, project graph, tests, and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "4fe63192a09910b2a0365a6a446e1e4f4816f2bb",
-      "reviewedAtUtc": "2026-08-30T03:31:54.3895413Z"
+      "gitHead": "db345807d2ba4360f8d853d6b88e4c9abac10ea5",
+      "reviewedAtUtc": "2026-08-30T14:28:24.9380012Z"
     }
   ]
 }

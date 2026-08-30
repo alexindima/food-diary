@@ -1,15 +1,17 @@
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
-using FoodDiary.Infrastructure.Persistence.FavoriteMeals;
-using FoodDiary.Infrastructure.Persistence.FavoriteProducts;
-using FoodDiary.Infrastructure.Persistence.FavoriteRecipes;
+using FoodDiary.Application.Favorites;
+using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteMeals;
+using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteProducts;
+using FoodDiary.Modules.Favorites.Infrastructure.Persistence.FavoriteRecipes;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Favorites.Infrastructure;
 
-public static partial class DependencyInjection {
-    private static void AddFavoritesPersistence(this IServiceCollection services) {
+public static class ModuleRegistration {
+    public static IServiceCollection AddFavoritesModule(this IServiceCollection services) {
+        services.AddFavoritesApplication();
         services.AddScoped<IFavoriteMealRepository, FavoriteMealRepository>();
         services.AddScoped<IFavoriteMealReadRepository>(static provider => provider.GetRequiredService<IFavoriteMealRepository>());
         services.AddScoped<IFavoriteMealReadModelRepository>(static provider => provider.GetRequiredService<IFavoriteMealRepository>());
@@ -22,6 +24,6 @@ public static partial class DependencyInjection {
         services.AddScoped<IFavoriteRecipeReadRepository>(static provider => provider.GetRequiredService<IFavoriteRecipeRepository>());
         services.AddScoped<IFavoriteRecipeReadModelRepository>(static provider => provider.GetRequiredService<IFavoriteRecipeRepository>());
         services.AddScoped<IFavoriteRecipeWriteRepository>(static provider => provider.GetRequiredService<IFavoriteRecipeRepository>());
-
+        return services;
     }
 }

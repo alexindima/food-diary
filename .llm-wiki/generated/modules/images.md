@@ -24,7 +24,6 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Images`
 - `FoodDiary.Domain/Entities/Assets`
 - `FoodDiary.Presentation.Api/Features/Images`
 
