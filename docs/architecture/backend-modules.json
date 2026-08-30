@@ -404,21 +404,23 @@
     },
     "Marketing": {
       "role": "aggregate-owner",
-      "physicalIsolation": "assembly",
-      "enforcement": "assembly-isolated",
-      "ownedEntities": [],
+      "physicalIsolation": "logical-module",
+      "enforcement": "project-reference-matrix-and-module-boundary-tests",
+      "ownedEntities": [
+        "MarketingAttributionEvent"
+      ],
       "sourceMappings": {
         "applicationProjects": [
           "FoodDiary.Application.Marketing"
         ],
         "abstractionAreas": [
-          "Marketing"
+          "Modules/Marketing/Application/Abstractions"
         ],
         "domainAreas": [
-          "Marketing"
+          "Modules/Marketing/Domain"
         ],
         "persistenceAreas": [
-          "Marketing"
+          "Modules/Marketing/Infrastructure"
         ]
       }
     },

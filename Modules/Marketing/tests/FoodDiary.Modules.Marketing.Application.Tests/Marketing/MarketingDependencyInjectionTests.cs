@@ -12,7 +12,7 @@ public sealed class MarketingDependencyInjectionTests {
     [Fact]
     public void AddMarketingModule_ResolvesConversionAliasesToSameScopedService() {
         var services = new ServiceCollection();
-        services.AddMarketingModule();
+        services.AddMarketingApplication();
         var recorder = new MarketingConversionRecorder(
             Substitute.For<IMarketingAttributionEventReadRepository>(),
             Substitute.For<IMarketingAttributionEventWriteRepository>(),

@@ -91,7 +91,7 @@ public sealed class PersistenceTransactionGuardrailTests {
         string[] allowedFiles = [
             Path.Combine(infrastructureRoot, "Persistence", "Notifications", "NotificationRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Tracking", "FastingTelemetryEventRepository.cs"),
-            Path.Combine(infrastructureRoot, "Persistence", "Tracking", "MarketingAttributionEventRepository.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Marketing", "Infrastructure", "Persistence", "MarketingAttributionEventRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserLoginEventRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "RefreshTokenSessionRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserRoleMembershipService.cs"),

@@ -434,6 +434,7 @@
           "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Marketing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
@@ -491,6 +492,9 @@
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
+      },
+      "fooddiary.modules.marketing.application.abstractions": {
+        "type": "Project"
       },
       "fooddiary.modules.openfoodfacts.application.abstractions": {
         "type": "Project",

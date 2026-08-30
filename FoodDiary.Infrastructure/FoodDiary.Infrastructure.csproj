@@ -3,6 +3,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Modules\OpenFoodFacts\Domain\FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />
     <ProjectReference Include="..\Modules\OpenFoodFacts\Infrastructure\Model\FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj" />
+    <ProjectReference Include="..\Modules\Marketing\Domain\FoodDiary.Modules.Marketing.Domain.csproj" />
+    <ProjectReference Include="..\Modules\Marketing\Infrastructure\Model\FoodDiary.Modules.Marketing.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\Favorites\Domain\FoodDiary.Modules.Favorites.Domain.csproj" />
     <ProjectReference Include="..\Modules\Favorites\Infrastructure\Model\FoodDiary.Modules.Favorites.PersistenceModel.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />

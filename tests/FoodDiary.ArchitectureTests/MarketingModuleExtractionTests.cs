@@ -5,7 +5,7 @@ public sealed class MarketingModuleExtractionTests {
     [Fact]
     public void MarketingApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Marketing");
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Marketing");
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Marketing", "Application");
 
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
@@ -23,7 +23,7 @@ public sealed class MarketingModuleExtractionTests {
     [Fact]
     public void ExtractedMarketingAssembly_DoesNotReferenceCoreApplication() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj");
+            "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application", references, StringComparer.Ordinal);
         Assert.Contains("FoodDiary.Application.Abstractions", references, StringComparer.Ordinal);

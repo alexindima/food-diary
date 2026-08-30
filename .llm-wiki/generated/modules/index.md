@@ -36,7 +36,7 @@ are reported separately; `none observed` never means proven isolation.
 | [Identity](identity.md) | aggregate-owner | 0 | 5 | 0 | 4 | assembly-isolated |
 | [Images](images.md) | aggregate-owner | 0 | 0 | 0 | 8 | project-reference-matrix |
 | [Lessons](lessons.md) | aggregate-owner | 0 | 0 | 0 | 3 | project-reference-matrix |
-| [Marketing](marketing.md) | aggregate-owner | 0 | 1 | 0 | 4 | assembly-isolated |
+| [Marketing](marketing.md) | aggregate-owner | 0 | 0 | 0 | 4 | project-reference-matrix-and-module-boundary-tests |
 | [MealPlanning](meal-planning.md) | aggregate-owner | 0 | 4 | 0 | 4 | project-reference-matrix |
 | [Meals](meals.md) | aggregate-owner | 0 | 8 | 0 | 7 | project-reference-matrix |
 | [Notifications](notifications.md) | aggregate-owner | 0 | 0 | 0 | 5 | project-reference-matrix |

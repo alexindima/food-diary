@@ -13,7 +13,11 @@ COPY FoodDiary.Application.Abstractions/*.csproj FoodDiary.Application.Abstracti
 COPY FoodDiary.Application.Admin/*.csproj FoodDiary.Application.Admin/
 COPY FoodDiary.Application.Runtime/*.csproj FoodDiary.Application.Runtime/
 COPY FoodDiary.Application.Billing/*.csproj FoodDiary.Application.Billing/
-COPY FoodDiary.Application.Marketing/*.csproj FoodDiary.Application.Marketing/
+COPY Modules/Marketing/Application/*.csproj Modules/Marketing/Application/
+COPY Modules/Marketing/Application/Abstractions/*.csproj Modules/Marketing/Application/Abstractions/
+COPY Modules/Marketing/Domain/*.csproj Modules/Marketing/Domain/
+COPY Modules/Marketing/Infrastructure/*.csproj Modules/Marketing/Infrastructure/
+COPY Modules/Marketing/Infrastructure/Model/*.csproj Modules/Marketing/Infrastructure/Model/
 COPY FoodDiary.Application.Users/*.csproj FoodDiary.Application.Users/
 COPY Modules/Dietologist/Application/*.csproj Modules/Dietologist/Application/
 COPY Modules/Dietologist/Application/Abstractions/*.csproj Modules/Dietologist/Application/Abstractions/
@@ -114,7 +118,12 @@ COPY FoodDiary.Application.Abstractions/ FoodDiary.Application.Abstractions/
 COPY FoodDiary.Application.Admin/ FoodDiary.Application.Admin/
 COPY FoodDiary.Application.Runtime/ FoodDiary.Application.Runtime/
 COPY FoodDiary.Application.Billing/ FoodDiary.Application.Billing/
-COPY FoodDiary.Application.Marketing/ FoodDiary.Application.Marketing/
+COPY Modules/Marketing/ Modules/Marketing/
+COPY Modules/Marketing/Application/ Modules/Marketing/Application/
+COPY Modules/Marketing/Application/Abstractions/ Modules/Marketing/Application/Abstractions/
+COPY Modules/Marketing/Domain/ Modules/Marketing/Domain/
+COPY Modules/Marketing/Infrastructure/ Modules/Marketing/Infrastructure/
+COPY Modules/Marketing/Infrastructure/Model/ Modules/Marketing/Infrastructure/Model/
 COPY FoodDiary.Application.Users/ FoodDiary.Application.Users/
 COPY Modules/Dietologist/Application/ Modules/Dietologist/Application/
 COPY Modules/Dietologist/Application/Abstractions/ Modules/Dietologist/Application/Abstractions/

@@ -22,7 +22,7 @@ using FoodDiary.Application.Notifications;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
 using FoodDiary.Application.Products;
 using FoodDiary.Application.Recipes;
-using FoodDiary.Application.Marketing;
+using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Application.Users;
 using FoodDiary.Application.Wearables;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;

@@ -2,12 +2,12 @@
 
 ## Scope
 
-Rules for `FoodDiary.Application.Marketing/`.
+Rules for `Modules/Marketing/Application/`.
 
 ## Responsibilities
 
 - Own marketing attribution commands, queries, models, and semantic services.
-- Register module handlers and services through `AddMarketingModule`.
+- Register module handlers and services through `AddMarketingApplication`; Infrastructure exposes the complete `AddMarketingModule` facade.
 - Implement consumer-owned ports such as `IBillingMarketingConversionRecorder` without exposing persistence contracts.
 
 ## Rules
@@ -19,6 +19,6 @@ Rules for `FoodDiary.Application.Marketing/`.
 
 ## Commands
 
-- Build: `dotnet build FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj`
-- Application tests: `dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj`
+- Build: `dotnet build Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj`
+- Application tests: `dotnet test Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/FoodDiary.Modules.Marketing.Application.Tests.csproj`
 - Architecture tests: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`

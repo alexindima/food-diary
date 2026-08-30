@@ -504,6 +504,7 @@
           "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Marketing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
@@ -667,6 +668,23 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Modules.Lessons.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.marketing.application.abstractions": {
+        "type": "Project"
+      },
+      "fooddiary.modules.marketing.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.marketing.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Marketing.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }

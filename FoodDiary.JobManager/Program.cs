@@ -7,7 +7,7 @@ using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Application.Identity;
 using FoodDiary.Application.Images;
 using FoodDiary.Application.Notifications;
-using FoodDiary.Application.Marketing;
+using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Application.Meals;
 using FoodDiary.Application.Users;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;

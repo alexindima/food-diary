@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Application.Marketing;
 
 public static class DependencyInjection {
-    public static IServiceCollection AddMarketingModule(this IServiceCollection services) {
+    public static IServiceCollection AddMarketingApplication(this IServiceCollection services) {
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddScoped<MarketingConversionRecorder>();

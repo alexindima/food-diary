@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3508,
-    "symbols": 3509,
+    "sourceFiles": 3509,
+    "symbols": 3510,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 217,
+    "dependencyInjectionRegistrations": 216,
     "kinds": {
-      "class": 1836,
+      "class": 1837,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1361,
+      "Other": 1362,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -2006,48 +2006,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Hydration/Common/HydrationEntryErrors.cs",
       "line": 4
-    },
-    {
-      "name": "IMarketingAttributionEventReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Marketing/Common/IMarketingAttributionEventReadRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IMarketingAttributionEventRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Marketing/Common/IMarketingAttributionEventRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IMarketingAttributionEventWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Marketing/Common/IMarketingAttributionEventWriteRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "MarketingAttributionBreakdownRecord",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Marketing/Common/MarketingAttributionBreakdownRecord.cs",
-      "line": 2
-    },
-    {
-      "name": "MarketingAttributionEventRecord",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Marketing/Common/MarketingAttributionEventRecord.cs",
-      "line": 2
-    },
-    {
-      "name": "MarketingAttributionSummaryRecord",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Marketing/Common/MarketingAttributionSummaryRecord.cs",
-      "line": 2
     },
     {
       "name": "IMealPlanReadModelRepository",
@@ -6411,111 +6369,6 @@
       "line": 6
     },
     {
-      "name": "RecordMarketingAttributionCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "RecordMarketingAttributionCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "IMarketingAttributionCleanupService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Marketing/Common/IMarketingAttributionCleanupService.cs",
-      "line": 2
-    },
-    {
-      "name": "IMarketingAttributionSummaryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Marketing/Common/IMarketingAttributionSummaryReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IMarketingConversionRecorder",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Marketing/Common/IMarketingConversionRecorder.cs",
-      "line": 2
-    },
-    {
-      "name": "MarketingAttributionEventTypes",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Marketing/Common/MarketingAttributionEventTypes.cs",
-      "line": 2
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Marketing/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "MarketingAttributionBreakdownModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Marketing/Models/MarketingAttributionBreakdownModel.cs",
-      "line": 2
-    },
-    {
-      "name": "MarketingAttributionRecentEventModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Marketing/Models/MarketingAttributionRecentEventModel.cs",
-      "line": 2
-    },
-    {
-      "name": "MarketingAttributionSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Marketing/Models/MarketingAttributionSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetMarketingAttributionSummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Marketing/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetMarketingAttributionSummaryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Marketing/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "MarketingAttributionCleanupService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Marketing/Services/MarketingAttributionCleanupService.cs",
-      "line": 5
-    },
-    {
-      "name": "MarketingAttributionSummaryReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Marketing/Services/MarketingAttributionSummaryReadService.cs",
-      "line": 7
-    },
-    {
-      "name": "MarketingConversionRecorder",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Marketing/Services/MarketingConversionRecorder.cs",
-      "line": 6
-    },
-    {
       "name": "EnumFilterParser",
       "kind": "class",
       "role": "Other",
@@ -10051,13 +9904,6 @@
       "line": 8
     },
     {
-      "name": "MarketingAttributionEvent",
-      "kind": "class",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 6
-    },
-    {
       "name": "WaistEntry",
       "kind": "class",
       "role": "Entity",
@@ -10545,13 +10391,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/ImageAssetId.cs",
-      "line": 4
-    },
-    {
-      "name": "MarketingAttributionEventId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MarketingAttributionEventId.cs",
       "line": 4
     },
     {
@@ -11139,13 +10978,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Marketing.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Meals.cs",
       "line": 6
     },
@@ -11575,13 +11407,6 @@
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageObjectDeletionOutboxMessageConfiguration.cs",
       "line": 6
-    },
-    {
-      "name": "MarketingAttributionEventConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Marketing/MarketingAttributionEventConfiguration.cs",
-      "line": 7
     },
     {
       "name": "MealPlanConfiguration",
@@ -12057,7 +11882,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "FoodDiaryDbContext",
@@ -12345,13 +12170,6 @@
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/ExerciseEntryRepository.cs",
       "line": 8
-    },
-    {
-      "name": "MarketingAttributionEventRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/MarketingAttributionEventRepository.cs",
-      "line": 7
     },
     {
       "name": "WaistEntryRepository",
@@ -23953,6 +23771,195 @@
       "line": 11
     },
     {
+      "name": "IMarketingAttributionEventReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Marketing/Application/Abstractions/Common/IMarketingAttributionEventReadRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IMarketingAttributionEventRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Marketing/Application/Abstractions/Common/IMarketingAttributionEventRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IMarketingAttributionEventWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Marketing/Application/Abstractions/Common/IMarketingAttributionEventWriteRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionBreakdownRecord",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Abstractions/Common/MarketingAttributionBreakdownRecord.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionEventRecord",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Abstractions/Common/MarketingAttributionEventRecord.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionSummaryRecord",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Abstractions/Common/MarketingAttributionSummaryRecord.cs",
+      "line": 2
+    },
+    {
+      "name": "RecordMarketingAttributionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "RecordMarketingAttributionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "IMarketingAttributionCleanupService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Marketing/Application/Common/IMarketingAttributionCleanupService.cs",
+      "line": 2
+    },
+    {
+      "name": "IMarketingAttributionSummaryReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Marketing/Application/Common/IMarketingAttributionSummaryReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IMarketingConversionRecorder",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Common/IMarketingConversionRecorder.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionEventTypes",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Common/MarketingAttributionEventTypes.cs",
+      "line": 2
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "MarketingAttributionBreakdownModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Models/MarketingAttributionBreakdownModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionRecentEventModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Models/MarketingAttributionRecentEventModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Models/MarketingAttributionSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetMarketingAttributionSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetMarketingAttributionSummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "MarketingAttributionCleanupService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Marketing/Application/Services/MarketingAttributionCleanupService.cs",
+      "line": 5
+    },
+    {
+      "name": "MarketingAttributionSummaryReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Marketing/Application/Services/MarketingAttributionSummaryReadService.cs",
+      "line": 7
+    },
+    {
+      "name": "MarketingConversionRecorder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Services/MarketingConversionRecorder.cs",
+      "line": 6
+    },
+    {
+      "name": "MarketingAttributionEvent",
+      "kind": "class",
+      "role": "Event",
+      "path": "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs",
+      "line": 6
+    },
+    {
+      "name": "MarketingAttributionEventId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Marketing/Domain/ValueObjects/Ids/MarketingAttributionEventId.cs",
+      "line": 4
+    },
+    {
+      "name": "MarketingAttributionEventConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Marketing/Infrastructure/Model/Configurations/MarketingAttributionEventConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "MarketingPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Marketing/Infrastructure/Model/MarketingPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Marketing/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "MarketingAttributionEventRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs",
+      "line": 8
+    },
+    {
       "name": "IOpenFoodFactsProductCacheReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
@@ -25510,30 +25517,30 @@
     },
     {
       "interface": "IMarketingAttributionCleanupService",
-      "interfacePath": "FoodDiary.Application.Marketing/Common/IMarketingAttributionCleanupService.cs",
+      "interfacePath": "Modules/Marketing/Application/Common/IMarketingAttributionCleanupService.cs",
       "implementation": "MarketingAttributionCleanupService",
-      "implementationPath": "FoodDiary.Application.Marketing/Services/MarketingAttributionCleanupService.cs",
+      "implementationPath": "Modules/Marketing/Application/Services/MarketingAttributionCleanupService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMarketingAttributionEventRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Marketing/Common/IMarketingAttributionEventRepository.cs",
+      "interfacePath": "Modules/Marketing/Application/Abstractions/Common/IMarketingAttributionEventRepository.cs",
       "implementation": "MarketingAttributionEventRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Tracking/MarketingAttributionEventRepository.cs",
+      "implementationPath": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMarketingAttributionSummaryReadService",
-      "interfacePath": "FoodDiary.Application.Marketing/Common/IMarketingAttributionSummaryReadService.cs",
+      "interfacePath": "Modules/Marketing/Application/Common/IMarketingAttributionSummaryReadService.cs",
       "implementation": "MarketingAttributionSummaryReadService",
-      "implementationPath": "FoodDiary.Application.Marketing/Services/MarketingAttributionSummaryReadService.cs",
+      "implementationPath": "Modules/Marketing/Application/Services/MarketingAttributionSummaryReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMarketingConversionRecorder",
-      "interfacePath": "FoodDiary.Application.Marketing/Common/IMarketingConversionRecorder.cs",
+      "interfacePath": "Modules/Marketing/Application/Common/IMarketingConversionRecorder.cs",
       "implementation": "MarketingConversionRecorder",
-      "implementationPath": "FoodDiary.Application.Marketing/Services/MarketingConversionRecorder.cs",
+      "implementationPath": "Modules/Marketing/Application/Services/MarketingConversionRecorder.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26484,20 +26491,6 @@
       "line": 25
     },
     {
-      "service": "IMarketingAttributionCleanupService",
-      "implementation": "MarketingAttributionCleanupService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Marketing/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "IMarketingAttributionSummaryReadService",
-      "implementation": "MarketingAttributionSummaryReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Marketing/DependencyInjection.cs",
-      "line": 19
-    },
-    {
       "service": "IMealPlanReadService",
       "implementation": "MealPlanReadService",
       "lifetime": "Scoped",
@@ -26929,13 +26922,6 @@
       "implementation": "MealPlanRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Learning.cs",
-      "line": 9
-    },
-    {
-      "service": "IMarketingAttributionEventRepository",
-      "implementation": "MarketingAttributionEventRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Marketing.cs",
       "line": 9
     },
     {
@@ -27728,6 +27714,20 @@
       "lifetime": "Scoped",
       "path": "Modules/Lessons/Application/DependencyInjection.cs",
       "line": 17
+    },
+    {
+      "service": "IMarketingAttributionCleanupService",
+      "implementation": "MarketingAttributionCleanupService",
+      "lifetime": "Scoped",
+      "path": "Modules/Marketing/Application/DependencyInjection.cs",
+      "line": 18
+    },
+    {
+      "service": "IMarketingAttributionSummaryReadService",
+      "implementation": "MarketingAttributionSummaryReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Marketing/Application/DependencyInjection.cs",
+      "line": 19
     },
     {
       "service": "IOpenFoodFactsCachedProductSearch",

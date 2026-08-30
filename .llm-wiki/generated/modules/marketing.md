@@ -15,18 +15,16 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj`
+- Extracted project: `Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Billing
+- Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Marketing`
 - `FoodDiary.Application.Marketing`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Marketing`
 - `FoodDiary.Presentation.Api/Features/Marketing`
 
 ## HTTP Surface
@@ -41,38 +39,34 @@ Source: `FoodDiary.Presentation.Api/Features/Marketing/MarketingAttributionContr
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: assembly
-- Architecture guardrails: assembly-isolated
-- Declared owned entities: not yet enumerated
-- Public contract files: 6
+- Physical isolation: logical-module
+- Architecture guardrails: project-reference-matrix-and-module-boundary-tests
+- Declared owned entities: MarketingAttributionEvent
+- Public contract files: 0
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 6
-- Interfaces: 3
+- Public contract types: 0
+- Interfaces: 0
 - DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 3
+- Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
-- `interface IMarketingAttributionEventReadRepository`
-- `interface IMarketingAttributionEventRepository`
-- `interface IMarketingAttributionEventWriteRepository`
-- `record MarketingAttributionBreakdownRecord`
-- `record MarketingAttributionEventRecord`
-- `record MarketingAttributionSummaryRecord`
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Marketing/MarketingAttributionCoverageTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Marketing/MarketingConversionRecorderTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Marketing/MarketingDependencyInjectionTests.cs`
+- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingAttributionCoverageTests.cs`
+- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingConversionRecorderTests.cs`
+- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingDependencyInjectionTests.cs`
+- [behavioral-or-text-match] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/Domain/MarketingAttributionEventInvariantTests.cs`
+- [integration] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/Integration/MarketingAttributionEventRepositoryIntegrationTests.cs`
+- [integration] `Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/MarketingModuleRegistrationTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/MarketingModuleExtractionTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/MarketingAttributionEventInvariantTests.cs`
-- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MarketingAttributionEventRepositoryIntegrationTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/MarketingAttributionCleanupJobTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs`
 - [integration] `tests/FoodDiary.Web.Api.IntegrationTests/MarketingAttributionIntegrationTests.cs`

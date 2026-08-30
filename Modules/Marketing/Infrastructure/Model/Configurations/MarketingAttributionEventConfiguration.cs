@@ -3,7 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.Marketing;
+namespace FoodDiary.Modules.Marketing.Infrastructure.Persistence.Configurations;
 
 internal sealed class MarketingAttributionEventConfiguration : IEntityTypeConfiguration<MarketingAttributionEvent> {
     public void Configure(EntityTypeBuilder<MarketingAttributionEvent> builder) {

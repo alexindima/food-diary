@@ -57,7 +57,11 @@ Use this file when deciding where backend code belongs.
 | Dietologist persistence model | `Modules/Dietologist/Infrastructure/Model` | EF configurations and model-builder seam | Shared `DbContext`, migrations, repository behavior |
 | Dietologist infrastructure | `Modules/Dietologist/Infrastructure` | Repositories, attention projection, and complete module registration | HTTP transport and central migrations |
 | Billing use cases | `FoodDiary.Application.Billing` | Billing commands, queries, validators, renewal and webhook orchestration | Core Application dependencies, persistence, HTTP DTOs |
-| Marketing use cases | `FoodDiary.Application.Marketing` | Attribution commands, queries and conversion recording | Core Application dependencies, persistence, HTTP DTOs |
+| Marketing application ports | `Modules/Marketing/Application/Abstractions` | Attribution repository ports and persistence projections | Billing's consumer-owned conversion port, EF implementations, HTTP transport |
+| Marketing domain | `Modules/Marketing/Domain` | Attribution event, identifier, normalization invariants, and stable CLR/EF identity | Application orchestration, EF mappings, transport |
+| Marketing use cases | `Modules/Marketing/Application` | Attribution commands, queries, conversion recording, cleanup and legacy application assembly identity | Persistence implementations, scheduler plumbing, HTTP DTOs |
+| Marketing persistence model | `Modules/Marketing/Infrastructure/Model` | Attribution EF configuration and central model-builder seam | Shared `DbContext`, migrations, repository behavior |
+| Marketing infrastructure | `Modules/Marketing/Infrastructure` | Attribution repository adapter and complete module registration | HTTP transport, central migrations, cleanup scheduling |
 | Notification use cases | `FoodDiary.Application.Notifications` | Notification feed, preferences, web-push subscription and delivery orchestration | Core Application dependencies, persistence implementations, HTTP DTOs |
 | Persistence/technical implementations | `FoodDiary.Infrastructure` | DbContext, EF mappings, repositories, technical service implementations | HTTP controllers, host startup, external provider orchestration |
 | External adapters | `FoodDiary.Integrations` | Provider clients, provider options, MailRelay/MailInbox client bridges | EF migrations, core domain workflows |

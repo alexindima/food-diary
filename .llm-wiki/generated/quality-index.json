@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4729,
+    "productionFiles": 4730,
     "wikiToolFiles": 201,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 781,
@@ -4439,54 +4439,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Marketing/Common/IMarketingAttributionEventReadRepository.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Marketing/Common/IMarketingAttributionEventRepository.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Marketing/Common/IMarketingAttributionEventWriteRepository.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Marketing/Common/MarketingAttributionBreakdownRecord.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Marketing/Common/MarketingAttributionEventRecord.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Marketing/Common/MarketingAttributionSummaryRecord.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Application.Abstractions/MealPlans/Common/IMealPlanReadModelRepository.cs",
@@ -9553,126 +9505,6 @@
       "structuralRiskScore": 0.5
     },
     {
-      "path": "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
-      "nonBlankLines": 109,
-      "decisionPoints": 27,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 44.68
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Common/IMarketingAttributionCleanupService.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Common/IMarketingAttributionSummaryReadService.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Common/IMarketingConversionRecorder.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Common/MarketingAttributionEventTypes.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/DependencyInjection.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Models/MarketingAttributionBreakdownModel.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Models/MarketingAttributionRecentEventModel.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Models/MarketingAttributionSummaryModel.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQueryHandler.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Services/MarketingAttributionCleanupService.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.92
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Services/MarketingAttributionSummaryReadService.cs",
-      "nonBlankLines": 54,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.08
-    },
-    {
-      "path": "FoodDiary.Application.Marketing/Services/MarketingConversionRecorder.cs",
-      "nonBlankLines": 44,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.38
-    },
-    {
       "path": "FoodDiary.Application.MealPlanning/AssemblyInfo.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -13809,14 +13641,6 @@
       "structuralRiskScore": 10.26
     },
     {
-      "path": "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "nonBlankLines": 78,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.56
-    },
-    {
       "path": "FoodDiary.Domain/Entities/Tracking/WaistEntry.cs",
       "nonBlankLines": 71,
       "decisionPoints": 9,
@@ -14370,14 +14194,6 @@
     },
     {
       "path": "FoodDiary.Domain/ValueObjects/Ids/ImageAssetId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MarketingAttributionEventId.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -15041,14 +14857,6 @@
       "structuralRiskScore": 0.24
     },
     {
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Marketing.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Meals.cs",
       "nonBlankLines": 14,
       "decisionPoints": 0,
@@ -15122,11 +14930,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Repositories.cs",
-      "nonBlankLines": 19,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
+      "structuralRiskScore": 0.36
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.ShoppingLists.cs",
@@ -15551,14 +15359,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.4
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Marketing/MarketingAttributionEventConfiguration.cs",
-      "nonBlankLines": 50,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/MealPlans/MealPlanConfiguration.cs",
@@ -16050,11 +15850,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 33,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.66
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -16327,14 +16127,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 10.38
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/MarketingAttributionEventRepository.cs",
-      "nonBlankLines": 197,
-      "decisionPoints": 30,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 48.94
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/WaistEntryRepository.cs",
@@ -37865,6 +37657,222 @@
       "structuralRiskScore": 19.62
     },
     {
+      "path": "Modules/Marketing/Application/Abstractions/Common/IMarketingAttributionEventReadRepository.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Marketing/Application/Abstractions/Common/IMarketingAttributionEventRepository.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Marketing/Application/Abstractions/Common/IMarketingAttributionEventWriteRepository.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Marketing/Application/Abstractions/Common/MarketingAttributionBreakdownRecord.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Marketing/Application/Abstractions/Common/MarketingAttributionEventRecord.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Marketing/Application/Abstractions/Common/MarketingAttributionSummaryRecord.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
+      "nonBlankLines": 109,
+      "decisionPoints": 27,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 44.68
+    },
+    {
+      "path": "Modules/Marketing/Application/Common/IMarketingAttributionCleanupService.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Marketing/Application/Common/IMarketingAttributionSummaryReadService.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Marketing/Application/Common/IMarketingConversionRecorder.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Marketing/Application/Common/MarketingAttributionEventTypes.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Marketing/Application/DependencyInjection.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Marketing/Application/Models/MarketingAttributionBreakdownModel.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Marketing/Application/Models/MarketingAttributionRecentEventModel.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Marketing/Application/Models/MarketingAttributionSummaryModel.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQueryHandler.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.26
+    },
+    {
+      "path": "Modules/Marketing/Application/Services/MarketingAttributionCleanupService.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.92
+    },
+    {
+      "path": "Modules/Marketing/Application/Services/MarketingAttributionSummaryReadService.cs",
+      "nonBlankLines": 54,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.08
+    },
+    {
+      "path": "Modules/Marketing/Application/Services/MarketingConversionRecorder.cs",
+      "nonBlankLines": 44,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.38
+    },
+    {
+      "path": "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs",
+      "nonBlankLines": 78,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.56
+    },
+    {
+      "path": "Modules/Marketing/Domain/ValueObjects/Ids/MarketingAttributionEventId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Marketing/Infrastructure/Model/Configurations/MarketingAttributionEventConfiguration.cs",
+      "nonBlankLines": 50,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1
+    },
+    {
+      "path": "Modules/Marketing/Infrastructure/Model/MarketingPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Marketing/Infrastructure/ModuleRegistration.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs",
+      "nonBlankLines": 198,
+      "decisionPoints": 30,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 48.96
+    },
+    {
       "path": "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheReadRepository.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -39815,11 +39823,11 @@
     {
       "name": "RecordMarketingAttributionCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
+      "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
       "line": 9,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Marketing/MarketingAttributionCoverageTests.cs",
+        "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingAttributionCoverageTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42712,7 +42720,7 @@
     {
       "name": "GetMarketingAttributionSummaryQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Marketing/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQueryHandler.cs",
+      "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQueryHandler.cs",
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [

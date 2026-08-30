@@ -55,6 +55,9 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.marketing.application.abstractions": {
+        "type": "Project"
+      },
       "fooddiary.results": {
         "type": "Project"
       },

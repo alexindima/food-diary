@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Marketing.Common;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Tracking;
+using FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;

@@ -1391,20 +1391,6 @@
     },
     {
       "category": "financial",
-      "name": "ITransactionalCommand",
-      "type": "IRequest<Result>,",
-      "path": "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
-      "line": 21
-    },
-    {
-      "category": "financial",
-      "name": "IBillingMarketingConversionRecorder",
-      "type": "IMarketingConversionRecorder,",
-      "path": "FoodDiary.Application.Marketing/Services/MarketingConversionRecorder.cs",
-      "line": 11
-    },
-    {
-      "category": "financial",
       "name": "BillingSubscriptionId",
       "type": "Guid?",
       "path": "FoodDiary.Domain/Entities/Billing/BillingPayment.cs",
@@ -1878,6 +1864,20 @@
       "type": "Func<NpgsqlConnection,",
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
       "line": 61
+    },
+    {
+      "category": "financial",
+      "name": "ITransactionalCommand",
+      "type": "IRequest<Result>,",
+      "path": "Modules/Marketing/Application/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
+      "line": 21
+    },
+    {
+      "category": "financial",
+      "name": "IBillingMarketingConversionRecorder",
+      "type": "IMarketingConversionRecorder,",
+      "path": "Modules/Marketing/Application/Services/MarketingConversionRecorder.cs",
+      "line": 11
     },
     {
       "category": "health",

@@ -1,14 +1,16 @@
 using FoodDiary.Application.Abstractions.Marketing.Common;
-using FoodDiary.Infrastructure.Persistence.Tracking;
+using FoodDiary.Application.Marketing;
+using FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Marketing.Infrastructure;
 
-public static partial class DependencyInjection {
-    private static void AddMarketingPersistence(this IServiceCollection services) {
+public static class ModuleRegistration {
+    public static IServiceCollection AddMarketingModule(this IServiceCollection services) {
+        services.AddMarketingApplication();
         services.AddScoped<IMarketingAttributionEventRepository, MarketingAttributionEventRepository>();
         services.AddScoped<IMarketingAttributionEventReadRepository>(static provider => provider.GetRequiredService<IMarketingAttributionEventRepository>());
         services.AddScoped<IMarketingAttributionEventWriteRepository>(static provider => provider.GetRequiredService<IMarketingAttributionEventRepository>());
-
+        return services;
     }
 }

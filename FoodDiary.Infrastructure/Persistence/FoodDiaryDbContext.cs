@@ -9,6 +9,7 @@ using FoodDiary.Modules.Favorites.Infrastructure.Persistence;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure.Persistence;
 using FoodDiary.Modules.Cycles.Infrastructure.Persistence;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure.Model;
+using FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
@@ -30,5 +31,6 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         modelBuilder.ApplyDietologistPersistenceModel();
         modelBuilder.ApplyCyclesPersistenceModel();
         modelBuilder.ApplyOpenFoodFactsPersistenceModel();
+        modelBuilder.ApplyMarketingPersistenceModel();
     }
 }

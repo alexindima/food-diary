@@ -354,6 +354,21 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Application.Marketing"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Mediator",
+                "FoodDiary.Modules.Marketing.Application.Abstractions",
+            ],
+            ["FoodDiary.Modules.Marketing.Application.Abstractions"] = [],
+            ["FoodDiary.Modules.Marketing.Domain"] = [
+                "FoodDiary.Domain",
+            ],
+            ["FoodDiary.Modules.Marketing.PersistenceModel"] = [
+                "FoodDiary.Modules.Marketing.Domain",
+            ],
+            ["FoodDiary.Modules.Marketing.Infrastructure"] = [
+                "FoodDiary.Application.Marketing",
+                "FoodDiary.Infrastructure",
+                "FoodDiary.Modules.Marketing.Application.Abstractions",
+                "FoodDiary.Modules.Marketing.Domain",
+                "FoodDiary.Modules.Marketing.PersistenceModel",
             ],
             ["FoodDiary.Application.Notifications"] = [
                 "FoodDiary.Application.Abstractions",
@@ -401,6 +416,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Favorites.Domain",
                 "FoodDiary.Modules.Cycles.Application.Abstractions",
                 "FoodDiary.Modules.Images.Application.Abstractions",
+                "FoodDiary.Modules.Marketing.Application.Abstractions",
                 "FoodDiary.Results",
             ],
             ["FoodDiary.Domain"] = [
@@ -431,6 +447,8 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Lessons.PersistenceModel",
                 "FoodDiary.Modules.OpenFoodFacts.Domain",
                 "FoodDiary.Modules.OpenFoodFacts.PersistenceModel",
+                "FoodDiary.Modules.Marketing.Domain",
+                "FoodDiary.Modules.Marketing.PersistenceModel",
                 "FoodDiary.Modules.WeeklyGoals.Domain",
                 "FoodDiary.Modules.WeeklyGoals.PersistenceModel",
             ],
@@ -453,7 +471,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Identity",
                 "FoodDiary.Application.Images",
                 "FoodDiary.Modules.Lessons.Infrastructure",
-                "FoodDiary.Application.Marketing",
+                "FoodDiary.Modules.Marketing.Infrastructure",
                 "FoodDiary.Application.MealPlanning",
                 "FoodDiary.Application.Meals",
                 "FoodDiary.Modules.WeeklyGoals.Infrastructure",
@@ -497,7 +515,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Favorites.Infrastructure",
                 "FoodDiary.Application.Identity",
                 "FoodDiary.Application.Images",
-                "FoodDiary.Application.Marketing",
+                "FoodDiary.Modules.Marketing.Infrastructure",
                 "FoodDiary.Application.MealPlanning",
                 "FoodDiary.Application.Meals",
                 "FoodDiary.Modules.WeeklyGoals.Application",
@@ -632,7 +650,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Identity",
                 "FoodDiary.Application.Images",
                 "FoodDiary.Modules.Lessons.Infrastructure",
-                "FoodDiary.Application.Marketing",
+                "FoodDiary.Modules.Marketing.Infrastructure",
                 "FoodDiary.Application.MealPlanning",
                 "FoodDiary.Application.Meals",
                 "FoodDiary.Modules.WeeklyGoals.Infrastructure",
@@ -683,7 +701,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Lessons.Application",
                 "FoodDiary.Modules.Lessons.Application.Abstractions",
                 "FoodDiary.Modules.Lessons.Contracts",
-                "FoodDiary.Application.Marketing",
                 "FoodDiary.Application.MealPlanning",
                 "FoodDiary.Application.Meals",
                 "FoodDiary.Application.Usda",
@@ -828,6 +845,17 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests"] = [
                 "FoodDiary.Modules.OpenFoodFacts.Infrastructure",
+            ],
+            ["FoodDiary.Modules.Marketing.Application.Tests"] = [
+                "FoodDiary.Application.Marketing",
+            ],
+            ["FoodDiary.Modules.Marketing.Domain.Tests"] = [
+                "FoodDiary.Modules.Marketing.Domain",
+            ],
+            ["FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests"] = [
+                "FoodDiary.Initializer",
+                "FoodDiary.Modules.Marketing.Infrastructure",
+                "FoodDiary.Testing",
             ],
             ["FoodDiary.Modules.ContentReports.Application.Tests"] = [
                 "FoodDiary.Modules.ContentReports.Application",

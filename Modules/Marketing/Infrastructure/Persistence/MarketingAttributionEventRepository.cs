@@ -1,9 +1,10 @@
 using FoodDiary.Application.Abstractions.Marketing.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Persistence.Tracking;
+namespace FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 
 public sealed class MarketingAttributionEventRepository(FoodDiaryDbContext context) : IMarketingAttributionEventRepository {
     public Task AddAsync(MarketingAttributionEventRecord record, CancellationToken cancellationToken = default) {

@@ -329,7 +329,7 @@
       "area": "FoodDiary",
       "name": "MarketingAttributionEvent",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
+      "path": "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs",
       "line": 6
     },
     {
@@ -1211,7 +1211,7 @@
       "area": "FoodDiary",
       "name": "MarketingAttributionEventId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MarketingAttributionEventId.cs",
+      "path": "Modules/Marketing/Domain/ValueObjects/Ids/MarketingAttributionEventId.cs",
       "line": 4
     },
     {
@@ -3084,27 +3084,6 @@
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "FoodDiary.Domain/Entities/Tracking/HydrationEntry.cs",
       "line": 70
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 73
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\")) : normalized",
-      "path": "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 82
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
-      "path": "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 86
     },
     {
       "area": "FoodDiary",
@@ -5175,6 +5154,27 @@
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs",
+      "line": 73
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\")) : normalized",
+      "path": "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs",
+      "line": 82
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
+      "path": "Modules/Marketing/Domain/Entities/Tracking/MarketingAttributionEvent.cs",
+      "line": 86
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
       "path": "Modules/OpenFoodFacts/Domain/OpenFoodFactsDomainGuard.cs",
       "line": 8
     },
@@ -5975,7 +5975,7 @@
         "e => new { e.UtmSource, e.UtmMedium, e.UtmCampaign, e.OccurredAtUtc })"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Marketing/MarketingAttributionEventConfiguration.cs"
+      "path": "Modules/Marketing/Infrastructure/Model/Configurations/MarketingAttributionEventConfiguration.cs"
     },
     {
       "area": "FoodDiary",
