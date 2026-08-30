@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3503,
-    "symbols": 3505,
+    "sourceFiles": 3505,
+    "symbols": 3507,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 219,
+    "dependencyInjectionRegistrations": 218,
     "kinds": {
-      "class": 1832,
+      "class": 1834,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1357,
+      "Other": 1359,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -1551,104 +1551,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Validation/UserIdParser.cs",
       "line": 6
-    },
-    {
-      "name": "CycleDayErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Common/CycleDayErrors.cs",
-      "line": 5
-    },
-    {
-      "name": "CycleErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Common/CycleErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "ICycleReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Common/ICycleReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "ICycleReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Common/ICycleReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "ICycleRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Common/ICycleRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "ICycleWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Common/ICycleWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "BleedingEntryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Models/BleedingEntryReadModel.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleConsentReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Models/CycleConsentReadModel.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleFactorReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Models/CycleFactorReadModel.cs",
-      "line": 4
-    },
-    {
-      "name": "CyclePredictionRevisionReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Models/CyclePredictionRevisionReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleProfileReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Models/CycleProfileReadModel.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleSymptomEntryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Models/CycleSymptomEntryReadModel.cs",
-      "line": 4
-    },
-    {
-      "name": "FertilitySignalReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Models/FertilitySignalReadModel.cs",
-      "line": 4
-    },
-    {
-      "name": "MenstrualEpisodeReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Cycles/Models/MenstrualEpisodeReadModel.cs",
-      "line": 4
     },
     {
       "name": "DailyAdviceErrors",
@@ -5527,405 +5429,6 @@
       "role": "Service",
       "path": "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
       "line": 8
-    },
-    {
-      "name": "ClearCycleDayCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "ClearCycleDayCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "ClearCycleDayCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "ConfirmPeriodStartCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "ConfirmPeriodStartCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "ConfirmPeriodStartCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "CreateCycleCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateCycleCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "CreateCycleCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteCycleProfileCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Cycles/Commands/DeleteCycleProfile/DeleteCycleProfileCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteCycleProfileCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Cycles/Commands/DeleteCycleProfile/DeleteCycleProfileCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "DeleteCycleProfileCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/DeleteCycleProfile/DeleteCycleProfileCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "DeleteMenstrualEpisodeCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "DeleteMenstrualEpisodeCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "DeleteMenstrualEpisodeCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "UpdateCycleConsentCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateCycleConsentCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommandHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "UpdateCycleConsentCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "UpdateCycleSettingsCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleSettings/UpdateCycleSettingsCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateCycleSettingsCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "UpdateCycleSettingsCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "UpdateMenstrualEpisodeCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateMenstrualEpisodeCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "UpdateMenstrualEpisodeCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "BleedingLogCommandModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/BleedingLogCommandModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FertilitySignalCommandModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/FertilitySignalCommandModel.cs",
-      "line": 2
-    },
-    {
-      "name": "SymptomLogCommandModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/SymptomLogCommandModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UpsertCycleDayCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpsertCycleDayCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "UpsertCycleDayCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "UpsertCycleFactorCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpsertCycleFactorCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "UpsertCycleFactorCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "ICycleReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Cycles/Common/ICycleReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "RequiredIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Internal/RequiredIdParser.cs",
-      "line": 5
-    },
-    {
-      "name": "UtcDateNormalizer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Internal/UtcDateNormalizer.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Mappings/CycleMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "BleedingEntryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Models/BleedingEntryModel.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleConsentModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Models/CycleConsentModel.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleFactorModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Models/CycleFactorModel.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleLogDayModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Models/CycleLogDayModel.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Models/CycleModel.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleNutritionSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Models/CycleNutritionSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "CyclePredictionRevisionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Models/CyclePredictionRevisionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "CyclePredictionsModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Models/CyclePredictionsModel.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleSymptomEntryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Models/CycleSymptomEntryModel.cs",
-      "line": 4
-    },
-    {
-      "name": "FertilitySignalModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Models/FertilitySignalModel.cs",
-      "line": 4
-    },
-    {
-      "name": "MenstrualEpisodeModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Cycles/Models/MenstrualEpisodeModel.cs",
-      "line": 4
-    },
-    {
-      "name": "GetCurrentCycleQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Cycles/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetCurrentCycleQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Cycles/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetCycleNutritionSummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetCycleNutritionSummaryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "GetCycleNutritionSummaryQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "CyclePredictionRevisionService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Cycles/Services/CyclePredictionRevisionService.cs",
-      "line": 5
-    },
-    {
-      "name": "CyclePredictionService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Cycles/Services/CyclePredictionService.cs",
-      "line": 7
-    },
-    {
-      "name": "CycleReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
-      "line": 13
     },
     {
       "name": "SendDashboardTestEmailCommand",
@@ -10639,67 +10142,11 @@
       "line": 6
     },
     {
-      "name": "BleedingEntry",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/BleedingEntry.cs",
-      "line": 6
-    },
-    {
-      "name": "CycleConsent",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
-      "line": 7
-    },
-    {
-      "name": "CycleFactor",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleFactor.cs",
-      "line": 6
-    },
-    {
-      "name": "CyclePredictionRevision",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 7
-    },
-    {
-      "name": "CycleProfile",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 6
-    },
-    {
-      "name": "CycleProfileSettings",
-      "kind": "record",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfileSettings.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleSymptomEntry",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
-      "line": 7
-    },
-    {
       "name": "ExerciseEntry",
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
       "line": 9
-    },
-    {
-      "name": "FertilitySignal",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/FertilitySignal.cs",
-      "line": 6
     },
     {
       "name": "HydrationEntry",
@@ -10713,13 +10160,6 @@
       "kind": "class",
       "role": "Event",
       "path": "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 6
-    },
-    {
-      "name": "MenstrualEpisode",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs",
       "line": 6
     },
     {
@@ -10905,59 +10345,10 @@
       "line": 2
     },
     {
-      "name": "CycleConfidence",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/CycleConfidence.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleConsentPurpose",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/CycleConsentPurpose.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleFactorType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/CycleFactorType.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleFlowLevel",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/CycleFlowLevel.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleReproductiveState",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/CycleReproductiveState.cs",
-      "line": 2
-    },
-    {
       "name": "CycleSymptomCategory",
       "kind": "enum",
       "role": "Other",
       "path": "FoodDiary.Domain/Enums/CycleSymptomCategory.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleTrackingGoal",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/CycleTrackingGoal.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleTrackingMode",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/CycleTrackingMode.cs",
       "line": 2
     },
     {
@@ -11007,13 +10398,6 @@
       "kind": "enum",
       "role": "Other",
       "path": "FoodDiary.Domain/Enums/MeasurementUnit.cs",
-      "line": 2
-    },
-    {
-      "name": "MenstrualEpisodeStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/MenstrualEpisodeStatus.cs",
       "line": 2
     },
     {
@@ -11241,27 +10625,6 @@
       "line": 4
     },
     {
-      "name": "BleedingEntryId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/BleedingEntryId.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleConsentId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/CycleConsentId.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleFactorId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/CycleFactorId.cs",
-      "line": 4
-    },
-    {
       "name": "CycleId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -11269,38 +10632,10 @@
       "line": 4
     },
     {
-      "name": "CyclePredictionRevisionId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/CyclePredictionRevisionId.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleProfileId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/CycleProfileId.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleSymptomEntryId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/CycleSymptomEntryId.cs",
-      "line": 4
-    },
-    {
       "name": "ExerciseEntryId",
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/ExerciseEntryId.cs",
-      "line": 4
-    },
-    {
-      "name": "FertilitySignalId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/FertilitySignalId.cs",
       "line": 4
     },
     {
@@ -11371,13 +10706,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/MealPlanMealId.cs",
-      "line": 4
-    },
-    {
-      "name": "MenstrualEpisodeId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MenstrualEpisodeId.cs",
       "line": 4
     },
     {
@@ -12008,7 +11336,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "DependencyInjection",
@@ -12330,62 +11658,6 @@
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics/WeightGoalConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "BleedingEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/BleedingEntryConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "CycleConsentConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CycleConsentConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "CycleFactorConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CycleFactorConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "CyclePredictionRevisionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CyclePredictionRevisionConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "CycleProfileConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CycleProfileConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "CycleSymptomEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CycleSymptomEntryConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "FertilitySignalConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/FertilitySignalConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "MenstrualEpisodeConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/MenstrualEpisodeConfiguration.cs",
       "line": 7
     },
     {
@@ -12904,7 +12176,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "FoodDiaryDbContext",
@@ -13191,13 +12463,6 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
-      "line": 9
-    },
-    {
-      "name": "CycleRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/CycleRepository.cs",
       "line": 9
     },
     {
@@ -20320,6 +19585,755 @@
       "line": 11
     },
     {
+      "name": "CycleDayErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Abstractions/Common/CycleDayErrors.cs",
+      "line": 5
+    },
+    {
+      "name": "CycleErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Abstractions/Common/CycleErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "ICycleReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Cycles/Application/Abstractions/Common/ICycleReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "ICycleReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Cycles/Application/Abstractions/Common/ICycleReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "ICycleRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Cycles/Application/Abstractions/Common/ICycleRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "ICycleWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Cycles/Application/Abstractions/Common/ICycleWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "BleedingEntryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Abstractions/Models/BleedingEntryReadModel.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleConsentReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Abstractions/Models/CycleConsentReadModel.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleFactorReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Abstractions/Models/CycleFactorReadModel.cs",
+      "line": 4
+    },
+    {
+      "name": "CyclePredictionRevisionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Abstractions/Models/CyclePredictionRevisionReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleProfileReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Abstractions/Models/CycleProfileReadModel.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleSymptomEntryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Abstractions/Models/CycleSymptomEntryReadModel.cs",
+      "line": 4
+    },
+    {
+      "name": "FertilitySignalReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Abstractions/Models/FertilitySignalReadModel.cs",
+      "line": 4
+    },
+    {
+      "name": "MenstrualEpisodeReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Abstractions/Models/MenstrualEpisodeReadModel.cs",
+      "line": 4
+    },
+    {
+      "name": "ClearCycleDayCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Cycles/Application/Commands/ClearCycleDay/ClearCycleDayCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "ClearCycleDayCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Cycles/Application/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "ClearCycleDayCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Cycles/Application/Commands/ClearCycleDay/ClearCycleDayCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "ConfirmPeriodStartCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Cycles/Application/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ConfirmPeriodStartCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Cycles/Application/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "ConfirmPeriodStartCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Cycles/Application/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "CreateCycleCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Cycles/Application/Commands/CreateCycle/CreateCycleCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateCycleCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Cycles/Application/Commands/CreateCycle/CreateCycleCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "CreateCycleCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Cycles/Application/Commands/CreateCycle/CreateCycleCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteCycleProfileCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Cycles/Application/Commands/DeleteCycleProfile/DeleteCycleProfileCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteCycleProfileCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Cycles/Application/Commands/DeleteCycleProfile/DeleteCycleProfileCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "DeleteCycleProfileCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Cycles/Application/Commands/DeleteCycleProfile/DeleteCycleProfileCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "DeleteMenstrualEpisodeCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Cycles/Application/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "DeleteMenstrualEpisodeCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Cycles/Application/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "DeleteMenstrualEpisodeCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Cycles/Application/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "UpdateCycleConsentCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Cycles/Application/Commands/UpdateCycleConsent/UpdateCycleConsentCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateCycleConsentCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Cycles/Application/Commands/UpdateCycleConsent/UpdateCycleConsentCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "UpdateCycleConsentCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Cycles/Application/Commands/UpdateCycleConsent/UpdateCycleConsentCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "UpdateCycleSettingsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Cycles/Application/Commands/UpdateCycleSettings/UpdateCycleSettingsCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateCycleSettingsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Cycles/Application/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "UpdateCycleSettingsCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Cycles/Application/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "UpdateMenstrualEpisodeCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateMenstrualEpisodeCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "UpdateMenstrualEpisodeCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Cycles/Application/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "BleedingLogCommandModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/BleedingLogCommandModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FertilitySignalCommandModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/FertilitySignalCommandModel.cs",
+      "line": 2
+    },
+    {
+      "name": "SymptomLogCommandModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/SymptomLogCommandModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UpsertCycleDayCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/UpsertCycleDayCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpsertCycleDayCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "UpsertCycleDayCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Cycles/Application/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "UpsertCycleFactorCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpsertCycleFactorCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "UpsertCycleFactorCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "ICycleReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Cycles/Application/Common/ICycleReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "RequiredIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Internal/RequiredIdParser.cs",
+      "line": 5
+    },
+    {
+      "name": "UtcDateNormalizer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Internal/UtcDateNormalizer.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Mappings/CycleMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "BleedingEntryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Models/BleedingEntryModel.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleConsentModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Models/CycleConsentModel.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleFactorModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Models/CycleFactorModel.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleLogDayModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Models/CycleLogDayModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Models/CycleModel.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleNutritionSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Models/CycleNutritionSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CyclePredictionRevisionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Models/CyclePredictionRevisionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CyclePredictionsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Models/CyclePredictionsModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleSymptomEntryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Models/CycleSymptomEntryModel.cs",
+      "line": 4
+    },
+    {
+      "name": "FertilitySignalModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Models/FertilitySignalModel.cs",
+      "line": 4
+    },
+    {
+      "name": "MenstrualEpisodeModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Application/Models/MenstrualEpisodeModel.cs",
+      "line": 4
+    },
+    {
+      "name": "GetCurrentCycleQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetCurrentCycleQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetCycleNutritionSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetCycleNutritionSummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "GetCycleNutritionSummaryQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "CyclePredictionRevisionService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Cycles/Application/Services/CyclePredictionRevisionService.cs",
+      "line": 5
+    },
+    {
+      "name": "CyclePredictionService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Cycles/Application/Services/CyclePredictionService.cs",
+      "line": 7
+    },
+    {
+      "name": "CycleReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Cycles/Application/Services/CycleReadService.cs",
+      "line": 13
+    },
+    {
+      "name": "BleedingEntry",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/BleedingEntry.cs",
+      "line": 6
+    },
+    {
+      "name": "CycleConsent",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+      "line": 7
+    },
+    {
+      "name": "CycleFactor",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleFactor.cs",
+      "line": 6
+    },
+    {
+      "name": "CyclePredictionRevision",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "line": 7
+    },
+    {
+      "name": "CycleProfile",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 6
+    },
+    {
+      "name": "CycleProfileSettings",
+      "kind": "record",
+      "role": "Entity",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfileSettings.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleSymptomEntry",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "line": 7
+    },
+    {
+      "name": "FertilitySignal",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/FertilitySignal.cs",
+      "line": 6
+    },
+    {
+      "name": "MenstrualEpisode",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "line": 6
+    },
+    {
+      "name": "CycleConfidence",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain/Enums/CycleConfidence.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleConsentPurpose",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain/Enums/CycleConsentPurpose.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleFactorType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain/Enums/CycleFactorType.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleFlowLevel",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain/Enums/CycleFlowLevel.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleReproductiveState",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain/Enums/CycleReproductiveState.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleTrackingGoal",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain/Enums/CycleTrackingGoal.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleTrackingMode",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain/Enums/CycleTrackingMode.cs",
+      "line": 2
+    },
+    {
+      "name": "MenstrualEpisodeStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain/Enums/MenstrualEpisodeStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "BleedingEntryId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/BleedingEntryId.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleConsentId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleConsentId.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleFactorId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleFactorId.cs",
+      "line": 4
+    },
+    {
+      "name": "CyclePredictionRevisionId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CyclePredictionRevisionId.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleProfileId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleProfileId.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleSymptomEntryId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleSymptomEntryId.cs",
+      "line": 4
+    },
+    {
+      "name": "FertilitySignalId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/FertilitySignalId.cs",
+      "line": 4
+    },
+    {
+      "name": "MenstrualEpisodeId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/MenstrualEpisodeId.cs",
+      "line": 4
+    },
+    {
+      "name": "BleedingEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/BleedingEntryConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "CycleConsentConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleConsentConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "CycleFactorConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleFactorConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "CyclePredictionRevisionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CyclePredictionRevisionConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "CycleProfileConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleProfileConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "CycleSymptomEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleSymptomEntryConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "FertilitySignalConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/FertilitySignalConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "MenstrualEpisodeConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/MenstrualEpisodeConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "CyclesPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Infrastructure/Model/CyclesPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "CycleRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs",
+      "line": 10
+    },
+    {
       "name": "IDailyAdviceReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -24880,16 +24894,16 @@
     },
     {
       "interface": "ICycleReadService",
-      "interfacePath": "FoodDiary.Application.Cycles/Common/ICycleReadService.cs",
+      "interfacePath": "Modules/Cycles/Application/Common/ICycleReadService.cs",
       "implementation": "CycleReadService",
-      "implementationPath": "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
+      "implementationPath": "Modules/Cycles/Application/Services/CycleReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "ICycleRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Cycles/Common/ICycleRepository.cs",
+      "interfacePath": "Modules/Cycles/Application/Abstractions/Common/ICycleRepository.cs",
       "implementation": "CycleRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Tracking/CycleRepository.cs",
+      "implementationPath": "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26351,13 +26365,6 @@
       "line": 18
     },
     {
-      "service": "ICycleReadService",
-      "implementation": "CycleReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Cycles/DependencyInjection.cs",
-      "line": 14
-    },
-    {
       "service": "IDashboardStatisticsReadService",
       "implementation": "MediatorDashboardStatisticsReadService",
       "lifetime": "Scoped",
@@ -27104,28 +27111,21 @@
       "implementation": "WeightEntryRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 12
+      "line": 11
     },
     {
       "service": "IWaistEntryRepository",
       "implementation": "WaistEntryRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 16
-    },
-    {
-      "service": "ICycleRepository",
-      "implementation": "CycleRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 20
+      "line": 15
     },
     {
       "service": "IExerciseEntryRepository",
       "implementation": "ExerciseEntryRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 24
+      "line": 19
     },
     {
       "service": "IUsdaFoodRepository",
@@ -27490,6 +27490,13 @@
       "lifetime": "Scoped",
       "path": "Modules/ContentReports/Application/DependencyInjection.cs",
       "line": 15
+    },
+    {
+      "service": "ICycleReadService",
+      "implementation": "CycleReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Cycles/Application/DependencyInjection.cs",
+      "line": 14
     },
     {
       "service": "IDailyAdviceReadService",

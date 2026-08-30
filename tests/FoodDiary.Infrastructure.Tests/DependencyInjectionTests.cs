@@ -14,7 +14,6 @@ using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -535,7 +534,6 @@ public sealed class DependencyInjectionTests {
         IWeightEntryRepository weightRepository = scope.ServiceProvider.GetRequiredService<IWeightEntryRepository>();
         IWaistEntryRepository waistRepository = scope.ServiceProvider.GetRequiredService<IWaistEntryRepository>();
         IHydrationEntryReadModelRepository hydrationRepository = scope.ServiceProvider.GetRequiredService<IHydrationEntryReadModelRepository>();
-        ICycleRepository cycleRepository = scope.ServiceProvider.GetRequiredService<ICycleRepository>();
         IExerciseEntryRepository exerciseRepository = scope.ServiceProvider.GetRequiredService<IExerciseEntryRepository>();
 
         Assert.Multiple(
@@ -547,9 +545,6 @@ public sealed class DependencyInjectionTests {
             () => Assert.Same(waistRepository, scope.ServiceProvider.GetRequiredService<IWaistEntryWriteRepository>()),
             () => Assert.IsType<HydrationEntryRepository>(hydrationRepository),
             () => Assert.Same(hydrationRepository, scope.ServiceProvider.GetRequiredService<IHydrationEntryWriteRepository>()),
-            () => Assert.IsType<CycleRepository>(cycleRepository),
-            () => Assert.Same(cycleRepository, scope.ServiceProvider.GetRequiredService<ICycleReadRepository>()),
-            () => Assert.Same(cycleRepository, scope.ServiceProvider.GetRequiredService<ICycleWriteRepository>()),
             () => Assert.IsType<ExerciseEntryRepository>(exerciseRepository),
             () => Assert.Same(exerciseRepository, scope.ServiceProvider.GetRequiredService<IExerciseEntryReadRepository>()),
             () => Assert.Same(exerciseRepository, scope.ServiceProvider.GetRequiredService<IExerciseEntryWriteRepository>()));

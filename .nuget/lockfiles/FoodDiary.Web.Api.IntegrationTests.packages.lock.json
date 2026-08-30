@@ -880,6 +880,7 @@
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
@@ -954,6 +955,8 @@
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
@@ -1321,6 +1324,8 @@
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.PersistenceModel": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.Domain": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Domain": "[1.0.0, )",
@@ -1431,6 +1436,36 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.cycles.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.cycles.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.cycles.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Cycles": "[1.0.0, )",
+          "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.PersistenceModel": "[1.0.0, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.cycles.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
@@ -1786,7 +1821,6 @@
           "FoodDiary.Application.Ai": "[1.0.0, )",
           "FoodDiary.Application.Billing": "[1.0.0, )",
           "FoodDiary.Application.BodyMetrics": "[1.0.0, )",
-          "FoodDiary.Application.Cycles": "[1.0.0, )",
           "FoodDiary.Application.Dashboard": "[1.0.0, )",
           "FoodDiary.Application.Exercises": "[1.0.0, )",
           "FoodDiary.Application.Export": "[1.0.0, )",
@@ -1810,6 +1844,7 @@
           "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Integrations": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Infrastructure": "[1.0.0, )",

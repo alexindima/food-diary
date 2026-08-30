@@ -23,7 +23,7 @@ are reported separately; `none observed` never means proven isolation.
 | [Billing](billing.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |
 | [BodyMetrics](body-metrics.md) | aggregate-owner | 0 | 3 | 0 | 4 | project-reference-matrix |
 | [ContentReports](content-reports.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix |
-| [Cycles](cycles.md) | aggregate-owner | 0 | 2 | 0 | 6 | project-reference-matrix |
+| [Cycles](cycles.md) | aggregate-owner | 0 | 2 | 0 | 5 | project-reference-matrix |
 | [DailyAdvices](daily-advices.md) | aggregate-owner | 0 | 1 | 0 | 5 | project-reference-matrix |
 | [Dashboard](dashboard.md) | read-composer | 0 | 7 | 0 | 4 | project-reference-matrix |
 | [Dietologist](dietologist.md) | aggregate-owner | 0 | 5 | 0 | 4 | project-reference-matrix |

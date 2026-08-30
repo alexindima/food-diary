@@ -21,7 +21,6 @@
     "Authentication": "Identity",
     "Billing": "Billing",
     "Common": "Shared",
-    "Cycles": "Cycles",
     "DailyAdvices": "DailyAdvices",
     "Dashboard": "Dashboard",
     "Dietologist": "Dietologist",
@@ -189,19 +188,19 @@
       "role": "aggregate-owner",
       "physicalIsolation": "project",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": [],
+      "ownedEntities": ["CycleProfile", "CycleFactor", "CycleConsent", "CycleSymptomEntry", "CyclePredictionRevision", "BleedingEntry", "FertilitySignal"],
       "sourceMappings": {
         "applicationProjects": [
-          "FoodDiary.Application.Cycles"
+          "Modules/Cycles/Application"
         ],
         "abstractionAreas": [
-          "Cycles"
+          "Modules/Cycles/Application/Abstractions"
         ],
         "domainAreas": [
-          "Tracking/Cycles"
+          "Modules/Cycles/Domain"
         ],
         "persistenceAreas": [
-          "Cycles"
+          "Modules/Cycles/Infrastructure"
         ]
       }
     },

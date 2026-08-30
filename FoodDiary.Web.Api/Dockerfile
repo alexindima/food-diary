@@ -36,7 +36,11 @@ COPY FoodDiary.Application.RecipeCommunity/*.csproj FoodDiary.Application.Recipe
 COPY FoodDiary.Application.Wearables/*.csproj FoodDiary.Application.Wearables/
 COPY FoodDiary.Application.Notifications/*.csproj FoodDiary.Application.Notifications/
 COPY FoodDiary.Application.BodyMetrics/*.csproj FoodDiary.Application.BodyMetrics/
-COPY FoodDiary.Application.Cycles/*.csproj FoodDiary.Application.Cycles/
+COPY Modules/Cycles/Application/*.csproj Modules/Cycles/Application/
+COPY Modules/Cycles/Application/Abstractions/*.csproj Modules/Cycles/Application/Abstractions/
+COPY Modules/Cycles/Domain/*.csproj Modules/Cycles/Domain/
+COPY Modules/Cycles/Infrastructure/*.csproj Modules/Cycles/Infrastructure/
+COPY Modules/Cycles/Infrastructure/Model/*.csproj Modules/Cycles/Infrastructure/Model/
 COPY FoodDiary.Application.Dashboard/*.csproj FoodDiary.Application.Dashboard/
 COPY FoodDiary.Application.Exercises/*.csproj FoodDiary.Application.Exercises/
 COPY Modules/Tdee/Application/*.csproj Modules/Tdee/Application/
@@ -130,7 +134,11 @@ COPY FoodDiary.Application.RecipeCommunity/ FoodDiary.Application.RecipeCommunit
 COPY FoodDiary.Application.Wearables/ FoodDiary.Application.Wearables/
 COPY FoodDiary.Application.Notifications/ FoodDiary.Application.Notifications/
 COPY FoodDiary.Application.BodyMetrics/ FoodDiary.Application.BodyMetrics/
-COPY FoodDiary.Application.Cycles/ FoodDiary.Application.Cycles/
+COPY Modules/Cycles/Application/ Modules/Cycles/Application/
+COPY Modules/Cycles/Application/Abstractions/ Modules/Cycles/Application/Abstractions/
+COPY Modules/Cycles/Domain/ Modules/Cycles/Domain/
+COPY Modules/Cycles/Infrastructure/ Modules/Cycles/Infrastructure/
+COPY Modules/Cycles/Infrastructure/Model/ Modules/Cycles/Infrastructure/Model/
 COPY FoodDiary.Application.Dashboard/ FoodDiary.Application.Dashboard/
 COPY FoodDiary.Application.Exercises/ FoodDiary.Application.Exercises/
 COPY Modules/Tdee/Application/ Modules/Tdee/Application/

@@ -642,9 +642,11 @@ public sealed class ApplicationGuardrailTests {
             "Abstractions",
             "Results",
             facadeFileName);
-        string featureErrorsPath = string.Equals(featureDirectory, "Images", StringComparison.Ordinal)
-            ? Path.Combine(root, "Modules", "Images", "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName)
-            : Path.Combine(root, "FoodDiary.Application.Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName);
+        string featureErrorsPath = featureDirectory switch {
+            "Images" => Path.Combine(root, "Modules", "Images", "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName),
+            "Cycles" => Path.Combine(root, "Modules", "Cycles", "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName),
+            _ => Path.Combine(root, "FoodDiary.Application.Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
+        };
 
         string facadeSource = File.ReadAllText(facadePath);
         string featureErrorsSource = File.ReadAllText(featureErrorsPath);
@@ -1203,7 +1205,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void CycleNutritionQueries_UseStatisticsReadServiceInsteadOfMealAggregates() {
         string root = GetRepositoryRoot();
-        string cycleQueriesRoot = Path.Combine(root, "FoodDiary.Application.Cycles", "Queries");
+        string cycleQueriesRoot = Path.Combine(root, "Modules", "Cycles", "Application", "Queries");
         string[] cycleQueryFiles = [.. SourceScanner.SourceFiles(cycleQueriesRoot)];
 
         string[] violations = [
@@ -1472,7 +1474,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string[] contractFiles = [
             Path.Combine(root, "Modules", "DailyAdvices", "Application", "Abstractions", "Common", "IDailyAdviceReadModelRepository.cs"),
-            Path.Combine(root, "FoodDiary.Application.Abstractions", "Cycles", "Common", "ICycleReadRepository.cs"),
+            Path.Combine(root, "Modules", "Cycles", "Application", "Abstractions", "Common", "ICycleReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Ai", "Common", "IAiPromptTemplateReadRepository.cs"),
         ];
 
@@ -1811,7 +1813,9 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.Cycles",
+            "Modules",
+            "Cycles",
+            "Application",
             "Services",
             "CycleReadService.cs");
         string[] serviceFiles = [servicePath];

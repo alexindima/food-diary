@@ -14,7 +14,6 @@
   </Folder>
   <Folder Name="/Application/Health and Tracking/">
     <Project Path="FoodDiary.Application.BodyMetrics/FoodDiary.Application.BodyMetrics.csproj" />
-    <Project Path="FoodDiary.Application.Cycles/FoodDiary.Application.Cycles.csproj" />
     <Project Path="FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj" />
     <Project Path="FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj" />
     <Project Path="FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj" />
@@ -34,6 +33,17 @@
     <Project Path="FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj" />
   </Folder>
   <Folder Name="/Modules/" />
+  <Folder Name="/Modules/Cycles/">
+    <Project Path="Modules/Cycles/Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj" />
+    <Project Path="Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj" />
+    <Project Path="Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
+    <Project Path="Modules/Cycles/Infrastructure/FoodDiary.Modules.Cycles.Infrastructure.csproj" />
+    <Project Path="Modules/Cycles/Infrastructure/Model/FoodDiary.Modules.Cycles.PersistenceModel.csproj" />
+    <Project Path="Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/FoodDiary.Modules.Cycles.Application.Tests.csproj" />
+    <Project Path="Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/FoodDiary.Modules.Cycles.Domain.Tests.csproj" />
+    <Project Path="Modules/Cycles/tests/FoodDiary.Modules.Cycles.Infrastructure.Tests/FoodDiary.Modules.Cycles.Infrastructure.Tests.csproj" />
+    <Project Path="Modules/Cycles/tests/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests.csproj" />
+  </Folder>
   <Folder Name="/Modules/ContentReports/">
     <Project Path="Modules/ContentReports/Application/Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
     <Project Path="Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj" />

@@ -12,7 +12,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Admin application module: `FoodDiary.Application.Admin/AGENTS.md`
 - AI application module: `FoodDiary.Application.Ai/AGENTS.md`
 - Body metrics application module: `FoodDiary.Application.BodyMetrics/AGENTS.md`
-- Cycles application module: `FoodDiary.Application.Cycles/AGENTS.md`
+- Cycles logical module: `Modules/Cycles/AGENTS.md`
+- Cycles application: `Modules/Cycles/Application/AGENTS.md`
+- Cycles application abstractions: `Modules/Cycles/Application/Abstractions/AGENTS.md`
+- Cycles domain: `Modules/Cycles/Domain/AGENTS.md`
+- Cycles infrastructure: `Modules/Cycles/Infrastructure/AGENTS.md`
+- Cycles persistence model: `Modules/Cycles/Infrastructure/Model/AGENTS.md`
 - Dietologist logical module: `Modules/Dietologist/AGENTS.md`
 - Dietologist application: `Modules/Dietologist/Application/AGENTS.md`
 - Exercises application module: `FoodDiary.Application.Exercises/AGENTS.md`

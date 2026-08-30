@@ -972,11 +972,11 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("WaistEntryConfiguration.cs", "Configurations/BodyMetrics")]
     [InlineData("HydrationEntryConfiguration.cs", "Modules/Hydration/Infrastructure/Model/Configurations")]
     [InlineData("ExerciseEntryConfiguration.cs", "Configurations/Exercises")]
-    [InlineData("CycleProfileConfiguration.cs", "Configurations/Cycles")]
-    [InlineData("CycleFactorConfiguration.cs", "Configurations/Cycles")]
-    [InlineData("CycleSymptomEntryConfiguration.cs", "Configurations/Cycles")]
-    [InlineData("BleedingEntryConfiguration.cs", "Configurations/Cycles")]
-    [InlineData("FertilitySignalConfiguration.cs", "Configurations/Cycles")]
+    [InlineData("CycleProfileConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
+    [InlineData("CycleFactorConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
+    [InlineData("CycleSymptomEntryConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
+    [InlineData("BleedingEntryConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
+    [InlineData("FertilitySignalConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
     public void HealthTrackingConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {

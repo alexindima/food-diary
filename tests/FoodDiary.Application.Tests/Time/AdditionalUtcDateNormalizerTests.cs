@@ -1,4 +1,3 @@
-using CyclesUtcDateNormalizer = FoodDiary.Application.Cycles.Internal.UtcDateNormalizer;
 using DashboardUtcDateNormalizer = FoodDiary.Application.Dashboard.Internal.UtcDateNormalizer;
 using ExportUtcDateNormalizer = FoodDiary.Application.Export.Internal.UtcDateNormalizer;
 using HydrationUtcDateNormalizer = FoodDiary.Application.Hydration.Internal.UtcDateNormalizer;
@@ -14,9 +13,6 @@ public sealed class AdditionalUtcDateNormalizerTests {
         var unspecified = new DateTime(2026, 8, 14, 12, 30, 0, DateTimeKind.Unspecified);
         var utc = new DateTime(2026, 8, 14, 12, 30, 0, DateTimeKind.Utc);
 
-        DateTime cyclesLocal = CyclesUtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(local);
-        DateTime cyclesUnspecified = CyclesUtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(unspecified);
-        DateTime cyclesUtc = CyclesUtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(utc);
         DateTime exportLocal = ExportUtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(local);
         DateTime exportUnspecified = ExportUtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(unspecified);
         DateTime hydration = HydrationUtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(unspecified);
@@ -30,9 +26,6 @@ public sealed class AdditionalUtcDateNormalizerTests {
         DateTime dashboardLocal = DashboardUtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(local);
 
         Assert.Multiple(
-            () => Assert.Equal(local.ToUniversalTime(), cyclesLocal),
-            () => Assert.Equal(DateTimeKind.Utc, cyclesUnspecified.Kind),
-            () => Assert.Equal(utc, cyclesUtc),
             () => Assert.Equal(local.ToUniversalTime(), exportLocal),
             () => Assert.Equal(DateTimeKind.Utc, exportUnspecified.Kind),
             () => Assert.Equal(DateTimeKind.Utc, hydration.Kind),

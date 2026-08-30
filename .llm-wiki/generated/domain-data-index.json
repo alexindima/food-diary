@@ -154,7 +154,7 @@
       "area": "FoodDiary",
       "name": "BleedingEntry",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/BleedingEntry.cs",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/BleedingEntry.cs",
       "line": 6
     },
     {
@@ -175,42 +175,42 @@
       "area": "FoodDiary",
       "name": "CycleConsent",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
       "line": 7
     },
     {
       "area": "FoodDiary",
       "name": "CycleFactor",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleFactor.cs",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleFactor.cs",
       "line": 6
     },
     {
       "area": "FoodDiary",
       "name": "CyclePredictionRevision",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
       "line": 7
     },
     {
       "area": "FoodDiary",
       "name": "CycleProfile",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
       "line": 6
     },
     {
       "area": "FoodDiary",
       "name": "CycleProfileSettings",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfileSettings.cs",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfileSettings.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "CycleSymptomEntry",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleSymptomEntry.cs",
       "line": 7
     },
     {
@@ -308,7 +308,7 @@
       "area": "FoodDiary",
       "name": "FertilitySignal",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/FertilitySignal.cs",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/FertilitySignal.cs",
       "line": 6
     },
     {
@@ -392,7 +392,7 @@
       "area": "FoodDiary",
       "name": "MenstrualEpisode",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
       "line": 6
     },
     {
@@ -686,35 +686,35 @@
       "area": "FoodDiary",
       "name": "CycleConfidence",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/CycleConfidence.cs",
+      "path": "Modules/Cycles/Domain/Enums/CycleConfidence.cs",
       "line": 2
     },
     {
       "area": "FoodDiary",
       "name": "CycleConsentPurpose",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/CycleConsentPurpose.cs",
+      "path": "Modules/Cycles/Domain/Enums/CycleConsentPurpose.cs",
       "line": 2
     },
     {
       "area": "FoodDiary",
       "name": "CycleFactorType",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/CycleFactorType.cs",
+      "path": "Modules/Cycles/Domain/Enums/CycleFactorType.cs",
       "line": 2
     },
     {
       "area": "FoodDiary",
       "name": "CycleFlowLevel",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/CycleFlowLevel.cs",
+      "path": "Modules/Cycles/Domain/Enums/CycleFlowLevel.cs",
       "line": 2
     },
     {
       "area": "FoodDiary",
       "name": "CycleReproductiveState",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/CycleReproductiveState.cs",
+      "path": "Modules/Cycles/Domain/Enums/CycleReproductiveState.cs",
       "line": 2
     },
     {
@@ -728,14 +728,14 @@
       "area": "FoodDiary",
       "name": "CycleTrackingGoal",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/CycleTrackingGoal.cs",
+      "path": "Modules/Cycles/Domain/Enums/CycleTrackingGoal.cs",
       "line": 2
     },
     {
       "area": "FoodDiary",
       "name": "CycleTrackingMode",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/CycleTrackingMode.cs",
+      "path": "Modules/Cycles/Domain/Enums/CycleTrackingMode.cs",
       "line": 2
     },
     {
@@ -854,7 +854,7 @@
       "area": "FoodDiary",
       "name": "MenstrualEpisodeStatus",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/MenstrualEpisodeStatus.cs",
+      "path": "Modules/Cycles/Domain/Enums/MenstrualEpisodeStatus.cs",
       "line": 2
     },
     {
@@ -973,7 +973,7 @@
       "area": "FoodDiary",
       "name": "BleedingEntryId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/BleedingEntryId.cs",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/BleedingEntryId.cs",
       "line": 4
     },
     {
@@ -994,14 +994,14 @@
       "area": "FoodDiary",
       "name": "CycleConsentId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/CycleConsentId.cs",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleConsentId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "CycleFactorId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/CycleFactorId.cs",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleFactorId.cs",
       "line": 4
     },
     {
@@ -1015,21 +1015,21 @@
       "area": "FoodDiary",
       "name": "CyclePredictionRevisionId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/CyclePredictionRevisionId.cs",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CyclePredictionRevisionId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "CycleProfileId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/CycleProfileId.cs",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleProfileId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "CycleSymptomEntryId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/CycleSymptomEntryId.cs",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleSymptomEntryId.cs",
       "line": 4
     },
     {
@@ -1141,7 +1141,7 @@
       "area": "FoodDiary",
       "name": "FertilitySignalId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/FertilitySignalId.cs",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/FertilitySignalId.cs",
       "line": 4
     },
     {
@@ -1295,7 +1295,7 @@
       "area": "FoodDiary",
       "name": "MenstrualEpisodeId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MenstrualEpisodeId.cs",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/MenstrualEpisodeId.cs",
       "line": 4
     },
     {
@@ -3045,286 +3045,6 @@
     },
     {
       "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
-      "path": "FoodDiary.Domain/Entities/Tracking/BleedingEntry.cs",
-      "line": 58
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/BleedingEntry.cs",
-      "line": 65
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(grantedAtUtc), \"Consent grant cannot precede its revocation.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
-      "line": 46
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(revokedAtUtc), \"Revocation cannot precede consent grant.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
-      "line": 62
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
-      "line": 71
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(purpose), \"Purpose must be supported.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
-      "line": 77
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(endDate), \"End date must be later than or equal to start date.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleFactor.cs",
-      "line": 54
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleFactor.cs",
-      "line": 60
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleFactor.cs",
-      "line": 67
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Cycle profile id is required.\", nameof(cycleProfileId))",
-      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 51
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Prediction start date cannot be after its end date.\", nameof(nextPeriodStartFrom))",
-      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 55
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(completedCycleCount), \"Value must be non-negative.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 59
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(calibrationSampleCount), \"Value must be non-negative.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 63
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(historicalCoveragePercent), \"Value must be in range [0, 100].\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 68
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(reasonCodes)",
-      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 71
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(reasonCodes), $\"Combined reason codes must be at most {ReasonCodesMaxLength} characters.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 78
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(settings)",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 105
-    },
-    {
-      "area": "FoodDiary",
-      "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException(\"Active fertility consent is required.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 277
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(categories)",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 308
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Confirmed menstrual episodes cannot overlap.\", nameof(date))",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 362
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Menstrual episode id is required.\", nameof(episodeId))",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 382
-    },
-    {
-      "area": "FoodDiary",
-      "type": "KeyNotFoundException",
-      "message": "throw new KeyNotFoundException($\"Menstrual episode {episodeId.Value} was not found.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 386
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Confirmed menstrual episodes cannot overlap.\", nameof(startDate))",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 394
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Menstrual episode id is required.\", nameof(episodeId))",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 408
-    },
-    {
-      "area": "FoodDiary",
-      "type": "KeyNotFoundException",
-      "message": "throw new KeyNotFoundException($\"Menstrual episode {episodeId.Value} was not found.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 412
-    },
-    {
-      "area": "FoodDiary",
-      "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException(\"Only confirmed menstrual episodes can be removed.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 414
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Notes must be at most {maxLength} characters.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 515
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be in range [0, 10].\") : value",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 538
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Average cycle length must be in range [18, 60].\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 543
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Average period length must be in range [1, 14].\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 550
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Luteal length must be in range [8, 18].\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 557
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 563
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 570
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 577
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(tags)",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
-      "line": 68
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(tags), $\"A maximum of {MaxTagsCount} tags is allowed.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
-      "line": 70
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Tags cannot contain null values.\", nameof(tags))",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
-      "line": 74
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(tags), $\"A tag must be at most {MaxTagLength} characters.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
-      "line": 82
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
-      "line": 93
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/CycleSymptomEntry.cs",
-      "line": 100
-    },
-    {
-      "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
       "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
@@ -3360,27 +3080,6 @@
     },
     {
       "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Basal body temperature must be in range [34, 42].\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/FertilitySignal.cs",
-      "line": 80
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
-      "path": "FoodDiary.Domain/Entities/Tracking/FertilitySignal.cs",
-      "line": 86
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/FertilitySignal.cs",
-      "line": 93
-    },
-    {
-      "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "FoodDiary.Domain/Entities/Tracking/HydrationEntry.cs",
@@ -3406,55 +3105,6 @@
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
       "path": "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
       "line": 86
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
-      "path": "FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs",
-      "line": 29
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(status), \"Status must be one of the supported values.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs",
-      "line": 33
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(endDate), \"Episode end date cannot precede its start date.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs",
-      "line": 37
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(endDate), \"Episode end date cannot precede its start date.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs",
-      "line": 57
-    },
-    {
-      "area": "FoodDiary",
-      "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException(\"Only confirmed menstrual episodes can be edited.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs",
-      "line": 66
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(endDate), \"Episode end date cannot precede its start date.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs",
-      "line": 70
-    },
-    {
-      "area": "FoodDiary",
-      "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException(\"Only confirmed menstrual episodes can be excluded from predictions.\")",
-      "path": "FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs",
-      "line": 80
     },
     {
       "area": "FoodDiary",
@@ -3587,168 +3237,168 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Password hash is required.\", nameof(value)) : value",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 137
+      "line": 135
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Token hash is required.\", paramName)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 146
+      "line": 144
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 151
+      "line": 149
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Date must be in the future (UTC).\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 162
+      "line": 160
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Expiration must be later than issuance.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 168
+      "line": 166
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(birthDate), \"Birth date cannot be in the future.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 179
+      "line": 177
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, ex.Message)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 210
+      "line": 208
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Deleted user cannot be mutated. Use Restore() first.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 216
+      "line": 214
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Language must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 436
+      "line": 434
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Theme must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 446
+      "line": 444
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UI style must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 456
+      "line": 454
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, ex.Message)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 468
+      "line": 466
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, ex.Message)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 480
+      "line": 478
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be a finite number.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 490
+      "line": 488
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 494
+      "line": 492
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Activity level must be one of the supported values.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 500
+      "line": 498
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Gender must be one of the supported codes.\") : gender.Value",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 505
+      "line": 503
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Language must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 510
+      "line": 508
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Theme must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 516
+      "line": 514
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UI style must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 522
+      "line": 520
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(roles)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 547
+      "line": 545
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Roles must not contain null elements.\", nameof(roles))",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 550
+      "line": 548
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(duration), \"Premium trial duration must be positive.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 613
+      "line": 611
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Premium trial has already been used.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 617
+      "line": 615
     },
     {
       "area": "FoodDiary",
@@ -4337,6 +3987,356 @@
       "message": "throw new ArgumentOutOfRangeException(paramName, FormattableString.Invariant($\"Value must be at most {maxLength} characters.\"))",
       "path": "Modules/ContentReports/Domain/Entities/Social/ContentReportsDomainGuard.cs",
       "line": 17
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/BleedingEntry.cs",
+      "line": 58
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/BleedingEntry.cs",
+      "line": 65
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(grantedAtUtc), \"Consent grant cannot precede its revocation.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+      "line": 46
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(revokedAtUtc), \"Revocation cannot precede consent grant.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+      "line": 62
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+      "line": 71
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(purpose), \"Purpose must be supported.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+      "line": 77
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(endDate), \"End date must be later than or equal to start date.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleFactor.cs",
+      "line": 54
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleFactor.cs",
+      "line": 60
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleFactor.cs",
+      "line": 67
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Cycle profile id is required.\", nameof(cycleProfileId))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "line": 51
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Prediction start date cannot be after its end date.\", nameof(nextPeriodStartFrom))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "line": 55
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(completedCycleCount), \"Value must be non-negative.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "line": 59
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(calibrationSampleCount), \"Value must be non-negative.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "line": 63
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(historicalCoveragePercent), \"Value must be in range [0, 100].\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "line": 68
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(reasonCodes)",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "line": 71
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(reasonCodes), $\"Combined reason codes must be at most {ReasonCodesMaxLength} characters.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "line": 78
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(settings)",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 105
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Active fertility consent is required.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 277
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(categories)",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 308
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Confirmed menstrual episodes cannot overlap.\", nameof(date))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 362
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Menstrual episode id is required.\", nameof(episodeId))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 382
+    },
+    {
+      "area": "FoodDiary",
+      "type": "KeyNotFoundException",
+      "message": "throw new KeyNotFoundException($\"Menstrual episode {episodeId.Value} was not found.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 386
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Confirmed menstrual episodes cannot overlap.\", nameof(startDate))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 394
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Menstrual episode id is required.\", nameof(episodeId))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 408
+    },
+    {
+      "area": "FoodDiary",
+      "type": "KeyNotFoundException",
+      "message": "throw new KeyNotFoundException($\"Menstrual episode {episodeId.Value} was not found.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 412
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Only confirmed menstrual episodes can be removed.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 414
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Notes must be at most {maxLength} characters.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 515
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be in range [0, 10].\") : value",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 538
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Average cycle length must be in range [18, 60].\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 543
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Average period length must be in range [1, 14].\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 550
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Luteal length must be in range [8, 18].\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 557
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 563
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 570
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
+      "line": 577
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(tags)",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "line": 68
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(tags), $\"A maximum of {MaxTagsCount} tags is allowed.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "line": 70
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Tags cannot contain null values.\", nameof(tags))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "line": 74
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(tags), $\"A tag must be at most {MaxTagLength} characters.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "line": 82
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "line": 93
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/CycleSymptomEntry.cs",
+      "line": 100
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Basal body temperature must be in range [34, 42].\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/FertilitySignal.cs",
+      "line": 80
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/FertilitySignal.cs",
+      "line": 86
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be one of the supported values.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/FertilitySignal.cs",
+      "line": 93
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"CycleProfileId is required.\", nameof(cycleProfileId))",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "line": 29
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(status), \"Status must be one of the supported values.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "line": 33
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(endDate), \"Episode end date cannot precede its start date.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "line": 37
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(endDate), \"Episode end date cannot precede its start date.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "line": 57
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Only confirmed menstrual episodes can be edited.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "line": 66
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(endDate), \"Episode end date cannot precede its start date.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "line": 70
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Only confirmed menstrual episodes can be excluded from predictions.\")",
+      "path": "Modules/Cycles/Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "line": 80
     },
     {
       "area": "FoodDiary",
@@ -5499,7 +5499,7 @@
         "e => new { e.CycleProfileId, e.Date, e.Type }).IsUnique()"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/BleedingEntryConfiguration.cs"
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/BleedingEntryConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5559,7 +5559,7 @@
         "e => new { e.CycleProfileId, e.Purpose }).IsUnique()"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CycleConsentConfiguration.cs"
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleConsentConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5569,7 +5569,7 @@
         "e => new { e.CycleProfileId, e.Type, e.StartDate }).IsUnique()"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CycleFactorConfiguration.cs"
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleFactorConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5579,7 +5579,7 @@
         "revision => new { revision.CycleProfileId, revision.GeneratedAtUtc })"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CyclePredictionRevisionConfiguration.cs"
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CyclePredictionRevisionConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5630,7 +5630,7 @@
           "expression": "e => e.PredictionRevisions)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CycleProfileConfiguration.cs"
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleProfileConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5640,7 +5640,7 @@
         "e => new { e.CycleProfileId, e.Date, e.Category }).IsUnique()"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CycleSymptomEntryConfiguration.cs"
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/CycleSymptomEntryConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5885,7 +5885,7 @@
         "e => new { e.CycleProfileId, e.Date }).IsUnique()"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/FertilitySignalConfiguration.cs"
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/FertilitySignalConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6079,7 +6079,7 @@
         "e => new { e.CycleProfileId, e.StartDate }).IsUnique()"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/MenstrualEpisodeConfiguration.cs"
+      "path": "Modules/Cycles/Infrastructure/Model/Configurations/MenstrualEpisodeConfiguration.cs"
     },
     {
       "area": "FoodDiary",

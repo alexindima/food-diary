@@ -3,7 +3,7 @@ using FoodDiary.Application.Admin;
 using FoodDiary.Application.Ai;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.BodyMetrics;
-using FoodDiary.Application.Cycles;
+using FoodDiary.Modules.Cycles.Infrastructure;
 using FoodDiary.Application.Dashboard;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.Dietologist.Infrastructure;

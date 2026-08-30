@@ -47,7 +47,6 @@ COPY FoodDiary.Application.RecipeCommunity/*.csproj FoodDiary.Application.Recipe
 COPY FoodDiary.Application.Wearables/*.csproj FoodDiary.Application.Wearables/
 COPY FoodDiary.Application.Notifications/*.csproj FoodDiary.Application.Notifications/
 COPY FoodDiary.Application.BodyMetrics/*.csproj FoodDiary.Application.BodyMetrics/
-COPY FoodDiary.Application.Cycles/*.csproj FoodDiary.Application.Cycles/
 COPY FoodDiary.Application.Dashboard/*.csproj FoodDiary.Application.Dashboard/
 COPY FoodDiary.Application.Exercises/*.csproj FoodDiary.Application.Exercises/
 COPY Modules/Tdee/Application/*.csproj Modules/Tdee/Application/
@@ -72,6 +71,10 @@ COPY Modules/DailyAdvices/Application/*.csproj Modules/DailyAdvices/Application/
 COPY Modules/DailyAdvices/Application/Abstractions/*.csproj Modules/DailyAdvices/Application/Abstractions/
 COPY Modules/DailyAdvices/Domain/*.csproj Modules/DailyAdvices/Domain/
 COPY Modules/DailyAdvices/Infrastructure/Model/*.csproj Modules/DailyAdvices/Infrastructure/Model/
+COPY Modules/Cycles/Application/*.csproj Modules/Cycles/Application/
+COPY Modules/Cycles/Application/Abstractions/*.csproj Modules/Cycles/Application/Abstractions/
+COPY Modules/Cycles/Domain/*.csproj Modules/Cycles/Domain/
+COPY Modules/Cycles/Infrastructure/Model/*.csproj Modules/Cycles/Infrastructure/Model/
 COPY Modules/Gamification/Application/*.csproj Modules/Gamification/Application/
 COPY Modules/Gamification/Application/Abstractions/*.csproj Modules/Gamification/Application/Abstractions/
 COPY Modules/Gamification/Domain/*.csproj Modules/Gamification/Domain/
@@ -132,7 +135,6 @@ COPY FoodDiary.Application.RecipeCommunity/ FoodDiary.Application.RecipeCommunit
 COPY FoodDiary.Application.Wearables/ FoodDiary.Application.Wearables/
 COPY FoodDiary.Application.Notifications/ FoodDiary.Application.Notifications/
 COPY FoodDiary.Application.BodyMetrics/ FoodDiary.Application.BodyMetrics/
-COPY FoodDiary.Application.Cycles/ FoodDiary.Application.Cycles/
 COPY FoodDiary.Application.Dashboard/ FoodDiary.Application.Dashboard/
 COPY FoodDiary.Application.Exercises/ FoodDiary.Application.Exercises/
 COPY Modules/Tdee/Application/ Modules/Tdee/Application/
@@ -158,6 +160,10 @@ COPY Modules/DailyAdvices/Application/ Modules/DailyAdvices/Application/
 COPY Modules/DailyAdvices/Application/Abstractions/ Modules/DailyAdvices/Application/Abstractions/
 COPY Modules/DailyAdvices/Domain/ Modules/DailyAdvices/Domain/
 COPY Modules/DailyAdvices/Infrastructure/Model/ Modules/DailyAdvices/Infrastructure/Model/
+COPY Modules/Cycles/Application/ Modules/Cycles/Application/
+COPY Modules/Cycles/Application/Abstractions/ Modules/Cycles/Application/Abstractions/
+COPY Modules/Cycles/Domain/ Modules/Cycles/Domain/
+COPY Modules/Cycles/Infrastructure/Model/ Modules/Cycles/Infrastructure/Model/
 COPY Modules/Gamification/ Modules/Gamification/
 COPY Modules/Gamification/Application/ Modules/Gamification/Application/
 COPY Modules/Gamification/Application/Abstractions/ Modules/Gamification/Application/Abstractions/

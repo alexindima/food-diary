@@ -43,7 +43,7 @@
     <ProjectReference Include="..\FoodDiary.Application.Wearables\FoodDiary.Application.Wearables.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Notifications\FoodDiary.Application.Notifications.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.BodyMetrics\FoodDiary.Application.BodyMetrics.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Cycles\FoodDiary.Application.Cycles.csproj" />
+    <ProjectReference Include="..\Modules\Cycles\Infrastructure\FoodDiary.Modules.Cycles.Infrastructure.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Dashboard\FoodDiary.Application.Dashboard.csproj" />
     <ProjectReference Include="..\Modules\Hydration\Infrastructure\FoodDiary.Modules.Hydration.Infrastructure.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />

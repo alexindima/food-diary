@@ -53,7 +53,7 @@ This map covers the governed business owners and composed read modules in the pr
 | WeeklyGoals | `WeeklyGoal`, `WeeklyGoalId`, and `WeeklyGoalType` in `Modules/WeeklyGoals/Domain`; legacy CLR namespaces and EF identity remain stable, with a one-way dependency on central `UserId` | commands, queries, progress calculation, reminder processing, ports, contracts, domain, and persistence under `Modules/WeeklyGoals` | Meals through `IMealActivityReadService`; Notifications and shared unit of work through central application contracts; JobManager as scheduler adapter |
 | TDEE | adaptive energy-expenditure calculation and insight composition; no owned aggregate or persistence adapter | `GetTdeeInsightQuery`, insight models, calculation/profile services, validation, and registration under `Modules/Tdee/Application` | Users, Body Metrics, Exercises, and Dashboard statistics through read-only application contracts; Dashboard and Presentation consume the existing mediator query/model surface |
 | Exercises | `ExerciseEntry` and burned-calorie measurements | exercise commands and `IExerciseEntryReadService` in `FoodDiary.Application.Exercises` | Users access; Dashboard and TDEE as read-only projection consumers |
-| Cycles | cycle profile, factors, symptoms, bleeding entries and fertility signals | cycle commands and `ICycleReadService` in `FoodDiary.Application.Cycles` | Users access; Dashboard as a read-only query consumer |
+| Cycles | cycle profile, factors, symptoms, bleeding entries and fertility signals in `Modules/Cycles/Domain` | cycle commands and `ICycleReadService` in `Modules/Cycles/Application`; repository and EF model registration under `Modules/Cycles/Infrastructure` | Central `UserId`, unit of work and database lifecycle; Dashboard, Export and Presentation as read consumers |
 | MealPlanning | meal plans plus shopping lists, items and provenance | MealPlans and ShoppingLists use cases grouped in `FoodDiary.Application.MealPlanning`; `IMealPlanReadService`, `IShoppingListCreationService`, `IShoppingListReadService` | Users access, Recipes/Product projections |
 | Wearables | provider connections and synchronization entries | connection/sync commands and `IWearableReadService` | Users access, provider client adapters |
 | Marketing Attribution | attribution events and conversion state | attribution command, conversion recorder and summary read service | Authentication and Billing call semantic capabilities |
@@ -295,7 +295,7 @@ Dashboard is a composed read model. Its production infrastructure adapter may qu
 
 The Dashboard application fallback now consumes `IWeightEntryReadService`, `IWaistEntryReadService`, `IHydrationEntryReadService` and `IExerciseEntryReadService`; it no longer acquires even read repositories from Health Tracking. Health repository isolation is therefore complete for all foreign Application modules.
 
-Body Metrics configurations live in central `Configurations/BodyMetrics`; Hydration configuration lives in `Modules/Hydration/Infrastructure/Model`, while Exercises and Cycles retain their corresponding central owned folders. Architecture tests protect both application repository boundaries and configuration placement.
+Body Metrics and Exercises configurations retain their central owned folders. Hydration and Cycles configurations live in their module-owned `Infrastructure/Model` projects and are applied by the central `FoodDiaryDbContext`. Architecture tests protect both application repository boundaries and configuration placement.
 
 ## Planning, Wearables and Marketing boundaries
 

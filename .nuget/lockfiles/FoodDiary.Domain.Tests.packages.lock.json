@@ -120,6 +120,12 @@
           "FoodDiary.Domain": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.cycles.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.dietologist.domain": {
         "type": "Project",
         "dependencies": {
