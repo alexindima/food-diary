@@ -153,3 +153,15 @@ migrations/model snapshot and HTTP transport remain central. Hosts explicitly ca
 registration remains `AddDashboardModule`. Scoped concrete/interface aliases and
 query behavior are preserved. Owned application/adapter tests live under module
 tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.
+
+## Admin physical ownership
+
+Admin owns application slices, billing-report/impersonation/mail-reader ports,
+AdminImpersonationSession Domain, its explicit EF model and reporting/session
+adapters under Modules/Admin. Legacy application assembly and CLR namespaces
+remain stable; compatibility requires coordinated host rebuilds. Email templates
+remain Identity-owned and role audit/User capabilities remain Users-owned despite
+legacy Admin namespaces. Shared context/migrations/cleanup, SSO store/JWT providers,
+HTTP authorization, structured audit and MailInbox client bridge remain central.
+Hosts call AddAdminModule; JobManager adds only AddAdminPersistence. See
+docs/ai/admin-ownership-inventory.md for current source evidence and test ownership.

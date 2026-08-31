@@ -59,4 +59,5 @@
     <ProjectReference Include="../../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup><ProjectReference Include="../../Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../../Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" /></ItemGroup>
 </Project>

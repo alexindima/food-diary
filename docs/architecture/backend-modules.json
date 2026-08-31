@@ -37,12 +37,32 @@
   "modules": {
     "Admin": {
       "role": "orchestrator",
-      "physicalIsolation": "project",
-      "enforcement": "project-reference-matrix",
-      "ownedEntities": [],
+      "physicalIsolation": "module-root",
+      "enforcement": "assembly-isolated",
+      "ownedEntities": [
+        "AdminImpersonationSession"
+      ],
       "sourceMappings": {
-        "applicationProjects": ["FoodDiary.Application.Admin"],
-        "abstractionAreas": ["Admin"]
+        "logicalRoot": "Modules/Admin",
+        "applicationProjects": [
+          "Modules/Admin/Application"
+        ],
+        "abstractionAreas": [
+          "Modules/Admin/Application/Abstractions"
+        ],
+        "domainProjects": [
+          "Modules/Admin/Domain"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Admin/Infrastructure/Model"
+        ],
+        "infrastructureProjects": [
+          "Modules/Admin/Infrastructure"
+        ],
+        "adapterAreas": [
+          "FoodDiary.Presentation.Api/Features/Admin",
+          "FoodDiary.Integrations/Services/MailInbox"
+        ]
       }
     },
     "Ai": {

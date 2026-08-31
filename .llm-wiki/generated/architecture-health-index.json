@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 612,
+    "productionProjectEdges": 625,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -4790,7 +4790,7 @@
     {
       "name": "ExchangeAdminImpersonationCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
+      "path": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
       "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -4830,7 +4830,7 @@
     {
       "name": "ExchangeAdminImpersonationCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandValidator.cs",
+      "path": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],

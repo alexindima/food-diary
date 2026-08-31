@@ -643,6 +643,7 @@ public sealed class ApplicationGuardrailTests {
             "Results",
             facadeFileName);
         string featureErrorsPath = featureDirectory switch {
+            "Admin" => Path.Combine(root, "Modules", "Admin", "Application", "Abstractions", "Admin", featureCommonDirectory, featureErrorsFileName),
             "Ai" => Path.Combine(root, "Modules", "Ai", "Application", "Abstractions", "Ai", featureCommonDirectory, featureErrorsFileName),
             "MealPlans" or "ShoppingLists" => Path.Combine(root, "Modules", "MealPlanning", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
             "Exercises" => Path.Combine(root, "Modules", "Exercises", "Application", "Abstractions", "Exercises", featureCommonDirectory, featureErrorsFileName),
@@ -1740,7 +1741,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.Admin",
+            "Modules/Admin/Application",
             "Services",
             "AdminUserReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -1759,7 +1760,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.Admin",
+            "Modules/Admin/Application",
             "Services",
             "AdminContentReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -1778,7 +1779,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.Admin",
+            "Modules/Admin/Application",
             "Services",
             "AdminContentReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -1796,7 +1797,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.Admin",
+            "Modules/Admin/Application",
             "Services",
             "AdminContentReadService.cs");
         string[] serviceFiles = [servicePath];

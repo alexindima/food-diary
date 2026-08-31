@@ -8,17 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "54cfa4962cff339ab31451891cf78d13bd5d45be29398b7964052376fbc869bc"
+          "sha256": "58213f2bff3f73795f20c8087e41089b1455d4e498630402c5f6ec914505a1ef"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "cd0108eabb52988986702beb81f5bfabe8c8275aa3fbb5db4173c047adcc7a91"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "1afc32757b4af4ab8cfd552e3eb1a46d09f075867c05f5e12c748ec7009aa288"
+          "sha256": "27de7e6b129439858654cd5fcad90c198090c1ffd9e020bf84e23f4509562087"
         }
       ],
-      "reason": "Recipes guides now point to module owners; Ai/Dashboard guide routes remain. Compiled navigation remains subordinate to verified source and runtime tests.",
+      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:07.1286084Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:45.5225612Z"
     },
     {
       "pageId": "module.frontend",
@@ -41,14 +45,18 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "cd0108eabb52988986702beb81f5bfabe8c8275aa3fbb5db4173c047adcc7a91"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "1afc32757b4af4ab8cfd552e3eb1a46d09f075867c05f5e12c748ec7009aa288"
+          "sha256": "27de7e6b129439858654cd5fcad90c198090c1ffd9e020bf84e23f4509562087"
         }
       ],
-      "reason": "Recipes integration does not change MailInbox/MailRelay deployments or the approved Integrations-to-client boundary; backend map additions preserve those rules.",
+      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:08.055659Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:46.0782921Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -87,22 +95,26 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "cd0108eabb52988986702beb81f5bfabe8c8275aa3fbb5db4173c047adcc7a91"
+        },
+        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "e59d7d251a87d79be55bb150c20a6097bce76c94b122bf178238df934ab2c742"
+          "sha256": "60b9b7c92fe3def896bb93c697a82d622b6269862ff2cb42f963e135935e0d38"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "1afc32757b4af4ab8cfd552e3eb1a46d09f075867c05f5e12c748ec7009aa288"
+          "sha256": "27de7e6b129439858654cd5fcad90c198090c1ffd9e020bf84e23f4509562087"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "cf48ffe7f4970774177be44d26336e35cda41e82a5145656fb00a09d1be1f215"
+          "sha256": "6535eda4dc62a66f3b561c9faf2c03b3935374a394fa40aaf87bc01391ffb453"
         }
       ],
-      "reason": "Combined solution preserves one-way module adapter access to the shared context, explicit host registration, independent mail services and existing inward dependencies. No new Domain boundary invented.",
+      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:10.1866795Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:46.5940241Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -141,13 +153,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "54cfa4962cff339ab31451891cf78d13bd5d45be29398b7964052376fbc869bc"
+          "sha256": "58213f2bff3f73795f20c8087e41089b1455d4e498630402c5f6ec914505a1ef"
         }
       ],
-      "reason": "Guide/module map paths changed, not source authority or review policy. Original failing runs and unknown baseline limitations remain separate from new evidence.",
+      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:10.7705013Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:47.1380777Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -156,13 +168,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "e59d7d251a87d79be55bb150c20a6097bce76c94b122bf178238df934ab2c742"
+          "sha256": "60b9b7c92fe3def896bb93c697a82d622b6269862ff2cb42f963e135935e0d38"
         }
       ],
-      "reason": "Regenerated catalog follows all three physical module trees; obsolete central Recipes abstraction ownership removed because ports moved. Empty directories are not proof of project ownership.",
+      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:11.3612357Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:47.7139959Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -220,21 +232,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "f08076b1a82d82400b2f727fd311d8881a91d626418b8d5b1f6e4cfd7db8dcee"
+          "sha256": "382cc9922a6efc6bfe7999dbc61750fc9772e3d6c1b5fb6d1ec9c9c2a8815bd0"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "e59d7d251a87d79be55bb150c20a6097bce76c94b122bf178238df934ab2c742"
+          "sha256": "60b9b7c92fe3def896bb93c697a82d622b6269862ff2cb42f963e135935e0d38"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "cf48ffe7f4970774177be44d26336e35cda41e82a5145656fb00a09d1be1f215"
+          "sha256": "6535eda4dc62a66f3b561c9faf2c03b3935374a394fa40aaf87bc01391ffb453"
         }
       ],
-      "reason": "Matrix merges all Ai/Dashboard/Recipes additions. Recipes central Domain and advisory-lock seams remain explicit; no architecture assertion or threshold relaxed.",
+      "reason": "Reviewed generated paths and workflow claims against actual Admin source moves and tests. Ranking maintenance changes only two source prefixes and one existing exclusion; complete candidate-set equivalence and seven engine-branch cases are preserved. Test-plan stale donor/irrelevant frontend suggestions and cold-index failures are recorded in docs/ai/admin-module-extraction-wiki-findings.md. Navigation and receipts are not execution or coverage proof; old context snapshot remains explicitly stale.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:12.0894383Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:48.3357035Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -243,17 +255,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7dd26fbd8fb98cf1a02d28c34f6e6bd268a8e85d27821a8ad0cc86769095c1d8"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d3bc52eec64f57fda69cd2445732f652203e0b438e89d9e8e5e1f1cadd0ccf44"
+          "sha256": "bf7f31eaea55ef64889d065727a813fd6323e361c5713c7cc191612b365c23d1"
         }
       ],
-      "reason": "Recipes ports/contracts retain CLR signatures while coordinated rebuild changes assembly ownership. Consumer links remain navigation rather than execution evidence; HTTP snapshots unchanged.",
+      "reason": "Reviewed unchanged HTTP transport and CLR namespaces, with legacy Admin application AssemblyName retained. New physical assemblies require coordinated host rebuilds; old binary compatibility is not asserted. EF mappings and shared migrations remain separate, and runtime test results are retained outside compiled navigation.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:13.2617869Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:49.2214697Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -291,66 +299,34 @@
       "pageSha256": "8c9843eeb4fbb377b79e506bb7a2969dd0393e10cc6fc0a1ec924ccbd6ee22f9",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-generalization.json",
-          "sha256": "374f7b9b2fb01b0e5ca2acde6b566b7d3b267e6f96e8966536c31a4cfcce0c1a"
+          "path": ".llm-wiki/evals/context-search-holdout-100.json",
+          "sha256": "03dece972b46b6bf9f0e3d90f88d2a4bcdcdbbc81648c671ac0e040562626ca4"
         },
         {
-          "path": ".llm-wiki/evals/context-search-holdout.json",
-          "sha256": "c0c4c678cb8dc9cd4612e4d0b4ee10e2445e7d78d8f7eff5b180c35721cc8801"
+          "path": ".llm-wiki/evals/context-search-probe-3.json",
+          "sha256": "79c9d0fdde0e82564a1c830d4fc0c574636b5428a4ec6876ff7dcc324cb4d248"
         },
         {
-          "path": ".llm-wiki/evals/context-search-probe-2.json",
-          "sha256": "8fcf564df99a395c260f2ff893396bfaa29f25ced085d56258ace28ed3c45b01"
+          "path": ".llm-wiki/evals/context-search-probe-4.json",
+          "sha256": "8df5c7648e3696776a13003ad640d5b609350dc124b35221478614ea8f0eae41"
         },
         {
-          "path": ".llm-wiki/evals/context-search-probe-5.json",
-          "sha256": "6e37e131c19ed462bf43e7923a822aeedf814978d9ee255e6e3bbba6111217b7"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe.json",
-          "sha256": "312015fdef759cd2218b9737dfb5e31d8a88c2e7c83d0f8b101e120b0b3b2b84"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-validation.json",
-          "sha256": "00f38cf10973ef2b7ad449a3cb8f10e4f233228b293dd699313c2da48e41300e"
+          "path": ".llm-wiki/evals/context-search-probe-7.json",
+          "sha256": "0d23bda0ecc10c33386fc14d6a6d70860ee77e9ef25345486f3fb82124e3ba36"
         },
         {
           "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "d3dddc3bc76f43a2e355d1b4aa22326ead250e548e3d2d626abddefdcb026f63"
+          "sha256": "ea8d35de9008b1f63a728ba7ff0bb5f6579249b6dc8e62fbb8ad7b8e51542846"
         },
         {
-          "path": ".llm-wiki/evals/development-context-bundles.json",
-          "sha256": "e35089375835ae528c693b771930c7b3605b9744b173b3adc2e057520f5e9f29"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d3bc52eec64f57fda69cd2445732f652203e0b438e89d9e8e5e1f1cadd0ccf44"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-          "sha256": "ee122bc709a3bc01ed9845150c054756ea52951286d027036524c4a27ea24dd8"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "3b1e0e60d4abbb4b2627e446c6dd0d26a1dd1708b82bbdc296c32b3ac18a368a"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
-          "sha256": "3a3cba13b2a7839f515de335f28265e3a8ae2b2b75171ba04827c0cabab53408"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextShadow.ps1",
-          "sha256": "649df8bc31535694b018cd01559a8228382ef390dd40b2f8097f6854ace4fedf"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "5aa06255244983619104c53689fa4bb164efb9649e3ec08ecf66bf83a81ed2bc"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "76755c5dbe9be19df4fb91ded9cd6eaad43ec04e83955a49eaf49a2c2c76bc35"
         }
       ],
-      "reason": "Readiness now discovers physical/mapped application projects and compiles existing projects with actual identity/references. Trace candidate filters retain backend layer and exact module segments. Context-search ranking weights and quality thresholds are unchanged; published historical scores do not certify this checkout.",
+      "reason": "Reviewed generated paths and workflow claims against actual Admin source moves and tests. Ranking maintenance changes only two source prefixes and one existing exclusion; complete candidate-set equivalence and seven engine-branch cases are preserved. Test-plan stale donor/irrelevant frontend suggestions and cold-index failures are recorded in docs/ai/admin-module-extraction-wiki-findings.md. Navigation and receipts are not execution or coverage proof; old context snapshot remains explicitly stale.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:14.700922Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:49:01.8721115Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -574,21 +550,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "24dc98fcb7ef9b2c4ba526fdfabe61c5fbc03cc2ef137e4606e2f39a548c1f15"
+          "sha256": "a4b978528c15b9fd32cb2787594e28b61cc0eab6b9af46240f5ce8e0cc11eec5"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "229987785e07f64c6ad5d5fdbb06593c14f68fda984aabf0417dc83a3e82f1a9"
+          "sha256": "68add3c12f28c10258806b99a2e5d5c44b437cbfdddf795b2af518a2bcf294ce"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "ddd8aaf9c95a94f80971fd0f87cf257260365c1fc63387509f8a33226173bc8a"
+          "sha256": "3829fafcc8fffd98cba6223e78dbc88014cb66b2e0918ba0a99d33519e2d6eb6"
         }
       ],
-      "reason": "Recipe CLR graph, snapshots and historical migrations remain central and unchanged; three EF configurations are applied by explicit module registration. Source relocation does not establish schema independence.",
+      "reason": "Reviewed generated paths and workflow claims against actual Admin source moves and tests. Ranking maintenance changes only two source prefixes and one existing exclusion; complete candidate-set equivalence and seven engine-branch cases are preserved. Test-plan stale donor/irrelevant frontend suggestions and cold-index failures are recorded in docs/ai/admin-module-extraction-wiki-findings.md. Navigation and receipts are not execution or coverage proof; old context snapshot remains explicitly stale.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:15.9789238Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:50.8163465Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -868,17 +844,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "5416652d2bd16c83e7fd7eb2143628b10af6f515f358b5a66297af5151ce7d97"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d3bc52eec64f57fda69cd2445732f652203e0b438e89d9e8e5e1f1cadd0ccf44"
+          "sha256": "8995fccb604699f3065bd137ad835359c385154a3148efaef7f66f72d0a3c9d4"
         }
       ],
-      "reason": "Name-based sensitive index follows Recipes port/source moves. No new data collection, logging, cache, export or provider sharing; private access predicates and media boundaries unchanged.",
+      "reason": "Reviewed unchanged impersonation session fields, central cleanup, handoff prefixes and two-minute TTL, single-use SSO store, role/consent checks and approved MailInbox integration. No provider, credential-storage, HTTP authorization, outbox, audit or retention implementation changes. Existing index/discovery limitations remain explicit; npm warnings are reported separately and not presented as baseline-confirmed.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:18.4662537Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:51.3022778Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -917,17 +889,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e01ee079171e746b6af06278995550d056d4594dfe68395204c4622b2bf68d1e"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-          "sha256": "ee122bc709a3bc01ed9845150c054756ea52951286d027036524c4a27ea24dd8"
+          "sha256": "31959d0ab0958d1a5eea0dc25115f3af2193fddf99270251fd8ad24e6b52b460"
         }
       ],
-      "reason": "Quality/test-reference indexes regenerated after relocation and Wiki regressions. Counts are navigation signals, not measured coverage; no coverage collector ran.",
+      "reason": "Reviewed generated paths and workflow claims against actual Admin source moves and tests. Ranking maintenance changes only two source prefixes and one existing exclusion; complete candidate-set equivalence and seven engine-branch cases are preserved. Test-plan stale donor/irrelevant frontend suggestions and cold-index failures are recorded in docs/ai/admin-module-extraction-wiki-findings.md. Navigation and receipts are not execution or coverage proof; old context snapshot remains explicitly stale.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:15:13.1595742Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:51.8704776Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1004,13 +972,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "1accfb35a2f5ea077f27b86db70d643dba130ad81fcaa6d199372e38c75b214c"
+          "sha256": "16915e1910323ea89c6898a2b22b8c37f35c3551b59aa88296639719282686d7"
         }
       ],
-      "reason": "API/Initializer compose Recipes; JobManager persistence only. Ai/Dashboard registrations preserved. No provider retry, background schedule, outbox or transaction behavior changes.",
+      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:21.2041251Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:53.2898881Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1019,21 +987,25 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e01ee079171e746b6af06278995550d056d4594dfe68395204c4622b2bf68d1e"
+          "sha256": "31959d0ab0958d1a5eea0dc25115f3af2193fddf99270251fd8ad24e6b52b460"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "1accfb35a2f5ea077f27b86db70d643dba130ad81fcaa6d199372e38c75b214c"
+          "sha256": "16915e1910323ea89c6898a2b22b8c37f35c3551b59aa88296639719282686d7"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "5416652d2bd16c83e7fd7eb2143628b10af6f515f358b5a66297af5151ce7d97"
+          "sha256": "8995fccb604699f3065bd137ad835359c385154a3148efaef7f66f72d0a3c9d4"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "76755c5dbe9be19df4fb91ded9cd6eaad43ec04e83955a49eaf49a2c2c76bc35"
         }
       ],
-      "reason": "Sensitive-data and runtime locations regenerated but no security scan/verdict is claimed. Navigation remains a source of review candidates; no credentials or production data used.",
+      "reason": "Reviewed unchanged impersonation session fields, central cleanup, handoff prefixes and two-minute TTL, single-use SSO store, role/consent checks and approved MailInbox integration. No provider, credential-storage, HTTP authorization, outbox, audit or retention implementation changes. Existing index/discovery limitations remain explicit; npm warnings are reported separately and not presented as baseline-confirmed.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:15:14.1396294Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:53.8918402Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1147,13 +1119,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "6e7368d88c6121dbe25b3586259e4eaaf5a630f73fb78ea11bf0f200bb0c0a46"
+          "sha256": "fc31b1e2db67722caebb67155bef41f1883e5a32ef7698e11663a8273972b3df"
         }
       ],
-      "reason": "Module research uses real source roots; test plan remains advisory. Runtime test selection verified against module and central consumer ownership, with final TRX required independently of recommendations.",
+      "reason": "Reviewed generated paths and workflow claims against actual Admin source moves and tests. Ranking maintenance changes only two source prefixes and one existing exclusion; complete candidate-set equivalence and seven engine-branch cases are preserved. Test-plan stale donor/irrelevant frontend suggestions and cold-index failures are recorded in docs/ai/admin-module-extraction-wiki-findings.md. Navigation and receipts are not execution or coverage proof; old context snapshot remains explicitly stale.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:23.302763Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:54.3899429Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1211,13 +1183,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "54cfa4962cff339ab31451891cf78d13bd5d45be29398b7964052376fbc869bc"
+          "sha256": "58213f2bff3f73795f20c8087e41089b1455d4e498630402c5f6ec914505a1ef"
         }
       ],
-      "reason": "No change-policy definitions, required checks, timing limits or hook bypass introduced. Actual check failures stay visible and are not converted to passes by module metadata.",
+      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:13.8745879Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:49.7262554Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1270,26 +1242,22 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-holdout-100.json",
+          "sha256": "03dece972b46b6bf9f0e3d90f88d2a4bcdcdbbc81648c671ac0e040562626ca4"
+        },
+        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "807dfe349bbb6842572651329b57ba8183d6a62400c57984cbb1e740e6b8884e"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d3bc52eec64f57fda69cd2445732f652203e0b438e89d9e8e5e1f1cadd0ccf44"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
-          "sha256": "3a3cba13b2a7839f515de335f28265e3a8ae2b2b75171ba04827c0cabab53408"
+          "sha256": "15da50d92cb933df2eb0b0cae46cbc03518bbd479f1d9b6358e90663731756f6"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "54cfa4962cff339ab31451891cf78d13bd5d45be29398b7964052376fbc869bc"
+          "sha256": "58213f2bff3f73795f20c8087e41089b1455d4e498630402c5f6ec914505a1ef"
         }
       ],
-      "reason": "Only source-proven Recipes fixture paths moved; corpus queries, rankings and thresholds unchanged. Trace filters are separate from context-search scoring; actual quality failures remain explicitly reported.",
+      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:19.9359921Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:49:02.6058193Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1297,18 +1265,14 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "5aa06255244983619104c53689fa4bb164efb9649e3ec08ecf66bf83a81ed2bc"
-        },
-        {
           "path": "AGENTS.md",
-          "sha256": "54cfa4962cff339ab31451891cf78d13bd5d45be29398b7964052376fbc869bc"
+          "sha256": "58213f2bff3f73795f20c8087e41089b1455d4e498630402c5f6ec914505a1ef"
         }
       ],
-      "reason": "Current source hashes require renewed source-impact receipts. Original source ledger/evidence retained in Git/archive; receipts certify page review, not test success.",
+      "reason": "Reviewed generated paths and workflow claims against actual Admin source moves and tests. Ranking maintenance changes only two source prefixes and one existing exclusion; complete candidate-set equivalence and seven engine-branch cases are preserved. Test-plan stale donor/irrelevant frontend suggestions and cold-index failures are recorded in docs/ai/admin-module-extraction-wiki-findings.md. Navigation and receipts are not execution or coverage proof; old context snapshot remains explicitly stale.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:20.5626104Z"
+      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "reviewedAtUtc": "2026-08-31T10:39:52.8009552Z"
     }
   ]
 }

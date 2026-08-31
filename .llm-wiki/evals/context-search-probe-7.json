@@ -29,7 +29,7 @@
       "query": "нужен кусок админки который приводит фильтры платежей к нормальному виду: провайдер, статус, даты UTC и поиск",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Admin/Services/AdminBillingQueryFilters.cs"
+        "Modules/Admin/Application/Services/AdminBillingQueryFilters.cs"
       ]
     },
     {
@@ -114,7 +114,7 @@
       "query": "admin parser для required language: trim locale, validate supported value и вернуть localized validation error",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Admin/Common/AdminLocaleParser.cs"
+        "Modules/Admin/Application/Common/AdminLocaleParser.cs"
       ]
     },
     {
@@ -168,7 +168,7 @@
       "query": "не validator команды урока, а общий parser значений category и difficulty в enum с именем поля",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Admin/Common/AdminLessonValueParser.cs"
+        "Modules/Admin/Application/Common/AdminLessonValueParser.cs"
       ]
     },
     {
@@ -195,7 +195,7 @@
       "query": "не mutation administration service: фасад чтения админ-пользователей отдает deleted user, paged list, dashboard summary и exists",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Admin/Services/AdminUserReadService.cs"
+        "Modules/Admin/Application/Services/AdminUserReadService.cs"
       ]
     },
     {
@@ -231,7 +231,7 @@
       "query": "не repository и не query handler: admin billing read facade загружает payments subscriptions webhook events и revenue summary",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Admin/Services/AdminBillingReadService.cs"
+        "Modules/Admin/Application/Services/AdminBillingReadService.cs"
       ]
     },
     {

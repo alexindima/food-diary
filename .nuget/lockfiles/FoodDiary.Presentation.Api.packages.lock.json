@@ -42,6 +42,7 @@
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
@@ -61,7 +62,7 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "fooddiary.application.admin": {
+      "FoodDiary.Application.Admin": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
@@ -71,6 +72,7 @@
           "FoodDiary.Application.Gamification": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Lessons.Contracts": "[1.0.0, )"
         }
@@ -464,6 +466,19 @@
       },
       "fooddiary.mediator": {
         "type": "Project"
+      },
+      "fooddiary.modules.admin.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Admin.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.admin.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
       },
       "fooddiary.modules.ai.application.abstractions": {
         "type": "Project",

@@ -112,7 +112,7 @@
       "area": "FoodDiary",
       "name": "AdminImpersonationSession",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
       "line": 5
     },
     {
@@ -1947,41 +1947,6 @@
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Actor user id must not be empty.\", nameof(actorUserId))",
-      "path": "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
-      "line": 25
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Target user id must not be empty.\", nameof(targetUserId))",
-      "path": "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
-      "line": 29
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Reason is required.\", nameof(value))",
-      "path": "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
-      "line": 49
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Reason must be between 10 and 500 characters.\") : trimmed",
-      "path": "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
-      "line": 53
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
-      "path": "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
-      "line": 66
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "FoodDiary.Domain/Entities/Assets/ImageAsset.cs",
       "line": 40
@@ -3420,6 +3385,41 @@
       "message": "throw new InvalidOperationException(\"A password must be set before a password change can be required.\")",
       "path": "FoodDiary.Domain/ValueObjects/UserSecurityState.cs",
       "line": 40
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Actor user id must not be empty.\", nameof(actorUserId))",
+      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "line": 25
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Target user id must not be empty.\", nameof(targetUserId))",
+      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "line": 29
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Reason is required.\", nameof(value))",
+      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "line": 49
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Reason must be between 10 and 500 characters.\") : trimmed",
+      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "line": 53
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
+      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "line": 66
     },
     {
       "area": "FoodDiary",
@@ -5398,7 +5398,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Admin/AdminImpersonationSessionConfiguration.cs"
+      "path": "Modules/Admin/Infrastructure/Model/Configurations/Admin/AdminImpersonationSessionConfiguration.cs"
     },
     {
       "area": "FoodDiary",

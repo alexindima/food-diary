@@ -2,7 +2,7 @@
 
 ## Scope
 
-Rules for `FoodDiary.Application.Admin/`.
+Rules for `Modules/Admin/Application/`.
 
 ## Boundary
 
@@ -13,6 +13,9 @@ Rules for `FoodDiary.Application.Admin/`.
 
 ## Commands
 
-- Build: `dotnet build FoodDiary.Application.Admin/FoodDiary.Application.Admin.csproj`
+- Build: `dotnet build Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj`
 - Tests: `dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --filter FullyQualifiedName~Admin`
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+
+- Register application handlers via AddAdminApplication; hosts use Infrastructure AddAdminModule.
+- Keep legacy FoodDiary.Application.Admin AssemblyName and CLR namespaces.

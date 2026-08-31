@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "74b7d20b1cebd237e01b36b957997e611e2e4498771761f149ace0e1672e632e",
-    "sourceFileCount": 3531
+    "sourceFingerprint": "7f2409815bb2888a92bfdcff642aa5e782eaf1a22a5d8016d478868360b13395",
+    "sourceFileCount": 3533
   },
   "summary": {
     "composeServices": 17,
@@ -834,7 +834,7 @@
     },
     {
       "name": "GetAdminBillingWebhookEventsQueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQueryHandler.cs",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQueryHandler.cs",
       "securitySignals": [],
       "behaviorSignals": "cancellation-propagation-candidate",
       "behaviorSignalScope": "class-window",
@@ -1374,7 +1374,7 @@
     },
     {
       "name": "SendAdminEmailTemplateTestCommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommandHandler.cs",
+      "path": "Modules/Admin/Application/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommandHandler.cs",
       "securitySignals": [
         "ip-address-policy",
         "uri-policy"

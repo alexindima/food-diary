@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FoodDiary.Application.Admin\FoodDiary.Application.Admin.csproj" />
+    <ProjectReference Include="../Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Products\FoodDiary.Application.Products.csproj" />
     <ProjectReference Include="../Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Runtime\FoodDiary.Application.Runtime.csproj" />
@@ -63,4 +63,5 @@
     <ProjectReference Include="../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup><ProjectReference Include="../Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" /></ItemGroup>
 </Project>

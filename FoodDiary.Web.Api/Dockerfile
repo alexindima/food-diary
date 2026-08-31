@@ -11,7 +11,6 @@ COPY Shared/FoodDiary.Results/*.csproj Shared/FoodDiary.Results/
 COPY FoodDiary.Domain/*.csproj FoodDiary.Domain/
 COPY FoodDiary.Application.Abstractions/*.csproj FoodDiary.Application.Abstractions/
 COPY Modules/Export/Application/Abstractions/*.csproj Modules/Export/Application/Abstractions/
-COPY FoodDiary.Application.Admin/*.csproj FoodDiary.Application.Admin/
 COPY FoodDiary.Application.Runtime/*.csproj FoodDiary.Application.Runtime/
 COPY Modules/Billing/Application/*.csproj Modules/Billing/Application/
 COPY Modules/Billing/Application/Abstractions/*.csproj Modules/Billing/Application/Abstractions/
@@ -98,6 +97,11 @@ COPY Modules/Images/Application/Abstractions/*.csproj Modules/Images/Application
 COPY Modules/Images/Infrastructure/*.csproj Modules/Images/Infrastructure/
 COPY Modules/Images/Infrastructure/Model/*.csproj Modules/Images/Infrastructure/Model/
 COPY Modules/Ai/Application/Abstractions/*.csproj Modules/Ai/Application/Abstractions/
+COPY Modules/Admin/Application/*.csproj Modules/Admin/Application/
+COPY Modules/Admin/Application/Abstractions/*.csproj Modules/Admin/Application/Abstractions/
+COPY Modules/Admin/Domain/*.csproj Modules/Admin/Domain/
+COPY Modules/Admin/Infrastructure/*.csproj Modules/Admin/Infrastructure/
+COPY Modules/Admin/Infrastructure/Model/*.csproj Modules/Admin/Infrastructure/Model/
 COPY Modules/Ai/Application/*.csproj Modules/Ai/Application/
 COPY Modules/Ai/Domain/*.csproj Modules/Ai/Domain/
 COPY Modules/Ai/Infrastructure/*.csproj Modules/Ai/Infrastructure/
@@ -161,7 +165,6 @@ COPY Shared/FoodDiary.Results/ Shared/FoodDiary.Results/
 COPY FoodDiary.Domain/ FoodDiary.Domain/
 COPY FoodDiary.Application.Abstractions/ FoodDiary.Application.Abstractions/
 COPY Modules/Export/Application/Abstractions/ Modules/Export/Application/Abstractions/
-COPY FoodDiary.Application.Admin/ FoodDiary.Application.Admin/
 COPY FoodDiary.Application.Runtime/ FoodDiary.Application.Runtime/
 COPY Modules/Billing/Application/ Modules/Billing/Application/
 COPY Modules/Billing/Application/Abstractions/ Modules/Billing/Application/Abstractions/
@@ -251,6 +254,11 @@ COPY Modules/Images/Application/ Modules/Images/Application/
 COPY Modules/Images/Application/Abstractions/ Modules/Images/Application/Abstractions/
 COPY Modules/Images/Infrastructure/ Modules/Images/Infrastructure/
 COPY Modules/Images/Infrastructure/Model/ Modules/Images/Infrastructure/Model/
+COPY Modules/Admin/Application/ Modules/Admin/Application/
+COPY Modules/Admin/Application/Abstractions/ Modules/Admin/Application/Abstractions/
+COPY Modules/Admin/Domain/ Modules/Admin/Domain/
+COPY Modules/Admin/Infrastructure/ Modules/Admin/Infrastructure/
+COPY Modules/Admin/Infrastructure/Model/ Modules/Admin/Infrastructure/Model/
 COPY Modules/Ai/Application/ Modules/Ai/Application/
 COPY Modules/Ai/Domain/ Modules/Ai/Domain/
 COPY Modules/Ai/Infrastructure/ Modules/Ai/Infrastructure/

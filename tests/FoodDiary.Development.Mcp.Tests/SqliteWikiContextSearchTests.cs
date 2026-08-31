@@ -424,13 +424,13 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
             result.Candidates,
             candidate => string.Equals(
                 candidate.Path,
-                "FoodDiary.Application.Admin/Common/AdminLessonValueParser.cs",
+                "Modules/Admin/Application/Common/AdminLessonValueParser.cs",
                 StringComparison.Ordinal));
         WikiContextSearchCandidate validator = Assert.Single(
             result.Candidates,
             candidate => string.Equals(
                 candidate.Path,
-                "FoodDiary.Application.Admin/Commands/CreateAdminLesson/CreateAdminLessonCommandValidator.cs",
+                "Modules/Admin/Application/Commands/CreateAdminLesson/CreateAdminLessonCommandValidator.cs",
                 StringComparison.Ordinal));
         Assert.True(parser.Rank < validator.Rank);
         Assert.Contains(
@@ -818,8 +818,8 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
                 ('code', 'cycle-consent-tests', 'tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs', 'cycle-consent-tests', 'csharp', 'CyclesFeatureTests ConsentAndConfirmation', 'tests confirm period start update cycle consent owner missing profile invalid user validator failures'),
                 ('code', 'cycle-command-validator', 'FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandValidator.cs', 'cycle-command-validator', 'csharp', 'ConfirmPeriodStartCommandValidator', 'confirm period start update cycle consent missing profile invalid user validator failures'),
                 ('code', 'authentication-validators', 'tests/FoodDiary.Application.Tests/Authentication/AuthenticationValidatorsTests.cs', 'authentication-validators', 'csharp', 'AuthenticationValidatorsTests', 'tests confirm start missing invalid user validator failures'),
-                ('code', 'admin-lesson-parser', 'FoodDiary.Application.Admin/Common/AdminLessonValueParser.cs', 'admin-lesson-parser', 'csharp', 'AdminLessonValueParser', 'parser category difficulty enum field lesson'),
-                ('code', 'admin-lesson-validator', 'FoodDiary.Application.Admin/Commands/CreateAdminLesson/CreateAdminLessonCommandValidator.cs', 'admin-lesson-validator', 'csharp', 'CreateAdminLessonCommandValidator', 'validator command lesson category difficulty enum field'),
+                ('code', 'admin-lesson-parser', 'Modules/Admin/Application/Common/AdminLessonValueParser.cs', 'admin-lesson-parser', 'csharp', 'AdminLessonValueParser', 'parser category difficulty enum field lesson'),
+                ('code', 'admin-lesson-validator', 'Modules/Admin/Application/Commands/CreateAdminLesson/CreateAdminLessonCommandValidator.cs', 'admin-lesson-validator', 'csharp', 'CreateAdminLessonCommandValidator', 'validator command lesson category difficulty enum field'),
                 ('code', 'generic-enum-parser', 'Modules/Fasting/Application/Common/EnumValueParser.cs', 'generic-enum-parser', 'csharp', 'EnumValueParser', 'parser category difficulty enum field'),
                 ('code', 'coverage-exact', 'FoodDiary.Infrastructure/Services/CoverageBranch.cs', 'coverage-exact', 'csharp', 'coveragebranch', 'coveragebranch'),
                 ('code', 'coverage-frontend', 'FoodDiary.Web.Client/src/app/coveragebranch.ts', 'coverage-frontend', 'typescript', 'CoverageBranch', 'coveragebranch'),

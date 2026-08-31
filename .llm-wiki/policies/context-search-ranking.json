@@ -3977,7 +3977,7 @@
       "affinityDirectOnly": false,
       "changeTypes": ["Backend"],
       "recordTypes": ["code"],
-      "pathPrefixes": ["FoodDiary.Application.Admin/Commands/"],
+      "pathPrefixes": ["Modules/Admin/Application/Commands/"],
       "pathSuffixes": ["Validator.cs"],
       "excludeTests": true
     },
@@ -4115,7 +4115,8 @@
       "affinityDirectOnly": false,
       "changeTypes": ["Backend"],
       "recordTypes": ["code"],
-      "pathPrefixes": ["FoodDiary.Application.Admin/"],
+      "pathPrefixes": ["Modules/Admin/Application/"],
+      "excludedPathPrefixes": ["Modules/Admin/Application/Abstractions/"],
       "pathSuffixes": [".cs"],
       "excludeTests": true
     },

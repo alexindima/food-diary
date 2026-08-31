@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3530,
-    "symbols": 3521,
+    "sourceFiles": 3532,
+    "symbols": 3523,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 183,
+    "dependencyInjectionRegistrations": 180,
     "kinds": {
-      "class": 1848,
+      "class": 1850,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1372,
+      "Other": 1374,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -97,62 +97,6 @@
       "line": 10
     },
     {
-      "name": "AdminMailInboxErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/AdminMailInboxErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "IAdminBillingReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IAdminBillingReadRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IAdminBillingRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IAdminBillingRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IAdminImpersonationHandoffService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs",
-      "line": 2
-    },
-    {
-      "name": "IAdminImpersonationSessionReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationSessionReadRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IAdminImpersonationSessionRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IAdminImpersonationSessionWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationSessionWriteRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IAdminMailInboxReader",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IAdminMailInboxReader.cs",
-      "line": 4
-    },
-    {
       "name": "IAdminUserRoleAuditReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
@@ -207,83 +151,6 @@
       "role": "WriteRepository",
       "path": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs",
       "line": 4
-    },
-    {
-      "name": "AdminBillingListFilter",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingListFilter.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminBillingPaymentReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminBillingRevenueCurrencyReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminBillingRevenueSummaryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueSummaryReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminBillingSubscriptionReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminBillingWebhookEventReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingWebhookEventReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminImpersonationSessionReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminMailInboxDmarcRecordModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminMailInboxDmarcRecordModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminMailInboxDmarcReportModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminMailInboxDmarcReportModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminMailInboxMessageDetailsModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminMailInboxMessageDetailsModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminMailInboxMessageSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminMailInboxMessageSummaryModel.cs",
-      "line": 2
     },
     {
       "name": "AdminUserRoleAuditEventReadModel",
@@ -2111,944 +1978,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Users/Models/WeightHistoryProfileModel.cs",
       "line": 2
-    },
-    {
-      "name": "CreateAdminAchievementDefinitionCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateAdminAchievementDefinitionCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "CreateAdminAchievementDefinitionCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandValidator.cs",
-      "line": 7
-    },
-    {
-      "name": "CreateAdminLessonCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminLesson/CreateAdminLessonCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateAdminLessonCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminLesson/CreateAdminLessonCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "CreateAdminLessonCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminLesson/CreateAdminLessonCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "CreateAdminUserCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateAdminUserCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "CreateAdminUserCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommandValidator.cs",
-      "line": 7
-    },
-    {
-      "name": "DeleteAdminLessonCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/DeleteAdminLesson/DeleteAdminLessonCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteAdminLessonCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/DeleteAdminLesson/DeleteAdminLessonCommandHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "DismissContentReportCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/DismissContentReport/DismissContentReportCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DismissContentReportCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/DismissContentReport/DismissContentReportCommandHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "ExchangeAdminImpersonationCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "ExchangeAdminImpersonationCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "ExchangeAdminImpersonationCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "ImportAdminLessonItem",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Commands/ImportAdminLessons/ImportAdminLessonItem.cs",
-      "line": 2
-    },
-    {
-      "name": "ImportAdminLessonsCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/ImportAdminLessons/ImportAdminLessonsCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "ImportAdminLessonsCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/ImportAdminLessons/ImportAdminLessonsCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "ImportAdminLessonsCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/ImportAdminLessons/ImportAdminLessonsCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "MarkAdminMailInboxMessageReadCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/MarkAdminMailInboxMessageRead/MarkAdminMailInboxMessageReadCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "MarkAdminMailInboxMessageReadCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/MarkAdminMailInboxMessageRead/MarkAdminMailInboxMessageReadCommandHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "MarkAdminMailInboxMessageReadCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/MarkAdminMailInboxMessageRead/MarkAdminMailInboxMessageReadCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "ReviewContentReportCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/ReviewContentReport/ReviewContentReportCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "ReviewContentReportCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "SendAdminEmailTemplateTestCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "SendAdminEmailTemplateTestCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommandHandler.cs",
-      "line": 6
-    },
-    {
-      "name": "SendAdminEmailTemplateTestCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "SetAdminUserPasswordCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "SetAdminUserPasswordCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "SetAdminUserPasswordCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "StartAdminImpersonationCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "StartAdminImpersonationCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
-      "line": 16
-    },
-    {
-      "name": "StartAdminImpersonationCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "UpdateAdminAchievementDefinitionCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateAdminAchievementDefinitionCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "UpdateAdminAchievementDefinitionCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandValidator.cs",
-      "line": 7
-    },
-    {
-      "name": "UpdateAdminLessonCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/UpdateAdminLesson/UpdateAdminLessonCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateAdminLessonCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/UpdateAdminLesson/UpdateAdminLessonCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "UpdateAdminLessonCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/UpdateAdminLesson/UpdateAdminLessonCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "UpdateAdminUserCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/UpdateAdminUser/UpdateAdminUserCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateAdminUserCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/UpdateAdminUser/UpdateAdminUserCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "UpdateAdminUserCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/UpdateAdminUser/UpdateAdminUserCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "UpsertAdminAiPromptCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpsertAdminAiPromptCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommandHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "UpsertAdminEmailTemplateCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Admin/Commands/UpsertAdminEmailTemplate/UpsertAdminEmailTemplateCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpsertAdminEmailTemplateCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Admin/Commands/UpsertAdminEmailTemplate/UpsertAdminEmailTemplateCommandHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "UpsertAdminEmailTemplateCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Commands/UpsertAdminEmailTemplate/UpsertAdminEmailTemplateCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "AdminLessonValueParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Common/AdminLessonValueParser.cs",
-      "line": 6
-    },
-    {
-      "name": "AdminLocaleParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Common/AdminLocaleParser.cs",
-      "line": 6
-    },
-    {
-      "name": "IAdminAiUsageReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Common/IAdminAiUsageReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IAdminAuditReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Common/IAdminAuditReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IAdminBillingReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Common/IAdminBillingReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IAdminContentReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Common/IAdminContentReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IAdminDashboardReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Common/IAdminDashboardReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IAdminUserLoginReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Common/IAdminUserLoginReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IAdminUserReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Common/IAdminUserReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "EnumFilterParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Internal/Validation/EnumFilterParser.cs",
-      "line": 2
-    },
-    {
-      "name": "EnumValueParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Internal/Validation/EnumValueParser.cs",
-      "line": 5
-    },
-    {
-      "name": "OptionalEntityIdValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Internal/Validation/OptionalEntityIdValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "RequiredIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Internal/Validation/RequiredIdParser.cs",
-      "line": 5
-    },
-    {
-      "name": "AdminAiPromptMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Mappings/AdminAiPromptMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "AdminContentReportMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Mappings/AdminContentReportMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "AdminEmailTemplateMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Mappings/AdminEmailTemplateMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "AdminLessonMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Mappings/AdminLessonMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "AdminUserMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Mappings/AdminUserMappings.cs",
-      "line": 5
-    },
-    {
-      "name": "AdminAiPromptModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminAiPromptModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminAiUsageBreakdownModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminAiUsageBreakdownModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminAiUsageDailyModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminAiUsageDailyModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminAiUsageSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminAiUsageSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminAiUsageUserModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminAiUsageUserModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminAuditEntryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminAuditEntryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminContentReportModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminContentReportModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminDashboardSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminDashboardSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminEmailTemplateModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminEmailTemplateModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminImpersonationStartModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminImpersonationStartModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminLessonModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminLessonModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminLessonsImportModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminLessonsImportModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminUserCreationModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserCreationModel.cs",
-      "line": 6
-    },
-    {
-      "name": "AdminUserLoginDeviceSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserLoginDeviceSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminUserLoginEventModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserLoginEventModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminUserModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminAchievementDefinitionsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminAchievementDefinitionsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminAiPromptsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminAiPrompts/GetAdminAiPromptsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminAiPromptsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminAiPrompts/GetAdminAiPromptsQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminAiUsageSummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminAiUsageSummaryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminAiUsageSummaryQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetAdminBillingPaymentsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQuery.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminBillingPaymentsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetAdminBillingRevenueSummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminBillingRevenueSummaryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminBillingSubscriptionsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminBillingSubscriptions/GetAdminBillingSubscriptionsQuery.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminBillingSubscriptionsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminBillingSubscriptions/GetAdminBillingSubscriptionsQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetAdminBillingWebhookEventsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQuery.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminBillingWebhookEventsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetAdminContentReportsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminContentReports/GetAdminContentReportsQuery.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminContentReportsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminContentReports/GetAdminContentReportsQueryHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "GetAdminDashboardSummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminDashboardSummary/GetAdminDashboardSummaryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminDashboardSummaryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminDashboardSummary/GetAdminDashboardSummaryQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminEmailTemplatesQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminEmailTemplates/GetAdminEmailTemplatesQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminEmailTemplatesQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminEmailTemplates/GetAdminEmailTemplatesQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminImpersonationSessionsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQuery.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminImpersonationSessionsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetAdminLessonsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminLessons/GetAdminLessonsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminLessonsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminLessons/GetAdminLessonsQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminMailInboxMessageDetailsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminMailInboxMessageDetails/GetAdminMailInboxMessageDetailsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminMailInboxMessageDetailsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminMailInboxMessageDetails/GetAdminMailInboxMessageDetailsQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetAdminMailInboxMessageDetailsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminMailInboxMessageDetails/GetAdminMailInboxMessageDetailsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetAdminMailInboxMessagesQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminMailInboxMessagesQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminMailInboxMessagesQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetAdminUserQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminUser/GetAdminUserQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminUserQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminUser/GetAdminUserQueryHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "GetAdminUserLoginEventsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQuery.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminUserLoginEventsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetAdminUserLoginSummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminUserLoginSummary/GetAdminUserLoginSummaryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminUserLoginSummaryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminUserLoginSummary/GetAdminUserLoginSummaryQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminUserRoleAuditQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetAdminUserRoleAuditQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetAdminUsersQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminUsers/GetAdminUsersQuery.cs",
-      "line": 8
-    },
-    {
-      "name": "GetAdminUsersQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetCollaborationAuditQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Admin/Queries/GetCollaborationAudit/GetCollaborationAuditQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetCollaborationAuditQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Admin/Queries/GetCollaborationAudit/GetCollaborationAuditQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "AdminAiUsageReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Services/AdminAiUsageReadService.cs",
-      "line": 9
-    },
-    {
-      "name": "AdminAuditReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Services/AdminAuditReadService.cs",
-      "line": 11
-    },
-    {
-      "name": "AdminBillingQueryFilters",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Admin/Services/AdminBillingQueryFilters.cs",
-      "line": 6
-    },
-    {
-      "name": "AdminBillingReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Services/AdminBillingReadService.cs",
-      "line": 9
-    },
-    {
-      "name": "AdminContentReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Services/AdminContentReadService.cs",
-      "line": 16
-    },
-    {
-      "name": "AdminDashboardReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Services/AdminDashboardReadService.cs",
-      "line": 8
-    },
-    {
-      "name": "AdminUserLoginReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Services/AdminUserLoginReadService.cs",
-      "line": 10
-    },
-    {
-      "name": "AdminUserReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Admin/Services/AdminUserReadService.cs",
-      "line": 9
     },
     {
       "name": "AdminSsoExchangeCommand",
@@ -5193,13 +4122,6 @@
       "line": 5
     },
     {
-      "name": "AdminImpersonationSession",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
-      "line": 5
-    },
-    {
       "name": "ImageAsset",
       "kind": "class",
       "role": "Entity",
@@ -6173,13 +5095,6 @@
       "line": 2
     },
     {
-      "name": "AdminImpersonationHandoffService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
-      "line": 6
-    },
-    {
       "name": "AdminSsoService",
       "kind": "class",
       "role": "Service",
@@ -6212,7 +5127,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "DependencyInjection",
@@ -6341,20 +5256,6 @@
       "line": 5
     },
     {
-      "name": "AdminBillingRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
-      "line": 7
-    },
-    {
-      "name": "AdminImpersonationSessionRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
-      "line": 8
-    },
-    {
       "name": "AdminUserRoleAuditRepository",
       "kind": "class",
       "role": "Repository",
@@ -6402,13 +5303,6 @@
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs",
       "line": 7
-    },
-    {
-      "name": "AdminImpersonationSessionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Admin/AdminImpersonationSessionConfiguration.cs",
-      "line": 8
     },
     {
       "name": "AuditEntryConfiguration",
@@ -7157,7 +6051,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 398
+      "line": 397
     },
     {
       "name": "UsdaCsvReader",
@@ -11700,7 +10594,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 51
+      "line": 50
     },
     {
       "name": "ApiTelemetry",
@@ -13759,6 +12653,1126 @@
       "role": "Other",
       "path": "MailRelay/FoodDiary.MailRelay.WebApi/Program.cs",
       "line": 28
+    },
+    {
+      "name": "AdminMailInboxErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/AdminMailInboxErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "IAdminBillingReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingReadRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IAdminBillingRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IAdminImpersonationHandoffService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs",
+      "line": 2
+    },
+    {
+      "name": "IAdminImpersonationSessionReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionReadRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IAdminImpersonationSessionRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IAdminImpersonationSessionWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionWriteRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IAdminMailInboxReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs",
+      "line": 4
+    },
+    {
+      "name": "AdminBillingListFilter",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingListFilter.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBillingPaymentReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBillingRevenueCurrencyReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBillingRevenueSummaryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueSummaryReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBillingSubscriptionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBillingWebhookEventReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingWebhookEventReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminImpersonationSessionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminMailInboxDmarcRecordModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxDmarcRecordModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminMailInboxDmarcReportModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxDmarcReportModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminMailInboxMessageDetailsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxMessageDetailsModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminMailInboxMessageSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxMessageSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CreateAdminAchievementDefinitionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateAdminAchievementDefinitionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "CreateAdminAchievementDefinitionCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandValidator.cs",
+      "line": 7
+    },
+    {
+      "name": "CreateAdminLessonCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/CreateAdminLesson/CreateAdminLessonCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateAdminLessonCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/CreateAdminLesson/CreateAdminLessonCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "CreateAdminLessonCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/CreateAdminLesson/CreateAdminLessonCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "CreateAdminUserCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateAdminUserCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "CreateAdminUserCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommandValidator.cs",
+      "line": 7
+    },
+    {
+      "name": "DeleteAdminLessonCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/DeleteAdminLesson/DeleteAdminLessonCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteAdminLessonCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/DeleteAdminLesson/DeleteAdminLessonCommandHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "DismissContentReportCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/DismissContentReport/DismissContentReportCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DismissContentReportCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/DismissContentReport/DismissContentReportCommandHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "ExchangeAdminImpersonationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "ExchangeAdminImpersonationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "ExchangeAdminImpersonationCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "ImportAdminLessonItem",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Commands/ImportAdminLessons/ImportAdminLessonItem.cs",
+      "line": 2
+    },
+    {
+      "name": "ImportAdminLessonsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/ImportAdminLessons/ImportAdminLessonsCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ImportAdminLessonsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/ImportAdminLessons/ImportAdminLessonsCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "ImportAdminLessonsCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/ImportAdminLessons/ImportAdminLessonsCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "MarkAdminMailInboxMessageReadCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/MarkAdminMailInboxMessageRead/MarkAdminMailInboxMessageReadCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "MarkAdminMailInboxMessageReadCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/MarkAdminMailInboxMessageRead/MarkAdminMailInboxMessageReadCommandHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "MarkAdminMailInboxMessageReadCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/MarkAdminMailInboxMessageRead/MarkAdminMailInboxMessageReadCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "ReviewContentReportCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/ReviewContentReport/ReviewContentReportCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "ReviewContentReportCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "SendAdminEmailTemplateTestCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "SendAdminEmailTemplateTestCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommandHandler.cs",
+      "line": 6
+    },
+    {
+      "name": "SendAdminEmailTemplateTestCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "SetAdminUserPasswordCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/SetAdminUserPassword/SetAdminUserPasswordCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "SetAdminUserPasswordCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "SetAdminUserPasswordCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "StartAdminImpersonationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "StartAdminImpersonationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
+      "line": 16
+    },
+    {
+      "name": "StartAdminImpersonationCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "UpdateAdminAchievementDefinitionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateAdminAchievementDefinitionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "UpdateAdminAchievementDefinitionCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandValidator.cs",
+      "line": 7
+    },
+    {
+      "name": "UpdateAdminLessonCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminLesson/UpdateAdminLessonCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateAdminLessonCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminLesson/UpdateAdminLessonCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "UpdateAdminLessonCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminLesson/UpdateAdminLessonCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "UpdateAdminUserCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminUser/UpdateAdminUserCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateAdminUserCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminUser/UpdateAdminUserCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "UpdateAdminUserCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminUser/UpdateAdminUserCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "UpsertAdminAiPromptCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpsertAdminAiPromptCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "UpsertAdminEmailTemplateCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Application/Commands/UpsertAdminEmailTemplate/UpsertAdminEmailTemplateCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpsertAdminEmailTemplateCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Admin/Application/Commands/UpsertAdminEmailTemplate/UpsertAdminEmailTemplateCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "UpsertAdminEmailTemplateCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Commands/UpsertAdminEmailTemplate/UpsertAdminEmailTemplateCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "AdminLessonValueParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Common/AdminLessonValueParser.cs",
+      "line": 6
+    },
+    {
+      "name": "AdminLocaleParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Common/AdminLocaleParser.cs",
+      "line": 6
+    },
+    {
+      "name": "IAdminAiUsageReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Common/IAdminAiUsageReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IAdminAuditReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Common/IAdminAuditReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IAdminBillingReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Common/IAdminBillingReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IAdminContentReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Common/IAdminContentReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IAdminDashboardReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Common/IAdminDashboardReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IAdminUserLoginReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Common/IAdminUserLoginReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IAdminUserReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Common/IAdminUserReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "EnumFilterParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Internal/Validation/EnumFilterParser.cs",
+      "line": 2
+    },
+    {
+      "name": "EnumValueParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Internal/Validation/EnumValueParser.cs",
+      "line": 5
+    },
+    {
+      "name": "OptionalEntityIdValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Internal/Validation/OptionalEntityIdValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "RequiredIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Internal/Validation/RequiredIdParser.cs",
+      "line": 5
+    },
+    {
+      "name": "AdminAiPromptMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Mappings/AdminAiPromptMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "AdminContentReportMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Mappings/AdminContentReportMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "AdminEmailTemplateMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Mappings/AdminEmailTemplateMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "AdminLessonMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Mappings/AdminLessonMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "AdminUserMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Mappings/AdminUserMappings.cs",
+      "line": 5
+    },
+    {
+      "name": "AdminAiPromptModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminAiPromptModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminAiUsageBreakdownModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminAiUsageBreakdownModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminAiUsageDailyModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminAiUsageDailyModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminAiUsageSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminAiUsageSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminAiUsageUserModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminAiUsageUserModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminAuditEntryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminAuditEntryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminContentReportModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminContentReportModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDashboardSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminDashboardSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminEmailTemplateModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminEmailTemplateModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminImpersonationStartModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminImpersonationStartModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminLessonModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminLessonModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminLessonsImportModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminLessonsImportModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminUserCreationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminUserCreationModel.cs",
+      "line": 6
+    },
+    {
+      "name": "AdminUserLoginDeviceSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminUserLoginDeviceSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminUserLoginEventModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminUserLoginEventModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminUserModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminAchievementDefinitionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminAchievementDefinitionsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminAiPromptsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminAiPromptsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminAiPrompts/GetAdminAiPromptsQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminAiUsageSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminAiUsageSummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminAiUsageSummaryQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminAiUsageSummary/GetAdminAiUsageSummaryQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetAdminBillingPaymentsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminBillingPaymentsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetAdminBillingRevenueSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminBillingRevenueSummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingRevenueSummary/GetAdminBillingRevenueSummaryQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminBillingSubscriptionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingSubscriptions/GetAdminBillingSubscriptionsQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminBillingSubscriptionsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingSubscriptions/GetAdminBillingSubscriptionsQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetAdminBillingWebhookEventsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminBillingWebhookEventsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminBillingWebhookEvents/GetAdminBillingWebhookEventsQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetAdminContentReportsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminContentReportsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "GetAdminDashboardSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminDashboardSummary/GetAdminDashboardSummaryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminDashboardSummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminDashboardSummary/GetAdminDashboardSummaryQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminEmailTemplatesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminEmailTemplates/GetAdminEmailTemplatesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminEmailTemplatesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminEmailTemplates/GetAdminEmailTemplatesQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminImpersonationSessionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminImpersonationSessionsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetAdminLessonsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminLessons/GetAdminLessonsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminLessonsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminLessons/GetAdminLessonsQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminMailInboxMessageDetailsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessageDetails/GetAdminMailInboxMessageDetailsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminMailInboxMessageDetailsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessageDetails/GetAdminMailInboxMessageDetailsQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetAdminMailInboxMessageDetailsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessageDetails/GetAdminMailInboxMessageDetailsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetAdminMailInboxMessagesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminMailInboxMessagesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminMailInboxMessagesQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetAdminUserQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminUserQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQueryHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "GetAdminUserLoginEventsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminUserLoginEventsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetAdminUserLoginSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminUserLoginSummary/GetAdminUserLoginSummaryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminUserLoginSummaryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminUserLoginSummary/GetAdminUserLoginSummaryQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminUserRoleAuditQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminUserRoleAuditQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminUserRoleAudit/GetAdminUserRoleAuditQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminUsersQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQuery.cs",
+      "line": 8
+    },
+    {
+      "name": "GetAdminUsersQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetCollaborationAuditQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetCollaborationAudit/GetCollaborationAuditQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetCollaborationAuditQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetCollaborationAudit/GetCollaborationAuditQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "AdminAiUsageReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Services/AdminAiUsageReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "AdminAuditReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Services/AdminAuditReadService.cs",
+      "line": 11
+    },
+    {
+      "name": "AdminBillingQueryFilters",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Services/AdminBillingQueryFilters.cs",
+      "line": 6
+    },
+    {
+      "name": "AdminBillingReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Services/AdminBillingReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "AdminContentReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Services/AdminContentReadService.cs",
+      "line": 16
+    },
+    {
+      "name": "AdminDashboardReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Services/AdminDashboardReadService.cs",
+      "line": 8
+    },
+    {
+      "name": "AdminUserLoginReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Services/AdminUserLoginReadService.cs",
+      "line": 10
+    },
+    {
+      "name": "AdminUserReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Services/AdminUserReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "AdminImpersonationSession",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "line": 5
+    },
+    {
+      "name": "AdminModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
+      "line": 8
+    },
+    {
+      "name": "AdminImpersonationHandoffService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Admin/Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
+      "line": 6
+    },
+    {
+      "name": "AdminPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Model/AdminPersistenceModelRegistration.cs",
+      "line": 5
+    },
+    {
+      "name": "AdminImpersonationSessionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Admin/Infrastructure/Model/Configurations/Admin/AdminImpersonationSessionConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "AdminBillingRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
+      "line": 7
+    },
+    {
+      "name": "AdminImpersonationSessionRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
+      "line": 8
     },
     {
       "name": "AiUsageBreakdown",
@@ -24747,58 +24761,58 @@
     },
     {
       "interface": "IAdminAiUsageReadService",
-      "interfacePath": "FoodDiary.Application.Admin/Common/IAdminAiUsageReadService.cs",
+      "interfacePath": "Modules/Admin/Application/Common/IAdminAiUsageReadService.cs",
       "implementation": "AdminAiUsageReadService",
-      "implementationPath": "FoodDiary.Application.Admin/Services/AdminAiUsageReadService.cs",
+      "implementationPath": "Modules/Admin/Application/Services/AdminAiUsageReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminAuditReadService",
-      "interfacePath": "FoodDiary.Application.Admin/Common/IAdminAuditReadService.cs",
+      "interfacePath": "Modules/Admin/Application/Common/IAdminAuditReadService.cs",
       "implementation": "AdminAuditReadService",
-      "implementationPath": "FoodDiary.Application.Admin/Services/AdminAuditReadService.cs",
+      "implementationPath": "Modules/Admin/Application/Services/AdminAuditReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminBillingReadService",
-      "interfacePath": "FoodDiary.Application.Admin/Common/IAdminBillingReadService.cs",
+      "interfacePath": "Modules/Admin/Application/Common/IAdminBillingReadService.cs",
       "implementation": "AdminBillingReadService",
-      "implementationPath": "FoodDiary.Application.Admin/Services/AdminBillingReadService.cs",
+      "implementationPath": "Modules/Admin/Application/Services/AdminBillingReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminBillingRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Admin/Common/IAdminBillingRepository.cs",
+      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs",
       "implementation": "AdminBillingRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
+      "implementationPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminContentReadService",
-      "interfacePath": "FoodDiary.Application.Admin/Common/IAdminContentReadService.cs",
+      "interfacePath": "Modules/Admin/Application/Common/IAdminContentReadService.cs",
       "implementation": "AdminContentReadService",
-      "implementationPath": "FoodDiary.Application.Admin/Services/AdminContentReadService.cs",
+      "implementationPath": "Modules/Admin/Application/Services/AdminContentReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminDashboardReadService",
-      "interfacePath": "FoodDiary.Application.Admin/Common/IAdminDashboardReadService.cs",
+      "interfacePath": "Modules/Admin/Application/Common/IAdminDashboardReadService.cs",
       "implementation": "AdminDashboardReadService",
-      "implementationPath": "FoodDiary.Application.Admin/Services/AdminDashboardReadService.cs",
+      "implementationPath": "Modules/Admin/Application/Services/AdminDashboardReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminImpersonationHandoffService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs",
+      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationHandoffService.cs",
       "implementation": "AdminImpersonationHandoffService",
-      "implementationPath": "FoodDiary.Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
+      "implementationPath": "Modules/Admin/Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminImpersonationSessionRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs",
+      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs",
       "implementation": "AdminImpersonationSessionRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
+      "implementationPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -24810,16 +24824,16 @@
     },
     {
       "interface": "IAdminUserLoginReadService",
-      "interfacePath": "FoodDiary.Application.Admin/Common/IAdminUserLoginReadService.cs",
+      "interfacePath": "Modules/Admin/Application/Common/IAdminUserLoginReadService.cs",
       "implementation": "AdminUserLoginReadService",
-      "implementationPath": "FoodDiary.Application.Admin/Services/AdminUserLoginReadService.cs",
+      "implementationPath": "Modules/Admin/Application/Services/AdminUserLoginReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAdminUserReadService",
-      "interfacePath": "FoodDiary.Application.Admin/Common/IAdminUserReadService.cs",
+      "interfacePath": "Modules/Admin/Application/Common/IAdminUserReadService.cs",
       "implementation": "AdminUserReadService",
-      "implementationPath": "FoodDiary.Application.Admin/Services/AdminUserReadService.cs",
+      "implementationPath": "Modules/Admin/Application/Services/AdminUserReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26337,55 +26351,6 @@
   ],
   "dependencyInjectionRegistrations": [
     {
-      "service": "IAdminAiUsageReadService",
-      "implementation": "AdminAiUsageReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Admin/DependencyInjection.cs",
-      "line": 14
-    },
-    {
-      "service": "IAdminAuditReadService",
-      "implementation": "AdminAuditReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Admin/DependencyInjection.cs",
-      "line": 15
-    },
-    {
-      "service": "IAdminBillingReadService",
-      "implementation": "AdminBillingReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Admin/DependencyInjection.cs",
-      "line": 16
-    },
-    {
-      "service": "IAdminContentReadService",
-      "implementation": "AdminContentReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Admin/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IAdminDashboardReadService",
-      "implementation": "AdminDashboardReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Admin/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "IAdminUserReadService",
-      "implementation": "AdminUserReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Admin/DependencyInjection.cs",
-      "line": 19
-    },
-    {
-      "service": "IAdminUserLoginReadService",
-      "implementation": "AdminUserLoginReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Admin/DependencyInjection.cs",
-      "line": 20
-    },
-    {
       "service": "IAuthenticationLoginEventCleanupService",
       "implementation": "AuthenticationLoginEventCleanupService",
       "lifetime": "Scoped",
@@ -26600,63 +26565,56 @@
       "implementation": "JwtTokenGenerator",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 17
+      "line": 16
     },
     {
       "service": "IPasswordHasher",
       "implementation": "PasswordHasher",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 18
+      "line": 17
     },
     {
       "service": "IAdminSsoCodeStore",
       "implementation": "InMemoryAdminSsoCodeStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 19
+      "line": 18
     },
     {
       "service": "IAdminSsoService",
       "implementation": "AdminSsoService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 20
-    },
-    {
-      "service": "IAdminImpersonationHandoffService",
-      "implementation": "AdminImpersonationHandoffService",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 21
+      "line": 19
     },
     {
       "service": "ITelegramAssertionReplayGuard",
       "implementation": "TelegramAssertionReplayGuard",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 22
+      "line": 20
     },
     {
       "service": "IUserCleanupService",
       "implementation": "UserCleanupService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 23
+      "line": 21
     },
     {
       "service": "IEmailTemplateProvider",
       "implementation": "EmailTemplateProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 24
+      "line": 22
     },
     {
       "service": "IAuditLogger",
       "implementation": "StructuredAuditLogger",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 25
+      "line": 23
     },
     {
       "service": "IEmailOutbox",
@@ -26785,46 +26743,32 @@
       "line": 29
     },
     {
-      "service": "IAdminBillingRepository",
-      "implementation": "AdminBillingRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 33
-    },
-    {
-      "service": "IAdminImpersonationSessionRepository",
-      "implementation": "AdminImpersonationSessionRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 35
-    },
-    {
       "service": "IAdminUserRoleAuditRepository",
       "implementation": "AdminUserRoleAuditRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 38
+      "line": 33
     },
     {
       "service": "IEmailTemplateRepository",
       "implementation": "EmailTemplateRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 40
+      "line": 35
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 127
+      "line": 126
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 128
+      "line": 127
     },
     {
       "service": "IGoogleTokenValidator",
@@ -26964,21 +26908,21 @@
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 105
+      "line": 104
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 106
+      "line": 105
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 138
+      "line": 137
     },
     {
       "service": "IMailInboxReadinessChecker",
@@ -27035,6 +26979,55 @@
       "lifetime": "Singleton",
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
       "line": 76
+    },
+    {
+      "service": "IAdminAiUsageReadService",
+      "implementation": "AdminAiUsageReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Admin/Application/DependencyInjection.cs",
+      "line": 14
+    },
+    {
+      "service": "IAdminAuditReadService",
+      "implementation": "AdminAuditReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Admin/Application/DependencyInjection.cs",
+      "line": 15
+    },
+    {
+      "service": "IAdminBillingReadService",
+      "implementation": "AdminBillingReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Admin/Application/DependencyInjection.cs",
+      "line": 16
+    },
+    {
+      "service": "IAdminContentReadService",
+      "implementation": "AdminContentReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Admin/Application/DependencyInjection.cs",
+      "line": 17
+    },
+    {
+      "service": "IAdminDashboardReadService",
+      "implementation": "AdminDashboardReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Admin/Application/DependencyInjection.cs",
+      "line": 18
+    },
+    {
+      "service": "IAdminUserReadService",
+      "implementation": "AdminUserReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Admin/Application/DependencyInjection.cs",
+      "line": 19
+    },
+    {
+      "service": "IAdminUserLoginReadService",
+      "implementation": "AdminUserLoginReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Admin/Application/DependencyInjection.cs",
+      "line": 20
     },
     {
       "service": "IOpenAiFoodService",

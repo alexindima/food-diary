@@ -135,7 +135,7 @@
       "id": "content-report-review",
       "query": "admin reviews a pending user content report",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Admin/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs"]
+      "expectedPaths": ["Modules/Admin/Application/Commands/ReviewContentReport/ReviewContentReportCommandHandler.cs"]
     },
     {
       "id": "cycle-prediction",

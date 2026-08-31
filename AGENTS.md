@@ -9,7 +9,13 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 
 - Build-time analyzers: `FoodDiary.Analyzers/AGENTS.md`
 - Application abstractions: `FoodDiary.Application.Abstractions/AGENTS.md`
-- Admin application module: `FoodDiary.Application.Admin/AGENTS.md`
+- Admin logical module: `Modules/Admin/AGENTS.md`
+- Admin application: `Modules/Admin/Application/AGENTS.md`
+- Admin ports: `Modules/Admin/Application/Abstractions/AGENTS.md`
+- Admin domain: `Modules/Admin/Domain/AGENTS.md`
+- Admin infrastructure: `Modules/Admin/Infrastructure/AGENTS.md`
+- Admin persistence model: `Modules/Admin/Infrastructure/Model/AGENTS.md`
+- Admin tests: `Modules/Admin/tests/AGENTS.md`
 - AI logical module: `Modules/Ai/AGENTS.md`
 - AI application: `Modules/Ai/Application/AGENTS.md`
 - AI application ports: `Modules/Ai/Application/Abstractions/AGENTS.md`

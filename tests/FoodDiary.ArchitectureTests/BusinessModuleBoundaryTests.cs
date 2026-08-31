@@ -167,10 +167,10 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void AdminUserMutationHandlers_DoNotDependOnUsersAggregateAccess() {
         string[] handlerPaths = [
-            "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
-            "FoodDiary.Application.Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
-            "FoodDiary.Application.Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
-            "FoodDiary.Application.Admin/Commands/UpdateAdminUser/UpdateAdminUserCommandHandler.cs",
+            "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
+            "Modules/Admin/Application/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
+            "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
+            "Modules/Admin/Application/Commands/UpdateAdminUser/UpdateAdminUserCommandHandler.cs",
         ];
         string[] forbiddenReferences = [
             "FoodDiary.Domain.Entities.Users",

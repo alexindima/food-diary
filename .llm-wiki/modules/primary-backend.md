@@ -27,11 +27,12 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 | Domain behavior and invariants | Owning module Domain project, with documented central `FoodDiary.Domain` compatibility seams |
 | Application-facing ports and models | Owning module abstractions plus shared `FoodDiary.Application.Abstractions` |
 | Cross-cutting application execution pipeline | `FoodDiary.Application.Runtime` |
-| Business use cases | Owning `FoodDiary.Application.<Feature>` project |
+| Business use cases | Owning module Application project, under `Modules/<Module>/Application` or a legacy `FoodDiary.Application.<Feature>` project |
 | Extracted billing use cases | `FoodDiary.Application.Billing` |
 | Extracted marketing use cases | `FoodDiary.Application.Marketing` |
 | Body measurements | `Modules/BodyMetrics` application, ports, repositories and mappings; central Domain identity seam |
 | AI use cases, usage and prompt ownership | `Modules/Ai` application, ports, Domain, persistence model and adapters; central User profile/context and external Integrations provider seams |
+| Admin orchestration and impersonation | `Modules/Admin`: application, ports, independent impersonation domain, adapters and explicit persistence model; Identity Email, Users role audit and shared SSO remain central |
 | EF Core and technical implementations | `FoodDiary.Infrastructure` |
 | External providers and service clients | `FoodDiary.Integrations` |
 | HTTP and SignalR transport | `FoodDiary.Presentation.Api` |

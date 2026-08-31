@@ -18,7 +18,7 @@
       "id": "admin-audit-reader-probe-4",
       "query": "read structured audit records for administrator review",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Admin/Services/AdminAuditReadService.cs"]
+      "expectedPaths": ["Modules/Admin/Application/Services/AdminAuditReadService.cs"]
     },
     {
       "id": "favorite-recipe-reader-probe-4",

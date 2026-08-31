@@ -117,62 +117,6 @@
     },
     {
       "category": "credential",
-      "name": "TemporaryPassword",
-      "type": "string?",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-      "line": 13
-    },
-    {
-      "category": "credential",
-      "name": "GeneratePassword",
-      "type": "bool",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-      "line": 14
-    },
-    {
-      "category": "credential",
-      "name": "SendCredentialsEmail",
-      "type": "bool",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-      "line": 16
-    },
-    {
-      "category": "credential",
-      "name": "RequirePasswordChange",
-      "type": "bool",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-      "line": 17
-    },
-    {
-      "category": "credential",
-      "name": "NewPassword",
-      "type": "string",
-      "path": "FoodDiary.Application.Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommand.cs",
-      "line": 9
-    },
-    {
-      "category": "credential",
-      "name": "TemporaryPassword",
-      "type": "string",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserCreationModel.cs",
-      "line": 8
-    },
-    {
-      "category": "credential",
-      "name": "CredentialsEmailQueued",
-      "type": "bool",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserCreationModel.cs",
-      "line": 9
-    },
-    {
-      "category": "credential",
-      "name": "HasPassword",
-      "type": "bool",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 9
-    },
-    {
-      "category": "credential",
       "name": "Password",
       "type": "string",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
@@ -477,7 +421,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 86
+      "line": 85
     },
     {
       "category": "credential",
@@ -957,6 +901,62 @@
     },
     {
       "category": "credential",
+      "name": "TemporaryPassword",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+      "line": 13
+    },
+    {
+      "category": "credential",
+      "name": "GeneratePassword",
+      "type": "bool",
+      "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+      "line": 14
+    },
+    {
+      "category": "credential",
+      "name": "SendCredentialsEmail",
+      "type": "bool",
+      "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+      "line": 16
+    },
+    {
+      "category": "credential",
+      "name": "RequirePasswordChange",
+      "type": "bool",
+      "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+      "line": 17
+    },
+    {
+      "category": "credential",
+      "name": "NewPassword",
+      "type": "string",
+      "path": "Modules/Admin/Application/Commands/SetAdminUserPassword/SetAdminUserPasswordCommand.cs",
+      "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "TemporaryPassword",
+      "type": "string",
+      "path": "Modules/Admin/Application/Models/AdminUserCreationModel.cs",
+      "line": 8
+    },
+    {
+      "category": "credential",
+      "name": "CredentialsEmailQueued",
+      "type": "bool",
+      "path": "Modules/Admin/Application/Models/AdminUserCreationModel.cs",
+      "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "HasPassword",
+      "type": "bool",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 9
+    },
+    {
+      "category": "credential",
       "name": "PaddleClientToken",
       "type": "string?",
       "path": "Modules/Billing/Application/Abstractions/Models/BillingPublicConfigModel.cs",
@@ -1038,132 +1038,6 @@
       "type": "ProtectedWearableToken?",
       "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
       "line": 18
-    },
-    {
-      "category": "financial",
-      "name": "BillingSubscriptionId",
-      "type": "Guid?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
-      "line": 7
-    },
-    {
-      "category": "financial",
-      "name": "ExternalPaymentId",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
-      "line": 9
-    },
-    {
-      "category": "financial",
-      "name": "ExternalCustomerId",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
-      "line": 10
-    },
-    {
-      "category": "financial",
-      "name": "ExternalSubscriptionId",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
-      "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "ExternalPaymentMethodId",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
-      "line": 12
-    },
-    {
-      "category": "financial",
-      "name": "ExternalPriceId",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
-      "line": 13
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "decimal?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
-      "line": 17
-    },
-    {
-      "category": "financial",
-      "name": "Currency",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
-      "line": 18
-    },
-    {
-      "category": "financial",
-      "name": "Currency",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
-      "line": 4
-    },
-    {
-      "category": "financial",
-      "name": "Refunds",
-      "type": "decimal",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
-      "line": 6
-    },
-    {
-      "category": "financial",
-      "name": "SuccessfulPayments",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
-      "line": 10
-    },
-    {
-      "category": "financial",
-      "name": "Tax",
-      "type": "decimal",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
-      "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "EarningsTrackedPayments",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
-      "line": 14
-    },
-    {
-      "category": "financial",
-      "name": "ExternalCustomerId",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
-      "line": 8
-    },
-    {
-      "category": "financial",
-      "name": "ExternalSubscriptionId",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
-      "line": 9
-    },
-    {
-      "category": "financial",
-      "name": "ExternalPaymentMethodId",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
-      "line": 10
-    },
-    {
-      "category": "financial",
-      "name": "ExternalPriceId",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
-      "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "NextBillingAttemptUtc",
-      "type": "DateTime?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
-      "line": 17
     },
     {
       "category": "financial",
@@ -1507,6 +1381,132 @@
       "type": "Func<NpgsqlConnection,",
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
       "line": 61
+    },
+    {
+      "category": "financial",
+      "name": "BillingSubscriptionId",
+      "type": "Guid?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "line": 7
+    },
+    {
+      "category": "financial",
+      "name": "ExternalPaymentId",
+      "type": "string",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "line": 9
+    },
+    {
+      "category": "financial",
+      "name": "ExternalCustomerId",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "line": 10
+    },
+    {
+      "category": "financial",
+      "name": "ExternalSubscriptionId",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "line": 11
+    },
+    {
+      "category": "financial",
+      "name": "ExternalPaymentMethodId",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "line": 12
+    },
+    {
+      "category": "financial",
+      "name": "ExternalPriceId",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "line": 13
+    },
+    {
+      "category": "financial",
+      "name": "Amount",
+      "type": "decimal?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "line": 17
+    },
+    {
+      "category": "financial",
+      "name": "Currency",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "line": 18
+    },
+    {
+      "category": "financial",
+      "name": "Currency",
+      "type": "string",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "line": 4
+    },
+    {
+      "category": "financial",
+      "name": "Refunds",
+      "type": "decimal",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "line": 6
+    },
+    {
+      "category": "financial",
+      "name": "SuccessfulPayments",
+      "type": "int",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "line": 10
+    },
+    {
+      "category": "financial",
+      "name": "Tax",
+      "type": "decimal",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "line": 11
+    },
+    {
+      "category": "financial",
+      "name": "EarningsTrackedPayments",
+      "type": "int",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingRevenueCurrencyReadModel.cs",
+      "line": 14
+    },
+    {
+      "category": "financial",
+      "name": "ExternalCustomerId",
+      "type": "string",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "line": 8
+    },
+    {
+      "category": "financial",
+      "name": "ExternalSubscriptionId",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "line": 9
+    },
+    {
+      "category": "financial",
+      "name": "ExternalPaymentMethodId",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "line": 10
+    },
+    {
+      "category": "financial",
+      "name": "ExternalPriceId",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "line": 11
+    },
+    {
+      "category": "financial",
+      "name": "NextBillingAttemptUtc",
+      "type": "DateTime?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "line": 17
     },
     {
       "category": "financial",
@@ -2459,132 +2459,6 @@
       "type": "double?",
       "path": "FoodDiary.Application.Abstractions/Users/Models/WeightHistoryProfileModel.cs",
       "line": 4
-    },
-    {
-      "category": "health",
-      "name": "BirthDate",
-      "type": "DateTime?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "Gender",
-      "type": "string?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 14
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 15
-    },
-    {
-      "category": "health",
-      "name": "DesiredWeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 16
-    },
-    {
-      "category": "health",
-      "name": "DesiredWaistCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 17
-    },
-    {
-      "category": "health",
-      "name": "HeightCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "ActivityLevel",
-      "type": "string",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 19
-    },
-    {
-      "category": "health",
-      "name": "HydrationGoal",
-      "type": "double?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 27
-    },
-    {
-      "category": "health",
-      "name": "MondayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 29
-    },
-    {
-      "category": "health",
-      "name": "TuesdayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 30
-    },
-    {
-      "category": "health",
-      "name": "WednesdayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 31
-    },
-    {
-      "category": "health",
-      "name": "ThursdayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 32
-    },
-    {
-      "category": "health",
-      "name": "FridayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 33
-    },
-    {
-      "category": "health",
-      "name": "SaturdayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 34
-    },
-    {
-      "category": "health",
-      "name": "SundayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 35
-    },
-    {
-      "category": "health",
-      "name": "FastingPushNotificationsEnabled",
-      "type": "bool",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 43
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInReminderHours",
-      "type": "int",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 45
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
-      "type": "int",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 46
     },
     {
       "category": "health",
@@ -4849,6 +4723,132 @@
     },
     {
       "category": "health",
+      "name": "BirthDate",
+      "type": "DateTime?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 16
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 17
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "ActivityLevel",
+      "type": "string",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 19
+    },
+    {
+      "category": "health",
+      "name": "HydrationGoal",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 27
+    },
+    {
+      "category": "health",
+      "name": "MondayCalories",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 29
+    },
+    {
+      "category": "health",
+      "name": "TuesdayCalories",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 30
+    },
+    {
+      "category": "health",
+      "name": "WednesdayCalories",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 31
+    },
+    {
+      "category": "health",
+      "name": "ThursdayCalories",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 32
+    },
+    {
+      "category": "health",
+      "name": "FridayCalories",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 33
+    },
+    {
+      "category": "health",
+      "name": "SaturdayCalories",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 34
+    },
+    {
+      "category": "health",
+      "name": "SundayCalories",
+      "type": "double?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 35
+    },
+    {
+      "category": "health",
+      "name": "FastingPushNotificationsEnabled",
+      "type": "bool",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 43
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInReminderHours",
+      "type": "int",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 45
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 46
+    },
+    {
+      "category": "health",
       "name": "Calories",
       "type": "decimal",
       "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodNutritionItemModel.cs",
@@ -6501,48 +6501,6 @@
     },
     {
       "category": "identity",
-      "name": "UserEmail",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "UserEmail",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "ActorEmail",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "TargetEmail",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
-      "name": "ActorIpAddress",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
-      "line": 10
-    },
-    {
-      "category": "identity",
-      "name": "ActorUserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
-      "line": 11
-    },
-    {
-      "category": "identity",
       "name": "ActorEmail",
       "type": "string?",
       "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminUserRoleAuditEventReadModel.cs",
@@ -6762,104 +6720,6 @@
       "category": "identity",
       "name": "Email",
       "type": "string",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
-      "name": "IsEmailConfirmed",
-      "type": "bool",
-      "path": "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-      "line": 15
-    },
-    {
-      "category": "identity",
-      "name": "ToEmail",
-      "type": "string",
-      "path": "FoodDiary.Application.Admin/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommand.cs",
-      "line": 7
-    },
-    {
-      "category": "identity",
-      "name": "ActorIpAddress",
-      "type": "string?",
-      "path": "FoodDiary.Application.Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
-      "line": 11
-    },
-    {
-      "category": "identity",
-      "name": "ActorUserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Application.Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
-      "line": 12
-    },
-    {
-      "category": "identity",
-      "name": "IsEmailConfirmed",
-      "type": "bool?",
-      "path": "FoodDiary.Application.Admin/Commands/UpdateAdminUser/UpdateAdminUserCommand.cs",
-      "line": 10
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Admin/Models/AdminAiUsageUserModel.cs",
-      "line": 5
-    },
-    {
-      "category": "identity",
-      "name": "TargetEmail",
-      "type": "string",
-      "path": "FoodDiary.Application.Admin/Models/AdminImpersonationStartModel.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "UserEmail",
-      "type": "string",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserLoginEventModel.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "MaskedIpAddress",
-      "type": "string?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserLoginEventModel.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
-      "name": "UserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserLoginEventModel.cs",
-      "line": 9
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
-      "name": "TelegramUserId",
-      "type": "long?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 47
-    },
-    {
-      "category": "identity",
-      "name": "IsEmailConfirmed",
-      "type": "bool",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
-      "line": 49
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
       "line": 7
     },
@@ -6904,20 +6764,6 @@
       "type": "long",
       "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
       "line": 9
-    },
-    {
-      "category": "identity",
-      "name": "ActorIpAddress",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
-      "line": 10
-    },
-    {
-      "category": "identity",
-      "name": "ActorUserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs",
-      "line": 11
     },
     {
       "category": "identity",
@@ -7397,6 +7243,160 @@
     },
     {
       "category": "identity",
+      "name": "UserEmail",
+      "type": "string",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "UserEmail",
+      "type": "string",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingSubscriptionReadModel.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "ActorEmail",
+      "type": "string",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "TargetEmail",
+      "type": "string",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "ActorIpAddress",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
+      "line": 10
+    },
+    {
+      "category": "identity",
+      "name": "ActorUserAgent",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminImpersonationSessionReadModel.cs",
+      "line": 11
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "IsEmailConfirmed",
+      "type": "bool",
+      "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+      "line": 15
+    },
+    {
+      "category": "identity",
+      "name": "ToEmail",
+      "type": "string",
+      "path": "Modules/Admin/Application/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "ActorIpAddress",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
+      "line": 11
+    },
+    {
+      "category": "identity",
+      "name": "ActorUserAgent",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
+      "line": 12
+    },
+    {
+      "category": "identity",
+      "name": "IsEmailConfirmed",
+      "type": "bool?",
+      "path": "Modules/Admin/Application/Commands/UpdateAdminUser/UpdateAdminUserCommand.cs",
+      "line": 10
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Admin/Application/Models/AdminAiUsageUserModel.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "TargetEmail",
+      "type": "string",
+      "path": "Modules/Admin/Application/Models/AdminImpersonationStartModel.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "UserEmail",
+      "type": "string",
+      "path": "Modules/Admin/Application/Models/AdminUserLoginEventModel.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "MaskedIpAddress",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Models/AdminUserLoginEventModel.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "UserAgent",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Models/AdminUserLoginEventModel.cs",
+      "line": 9
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 47
+    },
+    {
+      "category": "identity",
+      "name": "IsEmailConfirmed",
+      "type": "bool",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 49
+    },
+    {
+      "category": "identity",
+      "name": "ActorIpAddress",
+      "type": "string?",
+      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "line": 10
+    },
+    {
+      "category": "identity",
+      "name": "ActorUserAgent",
+      "type": "string?",
+      "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
+      "line": 11
+    },
+    {
+      "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "Modules/Ai/Application/Abstractions/Admin/Models/AiUsageUserSummary.cs",
@@ -7701,27 +7701,6 @@
       "name": "ProfileImageAssetId",
       "type": "Guid?",
       "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 37
-    },
-    {
-      "category": "privateContent",
-      "name": "PromptText",
-      "type": "string",
-      "path": "FoodDiary.Application.Admin/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommand.cs",
-      "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "PromptText",
-      "type": "string",
-      "path": "FoodDiary.Application.Admin/Models/AdminAiPromptModel.cs",
-      "line": 7
-    },
-    {
-      "category": "privateContent",
-      "name": "ProfileImageAssetId",
-      "type": "Guid?",
-      "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
       "line": 37
     },
     {
@@ -8955,6 +8934,27 @@
       "type": "Guid?",
       "path": "FoodDiary.Presentation.Api/Features/Users/Responses/UserHttpResponse.cs",
       "line": 36
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
+      "path": "Modules/Admin/Application/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommand.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
+      "path": "Modules/Admin/Application/Models/AdminAiPromptModel.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "ProfileImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
+      "line": 37
     },
     {
       "category": "privateContent",

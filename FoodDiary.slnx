@@ -13,7 +13,6 @@
   </Folder>
   <Folder Name="/Application/" />
   <Folder Name="/Application/Content and Engagement/">
-    <Project Path="FoodDiary.Application.Admin/FoodDiary.Application.Admin.csproj" />
   </Folder>
   <Folder Name="/Modules/" />
   <Folder Name="/Modules/Ai/">
@@ -367,5 +366,16 @@
   </Folder>
   <Folder Name="/Modules/Recipes/tests/">
     <Project Path="Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/FoodDiary.Modules.Recipes.Application.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Admin/">
+    <Project Path="Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
+    <Project Path="Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
+    <Project Path="Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj" />
+    <Project Path="Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" />
+    <Project Path="Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Admin/tests/">
+    <Project Path="Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FoodDiary.Modules.Admin.Application.Tests.csproj" />
+    <Project Path="Modules/Admin/tests/FoodDiary.Modules.Admin.Domain.Tests/FoodDiary.Modules.Admin.Domain.Tests.csproj" />
   </Folder>
 </Solution>

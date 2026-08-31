@@ -1,7 +1,6 @@
 using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Application.Runtime;
-using FoodDiary.Application.Admin;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.Cycles.Infrastructure;

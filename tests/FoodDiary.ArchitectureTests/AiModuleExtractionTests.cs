@@ -4,7 +4,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class AiModuleExtractionTests {
     [Fact]
     public void Admin_ConsumesSemanticAiCapabilitiesWithoutQuotaOrPromptRepositories() {
-        string adminRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Admin");
+        string adminRoot = ArchitectureTestPaths.FromRoot("Modules", "Admin", "Application");
         Assert.NotEmpty(SourceScanner.SourceFiles(adminRoot));
         Assert.Empty(SourceScanner.FindLinePatternViolations(adminRoot, [
             "IAiQuotaRepository", "IAiPromptTemplateRepository", "IAiPromptTemplateWriteRepository",

@@ -14,7 +14,7 @@
     <ProjectReference Include="..\..\Modules\ContentReports\Application\Abstractions\FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\Modules\Lessons\Application\Abstractions\FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\Modules\Lessons\Contracts\FoodDiary.Modules.Lessons.Contracts.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Application.Admin\FoodDiary.Application.Admin.csproj" />
+    <ProjectReference Include="../../Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />

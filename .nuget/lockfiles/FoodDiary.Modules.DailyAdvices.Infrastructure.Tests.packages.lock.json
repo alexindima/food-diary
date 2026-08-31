@@ -375,6 +375,7 @@
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
@@ -423,6 +424,7 @@
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Admin.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Ai.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Billing.PersistenceModel": "[1.0.0, )",
@@ -485,6 +487,27 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.admin.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Admin.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.admin.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.admin.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Admin.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
       "fooddiary.modules.ai.application.abstractions": {
