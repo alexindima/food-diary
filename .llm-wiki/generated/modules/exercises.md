@@ -15,19 +15,23 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj`
+- Extracted project: `Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Application.Dashboard, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Tdee.Application, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Exercises`
-- `FoodDiary.Application.Exercises`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Exercises`
 - `FoodDiary.Presentation.Api/Features/Exercises`
+- `Modules/Exercises/Application`
+- `Modules/Exercises/Application/Abstractions`
+- `Modules/Exercises/Application/Abstractions/Exercises`
+- `Modules/Exercises/Contracts`
+- `Modules/Exercises/Domain`
+- `Modules/Exercises/Infrastructure`
+- `Modules/Exercises/Infrastructure/Model`
 
 ## HTTP Surface
 
@@ -46,32 +50,36 @@ Source: `FoodDiary.Presentation.Api/Features/Exercises/ExercisesController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ExerciseEntry
-- Public contract files: 6
-- Observed external consumer groups: 6
+- Public contract files: 8
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 6
-- Interfaces: 4
-- DTO/read-model/projection types: 1
+- Public contract types: 8
+- Interfaces: 5
+- DTO/read-model/projection types: 2
 - Enums: 0
 - Exported repository-shaped contracts: 4
 - Contracts referencing domain entities: 2
 - `class ExerciseErrors`
 - `interface IExerciseEntryReadModelRepository`
 - `interface IExerciseEntryReadRepository`
+- `interface IExerciseEntryReadService`
 - `interface IExerciseEntryRepository`
 - `interface IExerciseEntryWriteRepository`
+- `record ExerciseEntryModel`
 - `record ExerciseEntryReadModel`
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Exercises/ExerciseEntryInputValidationCoverageTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Exercises/ExercisesFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Exercises/ExercisesValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/Exercises/ExerciseEntryInputValidationCoverageTests.cs`
+- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/Exercises/ExercisesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/Exercises/ExercisesValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Domain.Tests/Domain/ExerciseEntryInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Domain.Tests/Domain/ExerciseTrackingInvariantTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ExercisesModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/ExercisesControllerTests.cs`
 

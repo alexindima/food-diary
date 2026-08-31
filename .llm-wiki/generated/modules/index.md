@@ -27,7 +27,7 @@ are reported separately; `none observed` never means proven isolation.
 | [DailyAdvices](daily-advices.md) | aggregate-owner | 0 | 1 | 0 | 5 | project-reference-matrix |
 | [Dashboard](dashboard.md) | read-composer | 0 | 7 | 0 | 4 | project-reference-matrix |
 | [Dietologist](dietologist.md) | aggregate-owner | 0 | 5 | 0 | 4 | project-reference-matrix |
-| [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 0 | 6 | project-reference-matrix |
+| [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 0 | 4 | project-reference-matrix |
 | [Export](export.md) | read-composer | 0 | 1 | 0 | 4 | project-reference-matrix |
 | [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 0 | 4 | project-reference-matrix |
 | [Favorites](favorites.md) | aggregate-owner | 0 | 3 | 0 | 4 | project-reference-matrix |

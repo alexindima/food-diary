@@ -1,3 +1,7 @@
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -7,7 +11,7 @@ public sealed class MealPlanningModuleExtractionTests {
     [InlineData("ShoppingLists")]
     public void MealPlanningApplicationSource_LivesOnlyInExtractedAssembly(string feature) {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", feature);
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.MealPlanning", feature);
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "MealPlanning", "Application", feature);
 
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
@@ -24,11 +28,13 @@ public sealed class MealPlanningModuleExtractionTests {
     [Fact]
     public void ExtractedMealPlanningAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj");
+            "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj");
         string[] expectedReferences = [
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.MealPlanning.Application.Abstractions",
+            "FoodDiary.Modules.MealPlanning.Domain",
         ];
 
         Assert.Equal(expectedReferences, references);
@@ -42,4 +48,78 @@ public sealed class MealPlanningModuleExtractionTests {
 
         Assert.Contains("AddMealPlanningModule()", source, StringComparison.Ordinal);
     }
+
+    [Theory]
+    [InlineData("MealPlans", "MealPlan")]
+    [InlineData("MealPlans", "MealPlanDay")]
+    [InlineData("MealPlans", "MealPlanMeal")]
+    [InlineData("ShoppingLists", "ShoppingList")]
+    [InlineData("ShoppingLists", "ShoppingListItem")]
+    [InlineData("ShoppingLists", "ShoppingListItemSource")]
+    public void OwnedConfigurations_LiveOnlyInModulePersistenceModel(string area, string entity) {
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
+            "Modules", "MealPlanning", "Infrastructure", "Model", "Configurations", area, entity + "Configuration.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Infrastructure", "Persistence", "Configurations", area, entity + "Configuration.cs")));
+    }
+
+    [Theory]
+    [InlineData("MealPlans", "MealPlanRepository.cs")]
+    [InlineData("ShoppingLists", "ShoppingListRepository.cs")]
+    public void OwnedRepositoriesAndPorts_LiveOnlyInModule(string area, string repository) {
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
+            "Modules", "MealPlanning", "Infrastructure", "Persistence", area, repository)));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Infrastructure", "Persistence", area, repository)));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions", area)));
+        Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot(
+            "Modules", "MealPlanning", "Application", "Abstractions", area)));
+    }
+
+    [Theory]
+    [InlineData("MealPlan.cs")]
+    [InlineData("MealPlanDay.cs")]
+    [InlineData("MealPlanMeal.cs")]
+    public void MealPlanDomain_LivesOnlyInModule(string fileName) {
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
+            "Modules", "MealPlanning", "Domain", "Entities", "MealPlans", fileName)));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "MealPlans", fileName)));
+    }
+
+    [Fact]
+    public void ShoppingListCompatibilityGraph_RetainsPublicUserNavigationAndSourceIds() {
+        string path = ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Users", "User.cs");
+        CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(File.ReadAllText(path)).GetCompilationUnitRoot();
+        PropertyDeclarationSyntax navigation = Assert.Single(root.DescendantNodes()
+            .OfType<PropertyDeclarationSyntax>(), property => string.Equals(property.Identifier.ValueText, "ShoppingLists", StringComparison.Ordinal));
+        Assert.Contains(navigation.Modifiers, modifier => modifier.IsKind(SyntaxKind.PublicKeyword));
+        Assert.Equal("IReadOnlyCollection<ShoppingList>", navigation.Type.ToString());
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Shopping", "ShoppingList.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "ValueObjects", "Ids", "MealPlanId.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "ValueObjects", "Ids", "MealPlanMealId.cs")));
+        Assert.DoesNotContain("FoodDiary.Modules.MealPlanning.Domain",
+            ProjectReferenceReader.ReadProjectReferences("FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("Application.Tests")]
+    [InlineData("Domain.Tests")]
+    [InlineData("Infrastructure.IntegrationTests")]
+    public void FocusedTestProjects_LiveInModuleWithoutDonorProjectReferences(string suffix) {
+        string projectName = "FoodDiary.Modules.MealPlanning." + suffix;
+        string relativePath = $"Modules/MealPlanning/tests/{projectName}/{projectName}.csproj";
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(relativePath.Split('/'))));
+        Assert.DoesNotContain(ProjectReferenceReader.ReadProjectReferences(relativePath),
+            reference => reference.EndsWith(".Tests", StringComparison.Ordinal)
+                || reference.EndsWith(".IntegrationTests", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void MealPlanToShoppingListCreation_RemainsBehindInternalAreaPort() {
+        string portPath = ArchitectureTestPaths.FromRoot("Modules", "MealPlanning", "Application", "ShoppingLists",
+            "Common", "IShoppingListCreationService.cs");
+        Assert.True(File.Exists(portPath));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "ShoppingLists")));
+    }
+
 }

@@ -35,9 +35,9 @@ public sealed class TdeeModuleExtractionTests {
             "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
-            "FoodDiary.Application.Exercises",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Exercises.Contracts",
         ], references);
     }
 

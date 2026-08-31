@@ -1,4 +1,4 @@
-﻿# Domain Layer Guidelines
+# Domain Layer Guidelines
 
 ## Scope
 Rules for `FoodDiary.Domain/`.
@@ -30,3 +30,12 @@ Rules for `FoodDiary.Domain/`.
 
 ## Commands
 - Build: `dotnet build FoodDiary.Domain/FoodDiary.Domain.csproj`
+
+## MealPlanning compatibility seam
+
+Keep User.ShoppingLists, ShoppingList/items/sources, their IDs/events/source enum,
+and MealPlanId/MealPlanMealId central. The bidirectional public User relationship
+and source IDs prevent a one-way extraction of this graph. MealPlan entities and
+MealPlanDayId now live in Modules/MealPlanning/Domain. Preserve private EF setters.
+
+- Exercises owns ExerciseEntry, ExerciseEntryId and ExerciseType under Modules/Exercises/Domain. Its one-way User navigation requires no central back-reference; internal DomainGuard is accessed through explicit module IVT.

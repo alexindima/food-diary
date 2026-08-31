@@ -18,12 +18,12 @@ Assert-Retrieval (($generatedBefore -join "`n") -ceq ($generatedAfter -join "`n"
 
 $context = & $facade context -Query 'billing renewal service' -Format Json -Limit 5 | ConvertFrom-Json
 Assert-Retrieval ([bool]$context.conclusive -and -not [bool]$context.abstained) 'Grounded context query did not report a conclusive result.'
-Assert-Retrieval ($context.candidates[0].path -eq 'FoodDiary.Application.Billing/Services/BillingRenewalService.cs') 'Grounded context query lost its expected top candidate.'
+Assert-Retrieval ($context.candidates[0].path -eq 'Modules/Billing/Application/Services/BillingRenewalService.cs') 'Grounded context query lost its expected top candidate.'
 Assert-Retrieval (-not [string]::IsNullOrWhiteSpace([string]$context.confidence)) 'Context query omitted calibrated confidence.'
 
 $ownership = & $facade ownership -Query 'subscription checkout payment webhook renewal and financial state' -Format Json -Limit 5 | ConvertFrom-Json
 Assert-Retrieval ([bool]$ownership.conclusive -and @($ownership.ownershipGuides).Count -gt 0) 'Intent ownership returned an empty successful result.'
-Assert-Retrieval ($ownership.ownershipGuides[0].guide -eq 'FoodDiary.Application.Billing/AGENTS.md') 'Intent ownership resolved the wrong scoped guide.'
+Assert-Retrieval ($ownership.ownershipGuides[0].guide -eq 'Modules/Billing/Application/AGENTS.md') 'Intent ownership resolved the wrong scoped guide.'
 
 $trace = & $facade trace -Query 'Trace the primary user scenario end to end from endpoint or event through command/query to persistence/provider for gamification achievements points streaks rewards and concurrent updates.' -Format Json -Limit 5 | ConvertFrom-Json
 Assert-Retrieval ([bool]$trace.abstained -and -not [bool]$trace.traceConclusive) 'Broad trace invented a conclusive execution chain.'

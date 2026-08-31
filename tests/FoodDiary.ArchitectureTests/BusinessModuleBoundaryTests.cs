@@ -943,8 +943,7 @@ public sealed class BusinessModuleBoundaryTests {
             ? Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Dietologist", "Infrastructure", "Model", "Configurations", "Dietologist", fileName)
             : Path.Combine(
                 ArchitectureTestPaths.RepositoryRoot,
-                "FoodDiary.Infrastructure",
-                "Persistence",
+                "Modules", "RecipeCommunity", "Infrastructure", "Model",
                 expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar),
                 fileName);
 
@@ -970,7 +969,7 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("WeightEntryConfiguration.cs", "Modules/BodyMetrics/Infrastructure/Model/Configurations")]
     [InlineData("WaistEntryConfiguration.cs", "Modules/BodyMetrics/Infrastructure/Model/Configurations")]
     [InlineData("HydrationEntryConfiguration.cs", "Modules/Hydration/Infrastructure/Model/Configurations")]
-    [InlineData("ExerciseEntryConfiguration.cs", "Configurations/Exercises")]
+    [InlineData("ExerciseEntryConfiguration.cs", "Modules/Exercises/Infrastructure/Model/Configurations/Exercises")]
     [InlineData("CycleProfileConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
     [InlineData("CycleFactorConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
     [InlineData("CycleSymptomEntryConfiguration.cs", "Modules/Cycles/Infrastructure/Model/Configurations")]
@@ -1020,12 +1019,12 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("ShoppingListConfiguration.cs", "Configurations/ShoppingLists")]
-    [InlineData("ShoppingListItemConfiguration.cs", "Configurations/ShoppingLists")]
-    [InlineData("ShoppingListItemSourceConfiguration.cs", "Configurations/ShoppingLists")]
-    [InlineData("MealPlanConfiguration.cs", "Configurations/MealPlans")]
-    [InlineData("MealPlanDayConfiguration.cs", "Configurations/MealPlans")]
-    [InlineData("MealPlanMealConfiguration.cs", "Configurations/MealPlans")]
+    [InlineData("ShoppingListConfiguration.cs", "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists")]
+    [InlineData("ShoppingListItemConfiguration.cs", "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists")]
+    [InlineData("ShoppingListItemSourceConfiguration.cs", "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists")]
+    [InlineData("MealPlanConfiguration.cs", "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans")]
+    [InlineData("MealPlanDayConfiguration.cs", "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans")]
+    [InlineData("MealPlanMealConfiguration.cs", "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans")]
     [InlineData("WearableConnectionConfiguration.cs", "Modules/Wearables/Infrastructure/Model/Configurations/Wearables")]
     [InlineData("WearableSyncEntryConfiguration.cs", "Modules/Wearables/Infrastructure/Model/Configurations/Wearables")]
     [InlineData("MarketingAttributionEventConfiguration.cs", "Modules/Marketing/Infrastructure/Model/Configurations")]

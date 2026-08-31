@@ -150,3 +150,30 @@ Backend structure guardrails now enforce the high-level placement rules. In part
 - presentation controllers should depend only on presentation-safe collaborators;
 - executable hosts keep only `Program.cs` in the project root;
 - JobManager remains a scheduler/worker host and must not own persistence, mediator, or HTTP workflows directly.
+
+## MealPlanning physical ownership
+
+`Modules/MealPlanning` groups two distinct aggregate areas, MealPlans and
+ShoppingLists. Application retains its legacy assembly and CLR namespaces;
+Application/Abstractions contains both areas' ports, read models and errors.
+Domain contains MealPlan, MealPlanDay, MealPlanMeal and MealPlanDayId.
+Infrastructure contains both repositories and complete module DI; its Model
+project contains all six EF mappings, explicitly applied by the central context.
+
+The public `User.ShoppingLists` navigation requires the Shopping aggregate graph,
+its IDs/events/source enum to remain in central Domain. MealPlanId/MealPlanMealId
+also remain there because ShoppingListItemSource uses them. UserConfiguration
+configures the inverse field access; removing this navigation is not an extraction.
+The module Domain references central Domain one-way. Source provenance IDs are
+not foreign keys. Shared DbContext, migrations/snapshot, User cleanup orchestration
+and Presentation controllers remain central. No empty Contracts layer is created:
+IShoppingListCreationService is the existing internal aggregate boundary.
+
+Module tests live under `Modules/MealPlanning/tests`; central projects retain mixed
+domain, repository, HTTP and host integration tests.
+
+Exercises ownership: `Modules/Exercises/Application` owns slices and read-service implementation; `Application/Abstractions` owns repository ports/projections/errors; `Contracts` owns IExerciseEntryReadService and ExerciseEntryModel; `Domain` owns ExerciseEntry/ExerciseEntryId/ExerciseType; `Infrastructure/Model` owns explicit EF mapping; `Infrastructure` owns repository and complete DI. Focused Application/Domain tests live under `Modules/Exercises/tests`. Shared DbContext/migrations and HTTP/host/cross-module tests remain central.
+
+## RecipeCommunity logical module
+
+`Modules/RecipeCommunity` owns Application (RecipeComments/RecipeLikes), Application/Abstractions, Domain, Infrastructure and Infrastructure/Model. Legacy application assembly and CLR namespaces remain stable. One-way User/Recipe navigations permit owned entities/IDs to leave central Domain without extracting Recipes. Shared context/migrations, HTTP and ContentReports reportability projection remain with their owners; no extra Contracts or provider layer. See `docs/ai/recipecommunity-ownership-inventory.md` for sources and compatibility seams.

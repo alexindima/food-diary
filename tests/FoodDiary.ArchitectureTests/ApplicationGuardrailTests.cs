@@ -643,6 +643,9 @@ public sealed class ApplicationGuardrailTests {
             "Results",
             facadeFileName);
         string featureErrorsPath = featureDirectory switch {
+            "MealPlans" or "ShoppingLists" => Path.Combine(root, "Modules", "MealPlanning", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
+            "Exercises" => Path.Combine(root, "Modules", "Exercises", "Application", "Abstractions", "Exercises", featureCommonDirectory, featureErrorsFileName),
+            "RecipeComments" => Path.Combine(root, "Modules", "RecipeCommunity", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
             "Images" => Path.Combine(root, "Modules", "Images", "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName),
             "Cycles" => Path.Combine(root, "Modules", "Cycles", "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName),
             "Wearables" => Path.Combine(root, "Modules", "Wearables", "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName),
@@ -1042,11 +1045,11 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Commands", "DeleteRecipe", "DeleteRecipeCommandHandler.cs"),
             Path.Combine(applicationRoot, "Commands", "DuplicateRecipe", "DuplicateRecipeCommandHandler.cs"),
             Path.Combine(applicationRoot, "Commands", "UpdateRecipe", "UpdateRecipeValuePreparer.cs"),
-            Path.Combine(root, "FoodDiary.Application.Exercises", "Commands", "CreateExerciseEntry", "CreateExerciseEntryCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Exercises", "Commands", "DeleteExerciseEntry", "DeleteExerciseEntryCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Exercises", "Commands", "UpdateExerciseEntry", "UpdateExerciseEntryCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Commands", "AdoptMealPlan", "AdoptMealPlanCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Commands", "GenerateShoppingList", "GenerateShoppingListCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Exercises", "Application", "Commands", "CreateExerciseEntry", "CreateExerciseEntryCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Exercises", "Application", "Commands", "DeleteExerciseEntry", "DeleteExerciseEntryCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Exercises", "Application", "Commands", "UpdateExerciseEntry", "UpdateExerciseEntryCommandHandler.cs"),
+            Path.Combine(root, "Modules", "MealPlanning", "Application", "MealPlans", "Commands", "AdoptMealPlan", "AdoptMealPlanCommandHandler.cs"),
+            Path.Combine(root, "Modules", "MealPlanning", "Application", "MealPlans", "Commands", "GenerateShoppingList", "GenerateShoppingListCommandHandler.cs"),
             Path.Combine(root, "Modules", "Hydration", "Application", "Commands", "CreateHydrationEntry", "CreateHydrationEntryCommandHandler.cs"),
             Path.Combine(root, "Modules", "Hydration", "Application", "Commands", "DeleteHydrationEntry", "DeleteHydrationEntryCommandHandler.cs"),
             Path.Combine(root, "Modules", "Hydration", "Application", "Commands", "UpdateHydrationEntry", "UpdateHydrationEntryCommandHandler.cs"),
@@ -1064,16 +1067,16 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "Modules", "BodyMetrics", "Application", "WaistEntries", "Queries", "GetLatestWaistEntry", "GetLatestWaistEntryQueryHandler.cs"),
             Path.Combine(root, "Modules", "BodyMetrics", "Application", "WaistEntries", "Queries", "GetWaistEntries", "GetWaistEntriesQueryHandler.cs"),
             Path.Combine(root, "Modules", "BodyMetrics", "Application", "WaistEntries", "Queries", "GetWaistSummaries", "GetWaistSummariesQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Queries", "GetMealPlanById", "GetMealPlanByIdQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Queries", "GetMealPlans", "GetMealPlansQueryHandler.cs"),
+            Path.Combine(root, "Modules", "MealPlanning", "Application", "MealPlans", "Queries", "GetMealPlanById", "GetMealPlanByIdQueryHandler.cs"),
+            Path.Combine(root, "Modules", "MealPlanning", "Application", "MealPlans", "Queries", "GetMealPlans", "GetMealPlansQueryHandler.cs"),
             Path.Combine(root, "Modules", "Tdee", "Application", "Queries", "GetTdeeInsight", "GetTdeeInsightQueryHandler.cs"),
             Path.Combine(root, "Modules", "Gamification", "Application", "Queries", "GetGamification", "GetGamificationQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeLikes", "Commands", "ToggleRecipeLike", "ToggleRecipeLikeCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeLikes", "Queries", "GetRecipeLikeStatus", "GetRecipeLikeStatusQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeComments", "Commands", "CreateRecipeComment", "CreateRecipeCommentCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeComments", "Commands", "DeleteRecipeComment", "DeleteRecipeCommentCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeComments", "Commands", "UpdateRecipeComment", "UpdateRecipeCommentCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeComments", "Queries", "GetRecipeComments", "GetRecipeCommentsQueryHandler.cs"),
+            Path.Combine(root, "Modules", "RecipeCommunity", "Application", "RecipeLikes", "Commands", "ToggleRecipeLike", "ToggleRecipeLikeCommandHandler.cs"),
+            Path.Combine(root, "Modules", "RecipeCommunity", "Application", "RecipeLikes", "Queries", "GetRecipeLikeStatus", "GetRecipeLikeStatusQueryHandler.cs"),
+            Path.Combine(root, "Modules", "RecipeCommunity", "Application", "RecipeComments", "Commands", "CreateRecipeComment", "CreateRecipeCommentCommandHandler.cs"),
+            Path.Combine(root, "Modules", "RecipeCommunity", "Application", "RecipeComments", "Commands", "DeleteRecipeComment", "DeleteRecipeCommentCommandHandler.cs"),
+            Path.Combine(root, "Modules", "RecipeCommunity", "Application", "RecipeComments", "Commands", "UpdateRecipeComment", "UpdateRecipeCommentCommandHandler.cs"),
+            Path.Combine(root, "Modules", "RecipeCommunity", "Application", "RecipeComments", "Queries", "GetRecipeComments", "GetRecipeCommentsQueryHandler.cs"),
             Path.Combine(root, "Modules", "Wearables", "Application", "Commands", "ConnectWearable", "ConnectWearableCommandHandler.cs"),
             Path.Combine(root, "Modules", "Wearables", "Application", "Commands", "DisconnectWearable", "DisconnectWearableCommandHandler.cs"),
             Path.Combine(root, "Modules", "Wearables", "Application", "Commands", "SyncWearableData", "SyncWearableDataCommandHandler.cs"),
@@ -1114,7 +1117,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "Modules", "Dietologist", "Application", "Queries", "GetMyDietologistRelationship", "GetMyDietologistRelationshipQueryHandler.cs"),
             Path.Combine(root, "Modules", "Dietologist", "Application", "Queries", "GetMyRecommendations", "GetMyRecommendationsQueryHandler.cs"),
             Path.Combine(root, "Modules", "Dietologist", "Application", "Queries", "GetRecommendationsForClient", "GetRecommendationsForClientQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Exercises", "Queries", "GetExerciseEntries", "GetExerciseEntriesQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Exercises", "Application", "Queries", "GetExerciseEntries", "GetExerciseEntriesQueryHandler.cs"),
             Path.Combine(root, "Modules", "Lessons", "Application", "Commands", "MarkLessonRead", "MarkLessonReadCommandHandler.cs"),
             Path.Combine(root, "Modules", "Lessons", "Application", "Queries", "GetLessonById", "GetLessonByIdQueryHandler.cs"),
             Path.Combine(root, "Modules", "Lessons", "Application", "Queries", "GetLessons", "GetLessonsQueryHandler.cs"),
@@ -1501,7 +1504,7 @@ public sealed class ApplicationGuardrailTests {
         string[] contractFiles = [
             Path.Combine(root, "Modules", "BodyMetrics", "Application", "Abstractions", "WeightEntries", "Common", "IWeightEntryReadRepository.cs"),
             Path.Combine(root, "Modules", "BodyMetrics", "Application", "Abstractions", "WaistEntries", "Common", "IWaistEntryReadRepository.cs"),
-            Path.Combine(root, "FoodDiary.Application.Abstractions", "Exercises", "Common", "IExerciseEntryReadRepository.cs"),
+            Path.Combine(root, "Modules", "Exercises", "Application", "Abstractions", "Exercises", "Common", "IExerciseEntryReadRepository.cs"),
             Path.Combine(root, "Modules", "Fasting", "Application", "Abstractions", "Common", "IFastingOccurrenceReadRepository.cs"),
             Path.Combine(root, "Modules", "Fasting", "Application", "Abstractions", "Common", "IFastingCheckInReadRepository.cs"),
             Path.Combine(root, "Modules", "Billing", "Application", "Abstractions", "Common", "IBillingSubscriptionReadRepository.cs"),
@@ -1510,8 +1513,8 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "Modules", "Notifications", "Application", "Abstractions", "Common", "IWebPushSubscriptionReadRepository.cs"),
             Path.Combine(root, "Modules", "Wearables", "Application", "Abstractions", "Common", "IWearableSyncReadRepository.cs"),
             Path.Combine(root, "Modules", "Usda", "Application", "Abstractions", "Common", "IUsdaFoodReadRepository.cs"),
-            Path.Combine(root, "FoodDiary.Application.Abstractions", "ShoppingLists", "Common", "IShoppingListReadRepository.cs"),
-            Path.Combine(root, "FoodDiary.Application.Abstractions", "RecipeComments", "Common", "IRecipeCommentReadRepository.cs"),
+            Path.Combine(root, "Modules", "MealPlanning", "Application", "Abstractions", "ShoppingLists", "Common", "IShoppingListReadRepository.cs"),
+            Path.Combine(root, "Modules", "RecipeCommunity", "Application", "Abstractions", "RecipeComments", "Common", "IRecipeCommentReadRepository.cs"),
         ];
 
         string[] violations = [
@@ -1624,8 +1627,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string contractPath = Path.Combine(
             root,
-            "FoodDiary.Application.Abstractions",
-            "MealPlans",
+            "Modules", "MealPlanning", "Application", "Abstractions", "MealPlans",
             "Common",
             "IMealPlanReadRepository.cs");
         string[] contractFiles = [contractPath];
@@ -2218,7 +2220,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.Exercises",
+            "Modules", "Exercises", "Application",
             "Services",
             "ExerciseEntryReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -2316,7 +2318,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ShoppingListQueries_UseReadServicesInsteadOfShoppingAggregates() {
         string root = GetRepositoryRoot();
-        string shoppingListQueriesRoot = Path.Combine(root, "FoodDiary.Application.MealPlanning", "ShoppingLists", "Queries");
+        string shoppingListQueriesRoot = Path.Combine(root, "Modules", "MealPlanning", "Application", "ShoppingLists", "Queries");
         string[] shoppingListQueryFiles = [.. SourceScanner.SourceFiles(shoppingListQueriesRoot)];
 
         string[] violations = [
@@ -2330,7 +2332,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void MealPlanQueries_UseReadServicesInsteadOfMealPlanAggregates() {
         string root = GetRepositoryRoot();
-        string mealPlanQueriesRoot = Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Queries");
+        string mealPlanQueriesRoot = Path.Combine(root, "Modules", "MealPlanning", "Application", "MealPlans", "Queries");
         string[] mealPlanQueryFiles = [.. SourceScanner.SourceFiles(mealPlanQueriesRoot)];
 
         string[] violations = [
@@ -2346,7 +2348,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.MealPlanning",
+            "Modules", "MealPlanning", "Application",
             "ShoppingLists",
             "Services",
             "ShoppingListReadService.cs");
@@ -2368,7 +2370,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.MealPlanning",
+            "Modules", "MealPlanning", "Application",
             "MealPlans",
             "Services",
             "MealPlanReadService.cs");
@@ -2388,7 +2390,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void SocialQueries_UseReadServicesInsteadOfSocialAggregates() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application.RecipeCommunity");
+        string applicationRoot = Path.Combine(root, "Modules", "RecipeCommunity", "Application");
         string[] socialQueryFiles = [
             .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "RecipeLikes", "Queries")),
             .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "RecipeComments", "Queries")),
@@ -2407,7 +2409,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void SocialReadServices_UseReadModelsInsteadOfSocialAggregates() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application.RecipeCommunity");
+        string applicationRoot = Path.Combine(root, "Modules", "RecipeCommunity", "Application");
         string[] serviceFiles = [
             Path.Combine(applicationRoot, "RecipeLikes", "Services", "RecipeLikeReadService.cs"),
             Path.Combine(applicationRoot, "RecipeComments", "Services", "RecipeCommentReadService.cs"),

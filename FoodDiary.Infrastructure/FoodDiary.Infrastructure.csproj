@@ -65,4 +65,13 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>
 
+  <ItemGroup><ProjectReference Include="..\Modules\MealPlanning\Infrastructure\Model\FoodDiary.Modules.MealPlanning.PersistenceModel.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="..\Modules\MealPlanning\Domain\FoodDiary.Modules.MealPlanning.Domain.csproj" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Exercises\Infrastructure\Model\FoodDiary.Modules.Exercises.PersistenceModel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Exercises\Domain\FoodDiary.Modules.Exercises.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup><ProjectReference Include="../Modules/RecipeCommunity/Infrastructure/Model/FoodDiary.Modules.RecipeCommunity.PersistenceModel.csproj" /></ItemGroup>
 </Project>

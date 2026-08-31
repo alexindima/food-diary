@@ -62,6 +62,19 @@
           "FoodDiary.Domain": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.exercises.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Exercises.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.exercises.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.favorites.domain": {
         "type": "Project",
         "dependencies": {
@@ -78,6 +91,19 @@
       "fooddiary.modules.marketing.application.abstractions": {
         "type": "Project"
       },
+      "fooddiary.modules.mealplanning.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.MealPlanning.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.mealplanning.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.notifications.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -86,6 +112,19 @@
         }
       },
       "fooddiary.modules.notifications.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recipecommunity.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.RecipeCommunity.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recipecommunity.domain": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )"

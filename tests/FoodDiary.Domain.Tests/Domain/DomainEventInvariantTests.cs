@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Events;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Tests.Domain;
@@ -109,38 +108,4 @@ public sealed class DomainEventInvariantTests {
             () => Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc));
     }
 
-    [Fact]
-    public void ShoppingListItemAddedDomainEvent_WithOverride_ExposesPayload() {
-        var occurredOnUtc = new DateTime(2026, 3, 27, 12, 0, 0, DateTimeKind.Utc);
-        var shoppingListId = ShoppingListId.New();
-        var itemId = ShoppingListItemId.New();
-        var productId = ProductId.New();
-
-        var domainEvent = new ShoppingListItemAddedDomainEvent(
-            shoppingListId,
-            itemId,
-            productId,
-            "Milk",
-            1.5,
-            MeasurementUnit.Ml,
-            "Dairy",
-            aisle: null,
-            note: null,
-            isChecked: true,
-            checkedOnUtc: null,
-            sortOrder: 2,
-            occurredOnUtc);
-
-        Assert.Multiple(
-            () => Assert.Equal(shoppingListId, domainEvent.ShoppingListId),
-            () => Assert.Equal(itemId, domainEvent.ShoppingListItemId),
-            () => Assert.Equal(productId, domainEvent.ProductId),
-            () => Assert.Equal("Milk", domainEvent.Name),
-            () => Assert.Equal(1.5, domainEvent.Amount),
-            () => Assert.Equal(MeasurementUnit.Ml, domainEvent.Unit),
-            () => Assert.Equal("Dairy", domainEvent.Category),
-            () => Assert.True(domainEvent.IsChecked),
-            () => Assert.Equal(2, domainEvent.SortOrder),
-            () => Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc));
-    }
 }

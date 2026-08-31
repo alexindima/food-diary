@@ -2708,6 +2708,14 @@ const options = Object.fromEntries(argumentsList.map((argument) => {
 const databasePath = resolve(repositoryRoot, options.database ?? '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
 let database;
 try {
+  if (options['path-stdin'] === 'true') {
+    if (options.path !== undefined) throw new Error('Use either --path or --path-stdin, not both.');
+    const paths = JSON.parse(readFileSync(0, 'utf8'));
+    if (!Array.isArray(paths) || paths.some((path) => typeof path !== 'string')) {
+      throw new Error('Path stdin must contain a JSON array of strings.');
+    }
+    options.path = paths.join(';');
+  }
   let result;
   if (action === 'build') {
     result = withBuildLock(() => {

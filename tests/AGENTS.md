@@ -51,3 +51,9 @@ Rules for `tests/`.
 - Infrastructure unit tests: `dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj`
 - Infrastructure integration tests: `dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj`
 - Full backend test/build baseline: `dotnet build FoodDiary.slnx`
+
+- MealPlanning application and aggregate-focused tests live in Modules/MealPlanning/tests;
+  central mixed tests retain other owners. PostgreSQL module regression protects
+  the User inverse navigation, scalar source IDs and deletion relationships.
+
+- Exercises application/domain suites live in Modules/Exercises/tests. Only Exercises methods moved out of TrackingEntryInvariantTests; Hydration and MealPlanning mixed coverage remains central.

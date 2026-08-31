@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using FoodDiary.Modules.MealPlanning.Infrastructure.Model;
 using FoodDiary.Infrastructure.Persistence.Audit;
 using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
@@ -41,5 +42,8 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         modelBuilder.ApplyUsdaPersistenceModel();
         modelBuilder.ApplyBodyMetricsPersistenceModel();
         modelBuilder.ApplyNotificationsPersistenceModel();
+        modelBuilder.ApplyMealPlanningPersistenceModel();
+        modelBuilder.ApplyExercisesPersistenceModel();
+        modelBuilder.ApplyRecipeCommunityPersistenceModel();
     }
 }

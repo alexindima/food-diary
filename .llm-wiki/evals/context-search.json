@@ -279,7 +279,7 @@
       "id": "shopping-list-creation-service",
       "query": "create a shopping list from a meal plan",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListCreationService.cs"]
+      "expectedPaths": ["Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListCreationService.cs"]
     },
     {
       "id": "remove-favorite-meal-handler",

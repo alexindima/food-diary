@@ -48,11 +48,15 @@ function Get-LineNumber([string]$Text, [int]$Index) {
     if ($Index -le 0) { return 1 }
     ([regex]::Matches($Text.Substring(0, $Index), "`n")).Count + 1
 }
-function Get-ScanEntry([string]$RelativePath) {
-    if ([string]::IsNullOrWhiteSpace($RelativePath)) { return $null }
+function Normalize-ContextSecurityPath([string]$RelativePath) {
     $normalized = $RelativePath.Replace('\', '/')
     while ($normalized.StartsWith('./', [StringComparison]::Ordinal)) { $normalized = $normalized.Substring(2) }
     if ([IO.Path]::IsPathRooted($normalized) -or $normalized -match '(^|/)\.\.(/|$)') { throw "Context security path escapes the repository: $RelativePath" }
+    return $normalized
+}
+function Get-ScanEntry([string]$RelativePath) {
+    if ([string]::IsNullOrWhiteSpace($RelativePath)) { return $null }
+    $normalized = Normalize-ContextSecurityPath $RelativePath
     $absolute = Join-Path $repositoryRoot $normalized
     if (-not (Test-Path -LiteralPath $absolute -PathType Leaf)) {
         return [pscustomobject][ordered]@{
@@ -118,7 +122,7 @@ function Get-Summary([object[]]$Sources) {
 }
 function New-Assessment([string[]]$RequestedPaths) {
     $packet = Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json
-    $paths = @($RequestedPaths | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { ([string]$_).Replace('\', '/').TrimStart('./') } | Sort-Object -Unique)
+    $paths = @($RequestedPaths | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { Normalize-ContextSecurityPath ([string]$_) } | Sort-Object -Unique)
     if ($paths.Count -eq 0) {
         $manifestPaths = @()
         if (Test-Path -LiteralPath $manifestPath -PathType Leaf) {
@@ -133,7 +137,7 @@ function New-Assessment([string[]]$RequestedPaths) {
             @($packet.brief.contextPages) +
             @($packet.diff.changedPaths) |
                 Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
-                ForEach-Object { ([string]$_).Replace('\', '/').TrimStart('./') } |
+                ForEach-Object { Normalize-ContextSecurityPath ([string]$_) } |
                 Sort-Object -Unique
         )
     }

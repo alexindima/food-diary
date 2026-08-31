@@ -48,4 +48,9 @@
     <ProjectReference Include="..\..\Modules\Notifications\Infrastructure\FoodDiary.Modules.Notifications.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup><ProjectReference Include="..\..\Modules\MealPlanning\Infrastructure\FoodDiary.Modules.MealPlanning.Infrastructure.csproj" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Exercises\Infrastructure\FoodDiary.Modules.Exercises.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup><ProjectReference Include="../../Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj" /></ItemGroup>
 </Project>

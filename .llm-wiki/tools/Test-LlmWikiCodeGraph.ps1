@@ -31,6 +31,7 @@ $recipesSourcePrefix = if (Test-Path -LiteralPath (Join-Path $repositoryRoot $fl
 }
 $russianServerQuery = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('0L/QvtC00LrQu9GO0YfQuNGB0Ywg0YHQtdGA0LLQtdGA0YM='))
 $build = & $manager build -Format Json | ConvertFrom-Json
+& (Join-Path $PSScriptRoot 'Test-LlmWikiCodeGraphPathTransport.ps1')
 if ([int]$build.files -lt 100 -or [int]$build.symbols -lt 100) { throw 'Code graph build produced an implausibly small repository graph.' }
 if ([int]$build.typedEdges -lt 1000) { throw 'Code graph build produced an implausibly small typed relationship graph.' }
 if ([string]::IsNullOrWhiteSpace([string]$build.graphDependencyFingerprint) -or
@@ -233,10 +234,10 @@ if (@($broadFrontendPlan.scopeTooBroad).Count -ne 1 -or $broadFrontendPlan.confi
     throw 'Graph-only test plan did not diagnose an overly broad frontend scope.'
 }
 $auditRankingCases = @(
-    @{ Query = 'OpenFoodFacts barcode lookup'; ChangeType = 'Backend'; ExpectedPrefix = 'FoodDiary.Application.OpenFoodFacts/'; ExpectedPattern = '' }
+    @{ Query = 'OpenFoodFacts barcode lookup'; ChangeType = 'Backend'; ExpectedPrefix = 'Modules/OpenFoodFacts/Application/'; ExpectedPattern = '' }
     @{ Query = 'create meal command'; ChangeType = 'Backend'; ExpectedPrefix = 'FoodDiary.Application.Meals/'; ExpectedPattern = '' }
     @{ Query = 'dashboard query'; ChangeType = 'Backend'; ExpectedPrefix = 'FoodDiary.Application.Dashboard/'; ExpectedPattern = '' }
-    @{ Query = 'Telegram notification sender'; ChangeType = 'Backend'; ExpectedPrefix = ''; ExpectedPattern = '^(?:FoodDiary\.Telegram\.Bot|FoodDiary\.Application\.Notifications|FoodDiary\.Integrations)/' }
+    @{ Query = 'Telegram notification sender'; ChangeType = 'Backend'; ExpectedPrefix = ''; ExpectedPattern = '^(?:FoodDiary\.Telegram\.Bot|Modules/Notifications/(?:Application|Infrastructure)|FoodDiary\.Integrations)/' }
 )
 foreach ($case in $auditRankingCases) {
     $ranking = & $manager search -Query $case.Query -ChangeType $case.ChangeType -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json

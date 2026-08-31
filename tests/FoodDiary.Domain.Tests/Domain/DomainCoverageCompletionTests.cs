@@ -7,7 +7,6 @@ using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Usda;
@@ -244,53 +243,6 @@ public sealed class DomainCoverageCompletionTests {
             () => Assert.Equal("serving", target.SnapshotUnit),
             () => Assert.Equal(MealItemOrigin.Barcode, target.Origin),
             () => Assert.Null(target.SourceAiItemId));
-    }
-
-    [Fact]
-    public void ShoppingItems_CoverSourceAndUpdatePaths() {
-        var item = ShoppingListItem.Create(
-            ShoppingListId.New(),
-            " Apple ",
-            ProductId.New(),
-            1,
-            MeasurementUnit.Pcs,
-            " Fruit ",
-            isChecked: true,
-            sortOrder: 1,
-            aisle: " A1 ",
-            note: " Ripe ",
-            checkedOnUtc: DateTime.UtcNow);
-
-        item.UpdateDetails(
-            " Pear ",
-            ProductId.New(),
-            2,
-            MeasurementUnit.Pcs,
-            " Fruit ",
-            " A2 ",
-            " Green ",
-            isChecked: false,
-            checkedOnUtc: null,
-            sortOrder: 2);
-        ShoppingListItemSource source = item.AddMealPlanSource(
-            MealPlanId.New(),
-            MealPlanMealId.New(),
-            RecipeId.New(),
-            " Dinner ",
-            dayNumber: 1,
-            " Lunch ",
-            amount: 2,
-            MeasurementUnit.Pcs);
-
-        ReadPublicProperties(item);
-        ReadPublicProperties(source);
-
-        Assert.Multiple(
-            () => Assert.Equal("Pear", item.Name),
-            () => Assert.Null(item.CheckedOnUtc),
-            () => Assert.Single(item.Sources),
-            () => Assert.Equal("Dinner", source.Label),
-            () => Assert.Equal("Lunch", source.MealType));
     }
 
     [Fact]

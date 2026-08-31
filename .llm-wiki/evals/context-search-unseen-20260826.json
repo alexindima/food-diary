@@ -703,7 +703,7 @@
       "query": "implementation contract for shopping list summary model",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Application.MealPlanning/ShoppingLists/Models/ShoppingListSummaryModel.cs"
+        "Modules/MealPlanning/Application/ShoppingLists/Models/ShoppingListSummaryModel.cs"
       ]
     },
     {
@@ -919,7 +919,7 @@
       "query": "implementation contract for shopping list item data",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListItemData.cs"
+        "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListItemData.cs"
       ]
     },
     {

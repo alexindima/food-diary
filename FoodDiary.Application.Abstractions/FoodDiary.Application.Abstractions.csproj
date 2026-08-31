@@ -18,4 +18,9 @@
     <ProjectReference Include="..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
   </ItemGroup>
 
+  <ItemGroup><ProjectReference Include="..\Modules\MealPlanning\Application\Abstractions\FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Exercises\Application\Abstractions\FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
+  </ItemGroup>
+  <ItemGroup><ProjectReference Include="../Modules/RecipeCommunity/Application/Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj" /></ItemGroup>
 </Project>

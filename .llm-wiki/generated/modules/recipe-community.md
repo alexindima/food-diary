@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj`
+- Extracted project: `Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Notifications, RecipeComments, RecipeLikes, Recipes, Users
 - Business-module consumers: none observed
@@ -24,10 +24,13 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/RecipeComments`
-- `FoodDiary.Application.Abstractions/RecipeLikes`
-- `FoodDiary.Application.RecipeCommunity`
-- `FoodDiary.Infrastructure/Persistence/Configurations/RecipeSocial`
+- `FoodDiary.Presentation.Api/Features/RecipeComments`
+- `FoodDiary.Presentation.Api/Features/RecipeLikes`
+- `Modules/RecipeCommunity/Application`
+- `Modules/RecipeCommunity/Application/Abstractions`
+- `Modules/RecipeCommunity/Domain`
+- `Modules/RecipeCommunity/Infrastructure`
+- `Modules/RecipeCommunity/Infrastructure/Model`
 
 ## HTTP Surface
 
@@ -35,9 +38,9 @@ No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: project
+- Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
-- Declared owned entities: not yet enumerated
+- Declared owned entities: RecipeComment, RecipeLike
 - Public contract files: 9
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
@@ -64,6 +67,12 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/RecipeComments/RecipeCommentsValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/RecipeLikes/RecipeLikesFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/TestRecipeOverview.cs`
+- [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Domain.Tests/Domain/RecipeCommentInvariantTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/RecipeCommunityModuleExtractionTests.cs`
 
 ## Working Rule

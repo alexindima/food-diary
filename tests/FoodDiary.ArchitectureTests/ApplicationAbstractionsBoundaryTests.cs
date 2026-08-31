@@ -9,7 +9,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
         string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
         string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
 
-        Assert.Equal(["FoodDiary.Domain", "FoodDiary.Domain.Primitives", "FoodDiary.Mediator", "FoodDiary.Modules.Billing.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.Favorites.Domain", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Marketing.Application.Abstractions", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Wearables.Application.Abstractions", "FoodDiary.Results"], projectReferences);
+        Assert.Equal(["FoodDiary.Domain", "FoodDiary.Domain.Primitives", "FoodDiary.Mediator", "FoodDiary.Modules.Billing.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.Exercises.Application.Abstractions", "FoodDiary.Modules.Favorites.Domain", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Marketing.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.RecipeCommunity.Application.Abstractions", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Wearables.Application.Abstractions", "FoodDiary.Results"], projectReferences);
         Assert.Empty(packageReferences);
     }
 

@@ -25,21 +25,16 @@
     "Dashboard": "Dashboard",
     "Dietologist": "Dietologist",
     "Email": "Application.Runtime",
-    "Exercises": "Exercises",
     "Fasting": "Fasting",
     "FavoriteMeals": "Favorites",
     "FavoriteProducts": "Favorites",
     "FavoriteRecipes": "Favorites",
     "Hydration": "Hydration",
-    "MealPlans": "MealPlanning",
     "Meals": "Meals",
     "Nutrition": "Shared",
     "Products": "Products",
     "RecentItems": "Shared",
-    "RecipeComments": "RecipeCommunity",
-    "RecipeLikes": "RecipeCommunity",
     "Recipes": "Recipes",
-    "ShoppingLists": "MealPlanning",
     "Users": "Users"
   },
   "modules": {
@@ -240,13 +235,16 @@
       "role": "aggregate-owner",
       "physicalIsolation": "project",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": [
-        "ExerciseEntry"
-      ],
+      "ownedEntities": ["ExerciseEntry"],
       "sourceMappings": {
-        "applicationProjects": [
-          "FoodDiary.Application.Exercises"
-        ]
+        "logicalRoot": "Modules/Exercises",
+        "abstractionAreas": ["Modules/Exercises/Application/Abstractions/Exercises"],
+        "applicationProjects": ["Modules/Exercises/Application"],
+        "applicationAbstractionProjects": ["Modules/Exercises/Application/Abstractions"],
+        "contractProjects": ["Modules/Exercises/Contracts"],
+        "domainProjects": ["Modules/Exercises/Domain"],
+        "infrastructureProjects": ["Modules/Exercises/Infrastructure"],
+        "persistenceModelProjects": ["Modules/Exercises/Infrastructure/Model"]
       }
     },
     "Export": {
@@ -420,7 +418,7 @@
     },
     "MealPlanning": {
       "role": "aggregate-owner",
-      "physicalIsolation": "project",
+      "physicalIsolation": "logical-module",
       "enforcement": "project-reference-matrix",
       "ownedEntities": [
         "MealPlan",
@@ -431,20 +429,28 @@
         "ShoppingListItemSource"
       ],
       "sourceMappings": {
+        "logicalRoot": "Modules/MealPlanning",
         "applicationProjects": [
-          "FoodDiary.Application.MealPlanning"
+          "Modules/MealPlanning/Application"
+        ],
+        "applicationAbstractionProjects": [
+          "Modules/MealPlanning/Application/Abstractions"
         ],
         "abstractionAreas": [
-          "MealPlans",
-          "ShoppingLists"
+          "Modules/MealPlanning/Application/Abstractions/MealPlans",
+          "Modules/MealPlanning/Application/Abstractions/ShoppingLists"
+        ],
+        "domainProjects": [
+          "Modules/MealPlanning/Domain"
         ],
         "domainAreas": [
-          "MealPlans",
           "Shopping"
         ],
-        "persistenceAreas": [
-          "MealPlans",
-          "ShoppingLists"
+        "infrastructureProjects": [
+          "Modules/MealPlanning/Infrastructure"
+        ],
+        "persistenceModelProjects": [
+          "Modules/MealPlanning/Infrastructure/Model"
         ]
       }
     },
@@ -501,22 +507,27 @@
     },
     "RecipeCommunity": {
       "role": "aggregate-owner",
-      "physicalIsolation": "project",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": [],
+      "ownedEntities": [
+        "RecipeComment",
+        "RecipeLike"
+      ],
       "sourceMappings": {
+        "logicalRoot": "Modules/RecipeCommunity",
+        "persistenceModelProjects": ["Modules/RecipeCommunity/Infrastructure/Model"],
+        "adapterAreas": ["FoodDiary.Presentation.Api/Features/RecipeComments", "FoodDiary.Presentation.Api/Features/RecipeLikes"],
         "applicationProjects": [
-          "FoodDiary.Application.RecipeCommunity"
+          "Modules/RecipeCommunity/Application"
         ],
         "abstractionAreas": [
-          "RecipeComments",
-          "RecipeLikes"
+          "Modules/RecipeCommunity/Application/Abstractions"
         ],
-        "domainAreas": [
-          "RecipeSocial"
+        "domainProjects": [
+          "Modules/RecipeCommunity/Domain"
         ],
-        "persistenceAreas": [
-          "RecipeSocial"
+        "infrastructureProjects": [
+          "Modules/RecipeCommunity/Infrastructure"
         ]
       }
     },

@@ -14,8 +14,8 @@
     <ProjectReference Include="..\Modules\Fasting\Infrastructure\FoodDiary.Modules.Fasting.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Favorites\Infrastructure\FoodDiary.Modules.Favorites.Infrastructure.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Identity\FoodDiary.Application.Identity.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.MealPlanning\FoodDiary.Application.MealPlanning.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.RecipeCommunity\FoodDiary.Application.RecipeCommunity.csproj" />
+    <ProjectReference Include="..\Modules\MealPlanning\Application\FoodDiary.Application.MealPlanning.csproj" />
+    <ProjectReference Include="../Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj" />
     <ProjectReference Include="..\Modules\Wearables\Infrastructure\FoodDiary.Modules.Wearables.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\BodyMetrics\Application\FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="..\Modules\BodyMetrics\Infrastructure\FoodDiary.Modules.BodyMetrics.Infrastructure.csproj" />
@@ -23,7 +23,7 @@
     <ProjectReference Include="..\Modules\Cycles\Infrastructure\FoodDiary.Modules.Cycles.Infrastructure.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Dashboard\FoodDiary.Application.Dashboard.csproj" />
     <ProjectReference Include="..\Modules\Hydration\Infrastructure\FoodDiary.Modules.Hydration.Infrastructure.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
+    <ProjectReference Include="..\Modules\Exercises\Application\FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="..\Modules\Tdee\Application\FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="..\Modules\OpenFoodFacts\Infrastructure\FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Users\FoodDiary.Application.Users.csproj" />
@@ -53,4 +53,9 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" />
   </ItemGroup>
 
+  <ItemGroup><ProjectReference Include="..\Modules\MealPlanning\Infrastructure\FoodDiary.Modules.MealPlanning.Infrastructure.csproj" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Exercises\Infrastructure\FoodDiary.Modules.Exercises.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup><ProjectReference Include="../Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj" /></ItemGroup>
 </Project>

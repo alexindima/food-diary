@@ -66,12 +66,27 @@ if ($Action -eq 'search-batch') {
 }
 if ($SymbolKind -ne 'Any') { $arguments += "--symbol-kind=$SymbolKind" }
 $normalizedChangedPaths = [string[]]@($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
-if ($normalizedChangedPaths.Length -gt 0) { $arguments += "--path=$($normalizedChangedPaths -join ';')" }
+$pathArgument = "--path=$($normalizedChangedPaths -join ';')"
+# Keep large cross-module scopes off Windows' bounded native command line.
+$pathsViaStdin = $pathArgument.Length -gt 12000
+if ($normalizedChangedPaths.Length -gt 0) {
+    $arguments += $(if ($pathsViaStdin) { '--path-stdin=true' } else { $pathArgument })
+}
 $normalizedRelationKinds = [string[]]@($RelationKind | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
 if ($normalizedRelationKinds.Length -gt 0) { $arguments += "--kind=$($normalizedRelationKinds -join ';')" }
 if ($Force) { $arguments += '--force=true' }
 if ($BackendOnlyRefresh) { $arguments += '--skip-typescript=true' }
-$json = & node @arguments
+$previousOutputEncoding = $OutputEncoding
+try {
+    if ($pathsViaStdin) {
+        $OutputEncoding = [Text.UTF8Encoding]::new($false)
+        $json = (ConvertTo-Json -InputObject $normalizedChangedPaths -Compress) | & node @arguments
+    } else {
+        $json = & node @arguments
+    }
+} finally {
+    $OutputEncoding = $previousOutputEncoding
+}
 if ($LASTEXITCODE -ne 0) { throw "Code graph action '$Action' failed with exit code $LASTEXITCODE." }
 $result = $json | ConvertFrom-Json
 if ($Action -eq 'build') {

@@ -24,7 +24,14 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Cycles persistence model: `Modules/Cycles/Infrastructure/Model/AGENTS.md`
 - Dietologist logical module: `Modules/Dietologist/AGENTS.md`
 - Dietologist application: `Modules/Dietologist/Application/AGENTS.md`
-- Exercises application module: `FoodDiary.Application.Exercises/AGENTS.md`
+- Exercises logical module: `Modules/Exercises/AGENTS.md`
+- Exercises application: `Modules/Exercises/Application/AGENTS.md`
+- Exercises application abstractions: `Modules/Exercises/Application/Abstractions/AGENTS.md`
+- Exercises contracts: `Modules/Exercises/Contracts/AGENTS.md`
+- Exercises domain: `Modules/Exercises/Domain/AGENTS.md`
+- Exercises infrastructure: `Modules/Exercises/Infrastructure/AGENTS.md`
+- Exercises persistence model: `Modules/Exercises/Infrastructure/Model/AGENTS.md`
+- Exercises tests: `Modules/Exercises/tests/AGENTS.md`
 - Fasting logical module: `Modules/Fasting/AGENTS.md`
 - Fasting application abstractions: `Modules/Fasting/Application/Abstractions/AGENTS.md`
 - Fasting contracts: `Modules/Fasting/Contracts/AGENTS.md`
@@ -41,7 +48,13 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Identity application module: `FoodDiary.Application.Identity/AGENTS.md`
 - Images logical module: `Modules/Images/Application/AGENTS.md`
 - Lessons logical module: `Modules/Lessons/AGENTS.md`
-- Meal planning application module: `FoodDiary.Application.MealPlanning/AGENTS.md`
+- Meal planning logical module: `Modules/MealPlanning/AGENTS.md`
+- Meal planning Application: `Modules/MealPlanning/Application/AGENTS.md`
+- Meal planning Application/Abstractions: `Modules/MealPlanning/Application/Abstractions/AGENTS.md`
+- Meal planning Domain: `Modules/MealPlanning/Domain/AGENTS.md`
+- Meal planning Infrastructure: `Modules/MealPlanning/Infrastructure/AGENTS.md`
+- Meal planning Infrastructure/Model: `Modules/MealPlanning/Infrastructure/Model/AGENTS.md`
+- Meal planning tests: `Modules/MealPlanning/tests/AGENTS.md`
 - Meals application module: `FoodDiary.Application.Meals/AGENTS.md`
 - Open Food Facts logical module: `Modules/OpenFoodFacts/AGENTS.md`
 - Open Food Facts application abstractions: `Modules/OpenFoodFacts/Application/Abstractions/AGENTS.md`
@@ -50,7 +63,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Open Food Facts infrastructure: `Modules/OpenFoodFacts/Infrastructure/AGENTS.md`
 - Open Food Facts persistence model: `Modules/OpenFoodFacts/Infrastructure/Model/AGENTS.md`
 - Products application module: `FoodDiary.Application.Products/AGENTS.md`
-- Recipe community application module: `FoodDiary.Application.RecipeCommunity/AGENTS.md`
+- Recipe community logical module: `Modules/RecipeCommunity/AGENTS.md`
+- Recipe community Application: `Modules/RecipeCommunity/Application/AGENTS.md`
+- Recipe community Application/Abstractions: `Modules/RecipeCommunity/Application/Abstractions/AGENTS.md`
+- Recipe community Domain: `Modules/RecipeCommunity/Domain/AGENTS.md`
+- Recipe community Infrastructure: `Modules/RecipeCommunity/Infrastructure/AGENTS.md`
+- Recipe community Infrastructure/Model: `Modules/RecipeCommunity/Infrastructure/Model/AGENTS.md`
 - Recipes application module: `FoodDiary.Application.Recipes/AGENTS.md`
 - Statistics logical module: `Modules/Statistics/AGENTS.md`
 - Statistics application: `Modules/Statistics/Application/AGENTS.md`

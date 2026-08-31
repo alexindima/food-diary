@@ -348,6 +348,34 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
     }
 
     [RequiresDockerFact]
+    public async Task RecipeSocialMappings_PreserveLikeUniquenessAndNavigationCascades() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"social-constraints-{Guid.NewGuid():N}@example.com", "hash");
+        var recipe = Recipe.Create(user.Id, "Constraint recipe", servings: 1);
+        context.Users.Add(user);
+        context.Recipes.Add(recipe);
+        context.RecipeComments.Add(RecipeComment.Create(user.Id, recipe.Id, "Comment"));
+        context.RecipeLikes.Add(RecipeLike.Create(user.Id, recipe.Id));
+        await context.SaveChangesAsync();
+
+        context.RecipeLikes.Add(RecipeLike.Create(user.Id, recipe.Id));
+        DbUpdateException exception = await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
+        Npgsql.PostgresException postgresException = Assert.IsType<Npgsql.PostgresException>(exception.InnerException);
+        Assert.Equal(Npgsql.PostgresErrorCodes.UniqueViolation, postgresException.SqlState);
+        context.ChangeTracker.Clear();
+
+        RecipeComment comment = await context.RecipeComments.Include(item => item.User).Include(item => item.Recipe).SingleAsync();
+        Assert.Equal(user.Id, comment.User.Id);
+        Assert.Equal(recipe.Id, comment.Recipe.Id);
+        await context.Recipes.Where(item => item.Id == recipe.Id).ExecuteDeleteAsync();
+        Assert.False(await context.RecipeComments.AnyAsync());
+        // Likes deliberately have no Recipe FK in the existing schema.
+        Assert.True(await context.RecipeLikes.AnyAsync());
+        await context.Users.Where(item => item.Id == user.Id).ExecuteDeleteAsync();
+        Assert.False(await context.RecipeLikes.AnyAsync());
+    }
+
+    [RequiresDockerFact]
     public async Task MealPlanRepository_AddsAndQueriesCuratedAndUserPlans() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"meal-plans-{Guid.NewGuid():N}@example.com", "hash");

@@ -39,3 +39,13 @@ Rules for `FoodDiary.Infrastructure/`.
   4. Ensure LF line endings (not CRLF)
 - Before commit, run a whitespace formatter/check on migration files. Preferred command: `dotnet format whitespace FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj`. This specifically avoids CI failures like `WHITESPACE: Fix whitespace formatting` in generated migrations.
 - See `docs/backend/BACKEND_MIGRATION_SAFETY.md` for migration safety guidance.
+
+## MealPlanning
+
+MealPlanning repositories and DI live in Modules/MealPlanning/Infrastructure;
+all six EF mappings live in its Model project and are applied explicitly by the
+shared context. Hosts and repository-resolution fixtures call AddMealPlanningModule
+in addition to AddInfrastructure. Central Infrastructure must not reference the
+module adapter project. User cleanup, DbContext and migrations remain here.
+
+- Exercises mapping is registered through ApplyExercisesPersistenceModel; its repository and complete DI belong to Modules/Exercises/Infrastructure. Keep the central context, migrations and snapshot here.

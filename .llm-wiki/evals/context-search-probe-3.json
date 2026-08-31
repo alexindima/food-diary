@@ -54,7 +54,7 @@
       "id": "shopping-list-item-builder-probe-3",
       "query": "build and validate normalized product and custom shopping list items",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListItemBuilder.cs"]
+      "expectedPaths": ["Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListItemBuilder.cs"]
     },
     {
       "id": "dashboard-statistics-mapper-probe-3",

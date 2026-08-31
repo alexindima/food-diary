@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Domain</RootNamespace>
+    <!-- EF materializes private navigation setters; preserve the central Domain convention. -->
+    <NoWarn>$(NoWarn);RCS1170</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
+  </ItemGroup>
+</Project>

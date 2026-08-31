@@ -32,4 +32,6 @@
     <ProjectReference Include="..\..\Modules\Notifications\Domain\FoodDiary.Modules.Notifications.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup><ProjectReference Include="..\..\Modules\MealPlanning\Domain\FoodDiary.Modules.MealPlanning.Domain.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../../Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" /></ItemGroup>
 </Project>

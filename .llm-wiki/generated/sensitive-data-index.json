@@ -477,7 +477,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 88
+      "line": 87
     },
     {
       "category": "credential",
@@ -2028,20 +2028,6 @@
     },
     {
       "category": "health",
-      "name": "ExerciseType",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "CaloriesBurned",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
       "name": "TotalCalories",
       "type": "double",
       "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealModel.cs",
@@ -2088,27 +2074,6 @@
       "type": "double?",
       "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
       "line": 10
-    },
-    {
-      "category": "health",
-      "name": "RecipeTotalCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/MealPlans/Models/MealPlanMealReadModel.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "TargetCaloriesPerDay",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/MealPlans/Models/MealPlanReadModel.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "TargetCaloriesPerDay",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/MealPlans/Models/MealPlanSummaryReadModel.cs",
-      "line": 9
     },
     {
       "category": "health",
@@ -2938,69 +2903,6 @@
     },
     {
       "category": "health",
-      "name": "ExerciseType",
-      "type": "string",
-      "path": "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "CaloriesBurned",
-      "type": "double",
-      "path": "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "ExerciseType",
-      "type": "string?",
-      "path": "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "CaloriesBurned",
-      "type": "double?",
-      "path": "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "ExerciseType",
-      "type": "string",
-      "path": "FoodDiary.Application.Exercises/Models/ExerciseEntryModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "CaloriesBurned",
-      "type": "double",
-      "path": "FoodDiary.Application.Exercises/Models/ExerciseEntryModel.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double?",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Models/MealPlanMealModel.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "TargetCaloriesPerDay",
-      "type": "double?",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Models/MealPlanModel.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "TargetCaloriesPerDay",
-      "type": "double?",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Models/MealPlanSummaryModel.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
@@ -3386,13 +3288,6 @@
     },
     {
       "category": "health",
-      "name": "TargetCaloriesPerDay",
-      "type": "double?",
-      "path": "FoodDiary.Domain/Entities/MealPlans/MealPlan.cs",
-      "line": 20
-    },
-    {
-      "category": "health",
       "name": "TotalCalories",
       "type": "double",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
@@ -3502,20 +3397,6 @@
       "type": "IsNutritionAutoCalculated,",
       "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
       "line": 504
-    },
-    {
-      "category": "health",
-      "name": "ExerciseType",
-      "type": "ExerciseType",
-      "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "CaloriesBurned",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 21
     },
     {
       "category": "health",
@@ -6158,6 +6039,76 @@
     },
     {
       "category": "health",
+      "name": "ExerciseType",
+      "type": "string",
+      "path": "Modules/Exercises/Application/Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "CaloriesBurned",
+      "type": "double",
+      "path": "Modules/Exercises/Application/Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "ExerciseType",
+      "type": "string",
+      "path": "Modules/Exercises/Application/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "CaloriesBurned",
+      "type": "double",
+      "path": "Modules/Exercises/Application/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "ExerciseType",
+      "type": "string?",
+      "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "CaloriesBurned",
+      "type": "double?",
+      "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "ExerciseType",
+      "type": "string",
+      "path": "Modules/Exercises/Contracts/Models/ExerciseEntryModel.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "CaloriesBurned",
+      "type": "double",
+      "path": "Modules/Exercises/Contracts/Models/ExerciseEntryModel.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "ExerciseType",
+      "type": "ExerciseType",
+      "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "CaloriesBurned",
+      "type": "double",
+      "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
+      "line": 21
+    },
+    {
+      "category": "health",
       "name": "TotalCaloriesTitle",
       "type": "string",
       "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
@@ -6246,6 +6197,55 @@
       "type": "Guid",
       "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
       "line": 9
+    },
+    {
+      "category": "health",
+      "name": "RecipeTotalCalories",
+      "type": "double?",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Models/MealPlanMealReadModel.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "TargetCaloriesPerDay",
+      "type": "double?",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Models/MealPlanReadModel.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "TargetCaloriesPerDay",
+      "type": "double?",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Models/MealPlanSummaryReadModel.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double?",
+      "path": "Modules/MealPlanning/Application/MealPlans/Models/MealPlanMealModel.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "TargetCaloriesPerDay",
+      "type": "double?",
+      "path": "Modules/MealPlanning/Application/MealPlans/Models/MealPlanModel.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "TargetCaloriesPerDay",
+      "type": "double?",
+      "path": "Modules/MealPlanning/Application/MealPlans/Models/MealPlanSummaryModel.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "TargetCaloriesPerDay",
+      "type": "double?",
+      "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlan.cs",
+      "line": 20
     },
     {
       "category": "health",
@@ -7635,13 +7635,6 @@
     },
     {
       "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
-      "line": 10
-    },
-    {
-      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
@@ -7835,41 +7828,6 @@
       "type": "Guid",
       "path": "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
       "line": 7
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
-      "line": 14
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
-      "line": 15
-    },
-    {
-      "category": "privateContent",
-      "name": "ClearNotes",
-      "type": "bool",
-      "path": "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
-      "line": 16
-    },
-    {
-      "category": "privateContent",
-      "name": "MaxNotesLength",
-      "type": "notes,",
-      "path": "FoodDiary.Application.Exercises/Common/ExerciseEntryInputValidation.cs",
-      "line": 48
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Exercises/Models/ExerciseEntryModel.cs",
-      "line": 10
     },
     {
       "category": "privateContent",
@@ -8156,20 +8114,6 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Application.Products/Models/ProductSearchSuggestionModel.cs",
-      "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "CommentId",
-      "type": "Guid",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommand.cs",
-      "line": 9
-    },
-    {
-      "category": "privateContent",
-      "name": "CommentId",
-      "type": "Guid",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommand.cs",
       "line": 10
     },
     {
@@ -8598,34 +8542,6 @@
       "type": "ImageUrl,",
       "path": "FoodDiary.Domain/Entities/Recipes/RecipeStep.cs",
       "line": 88
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 22
-    },
-    {
-      "category": "privateContent",
-      "name": "NotesMaxLength",
-      "type": "notes,",
-      "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 50
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 115
-    },
-    {
-      "category": "privateContent",
-      "name": "NotesMaxLength",
-      "type": "notes,",
-      "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 134
     },
     {
       "category": "privateContent",
@@ -9532,6 +9448,76 @@
     },
     {
       "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Exercises/Application/Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Exercises/Application/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
+      "line": 14
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
+      "line": 15
+    },
+    {
+      "category": "privateContent",
+      "name": "ClearNotes",
+      "type": "bool",
+      "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
+      "line": 16
+    },
+    {
+      "category": "privateContent",
+      "name": "MaxNotesLength",
+      "type": "notes,",
+      "path": "Modules/Exercises/Application/Common/ExerciseEntryInputValidation.cs",
+      "line": 48
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Exercises/Contracts/Models/ExerciseEntryModel.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
+      "line": 22
+    },
+    {
+      "category": "privateContent",
+      "name": "NotesMaxLength",
+      "type": "notes,",
+      "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
+      "line": 50
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
+      "line": 115
+    },
+    {
+      "category": "privateContent",
+      "name": "NotesMaxLength",
+      "type": "notes,",
+      "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
+      "line": 134
+    },
+    {
+      "category": "privateContent",
       "name": "CommentColumn",
       "type": "string",
       "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
@@ -9676,6 +9662,20 @@
       "type": "imageUrl,",
       "path": "Modules/OpenFoodFacts/Domain/Entities/OpenFoodFacts/OpenFoodFactsProduct.cs",
       "line": 73
+    },
+    {
+      "category": "privateContent",
+      "name": "CommentId",
+      "type": "Guid",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommand.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "CommentId",
+      "type": "Guid",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommand.cs",
+      "line": 10
     }
   ],
   "boundaryFiles": [

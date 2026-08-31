@@ -5,7 +5,6 @@
     <ProjectReference Include="..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Modules\Cycles\Application\FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="..\Modules\DailyAdvices\Application\FoodDiary.Modules.DailyAdvices.Application.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="..\Modules\Hydration\Contracts\FoodDiary.Modules.Hydration.Contracts.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
     <ProjectReference Include="..\Modules\Statistics\Application\FoodDiary.Modules.Statistics.Application.csproj" />
@@ -18,5 +17,8 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Exercises\Contracts\FoodDiary.Modules.Exercises.Contracts.csproj" />
   </ItemGroup>
 </Project>

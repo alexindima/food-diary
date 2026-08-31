@@ -19,4 +19,7 @@
     <ProjectReference Include="..\..\..\BodyMetrics\Application\FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="..\..\Application\FoodDiary.Modules.Tdee.Application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../../Exercises/Application/FoodDiary.Application.Exercises.csproj" />
+  </ItemGroup>
 </Project>

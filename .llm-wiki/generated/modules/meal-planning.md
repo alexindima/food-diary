@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj`
+- Extracted project: `Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: MealPlans, Products, ShoppingLists, Users
 - Business-module consumers: none observed
@@ -24,15 +24,14 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/MealPlans`
-- `FoodDiary.Application.Abstractions/ShoppingLists`
-- `FoodDiary.Application.MealPlanning`
-- `FoodDiary.Domain/Entities/MealPlans`
 - `FoodDiary.Domain/Entities/Shopping`
-- `FoodDiary.Infrastructure/Persistence/Configurations/MealPlans`
-- `FoodDiary.Infrastructure/Persistence/Configurations/ShoppingLists`
-- `FoodDiary.Infrastructure/Persistence/MealPlans`
-- `FoodDiary.Infrastructure/Persistence/ShoppingLists`
+- `Modules/MealPlanning/Application`
+- `Modules/MealPlanning/Application/Abstractions`
+- `Modules/MealPlanning/Application/Abstractions/MealPlans`
+- `Modules/MealPlanning/Application/Abstractions/ShoppingLists`
+- `Modules/MealPlanning/Domain`
+- `Modules/MealPlanning/Infrastructure`
+- `Modules/MealPlanning/Infrastructure/Model`
 
 ## HTTP Surface
 
@@ -40,7 +39,7 @@ No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: project
+- Physical isolation: logical-module
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: MealPlan, MealPlanDay, MealPlanMeal, ShoppingList, ShoppingListItem, ShoppingListItemSource
 - Public contract files: 18
@@ -78,6 +77,26 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/MealPlans/MealPlansValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListCreationServiceTests.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.CreateCommand.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.DeleteCommand.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.ItemBuilder.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Mapping.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Queries.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.UpdateCommand.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/TestProductOverview.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/Domain/MealPlanInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/Domain/MealPlanningExtractedInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/Domain/ShoppingListInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/Domain/TrackingAndMealPlanCoverageGapTests.cs`
+- [integration] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/MealPlanningPersistenceCompatibilityTests.cs`
+- [integration] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/PostgresDatabaseCollection.cs`
+- [integration] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/PostgresDatabaseFixture.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/MealPlanningModuleExtractionTests.cs`
 
 ## Working Rule

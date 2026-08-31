@@ -90,7 +90,7 @@
       "id": "shopping-list-repository-probe-2",
       "query": "persist shopping lists and their items",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs"]
+      "expectedPaths": ["Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs"]
     },
     {
       "id": "presentation-error-details-mapper-probe-2",

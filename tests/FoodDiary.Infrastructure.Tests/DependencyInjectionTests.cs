@@ -1,3 +1,5 @@
+using FoodDiary.Modules.MealPlanning.Infrastructure;
+using FoodDiary.Modules.Exercises.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Modules.Billing.Infrastructure;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
@@ -20,6 +22,7 @@ using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Modules.Exercises.Infrastructure;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
@@ -32,7 +35,6 @@ using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Dashboard;
 using FoodDiary.Infrastructure.Persistence.Dietologist;
-using FoodDiary.Infrastructure.Persistence.Tracking;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
@@ -537,7 +539,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration).AddHydrationModule().AddBodyMetricsModule();
+        services.AddInfrastructure(configuration).AddHydrationModule().AddBodyMetricsModule().AddExercisesModule();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 
@@ -578,7 +580,7 @@ public sealed class DependencyInjectionTests {
         services
             .AddInfrastructure(configuration)
             .AddBillingModule()
-            .AddBodyMetricsModule()
+            .AddBodyMetricsModule().AddExercisesModule()
             .AddNotificationsPersistence()
             .AddOpenFoodFactsModule()
             .AddUsdaModule()
@@ -587,7 +589,9 @@ public sealed class DependencyInjectionTests {
             .AddDietologistModule()
             .AddFastingModule()
             .AddFavoritesModule()
-            .AddLessonsModule();
+            .AddLessonsModule()
+            .AddMealPlanningModule()
+            .AddRecipeCommunityModule();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 

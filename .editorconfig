@@ -395,6 +395,10 @@ dotnet_diagnostic.IDE0130.severity = none
 
 [Modules/{Hydration,WeeklyGoals}/**/*.cs]
 dotnet_diagnostic.IDE0130.severity = none
+
+# MealPlanning persistence types preserve their legacy CLR namespaces during extraction.
+[Modules/MealPlanning/Infrastructure/{Persistence,Model/Configurations}/**/*.cs]
+dotnet_diagnostic.IDE0130.severity = none
 dotnet_diagnostic.RCS1170.severity = none
 
 [FoodDiary.{Application,Application.Abstractions,Domain,Infrastructure,Integrations,JobManager,Presentation.Api,Telegram.Bot,Web.Api}/**/*.cs]
@@ -496,3 +500,7 @@ dotnet_diagnostic.RCS1194.severity = none
 # This file contains a ReSharper control comment, not member documentation.
 [Shared/FoodDiary.Domain.Primitives/Entity.cs]
 dotnet_diagnostic.RCS1181.severity = none
+
+# Preserve EF navigation setters after RecipeCommunity entity extraction.
+[Modules/RecipeCommunity/Domain/Entities/**/*.cs]
+dotnet_diagnostic.RCS1170.severity = none

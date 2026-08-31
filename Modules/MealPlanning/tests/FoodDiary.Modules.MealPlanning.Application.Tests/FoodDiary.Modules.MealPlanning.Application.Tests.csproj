@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="NSubstitute" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="NSubstitute" />
+    <Using Include="FoodDiary.Application.Tests.Support" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Application/FoodDiary.Application.MealPlanning.csproj" />
+  </ItemGroup>
+</Project>

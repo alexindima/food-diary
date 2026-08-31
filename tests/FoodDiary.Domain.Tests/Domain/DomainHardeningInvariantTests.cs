@@ -1,6 +1,5 @@
 using System.Reflection;
 using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.OpenFoodFacts;
 using FoodDiary.Domain.Entities.Products;
@@ -60,21 +59,6 @@ public sealed class DomainHardeningInvariantTests {
     public void FastingTelemetryEvent_Create_WithInvalidActualDuration_Throws(double value) {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             FastingTelemetryEvent.Create("fasting.completed", Now, actualDurationHours: value));
-    }
-
-    [Theory]
-    [InlineData(double.NaN)]
-    [InlineData(double.PositiveInfinity)]
-    [InlineData(0)]
-    [InlineData(-1)]
-    public void MealPlan_Create_WithInvalidTargetCalories_Throws(double value) {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealPlan.CreateCurated(
-                "Plan",
-                description: null,
-                DietType.Balanced,
-                durationDays: 7,
-                targetCaloriesPerDay: value));
     }
 
     [Fact]

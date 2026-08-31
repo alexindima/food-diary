@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3520,
-    "symbols": 3517,
+    "sourceFiles": 3526,
+    "symbols": 3519,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 197,
+    "dependencyInjectionRegistrations": 192,
     "kinds": {
-      "class": 1844,
+      "class": 1846,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1368,
+      "Other": 1370,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -1532,48 +1532,6 @@
       "line": 2
     },
     {
-      "name": "ExerciseErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Exercises/Common/ExerciseErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "IExerciseEntryReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IExerciseEntryReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IExerciseEntryRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IExerciseEntryWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "ExerciseEntryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
-      "line": 2
-    },
-    {
       "name": "FastingErrors",
       "kind": "class",
       "role": "Other",
@@ -1768,69 +1726,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Hydration/Common/HydrationEntryErrors.cs",
       "line": 4
-    },
-    {
-      "name": "IMealPlanReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/MealPlans/Common/IMealPlanReadModelRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "IMealPlanReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/MealPlans/Common/IMealPlanReadRepository.cs",
-      "line": 6
-    },
-    {
-      "name": "IMealPlanRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/MealPlans/Common/IMealPlanRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IMealPlanWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/MealPlans/Common/IMealPlanWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "MealPlanErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/MealPlans/Common/MealPlanErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "MealPlanDayReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/MealPlans/Models/MealPlanDayReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "MealPlanMealReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/MealPlans/Models/MealPlanMealReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "MealPlanReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/MealPlans/Models/MealPlanReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "MealPlanSummaryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/MealPlans/Models/MealPlanSummaryReadModel.cs",
-      "line": 2
     },
     {
       "name": "IMealActivityReadRepository",
@@ -2071,69 +1966,6 @@
       "line": 4
     },
     {
-      "name": "IRecipeCommentReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/RecipeComments/Common/IRecipeCommentReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IRecipeCommentReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/RecipeComments/Common/IRecipeCommentReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IRecipeCommentRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/RecipeComments/Common/IRecipeCommentRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IRecipeCommentWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/RecipeComments/Common/IRecipeCommentWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "RecipeCommentErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/RecipeComments/Common/RecipeCommentErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "RecipeCommentReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/RecipeComments/Models/RecipeCommentReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "IRecipeLikeReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/RecipeLikes/Common/IRecipeLikeReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IRecipeLikeRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/RecipeLikes/Common/IRecipeLikeRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IRecipeLikeWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/RecipeLikes/Common/IRecipeLikeWriteRepository.cs",
-      "line": 5
-    },
-    {
       "name": "IRecipeAccessService",
       "kind": "interface",
       "role": "Service",
@@ -2222,69 +2054,6 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Recipes/Models/RecipeQueryFilters.cs",
-      "line": 2
-    },
-    {
-      "name": "IShoppingListReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/ShoppingLists/Common/IShoppingListReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IShoppingListReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/ShoppingLists/Common/IShoppingListReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IShoppingListRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/ShoppingLists/Common/IShoppingListRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IShoppingListWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/ShoppingLists/Common/IShoppingListWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "ShoppingListErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/ShoppingLists/Common/ShoppingListErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "ShoppingListItemReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/ShoppingLists/Models/ShoppingListItemReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "ShoppingListItemSourceReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/ShoppingLists/Models/ShoppingListItemSourceReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "ShoppingListReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/ShoppingLists/Models/ShoppingListReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "ShoppingListSummaryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/ShoppingLists/Models/ShoppingListSummaryReadModel.cs",
       "line": 2
     },
     {
@@ -4115,139 +3884,6 @@
       "line": 11
     },
     {
-      "name": "CreateExerciseEntryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateExerciseEntryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "CreateExerciseEntryCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteExerciseEntryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteExerciseEntryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "UpdateExerciseEntryCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateExerciseEntryCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "UpdateExerciseEntryCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "ExerciseEntryInputValidation",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Exercises/Common/ExerciseEntryInputValidation.cs",
-      "line": 5
-    },
-    {
-      "name": "IExerciseEntryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Exercises/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "EnumValueParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Exercises/Internal/EnumValueParser.cs",
-      "line": 2
-    },
-    {
-      "name": "RequiredIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Exercises/Internal/RequiredIdParser.cs",
-      "line": 5
-    },
-    {
-      "name": "ExerciseMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Exercises/Mappings/ExerciseMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "ExerciseEntryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Exercises/Models/ExerciseEntryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetExerciseEntriesQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetExerciseEntriesQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetExerciseEntriesQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "ExerciseEntryReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Exercises/Services/ExerciseEntryReadService.cs",
-      "line": 9
-    },
-    {
       "name": "AdminSsoExchangeCommand",
       "kind": "record",
       "role": "Command",
@@ -4764,419 +4400,6 @@
       "role": "Service",
       "path": "FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationService.cs",
       "line": 6
-    },
-    {
-      "name": "EnumFilterParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/Common/Validation/EnumFilterParser.cs",
-      "line": 2
-    },
-    {
-      "name": "EnumValueParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/Common/Validation/EnumValueParser.cs",
-      "line": 5
-    },
-    {
-      "name": "OptionalEntityIdValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/Common/Validation/OptionalEntityIdValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "RequiredIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/Common/Validation/RequiredIdParser.cs",
-      "line": 5
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/DependencyInjection.cs",
-      "line": 10
-    },
-    {
-      "name": "AdoptMealPlanCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "AdoptMealPlanCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "AdoptMealPlanCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GenerateShoppingListCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "GenerateShoppingListCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "GenerateShoppingListCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "IMealPlanReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Common/IMealPlanReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "MealPlanMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Mappings/MealPlanMappings.cs",
-      "line": 7
-    },
-    {
-      "name": "MealPlanDayModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Models/MealPlanDayModel.cs",
-      "line": 2
-    },
-    {
-      "name": "MealPlanMealModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Models/MealPlanMealModel.cs",
-      "line": 2
-    },
-    {
-      "name": "MealPlanModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Models/MealPlanModel.cs",
-      "line": 2
-    },
-    {
-      "name": "MealPlanSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Models/MealPlanSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetMealPlanByIdQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetMealPlanByIdQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "GetMealPlanByIdQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetMealPlansQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetMealPlansQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "GetMealPlansQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "MealPlanReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.MealPlanning/MealPlans/Services/MealPlanReadService.cs",
-      "line": 10
-    },
-    {
-      "name": "CreateShoppingListCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "CreateShoppingListCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "CreateShoppingListCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteShoppingListCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteShoppingListCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "DeleteShoppingListCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "UpdateShoppingListCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "UpdateShoppingListCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
-      "line": 16
-    },
-    {
-      "name": "UpdateShoppingListCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "IShoppingListCreationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListCreationService.cs",
-      "line": 5
-    },
-    {
-      "name": "IShoppingListReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "ShoppingListCreationItem",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationItem.cs",
-      "line": 5
-    },
-    {
-      "name": "ShoppingListCreationRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationRequest.cs",
-      "line": 4
-    },
-    {
-      "name": "ShoppingListCreationSource",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationSource.cs",
-      "line": 5
-    },
-    {
-      "name": "ShoppingListInputLimits",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListInputLimits.cs",
-      "line": 2
-    },
-    {
-      "name": "ShoppingListItemInput",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListItemInput.cs",
-      "line": 2
-    },
-    {
-      "name": "ShoppingListItemInputValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListItemInputValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "ShoppingListMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Mappings/ShoppingListMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "ShoppingListItemModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Models/ShoppingListItemModel.cs",
-      "line": 2
-    },
-    {
-      "name": "ShoppingListItemSourceModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Models/ShoppingListItemSourceModel.cs",
-      "line": 2
-    },
-    {
-      "name": "ShoppingListModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Models/ShoppingListModel.cs",
-      "line": 2
-    },
-    {
-      "name": "ShoppingListSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Models/ShoppingListSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetCurrentShoppingListQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetCurrentShoppingListQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "GetCurrentShoppingListQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetShoppingListByIdQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetShoppingListByIdQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "GetShoppingListByIdQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetShoppingListsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetShoppingListsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetShoppingListsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "ShoppingListCreationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListCreationService.cs",
-      "line": 9
-    },
-    {
-      "name": "ShoppingListItemBuilder",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListItemBuilder.cs",
-      "line": 11
-    },
-    {
-      "name": "ShoppingListItemData",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListItemData.cs",
-      "line": 5
-    },
-    {
-      "name": "ShoppingListReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListReadService.cs",
-      "line": 9
     },
     {
       "name": "CreateMealCommand",
@@ -5968,146 +5191,6 @@
       "role": "Service",
       "path": "FoodDiary.Application.Products/Services/RecentProductReadService.cs",
       "line": 10
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.RecipeCommunity/DependencyInjection.cs",
-      "line": 10
-    },
-    {
-      "name": "CreateRecipeCommentCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateRecipeCommentCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "CreateRecipeCommentCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "DeleteRecipeCommentCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteRecipeCommentCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "UpdateRecipeCommentCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateRecipeCommentCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "IRecipeCommentReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Common/IRecipeCommentReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "RecipeCommentModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Models/RecipeCommentModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetRecipeCommentsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQuery.cs",
-      "line": 7
-    },
-    {
-      "name": "GetRecipeCommentsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQueryHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "RecipeCommentReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeComments/Services/RecipeCommentReadService.cs",
-      "line": 9
-    },
-    {
-      "name": "ToggleRecipeLikeCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "ToggleRecipeLikeCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "IRecipeLikeReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Common/IRecipeLikeReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "RecipeLikeStatusModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Models/RecipeLikeStatusModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetRecipeLikeStatusQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Queries/GetRecipeLikeStatus/GetRecipeLikeStatusQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetRecipeLikeStatusQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Queries/GetRecipeLikeStatus/GetRecipeLikeStatusQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "RecipeLikeReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Services/RecipeLikeReadService.cs",
-      "line": 7
     },
     {
       "name": "CreateRecipeCommand",
@@ -7370,27 +6453,6 @@
       "line": 6
     },
     {
-      "name": "MealPlan",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/MealPlans/MealPlan.cs",
-      "line": 10
-    },
-    {
-      "name": "MealPlanDay",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/MealPlans/MealPlanDay.cs",
-      "line": 6
-    },
-    {
-      "name": "MealPlanMeal",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/MealPlans/MealPlanMeal.cs",
-      "line": 8
-    },
-    {
       "name": "Meal",
       "kind": "class",
       "role": "Entity",
@@ -7447,13 +6509,6 @@
       "line": 12
     },
     {
-      "name": "RecipeComment",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Recipes/RecipeComment.cs",
-      "line": 6
-    },
-    {
       "name": "RecipeIngredient",
       "kind": "class",
       "role": "Entity",
@@ -7487,20 +6542,6 @@
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
       "line": 7
-    },
-    {
-      "name": "RecipeLike",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Social/RecipeLike.cs",
-      "line": 6
-    },
-    {
-      "name": "ExerciseEntry",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 9
     },
     {
       "name": "HydrationEntry",
@@ -7689,13 +6730,6 @@
       "kind": "enum",
       "role": "Other",
       "path": "FoodDiary.Domain/Enums/DietType.cs",
-      "line": 2
-    },
-    {
-      "name": "ExerciseType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/ExerciseType.cs",
       "line": 2
     },
     {
@@ -7951,13 +6985,6 @@
       "line": 4
     },
     {
-      "name": "ExerciseEntryId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ExerciseEntryId.cs",
-      "line": 4
-    },
-    {
       "name": "HydrationEntryId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -8000,13 +7027,6 @@
       "line": 4
     },
     {
-      "name": "MealPlanDayId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MealPlanDayId.cs",
-      "line": 4
-    },
-    {
       "name": "MealPlanId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -8035,13 +7055,6 @@
       "line": 4
     },
     {
-      "name": "RecipeCommentId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecipeCommentId.cs",
-      "line": 4
-    },
-    {
       "name": "RecipeId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -8053,13 +7066,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/RecipeIngredientId.cs",
-      "line": 4
-    },
-    {
-      "name": "RecipeLikeId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecipeLikeId.cs",
       "line": 4
     },
     {
@@ -8507,13 +7513,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Learning.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Meals.cs",
       "line": 6
     },
@@ -8556,13 +7555,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.RecipeInteractions.cs",
-      "line": 8
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Recipes.cs",
       "line": 7
     },
@@ -8572,20 +7564,6 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Repositories.cs",
       "line": 4
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.ShoppingLists.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 6
     },
     {
       "name": "DependencyInjection",
@@ -8840,39 +7818,11 @@
       "line": 6
     },
     {
-      "name": "ExerciseEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Exercises/ExerciseEntryConfiguration.cs",
-      "line": 7
-    },
-    {
       "name": "ImageObjectDeletionOutboxMessageConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageObjectDeletionOutboxMessageConfiguration.cs",
       "line": 6
-    },
-    {
-      "name": "MealPlanConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/MealPlans/MealPlanConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "MealPlanDayConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/MealPlans/MealPlanDayConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "MealPlanMealConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/MealPlans/MealPlanMealConfiguration.cs",
-      "line": 7
     },
     {
       "name": "MealAiItemConfiguration",
@@ -8950,41 +7900,6 @@
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Recipes/RecipeStepConfiguration.cs",
       "line": 8
-    },
-    {
-      "name": "RecipeCommentConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/RecipeSocial/RecipeCommentConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "RecipeLikeConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/RecipeSocial/RecipeLikeConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "ShoppingListConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/ShoppingLists/ShoppingListConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "ShoppingListItemConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/ShoppingLists/ShoppingListItemConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "ShoppingListItemSourceConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/ShoppingLists/ShoppingListItemSourceConfiguration.cs",
-      "line": 7
     },
     {
       "name": "RoleConfiguration",
@@ -9264,7 +8179,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 19
+      "line": 20
     },
     {
       "name": "FoodDiaryDbContext",
@@ -9358,13 +8273,6 @@
       "line": 4
     },
     {
-      "name": "MealPlanRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/MealPlans/MealPlanRepository.cs",
-      "line": 9
-    },
-    {
       "name": "MealRepository",
       "kind": "class",
       "role": "Repository",
@@ -9456,20 +8364,6 @@
       "line": 8
     },
     {
-      "name": "RecipeCommentRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs",
-      "line": 9
-    },
-    {
-      "name": "RecipeLikeRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/RecipeLikes/RecipeLikeRepository.cs",
-      "line": 7
-    },
-    {
       "name": "EfRecipeMutationTransactionRunner",
       "kind": "class",
       "role": "Other",
@@ -9496,20 +8390,6 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Shared/RecipeCompositionTransactionLock.cs",
       "line": 4
-    },
-    {
-      "name": "ShoppingListRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
-      "line": 9
-    },
-    {
-      "name": "ExerciseEntryRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Tracking/ExerciseEntryRepository.cs",
-      "line": 8
     },
     {
       "name": "RefreshTokenSessionRepository",
@@ -9761,7 +8641,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 400
+      "line": 399
     },
     {
       "name": "UsdaCsvReader",
@@ -14304,7 +13184,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 53
+      "line": 52
     },
     {
       "name": "ApiTelemetry",
@@ -19732,6 +18612,230 @@
       "line": 8
     },
     {
+      "name": "ExerciseErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Exercises/Application/Abstractions/Exercises/Common/ExerciseErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "IExerciseEntryReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IExerciseEntryReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IExerciseEntryRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IExerciseEntryWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "ExerciseEntryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Exercises/Application/Abstractions/Exercises/Models/ExerciseEntryReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CreateExerciseEntryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Exercises/Application/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateExerciseEntryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Exercises/Application/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "CreateExerciseEntryCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Exercises/Application/Commands/CreateExerciseEntry/CreateExerciseEntryCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteExerciseEntryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Exercises/Application/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteExerciseEntryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Exercises/Application/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "UpdateExerciseEntryCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateExerciseEntryCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "UpdateExerciseEntryCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "ExerciseEntryInputValidation",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Exercises/Application/Common/ExerciseEntryInputValidation.cs",
+      "line": 5
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Exercises/Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "EnumValueParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Exercises/Application/Internal/EnumValueParser.cs",
+      "line": 2
+    },
+    {
+      "name": "RequiredIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Exercises/Application/Internal/RequiredIdParser.cs",
+      "line": 5
+    },
+    {
+      "name": "ExerciseMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Exercises/Application/Mappings/ExerciseMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "GetExerciseEntriesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Exercises/Application/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetExerciseEntriesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Exercises/Application/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetExerciseEntriesQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Exercises/Application/Queries/GetExerciseEntries/GetExerciseEntriesQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "ExerciseEntryReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Exercises/Application/Services/ExerciseEntryReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "IExerciseEntryReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Exercises/Contracts/Common/IExerciseEntryReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "ExerciseEntryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Exercises/Contracts/Models/ExerciseEntryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ExerciseEntry",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
+      "line": 9
+    },
+    {
+      "name": "ExerciseType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Exercises/Domain/Enums/ExerciseType.cs",
+      "line": 2
+    },
+    {
+      "name": "ExerciseEntryId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Exercises/Domain/ValueObjects/Ids/ExerciseEntryId.cs",
+      "line": 4
+    },
+    {
+      "name": "ExerciseEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Exercises/Infrastructure/Model/Configurations/Exercises/ExerciseEntryConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "ExercisesPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Exercises/Infrastructure/Model/ExercisesPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Exercises/Infrastructure/ModuleRegistration.cs",
+      "line": 7
+    },
+    {
+      "name": "ExerciseEntryRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs",
+      "line": 9
+    },
+    {
       "name": "DiaryPdfReportTexts",
       "kind": "record",
       "role": "Other",
@@ -22420,6 +21524,643 @@
       "line": 8
     },
     {
+      "name": "IMealPlanReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Common/IMealPlanReadModelRepository.cs",
+      "line": 6
+    },
+    {
+      "name": "IMealPlanReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Common/IMealPlanReadRepository.cs",
+      "line": 6
+    },
+    {
+      "name": "IMealPlanRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Common/IMealPlanRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IMealPlanWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Common/IMealPlanWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "MealPlanErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Common/MealPlanErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "MealPlanDayReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Models/MealPlanDayReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MealPlanMealReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Models/MealPlanMealReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MealPlanReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Models/MealPlanReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MealPlanSummaryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Abstractions/MealPlans/Models/MealPlanSummaryReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "IShoppingListReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/MealPlanning/Application/Abstractions/ShoppingLists/Common/IShoppingListReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IShoppingListReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/MealPlanning/Application/Abstractions/ShoppingLists/Common/IShoppingListReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IShoppingListRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/MealPlanning/Application/Abstractions/ShoppingLists/Common/IShoppingListRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IShoppingListWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/MealPlanning/Application/Abstractions/ShoppingLists/Common/IShoppingListWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "ShoppingListErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Abstractions/ShoppingLists/Common/ShoppingListErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "ShoppingListItemReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Abstractions/ShoppingLists/Models/ShoppingListItemReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingListItemSourceReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Abstractions/ShoppingLists/Models/ShoppingListItemSourceReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingListReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Abstractions/ShoppingLists/Models/ShoppingListReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingListSummaryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Abstractions/ShoppingLists/Models/ShoppingListSummaryReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "EnumFilterParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Common/Validation/EnumFilterParser.cs",
+      "line": 2
+    },
+    {
+      "name": "EnumValueParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Common/Validation/EnumValueParser.cs",
+      "line": 5
+    },
+    {
+      "name": "OptionalEntityIdValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/Common/Validation/OptionalEntityIdValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "RequiredIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/Common/Validation/RequiredIdParser.cs",
+      "line": 5
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/DependencyInjection.cs",
+      "line": 10
+    },
+    {
+      "name": "AdoptMealPlanCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "AdoptMealPlanCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "AdoptMealPlanCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GenerateShoppingListCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "GenerateShoppingListCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "GenerateShoppingListCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "IMealPlanReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/MealPlanning/Application/MealPlans/Common/IMealPlanReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "MealPlanMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/MealPlans/Mappings/MealPlanMappings.cs",
+      "line": 7
+    },
+    {
+      "name": "MealPlanDayModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/MealPlans/Models/MealPlanDayModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MealPlanMealModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/MealPlans/Models/MealPlanMealModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MealPlanModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/MealPlans/Models/MealPlanModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MealPlanSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/MealPlans/Models/MealPlanSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetMealPlanByIdQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetMealPlanByIdQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "GetMealPlanByIdQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetMealPlansQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetMealPlansQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "GetMealPlansQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "MealPlanReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/MealPlanning/Application/MealPlans/Services/MealPlanReadService.cs",
+      "line": 10
+    },
+    {
+      "name": "CreateShoppingListCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "CreateShoppingListCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "CreateShoppingListCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteShoppingListCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteShoppingListCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "DeleteShoppingListCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "UpdateShoppingListCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "UpdateShoppingListCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
+      "line": 16
+    },
+    {
+      "name": "UpdateShoppingListCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "IShoppingListCreationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Common/IShoppingListCreationService.cs",
+      "line": 5
+    },
+    {
+      "name": "IShoppingListReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Common/IShoppingListReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "ShoppingListCreationItem",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Common/ShoppingListCreationItem.cs",
+      "line": 5
+    },
+    {
+      "name": "ShoppingListCreationRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Common/ShoppingListCreationRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "ShoppingListCreationSource",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Common/ShoppingListCreationSource.cs",
+      "line": 5
+    },
+    {
+      "name": "ShoppingListInputLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Common/ShoppingListInputLimits.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingListItemInput",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Common/ShoppingListItemInput.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingListItemInputValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Common/ShoppingListItemInputValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "ShoppingListMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Mappings/ShoppingListMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "ShoppingListItemModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Models/ShoppingListItemModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingListItemSourceModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Models/ShoppingListItemSourceModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingListModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Models/ShoppingListModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingListSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Models/ShoppingListSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetCurrentShoppingListQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetCurrentShoppingListQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "GetCurrentShoppingListQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetShoppingListByIdQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetShoppingListByIdQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "GetShoppingListByIdQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetShoppingListsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetShoppingListsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetShoppingListsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "ShoppingListCreationService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListCreationService.cs",
+      "line": 9
+    },
+    {
+      "name": "ShoppingListItemBuilder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListItemBuilder.cs",
+      "line": 11
+    },
+    {
+      "name": "ShoppingListItemData",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListItemData.cs",
+      "line": 5
+    },
+    {
+      "name": "ShoppingListReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "MealPlan",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlan.cs",
+      "line": 10
+    },
+    {
+      "name": "MealPlanDay",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanDay.cs",
+      "line": 6
+    },
+    {
+      "name": "MealPlanMeal",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanMeal.cs",
+      "line": 8
+    },
+    {
+      "name": "MealPlanDayId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/MealPlanDayId.cs",
+      "line": 4
+    },
+    {
+      "name": "MealPlanConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans/MealPlanConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "MealPlanDayConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans/MealPlanDayConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "MealPlanMealConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans/MealPlanMealConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "ShoppingListConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists/ShoppingListConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "ShoppingListItemConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists/ShoppingListItemConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "ShoppingListItemSourceConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists/ShoppingListItemSourceConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "MealPlanningPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Infrastructure/Model/MealPlanningPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Infrastructure/ModuleRegistration.cs",
+      "line": 9
+    },
+    {
+      "name": "MealPlanRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs",
+      "line": 9
+    },
+    {
+      "name": "ShoppingListRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
+      "line": 9
+    },
+    {
       "name": "DietologistInvitationDecisionNotificationPayload",
       "kind": "record",
       "role": "Other",
@@ -23377,6 +23118,279 @@
       "role": "Repository",
       "path": "Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsProductCacheRepository.cs",
       "line": 9
+    },
+    {
+      "name": "IRecipeCommentReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/RecipeCommunity/Application/Abstractions/RecipeComments/Common/IRecipeCommentReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IRecipeCommentReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/RecipeCommunity/Application/Abstractions/RecipeComments/Common/IRecipeCommentReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IRecipeCommentRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/RecipeCommunity/Application/Abstractions/RecipeComments/Common/IRecipeCommentRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IRecipeCommentWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/RecipeCommunity/Application/Abstractions/RecipeComments/Common/IRecipeCommentWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "RecipeCommentErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/RecipeCommunity/Application/Abstractions/RecipeComments/Common/RecipeCommentErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipeCommentReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/RecipeCommunity/Application/Abstractions/RecipeComments/Models/RecipeCommentReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "IRecipeLikeReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/RecipeCommunity/Application/Abstractions/RecipeLikes/Common/IRecipeLikeReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IRecipeLikeRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/RecipeCommunity/Application/Abstractions/RecipeLikes/Common/IRecipeLikeRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IRecipeLikeWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/RecipeCommunity/Application/Abstractions/RecipeLikes/Common/IRecipeLikeWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/RecipeCommunity/Application/DependencyInjection.cs",
+      "line": 10
+    },
+    {
+      "name": "CreateRecipeCommentCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateRecipeCommentCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "CreateRecipeCommentCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "DeleteRecipeCommentCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteRecipeCommentCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "UpdateRecipeCommentCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateRecipeCommentCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "IRecipeCommentReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Common/IRecipeCommentReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "RecipeCommentModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Models/RecipeCommentModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetRecipeCommentsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetRecipeCommentsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQueryHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "RecipeCommentReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/RecipeCommunity/Application/RecipeComments/Services/RecipeCommentReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "ToggleRecipeLikeCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/RecipeCommunity/Application/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ToggleRecipeLikeCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/RecipeCommunity/Application/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "IRecipeLikeReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/RecipeCommunity/Application/RecipeLikes/Common/IRecipeLikeReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "RecipeLikeStatusModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/RecipeCommunity/Application/RecipeLikes/Models/RecipeLikeStatusModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetRecipeLikeStatusQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/RecipeCommunity/Application/RecipeLikes/Queries/GetRecipeLikeStatus/GetRecipeLikeStatusQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetRecipeLikeStatusQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/RecipeCommunity/Application/RecipeLikes/Queries/GetRecipeLikeStatus/GetRecipeLikeStatusQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "RecipeLikeReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/RecipeCommunity/Application/RecipeLikes/Services/RecipeLikeReadService.cs",
+      "line": 7
+    },
+    {
+      "name": "RecipeComment",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/RecipeCommunity/Domain/Entities/Recipes/RecipeComment.cs",
+      "line": 6
+    },
+    {
+      "name": "RecipeLike",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/RecipeCommunity/Domain/Entities/Social/RecipeLike.cs",
+      "line": 6
+    },
+    {
+      "name": "RecipeCommentId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/RecipeCommunity/Domain/ValueObjects/Ids/RecipeCommentId.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipeLikeId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/RecipeCommunity/Domain/ValueObjects/Ids/RecipeLikeId.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipeCommentConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/RecipeCommunity/Infrastructure/Model/Configurations/RecipeSocial/RecipeCommentConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "RecipeLikeConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/RecipeCommunity/Infrastructure/Model/Configurations/RecipeSocial/RecipeLikeConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "RecipeCommunityPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/RecipeCommunity/Infrastructure/Model/RecipeCommunityPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/RecipeCommunity/Infrastructure/ModuleRegistration.cs",
+      "line": 9
+    },
+    {
+      "name": "RecipeCommentRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs",
+      "line": 9
+    },
+    {
+      "name": "RecipeLikeRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeLikes/RecipeLikeRepository.cs",
+      "line": 7
     },
     {
       "name": "UtcDateNormalizer",
@@ -25258,16 +25272,16 @@
     },
     {
       "interface": "IExerciseEntryReadService",
-      "interfacePath": "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs",
+      "interfacePath": "Modules/Exercises/Contracts/Common/IExerciseEntryReadService.cs",
       "implementation": "ExerciseEntryReadService",
-      "implementationPath": "FoodDiary.Application.Exercises/Services/ExerciseEntryReadService.cs",
+      "implementationPath": "Modules/Exercises/Application/Services/ExerciseEntryReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IExerciseEntryRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryRepository.cs",
+      "interfacePath": "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryRepository.cs",
       "implementation": "ExerciseEntryRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Tracking/ExerciseEntryRepository.cs",
+      "implementationPath": "Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25615,16 +25629,16 @@
     },
     {
       "interface": "IMealPlanReadService",
-      "interfacePath": "FoodDiary.Application.MealPlanning/MealPlans/Common/IMealPlanReadService.cs",
+      "interfacePath": "Modules/MealPlanning/Application/MealPlans/Common/IMealPlanReadService.cs",
       "implementation": "MealPlanReadService",
-      "implementationPath": "FoodDiary.Application.MealPlanning/MealPlans/Services/MealPlanReadService.cs",
+      "implementationPath": "Modules/MealPlanning/Application/MealPlans/Services/MealPlanReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMealPlanRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/MealPlans/Common/IMealPlanRepository.cs",
+      "interfacePath": "Modules/MealPlanning/Application/Abstractions/MealPlans/Common/IMealPlanRepository.cs",
       "implementation": "MealPlanRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/MealPlans/MealPlanRepository.cs",
+      "implementationPath": "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25860,30 +25874,30 @@
     },
     {
       "interface": "IRecipeCommentReadService",
-      "interfacePath": "FoodDiary.Application.RecipeCommunity/RecipeComments/Common/IRecipeCommentReadService.cs",
+      "interfacePath": "Modules/RecipeCommunity/Application/RecipeComments/Common/IRecipeCommentReadService.cs",
       "implementation": "RecipeCommentReadService",
-      "implementationPath": "FoodDiary.Application.RecipeCommunity/RecipeComments/Services/RecipeCommentReadService.cs",
+      "implementationPath": "Modules/RecipeCommunity/Application/RecipeComments/Services/RecipeCommentReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IRecipeCommentRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/RecipeComments/Common/IRecipeCommentRepository.cs",
+      "interfacePath": "Modules/RecipeCommunity/Application/Abstractions/RecipeComments/Common/IRecipeCommentRepository.cs",
       "implementation": "RecipeCommentRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs",
+      "implementationPath": "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IRecipeLikeReadService",
-      "interfacePath": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Common/IRecipeLikeReadService.cs",
+      "interfacePath": "Modules/RecipeCommunity/Application/RecipeLikes/Common/IRecipeLikeReadService.cs",
       "implementation": "RecipeLikeReadService",
-      "implementationPath": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Services/RecipeLikeReadService.cs",
+      "implementationPath": "Modules/RecipeCommunity/Application/RecipeLikes/Services/RecipeLikeReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IRecipeLikeRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/RecipeLikes/Common/IRecipeLikeRepository.cs",
+      "interfacePath": "Modules/RecipeCommunity/Application/Abstractions/RecipeLikes/Common/IRecipeLikeRepository.cs",
       "implementation": "RecipeLikeRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/RecipeLikes/RecipeLikeRepository.cs",
+      "implementationPath": "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeLikes/RecipeLikeRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25965,23 +25979,23 @@
     },
     {
       "interface": "IShoppingListCreationService",
-      "interfacePath": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListCreationService.cs",
+      "interfacePath": "Modules/MealPlanning/Application/ShoppingLists/Common/IShoppingListCreationService.cs",
       "implementation": "ShoppingListCreationService",
-      "implementationPath": "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListCreationService.cs",
+      "implementationPath": "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListCreationService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IShoppingListReadService",
-      "interfacePath": "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListReadService.cs",
+      "interfacePath": "Modules/MealPlanning/Application/ShoppingLists/Common/IShoppingListReadService.cs",
       "implementation": "ShoppingListReadService",
-      "implementationPath": "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListReadService.cs",
+      "implementationPath": "Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IShoppingListRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/ShoppingLists/Common/IShoppingListRepository.cs",
+      "interfacePath": "Modules/MealPlanning/Application/Abstractions/ShoppingLists/Common/IShoppingListRepository.cs",
       "implementation": "ShoppingListRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
+      "implementationPath": "Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26435,13 +26449,6 @@
       "line": 21
     },
     {
-      "service": "IExerciseEntryReadService",
-      "implementation": "ExerciseEntryReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Exercises/DependencyInjection.cs",
-      "line": 14
-    },
-    {
       "service": "IAuthenticationLoginEventCleanupService",
       "implementation": "AuthenticationLoginEventCleanupService",
       "lifetime": "Scoped",
@@ -26489,27 +26496,6 @@
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Identity/DependencyInjection.cs",
       "line": 25
-    },
-    {
-      "service": "IMealPlanReadService",
-      "implementation": "MealPlanReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.MealPlanning/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IShoppingListCreationService",
-      "implementation": "ShoppingListCreationService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.MealPlanning/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "IShoppingListReadService",
-      "implementation": "ShoppingListReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.MealPlanning/DependencyInjection.cs",
-      "line": 19
     },
     {
       "service": "IMealReadService",
@@ -26573,20 +26559,6 @@
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Products/DependencyInjection.cs",
       "line": 19
-    },
-    {
-      "service": "IRecipeCommentReadService",
-      "implementation": "RecipeCommentReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.RecipeCommunity/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IRecipeLikeReadService",
-      "implementation": "RecipeLikeReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.RecipeCommunity/DependencyInjection.cs",
-      "line": 18
     },
     {
       "service": "IRecentRecipeReadService",
@@ -26806,13 +26778,6 @@
       "line": 10
     },
     {
-      "service": "IMealPlanRepository",
-      "implementation": "MealPlanRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Learning.cs",
-      "line": 9
-    },
-    {
       "service": "IMealRepository",
       "implementation": "MealRepository",
       "lifetime": "Scoped",
@@ -26883,20 +26848,6 @@
       "line": 13
     },
     {
-      "service": "IRecipeCommentRepository",
-      "implementation": "RecipeCommentRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.RecipeInteractions.cs",
-      "line": 11
-    },
-    {
-      "service": "IRecipeLikeRepository",
-      "implementation": "RecipeLikeRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.RecipeInteractions.cs",
-      "line": 15
-    },
-    {
       "service": "IRecipeOverviewReadService",
       "implementation": "RecipeOverviewReadService",
       "lifetime": "Scoped",
@@ -26930,20 +26881,6 @@
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Recipes.cs",
       "line": 17
-    },
-    {
-      "service": "IShoppingListRepository",
-      "implementation": "ShoppingListRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.ShoppingLists.cs",
-      "line": 9
-    },
-    {
-      "service": "IExerciseEntryRepository",
-      "implementation": "ExerciseEntryRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-      "line": 9
     },
     {
       "service": "IUserRoleCatalogService",
@@ -27020,14 +26957,14 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 129
+      "line": 128
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 130
+      "line": 129
     },
     {
       "service": "IGoogleTokenValidator",
@@ -27167,21 +27104,21 @@
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 106
+      "line": 105
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 107
+      "line": 106
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 139
+      "line": 138
     },
     {
       "service": "IMailInboxReadinessChecker",
@@ -27373,6 +27310,13 @@
       "line": 27
     },
     {
+      "service": "IExerciseEntryReadService",
+      "implementation": "ExerciseEntryReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Exercises/Application/DependencyInjection.cs",
+      "line": 14
+    },
+    {
       "service": "IExportDiaryReadService",
       "implementation": "ExportDiaryReadService",
       "lifetime": "Scoped",
@@ -27555,6 +27499,27 @@
       "line": 19
     },
     {
+      "service": "IMealPlanReadService",
+      "implementation": "MealPlanReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/MealPlanning/Application/DependencyInjection.cs",
+      "line": 17
+    },
+    {
+      "service": "IShoppingListCreationService",
+      "implementation": "ShoppingListCreationService",
+      "lifetime": "Scoped",
+      "path": "Modules/MealPlanning/Application/DependencyInjection.cs",
+      "line": 18
+    },
+    {
+      "service": "IShoppingListReadService",
+      "implementation": "ShoppingListReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/MealPlanning/Application/DependencyInjection.cs",
+      "line": 19
+    },
+    {
       "service": "INotificationCleanupService",
       "implementation": "NotificationCleanupService",
       "lifetime": "Scoped",
@@ -27623,6 +27588,20 @@
       "lifetime": "Scoped",
       "path": "Modules/OpenFoodFacts/Application/DependencyInjection.cs",
       "line": 14
+    },
+    {
+      "service": "IRecipeCommentReadService",
+      "implementation": "RecipeCommentReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/RecipeCommunity/Application/DependencyInjection.cs",
+      "line": 17
+    },
+    {
+      "service": "IRecipeLikeReadService",
+      "implementation": "RecipeLikeReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/RecipeCommunity/Application/DependencyInjection.cs",
+      "line": 18
     },
     {
       "service": "ITdeeUserProfileService",

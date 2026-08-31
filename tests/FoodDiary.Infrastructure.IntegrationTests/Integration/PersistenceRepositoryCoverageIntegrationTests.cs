@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Exercises.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
@@ -51,7 +52,6 @@ using FoodDiary.Infrastructure.Persistence.Recommendations;
 using FoodDiary.Infrastructure.Persistence.RecentItems;
 using FoodDiary.Infrastructure.Persistence.Recipes;
 using FoodDiary.Infrastructure.Persistence.ShoppingLists;
-using FoodDiary.Infrastructure.Persistence.Tracking;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Users;
@@ -694,6 +694,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Equal("Cardio", exerciseReadModel.ExerciseType);
         Assert.Equal(320, exerciseReadModel.CaloriesBurned);
         Assert.Equal(320, await exerciseRepository.GetTotalCaloriesBurnedAsync(user.Id, today));
+        Assert.Null(await exerciseRepository.GetByIdAsync(exercise.Id, UserId.New(), asTracking: true));
+        Assert.Empty(await exerciseRepository.GetByDateRangeReadModelsAsync(UserId.New(), today, today));
+        Assert.Equal(0, await exerciseRepository.GetTotalCaloriesBurnedAsync(user.Id, today.AddDays(1)));
 
         await hydrationRepository.DeleteAsync(hydration);
         await new WeightEntryRepository(context).DeleteAsync(weight);

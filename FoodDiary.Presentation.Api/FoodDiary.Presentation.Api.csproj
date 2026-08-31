@@ -19,7 +19,7 @@
     <ProjectReference Include="..\Modules\DailyAdvices\Application\FoodDiary.Modules.DailyAdvices.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Dashboard\FoodDiary.Application.Dashboard.csproj" />
     <ProjectReference Include="..\Modules\Dietologist\Application\FoodDiary.Modules.Dietologist.Application.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
+    <ProjectReference Include="..\Modules\Exercises\Application\FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="..\Modules\Export\Application\FoodDiary.Modules.Export.Application.csproj" />
     <ProjectReference Include="..\Modules\Fasting\Contracts\FoodDiary.Modules.Fasting.Contracts.csproj" />
     <ProjectReference Include="..\Modules\Fasting\Application\FoodDiary.Modules.Fasting.Application.csproj" />
@@ -30,12 +30,12 @@
     <ProjectReference Include="..\Modules\Images\Application\FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="..\Modules\Lessons\Application\FoodDiary.Modules.Lessons.Application.csproj" />
     <ProjectReference Include="..\Modules\Marketing\Application\FoodDiary.Application.Marketing.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.MealPlanning\FoodDiary.Application.MealPlanning.csproj" />
+    <ProjectReference Include="..\Modules\MealPlanning\Application\FoodDiary.Application.MealPlanning.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
     <ProjectReference Include="..\Modules\Notifications\Application\FoodDiary.Application.Notifications.csproj" />
     <ProjectReference Include="..\Modules\OpenFoodFacts\Application\FoodDiary.Modules.OpenFoodFacts.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Products\FoodDiary.Application.Products.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.RecipeCommunity\FoodDiary.Application.RecipeCommunity.csproj" />
+    <ProjectReference Include="../Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Recipes\FoodDiary.Application.Recipes.csproj" />
     <ProjectReference Include="..\Modules\Statistics\Application\FoodDiary.Modules.Statistics.Application.csproj" />
     <ProjectReference Include="..\Modules\Tdee\Application\FoodDiary.Modules.Tdee.Application.csproj" />

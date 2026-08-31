@@ -84,13 +84,13 @@
       "id": "shopping-list-read-service-probe-5",
       "query": "read shopping list data for meal planning",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListReadService.cs"]
+      "expectedPaths": ["Modules/MealPlanning/Application/ShoppingLists/Services/ShoppingListReadService.cs"]
     },
     {
       "id": "meal-plan-read-service-probe-5",
       "query": "read saved meal plan details",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.MealPlanning/MealPlans/Services/MealPlanReadService.cs"]
+      "expectedPaths": ["Modules/MealPlanning/Application/MealPlans/Services/MealPlanReadService.cs"]
     },
     {
       "id": "post-commit-action-queue-probe-5",
