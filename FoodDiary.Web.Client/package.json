@@ -140,7 +140,7 @@
         "@typescript-eslint/parser": "^8.67.0",
         "@vitest/coverage-v8": "^4.1.10",
         "angular-eslint": "^22.1.0",
-        "baseline-browser-mapping": "^2.11.16",
+        "baseline-browser-mapping": "^2.11.20",
         "chrome-launcher": "^1.2.1",
         "concurrently": "^10.0.5",
         "dependency-cruiser": "^18.2.0",
