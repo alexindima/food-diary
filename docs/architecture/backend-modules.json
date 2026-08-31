@@ -166,7 +166,7 @@
     },
     "Meals": {
       "role": "aggregate-owner",
-      "physicalIsolation": "project",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix",
       "ownedEntities": [
         "Meal",
@@ -175,17 +175,26 @@
         "MealAiItem"
       ],
       "sourceMappings": {
+        "logicalRoot": "Modules/Meals",
         "applicationProjects": [
-          "FoodDiary.Application.Meals"
+          "Modules/Meals/Application"
         ],
         "abstractionAreas": [
-          "Meals"
+          "Modules/Meals/Application/Abstractions",
+          "Modules/Meals/Contracts"
         ],
         "domainAreas": [
-          "Meals"
+          "FoodDiary.Domain/Entities/Meals"
         ],
-        "persistenceAreas": [
-          "Meals"
+        "infrastructureAreas": [
+          "Modules/Meals/Infrastructure"
+        ],
+        "adapterAreas": [
+          "FoodDiary.Presentation.Api/Features/Meals"
+        ],
+        "testAreas": [
+          "Modules/Meals/tests",
+          "tests/FoodDiary.Web.Api.IntegrationTests"
         ]
       }
     },

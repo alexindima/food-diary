@@ -8,21 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "9805f2da1e15f27114b7f1c8d6bae74d05386e9e66f533c535494db355b20cc4"
+          "sha256": "452373be7a80dfe2b6e6fd144cdc15fd7b37ed9a17c8b51b5abee947a39b9dea"
         },
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "8bab56fb6add57212192206dd312cb1f954f102453c500d2e36feb01bfe55d4b"
+          "sha256": "8ceb660f2954b8a9bde19a425dd389acc93769ce0f392cb75c72da437c0d47ce"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "1cca2c792280697b1975c7fd4c534b48f4f4f9cb6839487abcc81c3c7e22ebaf"
+          "sha256": "ffe657b156794abfc66075947dbd4e1f92f1770f0d133276657493adc5b1dc85"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:30.3546025Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:25.1529274Z"
     },
     {
       "pageId": "module.frontend",
@@ -46,48 +46,44 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "8bab56fb6add57212192206dd312cb1f954f102453c500d2e36feb01bfe55d4b"
+          "sha256": "8ceb660f2954b8a9bde19a425dd389acc93769ce0f392cb75c72da437c0d47ce"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "1cca2c792280697b1975c7fd4c534b48f4f4f9cb6839487abcc81c3c7e22ebaf"
+          "sha256": "ffe657b156794abfc66075947dbd4e1f92f1770f0d133276657493adc5b1dc85"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:30.6284626Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:25.5036738Z"
     },
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "6d9ffec92f106cae627f4f9bae73e55edd685c9bdd65be86107bfbf75184e52f",
+      "pageSha256": "1e1f4453a594ad85326267450f3f408797d4ccac7e34d13f5d5b06b12d2fe5bc",
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "e59d7d251a87d79be55bb150c20a6097bce76c94b122bf178238df934ab2c742"
+          "sha256": "a3c0e39984dd241073bd0659669bffcb4bf2a3a9550e584db6341130710469f5"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "1afc32757b4af4ab8cfd552e3eb1a46d09f075867c05f5e12c748ec7009aa288"
-        },
-        {
-          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "4a2769f19d883cdfc52541a6ebe00d306d02308cf25533f708d4a5d1a9820b93"
+          "sha256": "ffe657b156794abfc66075947dbd4e1f92f1770f0d133276657493adc5b1dc85"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "229987785e07f64c6ad5d5fdbb06593c14f68fda984aabf0417dc83a3e82f1a9"
+          "sha256": "4d170dc58d0cdd7af216310e72751fc77ab3fe1d5fb838ca5faf6bd16a159429"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "ddd8aaf9c95a94f80971fd0f87cf257260365c1fc63387509f8a33226173bc8a"
+          "sha256": "46a02baaac7b32a5915b571dccd448938c03359b56ed495688dbc27fc3d9e465"
         }
       ],
-      "reason": "Reviewed Recipes inventory and combined project/DI graph: module owns ports/read contracts/adapters/model while public domain navigations, context and HTTP remain central. Ai/Dashboard ownership retained.",
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:09.0866627Z"
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:25.7870329Z"
     },
     {
       "pageId": "system.architecture",
@@ -96,25 +92,25 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "8bab56fb6add57212192206dd312cb1f954f102453c500d2e36feb01bfe55d4b"
+          "sha256": "8ceb660f2954b8a9bde19a425dd389acc93769ce0f392cb75c72da437c0d47ce"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "25ce41c4730c48c0246732931c89400ff3215cde3b905031fdbdb92aa59810e8"
+          "sha256": "a3c0e39984dd241073bd0659669bffcb4bf2a3a9550e584db6341130710469f5"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "1cca2c792280697b1975c7fd4c534b48f4f4f9cb6839487abcc81c3c7e22ebaf"
+          "sha256": "ffe657b156794abfc66075947dbd4e1f92f1770f0d133276657493adc5b1dc85"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c83c125a199dcb5b56e3d578e9117a3f8a9b58375b6914d05efcdd31af728076"
+          "sha256": "de20eab119c3cce7ba2c9beff87f7c4f0c557572e6e96cf89cb4a8d25f144974"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:30.8772866Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:26.0328469Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -153,13 +149,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "9805f2da1e15f27114b7f1c8d6bae74d05386e9e66f533c535494db355b20cc4"
+          "sha256": "452373be7a80dfe2b6e6fd144cdc15fd7b37ed9a17c8b51b5abee947a39b9dea"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:31.1194585Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:26.2999090Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -168,13 +164,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "25ce41c4730c48c0246732931c89400ff3215cde3b905031fdbdb92aa59810e8"
+          "sha256": "a3c0e39984dd241073bd0659669bffcb4bf2a3a9550e584db6341130710469f5"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:31.3845455Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:26.5658656Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -228,21 +224,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "6336d68ae4f04b9cd67c0f58dced8b48fa4f06d8b48394cf095e31207b494e03"
+          "sha256": "4a92d53ed44b4fdc57a2df981ad5c0169f975a087e2c2c72d79e47921a33daac"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "25ce41c4730c48c0246732931c89400ff3215cde3b905031fdbdb92aa59810e8"
+          "sha256": "a3c0e39984dd241073bd0659669bffcb4bf2a3a9550e584db6341130710469f5"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c83c125a199dcb5b56e3d578e9117a3f8a9b58375b6914d05efcdd31af728076"
+          "sha256": "de20eab119c3cce7ba2c9beff87f7c4f0c557572e6e96cf89cb4a8d25f144974"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:31.9135114Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:26.8358670Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -251,17 +247,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "6765a93114d2415575c10f35c58952da80962eb515190a21b3aee9dcebcf37e5"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "b632e8546632d256b8129677b8984ea82148cdbb7603fbab55be5d73f91ab167"
+          "sha256": "184f6ce5399c736065e687fe048356fedafc442b65de09cb04cf583d0fc4a348"
         }
       ],
-      "reason": "Combined full HTTP182/Presentation825 and EF no model changes, unchanged snapshots; both module composition boundaries retained with coordinated rebuilt hosts.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T14:16:18.0462445Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:27.3423463Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -594,21 +586,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "b9f4c629d114d9a1594457f6d8c4da1c43168afa2882f11444d14cfca7cda8a3"
+          "sha256": "1f0837ee7700d54adda38dbdad33bf75fd846446df710c10bad8350a6d9a2326"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "1ad86a6795766af3211f1ab022e6c3a86c72d95290e42093cb3861360d0e4d81"
+          "sha256": "4d170dc58d0cdd7af216310e72751fc77ab3fe1d5fb838ca5faf6bd16a159429"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "950ae7fe035feb1fb253c567e537976b59d5aa5a00227040ca3715999a61fbac"
+          "sha256": "46a02baaac7b32a5915b571dccd448938c03359b56ed495688dbc27fc3d9e465"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:36.6547608Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:27.8943494Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -888,17 +880,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "8583608f36daf0f25ad462192e869e7dba88ebb93e6b668a070f4cfb7b69c980"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "b632e8546632d256b8129677b8984ea82148cdbb7603fbab55be5d73f91ab167"
+          "sha256": "e4ef4047cc7ef85575d7ea81c1d8c8b3ac313452dfc8d2f782cc83259d060646"
         }
       ],
-      "reason": "Reviewed Admin impersonation and Products data/provider boundaries against both inventories; no production dataflow change. Ranking aliases do not expand filtering, scanner retains malicious test fixtures in quarantine with unchanged limits.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T14:16:20.7196667Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:28.1567137Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -937,13 +925,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "528e0785a376e9d1b38c3ae2d5f3a7ba5642151076dc1679f9f29a258e2faf63"
+          "sha256": "6dcd3f9027de46fb0bf6a2a3709d9abed13239db144f9f524f2513c49c4a9fc2"
         }
       ],
-      "reason": "Combined5589 unfiltered .NET tests pass; full MCP245, Architecture831. Actual Node/.NET parity200cases and nine non-quality smoke groups passed. Full Wiki remains explicitly non-green for five fresh exact-base-identical ranking cases; see report and measured comparison, not a fabricated PASS receipt.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T14:16:21.6554613Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:28.6171768Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1020,17 +1008,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "de42ed1207b6edc57a378f3497a89aa8298b51725f48e9a434413f57341a3ebb"
-        },
-        {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
+          "sha256": "4dce8efee8ebf5b44859220bf037c8283dfcf641703cc4bee93aa9b5d21beaa7"
         }
       ],
-      "reason": "Reviewed272project graph, both ownership inventories, archived source evidence and final integration report.125 target references have113 proven Git rename chains; query/history/threshold fields unchanged. Baseline comparison uses revision-appropriate physical paths only.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T14:16:23.0268709Z"
+      "reason": "Reviewed post-graph-build runtime topology and repository catalog against the final Meals solution graph, hosts, dependency matrix and retained verification evidence.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T23:18:35.6530565Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1039,25 +1023,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "528e0785a376e9d1b38c3ae2d5f3a7ba5642151076dc1679f9f29a258e2faf63"
+          "sha256": "6dcd3f9027de46fb0bf6a2a3709d9abed13239db144f9f524f2513c49c4a9fc2"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "de42ed1207b6edc57a378f3497a89aa8298b51725f48e9a434413f57341a3ebb"
+          "sha256": "4dce8efee8ebf5b44859220bf037c8283dfcf641703cc4bee93aa9b5d21beaa7"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "8583608f36daf0f25ad462192e869e7dba88ebb93e6b668a070f4cfb7b69c980"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "76755c5dbe9be19df4fb91ded9cd6eaad43ec04e83955a49eaf49a2c2c76bc35"
+          "sha256": "e4ef4047cc7ef85575d7ea81c1d8c8b3ac313452dfc8d2f782cc83259d060646"
         }
       ],
-      "reason": "Reviewed Admin impersonation and Products data/provider boundaries against both inventories; no production dataflow change. Ranking aliases do not expand filtering, scanner retains malicious test fixtures in quarantine with unchanged limits.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T14:16:23.8478565Z"
+      "reason": "Reviewed post-graph-build runtime topology and repository catalog against the final Meals solution graph, hosts, dependency matrix and retained verification evidence.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T23:18:36.4255465Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1170,22 +1150,14 @@
       "pageSha256": "034a7fbc5f124bcf40175e3a37f52338dfec658615c7b91245322232f61f08d6",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "a84f2d52c7e100965178d1cb1bec0b1d5dd6e6c5f89892a39f9ad45551101868"
-        },
-        {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "a885b9c3c97d95ae5bd4028936a5d9cde6be5fad34f99ffca1d88296f6d5be18"
+          "sha256": "0c3dac1f70aea744155d4467d4f3cec132f1442f08f140cff70434b5d59c17c3"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:44.8804830Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:30.3194594Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1246,18 +1218,14 @@
       "pageSha256": "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
-        },
-        {
           "path": "AGENTS.md",
-          "sha256": "9805f2da1e15f27114b7f1c8d6bae74d05386e9e66f533c535494db355b20cc4"
+          "sha256": "452373be7a80dfe2b6e6fd144cdc15fd7b37ed9a17c8b51b5abee947a39b9dea"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:32.7450628Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:27.5927257Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1310,30 +1278,18 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "03dece972b46b6bf9f0e3d90f88d2a4bcdcdbbc81648c671ac0e040562626ca4"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "20ab556641c78e72ea3bda50f344e67d82a7a6d74cc465216b9460826c915c0b"
-        },
-        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "cdf4aa0c1f9f6163da909356c4086d104282920f5ca8ec512b934aebfa9fa95e"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "b632e8546632d256b8129677b8984ea82148cdbb7603fbab55be5d73f91ab167"
+          "sha256": "271612851713d5c1154effc6b55d2662c061fe19d8d6f38e02ccf1642238e0dc"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "9805f2da1e15f27114b7f1c8d6bae74d05386e9e66f533c535494db355b20cc4"
+          "sha256": "452373be7a80dfe2b6e6fd144cdc15fd7b37ed9a17c8b51b5abee947a39b9dea"
         }
       ],
-      "reason": "Reviewed272project graph, both ownership inventories, archived source evidence and final integration report.125 target references have113 proven Git rename chains; query/history/threshold fields unchanged. Baseline comparison uses revision-appropriate physical paths only.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T14:16:22.3390082Z"
+      "reason": "Reviewed final Meals extraction findings, exact verification evidence, known generator limitations, final solution graph and central compatibility seams against source and retained logs.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:53:51.2093363Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1342,13 +1298,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "9805f2da1e15f27114b7f1c8d6bae74d05386e9e66f533c535494db355b20cc4"
+          "sha256": "452373be7a80dfe2b6e6fd144cdc15fd7b37ed9a17c8b51b5abee947a39b9dea"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:42.8080633Z"
+      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "baseRef": "HEAD",
+      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
+      "reviewedAtUtc": "2026-08-31T22:37:29.2549002Z"
     }
   ]
 }

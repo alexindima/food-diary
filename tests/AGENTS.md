@@ -67,3 +67,10 @@ shared context/migrations and composition lock remain unchanged. Hosts explicitl
 compose AddProductsModule; JobManager adds AddProductsPersistence without new
 handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
 coordinated-rebuild compatibility promise.
+
+## Meals physical ownership
+
+Meals-only application tests, Meal/MealAI invariant tests and MealRepository
+PostgreSQL tests live in the three projects under `Modules/Meals/tests`. Keep mixed
+Domain/DI and cross-module/provider/HTTP suites with their established owners; do
+not duplicate them. See `docs/ai/meals-ownership-inventory.md`.

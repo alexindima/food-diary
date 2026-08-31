@@ -93,6 +93,11 @@ COPY Modules/OpenFoodFacts/Domain/*.csproj Modules/OpenFoodFacts/Domain/
 COPY Modules/OpenFoodFacts/Infrastructure/*.csproj Modules/OpenFoodFacts/Infrastructure/
 COPY Modules/OpenFoodFacts/Infrastructure/Model/*.csproj Modules/OpenFoodFacts/Infrastructure/Model/
 COPY Modules/Products/Application/*.csproj Modules/Products/Application/
+COPY Modules/Meals/Application/*.csproj Modules/Meals/Application/
+COPY Modules/Meals/Application/Abstractions/*.csproj Modules/Meals/Application/Abstractions/
+COPY Modules/Meals/Contracts/*.csproj Modules/Meals/Contracts/
+COPY Modules/Meals/Infrastructure/*.csproj Modules/Meals/Infrastructure/
+COPY Modules/Meals/Infrastructure/Model/*.csproj Modules/Meals/Infrastructure/Model/
 COPY Modules/Recipes/Application/*.csproj Modules/Recipes/Application/
 COPY Modules/Recipes/Application/Abstractions/*.csproj Modules/Recipes/Application/Abstractions/
 COPY Modules/Products/Application/Abstractions/*.csproj Modules/Products/Application/Abstractions/
@@ -117,7 +122,6 @@ COPY Modules/Ai/Domain/*.csproj Modules/Ai/Domain/
 COPY Modules/Ai/Infrastructure/*.csproj Modules/Ai/Infrastructure/
 COPY Modules/Ai/Infrastructure/Model/*.csproj Modules/Ai/Infrastructure/Model/
 COPY Modules/Statistics/Application/*.csproj Modules/Statistics/Application/
-COPY FoodDiary.Application.Meals/*.csproj FoodDiary.Application.Meals/
 COPY Modules/WeeklyGoals/Application/*.csproj Modules/WeeklyGoals/Application/
 COPY Modules/WeeklyGoals/Application/Abstractions/*.csproj Modules/WeeklyGoals/Application/Abstractions/
 COPY Modules/WeeklyGoals/Contracts/*.csproj Modules/WeeklyGoals/Contracts/
@@ -245,6 +249,11 @@ COPY Modules/OpenFoodFacts/Domain/ Modules/OpenFoodFacts/Domain/
 COPY Modules/OpenFoodFacts/Infrastructure/ Modules/OpenFoodFacts/Infrastructure/
 COPY Modules/OpenFoodFacts/Infrastructure/Model/ Modules/OpenFoodFacts/Infrastructure/Model/
 COPY Modules/Products/Application/ Modules/Products/Application/
+COPY Modules/Meals/Application/ Modules/Meals/Application/
+COPY Modules/Meals/Application/Abstractions/ Modules/Meals/Application/Abstractions/
+COPY Modules/Meals/Contracts/ Modules/Meals/Contracts/
+COPY Modules/Meals/Infrastructure/ Modules/Meals/Infrastructure/
+COPY Modules/Meals/Infrastructure/Model/ Modules/Meals/Infrastructure/Model/
 COPY Modules/Recipes/Application/ Modules/Recipes/Application/
 COPY Modules/Recipes/Application/Abstractions/ Modules/Recipes/Application/Abstractions/
 COPY Modules/Products/Application/Abstractions/ Modules/Products/Application/Abstractions/
@@ -269,7 +278,6 @@ COPY Modules/Ai/Infrastructure/ Modules/Ai/Infrastructure/
 COPY Modules/Ai/Application/Abstractions/ Modules/Ai/Application/Abstractions/
 COPY Modules/Ai/Infrastructure/Model/ Modules/Ai/Infrastructure/Model/
 COPY Modules/Statistics/Application/ Modules/Statistics/Application/
-COPY FoodDiary.Application.Meals/ FoodDiary.Application.Meals/
 COPY Modules/WeeklyGoals/ Modules/WeeklyGoals/
 COPY Modules/WeeklyGoals/Application/ Modules/WeeklyGoals/Application/
 COPY Modules/WeeklyGoals/Application/Abstractions/ Modules/WeeklyGoals/Application/Abstractions/

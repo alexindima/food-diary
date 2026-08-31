@@ -14,6 +14,7 @@
     <ProjectReference Include="..\Contracts\FoodDiary.Modules.WeeklyGoals.Contracts.csproj" />
     <ProjectReference Include="..\Domain\FoodDiary.Modules.WeeklyGoals.Domain.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
     <ProjectReference Include="..\..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
   </ItemGroup>

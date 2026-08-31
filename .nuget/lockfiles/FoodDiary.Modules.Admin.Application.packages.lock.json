@@ -86,6 +86,7 @@
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Gamification.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Gamification.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
@@ -250,6 +251,13 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.meals.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.notifications.application.abstractions": {

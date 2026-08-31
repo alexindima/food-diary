@@ -320,10 +320,13 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Abstractions.Products.Models",
         "FoodDiary.Application.Abstractions.RecentItems.Common",
         "FoodDiary.Application.Abstractions.Recipes.Common",
+        "FoodDiary.Application.Abstractions.Recipes.Models",
         "FoodDiary.Application.Abstractions.Users.Common",
         "FoodDiary.Application.Common",
         "FoodDiary.Application.Meals",
         "FoodDiary.Application.Images.Common",
+        "FoodDiary.Modules.Meals.Application.Abstractions",
+        "FoodDiary.Modules.Meals.Contracts",
         "FoodDiary.Application.Abstractions.Nutrition.Common",
         "FoodDiary.Application.Users.Common",
     };
@@ -690,7 +693,7 @@ public sealed class BusinessModuleBoundaryTests {
         Assert.DoesNotContain(".AddProductsPersistence()", source, StringComparison.Ordinal);
         Assert.DoesNotContain(".AddRecipesPersistence()", source, StringComparison.Ordinal);
         Assert.Contains(".AddRecentItemsPersistence()", source, StringComparison.Ordinal);
-        Assert.Contains(".AddMealsPersistence()", source, StringComparison.Ordinal);
+        Assert.DoesNotContain(".AddMealsPersistence()", source, StringComparison.Ordinal);
         Assert.DoesNotContain("AddScoped<", source, StringComparison.Ordinal);
     }
 
@@ -714,8 +717,9 @@ public sealed class BusinessModuleBoundaryTests {
     public void MealsApplication_DoesNotDependOnUnapprovedApplicationFeatures() {
         string moduleRoot = Path.Combine(
             ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Application",
-            "Meals");
+            "Modules",
+            "Meals",
+            "Application");
 
         string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
             .SelectMany(ReadApplicationNamespaceDependencies)
@@ -776,20 +780,18 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("MealConfiguration.cs", "Configurations/Meals")]
-    [InlineData("MealItemConfiguration.cs", "Configurations/Meals")]
-    [InlineData("MealAiSessionConfiguration.cs", "Configurations/Meals")]
-    [InlineData("MealAiItemConfiguration.cs", "Configurations/Meals")]
+    [InlineData("MealConfiguration.cs", "Modules/Meals/Infrastructure/Model/Configurations/Meals")]
+    [InlineData("MealItemConfiguration.cs", "Modules/Meals/Infrastructure/Model/Configurations/Meals")]
+    [InlineData("MealAiSessionConfiguration.cs", "Modules/Meals/Infrastructure/Model/Configurations/Meals")]
+    [InlineData("MealAiItemConfiguration.cs", "Modules/Meals/Infrastructure/Model/Configurations/Meals")]
     [InlineData("RecentItemConfiguration.cs", "Configurations/RecentItems")]
     public void MealAndRecentItemConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {
-        string expectedPath = Path.Combine(
-            ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Infrastructure",
-            "Persistence",
-            expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar),
-            fileName);
+        string expectedRoot = expectedRelativeDirectory.StartsWith("Modules/", StringComparison.Ordinal)
+            ? ArchitectureTestPaths.RepositoryRoot
+            : Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Infrastructure", "Persistence");
+        string expectedPath = Path.Combine(expectedRoot, expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar), fileName);
 
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in {expectedRelativeDirectory}.");
     }

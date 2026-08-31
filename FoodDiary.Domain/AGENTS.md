@@ -65,3 +65,11 @@ shared context/migrations and composition lock remain unchanged. Hosts explicitl
 compose AddProductsModule; JobManager adds AddProductsPersistence without new
 handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
 coordinated-rebuild compatibility promise.
+
+## Meals physical ownership
+
+Meals application, ports/contracts, persistence adapter and EF model live under
+`Modules/Meals`. Keep Meal, MealItem, MealAiSession, MealAiItem and their IDs/value
+objects central: User.Meals and Product/Recipe MealItems are public inverse graphs.
+Do not create a symmetric Meals Domain project without redesigning those seams.
+See `docs/ai/meals-ownership-inventory.md`.

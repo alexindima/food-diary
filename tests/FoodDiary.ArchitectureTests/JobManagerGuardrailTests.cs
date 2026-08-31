@@ -29,7 +29,7 @@ public sealed class JobManagerGuardrailTests {
             "AddIdentityModule",
             "AddImagesModule",
             "AddMarketingModule",
-            "AddMealsModule",
+            "AddMealsPersistence",
             "AddNotificationsModule",
             "AddUsersModule",
             "AddWeeklyGoalsModule",
@@ -38,7 +38,7 @@ public sealed class JobManagerGuardrailTests {
             .Select(static line => line.Trim())
             .Where(static line => line.StartsWith("builder.Services.Add", StringComparison.Ordinal))
             .Select(static line => line[(line.IndexOf(".Add", StringComparison.Ordinal) + 1)..line.IndexOf('(', StringComparison.Ordinal)])
-            .Where(static method => method is "AddApplicationRuntime" || method.EndsWith("Module", StringComparison.Ordinal))
+            .Where(static method => method is "AddApplicationRuntime" or "AddMealsPersistence" || method.EndsWith("Module", StringComparison.Ordinal))
             .Order(StringComparer.Ordinal)];
 
         Assert.Equal(expectedRegistrations.Order(StringComparer.Ordinal), actualRegistrations, StringComparer.Ordinal);
@@ -68,7 +68,6 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application.Identity",
             "FoodDiary.Application.Images",
             "FoodDiary.Application.MealPlanning",
-            "FoodDiary.Application.Meals",
             "FoodDiary.Application.Notifications",
             "FoodDiary.Application.RecipeCommunity",
             "FoodDiary.Application.Runtime",
@@ -92,6 +91,7 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Modules.Gamification.Infrastructure",
             "FoodDiary.Modules.Images.Infrastructure",
             "FoodDiary.Modules.Marketing.Infrastructure",
+            "FoodDiary.Modules.Meals.Infrastructure",
             "FoodDiary.Modules.Notifications.Infrastructure",
             "FoodDiary.Modules.OpenFoodFacts.Application",
             "FoodDiary.Modules.Products.Application",

@@ -16,8 +16,8 @@ public sealed class UsdaModuleExtractionTests {
             "Modules/Usda/Application/FoodDiary.Application.Usda.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
-            "FoodDiary.Application.Meals",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Meals.Contracts",
             "FoodDiary.Modules.Usda.Application.Abstractions",
             "FoodDiary.Modules.Usda.Contracts",
         ], references);

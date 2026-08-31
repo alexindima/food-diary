@@ -12,7 +12,7 @@
     <ProjectReference Include="../../Cycles/Application/FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="../../DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />
     <ProjectReference Include="../../Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj" />
+    <ProjectReference Include="../../Meals/Application/FoodDiary.Modules.Meals.Application.csproj" />
     <ProjectReference Include="../../Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj" />
     <ProjectReference Include="../../Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />

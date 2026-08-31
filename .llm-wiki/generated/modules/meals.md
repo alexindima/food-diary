@@ -15,21 +15,21 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj`
+- Extracted project: `Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Achievements, FavoriteMeals, Images, Nutrition, Products, RecentItems, Recipes, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Application.Usda, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Dashboard.Application, FoodDiary.Modules.Export.Application, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Modules.Dashboard.Application, FoodDiary.Presentation.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Meals`
-- `FoodDiary.Application.Meals`
-- `FoodDiary.Domain/Entities/Meals`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Meals`
 - `FoodDiary.Infrastructure/Persistence/Meals`
 - `FoodDiary.Presentation.Api/Features/Meals`
+- `Modules/Meals/Application`
+- `Modules/Meals/Application/Abstractions`
+- `Modules/Meals/Contracts`
 
 ## HTTP Surface
 
@@ -48,26 +48,27 @@ Source: `FoodDiary.Presentation.Api/Features/Meals/MealsController.cs`
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: project
+- Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Meal, MealItem, MealAiSession, MealAiItem
-- Public contract files: 16
-- Observed external consumer groups: 7
+- Public contract files: 17
+- Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 16
-- Interfaces: 8
+- Public contract types: 17
+- Interfaces: 10
 - DTO/read-model/projection types: 6
 - Enums: 0
 - Exported repository-shaped contracts: 6
 - Contracts referencing domain entities: 2
-- `class MealErrors`
 - `interface IMealActivityReadRepository`
 - `interface IMealActivityReadService`
+- `interface IMealExportReadService`
 - `interface IMealFavoriteReadService`
 - `interface IMealProductNutritionReadRepository`
+- `interface IMealProductNutritionReadService`
 - `interface IMealProjectionReadRepository`
 - `interface IMealReadRepository`
 - `interface IMealRepository`
@@ -84,18 +85,26 @@ Source: `FoodDiary.Presentation.Api/Features/Meals/MealsController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/CreateMealCommandValidatorTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/MealNutritionServiceTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/MealsAdditionalValidatorTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/MealsFeatureTests.CreateCommandTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/MealsFeatureTests.MappingTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/MealsFeatureTests.ReadQueryTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/MealsFeatureTests.RepeatAndDeleteCommandTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/MealsFeatureTests.UpdateCommandTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/MealsFeatureTests.ValidatorAndCalculatorTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/MealsFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/UpdateMealCommandValidatorTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/UtcDateNormalizerTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/CreateMealCommandValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealNutritionServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsAdditionalValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.CreateCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.MappingTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.ReadQueryTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.RepeatAndDeleteCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.UpdateCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.ValidatorAndCalculatorTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/UpdateMealCommandValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/UtcDateNormalizerTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Support/AllowImageAssetAccessService.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Support/RecordingImageAssetAccessService.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/TestProductOverview.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/TestRecipeOverview.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealAiInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealInvariantTests.cs`
+- [integration] `Modules/Meals/tests/FoodDiary.Modules.Meals.Infrastructure.IntegrationTests/Integration/MealRepositoryIntegrationTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/MealsModuleExtractionTests.cs`
 
 ## Working Rule

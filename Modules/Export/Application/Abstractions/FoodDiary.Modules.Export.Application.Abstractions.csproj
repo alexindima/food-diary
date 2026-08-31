@@ -3,6 +3,7 @@
     <RootNamespace>FoodDiary.Application.Abstractions.Export</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../../Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
     <ProjectReference Include="..\..\..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
   </ItemGroup>
 </Project>

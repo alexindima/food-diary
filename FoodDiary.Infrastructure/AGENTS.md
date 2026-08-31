@@ -77,3 +77,10 @@ shared context/migrations and composition lock remain unchanged. Hosts explicitl
 compose AddProductsModule; JobManager adds AddProductsPersistence without new
 handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
 coordinated-rebuild compatibility promise.
+
+## Meals physical ownership
+
+MealRepository and the four Meals EF mappings live under `Modules/Meals`; the shared
+context explicitly applies `ApplyMealsPersistenceModel`. Keep UserConfiguration,
+user cleanup, Meals DbSets, migrations and snapshot central. Hosts use AddMealsModule;
+JobManager uses AddMealsPersistence only. See `docs/ai/meals-ownership-inventory.md`.

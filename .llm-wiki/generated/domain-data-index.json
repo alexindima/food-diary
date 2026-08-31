@@ -6001,7 +6001,7 @@
           "expression": "e => e.AiSessions)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Meals/MealConfiguration.cs"
+      "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6009,7 +6009,7 @@
       "table": null,
       "indexes": [],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Meals/MealAiItemConfiguration.cs"
+      "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealAiItemConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6028,7 +6028,7 @@
           "expression": "e => e.Items)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Meals/MealAiSessionConfiguration.cs"
+      "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealAiSessionConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6052,7 +6052,7 @@
           "expression": "e => e.Recipe)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Meals/MealItemConfiguration.cs"
+      "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealItemConfiguration.cs"
     },
     {
       "area": "FoodDiary",

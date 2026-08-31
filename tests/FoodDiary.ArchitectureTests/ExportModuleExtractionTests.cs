@@ -18,10 +18,10 @@ public sealed class ExportModuleExtractionTests {
             "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Cycles",
-            "FoodDiary.Application.Meals",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
             "FoodDiary.Modules.Export.Application.Abstractions",
+            "FoodDiary.Modules.Meals.Contracts",
         ], references);
     }
 
@@ -29,7 +29,7 @@ public sealed class ExportModuleExtractionTests {
     public void ExportAbstractions_HaveOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts"], references);
     }
 
     [Theory]

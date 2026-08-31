@@ -20,6 +20,7 @@ public sealed class GamificationModuleExtractionTests {
             "FoodDiary.Mediator",
             "FoodDiary.Modules.Gamification.Application.Abstractions",
             "FoodDiary.Modules.Gamification.Domain",
+            "FoodDiary.Modules.Meals.Contracts",
         ], references);
     }
 

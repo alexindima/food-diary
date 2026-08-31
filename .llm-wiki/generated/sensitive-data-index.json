@@ -421,7 +421,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 84
+      "line": 83
     },
     {
       "category": "credential",
@@ -1930,69 +1930,6 @@
     },
     {
       "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealAiItemProjectionReadModel.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealFavoriteMealModel.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "ProductCaloriesPerBase",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
-      "line": 14
-    },
-    {
-      "category": "health",
-      "name": "RecipeTotalCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
-      "line": 25
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "IsNutritionAutoCalculated",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "ManualCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
-      "line": 19
-    },
-    {
-      "category": "health",
-      "name": "PreMealSatietyLevel",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
-      "line": 25
-    },
-    {
-      "category": "health",
-      "name": "PostMealSatietyLevel",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
-      "line": 26
-    },
-    {
-      "category": "health",
       "name": "DesiredWeightKg",
       "type": "double?",
       "path": "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
@@ -2451,153 +2388,6 @@
       "name": "HeightCm",
       "type": "double?",
       "path": "FoodDiary.Application.Abstractions/Users/Models/WeightHistoryProfileModel.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
-      "name": "IsNutritionAutoCalculated",
-      "type": "bool",
-      "path": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 17
-    },
-    {
-      "category": "health",
-      "name": "ManualCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "PreMealSatietyLevel",
-      "type": "int",
-      "path": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 24
-    },
-    {
-      "category": "health",
-      "name": "PostMealSatietyLevel",
-      "type": "int",
-      "path": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 25
-    },
-    {
-      "category": "health",
-      "name": "IsNutritionAutoCalculated",
-      "type": "bool",
-      "path": "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "ManualCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
-      "line": 19
-    },
-    {
-      "category": "health",
-      "name": "PreMealSatietyLevel",
-      "type": "int",
-      "path": "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
-      "line": 25
-    },
-    {
-      "category": "health",
-      "name": "PostMealSatietyLevel",
-      "type": "int",
-      "path": "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
-      "line": 26
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "FoodDiary.Application.Meals/Common/ManualNutritionInput.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "FoodDiary.Application.Meals/Common/MealAiItemInput.cs",
-      "line": 8
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "FoodDiary.Application.Meals/Models/MealAiItemModel.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "ProductCaloriesPerBase",
-      "type": "double?",
-      "path": "FoodDiary.Application.Meals/Models/MealItemModel.cs",
-      "line": 15
-    },
-    {
-      "category": "health",
-      "name": "RecipeTotalCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Meals/Models/MealItemModel.cs",
-      "line": 25
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "FoodDiary.Application.Meals/Models/MealModel.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "IsNutritionAutoCalculated",
-      "type": "bool",
-      "path": "FoodDiary.Application.Meals/Models/MealModel.cs",
-      "line": 19
-    },
-    {
-      "category": "health",
-      "name": "ManualCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Meals/Models/MealModel.cs",
-      "line": 20
-    },
-    {
-      "category": "health",
-      "name": "PreMealSatietyLevel",
-      "type": "int",
-      "path": "FoodDiary.Application.Meals/Models/MealModel.cs",
-      "line": 26
-    },
-    {
-      "category": "health",
-      "name": "PostMealSatietyLevel",
-      "type": "int",
-      "path": "FoodDiary.Application.Meals/Models/MealModel.cs",
-      "line": 27
-    },
-    {
-      "category": "health",
-      "name": "IsNutritionAutoCalculated",
-      "type": "bool",
-      "path": "FoodDiary.Application.Meals/Services/MealNutritionInput.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
-      "name": "ManualCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Meals/Services/MealNutritionInput.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "FoodDiary.Application.Meals/Services/MealNutritionSummary.cs",
       "line": 4
     },
     {
@@ -6039,6 +5829,216 @@
     },
     {
       "category": "health",
+      "name": "IsNutritionAutoCalculated",
+      "type": "bool",
+      "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
+      "line": 17
+    },
+    {
+      "category": "health",
+      "name": "ManualCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "PreMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
+      "line": 24
+    },
+    {
+      "category": "health",
+      "name": "PostMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
+      "line": 25
+    },
+    {
+      "category": "health",
+      "name": "IsNutritionAutoCalculated",
+      "type": "bool",
+      "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommand.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "ManualCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommand.cs",
+      "line": 19
+    },
+    {
+      "category": "health",
+      "name": "PreMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommand.cs",
+      "line": 25
+    },
+    {
+      "category": "health",
+      "name": "PostMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommand.cs",
+      "line": 26
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Meals/Application/Common/ManualNutritionInput.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Meals/Application/Common/MealAiItemInput.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Meals/Application/Models/MealAiItemModel.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "ProductCaloriesPerBase",
+      "type": "double?",
+      "path": "Modules/Meals/Application/Models/MealItemModel.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
+      "name": "RecipeTotalCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Application/Models/MealItemModel.cs",
+      "line": 25
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Meals/Application/Models/MealModel.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "IsNutritionAutoCalculated",
+      "type": "bool",
+      "path": "Modules/Meals/Application/Models/MealModel.cs",
+      "line": 19
+    },
+    {
+      "category": "health",
+      "name": "ManualCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Application/Models/MealModel.cs",
+      "line": 20
+    },
+    {
+      "category": "health",
+      "name": "PreMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Application/Models/MealModel.cs",
+      "line": 26
+    },
+    {
+      "category": "health",
+      "name": "PostMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Application/Models/MealModel.cs",
+      "line": 27
+    },
+    {
+      "category": "health",
+      "name": "IsNutritionAutoCalculated",
+      "type": "bool",
+      "path": "Modules/Meals/Application/Services/MealNutritionInput.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "ManualCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Application/Services/MealNutritionInput.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Meals/Application/Services/MealNutritionSummary.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealAiItemProjectionReadModel.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealFavoriteMealModel.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "ProductCaloriesPerBase",
+      "type": "double?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealItemProjectionReadModel.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "RecipeTotalCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealItemProjectionReadModel.cs",
+      "line": 25
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "IsNutritionAutoCalculated",
+      "type": "bool",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "ManualCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "line": 19
+    },
+    {
+      "category": "health",
+      "name": "PreMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "line": 25
+    },
+    {
+      "category": "health",
+      "name": "PostMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "line": 26
+    },
+    {
+      "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "bool?",
       "path": "Modules/Notifications/Application/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
@@ -7614,62 +7614,6 @@
     },
     {
       "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "Guid?",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealAiSessionProjectionReadModel.cs",
-      "line": 8
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealAiSessionProjectionReadModel.cs",
-      "line": 9
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealAiSessionProjectionReadModel.cs",
-      "line": 13
-    },
-    {
-      "category": "privateContent",
-      "name": "ProductImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
-      "line": 11
-    },
-    {
-      "category": "privateContent",
-      "name": "RecipeImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
-      "line": 23
-    },
-    {
-      "category": "privateContent",
-      "name": "Comment",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
-      "line": 9
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
-      "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "Guid?",
-      "path": "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
-      "line": 11
-    },
-    {
-      "category": "privateContent",
       "name": "ProfileImageAssetId",
       "type": "Guid?",
       "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
@@ -7681,146 +7625,6 @@
       "type": "Guid?",
       "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
       "line": 37
-    },
-    {
-      "category": "privateContent",
-      "name": "Comment",
-      "type": "string?",
-      "path": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 12
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 13
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "Guid?",
-      "path": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
-      "line": 14
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "ImageAssetId?",
-      "path": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealValues.cs",
-      "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAsset",
-      "type": "ImageAsset?",
-      "path": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealValues.cs",
-      "line": 11
-    },
-    {
-      "category": "privateContent",
-      "name": "Comment",
-      "type": "string?",
-      "path": "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
-      "line": 13
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
-      "line": 14
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "Guid?",
-      "path": "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
-      "line": 15
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "ImageAssetId?",
-      "path": "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealValues.cs",
-      "line": 13
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAsset",
-      "type": "ImageAsset?",
-      "path": "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealValues.cs",
-      "line": 14
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "Guid?",
-      "path": "FoodDiary.Application.Meals/Common/MealAiSessionInput.cs",
-      "line": 4
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Meals/Common/MealAiSessionInput.cs",
-      "line": 7
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "Guid?",
-      "path": "FoodDiary.Application.Meals/Models/MealAiSessionModel.cs",
-      "line": 6
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Meals/Models/MealAiSessionModel.cs",
-      "line": 7
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Application.Meals/Models/MealAiSessionModel.cs",
-      "line": 11
-    },
-    {
-      "category": "privateContent",
-      "name": "ProductImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Meals/Models/MealItemModel.cs",
-      "line": 12
-    },
-    {
-      "category": "privateContent",
-      "name": "RecipeImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Meals/Models/MealItemModel.cs",
-      "line": 23
-    },
-    {
-      "category": "privateContent",
-      "name": "Comment",
-      "type": "string?",
-      "path": "FoodDiary.Application.Meals/Models/MealModel.cs",
-      "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Meals/Models/MealModel.cs",
-      "line": 11
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "Guid?",
-      "path": "FoodDiary.Application.Meals/Models/MealModel.cs",
-      "line": 12
     },
     {
       "category": "privateContent",
@@ -9256,6 +9060,202 @@
       "type": "ImageAssetId?",
       "path": "Modules/Images/Application/Common/ImageAssetResolution.cs",
       "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
+      "line": 12
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
+      "line": 13
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommand.cs",
+      "line": 14
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "ImageAssetId?",
+      "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealValues.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAsset",
+      "type": "ImageAsset?",
+      "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealValues.cs",
+      "line": 11
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommand.cs",
+      "line": 13
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommand.cs",
+      "line": 14
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommand.cs",
+      "line": 15
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "ImageAssetId?",
+      "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealValues.cs",
+      "line": 13
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAsset",
+      "type": "ImageAsset?",
+      "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealValues.cs",
+      "line": 14
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Meals/Application/Common/MealAiSessionInput.cs",
+      "line": 4
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Meals/Application/Common/MealAiSessionInput.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Meals/Application/Models/MealAiSessionModel.cs",
+      "line": 6
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Application/Models/MealAiSessionModel.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Meals/Application/Models/MealAiSessionModel.cs",
+      "line": 11
+    },
+    {
+      "category": "privateContent",
+      "name": "ProductImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Application/Models/MealItemModel.cs",
+      "line": 12
+    },
+    {
+      "category": "privateContent",
+      "name": "RecipeImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Application/Models/MealItemModel.cs",
+      "line": 23
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Meals/Application/Models/MealModel.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Application/Models/MealModel.cs",
+      "line": 11
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Meals/Application/Models/MealModel.cs",
+      "line": 12
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealAiSessionProjectionReadModel.cs",
+      "line": 8
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealAiSessionProjectionReadModel.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealAiSessionProjectionReadModel.cs",
+      "line": 13
+    },
+    {
+      "category": "privateContent",
+      "name": "ProductImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealItemProjectionReadModel.cs",
+      "line": 11
+    },
+    {
+      "category": "privateContent",
+      "name": "RecipeImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealItemProjectionReadModel.cs",
+      "line": 23
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "line": 11
     },
     {
       "category": "privateContent",

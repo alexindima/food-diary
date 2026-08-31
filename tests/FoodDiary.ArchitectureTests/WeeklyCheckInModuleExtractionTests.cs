@@ -19,6 +19,7 @@ public sealed class WeeklyCheckInModuleExtractionTests {
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
             "FoodDiary.Modules.Hydration.Contracts",
+            "FoodDiary.Modules.Meals.Contracts",
         ], references);
     }
 

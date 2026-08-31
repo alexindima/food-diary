@@ -18,6 +18,7 @@ public sealed class WeeklyGoalsModuleExtractionTests {
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Meals.Contracts",
             "FoodDiary.Modules.WeeklyGoals.Application.Abstractions",
             "FoodDiary.Modules.WeeklyGoals.Contracts",
             "FoodDiary.Modules.WeeklyGoals.Domain",

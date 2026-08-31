@@ -67,7 +67,13 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Meal planning Infrastructure: `Modules/MealPlanning/Infrastructure/AGENTS.md`
 - Meal planning Infrastructure/Model: `Modules/MealPlanning/Infrastructure/Model/AGENTS.md`
 - Meal planning tests: `Modules/MealPlanning/tests/AGENTS.md`
-- Meals application module: `FoodDiary.Application.Meals/AGENTS.md`
+- Meals logical module: `Modules/Meals/AGENTS.md`
+- Meals application: `Modules/Meals/Application/AGENTS.md`
+- Meals application abstractions: `Modules/Meals/Application/Abstractions/AGENTS.md`
+- Meals contracts: `Modules/Meals/Contracts/AGENTS.md`
+- Meals infrastructure: `Modules/Meals/Infrastructure/AGENTS.md`
+- Meals persistence model: `Modules/Meals/Infrastructure/Model/AGENTS.md`
+- Meals tests: `Modules/Meals/tests/AGENTS.md`
 - Open Food Facts logical module: `Modules/OpenFoodFacts/AGENTS.md`
 - Open Food Facts application abstractions: `Modules/OpenFoodFacts/Application/Abstractions/AGENTS.md`
 - Open Food Facts contracts: `Modules/OpenFoodFacts/Contracts/AGENTS.md`

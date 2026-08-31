@@ -31,6 +31,7 @@ public sealed class FavoritesModuleExtractionTests {
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
             "FoodDiary.Modules.Favorites.Domain",
+            "FoodDiary.Modules.Meals.Contracts",
         ];
 
         Assert.Equal(expectedReferences, references);

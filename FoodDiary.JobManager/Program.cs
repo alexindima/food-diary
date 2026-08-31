@@ -10,7 +10,6 @@ using FoodDiary.Application.Identity;
 using FoodDiary.Application.Images;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Modules.Marketing.Infrastructure;
-using FoodDiary.Application.Meals;
 using FoodDiary.Application.Users;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
@@ -35,7 +34,7 @@ builder.Services.AddNotificationsModule().AddNotificationsInfrastructure(builder
 builder.Services.AddUsersModule();
 builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
-builder.Services.AddMealsModule();
+builder.Services.AddMealsPersistence();
 builder.Services.AddInfrastructure(builder.Configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddProductsPersistence().AddDashboardReadServices();
 builder.Services.AddImagesInfrastructure();
 builder.Services.AddIntegrations(builder.Configuration);

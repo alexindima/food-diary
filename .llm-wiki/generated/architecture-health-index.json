@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 640,
+    "productionProjectEdges": 657,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -4900,7 +4900,7 @@
     {
       "name": "MealAiItemInputValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Meals/Common/Validators/MealAiItemInputValidator.cs",
+      "path": "Modules/Meals/Application/Common/Validators/MealAiItemInputValidator.cs",
       "line": 6,
       "testReferenceCount": 0,
       "testReferences": [],

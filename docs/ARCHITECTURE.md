@@ -175,3 +175,15 @@ shared context/migrations and composition lock remain unchanged. Hosts explicitl
 compose AddProductsModule; JobManager adds AddProductsPersistence without new
 handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
 coordinated-rebuild compatibility promise.
+
+## Meals physical ownership
+
+Meals use cases, owner ports, consumed contracts, persistence adapter and EF model
+live under `Modules/Meals`; focused application, invariant and repository PostgreSQL
+tests live under its nested tests folder. Meal/MealItem/MealAiSession/MealAiItem stay
+in central Domain because `User.Meals`, Product/Recipe MealItems and their inverse
+navigations are a public bidirectional graph. UserConfiguration, user cleanup, the
+shared DbContext, migrations and snapshot remain central. API and Initializer compose
+`AddMealsModule`; JobManager adds `AddMealsPersistence` only. Legacy application
+assembly/CLR identity and HTTP/Swagger behavior are preserved. See
+`docs/ai/meals-ownership-inventory.md` for the evidence and compatibility boundary.

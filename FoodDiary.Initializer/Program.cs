@@ -16,7 +16,6 @@ using FoodDiary.Application.Identity;
 using FoodDiary.Application.Images;
 using FoodDiary.Modules.Lessons.Infrastructure;
 using FoodDiary.Application.Statistics;
-using FoodDiary.Application.Meals;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
 using FoodDiary.Application.Tdee;
 using FoodDiary.Application.Notifications;

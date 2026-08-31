@@ -1100,8 +1100,8 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
             Path.Combine(root, "Modules", "Ai", "Application", "Commands", "ParseFoodText", "ParseFoodTextCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Meals", "Commands", "DeleteMeal", "DeleteMealCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Meals", "Queries", "GetMealById", "GetMealByIdQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Meals", "Application", "Commands", "DeleteMeal", "DeleteMealCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Meals", "Application", "Queries", "GetMealById", "GetMealByIdQueryHandler.cs"),
             Path.Combine(root, "Modules", "ContentReports", "Application", "Commands", "CreateContentReport", "CreateContentReportCommandHandler.cs"),
             Path.Combine(root, "Modules/Dashboard/Application", "Queries", "GetDashboardSnapshot", "GetDashboardSnapshotQueryHandler.cs"),
             Path.Combine(root, "Modules", "Dietologist", "Application", "Commands", "AcceptInvitation", "AcceptInvitationCommandHandler.cs"),
@@ -1295,7 +1295,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] serviceFiles = [
-            Path.Combine(root, "FoodDiary.Application.Meals", "Services", "MealReadService.cs"),
+            Path.Combine(root, "Modules", "Meals", "Application", "Services", "MealReadService.cs"),
             Path.Combine(root, "Modules", "Export", "Application", "Services", "ExportDiaryReadService.cs"),
             Path.Combine(root, "Modules", "Gamification", "Application", "Services", "GamificationReadService.cs"),
             Path.Combine(root, "Modules", "Usda", "Application", "Services", "UsdaDailyMicronutrientReadService.cs"),
@@ -1370,7 +1370,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void MealQueries_UseDedicatedReadServiceInsteadOfMealRepository() {
         string root = GetRepositoryRoot();
-        string mealQueriesRoot = Path.Combine(root, "FoodDiary.Application.Meals", "Queries");
+        string mealQueriesRoot = Path.Combine(root, "Modules", "Meals", "Application", "Queries");
         string[] mealQueryFiles = [.. SourceScanner.SourceFiles(mealQueriesRoot)];
 
         string[] violations = [
@@ -1387,7 +1387,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.Meals",
+            "Modules", "Meals", "Application",
             "Services",
             "MealReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -1430,7 +1430,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void MealReadContracts_DoNotFallbackToAggregateDefaultReadModels() {
         string root = GetRepositoryRoot();
-        string contractRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Meals", "Common");
+        string contractRoot = Path.Combine(root, "Modules", "Meals", "Application", "Abstractions", "Meals", "Common");
         string[] contractFiles = [
             Path.Combine(contractRoot, "IMealReadRepository.cs"),
             Path.Combine(contractRoot, "IMealProjectionReadRepository.cs"),
@@ -1650,7 +1650,9 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string mappingPath = Path.Combine(
             root,
-            "FoodDiary.Application.Meals",
+            "Modules",
+            "Meals",
+            "Application",
             "Mappings",
             "MealMappings.cs");
         string[] mappingFiles = [mappingPath];

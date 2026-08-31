@@ -9,7 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="Abstractions\FoodDiary.Modules.Export.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\Cycles\Application\FoodDiary.Application.Cycles.csproj" />
-    <ProjectReference Include="..\..\..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
+    <ProjectReference Include="..\..\Meals\Contracts\FoodDiary.Modules.Meals.Contracts.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
     <ProjectReference Include="..\..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
   </ItemGroup>

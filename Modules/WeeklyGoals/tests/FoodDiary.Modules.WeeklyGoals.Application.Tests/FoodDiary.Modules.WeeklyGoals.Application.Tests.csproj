@@ -14,6 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Application\FoodDiary.Modules.WeeklyGoals.Application.csproj" />
+    <ProjectReference Include="../../../Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
     <ProjectReference Include="..\..\..\..\FoodDiary.Application.Users\FoodDiary.Application.Users.csproj" />
   </ItemGroup>
 </Project>

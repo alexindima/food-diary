@@ -30,7 +30,6 @@ public sealed class DashboardModuleExtractionTests {
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Application.Cycles",
-            "FoodDiary.Application.Meals",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
             "FoodDiary.Modules.DailyAdvices.Application",
@@ -39,6 +38,7 @@ public sealed class DashboardModuleExtractionTests {
             "FoodDiary.Modules.Exercises.Contracts",
             "FoodDiary.Modules.Fasting.Contracts",
             "FoodDiary.Modules.Hydration.Contracts",
+            "FoodDiary.Modules.Meals.Application",
             "FoodDiary.Modules.Statistics.Application",
             "FoodDiary.Modules.Tdee.Application",
         ], references);
