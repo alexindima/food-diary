@@ -153,3 +153,13 @@ migrations/model snapshot and HTTP transport remain central. Hosts explicitly ca
 registration remains `AddDashboardModule`. Scoped concrete/interface aliases and
 query behavior are preserved. Owned application/adapter tests live under module
 tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.
+
+## Products physical ownership
+
+Products use cases, ports, consumed contracts, persistence adapters and EF model
+live under `Modules/Products`; focused application, Product invariant and repository PostgreSQL tests live under its nested
+tests folder. Central Product/User/RecipeIngredient/MealItem/USDA CLR navigations,
+shared context/migrations and composition lock remain unchanged. Hosts explicitly
+compose AddProductsModule; JobManager adds AddProductsPersistence without new
+handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
+coordinated-rebuild compatibility promise.

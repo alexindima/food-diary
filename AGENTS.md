@@ -68,7 +68,13 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Open Food Facts domain: `Modules/OpenFoodFacts/Domain/AGENTS.md`
 - Open Food Facts infrastructure: `Modules/OpenFoodFacts/Infrastructure/AGENTS.md`
 - Open Food Facts persistence model: `Modules/OpenFoodFacts/Infrastructure/Model/AGENTS.md`
-- Products application module: `FoodDiary.Application.Products/AGENTS.md`
+- Products logical module: `Modules/Products/AGENTS.md`
+- Products application: `Modules/Products/Application/AGENTS.md`
+- Products ports: `Modules/Products/Application/Abstractions/AGENTS.md`
+- Products contracts: `Modules/Products/Contracts/AGENTS.md`
+- Products infrastructure: `Modules/Products/Infrastructure/AGENTS.md`
+- Products persistence model: `Modules/Products/Infrastructure/Model/AGENTS.md`
+- Products tests: `Modules/Products/tests/AGENTS.md`
 - Recipe community logical module: `Modules/RecipeCommunity/AGENTS.md`
 - Recipe community Application: `Modules/RecipeCommunity/Application/AGENTS.md`
 - Recipe community Application/Abstractions: `Modules/RecipeCommunity/Application/Abstractions/AGENTS.md`

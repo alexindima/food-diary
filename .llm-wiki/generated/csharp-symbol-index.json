@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3530,
-    "symbols": 3521,
+    "sourceFiles": 3532,
+    "symbols": 3522,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 183,
+    "dependencyInjectionRegistrations": 179,
     "kinds": {
-      "class": 1848,
+      "class": 1849,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1372,
+      "Other": 1373,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -1523,76 +1523,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Nutrition/Common/ManualNutritionLimits.cs",
       "line": 2
-    },
-    {
-      "name": "IProductLookupService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs",
-      "line": 5
-    },
-    {
-      "name": "IProductMutationTransactionRunner",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductMutationTransactionRunner.cs",
-      "line": 2
-    },
-    {
-      "name": "IProductOverviewReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductOverviewReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IProductReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IProductRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IProductUsdaLinkService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs",
-      "line": 4
-    },
-    {
-      "name": "IProductWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "ProductErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Products/Common/ProductErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "ProductOverviewReadItem",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Products/Models/ProductOverviewReadItem.cs",
-      "line": 5
-    },
-    {
-      "name": "ProductQueryFilters",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Products/Models/ProductQueryFilters.cs",
-      "line": 4
     },
     {
       "name": "IRecentItemReadRepository",
@@ -3996,370 +3926,6 @@
       "line": 5
     },
     {
-      "name": "CreateProductCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateProductCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "CreateProductCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "CreateProductValuePreparer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductValuePreparer.cs",
-      "line": 10
-    },
-    {
-      "name": "CreateProductValues",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductValues.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteProductCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Products/Commands/DeleteProduct/DeleteProductCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteProductCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "DeleteProductCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Commands/DeleteProduct/DeleteProductCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "DuplicateProductCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Products/Commands/DuplicateProduct/DuplicateProductCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "DuplicateProductCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "DuplicateProductCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Commands/DuplicateProduct/DuplicateProductCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "ProductUpdateApplier",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateApplier.cs",
-      "line": 5
-    },
-    {
-      "name": "ProductUpdateLimitValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
-      "line": 7
-    },
-    {
-      "name": "ProductUpdateValuePreparer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
-      "line": 11
-    },
-    {
-      "name": "ProductUpdateValues",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 5
-    },
-    {
-      "name": "UpdateProductCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateProductCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "UpdateProductCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/UpdateProductCommandValidator.cs",
-      "line": 7
-    },
-    {
-      "name": "IProductSearchSuggestionProvider",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Common/IProductSearchSuggestionProvider.cs",
-      "line": 4
-    },
-    {
-      "name": "IRecentProductReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Products/Common/IRecentProductReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "ProductCommandParsers",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Common/ProductCommandParsers.cs",
-      "line": 7
-    },
-    {
-      "name": "ProductCommandValidation",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Common/ProductCommandValidation.cs",
-      "line": 6
-    },
-    {
-      "name": "ProductEnumFilterParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Common/ProductEnumFilterParser.cs",
-      "line": 4
-    },
-    {
-      "name": "ProductImageAssetResolution",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Common/ProductImageAssetResolution.cs",
-      "line": 4
-    },
-    {
-      "name": "ProductImageAssetResolver",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Common/ProductImageAssetResolver.cs",
-      "line": 7
-    },
-    {
-      "name": "ProductRequiredIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Common/ProductRequiredIdParser.cs",
-      "line": 5
-    },
-    {
-      "name": "RecentProductOverviewLoader",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Common/RecentProductOverviewLoader.cs",
-      "line": 4
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/DependencyInjection.cs",
-      "line": 10
-    },
-    {
-      "name": "ProductMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Mappings/ProductMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "ProductOverviewReadMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Mappings/ProductOverviewReadMappings.cs",
-      "line": 5
-    },
-    {
-      "name": "ProductModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Models/ProductModel.cs",
-      "line": 6
-    },
-    {
-      "name": "ProductOverviewModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Models/ProductOverviewModel.cs",
-      "line": 5
-    },
-    {
-      "name": "ProductSearchSuggestionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/Models/ProductSearchSuggestionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetProductByIdQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Products/Queries/GetProductById/GetProductByIdQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetProductByIdQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "GetProductByIdQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Queries/GetProductById/GetProductByIdQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetProductsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Products/Queries/GetProducts/GetProductsQuery.cs",
-      "line": 7
-    },
-    {
-      "name": "GetProductsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Queries/GetProducts/GetProductsQueryHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "GetProductsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Queries/GetProducts/GetProductsQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "GetProductsOverviewQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetProductsOverviewQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "line": 17
-    },
-    {
-      "name": "GetProductsOverviewQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "GetRecentProductsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetRecentProductsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetRecentProductsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Queries/GetRecentProducts/GetRecentProductsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "SearchProductSuggestionsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "SearchProductSuggestionsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "SearchProductSuggestionsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "OpenFoodFactsProductSearchSuggestionProvider",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/SearchSuggestions/OpenFoodFactsProductSearchSuggestionProvider.cs",
-      "line": 7
-    },
-    {
-      "name": "UsdaProductSearchSuggestionProvider",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
-      "line": 8
-    },
-    {
-      "name": "ProductUsdaLinkService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Products/Services/ProductUsdaLinkService.cs",
-      "line": 6
-    },
-    {
-      "name": "RecentProductReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Products/Services/RecentProductReadService.cs",
-      "line": 10
-    },
-    {
       "name": "CommandTransactionBehavior",
       "kind": "class",
       "role": "Other",
@@ -6274,13 +5840,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Products.cs",
-      "line": 7
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.RecentItems.cs",
       "line": 6
     },
@@ -6514,13 +6073,6 @@
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Outbox/OutboxReplayAuditConfiguration.cs",
       "line": 6
-    },
-    {
-      "name": "ProductConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Products/ProductConfiguration.cs",
-      "line": 9
     },
     {
       "name": "RecentItemConfiguration",
@@ -6873,34 +6425,6 @@
       "line": 2
     },
     {
-      "name": "CachedProductRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Products/CachedProductRepository.cs",
-      "line": 8
-    },
-    {
-      "name": "EfProductMutationTransactionRunner",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs",
-      "line": 8
-    },
-    {
-      "name": "ProductOverviewReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 11
-    },
-    {
-      "name": "ProductRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Products/ProductRepository.cs",
-      "line": 8
-    },
-    {
       "name": "PostCommitRecentItemUsageRecorder",
       "kind": "class",
       "role": "Other",
@@ -7104,13 +6628,6 @@
       "line": 4
     },
     {
-      "name": "ProductLookupService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Services/ProductLookupService.cs",
-      "line": 6
-    },
-    {
       "name": "StructuredAuditLogger",
       "kind": "class",
       "role": "Other",
@@ -7157,7 +6674,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 398
+      "line": 397
     },
     {
       "name": "UsdaCsvReader",
@@ -11700,7 +11217,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 51
+      "line": 50
     },
     {
       "name": "ApiTelemetry",
@@ -22581,6 +22098,496 @@
       "line": 9
     },
     {
+      "name": "IProductMutationTransactionRunner",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Products/Application/Abstractions/Products/Common/IProductMutationTransactionRunner.cs",
+      "line": 2
+    },
+    {
+      "name": "IProductReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Products/Application/Abstractions/Products/Common/IProductReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IProductRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Products/Application/Abstractions/Products/Common/IProductRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IProductWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Products/Application/Abstractions/Products/Common/IProductWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "ProductErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Abstractions/Products/Common/ProductErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "CreateProductCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateProductCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "CreateProductCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "CreateProductValuePreparer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValuePreparer.cs",
+      "line": 10
+    },
+    {
+      "name": "CreateProductValues",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteProductCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteProductCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "DeleteProductCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "DuplicateProductCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "DuplicateProductCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "DuplicateProductCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "ProductUpdateApplier",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateApplier.cs",
+      "line": 5
+    },
+    {
+      "name": "ProductUpdateLimitValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
+      "line": 7
+    },
+    {
+      "name": "ProductUpdateValuePreparer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
+      "line": 11
+    },
+    {
+      "name": "ProductUpdateValues",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
+      "line": 5
+    },
+    {
+      "name": "UpdateProductCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateProductCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "UpdateProductCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommandValidator.cs",
+      "line": 7
+    },
+    {
+      "name": "IProductSearchSuggestionProvider",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Products/Application/Common/IProductSearchSuggestionProvider.cs",
+      "line": 4
+    },
+    {
+      "name": "IRecentProductReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Products/Application/Common/IRecentProductReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "ProductCommandParsers",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Common/ProductCommandParsers.cs",
+      "line": 7
+    },
+    {
+      "name": "ProductCommandValidation",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Common/ProductCommandValidation.cs",
+      "line": 6
+    },
+    {
+      "name": "ProductEnumFilterParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Common/ProductEnumFilterParser.cs",
+      "line": 4
+    },
+    {
+      "name": "ProductImageAssetResolution",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Application/Common/ProductImageAssetResolution.cs",
+      "line": 4
+    },
+    {
+      "name": "ProductImageAssetResolver",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Common/ProductImageAssetResolver.cs",
+      "line": 7
+    },
+    {
+      "name": "ProductRequiredIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Common/ProductRequiredIdParser.cs",
+      "line": 5
+    },
+    {
+      "name": "RecentProductOverviewLoader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Common/RecentProductOverviewLoader.cs",
+      "line": 4
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/DependencyInjection.cs",
+      "line": 10
+    },
+    {
+      "name": "ProductMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Mappings/ProductMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "ProductOverviewReadMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/Mappings/ProductOverviewReadMappings.cs",
+      "line": 5
+    },
+    {
+      "name": "ProductModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Application/Models/ProductModel.cs",
+      "line": 6
+    },
+    {
+      "name": "ProductOverviewModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Application/Models/ProductOverviewModel.cs",
+      "line": 5
+    },
+    {
+      "name": "ProductSearchSuggestionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Application/Models/ProductSearchSuggestionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetProductByIdQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Products/Application/Queries/GetProductById/GetProductByIdQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetProductByIdQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Products/Application/Queries/GetProductById/GetProductByIdQueryHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "GetProductByIdQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Products/Application/Queries/GetProductById/GetProductByIdQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetProductsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetProductsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQueryHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "GetProductsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "GetProductsOverviewQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetProductsOverviewQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+      "line": 17
+    },
+    {
+      "name": "GetProductsOverviewQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "GetRecentProductsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Products/Application/Queries/GetRecentProducts/GetRecentProductsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetRecentProductsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Products/Application/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetRecentProductsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Products/Application/Queries/GetRecentProducts/GetRecentProductsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "SearchProductSuggestionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Products/Application/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "SearchProductSuggestionsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Products/Application/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "SearchProductSuggestionsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Products/Application/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "OpenFoodFactsProductSearchSuggestionProvider",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/SearchSuggestions/OpenFoodFactsProductSearchSuggestionProvider.cs",
+      "line": 7
+    },
+    {
+      "name": "UsdaProductSearchSuggestionProvider",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Application/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
+      "line": 8
+    },
+    {
+      "name": "ProductUsdaLinkService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Products/Application/Services/ProductUsdaLinkService.cs",
+      "line": 6
+    },
+    {
+      "name": "RecentProductReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Products/Application/Services/RecentProductReadService.cs",
+      "line": 10
+    },
+    {
+      "name": "IProductLookupService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Products/Contracts/Products/Common/IProductLookupService.cs",
+      "line": 5
+    },
+    {
+      "name": "IProductOverviewReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Products/Contracts/Products/Common/IProductOverviewReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IProductUsdaLinkService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Products/Contracts/Products/Common/IProductUsdaLinkService.cs",
+      "line": 4
+    },
+    {
+      "name": "ProductOverviewReadItem",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
+      "line": 5
+    },
+    {
+      "name": "ProductQueryFilters",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Products/Contracts/Products/Models/ProductQueryFilters.cs",
+      "line": 4
+    },
+    {
+      "name": "ProductConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Products/Infrastructure/Model/Configurations/Products/ProductConfiguration.cs",
+      "line": 9
+    },
+    {
+      "name": "ProductsPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Infrastructure/Model/ProductsPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "CachedProductRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Products/Infrastructure/Persistence/Products/CachedProductRepository.cs",
+      "line": 8
+    },
+    {
+      "name": "EfProductMutationTransactionRunner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs",
+      "line": 8
+    },
+    {
+      "name": "ProductOverviewReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
+      "line": 11
+    },
+    {
+      "name": "ProductRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs",
+      "line": 8
+    },
+    {
+      "name": "ProductsModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Infrastructure/ProductsModuleRegistration.cs",
+      "line": 8
+    },
+    {
+      "name": "ProductLookupService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Products/Infrastructure/Services/ProductLookupService.cs",
+      "line": 6
+    },
+    {
       "name": "IRecipeCommentReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -25825,30 +25832,30 @@
     },
     {
       "interface": "IProductLookupService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs",
+      "interfacePath": "Modules/Products/Contracts/Products/Common/IProductLookupService.cs",
       "implementation": "ProductLookupService",
-      "implementationPath": "FoodDiary.Infrastructure/Services/ProductLookupService.cs",
+      "implementationPath": "Modules/Products/Infrastructure/Services/ProductLookupService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IProductOverviewReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Products/Common/IProductOverviewReadService.cs",
+      "interfacePath": "Modules/Products/Contracts/Products/Common/IProductOverviewReadService.cs",
       "implementation": "ProductOverviewReadService",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
+      "implementationPath": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IProductRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Products/Common/IProductRepository.cs",
+      "interfacePath": "Modules/Products/Application/Abstractions/Products/Common/IProductRepository.cs",
       "implementation": "ProductRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Products/ProductRepository.cs",
+      "implementationPath": "Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IProductUsdaLinkService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs",
+      "interfacePath": "Modules/Products/Contracts/Products/Common/IProductUsdaLinkService.cs",
       "implementation": "ProductUsdaLinkService",
-      "implementationPath": "FoodDiary.Application.Products/Services/ProductUsdaLinkService.cs",
+      "implementationPath": "Modules/Products/Application/Services/ProductUsdaLinkService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25867,9 +25874,9 @@
     },
     {
       "interface": "IRecentProductReadService",
-      "interfacePath": "FoodDiary.Application.Products/Common/IRecentProductReadService.cs",
+      "interfacePath": "Modules/Products/Application/Common/IRecentProductReadService.cs",
       "implementation": "RecentProductReadService",
-      "implementationPath": "FoodDiary.Application.Products/Services/RecentProductReadService.cs",
+      "implementationPath": "Modules/Products/Application/Services/RecentProductReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26470,34 +26477,6 @@
       "line": 23
     },
     {
-      "service": "IProductSearchSuggestionProvider",
-      "implementation": "OpenFoodFactsProductSearchSuggestionProvider",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Products/DependencyInjection.cs",
-      "line": 16
-    },
-    {
-      "service": "IProductSearchSuggestionProvider",
-      "implementation": "UsdaProductSearchSuggestionProvider",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Products/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IRecentProductReadService",
-      "implementation": "RecentProductReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Products/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "IProductUsdaLinkService",
-      "implementation": "ProductUsdaLinkService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Products/DependencyInjection.cs",
-      "line": 19
-    },
-    {
       "service": "IPostCommitActionQueue",
       "implementation": "PostCommitActionQueue",
       "lifetime": "Scoped",
@@ -26701,34 +26680,6 @@
       "line": 22
     },
     {
-      "service": "IProductOverviewReadService",
-      "implementation": "ProductOverviewReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Products.cs",
-      "line": 11
-    },
-    {
-      "service": "IProductRepository",
-      "implementation": "CachedProductRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Products.cs",
-      "line": 12
-    },
-    {
-      "service": "IProductMutationTransactionRunner",
-      "implementation": "EfProductMutationTransactionRunner",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Products.cs",
-      "line": 15
-    },
-    {
-      "service": "IProductLookupService",
-      "implementation": "ProductLookupService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Products.cs",
-      "line": 16
-    },
-    {
       "service": "IRecentItemRepository",
       "implementation": "RecentItemRepository",
       "lifetime": "Scoped",
@@ -26817,14 +26768,14 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 127
+      "line": 126
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 128
+      "line": 127
     },
     {
       "service": "IGoogleTokenValidator",
@@ -26964,21 +26915,21 @@
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 105
+      "line": 104
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 106
+      "line": 105
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 138
+      "line": 137
     },
     {
       "service": "IMailInboxReadinessChecker",
@@ -27532,6 +27483,34 @@
       "lifetime": "Scoped",
       "path": "Modules/OpenFoodFacts/Application/DependencyInjection.cs",
       "line": 14
+    },
+    {
+      "service": "IProductSearchSuggestionProvider",
+      "implementation": "OpenFoodFactsProductSearchSuggestionProvider",
+      "lifetime": "Scoped",
+      "path": "Modules/Products/Application/DependencyInjection.cs",
+      "line": 16
+    },
+    {
+      "service": "IProductSearchSuggestionProvider",
+      "implementation": "UsdaProductSearchSuggestionProvider",
+      "lifetime": "Scoped",
+      "path": "Modules/Products/Application/DependencyInjection.cs",
+      "line": 17
+    },
+    {
+      "service": "IRecentProductReadService",
+      "implementation": "RecentProductReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Products/Application/DependencyInjection.cs",
+      "line": 18
+    },
+    {
+      "service": "IProductUsdaLinkService",
+      "implementation": "ProductUsdaLinkService",
+      "lifetime": "Scoped",
+      "path": "Modules/Products/Application/DependencyInjection.cs",
+      "line": 19
     },
     {
       "service": "IRecipeCommentReadService",

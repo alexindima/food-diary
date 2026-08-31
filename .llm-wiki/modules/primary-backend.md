@@ -32,6 +32,7 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 | Extracted marketing use cases | `FoodDiary.Application.Marketing` |
 | Body measurements | `Modules/BodyMetrics` application, ports, repositories and mappings; central Domain identity seam |
 | AI use cases, usage and prompt ownership | `Modules/Ai` application, ports, Domain, persistence model and adapters; central User profile/context and external Integrations provider seams |
+| Product catalog and mutation ownership | `Modules/Products` application, ports/contracts, persistence model, adapters and focused tests; central Product/User/RecipeIngredient/MealItem/USDA CLR navigation and shared composition-lock seams |
 | EF Core and technical implementations | `FoodDiary.Infrastructure` |
 | External providers and service clients | `FoodDiary.Integrations` |
 | HTTP and SignalR transport | `FoodDiary.Presentation.Api` |

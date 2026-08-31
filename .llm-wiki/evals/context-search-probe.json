@@ -78,7 +78,7 @@
       "id": "product-lookup-service-probe",
       "query": "lookup one product from database persistence",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Services/ProductLookupService.cs"]
+      "expectedPaths": ["Modules/Products/Infrastructure/Services/ProductLookupService.cs"]
     },
     {
       "id": "recipe-access-service-probe",

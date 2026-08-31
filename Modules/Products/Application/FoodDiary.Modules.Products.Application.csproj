@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Application.Products</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Products</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup><Compile Remove="Abstractions/**/*.cs" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../../FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Images/Application/FoodDiary.Application.Images.csproj" />
+    <ProjectReference Include="../../OpenFoodFacts/Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
+    <ProjectReference Include="../../Usda/Application/FoodDiary.Application.Usda.csproj" />
+    <ProjectReference Include="../../Usda/Contracts/FoodDiary.Modules.Usda.Contracts.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
+  </ItemGroup>
+</Project>

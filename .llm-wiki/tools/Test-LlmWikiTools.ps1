@@ -313,7 +313,7 @@ Assert-Wiki (@($localVisualDiffBrief.change.scopes | Where-Object { $_ -notin @(
 Assert-Wiki (@($localVisualDiffBrief.requiredChecks.id) -notcontains 'architecture-tests') 'Local visual diff incorrectly required architecture tests.'
 
 $testPlanJson = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') `
-    -ChangedPath @('FoodDiary.Infrastructure/Persistence/Products/ProductRepository.cs') `
+    -ChangedPath @('Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs') `
     -Format Json `
     -Limit 15
 $testPlan = $testPlanJson | ConvertFrom-Json

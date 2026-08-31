@@ -43,3 +43,13 @@ MealPlanDayId now live in Modules/MealPlanning/Domain. Preserve private EF sette
 ## Recipes physical ownership
 
 Recipes use cases, ports, read contracts, persistence model and adapters live under `Modules/Recipes`. Recipe/Steps/Ingredients, IDs/value objects/events remain central Domain because public User/MealItem/Product inverse navigations prohibit a one-way extraction. Shared context/migrations/snapshot and cross-module tests stay central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers. See `docs/ai/recipes-ownership-inventory.md`; this is not full Domain/database isolation.
+
+## Products physical ownership
+
+Products use cases, ports, consumed contracts, persistence adapters and EF model
+live under `Modules/Products`; focused application tests live under its nested
+tests folder. Central Product/User/RecipeIngredient/MealItem/USDA CLR navigations,
+shared context/migrations and composition lock remain unchanged. Hosts explicitly
+compose AddProductsModule; JobManager adds AddProductsPersistence without new
+handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
+coordinated-rebuild compatibility promise.

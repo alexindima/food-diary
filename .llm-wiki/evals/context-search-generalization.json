@@ -216,7 +216,7 @@
       "id": "product-overview-reader",
       "query": "database reader returns product overview information",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs"]
+      "expectedPaths": ["Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs"]
     },
     {
       "id": "open-food-facts-cache-repository",

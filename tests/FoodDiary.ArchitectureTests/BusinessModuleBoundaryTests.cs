@@ -687,7 +687,7 @@ public sealed class BusinessModuleBoundaryTests {
             "DependencyInjection.Food.cs");
         string source = File.ReadAllText(path);
 
-        Assert.Contains(".AddProductsPersistence()", source, StringComparison.Ordinal);
+        Assert.DoesNotContain(".AddProductsPersistence()", source, StringComparison.Ordinal);
         Assert.DoesNotContain(".AddRecipesPersistence()", source, StringComparison.Ordinal);
         Assert.Contains(".AddRecentItemsPersistence()", source, StringComparison.Ordinal);
         Assert.Contains(".AddMealsPersistence()", source, StringComparison.Ordinal);
@@ -695,7 +695,7 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("ProductConfiguration.cs", "Configurations/Products")]
+    [InlineData("ProductConfiguration.cs", "Modules/Products/Infrastructure/Model/Configurations/Products")]
     [InlineData("RecipeConfiguration.cs", "Modules/Recipes/Infrastructure/Model/Configurations/Recipes")]
     [InlineData("RecipeIngredientConfiguration.cs", "Modules/Recipes/Infrastructure/Model/Configurations/Recipes")]
     [InlineData("RecipeStepConfiguration.cs", "Modules/Recipes/Infrastructure/Model/Configurations/Recipes")]

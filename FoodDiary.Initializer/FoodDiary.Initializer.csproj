@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FoodDiary.Application.Admin\FoodDiary.Application.Admin.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Products\FoodDiary.Application.Products.csproj" />
+    <ProjectReference Include="../Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj" />
     <ProjectReference Include="../Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Runtime\FoodDiary.Application.Runtime.csproj" />
     <ProjectReference Include="..\Modules\Dietologist\Infrastructure\FoodDiary.Modules.Dietologist.Infrastructure.csproj" />
@@ -63,4 +63,5 @@
     <ProjectReference Include="../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup><ProjectReference Include="../Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj" /></ItemGroup>
 </Project>

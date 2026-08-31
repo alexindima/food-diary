@@ -6212,7 +6212,7 @@
           "expression": "e => e.UsdaFood)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Products/ProductConfiguration.cs"
+      "path": "Modules/Products/Infrastructure/Model/Configurations/Products/ProductConfiguration.cs"
     },
     {
       "area": "FoodDiary",
