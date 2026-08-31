@@ -5,6 +5,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writ
 import { basename, dirname, extname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
+import { traceCandidateMatchesScope } from './code-graph-trace-scope.mjs';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
@@ -2054,8 +2055,7 @@ function rankedTrace(database, query, limit, filters = {}) {
   const candidates = rows.flatMap((row) => {
     const path = row.path.toLowerCase();
     const name = row.name.toLowerCase();
-    if (prefix && !path.startsWith(prefix)) return [];
-    if (moduleTerm && !path.includes(moduleTerm)) return [];
+    if (!traceCandidateMatchesScope(row, filters)) return [];
     if (desiredKind && desiredKind !== 'any' && !name.includes(desiredKind) && row.kind.toLowerCase() !== desiredKind) return [];
     const matched = terms.filter((term) => name.includes(term) || path.includes(term));
     if (matched.length === 0) return [];

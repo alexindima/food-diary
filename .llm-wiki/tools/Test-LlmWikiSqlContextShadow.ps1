@@ -8,7 +8,7 @@ $null = & $manager build -Format Json
 $shadow = & $contextTool `
     -Module Recipes `
     -Query 'Recipe nutrition updater' `
-    -ScopePath 'FoodDiary.Application.Recipes' `
+    -ScopePath 'Modules/Recipes/Application' `
     -Limit 12 `
     -SqlShadow `
     -Format Json | ConvertFrom-Json

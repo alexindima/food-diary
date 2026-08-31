@@ -8,3 +8,5 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Wearables.Infrastructure")]
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Billing.Infrastructure")]
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Notifications.Infrastructure")]
+
+[assembly: InternalsVisibleTo("FoodDiary.Modules.Recipes.Infrastructure")]

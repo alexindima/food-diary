@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param()
 $ErrorActionPreference = 'Stop'
+& (Join-Path $PSScriptRoot 'Test-LlmWikiApplicationModulePaths.ps1')
 $readinessToolText = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Raw
 if (-not $readinessToolText.Contains('$reusable = -not $CompileProbe -or [bool]$cached.compileProbe.passed') -or
     -not $readinessToolText.Contains('$cachePath -and (-not $CompileProbe -or [bool]$compileProbeResult.passed)')) {
@@ -17,6 +18,10 @@ if (@($result.moduleReadiness.blockers).Count -ne 0) { throw 'Extraction-ready m
 if ($result.contractReadiness.mutationBlockers -ne 0) { throw 'Owner-internal IUserContextService mutations must not block extraction.' }
 if (-not $result.contractReadiness.aggregateReady) { throw 'Contract and module readiness were not separated.' }
 $dietologist = & (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Module Dietologist -Format Json | ConvertFrom-Json
+if ($dietologist.dependencyReadiness.sourceFileCount -le 0 -or
+    @($dietologist.dependencyReadiness.sourceRoots) -notcontains 'Modules/Dietologist/Application') {
+    throw 'Logical application readiness must scan real moved sources, never an empty donor folder.'
+}
 if ($dietologist.contractReadiness.mutationBlockers -ne 0) { throw 'Users-owned mutation consumers must not block unrelated module extraction.' }
 if (-not $dietologist.moduleReadiness.ready) { throw "Dietologist should be extraction-ready after cross-feature dependencies are removed: $($dietologist.moduleReadiness.blockers -join '; ')" }
 $probe = & (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Module Dietologist -CompileProbe -Format Json | ConvertFrom-Json
@@ -36,10 +41,13 @@ if (@($bodyMetrics.dependencyReadiness.actualModules) -contains 'WeightEntries' 
     throw 'BodyMetrics readiness still reports assembly-internal logical features as external dependencies.'
 }
 
-$recipesProject = Join-Path (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path 'FoodDiary.Application.Recipes/FoodDiary.Application.Recipes.csproj'
+$recipesProject = Join-Path (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path 'Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj'
 if (Test-Path -LiteralPath $recipesProject -PathType Leaf) {
     $recipes = & (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Module Recipes -Format Json | ConvertFrom-Json
     $recipeRegistrations = @($recipes.dependencyReadiness.diRegistrations)
+    if (@($recipeRegistrations | Where-Object { $_.path -like 'Modules/Recipes/*' }).Count -gt 0) {
+        throw 'Module registration definitions must not be counted as external composition-root calls.'
+    }
     foreach ($compositionRoot in @(
         'FoodDiary.Initializer/Program.cs'
         'FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs'

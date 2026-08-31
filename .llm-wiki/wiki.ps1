@@ -1043,9 +1043,10 @@ switch ($Command) {
         $filteredGraphTrace = $CompiledIndexSource -eq 'Sqlite' -and
             ($Fast -or $TraceView -eq 'Backend' -or $backendIntent -or $SymbolKind -ne 'Any' -or -not [string]::IsNullOrWhiteSpace($PathPrefix))
         if ($filteredGraphTrace) {
+            $graphLayer = if ($TraceView -ne 'Auto') { $TraceView } elseif ($backendIntent -or -not [string]::IsNullOrWhiteSpace($Module)) { 'Backend' } else { 'Auto' }
             $graphArguments = @{
                 Action = 'trace'; Query = $Query; Limit = [Math]::Min($Limit, 30); Format = 'Json'
-                SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module; SkipRefresh = $true
+                SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module; Layer = $graphLayer; SkipRefresh = $true
             }
             $graphProbe = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') @graphArguments | ConvertFrom-Json
             $graphSymbols = [object[]]@($graphProbe.symbols)
@@ -1066,7 +1067,7 @@ switch ($Command) {
                         } else {
                             Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' @{
                                 Action = 'trace'; Query = [string]$topCandidate.name; Limit = [Math]::Min($Limit, 30); Format = $Format; SkipRefresh = $true
-                                SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module
+                                SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module; Layer = $graphLayer
                             }
                         }
                         break
@@ -1079,7 +1080,7 @@ switch ($Command) {
                 } else {
                     Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' @{
                         Action = 'trace'; Query = $Query; Limit = [Math]::Min($Limit, 30); Format = $Format; SkipRefresh = $true
-                        SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module
+                        SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module; Layer = $graphLayer
                     }
                 }
                 break

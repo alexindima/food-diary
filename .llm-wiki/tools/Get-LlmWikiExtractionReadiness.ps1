@@ -10,17 +10,17 @@ param(
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
-$folderModulePath = Join-Path $repositoryRoot "FoodDiary.Application/$Module"
-$extractedModulePath = Join-Path $repositoryRoot "FoodDiary.Application.$Module"
-if (-not (Test-Path -LiteralPath $folderModulePath -PathType Container) -and
-    -not (Test-Path -LiteralPath $extractedModulePath -PathType Container)) {
+. (Join-Path $PSScriptRoot 'LlmWikiApplicationModulePaths.ps1')
+$moduleLayout = Get-LlmWikiApplicationModuleLayout -RepositoryRoot $repositoryRoot -Module $Module
+if ($moduleLayout.sourceRoots.Count -eq 0) {
     throw "Application module not found: $Module"
 }
 $cachePath = $null
 if (@($DependencyFixturePath | Where-Object { $_ }).Count -eq 0) {
     $graphFingerprint = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action fingerprint -Format Json | ConvertFrom-Json
     $toolFingerprint = (Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256).Hash.ToLowerInvariant()
-    $cacheKeyText = "$($graphFingerprint.fingerprint)|tool=$toolFingerprint|$Module|tests=$([bool]$IncludeTests)|compile=$([bool]$CompileProbe)"
+    $layoutFingerprint = (Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'LlmWikiApplicationModulePaths.ps1') -Algorithm SHA256).Hash.ToLowerInvariant()
+    $cacheKeyText = "$($graphFingerprint.fingerprint)|tool=$toolFingerprint|layout=$layoutFingerprint|$Module|tests=$([bool]$IncludeTests)|compile=$([bool]$CompileProbe)"
     $sha = [Security.Cryptography.SHA256]::Create()
     try { $cacheKey = ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($cacheKeyText))) -replace '-', '').ToLowerInvariant() }
     finally { $sha.Dispose() }
@@ -45,7 +45,7 @@ $sourcePaths = @($sourcePaths |
     Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) -PathType Leaf } |
     Where-Object { $IncludeTests -or $_ -notmatch '(^|/)tests?/|\.Tests?/' } |
     Sort-Object -Unique)
-$moduleSourcePrefixes = @("FoodDiary.Application/$Module/", "FoodDiary.Application.$Module/")
+$moduleSourcePrefixes = @($moduleLayout.sourceRoots | ForEach-Object { "$_/" })
 $moduleSourcePaths = @($sourcePaths | Where-Object {
     $candidate = $_
     @($moduleSourcePrefixes | Where-Object { $candidate.StartsWith($_, [StringComparison]::OrdinalIgnoreCase) }).Count -gt 0
@@ -94,7 +94,12 @@ $sourceDependencies = @($sourceDependencies | Sort-Object module, path, line, ki
 $actualDependencies = @($sourceDependencies | ForEach-Object { [string]$_.module } | Where-Object { $_ } | Sort-Object -Unique)
 $undeclaredDependencies = @($actualDependencies | Where-Object { $_ -notin $declaredDependencies })
 $staleDeclaredDependencies = @($declaredDependencies | Where-Object { $_ -notin $actualDependencies })
-$projectDependencies = @($actualDependencies | Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot "FoodDiary.Application.$_/FoodDiary.Application.$_.csproj") -PathType Leaf })
+$dependencyProjects = @{}
+foreach ($dependency in $actualDependencies) {
+    $layout = Get-LlmWikiApplicationModuleLayout -RepositoryRoot $repositoryRoot -Module $dependency
+    if ($layout.projects.Count -gt 0) { $dependencyProjects[$dependency] = @($layout.projects) }
+}
+$projectDependencies = @($actualDependencies | Where-Object { $dependencyProjects.ContainsKey($_) })
 $unresolvedCoreDependencies = @($actualDependencies | Where-Object { $_ -notin $projectDependencies })
 $diRegistrations = @(
     $sourcePaths |
@@ -102,7 +107,8 @@ $diRegistrations = @(
             $path = $_
             $text = [IO.File]::ReadAllText((Join-Path $repositoryRoot $path))
             $moduleRegistration = "Add$($Module)Module"
-            $callsExtractedModule = $path -notin $moduleSourcePaths -and $text -match "\b$([regex]::Escape($moduleRegistration))\s*\("
+            $moduleOwnedPath = $path.StartsWith("Modules/$Module/", [StringComparison]::OrdinalIgnoreCase)
+            $callsExtractedModule = -not $moduleOwnedPath -and $path -notin $moduleSourcePaths -and $text -match "\b$([regex]::Escape($moduleRegistration))\s*\("
             $legacyComposition = $path -match '^FoodDiary\.Application/DependencyInjection(?:\.[^/]+)?\.cs$' -and
                 $text -match "FoodDiary\.Application\.$([regex]::Escape($Module))\.|\b$([regex]::Escape($Module))[A-Za-z0-9_]*(?:Service|Handler|Processor|Validator)\b"
             if ($callsExtractedModule -or $legacyComposition) {
@@ -148,6 +154,7 @@ do {
 } while ($added)
 
 function Get-ConsumerModule([string]$Path) {
+    if ($Path -match '^Modules/([^/]+)/') { return $Matches[1] }
     if ($Path -match '^FoodDiary\.Application(?:\.Abstractions)?/([^/]+)/') { return $Matches[1] }
     if ($Path -match '^FoodDiary\.Application\.([^/]+)/') { return $Matches[1] }
     return ($Path -split '/')[0]
@@ -208,13 +215,13 @@ if ($CompileProbe) {
     try {
         $compileItems = @($moduleSourcePaths | ForEach-Object {
             $absolute = (Join-Path $repositoryRoot $_).Replace('&', '&amp;').Replace('"', '&quot;')
-            "    <Compile Include=`"$absolute`" Link=`"$($_.Substring($moduleSourcePrefixes[0].Length).Replace('&', '&amp;').Replace('"', '&quot;'))`" />"
+            "    <Compile Include=`"$absolute`" Link=`"$($_.Replace('&', '&amp;').Replace('"', '&quot;'))`" />"
         }) -join [Environment]::NewLine
         $projectReferences = @(
             'FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj'
             'FoodDiary.Domain/FoodDiary.Domain.csproj'
             'Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj'
-            $projectDependencies | ForEach-Object { "FoodDiary.Application.$_/FoodDiary.Application.$_.csproj" }
+            $projectDependencies | ForEach-Object { $dependencyProjects[$_] }
         ) | ForEach-Object { "    <ProjectReference Include=`"$((Join-Path $repositoryRoot $_).Replace('&', '&amp;').Replace('"', '&quot;'))`" />" }
         $projectText = @"
 <Project Sdk="Microsoft.NET.Sdk">
@@ -240,7 +247,13 @@ $($projectReferences -join [Environment]::NewLine)
   </ItemGroup>
 </Project>
 "@
-        [IO.File]::WriteAllText($probeProject, $projectText, [Text.UTF8Encoding]::new($false))
+        if ($moduleLayout.projects.Count -gt 1) { throw "Ambiguous application projects for ${Module}: $($moduleLayout.projects -join ', ')" }
+        if ($moduleLayout.projects.Count -eq 1) {
+            # Compile the actual extracted project: preserve its references, excludes and assembly identity/IVT.
+            $probeProject = Join-Path $repositoryRoot $moduleLayout.projects[0]
+        } else {
+            [IO.File]::WriteAllText($probeProject, $projectText, [Text.UTF8Encoding]::new($false))
+        }
         $probeOutput = @(& dotnet build $probeProject --nologo --artifacts-path (Join-Path $probeRoot 'artifacts') -m:1 2>&1 | ForEach-Object { [string]$_ })
         $probeExitCode = $LASTEXITCODE
         $compileProbeResult = [pscustomobject]@{
@@ -262,6 +275,8 @@ $result = [pscustomobject]@{
     moduleReadiness = [pscustomobject]@{ ready = $blockers.Count -eq 0; blockers = @($blockers); aggregateLeakPaths = $productionLeaks.Count; leakingContracts = @($leakingNames | Sort-Object) }
     dependencyReadiness = [pscustomobject]@{
         sourceFileCount = $moduleSourcePaths.Count
+        sourceRoots = @($moduleLayout.sourceRoots)
+        applicationProjects = @($moduleLayout.projects)
         internalFeatureNamespaces = @($internalFeatureNamespaces | Sort-Object)
         actualModules = $actualDependencies
         declaredModules = $declaredDependencies

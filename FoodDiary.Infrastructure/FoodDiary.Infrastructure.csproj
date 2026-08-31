@@ -75,4 +75,5 @@
   </ItemGroup>
   <ItemGroup><ProjectReference Include="../Modules/RecipeCommunity/Infrastructure/Model/FoodDiary.Modules.RecipeCommunity.PersistenceModel.csproj" /></ItemGroup>
   <ItemGroup><ProjectReference Include="../Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../Modules/Recipes/Infrastructure/Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj" /></ItemGroup>
 </Project>

@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Recipes/FoodDiary.Application.Recipes.csproj`
+- Extracted project: `Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: FavoriteRecipes, Images, Nutrition, Products, RecentItems, Users
 - Business-module consumers: none observed
@@ -24,12 +24,10 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Recipes`
-- `FoodDiary.Application.Recipes`
-- `FoodDiary.Domain/Entities/Recipes`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Recipes`
-- `FoodDiary.Infrastructure/Persistence/Recipes`
 - `FoodDiary.Presentation.Api/Features/Recipes`
+- `Modules/Recipes/Application`
+- `Modules/Recipes/Application/Abstractions`
+- `Modules/Recipes/Contracts`
 
 ## HTTP Surface
 
@@ -88,10 +86,21 @@ Source: `FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/CreateRecipeCommandValidatorTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/ExploreRecipesQueryValidatorTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipeNutritionCalculatorTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/CreateRecipeCommandValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/ExploreRecipesQueryValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/RecipeNutritionCalculatorTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Media.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.NestedIngredients.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.UpdateFlow.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Validation.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Support/AllowImageAssetAccessService.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Support/RecordingImageAssetAccessService.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/TestProductOverview.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/TestRecipeOverview.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.CreateCommandTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DeleteCommandTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DuplicateCommandTests.cs`
@@ -99,12 +108,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.UpdateCommandTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Media.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.NestedIngredients.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.UpdateFlow.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Validation.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/RecipesModuleExtractionTests.cs`
 
 ## Working Rule

@@ -18,6 +18,8 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiResearchPacket.ps1
   - .llm-wiki/tools/Get-LlmWikiNextResearchQuestion.ps1
   - .llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1
+  - .llm-wiki/tools/LlmWikiApplicationModulePaths.ps1
+  - .llm-wiki/tools/Test-LlmWikiApplicationModulePaths.ps1
   - .llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1
   - .llm-wiki/tools/Get-LlmWikiGitPrecedents.ps1
   - .llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1
@@ -65,6 +67,9 @@ inheriting an unrelated session baseline.
 A clean worktree, or a worktree whose changes are all outside that explicit
 scope, legitimately produces an empty overlay. The read-oriented command still
 runs from the captured `HEAD` snapshot and must accept that empty path set.
+For changed paths, Git rename detection is disabled during overlay enumeration:
+both the removed source and added destination must be applied. Copying only the
+destination would leave stale `HEAD` declarations in the isolated graph.
 
 For physical module extraction, use bounded source research and a compile proof:
 
@@ -82,9 +87,13 @@ physical source set is authoritative for ownership: multiple logical feature
 namespaces compiled into the same target project are reported as internal
 features, not external module dependencies. References to namespaces that are
 not declared by that source set remain extraction blockers. The
-compile probe creates an ignored temporary SDK project from the module sources,
-builds it with inferred references, reports compiler diagnostics, and removes
-the fixture. A requested compile probe must pass before the module is reported
+module lookup supports declared application projects, `Modules/<Module>/Application`,
+legacy standalone projects and legacy feature folders. Empty build-only donor
+directories are not application projects. For an existing extracted project the
+compile probe builds that actual project, preserving its references, source
+exclusions and assembly identity; only a legacy folder needs an ignored temporary
+SDK project with inferred references. Probe outputs are isolated and removed.
+A requested compile probe must pass before the module is reported
 ready. Only successful compile-probe evidence is reusable: an interrupted or
 failed child build is recomputed on the next request instead of poisoning the
 readiness cache.

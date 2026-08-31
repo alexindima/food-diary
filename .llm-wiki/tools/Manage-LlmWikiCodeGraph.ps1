@@ -8,6 +8,8 @@ param(
     [string[]]$ChangedPath,
     [string[]]$RelationKind,
     [string]$Module,
+    [ValidateSet('Auto', 'Backend', 'Frontend')]
+    [string]$Layer = 'Auto',
     [string]$PathPrefix,
     [string]$ExcludePathPrefix,
     [string]$RecordKind,
@@ -49,6 +51,7 @@ $arguments = @($scriptPath, $Action, "--limit=$Limit")
 if (-not [string]::IsNullOrWhiteSpace($Query)) { $arguments += "--query=$Query" }
 if ($Action -eq 'query') { $arguments += "--category=$Category" }
 if (-not [string]::IsNullOrWhiteSpace($Module)) { $arguments += "--module=$Module" }
+if ($Action -eq 'trace') { $arguments += "--layer=$Layer" }
 if (-not [string]::IsNullOrWhiteSpace($PathPrefix)) { $arguments += "--path-prefix=$PathPrefix" }
 if (-not [string]::IsNullOrWhiteSpace($ExcludePathPrefix)) { $arguments += "--exclude-path-prefix=$ExcludePathPrefix" }
 if (-not [string]::IsNullOrWhiteSpace($RecordKind)) { $arguments += "--record-kind=$RecordKind" }

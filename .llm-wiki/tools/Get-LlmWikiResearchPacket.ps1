@@ -30,9 +30,8 @@ $researchPlanningPolicy = $workspacePolicy.scheduler.researchPlanning
 if ($Compact) { $Limit = [Math]::Min($Limit, 6) }
 $moduleScope = @()
 if (-not [string]::IsNullOrWhiteSpace($Module)) {
-    foreach ($candidate in @("FoodDiary.Application/$Module", "FoodDiary.Application.$Module")) {
-        if (Test-Path -LiteralPath (Join-Path $repositoryRoot $candidate) -PathType Container) { $moduleScope += $candidate }
-    }
+    . (Join-Path $PSScriptRoot 'LlmWikiApplicationModulePaths.ps1')
+    $moduleScope = @((Get-LlmWikiApplicationModuleLayout -RepositoryRoot $repositoryRoot -Module $Module).sourceRoots)
     if ($moduleScope.Count -eq 0) { throw "Research module not found: $Module" }
     if (-not $PSBoundParameters.ContainsKey('ProposedPath')) { $ProposedPath = $moduleScope }
 }
@@ -47,6 +46,7 @@ $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -N
 } -RelevantPath @($(if (@($ProposedPath).Count -gt 0) { $ProposedPath } else { $ChangedPath })) -DependencyPath @(
     '.llm-wiki/policies/query-indexes.json'
     '.llm-wiki/policies/workspace-policies.json'
+    '.llm-wiki/tools/LlmWikiApplicationModulePaths.ps1'
     $(if ($CompiledIndexSource -eq 'Sqlite') { '.artifacts/llm-wiki/code-graph/code-graph.fingerprint' } else { '.llm-wiki/generated/repository-catalog.json' })
 )
 $cachedResearch = Read-LlmWikiQueryCache -Entry $queryCacheEntry

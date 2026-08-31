@@ -22,16 +22,18 @@ try {
     foreach ($path in @('alpha/changed.txt', 'alpha/deleted.txt', $unicodePath, 'outside.txt', '.llm-wiki/note.txt')) {
         [IO.File]::WriteAllText((Join-Path $fixture $path), 'baseline', [Text.UTF8Encoding]::new($false))
     }
+    [IO.File]::WriteAllText((Join-Path $fixture 'alpha/old-location.cs'), 'public class UniqueRelocatedHandler {}', [Text.UTF8Encoding]::new($false))
     $null = Invoke-LlmWikiGitCommand -RepositoryRoot $fixture -Arguments @('init', '--quiet')
     $null = Invoke-LlmWikiGitCommand -RepositoryRoot $fixture -Arguments @('add', '--all')
     $null = Invoke-LlmWikiGitCommand -RepositoryRoot $fixture -Arguments @('-c', 'user.name=Wiki Smoke', '-c', 'user.email=wiki-smoke@example.invalid', 'commit', '--quiet', '-m', 'fixture')
+    $null = Invoke-LlmWikiGitCommand -RepositoryRoot $fixture -Arguments @('mv', 'alpha/old-location.cs', 'alpha/new-location.cs')
     foreach ($path in @('alpha/changed.txt', $unicodePath, 'outside.txt', '.llm-wiki/note.txt', 'alpha/untracked.txt', 'outside-untracked.txt')) {
         [IO.File]::WriteAllText((Join-Path $fixture $path), 'changed', [Text.UTF8Encoding]::new($false))
     }
     Remove-Item -LiteralPath (Join-Path $fixture 'alpha/deleted.txt') -Force
     $smallScopes = @('alpha', 'folder with spaces', '.llm-wiki')
     $expectedScoped = @(
-        @(Invoke-LlmWikiGitPathList -RepositoryRoot $fixture -Arguments (@('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') + $smallScopes)) +
+        @(Invoke-LlmWikiGitPathList -RepositoryRoot $fixture -Arguments (@('diff', '--no-renames', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') + $smallScopes)) +
         @(Invoke-LlmWikiGitPathList -RepositoryRoot $fixture -Arguments (@('ls-files', '--others', '--exclude-standard', '--') + $smallScopes)) |
             Sort-Object -Unique
     )
@@ -47,8 +49,11 @@ try {
     if ($unicodePath -notin $actualScoped -or 'alpha/deleted.txt' -notin $actualScoped -or 'alpha/untracked.txt' -notin $actualScoped) {
         throw 'Batched overlay lost Unicode, deleted, or untracked paths.'
     }
+    if ('alpha/old-location.cs' -notin $actualScoped -or 'alpha/new-location.cs' -notin $actualScoped) {
+        throw 'A staged rename must delete the old snapshot source and copy the new source.'
+    }
     $expectedAll = @(
-        @(Invoke-LlmWikiGitPathList -RepositoryRoot $fixture -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--')) +
+        @(Invoke-LlmWikiGitPathList -RepositoryRoot $fixture -Arguments @('diff', '--no-renames', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--')) +
         @(Invoke-LlmWikiGitPathList -RepositoryRoot $fixture -Arguments @('ls-files', '--others', '--exclude-standard', '--')) |
             Sort-Object -Unique
     )
@@ -69,4 +74,4 @@ try {
     }
     Remove-Item -LiteralPath $resolvedFixture -Recurse -Force -ErrorAction SilentlyContinue
 }
-Write-Host 'LLM Wiki overlay batching regression passed: large argv, exact scoped results, stable deduplication, Unicode/spaces, empty scope, and Git failures.'
+Write-Host 'LLM Wiki overlay batching regression passed: large argv, exact scoped results, rename source/destination, stable deduplication, Unicode/spaces, empty scope, and Git failures.'

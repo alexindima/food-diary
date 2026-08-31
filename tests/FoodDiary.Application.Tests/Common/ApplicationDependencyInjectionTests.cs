@@ -47,10 +47,10 @@ public sealed class ApplicationDependencyInjectionTests {
     }
 
     [Fact]
-    public void AddRecipesModule_RegistersRecipeServices() {
+    public void AddRecipesApplication_RegistersRecipeServices() {
         var services = new ServiceCollection();
 
-        services.AddRecipesModule();
+        services.AddRecipesApplication();
 
         Assert.Contains(services, ServiceDescriptorMatches<IRecentRecipeReadService, RecentRecipeReadService>(ServiceLifetime.Scoped));
     }

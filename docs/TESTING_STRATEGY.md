@@ -107,3 +107,7 @@ migrations/model snapshot and HTTP transport remain central. Hosts explicitly ca
 registration remains `AddDashboardModule`. Scoped concrete/interface aliases and
 query behavior are preserved. Owned application/adapter tests live under module
 tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.
+
+## Recipes physical ownership
+
+Recipes use cases, ports, read contracts, persistence model and adapters live under `Modules/Recipes`. Recipe/Steps/Ingredients, IDs/value objects/events remain central Domain because public User/MealItem/Product inverse navigations prohibit a one-way extraction. Shared context/migrations/snapshot and cross-module tests stay central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers. See `docs/ai/recipes-ownership-inventory.md`; this is not full Domain/database isolation.

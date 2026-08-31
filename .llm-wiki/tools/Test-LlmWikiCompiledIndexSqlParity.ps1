@@ -9,7 +9,7 @@ if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($repositoryRoot)) { thr
 $null = & $manager -Action build -Format Json
 
 $cases = @(
-    @{ Module = 'Recipes'; Query = 'Recipe nutrition updater'; ScopePath = 'FoodDiary.Application.Recipes'; ChangeType = 'Backend'; ExpectedPath = '^FoodDiary\.Application\.Recipes/' }
+    @{ Module = 'Recipes'; Query = 'Recipe nutrition updater'; ScopePath = 'Modules/Recipes/Application'; ChangeType = 'Backend'; ExpectedPath = '^Modules/Recipes/Application/' }
     @{ Module = 'Users'; Query = 'password reset command handler'; ScopePath = 'FoodDiary.Application.Users'; ChangeType = 'Backend'; ExpectedPath = '^FoodDiary\.Application\.Users/' }
     @{ Module = ''; Query = 'achievement definitions controller route'; ScopePath = 'FoodDiary.Presentation.Api'; ChangeType = 'Api'; ExpectedPath = '^FoodDiary\.Presentation\.Api/' }
     @{ Module = ''; Query = 'SQLite Wiki context search'; ScopePath = '.llm-wiki/tools'; ChangeType = 'Tests'; ExpectedPath = '^\.llm-wiki/tools/' }

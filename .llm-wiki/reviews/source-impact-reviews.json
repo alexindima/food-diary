@@ -8,21 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "ae864d3d8ef341e0c6eaee3a6edaeaec572ea858eaae68dd34a16f79e6d56944"
-        },
-        {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "be60756bd365de0f6fbddd64a44ee67223102425fbd1d113eb965389d2f7066e"
+          "sha256": "54cfa4962cff339ab31451891cf78d13bd5d45be29398b7964052376fbc869bc"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "942599dd8792a2fe297ec3c5411ce2fccdbbd8e397f1aad4ac9a3e4a6f7c3f61"
+          "sha256": "1afc32757b4af4ab8cfd552e3eb1a46d09f075867c05f5e12c748ec7009aa288"
         }
       ],
-      "reason": "Checked the merged root guides and backend maps: both Ai and Dashboard route to module-owned projects; navigation remains subordinate to source evidence. Integration report retains non-green quality outcomes.",
+      "reason": "Recipes guides now point to module owners; Ai/Dashboard guide routes remain. Compiled navigation remains subordinate to verified source and runtime tests.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:14:19.0794021Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:07.1286084Z"
     },
     {
       "pageId": "module.frontend",
@@ -45,18 +41,14 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "be60756bd365de0f6fbddd64a44ee67223102425fbd1d113eb965389d2f7066e"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "942599dd8792a2fe297ec3c5411ce2fccdbbd8e397f1aad4ac9a3e4a6f7c3f61"
+          "sha256": "1afc32757b4af4ab8cfd552e3eb1a46d09f075867c05f5e12c748ec7009aa288"
         }
       ],
-      "reason": "Backend map additions describe Ai/Dashboard only; MailRelay/MailInbox client boundaries and independently deployed host responsibilities are unchanged.",
+      "reason": "Recipes integration does not change MailInbox/MailRelay deployments or the approved Integrations-to-client boundary; backend map additions preserve those rules.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:14:19.6448127Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:08.055659Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -65,25 +57,29 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "5ccb60db8c85f1e8fd43a2ff38762738593391b93323b71e366766fa864eb5b4"
+          "sha256": "e59d7d251a87d79be55bb150c20a6097bce76c94b122bf178238df934ab2c742"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "942599dd8792a2fe297ec3c5411ce2fccdbbd8e397f1aad4ac9a3e4a6f7c3f61"
+          "sha256": "1afc32757b4af4ab8cfd552e3eb1a46d09f075867c05f5e12c748ec7009aa288"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "e56f5f82261a34378b3edfd27ff926bdf555a838e2b0bb2f7b9824db69dabb79"
+          "sha256": "4a2769f19d883cdfc52541a6ebe00d306d02308cf25533f708d4a5d1a9820b93"
+        },
+        {
+          "path": "FoodDiary.Domain/AGENTS.md",
+          "sha256": "229987785e07f64c6ad5d5fdbb06593c14f68fda984aabf0417dc83a3e82f1a9"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "2b9320d69e3f2dcf0197c3b5ba9e793737e368a8d59a56c6a0c48634b7350870"
+          "sha256": "ddd8aaf9c95a94f80971fd0f87cf257260365c1fc63387509f8a33226173bc8a"
         }
       ],
-      "reason": "Reviewed both module inventories, host composition and references: Dashboard owns read adapters/contracts, Ai owns its domain and persistence, central context and transport remain shared. No new aggregate ownership is assigned to Dashboard.",
+      "reason": "Reviewed Recipes inventory and combined project/DI graph: module owns ports/read contracts/adapters/model while public domain navigations, context and HTTP remain central. Ai/Dashboard ownership retained.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:14:20.2657289Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:09.0866627Z"
     },
     {
       "pageId": "system.architecture",
@@ -91,26 +87,22 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "be60756bd365de0f6fbddd64a44ee67223102425fbd1d113eb965389d2f7066e"
-        },
-        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "5ccb60db8c85f1e8fd43a2ff38762738593391b93323b71e366766fa864eb5b4"
+          "sha256": "e59d7d251a87d79be55bb150c20a6097bce76c94b122bf178238df934ab2c742"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "942599dd8792a2fe297ec3c5411ce2fccdbbd8e397f1aad4ac9a3e4a6f7c3f61"
+          "sha256": "1afc32757b4af4ab8cfd552e3eb1a46d09f075867c05f5e12c748ec7009aa288"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "73f008419e56ea78fbfba067673b4b29aa2e399a2477cf46dac5c731cf9be178"
+          "sha256": "cf48ffe7f4970774177be44d26336e35cda41e82a5145656fb00a09d1be1f215"
         }
       ],
-      "reason": "Combined solution and dependency matrix retain both module sets and one-way central DbContext access. The architecture shape and inward-dependency explanation remain valid; runtime quality is not inferred from these pages.",
+      "reason": "Combined solution preserves one-way module adapter access to the shared context, explicit host registration, independent mail services and existing inward dependencies. No new Domain boundary invented.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:14:20.9014378Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:10.1866795Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -149,13 +141,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "ae864d3d8ef341e0c6eaee3a6edaeaec572ea858eaae68dd34a16f79e6d56944"
+          "sha256": "54cfa4962cff339ab31451891cf78d13bd5d45be29398b7964052376fbc869bc"
         }
       ],
-      "reason": "Root guide updates only point to extracted module owners; source authority, review obligations and the compiled-navigation status of Wiki are unchanged.",
+      "reason": "Guide/module map paths changed, not source authority or review policy. Original failing runs and unknown baseline limitations remain separate from new evidence.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:14:21.5157859Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:10.7705013Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -164,13 +156,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "5ccb60db8c85f1e8fd43a2ff38762738593391b93323b71e366766fa864eb5b4"
+          "sha256": "e59d7d251a87d79be55bb150c20a6097bce76c94b122bf178238df934ab2c742"
         }
       ],
-      "reason": "Manifest mappings now describe both physical module trees; the obsolete central Dashboard ownership key is removed. Catalog limitations and generation/check commands remain valid.",
+      "reason": "Regenerated catalog follows all three physical module trees; obsolete central Recipes abstraction ownership removed because ports moved. Empty directories are not proof of project ownership.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:14:22.1607569Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:11.3612357Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -228,21 +220,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "1e225a7556553359ece0f2306767410e007cf5dd1702c4fed67b2d6e0caf0b87"
+          "sha256": "f08076b1a82d82400b2f727fd311d8881a91d626418b8d5b1f6e4cfd7db8dcee"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "5ccb60db8c85f1e8fd43a2ff38762738593391b93323b71e366766fa864eb5b4"
+          "sha256": "e59d7d251a87d79be55bb150c20a6097bce76c94b122bf178238df934ab2c742"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "73f008419e56ea78fbfba067673b4b29aa2e399a2477cf46dac5c731cf9be178"
+          "sha256": "cf48ffe7f4970774177be44d26336e35cda41e82a5145656fb00a09d1be1f215"
         }
       ],
-      "reason": "Merged matrix preserves explicit Ai and Dashboard references without new central-to-adapter cycles. Removing the obsolete central Dashboard ownership entry aligns metadata with the actual checkout; guardrails were not weakened.",
+      "reason": "Matrix merges all Ai/Dashboard/Recipes additions. Recipes central Domain and advisory-lock seams remain explicit; no architecture assertion or threshold relaxed.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:14:22.8209103Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:12.0894383Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -251,13 +243,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "fa9b5496607874cde1d437990afb8e02ba98ee31b8d2e45149363e44bafe5ed1"
+          "sha256": "7dd26fbd8fb98cf1a02d28c34f6e6bd268a8e85d27821a8ad0cc86769095c1d8"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "d3bc52eec64f57fda69cd2445732f652203e0b438e89d9e8e5e1f1cadd0ccf44"
         }
       ],
-      "reason": "Regenerated contracts retain stable CLR shapes while both module project owners are relocated; Dashboard statistics contracts form the one-way consumer seam. Consumer references remain navigation, not test execution evidence; HTTP and schema snapshots are unchanged.",
+      "reason": "Recipes ports/contracts retain CLR signatures while coordinated rebuild changes assembly ownership. Consumer links remain navigation rather than execution evidence; HTTP snapshots unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:15:14.9733078Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:13.2617869Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -296,49 +292,65 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-generalization.json",
-          "sha256": "b2ee5ea54c6a1f07dad9d87c9cbd0907a686845484e4750fb36019db5c21ddf2"
+          "sha256": "374f7b9b2fb01b0e5ca2acde6b566b7d3b267e6f96e8966536c31a4cfcce0c1a"
         },
         {
           "path": ".llm-wiki/evals/context-search-holdout.json",
-          "sha256": "6422d0a7ec886b79534775f8659768bca91c2a4cc535aa4dac177b321c1816fa"
+          "sha256": "c0c4c678cb8dc9cd4612e4d0b4ee10e2445e7d78d8f7eff5b180c35721cc8801"
         },
         {
-          "path": ".llm-wiki/evals/context-search-probe-3.json",
-          "sha256": "510f79323c7cc3da8d75c2225f0ff6e3d9c63fcbb61f3a948b654b1ec754cbf4"
+          "path": ".llm-wiki/evals/context-search-probe-2.json",
+          "sha256": "8fcf564df99a395c260f2ff893396bfaa29f25ced085d56258ace28ed3c45b01"
         },
         {
-          "path": ".llm-wiki/evals/context-search-probe-4.json",
-          "sha256": "866a4b7fbddf1d1636d96febcf4ae5e0292c4a5b3f5adf91d2818d4a97c6ae27"
+          "path": ".llm-wiki/evals/context-search-probe-5.json",
+          "sha256": "6e37e131c19ed462bf43e7923a822aeedf814978d9ee255e6e3bbba6111217b7"
         },
         {
-          "path": ".llm-wiki/evals/context-search-probe-6.json",
-          "sha256": "c56c50ee77de13bbd4c684fa8ea2ef3ff9189b74b414111b66af4bee86542aeb"
+          "path": ".llm-wiki/evals/context-search-probe.json",
+          "sha256": "312015fdef759cd2218b9737dfb5e31d8a88c2e7c83d0f8b101e120b0b3b2b84"
         },
         {
-          "path": ".llm-wiki/evals/context-search-probe-7.json",
-          "sha256": "686f42c3a9fa9cb36c0199180b9f66dd8534ad4eb565ed98629421bc2504f449"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "85efea73a4e37fd740bb2e5d452132ecaf4beee907e3eb056f0de366aa2bf600"
+          "path": ".llm-wiki/evals/context-search-validation.json",
+          "sha256": "00f38cf10973ef2b7ad449a3cb8f10e4f233228b293dd699313c2da48e41300e"
         },
         {
           "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "6e16378aa849b1f1dcd8096aa158223fd06ba8be2032a87c74f889d3e7d6d07f"
+          "sha256": "d3dddc3bc76f43a2e355d1b4aa22326ead250e548e3d2d626abddefdcb026f63"
         },
         {
           "path": ".llm-wiki/evals/development-context-bundles.json",
-          "sha256": "cd7d5e7878c88dfdfa646bdbe3d9ada9ae4cb114efb3c5aea1229605fe334242"
+          "sha256": "e35089375835ae528c693b771930c7b3605b9744b173b3adc2e057520f5e9f29"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "d3bc52eec64f57fda69cd2445732f652203e0b438e89d9e8e5e1f1cadd0ccf44"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
+          "sha256": "ee122bc709a3bc01ed9845150c054756ea52951286d027036524c4a27ea24dd8"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "aef3ea5fddc75f04aadec7fda6e24a2651cee49bc83ee1fbd5dd17d8ea067281"
+          "sha256": "3b1e0e60d4abbb4b2627e446c6dd0d26a1dd1708b82bbdc296c32b3ac18a368a"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
+          "sha256": "3a3cba13b2a7839f515de335f28265e3a8ae2b2b75171ba04827c0cabab53408"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextShadow.ps1",
+          "sha256": "649df8bc31535694b018cd01559a8228382ef390dd40b2f8097f6854ace4fedf"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "5aa06255244983619104c53689fa4bb164efb9649e3ec08ecf66bf83a81ed2bc"
         }
       ],
-      "reason": "Reviewed physical-project discovery and module-layer regressions plus the source-proven Dashboard fixture relocations. Ranking, queries and thresholds are unchanged. Historical published scores do not certify this merged checkout; non-green current and supplemental outcomes remain recorded.",
+      "reason": "Readiness now discovers physical/mapped application projects and compiles existing projects with actual identity/references. Trace candidate filters retain backend layer and exact module segments. Context-search ranking weights and quality thresholds are unchanged; published historical scores do not certify this checkout.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:15:16.2297413Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:14.700922Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -542,14 +554,18 @@
       "pageSha256": "9f6bae95818d903f73f64f0e716692d7ed0c9cab0f4ded06be4253df021bb5ba",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "21732e8d0658c7d454743409cd19a285d4533428fdfd62d0318f0967a2ba6823"
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "c42d1ff50c3e1f2e5c15c5b515c58e87907cc94246f8eef8cf4de9d86c0d2526"
+          "sha256": "5aa06255244983619104c53689fa4bb164efb9649e3ec08ecf66bf83a81ed2bc"
         }
       ],
-      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
+      "reason": "Module-scoped research now resolves current application roots using the shared layout helper. This repairs discovery without changing adaptive routing, budget, JSON/SQLite authority or task completion semantics.",
       "baseRef": "HEAD",
-      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
-      "reviewedAtUtc": "2026-08-30T01:50:32.3880191Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:15.3488961Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -557,14 +573,22 @@
       "pageSha256": "740dd5bba75b488c88d30cb9fda34ae14a0f7441a6d375ba03994ceaf41bc86f",
       "sources": [
         {
+          "path": ".llm-wiki/generated/domain-data-index.json",
+          "sha256": "24dc98fcb7ef9b2c4ba526fdfabe61c5fbc03cc2ef137e4606e2f39a548c1f15"
+        },
+        {
+          "path": "FoodDiary.Domain/AGENTS.md",
+          "sha256": "229987785e07f64c6ad5d5fdbb06593c14f68fda984aabf0417dc83a3e82f1a9"
+        },
+        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "2b9320d69e3f2dcf0197c3b5ba9e793737e368a8d59a56c6a0c48634b7350870"
+          "sha256": "ddd8aaf9c95a94f80971fd0f87cf257260365c1fc63387509f8a33226173bc8a"
         }
       ],
-      "reason": "Dashboard has no owned aggregates or mappings. Source schema/migration/snapshot diff is empty, and central Infrastructure guidance routes read adapters to their module; invariant and provider validation rules remain unchanged.",
+      "reason": "Recipe CLR graph, snapshots and historical migrations remain central and unchanged; three EF configurations are applied by explicit module registration. Source relocation does not establish schema independence.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:15:16.9236657Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:15.9789238Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -648,13 +672,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4360e7e65d6498161828e51e218cabd3a78f158bedbd2e4c350f64338b3fcf03"
+          "sha256": "d3bc52eec64f57fda69cd2445732f652203e0b438e89d9e8e5e1f1cadd0ccf44"
         }
       ],
-      "reason": "Reviewed root/scoped module guides, ownership inventories, ADR 0016 and 0006, and the combined integration report. Reconciled all three modules and solution/test grouping; remaining central seams and old scanner caveats are explicit.",
+      "reason": "Only broad graph trace candidate filtering changed; compiled-context/impact contracts and simulation policy are unchanged. No impact result is substituted for PostgreSQL verification.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:49.4879635Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:16.6248709Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -696,14 +720,18 @@
       "pageSha256": "ca4122ad45c7918953e4e7acf1974a72586f53a72a9d3f06fe574edb9a5f8533",
       "sources": [
         {
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "921ec70dbc77cd75428318294cde5b9f7d1e3aba24faa155f27dbce6cbc3a721"
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "c42d1ff50c3e1f2e5c15c5b515c58e87907cc94246f8eef8cf4de9d86c0d2526"
+          "sha256": "5aa06255244983619104c53689fa4bb164efb9649e3ec08ecf66bf83a81ed2bc"
         }
       ],
-      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
+      "reason": "Native update rebuilt merged indexes; no concurrency/timeout policy or pass receipt fabricated. A readiness attempt overlapping source/index edits correctly rejected stale input; stable smoke is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
-      "reviewedAtUtc": "2026-08-30T01:50:33.1099783Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:15:12.284766Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -726,14 +754,14 @@
       "pageSha256": "a952661d5073668178342e7b7131b00a3ea21d502dae2ea219a05a41d7094cdb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b1386e1d8c063bba53baa2edcddd6004773977989ca17e24e18a4e4cab3bc3a4"
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "21732e8d0658c7d454743409cd19a285d4533428fdfd62d0318f0967a2ba6823"
         }
       ],
-      "reason": "Integration discovery remains context-only and does not widen an explicitly supplied implementation scope.",
+      "reason": "Module source lookup includes current Recipes root; integration advice still requires source confirmation. Providers, jobs and shared context remain at their documented owners.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:52:17.1212904Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:17.796051Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -840,13 +868,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "79a630141d6f4230474addc0d647c401cdefd798af2df47eb7d0ed82486c0444"
+          "sha256": "5416652d2bd16c83e7fd7eb2143628b10af6f515f358b5a66297af5151ce7d97"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "d3bc52eec64f57fda69cd2445732f652203e0b438e89d9e8e5e1f1cadd0ccf44"
         }
       ],
-      "reason": "Generated sensitive-data locations reflect module relocation; no payload, consent, sharing, logging, retention or external-provider policy is added. The page still labels name-based inventory as leads, not a privacy verdict.",
+      "reason": "Name-based sensitive index follows Recipes port/source moves. No new data collection, logging, cache, export or provider sharing; private access predicates and media boundaries unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:15:17.6683614Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:18.4662537Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -885,13 +917,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5cb1b264f14ab21c02592d9d5b360153d4127f4dcf5c0eaeb8cf85705bcc9f98"
+          "sha256": "e01ee079171e746b6af06278995550d056d4594dfe68395204c4622b2bf68d1e"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
+          "sha256": "ee122bc709a3bc01ed9845150c054756ea52951286d027036524c4a27ea24dd8"
         }
       ],
-      "reason": "Merged quality records reflect source/test relocation and the two bounded Wiki regressions. Test-reference counts are still navigation rather than measured coverage; no collectors ran and no score is substituted for actual VSTest results.",
+      "reason": "Quality/test-reference indexes regenerated after relocation and Wiki regressions. Counts are navigation signals, not measured coverage; no coverage collector ran.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:15:18.5158027Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:15:13.1595742Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -968,13 +1004,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "be8a6bf299dac4ff11243e8db1d06c6e1d41ee3c26f07397f473abd16c04c73a"
+          "sha256": "1accfb35a2f5ea077f27b86db70d643dba130ad81fcaa6d199372e38c75b214c"
         }
       ],
-      "reason": "Both modules are composed explicitly by existing hosts; no recurring job, provider client, queue protocol, timeout or retry policy is changed. Generated topology remains declaration/inference evidence, not production runtime proof.",
+      "reason": "API/Initializer compose Recipes; JobManager persistence only. Ai/Dashboard registrations preserved. No provider retry, background schedule, outbox or transaction behavior changes.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:15:20.4058883Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:21.2041251Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -983,21 +1019,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5cb1b264f14ab21c02592d9d5b360153d4127f4dcf5c0eaeb8cf85705bcc9f98"
+          "sha256": "e01ee079171e746b6af06278995550d056d4594dfe68395204c4622b2bf68d1e"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "be8a6bf299dac4ff11243e8db1d06c6e1d41ee3c26f07397f473abd16c04c73a"
+          "sha256": "1accfb35a2f5ea077f27b86db70d643dba130ad81fcaa6d199372e38c75b214c"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "79a630141d6f4230474addc0d647c401cdefd798af2df47eb7d0ed82486c0444"
+          "sha256": "5416652d2bd16c83e7fd7eb2143628b10af6f515f358b5a66297af5151ce7d97"
         }
       ],
-      "reason": "Recompiled sensitive-data/quality/runtime locations do not create a security scan or verdict. No security policy, production configuration or provider handling changed; the workflow correctly retains its navigation-only limitation.",
+      "reason": "Sensitive-data and runtime locations regenerated but no security scan/verdict is claimed. Navigation remains a source of review candidates; no credentials or production data used.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:15:21.1871230Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:15:14.1396294Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1066,13 +1102,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "c42d1ff50c3e1f2e5c15c5b515c58e87907cc94246f8eef8cf4de9d86c0d2526"
+          "sha256": "5aa06255244983619104c53689fa4bb164efb9649e3ec08ecf66bf83a81ed2bc"
         }
       ],
-      "reason": "Lessons vertical-module extraction verified against current source, architecture tests, and generated indexes.",
+      "reason": "Facade trace passes Layer through its graph calls; dispatch/scheduler/task receipt logic is unchanged. No task completion receipt or authority is inferred from graph candidates.",
       "baseRef": "HEAD",
-      "gitHead": "8249e9f97bac4ba945be037b38b910a5bd2747ef",
-      "reviewedAtUtc": "2026-08-30T01:50:35.6501349Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:22.5650021Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1111,13 +1147,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "85330812b4e336e732a7d7a971fae5c1dbc2282ccb17aa38f9d7179f4904a7d7"
+          "sha256": "6e7368d88c6121dbe25b3586259e4eaaf5a630f73fb78ea11bf0f200bb0c0a46"
         }
       ],
-      "reason": "Reviewed scoped fixture relocations and both approved generic fixes. GovernedExtraction Windows fixture passes; InferLayer fail-before9/28 and full MCP220 pass. Actual facade frozen100 exit1 has exact baseline metrics;8 supplemental corpora and3 development-context cases remain semantic failures with numerical baseline UNKNOWN. No broad quality PASS or stale aggregate receipt.",
+      "reason": "Module research uses real source roots; test plan remains advisory. Runtime test selection verified against module and central consumer ownership, with final TRX required independently of recommendations.",
       "baseRef": "HEAD",
-      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
-      "reviewedAtUtc": "2026-08-31T03:31:47.966927Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:23.302763Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1175,13 +1211,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "ae864d3d8ef341e0c6eaee3a6edaeaec572ea858eaae68dd34a16f79e6d56944"
+          "sha256": "54cfa4962cff339ab31451891cf78d13bd5d45be29398b7964052376fbc869bc"
         }
       ],
-      "reason": "Root instructions changed guide locations only; no deterministic policy, threshold, hook or required verification rule was relaxed. Known quality failures stay explicit in integration documentation.",
+      "reason": "No change-policy definitions, required checks, timing limits or hook bypass introduced. Actual check failures stay visible and are not converted to passes by module metadata.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:15:15.5989297Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:13.8745879Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1234,22 +1270,26 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "85efea73a4e37fd740bb2e5d452132ecaf4beee907e3eb056f0de366aa2bf600"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "807dfe349bbb6842572651329b57ba8183d6a62400c57984cbb1e740e6b8884e"
         },
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "132193e558d6e990653c7532a2a923815dc4a6c72f7f60db1f0e7a7853443a4c"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "d3bc52eec64f57fda69cd2445732f652203e0b438e89d9e8e5e1f1cadd0ccf44"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
+          "sha256": "3a3cba13b2a7839f515de335f28265e3a8ae2b2b75171ba04827c0cabab53408"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "ae864d3d8ef341e0c6eaee3a6edaeaec572ea858eaae68dd34a16f79e6d56944"
+          "sha256": "54cfa4962cff339ab31451891cf78d13bd5d45be29398b7964052376fbc869bc"
         }
       ],
-      "reason": "Reviewed fixture-only Dashboard path substitutions and retained Ai holdout targets. SQL freshness/no-fallback rules are unchanged; explicit JSON baseline brief returned empty focused tests, and runtime checks were selected from source instead. No retrieval quality pass is implied.",
+      "reason": "Only source-proven Recipes fixture paths moved; corpus queries, rankings and thresholds unchanged. Trace filters are separate from context-search scoring; actual quality failures remain explicitly reported.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:15:19.2306393Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:19.9359921Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1257,14 +1297,18 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "5aa06255244983619104c53689fa4bb164efb9649e3ec08ecf66bf83a81ed2bc"
+        },
+        {
           "path": "AGENTS.md",
-          "sha256": "ae864d3d8ef341e0c6eaee3a6edaeaec572ea858eaae68dd34a16f79e6d56944"
+          "sha256": "54cfa4962cff339ab31451891cf78d13bd5d45be29398b7964052376fbc869bc"
         }
       ],
-      "reason": "Guide relocation and merged source hashes require renewed receipts. Existing review mechanics remain unchanged; historical receipt versions remain in Git and the archived source evidence, not treated as current verification.",
+      "reason": "Current source hashes require renewed source-impact receipts. Original source ledger/evidence retained in Git/archive; receipts certify page review, not test success.",
       "baseRef": "HEAD",
-      "gitHead": "ec86da7995d1603052052a3f6fd59fb100af47ed",
-      "reviewedAtUtc": "2026-08-31T04:15:19.7980485Z"
+      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
+      "reviewedAtUtc": "2026-08-31T08:06:20.5626104Z"
     }
   ]
 }

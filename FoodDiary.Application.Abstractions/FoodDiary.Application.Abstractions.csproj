@@ -27,4 +27,6 @@
     <ProjectReference Include="../Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
   </ItemGroup>
+  <ItemGroup><ProjectReference Include="../Modules/Recipes/Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" /></ItemGroup>
 </Project>

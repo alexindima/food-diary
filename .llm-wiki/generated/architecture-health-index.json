@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 597,
+    "productionProjectEdges": 612,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -4910,7 +4910,7 @@
     {
       "name": "RecipeIngredientInputValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Common/Validators/RecipeIngredientInputValidator.cs",
+      "path": "Modules/Recipes/Application/Common/Validators/RecipeIngredientInputValidator.cs",
       "line": 5,
       "testReferenceCount": 0,
       "testReferences": [],

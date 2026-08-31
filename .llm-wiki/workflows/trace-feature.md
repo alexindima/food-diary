@@ -14,6 +14,8 @@ sources:
   - .llm-wiki/tools/Find-LlmWikiFrontendTrace.ps1
   - .llm-wiki/tools/Test-LlmWikiFrontendTraceSqlParity.ps1
   - .llm-wiki/tools/Test-LlmWikiTraceOutput.ps1
+  - .llm-wiki/tools/code-graph-trace-scope.mjs
+  - .llm-wiki/tools/Test-LlmWikiTraceScope.mjs
   - .llm-wiki/generated/frontend-index.json
   - .llm-wiki/generated/frontend-contract-index.json
 ---
@@ -39,8 +41,12 @@ service, or telemetry. Narrow ambiguous searches explicitly with `-Layer
 Backend`, `-Module MailInbox`, `-PathPrefix 'MailInbox/'`, and optional
 `-SymbolKind HostedService|Service|Handler|Controller|Repository`. A broad
 graph result returns ranked candidates with confidence and concrete scoring
-reasons. Production C# candidates receive a backend-intent boost, while
-frontend and test candidates are penalized for backend queries.
+reasons. Candidate filters retain an explicit backend/frontend layer and match
+module folder/project segments exactly: `Recipes` does not mean `FavoriteRecipes`.
+A named backend module on the fast graph route defaults to backend candidates
+unless a frontend view is explicitly requested. Test candidates remain ranked
+after production. These scope rules do not change the context-search ranking or
+quality thresholds; exact-symbol tracing may still show cross-module consumers.
 
 Text output is compact by default: one best match, bounded direct consumers,
 routes, calls, and tests. Use `-FullTrace` only when broad dependency discovery

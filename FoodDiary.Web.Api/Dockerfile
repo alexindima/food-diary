@@ -88,7 +88,11 @@ COPY Modules/OpenFoodFacts/Domain/*.csproj Modules/OpenFoodFacts/Domain/
 COPY Modules/OpenFoodFacts/Infrastructure/*.csproj Modules/OpenFoodFacts/Infrastructure/
 COPY Modules/OpenFoodFacts/Infrastructure/Model/*.csproj Modules/OpenFoodFacts/Infrastructure/Model/
 COPY FoodDiary.Application.Products/*.csproj FoodDiary.Application.Products/
-COPY FoodDiary.Application.Recipes/*.csproj FoodDiary.Application.Recipes/
+COPY Modules/Recipes/Application/*.csproj Modules/Recipes/Application/
+COPY Modules/Recipes/Application/Abstractions/*.csproj Modules/Recipes/Application/Abstractions/
+COPY Modules/Recipes/Contracts/*.csproj Modules/Recipes/Contracts/
+COPY Modules/Recipes/Infrastructure/*.csproj Modules/Recipes/Infrastructure/
+COPY Modules/Recipes/Infrastructure/Model/*.csproj Modules/Recipes/Infrastructure/Model/
 COPY Modules/Images/Application/*.csproj Modules/Images/Application/
 COPY Modules/Images/Application/Abstractions/*.csproj Modules/Images/Application/Abstractions/
 COPY Modules/Images/Infrastructure/*.csproj Modules/Images/Infrastructure/
@@ -238,7 +242,11 @@ COPY Modules/OpenFoodFacts/Domain/ Modules/OpenFoodFacts/Domain/
 COPY Modules/OpenFoodFacts/Infrastructure/ Modules/OpenFoodFacts/Infrastructure/
 COPY Modules/OpenFoodFacts/Infrastructure/Model/ Modules/OpenFoodFacts/Infrastructure/Model/
 COPY FoodDiary.Application.Products/ FoodDiary.Application.Products/
-COPY FoodDiary.Application.Recipes/ FoodDiary.Application.Recipes/
+COPY Modules/Recipes/Application/ Modules/Recipes/Application/
+COPY Modules/Recipes/Application/Abstractions/ Modules/Recipes/Application/Abstractions/
+COPY Modules/Recipes/Contracts/ Modules/Recipes/Contracts/
+COPY Modules/Recipes/Infrastructure/ Modules/Recipes/Infrastructure/
+COPY Modules/Recipes/Infrastructure/Model/ Modules/Recipes/Infrastructure/Model/
 COPY Modules/Images/Application/ Modules/Images/Application/
 COPY Modules/Images/Application/Abstractions/ Modules/Images/Application/Abstractions/
 COPY Modules/Images/Infrastructure/ Modules/Images/Infrastructure/

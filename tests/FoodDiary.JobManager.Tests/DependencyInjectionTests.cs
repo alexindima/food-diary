@@ -128,7 +128,7 @@ public sealed class DependencyInjectionTests {
         services.AddMealsModule();
         services.AddNotificationsModule().AddNotificationsInfrastructure(configuration);
         services.AddWeeklyGoalsModule();
-        services.AddInfrastructure(configuration).AddAiPersistence().AddDashboardReadServices();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddDashboardReadServices();
         services.AddIntegrations(configuration);
         services.AddDataProtection();
         services.AddNotificationResources();

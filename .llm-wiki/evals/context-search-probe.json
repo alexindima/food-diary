@@ -84,7 +84,7 @@
       "id": "recipe-access-service-probe",
       "query": "check whether a user may access a private recipe",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Services/RecipeAccessService.cs"]
+      "expectedPaths": ["Modules/Recipes/Infrastructure/Services/RecipeAccessService.cs"]
     },
     {
       "id": "user-role-membership-service-probe",

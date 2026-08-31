@@ -86,7 +86,9 @@ function Get-WorkspaceOverlayPaths {
     if ($batch.Count -gt 0 -or $batches.Count -eq 0) { $batches.Add($batch.ToArray()) }
     $paths = [Collections.Generic.List[string]]::new()
     foreach ($pathspecBatch in $batches) {
-        $trackedArguments = @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') + @($pathspecBatch)
+        # A rename must overlay both deletion and addition. Name-only rename
+        # detection emits only the destination and leaves the old HEAD file alive.
+        $trackedArguments = @('diff', '--no-renames', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') + @($pathspecBatch)
         $untrackedArguments = @('ls-files', '--others', '--exclude-standard', '--') + @($pathspecBatch)
         foreach ($path in @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments $trackedArguments -FailureMessage 'Unable to enumerate tracked workspace changes for the read-only snapshot.')) { $paths.Add($path) }
         foreach ($path in @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments $untrackedArguments -FailureMessage 'Unable to enumerate untracked workspace changes for the read-only snapshot.')) { $paths.Add($path) }

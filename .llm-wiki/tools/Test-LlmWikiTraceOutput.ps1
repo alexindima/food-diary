@@ -2,6 +2,8 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+& node (Join-Path $PSScriptRoot 'Test-LlmWikiTraceScope.mjs')
+if ($LASTEXITCODE -ne 0) { throw 'Trace scope unit regression failed.' }
 $frontendTraceScript = Join-Path $PSScriptRoot 'Find-LlmWikiFrontendTrace.ps1'
 $backendTraceScript = Join-Path $PSScriptRoot 'Find-LlmWikiTrace.ps1'
 $facadeText = Get-Content -LiteralPath (Join-Path $PSScriptRoot '../wiki.ps1') -Raw

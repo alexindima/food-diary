@@ -21,7 +21,6 @@ using FoodDiary.Application.Tdee;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
 using FoodDiary.Application.Products;
-using FoodDiary.Application.Recipes;
 using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Application.Users;
 using FoodDiary.Modules.Wearables.Infrastructure;
