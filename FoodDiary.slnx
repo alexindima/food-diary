@@ -15,10 +15,22 @@
   <Folder Name="/Application/" />
   <Folder Name="/Application/Content and Engagement/">
     <Project Path="FoodDiary.Application.Admin/FoodDiary.Application.Admin.csproj" />
-    <Project Path="FoodDiary.Application.Ai/FoodDiary.Application.Ai.csproj" />
     <Project Path="FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj" />
   </Folder>
   <Folder Name="/Modules/" />
+  <Folder Name="/Modules/Ai/">
+    <Project Path="Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
+    <Project Path="Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />
+    <Project Path="Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
+    <Project Path="Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
+    <Project Path="Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Ai/tests/">
+    <Project Path="Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/FoodDiary.Modules.Ai.Application.Tests.csproj" />
+    <Project Path="Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/FoodDiary.Modules.Ai.Domain.Tests.csproj" />
+    <Project Path="Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/FoodDiary.Modules.Ai.Infrastructure.Tests.csproj" />
+  </Folder>
+
   <Folder Name="/Modules/Exercises/">
     <Project Path="Modules/Exercises/Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
     <Project Path="Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj" />

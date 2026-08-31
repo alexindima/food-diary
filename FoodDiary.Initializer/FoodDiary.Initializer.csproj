@@ -32,7 +32,7 @@
     <ProjectReference Include="..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Images\Application\FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="..\Modules\Images\Infrastructure\FoodDiary.Modules.Images.Infrastructure.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Ai\FoodDiary.Application.Ai.csproj" />
+    <ProjectReference Include="../Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />
     <ProjectReference Include="..\Modules\Lessons\Infrastructure\FoodDiary.Modules.Lessons.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Statistics\Application\FoodDiary.Modules.Statistics.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
@@ -58,4 +58,5 @@
     <ProjectReference Include="..\Modules\Exercises\Infrastructure\FoodDiary.Modules.Exercises.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup><ProjectReference Include="../Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" /></ItemGroup>
 </Project>

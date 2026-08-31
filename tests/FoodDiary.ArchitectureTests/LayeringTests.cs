@@ -354,7 +354,6 @@ public class LayeringTests {
             "services.AddAuditPersistence();",
             "services.AddFoodPersistence();",
             "services.AddDashboardReadServices();",
-            "services.AddAiPersistence();",
             "services.AddEmailPersistence();",
             "services.AddModerationPersistence();",
         ];

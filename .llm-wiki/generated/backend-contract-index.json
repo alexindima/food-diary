@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7605,
+    "consumerEdges": 7611,
     "productionConsumerEdges": 4559,
-    "testConsumerEdges": 3046,
+    "testConsumerEdges": 3052,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -991,7 +991,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -1008,7 +1008,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+        "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -1382,7 +1382,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+        "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -6023,7 +6023,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
+        "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7026,7 +7026,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Application/Common/IAiAdministrationReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7043,7 +7043,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiPromptAdministrationService.cs"
+        "Modules/Ai/Application/Common/IAiPromptAdministrationService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7060,7 +7060,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptProvider.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptProvider.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7077,7 +7077,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7094,7 +7094,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7111,7 +7111,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7128,7 +7128,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7145,7 +7145,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiQuotaRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiQuotaRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7162,7 +7162,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7179,7 +7179,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7196,7 +7196,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageWriteRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7213,7 +7213,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
+        "Modules/Ai/Application/Common/IAiUserContextService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11127,7 +11127,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodClient.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11144,7 +11144,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -12929,7 +12929,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs"
+        "Modules/Ai/Application/Common/IUserAiUsageSummaryReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14987,7 +14987,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15055,7 +15055,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+        "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -21437,10 +21437,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Ai/Common/IAiQuotaRepository.cs",
+      "consumerPath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiQuotaRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -21450,10 +21450,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -21463,10 +21463,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/Model/Ai/AiQuotaReservation.cs",
       "isTest": false,
       "referenceCount": 3
     },
@@ -21476,10 +21476,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaReservation.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
       "isTest": false,
       "referenceCount": 3
     },
@@ -21489,10 +21489,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -21502,7 +21502,20 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Persistence/AiQuotaRepositoryTests.cs",
+      "isTest": true,
+      "referenceCount": 14
+    },
+    {
+      "contract": "AiQuotaReservationRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs",
@@ -21510,51 +21523,12 @@
       "referenceCount": 7
     },
     {
-      "contract": "AiQuotaReservationRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/AiQuotaReservationRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/AiQuotaRepositoryTests.cs",
-      "isTest": true,
-      "referenceCount": 14
-    },
-    {
       "contract": "AnalyzeFoodImageCommand",
       "roles": [
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "AnalyzeFoodImageCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "AnalyzeFoodImageCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+        "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Ai/Mappings/AiHttpMappings.cs",
@@ -21567,10 +21541,36 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+        "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
+      "consumerPath": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "AnalyzeFoodImageCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "AnalyzeFoodImageCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 11
     },
@@ -21580,7 +21580,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+        "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs",
@@ -21593,7 +21593,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+        "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs",
@@ -23036,33 +23036,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "CalculateFoodNutritionCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "CalculateFoodNutritionCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+        "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Ai/Mappings/AiHttpMappings.cs",
@@ -23075,10 +23049,36 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+        "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
+      "consumerPath": "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "CalculateFoodNutritionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CalculateFoodNutritionCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -23088,7 +23088,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+        "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs",
@@ -23101,7 +23101,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+        "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs",
@@ -41197,33 +41197,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetUserAiUsageSummaryQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetUserAiUsageSummaryQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
+        "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Ai/Mappings/AiHttpMappings.cs",
@@ -41236,10 +41210,36 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
+        "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
+      "consumerPath": "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetUserAiUsageSummaryQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetUserAiUsageSummaryQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -41249,7 +41249,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
+        "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs",
@@ -45162,7 +45162,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Application/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Services/AdminAiUsageReadService.cs",
@@ -45175,7 +45175,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Application/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Services/AdminContentReadService.cs",
@@ -45188,10 +45188,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Application/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/DependencyInjection.cs",
+      "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45201,10 +45201,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Application/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/AiAdministrationReadService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45214,7 +45214,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiPromptAdministrationService.cs"
+        "Modules/Ai/Application/Common/IAiPromptAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Admin/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommandHandler.cs",
@@ -45227,10 +45227,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiPromptAdministrationService.cs"
+        "Modules/Ai/Application/Common/IAiPromptAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/DependencyInjection.cs",
+      "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45240,10 +45240,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiPromptAdministrationService.cs"
+        "Modules/Ai/Application/Common/IAiPromptAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/AiPromptAdministrationService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45253,10 +45253,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptProvider.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptProvider.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45266,10 +45266,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptProvider.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptProvider.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45279,10 +45279,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptProvider.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptProvider.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Ai/AiPromptProvider.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptProvider.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45292,10 +45292,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptProvider.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptProvider.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -45305,10 +45305,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptProvider.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptProvider.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Services/AiPromptProviderTests.cs",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/AiPromptProviderTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -45318,10 +45318,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateRepository.cs",
+      "consumerPath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45331,10 +45331,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/AiAdministrationReadService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45344,10 +45344,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45357,7 +45357,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -45370,7 +45370,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
@@ -45383,7 +45383,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs",
@@ -45396,7 +45396,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -45409,7 +45409,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -45422,10 +45422,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateRepository.cs",
+      "consumerPath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45435,10 +45435,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45448,7 +45448,20 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiPromptTemplateReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -45461,7 +45474,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -45474,7 +45487,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -45487,10 +45500,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 4
     },
@@ -45500,10 +45513,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Ai/AiPromptTemplateRepository.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptTemplateRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45513,7 +45526,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -45526,7 +45539,20 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiPromptTemplateRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -45539,7 +45565,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -45552,7 +45578,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -45565,10 +45591,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateRepository.cs",
+      "consumerPath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45578,10 +45604,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/AiPromptAdministrationService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45591,10 +45617,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45604,7 +45630,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -45617,7 +45643,20 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiPromptTemplateWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -45630,7 +45669,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -45643,10 +45682,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiQuotaRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiQuotaRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45656,10 +45695,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiQuotaRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiQuotaRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45669,10 +45708,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiQuotaRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiQuotaRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45682,10 +45721,23 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiQuotaRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiQuotaRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiQuotaRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiQuotaRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -45695,10 +45747,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageRepository.cs",
+      "consumerPath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45708,10 +45760,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/AiAdministrationReadService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45721,10 +45773,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/UserAiUsageSummaryReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45734,10 +45786,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45747,7 +45799,20 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IAiUsageReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -45760,7 +45825,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs",
@@ -45773,20 +45838,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageReadRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IAiUsageReadRepository",
-      "roles": [
-        "ReadRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -45799,7 +45851,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageReadRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -45812,10 +45864,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 3
     },
@@ -45825,10 +45877,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Ai/AiUsageRepository.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/Persistence/Ai/AiUsageRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45838,7 +45890,20 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "IAiUsageRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -45851,12 +45916,12 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs",
       "isTest": true,
-      "referenceCount": 5
+      "referenceCount": 1
     },
     {
       "contract": "IAiUsageRepository",
@@ -45864,7 +45929,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -45877,10 +45942,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageWriteRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageRepository.cs",
+      "consumerPath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45890,10 +45955,36 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageWriteRepository.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
+      "consumerPath": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiUsageWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAiUserContextService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Common/IAiUserContextService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45903,10 +45994,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
+        "Modules/Ai/Application/Common/IAiUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+      "consumerPath": "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45916,10 +46007,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
+        "Modules/Ai/Application/Common/IAiUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+      "consumerPath": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45929,10 +46020,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
+        "Modules/Ai/Application/Common/IAiUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
+      "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45942,10 +46033,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
+        "Modules/Ai/Application/Common/IAiUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/DependencyInjection.cs",
+      "consumerPath": "Modules/Ai/Application/Services/AiUserContextService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45955,10 +46046,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
+        "Modules/Ai/Application/Common/IAiUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/AiUserContextService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45968,10 +46059,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
+        "Modules/Ai/Application/Common/IAiUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/UserAiUsageSummaryReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45981,23 +46072,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
+        "Modules/Ai/Application/Common/IAiUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAiUserContextService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -46007,10 +46085,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
+        "Modules/Ai/Application/Common/IAiUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -49338,45 +49416,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -49924,6 +49963,45 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -51262,45 +51340,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -51848,6 +51887,45 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -53368,19 +53446,6 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -53915,6 +53980,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -55799,6 +55877,19 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -56218,19 +56309,6 @@
       "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
-      "isTest": true,
-      "referenceCount": 3
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -60908,32 +60986,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/AiPromptTemplateId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/AiUsageId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/CycleId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61247,6 +61299,32 @@
       ],
       "consumerArea": "MailRelay",
       "consumerPath": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Domain/ValueObjects/Ids/AiPromptTemplateId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Domain/ValueObjects/Ids/AiUsageId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -66069,19 +66147,6 @@
         "Modules/Images/Application/Abstractions/Common/IImageAssetAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IImageAssetAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Images/Application/Abstractions/Common/IImageAssetAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
@@ -66291,6 +66356,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application/Abstractions/Common/IImageAssetAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -66745,7 +66823,7 @@
         "Modules/Images/Application/Abstractions/Common/IImageAssetReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -66797,9 +66875,9 @@
         "Modules/Images/Application/Abstractions/Common/IImageAssetRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/Images/ImagesFeatureTests.cs",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 3
     },
     {
       "contract": "IImageAssetRepository",
@@ -66810,9 +66888,9 @@
         "Modules/Images/Application/Abstractions/Common/IImageAssetRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
+      "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/Images/ImagesFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 1
     },
     {
       "contract": "IImageAssetRepository",
@@ -74515,20 +74593,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodClient.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IOpenAiFoodClient",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodClient.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Integrations/DependencyInjection.Ai.cs",
@@ -74541,7 +74606,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodClient.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
@@ -74554,10 +74619,23 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodClient.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
+      "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenAiFoodClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -74567,7 +74645,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodClient.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -74580,10 +74658,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+      "consumerPath": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74593,10 +74671,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+      "consumerPath": "Modules/Ai/Application/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74606,10 +74684,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
+      "consumerPath": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74619,10 +74697,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/DependencyInjection.cs",
+      "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74632,10 +74710,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -74645,10 +74723,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 11
     },
@@ -77482,19 +77560,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -77782,6 +77847,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -78964,19 +79042,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -79264,6 +79329,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -90586,19 +90664,6 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserAiProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/AiUserContextService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserAiProfileReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/IUserAiProfileReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Users/Common/UserContextService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -90625,7 +90690,20 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserAiProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
+      "consumerPath": "Modules/Ai/Application/Services/AiUserContextService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAiProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserAiProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -90635,10 +90713,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs"
+        "Modules/Ai/Application/Common/IUserAiUsageSummaryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/DependencyInjection.cs",
+      "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -90648,10 +90726,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs"
+        "Modules/Ai/Application/Common/IUserAiUsageSummaryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
+      "consumerPath": "Modules/Ai/Application/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -90661,10 +90739,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs"
+        "Modules/Ai/Application/Common/IUserAiUsageSummaryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs",
+      "consumerPath": "Modules/Ai/Application/Services/UserAiUsageSummaryReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -90674,10 +90752,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs"
+        "Modules/Ai/Application/Common/IUserAiUsageSummaryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -93082,19 +93160,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -93642,6 +93707,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -102556,33 +102634,7 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodClient.cs",
-      "isTest": false,
-      "referenceCount": 3
-    },
-    {
-      "contract": "OpenAiFoodClientResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
-      "isTest": false,
-      "referenceCount": 4
-    },
-    {
-      "contract": "OpenAiFoodClientResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
@@ -102595,10 +102647,36 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
+      "consumerPath": "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs",
+      "isTest": false,
+      "referenceCount": 3
+    },
+    {
+      "contract": "OpenAiFoodClientResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
+      "isTest": false,
+      "referenceCount": 4
+    },
+    {
+      "contract": "OpenAiFoodClientResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
       "referenceCount": 13
     },
@@ -102608,10 +102686,10 @@
         "Response"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs",
       "isTest": true,
       "referenceCount": 31
     },
@@ -104077,33 +104155,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "ParseFoodTextCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ParseFoodTextCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+        "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Ai/Mappings/AiHttpMappings.cs",
@@ -104116,10 +104168,36 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+        "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
+      "consumerPath": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ParseFoodTextCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ParseFoodTextCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -104129,10 +104207,10 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+        "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Ai/ParseFoodTextValidatorTests.cs",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/ParseFoodTextValidatorTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -104142,7 +104220,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+        "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs",
@@ -104155,7 +104233,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+        "Modules/Ai/Application/Commands/ParseFoodText/ParseFoodTextCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs",

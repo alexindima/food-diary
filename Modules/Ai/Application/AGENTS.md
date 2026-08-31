@@ -2,7 +2,7 @@
 
 ## Scope
 
-Rules for `FoodDiary.Application.Ai/`.
+Rules for `Modules/Ai/Application/`.
 
 ## Boundary
 

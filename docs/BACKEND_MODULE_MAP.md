@@ -177,3 +177,7 @@ Exercises ownership: `Modules/Exercises/Application` owns slices and read-servic
 ## RecipeCommunity logical module
 
 `Modules/RecipeCommunity` owns Application (RecipeComments/RecipeLikes), Application/Abstractions, Domain, Infrastructure and Infrastructure/Model. Legacy application assembly and CLR namespaces remain stable. One-way User/Recipe navigations permit owned entities/IDs to leave central Domain without extracting Recipes. Shared context/migrations, HTTP and ContentReports reportability projection remain with their owners; no extra Contracts or provider layer. See `docs/ai/recipecommunity-ownership-inventory.md` for sources and compatibility seams.
+
+## Ai physical ownership
+
+Ai owns Application, Application/Abstractions, Domain, Infrastructure/Model and Infrastructure under `Modules/Ai`. Application keeps its legacy assembly/CLR identity. AiUsage/AiPromptTemplate and quota ledger ownership, provider/cache/consent semantics, central User and DbContext seams and consumers are source-audited in `docs/ai/ai-ownership-inventory.md`. Admin invokes semantic administration capabilities; Meals AI entities remain Meals-owned. Provider HTTP/options remain Integrations. Focused tests live under Modules/Ai/tests; central PostgreSQL/HTTP/mixed suites remain with their owners.

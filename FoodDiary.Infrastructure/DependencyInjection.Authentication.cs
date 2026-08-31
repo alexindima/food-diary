@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
@@ -6,7 +5,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Infrastructure.Authentication;
 using FoodDiary.Infrastructure.Persistence.Authentication;
-using FoodDiary.Infrastructure.Persistence.Ai;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Infrastructure.Services;
@@ -24,7 +22,6 @@ public static partial class DependencyInjection {
         services.AddScoped<ITelegramAssertionReplayGuard, TelegramAssertionReplayGuard>();
         services.AddScoped<IUserCleanupService, UserCleanupService>();
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
-        services.AddSingleton<IAiPromptProvider, AiPromptProvider>();
         services.AddSingleton<IAuditLogger, StructuredAuditLogger>();
 
     }

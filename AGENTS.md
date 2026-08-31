@@ -10,7 +10,13 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Build-time analyzers: `FoodDiary.Analyzers/AGENTS.md`
 - Application abstractions: `FoodDiary.Application.Abstractions/AGENTS.md`
 - Admin application module: `FoodDiary.Application.Admin/AGENTS.md`
-- AI application module: `FoodDiary.Application.Ai/AGENTS.md`
+- AI logical module: `Modules/Ai/AGENTS.md`
+- AI application: `Modules/Ai/Application/AGENTS.md`
+- AI application ports: `Modules/Ai/Application/Abstractions/AGENTS.md`
+- AI domain: `Modules/Ai/Domain/AGENTS.md`
+- AI infrastructure: `Modules/Ai/Infrastructure/AGENTS.md`
+- AI persistence model: `Modules/Ai/Infrastructure/Model/AGENTS.md`
+- AI tests: `Modules/Ai/tests/AGENTS.md`
 - BodyMetrics logical module: `Modules/BodyMetrics/AGENTS.md`
 - BodyMetrics application: `Modules/BodyMetrics/Application/AGENTS.md`
 - BodyMetrics application abstractions: `Modules/BodyMetrics/Application/Abstractions/AGENTS.md`

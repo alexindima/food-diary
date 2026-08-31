@@ -324,8 +324,11 @@ exact-rank or top-five differences. A later role-generalization pass raised the
 same frozen diagnostic corpus to 96/100 top-1, 100/100 top-10, and 0.9783 MRR
 while preserving the promoted and control gates. The original blind result
 remains immutable; later results are regression evidence, not new blind
-baselines. The current fresh-graph regression result is 99/100 top-1, 100/100
-top-10, and 0.995 MRR; the live gate builds the current .NET reader and requires
+baselines. An earlier fresh-graph regression recorded 99/100 top-1, 100/100
+top-10, and 0.995 MRR; this historical measurement does not establish the result
+for a subsequently changed checkout. Rerun the live holdout after source moves
+and retain any new misses separately from known baseline failures. The live
+gate builds the current .NET reader and requires
 exact rank and ordered top-five path/score parity with Node. Use a new unseen
 holdout for any later generalization claim.
 

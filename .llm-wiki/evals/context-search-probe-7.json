@@ -123,7 +123,7 @@
       "query": "AI user context service загружает профиль и решает active ли пользователь и какой у него subscription tier",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Ai/Services/AiUserContextService.cs"
+        "Modules/Ai/Application/Services/AiUserContextService.cs"
       ]
     },
     {
@@ -177,7 +177,7 @@
       "query": "не сервис AI-провайдера: read service пользовательской квоты собирает usage за текущий UTC месяц и лимит тарифа",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs"
+        "Modules/Ai/Application/Services/UserAiUsageSummaryReadService.cs"
       ]
     },
     {
@@ -285,7 +285,7 @@
       "query": "тестовый набор для AnalyzeFoodImage и CalculateFoodNutrition validation: empty ids, non-hex request id, missing asset, inactive user",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs"
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs"
       ]
     },
     {
@@ -303,7 +303,7 @@
       "query": "найти тесты AI orchestration где quota reservation идет до generation, actual tokens reconcile, unknown cost остается pending и cancellation пробрасывается",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs"
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs"
       ]
     },
     {

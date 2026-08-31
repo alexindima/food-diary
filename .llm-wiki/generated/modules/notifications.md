@@ -57,7 +57,7 @@ Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationsControll
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: logical-module
+- Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Notification, WebPushSubscription, NotificationWebPushOutboxMessage
 - Public contract files: 0

@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Ai/FoodDiary.Application.Ai.csproj`
+- Extracted project: `Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Admin, Images, Users
 - Business-module consumers: none observed
@@ -24,12 +24,13 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Ai`
-- `FoodDiary.Application.Ai`
-- `FoodDiary.Domain/Entities/Ai`
-- `FoodDiary.Infrastructure/Persistence/Ai`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Ai`
+- `FoodDiary.Integrations/Services/OpenAi`
 - `FoodDiary.Presentation.Api/Features/Ai`
+- `Modules/Ai/Application`
+- `Modules/Ai/Application/Abstractions`
+- `Modules/Ai/Domain`
+- `Modules/Ai/Infrastructure`
+- `Modules/Ai/Infrastructure/Model`
 
 ## HTTP Surface
 
@@ -49,17 +50,17 @@ Source: `FoodDiary.Presentation.Api/Features/Ai/AiUsageController.cs`
 
 ## Boundary Health
 
-- Role: orchestrator
-- Physical isolation: project
-- Architecture guardrails: project-reference-matrix
-- Declared owned entities: not yet enumerated
-- Public contract files: 25
+- Role: aggregate-owner
+- Physical isolation: module-root
+- Architecture guardrails: assembly-isolated
+- Declared owned entities: AiUsage, AiPromptTemplate, AiQuotaPeriod, AiQuotaReservation
+- Public contract files: 29
 - Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 25
+- Public contract types: 29
 - Interfaces: 11
 - DTO/read-model/projection types: 8
 - Enums: 1
@@ -82,7 +83,11 @@ Source: `FoodDiary.Presentation.Api/Features/Ai/AiUsageController.cs`
 - `record AiProviderTokenBudget`
 - `record AiQuotaReservationRequest`
 - `record AiQuotaUsage`
+- `record AiUsageBreakdown`
+- `record AiUsageDailySummary`
+- `record AiUsageSummary`
 - `record AiUsageTotals`
+- `record AiUsageUserSummary`
 - `record FoodNutritionItemModel`
 - `record FoodNutritionModel`
 - `record FoodVisionItemModel`
@@ -95,17 +100,19 @@ Source: `FoodDiary.Presentation.Api/Features/Ai/AiUsageController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Ai/ParseFoodTextValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/ParseFoodTextValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/Domain/AiPromptTemplateInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/Domain/AiUsageInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Persistence/AiQuotaRepositoryTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/AiPromptProviderTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/AiConsentTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AiPromptTemplateInvariantTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AiUsageInvariantTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiUsageRepositoryIntegrationTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/AiQuotaRepositoryTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/AiPromptProviderTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs`
 

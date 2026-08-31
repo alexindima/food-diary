@@ -55,7 +55,7 @@
       "query": "implementation contract for artificial intelligence usage daily summary",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Application.Abstractions/Admin/Models/AiUsageDailySummary.cs"
+        "Modules/Ai/Application/Abstractions/Admin/Models/AiUsageDailySummary.cs"
       ]
     },
     {

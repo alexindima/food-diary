@@ -8,7 +8,6 @@ public static partial class DependencyInjection {
         services.AddAuditPersistence();
         services.AddFoodPersistence();
         services.AddDashboardReadServices();
-        services.AddAiPersistence();
         services.AddEmailPersistence();
         services.AddModerationPersistence();
     }
