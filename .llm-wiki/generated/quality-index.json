@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4747,
+    "productionFiles": 4745,
     "wikiToolFiles": 201,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 782,
@@ -6311,22 +6311,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.2
-    },
-    {
-      "path": "FoodDiary.Application.ContentReports/AssemblyInfo.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.DailyAdvices/AssemblyInfo.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
     },
     {
       "path": "FoodDiary.Application.Dashboard/AssemblyInfo.cs",

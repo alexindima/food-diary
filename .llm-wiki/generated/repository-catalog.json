@@ -21,7 +21,7 @@
     "backendBusinessModules": 33,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 156,
+    "agentGuides": 155,
     "documentationPages": 87
   },
   "dotnet": {
@@ -9889,7 +9889,6 @@
       "FoodDiary.Application.Abstractions/AGENTS.md",
       "FoodDiary.Application.Admin/AGENTS.md",
       "FoodDiary.Application.Ai/AGENTS.md",
-      "FoodDiary.Application.ContentReports/AGENTS.md",
       "FoodDiary.Application.Dashboard/AGENTS.md",
       "FoodDiary.Application.Identity/AGENTS.md",
       "FoodDiary.Application.Meals/AGENTS.md",

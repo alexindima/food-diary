@@ -8,7 +8,7 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3526,
+    "sourceFiles": 3524,
     "symbols": 3519,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 192,
