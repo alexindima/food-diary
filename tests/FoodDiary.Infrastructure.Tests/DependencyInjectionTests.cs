@@ -83,6 +83,7 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddInfrastructure(configuration);
+        services.AddRecipesPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
@@ -105,6 +106,7 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddInfrastructure(configuration);
+        services.AddRecipesPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
@@ -447,6 +449,7 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddInfrastructure(configuration);
+        services.AddRecipesPersistence();
 
         ServiceDescriptor interceptorDescriptor = Assert.Single(
             services,
@@ -504,6 +507,7 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddInfrastructure(configuration);
+        services.AddRecipesPersistence();
         Assert.Multiple(
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardStatisticsReadService))),
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardBodyReadService))),
@@ -579,6 +583,7 @@ public sealed class DependencyInjectionTests {
 
         services
             .AddInfrastructure(configuration)
+            .AddRecipesPersistence()
             .AddBillingModule()
             .AddBodyMetricsModule().AddExercisesModule()
             .AddNotificationsPersistence()
@@ -616,6 +621,7 @@ public sealed class DependencyInjectionTests {
 
         services.AddSingleton<IDiaryPdfReportTextProvider, TestDiaryPdfReportTextProvider>();
         services.AddInfrastructure(configuration);
+        services.AddRecipesPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         IDiaryPdfGenerator generator = provider.GetRequiredService<IDiaryPdfGenerator>();
@@ -800,6 +806,7 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddInfrastructure(configuration);
+        services.AddRecipesPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<DatabaseOptions>>().Value);
@@ -823,6 +830,7 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddInfrastructure(configuration);
+        services.AddRecipesPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException exception = Assert.Throws<OptionsValidationException>(() =>
@@ -848,6 +856,7 @@ public sealed class DependencyInjectionTests {
 
         services.AddSingleton<IPublisher>(new NullPublisher());
         services.AddInfrastructure(configuration);
+        services.AddRecipesPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
         using FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();

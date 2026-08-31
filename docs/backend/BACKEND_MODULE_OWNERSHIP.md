@@ -211,7 +211,7 @@ Other modules use `IRecipeLookupService` or `IRecipeAccessService` for existence
 
 ### Infrastructure composition
 
-The historical `AddFoodPersistence` registration remains only as a composition aggregator. It delegates to Products, Recipes, RecentItems and Meals registration modules and may not contain registrations itself. Product and Recipe aggregate EF configurations live under their respective owned configuration folders.
+The historical `AddFoodPersistence` registration remains only as a composition aggregator. It delegates to Products, RecentItems and Meals registration modules and may not contain registrations itself. Recipes persistence is composed explicitly by the hosts through Modules/Recipes/Infrastructure. Product configurations remain central; Recipe aggregate EF configurations live in Modules/Recipes/Infrastructure/Model.
 
 ## Meal Diary and RecentItems boundaries
 
@@ -347,3 +347,7 @@ Exercises owns Application, repository Abstractions, stable read Contracts, Doma
 ## RecipeCommunity logical module
 
 `Modules/RecipeCommunity` owns Application (RecipeComments/RecipeLikes), Application/Abstractions, Domain, Infrastructure and Infrastructure/Model. Legacy application assembly and CLR namespaces remain stable. One-way User/Recipe navigations permit owned entities/IDs to leave central Domain without extracting Recipes. Shared context/migrations, HTTP and ContentReports reportability projection remain with their owners; no extra Contracts or provider layer. See `docs/ai/recipecommunity-ownership-inventory.md` for sources and compatibility seams.
+
+## Recipes physical ownership
+
+Recipes use cases, ports, read contracts, persistence model and adapters live under `Modules/Recipes`. Recipe/Steps/Ingredients, IDs/value objects/events remain central Domain because public User/MealItem/Product inverse navigations prohibit a one-way extraction. Shared context/migrations/snapshot and cross-module tests stay central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers. See `docs/ai/recipes-ownership-inventory.md`; this is not full Domain/database isolation.

@@ -8,17 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "d9e87b23eea715e898c5ae46562045fcde16bb86b2645b508e186f14ddc1614a"
+          "sha256": "c953df1d213d6f7d77ff9f06a58cfaccc0593acb6e52f3454ca9571e81b577a4"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3348e9c376e9c4dcaed020ab3b9acf7b3296fe1b025a17b3c472a9a6137a5ab1"
+          "sha256": "f77ee48c81fcab9bb8062d461bb56947d81022c2eff357287912211290e12d54"
         }
       ],
-      "reason": "Reviewed root/scoped module guides, ownership inventories, ADR 0016 and 0006, and the combined integration report. Reconciled all three modules and solution/test grouping; remaining central seams and old scanner caveats are explicit.",
+      "reason": "Ownership inventory and module guides describe five production projects, focused versus mixed tests, central Domain/context/history seams and coordinated host rebuild.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:45.7425514Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:41.6742153Z"
     },
     {
       "pageId": "module.frontend",
@@ -42,13 +42,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3348e9c376e9c4dcaed020ab3b9acf7b3296fe1b025a17b3c472a9a6137a5ab1"
+          "sha256": "f77ee48c81fcab9bb8062d461bb56947d81022c2eff357287912211290e12d54"
         }
       ],
-      "reason": "Reviewed root/scoped module guides, ownership inventories, ADR 0016 and 0006, and the combined integration report. Reconciled all three modules and solution/test grouping; remaining central seams and old scanner caveats are explicit.",
+      "reason": "Ownership inventory and module guides describe five production projects, focused versus mixed tests, central Domain/context/history seams and coordinated host rebuild.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:46.0731564Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:42.8228030Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -57,29 +57,29 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b49e72216ddebd09e2a08641cf27e57facfab765b9d0a0844da9820a92b3382b"
+          "sha256": "8a98c691c221bec286446439196676bcbc3a67d42f5ac9668fece5898a2b0b28"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3348e9c376e9c4dcaed020ab3b9acf7b3296fe1b025a17b3c472a9a6137a5ab1"
+          "sha256": "f77ee48c81fcab9bb8062d461bb56947d81022c2eff357287912211290e12d54"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "3ce2423811d4c365c9c42226da7fa22ae6c4b3a4d1d2496d756bfecdd341da1e"
+          "sha256": "e74eb70f3ae2e6214d2174290bfed11de1833dece9c1268aa65a76b9b4cf9a11"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "55920b1dd1a866b85615b5f461f74cb7f3dab700726cc7b0a6264593051b557b"
+          "sha256": "229987785e07f64c6ad5d5fdbb06593c14f68fda984aabf0417dc83a3e82f1a9"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "377d8f1aad12ffb1da58a1a269f11a5a404053372a42979d2b30d3b03c1b435a"
+          "sha256": "54b72ac031ef0327f0aad610eafcb76aecf2228583a57e3e4612685d27493ade"
         }
       ],
-      "reason": "Reviewed the three completed module inventories and merged host/project registrations. Module source bodies match their verified commits; HTTP snapshots and migration/model snapshot diff are empty; 825 Presentation and 175 non-performance HTTP integration tests pass, with EF no pending changes.",
+      "reason": "Recipes physical project and contract reference relocation preserves routes, payloads, statuses, public navigation and EF schema; full HTTP176 and architecture792 pass.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:46.3442632Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:43.8817089Z"
     },
     {
       "pageId": "system.architecture",
@@ -88,21 +88,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b49e72216ddebd09e2a08641cf27e57facfab765b9d0a0844da9820a92b3382b"
+          "sha256": "8a98c691c221bec286446439196676bcbc3a67d42f5ac9668fece5898a2b0b28"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3348e9c376e9c4dcaed020ab3b9acf7b3296fe1b025a17b3c472a9a6137a5ab1"
+          "sha256": "f77ee48c81fcab9bb8062d461bb56947d81022c2eff357287912211290e12d54"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "9e87749696596c745ed4c16d5d77e2d44526f2918c02b1727455e796667d5bc8"
+          "sha256": "90e3227dc2bad265e5c1752a21f760e4f03656336f173f887f7d0911fab892a9"
         }
       ],
-      "reason": "Reviewed root/scoped module guides, ownership inventories, ADR 0016 and 0006, and the combined integration report. Reconciled all three modules and solution/test grouping; remaining central seams and old scanner caveats are explicit.",
+      "reason": "Ownership inventory and module guides describe five production projects, focused versus mixed tests, central Domain/context/history seams and coordinated host rebuild.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:46.6102955Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:44.7566830Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -141,13 +141,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "d9e87b23eea715e898c5ae46562045fcde16bb86b2645b508e186f14ddc1614a"
+          "sha256": "c953df1d213d6f7d77ff9f06a58cfaccc0593acb6e52f3454ca9571e81b577a4"
         }
       ],
-      "reason": "Reviewed root/scoped module guides, ownership inventories, ADR 0016 and 0006, and the combined integration report. Reconciled all three modules and solution/test grouping; remaining central seams and old scanner caveats are explicit.",
+      "reason": "Ownership inventory and module guides describe five production projects, focused versus mixed tests, central Domain/context/history seams and coordinated host rebuild.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:46.8690955Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:45.5479666Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -156,13 +156,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b49e72216ddebd09e2a08641cf27e57facfab765b9d0a0844da9820a92b3382b"
+          "sha256": "8a98c691c221bec286446439196676bcbc3a67d42f5ac9668fece5898a2b0b28"
         }
       ],
-      "reason": "Reviewed root/scoped module guides, ownership inventories, ADR 0016 and 0006, and the combined integration report. Reconciled all three modules and solution/test grouping; remaining central seams and old scanner caveats are explicit.",
+      "reason": "Ownership inventory and module guides describe five production projects, focused versus mixed tests, central Domain/context/history seams and coordinated host rebuild.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:47.1733183Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:46.3243197Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -185,18 +185,14 @@
       "pageSha256": "3bcd8f832445f89d012e571e85cfdc85ea328f6c3713a9427b8020d6a0a3438e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "ddded0a588487f6e7825b0b559e5ce02a46f69ef986ac3eab7438964999ba0dc"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "39b5ffdfc85f50576d0e148ef0bee03c3405c60f3df9add6cdd80e9869063077"
+          "path": ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
+          "sha256": "b8c14b20a3ce59841594998a3411d36db5a8218c0fa8a9376e675603655203c6"
         }
       ],
-      "reason": "Focused tests moved without duplicates; architecture767 and module179 passed; Windows Git batching regression passed.",
+      "reason": "Actual TRX and native evidence retain failed unfiltered persistence timing, filtered recovery, known holdout failure and additional readiness/trace defects; no thresholds or rankings changed.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-30T22:50:56.8648696Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:47.1717075Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -220,21 +216,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "259c6b8575edcdbbed1613442dc9d956ccd1ecc85854bc3862013a29fa636579"
+          "sha256": "67bd25f1b2a2fa7b797e25ce5ad6231f00d2bf3644ee53babef8e21e74d44d77"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b49e72216ddebd09e2a08641cf27e57facfab765b9d0a0844da9820a92b3382b"
+          "sha256": "8a98c691c221bec286446439196676bcbc3a67d42f5ac9668fece5898a2b0b28"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "9e87749696596c745ed4c16d5d77e2d44526f2918c02b1727455e796667d5bc8"
+          "sha256": "90e3227dc2bad265e5c1752a21f760e4f03656336f173f887f7d0911fab892a9"
         }
       ],
-      "reason": "Combined full build and 5623 tests passed. Generic Git batching, dot-path normalization and oversized Node stdin transport regressions passed. Preserve the measured full Wiki search-gate baseline failure; do not weaken ranking, corpus queries or thresholds.",
+      "reason": "Actual TRX and native evidence retain failed unfiltered persistence timing, filtered recovery, known holdout failure and additional readiness/trace defects; no thresholds or rankings changed.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:47.4909762Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:48.1163852Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -243,17 +239,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "773cb320a26b2fd73680115e8b8f2fd79ecd131a81d9b317cee3edc832329758"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4360e7e65d6498161828e51e218cabd3a78f158bedbd2e4c350f64338b3fcf03"
+          "sha256": "eca69bd01a47cfce9e6c4ec88cd7589d719c389b25ac919568887aacef543f23"
         }
       ],
-      "reason": "Reviewed the three completed module inventories and merged host/project registrations. Module source bodies match their verified commits; HTTP snapshots and migration/model snapshot diff are empty; 825 Presentation and 175 non-performance HTTP integration tests pass, with EF no pending changes.",
+      "reason": "Recipes physical project and contract reference relocation preserves routes, payloads, statuses, public navigation and EF schema; full HTTP176 and architecture792 pass.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:48.2025284Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:49.1456660Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -291,46 +283,54 @@
       "pageSha256": "4e6f774f1817d334504316d5d64c5a4bf62bc3a1234600d3293d028f8cbb731a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "7b19546a9f7d98936ca4d86d8e5f8c9e511dea8eea56cc793ff60112fdb824b0"
+          "path": ".llm-wiki/evals/context-search-generalization.json",
+          "sha256": "4f5e46b541590ab0fdff843b1caef00aebef6aea733170626c7d92c95ca2a01c"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-holdout.json",
+          "sha256": "b4f9af92874cebce52c6a62966aa93b4892b40eee94d1354579b093d81d93be6"
         },
         {
           "path": ".llm-wiki/evals/context-search-probe-2.json",
-          "sha256": "eadbee5aaddcceb730fb8c4a0babad0ae4f492bb8fa97a375dc5772a272aaa89"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-3.json",
-          "sha256": "62e46e51b47b02e29ac255eafa6ea5220e226ad3cff883b3a8afbbd46fbc4786"
+          "sha256": "8fcf564df99a395c260f2ff893396bfaa29f25ced085d56258ace28ed3c45b01"
         },
         {
           "path": ".llm-wiki/evals/context-search-probe-5.json",
-          "sha256": "7aa8c858e84989357ed671bd35878a4fbb3895f769144ea3f3b74334e565cde2"
+          "sha256": "6e37e131c19ed462bf43e7923a822aeedf814978d9ee255e6e3bbba6111217b7"
         },
         {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "116f3e8d8a3233cf2a4003ca954c5bb6b4ab307c3d2f2e067fff68dc22debea4"
+          "path": ".llm-wiki/evals/context-search-probe.json",
+          "sha256": "312015fdef759cd2218b9737dfb5e31d8a88c2e7c83d0f8b101e120b0b3b2b84"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-validation.json",
+          "sha256": "00f38cf10973ef2b7ad449a3cb8f10e4f233228b293dd699313c2da48e41300e"
         },
         {
           "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "ae99b0d0ce38869e4b2e7c1f53c554fa10c88566db2b345d414af02c0479154c"
+          "sha256": "cfe70b5690ee0624bf428b534f112af9dea1d13fb503eb5c66b52cbfb0f4b59b"
         },
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4360e7e65d6498161828e51e218cabd3a78f158bedbd2e4c350f64338b3fcf03"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-          "sha256": "1cb8d37e5128c9c2774014462b1510851ee2dbdb889ad0c9dfb3a8c6005905f2"
+          "path": ".llm-wiki/evals/development-context-bundles.json",
+          "sha256": "d528f20774e4c90832da85a4b17f31de9ca49b91f2d860f17aa39b8928b4781d"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "5dbf6c13bf1a81f50acd1bc6a8729f5abacb13f8f7ccce325934f82eec1dfdf1"
+          "sha256": "15fc26082e3470132d705cef247b49f7249894367d9eb2b7482f0291eec2d92f"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
+          "sha256": "3a3cba13b2a7839f515de335f28265e3a8ae2b2b75171ba04827c0cabab53408"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiSqlContextShadow.ps1",
+          "sha256": "649df8bc31535694b018cd01559a8228382ef390dd40b2f8097f6854ace4fedf"
         }
       ],
-      "reason": "Combined 5623 tests, full build, and generic Wiki regressions pass. Oversized scope uses lossless UTF-8 stdin; OpenFoodFacts module-root smoke fixture follows its pre-existing relocation. Frozen holdout queries and thresholds remain unchanged; full Wiki baseline failure is explicit.",
+      "reason": "Actual TRX and native evidence retain failed unfiltered persistence timing, filtered recovery, known holdout failure and additional readiness/trace defects; no thresholds or rankings changed.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:50:36.6401444Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:50.5391436Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -550,21 +550,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "7b9d0901122a9a263a2b074bf67f99376b06154355d5cd9ef016b62620445e7d"
+          "sha256": "07d87464a54b5a7a023910085baa83c2ed57b9695a0a2560a0725a8f0e5fca51"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "55920b1dd1a866b85615b5f461f74cb7f3dab700726cc7b0a6264593051b557b"
+          "sha256": "229987785e07f64c6ad5d5fdbb06593c14f68fda984aabf0417dc83a3e82f1a9"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "377d8f1aad12ffb1da58a1a269f11a5a404053372a42979d2b30d3b03c1b435a"
+          "sha256": "54b72ac031ef0327f0aad610eafcb76aecf2228583a57e3e4612685d27493ade"
         }
       ],
-      "reason": "Combined full build and 5623 tests passed. Generic Git batching, dot-path normalization and oversized Node stdin transport regressions passed. Preserve the measured full Wiki search-gate baseline failure; do not weaken ranking, corpus queries or thresholds.",
+      "reason": "Actual TRX and native evidence retain failed unfiltered persistence timing, filtered recovery, known holdout failure and additional readiness/trace defects; no thresholds or rankings changed.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:49.2297660Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:51.2529644Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -840,17 +840,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "87fa4f04ffb61860f9026c021cceb6b6680b3ea3b154edf690a33eee6a294269"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4360e7e65d6498161828e51e218cabd3a78f158bedbd2e4c350f64338b3fcf03"
+          "sha256": "9f71080802711af1845df3d529a741438203a40041175cc357566faca1d08a22"
         }
       ],
-      "reason": "No new collection, logging, provider transfer or credential behavior. Shared User and ShoppingList seams preserved. Corrected standalone assessments rerun for all child scopes with independently verified file hashes and zero false missing paths; this is not an exhaustive security audit or selected-bundle claim.",
+      "reason": "Existing user and visibility filters, private notes, media access and Images outbox calls remain unchanged; no provider, secrets, telemetry or logging changes.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:49.8105722Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:51.9619951Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -889,17 +885,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1c60b6faf7d20adcee3d4c53f8c7e29400f63f5a2eb804ab2cf3311c8473fad3"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-          "sha256": "1cb8d37e5128c9c2774014462b1510851ee2dbdb889ad0c9dfb3a8c6005905f2"
+          "sha256": "c0877b937f0feb2bd7bc3e2623b4aa40a077bb26c4be4fc8be864d486cca5cde"
         }
       ],
-      "reason": "Combined full build and 5623 tests passed. Generic Git batching, dot-path normalization and oversized Node stdin transport regressions passed. Preserve the measured full Wiki search-gate baseline failure; do not weaken ranking, corpus queries or thresholds.",
+      "reason": "Actual TRX and native evidence retain failed unfiltered persistence timing, filtered recovery, known holdout failure and additional readiness/trace defects; no thresholds or rankings changed.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:50.2130407Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:52.8607597Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -976,13 +968,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ea7df942203e85a0b24125ee05e67b92b3e6738b84e91f4998d334f3158dec2f"
+          "sha256": "8a98e97d302f9970832329c5f940e94da4ddeaf617e9d5ce542da62712335d88"
         }
       ],
-      "reason": "Reviewed root/scoped module guides, ownership inventories, ADR 0016 and 0006, and the combined integration report. Reconciled all three modules and solution/test grouping; remaining central seams and old scanner caveats are explicit.",
+      "reason": "Ownership inventory and module guides describe five production projects, focused versus mixed tests, central Domain/context/history seams and coordinated host rebuild.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:51.1545716Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:55.1101131Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -991,21 +983,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1c60b6faf7d20adcee3d4c53f8c7e29400f63f5a2eb804ab2cf3311c8473fad3"
+          "sha256": "c0877b937f0feb2bd7bc3e2623b4aa40a077bb26c4be4fc8be864d486cca5cde"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ea7df942203e85a0b24125ee05e67b92b3e6738b84e91f4998d334f3158dec2f"
+          "sha256": "8a98e97d302f9970832329c5f940e94da4ddeaf617e9d5ce542da62712335d88"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "87fa4f04ffb61860f9026c021cceb6b6680b3ea3b154edf690a33eee6a294269"
+          "sha256": "9f71080802711af1845df3d529a741438203a40041175cc357566faca1d08a22"
         }
       ],
-      "reason": "No new collection, logging, provider transfer or credential behavior. Shared User and ShoppingList seams preserved. Corrected standalone assessments rerun for all child scopes with independently verified file hashes and zero false missing paths; this is not an exhaustive security audit or selected-bundle claim.",
+      "reason": "Existing user and visibility filters, private notes, media access and Images outbox calls remain unchanged; no provider, secrets, telemetry or logging changes.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:51.6113203Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:56.0169326Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1119,13 +1111,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "8bd75833568217d727d3442ba1bddd58bed2b976fbb14eef4b5e5c8b77aaa575"
+          "sha256": "936c4738865e4781701f0b330b89b499479958d424fd73e08d37258724064c0c"
         }
       ],
-      "reason": "Reviewed merged module/central test references and preserved baseline115 tests. All 5541 reported ordinary tests executed; DI six baseline failures fixed. Public-surface generator path regression passes under StrictMode; no collectors or blanket governance approval claimed.",
+      "reason": "Actual TRX and native evidence retain failed unfiltered persistence timing, filtered recovery, known holdout failure and additional readiness/trace defects; no thresholds or rankings changed.",
       "baseRef": "HEAD",
-      "gitHead": "c421af4f3eca13de3c36fe80170219176aaaf8f6",
-      "reviewedAtUtc": "2026-08-30T21:36:53.8845332Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:56.8507678Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1183,13 +1175,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "d9e87b23eea715e898c5ae46562045fcde16bb86b2645b508e186f14ddc1614a"
+          "sha256": "c953df1d213d6f7d77ff9f06a58cfaccc0593acb6e52f3454ca9571e81b577a4"
         }
       ],
-      "reason": "Reviewed root/scoped module guides, ownership inventories, ADR 0016 and 0006, and the combined integration report. Reconciled all three modules and solution/test grouping; remaining central seams and old scanner caveats are explicit.",
+      "reason": "Ownership inventory and module guides describe five production projects, focused versus mixed tests, central Domain/context/history seams and coordinated host rebuild.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:48.6433744Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:49.8666680Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1242,30 +1234,22 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "7b19546a9f7d98936ca4d86d8e5f8c9e511dea8eea56cc793ff60112fdb824b0"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "116f3e8d8a3233cf2a4003ca954c5bb6b4ab307c3d2f2e067fff68dc22debea4"
-        },
-        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "3af705465e315fe958fe1fda2aa490d913c692f6eda1f136b9629a4a5c76aafd"
+          "sha256": "72831d379e2d852c2f3b239d11b4c09d03582c54159fca1a6a2aa899b5a902d5"
         },
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4360e7e65d6498161828e51e218cabd3a78f158bedbd2e4c350f64338b3fcf03"
+          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
+          "sha256": "3a3cba13b2a7839f515de335f28265e3a8ae2b2b75171ba04827c0cabab53408"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "d9e87b23eea715e898c5ae46562045fcde16bb86b2645b508e186f14ddc1614a"
+          "sha256": "c953df1d213d6f7d77ff9f06a58cfaccc0593acb6e52f3454ca9571e81b577a4"
         }
       ],
-      "reason": "Reviewed root/scoped module guides, ownership inventories, ADR 0016 and 0006, and the combined integration report. Reconciled all three modules and solution/test grouping; remaining central seams and old scanner caveats are explicit.",
+      "reason": "Ownership inventory and module guides describe five production projects, focused versus mixed tests, central Domain/context/history seams and coordinated host rebuild.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:50.5192239Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:53.6426216Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1274,13 +1258,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "d9e87b23eea715e898c5ae46562045fcde16bb86b2645b508e186f14ddc1614a"
+          "sha256": "c953df1d213d6f7d77ff9f06a58cfaccc0593acb6e52f3454ca9571e81b577a4"
         }
       ],
-      "reason": "Combined full build and 5623 tests passed. Generic Git batching, dot-path normalization and oversized Node stdin transport regressions passed. Preserve the measured full Wiki search-gate baseline failure; do not weaken ranking, corpus queries or thresholds.",
+      "reason": "Actual TRX and native evidence retain failed unfiltered persistence timing, filtered recovery, known holdout failure and additional readiness/trace defects; no thresholds or rankings changed.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:50.8654749Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T03:17:54.3556036Z"
     }
   ]
 }

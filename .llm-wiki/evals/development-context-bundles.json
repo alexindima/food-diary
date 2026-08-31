@@ -37,8 +37,8 @@
       "id": "recipe-nutrition-applier-bundle",
       "intent": "Improve how calculated nutrition values are applied to recipes",
       "query": "apply calculated nutrition values to a recipe",
-      "plannedPath": "FoodDiary.Application.Recipes/",
-      "expectedPaths": ["FoodDiary.Application.Recipes/Services/RecipeNutritionApplier.cs"],
+      "plannedPath": "Modules/Recipes/Application/",
+      "expectedPaths": ["Modules/Recipes/Application/Services/RecipeNutritionApplier.cs"],
       "expectedLayers": ["Application"]
     },
     {

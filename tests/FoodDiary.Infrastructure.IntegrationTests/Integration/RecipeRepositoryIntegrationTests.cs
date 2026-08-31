@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -24,6 +25,41 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     private const int PerformanceSeedCount = 1500;
     private static readonly TimeSpan FirstPageLatencyBudget = TimeSpan.FromMilliseconds(250);
+
+    [RequiresDockerFact]
+    public async Task MealRecipeSnapshot_SurvivesRecipeNutritionChangeAndRetainsInverseNavigations() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"recipe-snapshot-{Guid.NewGuid():N}@example.com", "hash");
+        var recipe = Recipe.Create(user.Id, "Original recipe", servings: 4);
+        recipe.SetManualNutrition(400, 20, 10, 60, 8, 0);
+        var meal = Meal.Create(user.Id, DateTime.UtcNow);
+        MealItem item = meal.AddRecipe(recipe.Id, 2);
+        item.ApplyRecipeSnapshot(recipe);
+        context.Users.Add(user);
+        context.Recipes.Add(recipe);
+        context.Meals.Add(meal);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        Recipe storedRecipe = await context.Recipes.Include(value => value.MealItems)
+            .SingleAsync(value => value.Id == recipe.Id);
+        Assert.Equal(item.Id, Assert.Single(storedRecipe.MealItems).Id);
+        storedRecipe.SetManualNutrition(800, 40, 20, 120, 16, 0);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        Meal storedMeal = await context.Meals.Include(value => value.Items).ThenInclude(value => value.Recipe)
+            .SingleAsync(value => value.Id == meal.Id);
+        MealItem snapshot = Assert.Single(storedMeal.Items);
+        Assert.Multiple(
+            () => Assert.Equal(recipe.Id, snapshot.RecipeId),
+            () => Assert.Equal("Original recipe", snapshot.SnapshotName),
+            () => Assert.Equal(100, snapshot.SnapshotCaloriesPerBase),
+            () => Assert.Equal(2, snapshot.Amount),
+            () => Assert.Equal(800, snapshot.Recipe!.TotalCalories));
+        User storedUser = await context.Users.Include(value => value.Recipes).SingleAsync(value => value.Id == user.Id);
+        Assert.Equal(recipe.Id, Assert.Single(storedUser.Recipes).Id);
+    }
 
     [Fact]
     public void CalculateAutoNutrition_WithNestedRecipeIngredient_UsesNestedRecipeNutritionPerServing() {

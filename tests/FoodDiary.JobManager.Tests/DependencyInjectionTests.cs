@@ -128,6 +128,7 @@ public sealed class DependencyInjectionTests {
         services.AddNotificationsModule().AddNotificationsInfrastructure(configuration);
         services.AddWeeklyGoalsModule();
         services.AddInfrastructure(configuration);
+        services.AddRecipesPersistence();
         services.AddIntegrations(configuration);
         services.AddDataProtection();
         services.AddNotificationResources();

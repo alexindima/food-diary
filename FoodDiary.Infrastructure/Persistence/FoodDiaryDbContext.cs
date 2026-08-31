@@ -45,5 +45,6 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         modelBuilder.ApplyMealPlanningPersistenceModel();
         modelBuilder.ApplyExercisesPersistenceModel();
         modelBuilder.ApplyRecipeCommunityPersistenceModel();
+        modelBuilder.ApplyRecipesPersistenceModel();
     }
 }

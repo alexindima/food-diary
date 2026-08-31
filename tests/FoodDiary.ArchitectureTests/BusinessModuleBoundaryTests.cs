@@ -688,7 +688,7 @@ public sealed class BusinessModuleBoundaryTests {
         string source = File.ReadAllText(path);
 
         Assert.Contains(".AddProductsPersistence()", source, StringComparison.Ordinal);
-        Assert.Contains(".AddRecipesPersistence()", source, StringComparison.Ordinal);
+        Assert.DoesNotContain(".AddRecipesPersistence()", source, StringComparison.Ordinal);
         Assert.Contains(".AddRecentItemsPersistence()", source, StringComparison.Ordinal);
         Assert.Contains(".AddMealsPersistence()", source, StringComparison.Ordinal);
         Assert.DoesNotContain("AddScoped<", source, StringComparison.Ordinal);
@@ -696,13 +696,16 @@ public sealed class BusinessModuleBoundaryTests {
 
     [Theory]
     [InlineData("ProductConfiguration.cs", "Configurations/Products")]
-    [InlineData("RecipeConfiguration.cs", "Configurations/Recipes")]
-    [InlineData("RecipeIngredientConfiguration.cs", "Configurations/Recipes")]
-    [InlineData("RecipeStepConfiguration.cs", "Configurations/Recipes")]
+    [InlineData("RecipeConfiguration.cs", "Modules/Recipes/Infrastructure/Model/Configurations/Recipes")]
+    [InlineData("RecipeIngredientConfiguration.cs", "Modules/Recipes/Infrastructure/Model/Configurations/Recipes")]
+    [InlineData("RecipeStepConfiguration.cs", "Modules/Recipes/Infrastructure/Model/Configurations/Recipes")]
     public void CatalogAggregateConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {
-        string expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Infrastructure", "Persistence", expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar), fileName);
+        string expectedRoot = expectedRelativeDirectory.StartsWith("Modules/", StringComparison.Ordinal)
+            ? ArchitectureTestPaths.RepositoryRoot
+            : Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Infrastructure", "Persistence");
+        string expectedPath = Path.Combine(expectedRoot, expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar), fileName);
 
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in {expectedRelativeDirectory}.");
     }

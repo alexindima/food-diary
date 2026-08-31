@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4747,
+    "productionFiles": 4749,
     "wikiToolFiles": 201,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 782,
@@ -399,7 +399,7 @@
       "structuralRiskScore": 108
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
+      "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
       "nonBlankLines": 361,
       "decisionPoints": 67,
       "criticalSymbols": 0,
@@ -4393,110 +4393,6 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeAccessService.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeLookupService.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeMutationTransactionRunner.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeNutritionWriter.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeOverviewReadService.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeReadRepository.cs",
-      "nonBlankLines": 35,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeRepository.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeWriteRepository.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Common/RecipeErrors.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Models/RecipeOverviewIngredientReadItem.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Models/RecipeOverviewReadItem.cs",
-      "nonBlankLines": 35,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Models/RecipeOverviewStepReadItem.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Recipes/Models/RecipeQueryFilters.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
       "path": "FoodDiary.Application.Abstractions/Users/Common/CurrentUserAccessResolver.cs",
       "nonBlankLines": 34,
       "decisionPoints": 1,
@@ -8137,462 +8033,6 @@
       "structuralRiskScore": 13.22
     },
     {
-      "path": "FoodDiary.Application.Recipes/AssemblyInfo.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
-      "nonBlankLines": 84,
-      "decisionPoints": 4,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.68
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeCommandValidator.cs",
-      "nonBlankLines": 123,
-      "decisionPoints": 4,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.46
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeValuePreparer.cs",
-      "nonBlankLines": 45,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.4
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeValues.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/RecipeCreateFactory.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.34
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
-      "nonBlankLines": 77,
-      "decisionPoints": 6,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.54
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/DeleteRecipe/DeleteRecipeCommandValidator.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.86
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
-      "nonBlankLines": 118,
-      "decisionPoints": 18,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 31.36
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandValidator.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.84
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/RecipeUpdateApplier.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.02
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/RecipeUpdateAssetCleanup.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.66
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-      "nonBlankLines": 94,
-      "decisionPoints": 5,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.38
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs",
-      "nonBlankLines": 153,
-      "decisionPoints": 10,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.06
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
-      "nonBlankLines": 124,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.98
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeValues.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Common/IRecentRecipeReadService.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Common/RecipeIngredientInput.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Common/RecipeOptionalEntityIdParser.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Common/RecipeRequiredIdParser.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Common/RecipeStepInput.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Common/Validators/RecipeIngredientInputValidator.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.32
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Common/Validators/RecipeStepInputValidator.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.58
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/DependencyInjection.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Mappings/RecipeMappings.cs",
-      "nonBlankLines": 105,
-      "decisionPoints": 13,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.6
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Mappings/RecipeOverviewReadMappings.cs",
-      "nonBlankLines": 74,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.48
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Models/RecipeIngredientModel.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Models/RecipeModel.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.72
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Models/RecipeOverviewModel.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Models/RecipeStepModel.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
-      "nonBlankLines": 41,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.32
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/ExploreRecipes/ExploreRecipesQueryValidator.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.4
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.12
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryValidator.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.84
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
-      "nonBlankLines": 45,
-      "decisionPoints": 3,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.4
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipeById/GetRecipeByIdQueryValidator.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.8
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipes/GetRecipesQuery.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
-      "nonBlankLines": 49,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.48
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipes/GetRecipesQueryValidator.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.9
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
-      "nonBlankLines": 111,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.72
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryValidator.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.04
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Services/RecentRecipeReadService.cs",
-      "nonBlankLines": 67,
-      "decisionPoints": 17,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.84
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Services/RecipeIngredientAccessValidator.cs",
-      "nonBlankLines": 133,
-      "decisionPoints": 20,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 34.66
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Services/RecipeManualNutritionValidator.cs",
-      "nonBlankLines": 46,
-      "decisionPoints": 18,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 29.92
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Services/RecipeNutritionApplier.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.76
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Services/RecipeNutritionCalculator.cs",
-      "nonBlankLines": 57,
-      "decisionPoints": 13,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.64
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Services/RecipeNutritionSummary.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Services/RecipeNutritionUpdater.cs",
-      "nonBlankLines": 42,
-      "decisionPoints": 11,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.34
-    },
-    {
-      "path": "FoodDiary.Application.Recipes/Services/RecipeStepAppender.cs",
-      "nonBlankLines": 89,
-      "decisionPoints": 11,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.28
-    },
-    {
       "path": "FoodDiary.Application.Runtime/AssemblyInfo.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -10810,11 +10250,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Food.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.18
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Meals.cs",
@@ -10863,14 +10303,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.26
-    },
-    {
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Recipes.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Repositories.cs",
@@ -11249,30 +10681,6 @@
       "structuralRiskScore": 0.54
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Recipes/RecipeConfiguration.cs",
-      "nonBlankLines": 52,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.04
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Recipes/RecipeIngredientConfiguration.cs",
-      "nonBlankLines": 34,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.68
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Recipes/RecipeStepConfiguration.cs",
-      "nonBlankLines": 28,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.56
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/RoleConfiguration.cs",
       "nonBlankLines": 19,
       "decisionPoints": 0,
@@ -11538,11 +10946,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 46,
+      "nonBlankLines": 47,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.92
+      "structuralRiskScore": 0.94
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -11697,30 +11105,6 @@
       "structuralRiskScore": 36.42
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Recipes/EfRecipeMutationTransactionRunner.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.24
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
-      "nonBlankLines": 361,
-      "decisionPoints": 67,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 107.72
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Recipes/RecipeRepository.cs",
-      "nonBlankLines": 119,
-      "decisionPoints": 18,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 29.38
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/RecipeCompositionTransactionLock.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
@@ -11794,11 +11178,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 6,
+      "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
+      "structuralRiskScore": 0.14
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DatabaseCommandTelemetryInterceptor.cs",
@@ -11953,22 +11337,6 @@
       "structuralRiskScore": 0.22
     },
     {
-      "path": "FoodDiary.Infrastructure/Services/RecipeAccessService.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/RecipeLookupService.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
       "path": "FoodDiary.Infrastructure/Services/StructuredAuditLogger.cs",
       "nonBlankLines": 18,
       "decisionPoints": 3,
@@ -12018,11 +11386,11 @@
     },
     {
       "path": "FoodDiary.Initializer/Program.cs",
-      "nonBlankLines": 364,
+      "nonBlankLines": 363,
       "decisionPoints": 41,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 68.78
+      "structuralRiskScore": 68.76
     },
     {
       "path": "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -12482,11 +11850,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Program.cs",
-      "nonBlankLines": 59,
+      "nonBlankLines": 60,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.68
+      "structuralRiskScore": 2.7
     },
     {
       "path": "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -17234,11 +16602,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 139,
+      "nonBlankLines": 138,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.78
+      "structuralRiskScore": 5.76
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -37257,6 +36625,654 @@
       "structuralRiskScore": 3.68
     },
     {
+      "path": "Modules/Recipes/Application/Abstractions/Recipes/Common/IRecipeMutationTransactionRunner.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Recipes/Application/Abstractions/Recipes/Common/IRecipeNutritionWriter.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Recipes/Application/Abstractions/Recipes/Common/IRecipeReadRepository.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.7
+    },
+    {
+      "path": "Modules/Recipes/Application/Abstractions/Recipes/Common/IRecipeRepository.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Recipes/Application/Abstractions/Recipes/Common/IRecipeWriteRepository.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Recipes/Application/Abstractions/Recipes/Common/RecipeErrors.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Recipes/Application/AssemblyInfo.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommand.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.5
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+      "nonBlankLines": 84,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.68
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommandValidator.cs",
+      "nonBlankLines": 123,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.46
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeValuePreparer.cs",
+      "nonBlankLines": 45,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.4
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeValues.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/CreateRecipe/RecipeCreateFactory.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.34
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/DeleteRecipe/DeleteRecipeCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
+      "nonBlankLines": 77,
+      "decisionPoints": 6,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.54
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/DeleteRecipe/DeleteRecipeCommandValidator.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.86
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
+      "nonBlankLines": 118,
+      "decisionPoints": 18,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 31.36
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommandValidator.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.84
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/UpdateRecipe/RecipeUpdateApplier.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.02
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/UpdateRecipe/RecipeUpdateAssetCleanup.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.66
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+      "nonBlankLines": 31,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.62
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+      "nonBlankLines": 94,
+      "decisionPoints": 5,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.38
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs",
+      "nonBlankLines": 153,
+      "decisionPoints": 10,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 20.06
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
+      "nonBlankLines": 124,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.98
+    },
+    {
+      "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeValues.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Recipes/Application/Common/IRecentRecipeReadService.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
+      "path": "Modules/Recipes/Application/Common/RecipeIngredientInput.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Recipes/Application/Common/RecipeOptionalEntityIdParser.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Recipes/Application/Common/RecipeRequiredIdParser.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
+      "path": "Modules/Recipes/Application/Common/RecipeStepInput.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Recipes/Application/Common/Validators/RecipeIngredientInputValidator.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.32
+    },
+    {
+      "path": "Modules/Recipes/Application/Common/Validators/RecipeStepInputValidator.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.58
+    },
+    {
+      "path": "Modules/Recipes/Application/DependencyInjection.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/Recipes/Application/Mappings/RecipeMappings.cs",
+      "nonBlankLines": 105,
+      "decisionPoints": 13,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 21.6
+    },
+    {
+      "path": "Modules/Recipes/Application/Mappings/RecipeOverviewReadMappings.cs",
+      "nonBlankLines": 74,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.48
+    },
+    {
+      "path": "Modules/Recipes/Application/Models/RecipeIngredientModel.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.5
+    },
+    {
+      "path": "Modules/Recipes/Application/Models/RecipeModel.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.72
+    },
+    {
+      "path": "Modules/Recipes/Application/Models/RecipeOverviewModel.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Recipes/Application/Models/RecipeStepModel.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/ExploreRecipes/ExploreRecipesQuery.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
+      "nonBlankLines": 41,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.32
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/ExploreRecipes/ExploreRecipesQueryValidator.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.4
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
+      "nonBlankLines": 31,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.12
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/GetRecentRecipes/GetRecentRecipesQueryValidator.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.84
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/GetRecipeById/GetRecipeByIdQuery.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
+      "nonBlankLines": 45,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.4
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/GetRecipeById/GetRecipeByIdQueryValidator.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.8
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/GetRecipes/GetRecipesQuery.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/GetRecipes/GetRecipesQueryHandler.cs",
+      "nonBlankLines": 49,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.48
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/GetRecipes/GetRecipesQueryValidator.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.9
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
+      "nonBlankLines": 111,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.72
+    },
+    {
+      "path": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryValidator.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.04
+    },
+    {
+      "path": "Modules/Recipes/Application/Services/RecentRecipeReadService.cs",
+      "nonBlankLines": 67,
+      "decisionPoints": 17,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 26.84
+    },
+    {
+      "path": "Modules/Recipes/Application/Services/RecipeIngredientAccessValidator.cs",
+      "nonBlankLines": 133,
+      "decisionPoints": 20,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 34.66
+    },
+    {
+      "path": "Modules/Recipes/Application/Services/RecipeManualNutritionValidator.cs",
+      "nonBlankLines": 46,
+      "decisionPoints": 18,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 29.92
+    },
+    {
+      "path": "Modules/Recipes/Application/Services/RecipeNutritionApplier.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.76
+    },
+    {
+      "path": "Modules/Recipes/Application/Services/RecipeNutritionCalculator.cs",
+      "nonBlankLines": 57,
+      "decisionPoints": 13,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 20.64
+    },
+    {
+      "path": "Modules/Recipes/Application/Services/RecipeNutritionSummary.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Recipes/Application/Services/RecipeNutritionUpdater.cs",
+      "nonBlankLines": 42,
+      "decisionPoints": 11,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 17.34
+    },
+    {
+      "path": "Modules/Recipes/Application/Services/RecipeStepAppender.cs",
+      "nonBlankLines": 89,
+      "decisionPoints": 11,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 18.28
+    },
+    {
+      "path": "Modules/Recipes/Contracts/Recipes/Common/IRecipeAccessService.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Recipes/Contracts/Recipes/Common/IRecipeLookupService.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Recipes/Contracts/Recipes/Common/IRecipeOverviewReadService.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.52
+    },
+    {
+      "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeOverviewIngredientReadItem.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.5
+    },
+    {
+      "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeOverviewReadItem.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.7
+    },
+    {
+      "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeOverviewStepReadItem.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeQueryFilters.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Recipes/Infrastructure/AssemblyInfo.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeConfiguration.cs",
+      "nonBlankLines": 52,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.04
+    },
+    {
+      "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeIngredientConfiguration.cs",
+      "nonBlankLines": 34,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.68
+    },
+    {
+      "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeStepConfiguration.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.56
+    },
+    {
+      "path": "Modules/Recipes/Infrastructure/Model/RecipesPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/EfRecipeMutationTransactionRunner.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.24
+    },
+    {
+      "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
+      "nonBlankLines": 361,
+      "decisionPoints": 67,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 107.72
+    },
+    {
+      "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeRepository.cs",
+      "nonBlankLines": 119,
+      "decisionPoints": 18,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 29.38
+    },
+    {
+      "path": "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.42
+    },
+    {
+      "path": "Modules/Recipes/Infrastructure/Services/RecipeAccessService.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Recipes/Infrastructure/Services/RecipeLookupService.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
       "path": "Modules/Statistics/Application/AssemblyInfo.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -39234,7 +39250,7 @@
     {
       "name": "CreateRecipeCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+      "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
       "line": 15,
       "testReferenceCount": 3,
       "testReferences": [
@@ -39467,7 +39483,7 @@
     {
       "name": "DeleteRecipeCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
+      "path": "Modules/Recipes/Application/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
       "line": 13,
       "testReferenceCount": 3,
       "testReferences": [
@@ -39607,7 +39623,7 @@
     {
       "name": "DuplicateRecipeCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
+      "path": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
       "line": 16,
       "testReferenceCount": 3,
       "testReferences": [
@@ -40602,17 +40618,17 @@
     {
       "name": "UpdateRecipeCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+      "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
       "line": 15,
       "testReferenceCount": 8,
       "testReferences": [
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Media.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.NestedIngredients.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.UpdateFlow.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Validation.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.cs",
         "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.UpdateCommandTests.cs",
         "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Media.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.NestedIngredients.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.UpdateFlow.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Validation.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42086,7 +42102,7 @@
     {
       "name": "ExploreRecipesQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
+      "path": "Modules/Recipes/Application/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
       "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
@@ -43105,7 +43121,7 @@
     {
       "name": "GetRecentRecipesQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
+      "path": "Modules/Recipes/Application/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
@@ -43119,7 +43135,7 @@
     {
       "name": "GetRecipeByIdQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
+      "path": "Modules/Recipes/Application/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
       "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
@@ -43158,7 +43174,7 @@
     {
       "name": "GetRecipesOverviewQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
+      "path": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
       "line": 16,
       "testReferenceCount": 3,
       "testReferences": [
@@ -43172,7 +43188,7 @@
     {
       "name": "GetRecipesQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
+      "path": "Modules/Recipes/Application/Queries/GetRecipes/GetRecipesQueryHandler.cs",
       "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
@@ -44003,11 +44019,11 @@
     {
       "name": "CreateRecipeCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeCommandValidator.cs",
+      "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommandValidator.cs",
       "line": 10,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/CreateRecipeCommandValidatorTests.cs"
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/CreateRecipeCommandValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44162,7 +44178,7 @@
     {
       "name": "DeleteRecipeCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Commands/DeleteRecipe/DeleteRecipeCommandValidator.cs",
+      "path": "Modules/Recipes/Application/Commands/DeleteRecipe/DeleteRecipeCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
@@ -44247,11 +44263,11 @@
     {
       "name": "DuplicateRecipeCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandValidator.cs",
+      "path": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs"
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44291,11 +44307,11 @@
     {
       "name": "ExploreRecipesQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Queries/ExploreRecipes/ExploreRecipesQueryValidator.cs",
+      "path": "Modules/Recipes/Application/Queries/ExploreRecipes/ExploreRecipesQueryValidator.cs",
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/ExploreRecipesQueryValidatorTests.cs"
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/ExploreRecipesQueryValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44759,11 +44775,11 @@
     {
       "name": "GetRecentRecipesQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryValidator.cs",
+      "path": "Modules/Recipes/Application/Queries/GetRecentRecipes/GetRecentRecipesQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs",
         "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -44772,11 +44788,11 @@
     {
       "name": "GetRecipeByIdQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipeById/GetRecipeByIdQueryValidator.cs",
+      "path": "Modules/Recipes/Application/Queries/GetRecipeById/GetRecipeByIdQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs"
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44784,11 +44800,11 @@
     {
       "name": "GetRecipesOverviewQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryValidator.cs",
+      "path": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryValidator.cs",
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs",
         "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -44797,11 +44813,11 @@
     {
       "name": "GetRecipesQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Queries/GetRecipes/GetRecipesQueryValidator.cs",
+      "path": "Modules/Recipes/Application/Queries/GetRecipes/GetRecipesQueryValidator.cs",
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs"
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45350,11 +45366,12 @@
     {
       "name": "RecipeIngredientAccessValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Services/RecipeIngredientAccessValidator.cs",
+      "path": "Modules/Recipes/Application/Services/RecipeIngredientAccessValidator.cs",
       "line": 11,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.NutritionAndIngredientTests.cs"
+        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.NutritionAndIngredientTests.cs",
+        "tests/FoodDiary.Web.Api.IntegrationTests/RecipePostgresApiFlowTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45362,7 +45379,7 @@
     {
       "name": "RecipeIngredientInputValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Common/Validators/RecipeIngredientInputValidator.cs",
+      "path": "Modules/Recipes/Application/Common/Validators/RecipeIngredientInputValidator.cs",
       "line": 5,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -45372,7 +45389,7 @@
     {
       "name": "RecipeManualNutritionValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Services/RecipeManualNutritionValidator.cs",
+      "path": "Modules/Recipes/Application/Services/RecipeManualNutritionValidator.cs",
       "line": 6,
       "testReferenceCount": 1,
       "testReferences": [
@@ -45384,24 +45401,24 @@
     {
       "name": "RecipeStepInputValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Common/Validators/RecipeStepInputValidator.cs",
+      "path": "Modules/Recipes/Application/Common/Validators/RecipeStepInputValidator.cs",
       "line": 5,
       "testReferenceCount": 4,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/CreateRecipeCommandValidatorTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/CreateRecipeCommandValidatorTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs",
         "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.UpdateCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "tested-consumer-reference",
       "coveredThrough": [
         {
           "symbol": "CreateRecipeCommandValidator",
-          "path": "FoodDiary.Application.Recipes/Commands/CreateRecipe/CreateRecipeCommandValidator.cs"
+          "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeCommandValidator.cs"
         },
         {
           "symbol": "UpdateRecipeCommandValidator",
-          "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs"
+          "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs"
         }
       ]
     },
@@ -46012,12 +46029,12 @@
     {
       "name": "UpdateRecipeCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Recipes/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs",
+      "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs",
       "line": 10,
       "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs",
         "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.UpdateCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",

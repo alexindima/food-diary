@@ -6259,7 +6259,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Recipes/RecipeConfiguration.cs"
+      "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6304,7 +6304,7 @@
           "expression": "e => e.NestedRecipe)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Recipes/RecipeIngredientConfiguration.cs"
+      "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeIngredientConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6340,7 +6340,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Recipes/RecipeStepConfiguration.cs"
+      "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeStepConfiguration.cs"
     },
     {
       "area": "FoodDiary",

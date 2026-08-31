@@ -541,8 +541,28 @@
         "RecipeStep"
       ],
       "sourceMappings": {
+        "logicalRoot": "Modules/Recipes",
         "applicationProjects": [
-          "FoodDiary.Application.Recipes"
+          "Modules/Recipes/Application"
+        ],
+        "abstractionAreas": [
+          "Modules/Recipes/Application/Abstractions",
+          "Modules/Recipes/Contracts"
+        ],
+        "domainAreas": [
+          "FoodDiary.Domain/Entities/Recipes"
+        ],
+        "infrastructureAreas": [
+          "Modules/Recipes/Infrastructure"
+        ],
+        "adapterAreas": [
+          "FoodDiary.Presentation.Api/Features/Recipes"
+        ],
+        "testAreas": [
+          "Modules/Recipes/tests",
+          "tests/FoodDiary.Application.Tests/Recipes",
+          "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeRepositoryIntegrationTests.cs",
+          "tests/FoodDiary.Web.Api.IntegrationTests/RecipePostgresApiFlowTests.cs"
         ]
       }
     },

@@ -69,7 +69,13 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Recipe community Domain: `Modules/RecipeCommunity/Domain/AGENTS.md`
 - Recipe community Infrastructure: `Modules/RecipeCommunity/Infrastructure/AGENTS.md`
 - Recipe community Infrastructure/Model: `Modules/RecipeCommunity/Infrastructure/Model/AGENTS.md`
-- Recipes application module: `FoodDiary.Application.Recipes/AGENTS.md`
+- Recipes logical module: `Modules/Recipes/AGENTS.md`
+- Recipes application: `Modules/Recipes/Application/AGENTS.md`
+- Recipes ports: `Modules/Recipes/Application/Abstractions/AGENTS.md`
+- Recipes contracts: `Modules/Recipes/Contracts/AGENTS.md`
+- Recipes infrastructure: `Modules/Recipes/Infrastructure/AGENTS.md`
+- Recipes persistence model: `Modules/Recipes/Infrastructure/Model/AGENTS.md`
+- Recipes tests: `Modules/Recipes/tests/AGENTS.md`
 - Statistics logical module: `Modules/Statistics/AGENTS.md`
 - Statistics application: `Modules/Statistics/Application/AGENTS.md`
 - Statistics application tests: `Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/AGENTS.md`

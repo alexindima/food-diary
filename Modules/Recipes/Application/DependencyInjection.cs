@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FoodDiary.Application.Recipes;
 
 public static class DependencyInjection {
-    public static IServiceCollection AddRecipesModule(this IServiceCollection services) {
+    public static IServiceCollection AddRecipesApplication(this IServiceCollection services) {
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);

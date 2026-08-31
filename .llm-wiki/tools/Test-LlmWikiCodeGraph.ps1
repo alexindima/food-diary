@@ -19,7 +19,7 @@ foreach ($compiledIndexSafetyFragment in @('compiled-index-projection-stale', 'c
 foreach ($queryDocumentSafetyFragment in @('backend-contract-projection-stale', 'frontend-contract-projection-stale', 'sensitive-data-projection-stale', 'task-brief-impact-${category}-projection-stale', 'query_document_schema_version')) {
     if (-not $graphToolText.Contains($queryDocumentSafetyFragment)) { throw "Query-document projection safety is missing: $queryDocumentSafetyFragment" }
 }
-$recipesBoundary = if (Test-Path -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Application.Recipes') -PathType Container) { 'FoodDiary.Application.Recipes' } else { 'FoodDiary.Application/Recipes' }
+$recipesBoundary = 'Modules/Recipes/Application'
 $flattenedRecipeUpdater = "$recipesBoundary/Services/RecipeNutritionUpdater.cs"
 $nestedRecipeUpdater = "$recipesBoundary/Recipes/Services/RecipeNutritionUpdater.cs"
 $recipesSourcePrefix = if (Test-Path -LiteralPath (Join-Path $repositoryRoot $flattenedRecipeUpdater) -PathType Leaf) {
@@ -172,7 +172,7 @@ if (@($symbol.symbols | Where-Object path -eq "$recipesSourcePrefix/Services/Rec
 $consumers = & $manager consumers -Query IRecipeOverviewReadService -Limit 100 -Format Json | ConvertFrom-Json
 foreach ($requiredConsumer in @(
     "$recipesSourcePrefix/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs"
-    'FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs'
+    'Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs'
 )) {
     if ($requiredConsumer -notin @($consumers.consumers.path)) { throw "Code graph omitted expected consumer: $requiredConsumer" }
 }

@@ -36,6 +36,7 @@ builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
 builder.Services.AddMealsModule();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddRecipesPersistence();
 builder.Services.AddImagesInfrastructure();
 builder.Services.AddIntegrations(builder.Configuration);
 builder.Services.AddDataProtection();

@@ -36,7 +36,7 @@ if (@($bodyMetrics.dependencyReadiness.actualModules) -contains 'WeightEntries' 
     throw 'BodyMetrics readiness still reports assembly-internal logical features as external dependencies.'
 }
 
-$recipesProject = Join-Path (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path 'FoodDiary.Application.Recipes/FoodDiary.Application.Recipes.csproj'
+$recipesProject = Join-Path (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path 'Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj'
 if (Test-Path -LiteralPath $recipesProject -PathType Leaf) {
     $recipes = & (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Module Recipes -Format Json | ConvertFrom-Json
     $recipeRegistrations = @($recipes.dependencyReadiness.diRegistrations)

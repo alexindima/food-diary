@@ -13,5 +13,5 @@
   </ItemGroup>
   <ItemGroup><Using Include="Xunit" /><Using Include="NSubstitute" /></ItemGroup>
   <ItemGroup><Using Include="FoodDiary.Application.Tests.Support" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../../../../FoodDiary.Application.Recipes/FoodDiary.Application.Recipes.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../../../Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" /></ItemGroup>
 </Project>
