@@ -45,7 +45,7 @@ Source: `FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs`
 ## Boundary Health
 
 - Role: adapter
-- Physical isolation: logical-module
+- Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: not yet enumerated
 - Public contract files: 11

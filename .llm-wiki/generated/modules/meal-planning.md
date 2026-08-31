@@ -39,7 +39,7 @@ No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: logical-module
+- Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: MealPlan, MealPlanDay, MealPlanMeal, ShoppingList, ShoppingListItem, ShoppingListItemSource
 - Public contract files: 18

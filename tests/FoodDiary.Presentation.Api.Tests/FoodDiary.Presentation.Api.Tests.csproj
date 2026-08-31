@@ -44,7 +44,7 @@
     <ProjectReference Include="..\..\Modules\Tdee\Application\FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="..\..\Modules\OpenFoodFacts\Application\FoodDiary.Modules.OpenFoodFacts.Application.csproj" />
     <ProjectReference Include="..\..\Modules\Images\Application\FoodDiary.Application.Images.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Application.Ai\FoodDiary.Application.Ai.csproj" />
+    <ProjectReference Include="../../Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />
     <ProjectReference Include="..\..\Modules\Lessons\Application\FoodDiary.Modules.Lessons.Application.csproj" />
     <ProjectReference Include="..\..\Modules\Statistics\Application\FoodDiary.Modules.Statistics.Application.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />

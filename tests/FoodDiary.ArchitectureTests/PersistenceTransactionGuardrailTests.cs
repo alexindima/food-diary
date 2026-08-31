@@ -20,7 +20,7 @@ public sealed class PersistenceTransactionGuardrailTests {
     public void PersistenceSaveChangesAsyncUsage_StaysInsideCurrentExplicitAllowlist() {
         string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
         string[] allowedFiles = [
-            Path.Combine(persistenceRoot, "Ai", "AiQuotaRepository.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "Ai", "AiQuotaRepository.cs"),
             Path.Combine(persistenceRoot, "Billing", "EfBillingTransactionRunner.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
             Path.Combine(persistenceRoot, "Email", "EmailOutbox.cs"),
@@ -37,6 +37,7 @@ public sealed class PersistenceTransactionGuardrailTests {
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         string[] violations = [.. SourceScanner.SourceFiles(persistenceRoot)
+            .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence")))
             .Where(path => !allowed.Contains(path))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
@@ -53,7 +54,7 @@ public sealed class PersistenceTransactionGuardrailTests {
     public void InfrastructureManualTransactionUsage_StaysInsideCurrentExplicitAllowlist() {
         string infrastructureRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure");
         string[] allowedFiles = [
-            Path.Combine(infrastructureRoot, "Persistence", "Ai", "AiQuotaRepository.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "Ai", "AiQuotaRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Billing", "EfBillingTransactionRunner.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxDeadLetterReplayService.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxMessageClaimer.cs"),
@@ -73,6 +74,7 @@ public sealed class PersistenceTransactionGuardrailTests {
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         string[] violations = [.. SourceScanner.SourceFiles(infrastructureRoot)
+            .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence")))
             .Where(path => !allowed.Contains(path))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line })

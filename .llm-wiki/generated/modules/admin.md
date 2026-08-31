@@ -159,13 +159,13 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 33
+- Public contract files: 29
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 33
+- Public contract types: 29
 - Interfaces: 15
 - DTO/read-model/projection types: 12
 - Enums: 0
@@ -199,9 +199,7 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - `record AdminMailInboxMessageDetailsModel`
 - `record AdminMailInboxMessageSummaryModel`
 - `record AdminUserRoleAuditEventReadModel`
-- `record AiUsageBreakdown`
-- `record AiUsageDailySummary`
-- ... 3 more type(s)
+- `record EmailTemplateReadModel`
 
 ## Focused Tests
 

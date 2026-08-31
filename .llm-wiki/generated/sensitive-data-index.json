@@ -477,7 +477,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 87
+      "line": 86
     },
     {
       "category": "credential",
@@ -1878,20 +1878,6 @@
       "type": "List<WebPushDeliverySubscription>",
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
       "line": 71
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "decimal",
-      "path": "FoodDiary.Application.Abstractions/Ai/Models/FoodNutritionItemModel.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "decimal",
-      "path": "FoodDiary.Application.Abstractions/Ai/Models/FoodNutritionModel.cs",
-      "line": 4
     },
     {
       "category": "health",
@@ -5339,6 +5325,20 @@
     },
     {
       "category": "health",
+      "name": "Calories",
+      "type": "decimal",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodNutritionItemModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "decimal",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Models/FoodNutritionModel.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
       "name": "WeightKg",
       "type": "double",
       "path": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Models/WeightEntryModel.cs",
@@ -6552,13 +6552,6 @@
       "category": "identity",
       "name": "Email",
       "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AiUsageUserSummary.cs",
-      "line": 7
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
       "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
       "line": 6
     },
@@ -7413,6 +7406,13 @@
       "category": "identity",
       "name": "Email",
       "type": "string",
+      "path": "Modules/Ai/Application/Abstractions/Admin/Models/AiUsageUserSummary.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
       "path": "Modules/Billing/Application/Abstractions/Models/BillingCheckoutSessionRequestModel.cs",
       "line": 5
     },
@@ -7569,13 +7569,6 @@
       "type": "userAgent,",
       "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
       "line": 62
-    },
-    {
-      "category": "privateContent",
-      "name": "PromptText",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Ai/Models/AiPromptTemplateReadModel.cs",
-      "line": 10
     },
     {
       "category": "privateContent",
@@ -7821,13 +7814,6 @@
       "type": "Guid?",
       "path": "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
       "line": 37
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "Guid",
-      "path": "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
-      "line": 7
     },
     {
       "category": "privateContent",
@@ -8269,27 +8255,6 @@
       "type": "ImageAssetId?",
       "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
       "line": 30
-    },
-    {
-      "category": "privateContent",
-      "name": "PromptText",
-      "type": "string",
-      "path": "FoodDiary.Domain/Entities/Ai/AiPromptTemplate.cs",
-      "line": 14
-    },
-    {
-      "category": "privateContent",
-      "name": "PromptTextMaxLength",
-      "type": "promptText,",
-      "path": "FoodDiary.Domain/Entities/Ai/AiPromptTemplate.cs",
-      "line": 30
-    },
-    {
-      "category": "privateContent",
-      "name": "PromptTextMaxLength",
-      "type": "promptText,",
-      "path": "FoodDiary.Domain/Entities/Ai/AiPromptTemplate.cs",
-      "line": 39
     },
     {
       "category": "privateContent",
@@ -9305,6 +9270,41 @@
       "type": "Guid?",
       "path": "FoodDiary.Presentation.Api/Features/Users/Responses/UserHttpResponse.cs",
       "line": 36
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Models/AiPromptTemplateReadModel.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "Guid",
+      "path": "Modules/Ai/Application/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
+      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
+      "line": 14
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptTextMaxLength",
+      "type": "promptText,",
+      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
+      "line": 30
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptTextMaxLength",
+      "type": "promptText,",
+      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
+      "line": 39
     },
     {
       "category": "privateContent",

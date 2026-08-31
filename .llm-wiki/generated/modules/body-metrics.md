@@ -33,7 +33,7 @@ No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: logical-module
+- Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: WaistEntry, WeightEntry
 - Public contract files: 18

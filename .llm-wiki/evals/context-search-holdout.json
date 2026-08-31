@@ -231,7 +231,7 @@
       "id": "ai-prompt-provider",
       "query": "load the configured AI prompt template used for food recognition",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Ai/AiPromptProvider.cs"]
+      "expectedPaths": ["Modules/Ai/Infrastructure/Persistence/Ai/AiPromptProvider.cs"]
     },
     {
       "id": "russian-prerender-html-tool",

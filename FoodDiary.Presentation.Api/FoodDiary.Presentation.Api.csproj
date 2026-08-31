@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Admin\FoodDiary.Application.Admin.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Ai\FoodDiary.Application.Ai.csproj" />
+    <ProjectReference Include="../Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />
     <ProjectReference Include="..\Modules\Billing\Application\FoodDiary.Application.Billing.csproj" />
     <ProjectReference Include="..\Modules\BodyMetrics\Application\FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="..\Modules\ContentReports\Application\FoodDiary.Modules.ContentReports.Application.csproj" />

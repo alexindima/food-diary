@@ -74,4 +74,5 @@
     <ProjectReference Include="..\Modules\Exercises\Domain\FoodDiary.Modules.Exercises.Domain.csproj" />
   </ItemGroup>
   <ItemGroup><ProjectReference Include="../Modules/RecipeCommunity/Infrastructure/Model/FoodDiary.Modules.RecipeCommunity.PersistenceModel.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj" /></ItemGroup>
 </Project>

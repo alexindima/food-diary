@@ -8,13 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f841c387237849b232f662b0a44a2d9695bd32f5817d9f7e271885b598bd87c3"
+          "sha256": "28b18ea282defd4e9e509610c826f55f484593f820547c0da73719bc1db6af87"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "0aa5f81c1e037ea60171eff13a32f97888f8dd0edf1aaf9dbdb94187f94301fd"
         }
       ],
-      "reason": "Removed unused legacy ContentReports AGENTS and AssemblyInfo files and the obsolete root guide link. MSBuild confirms no legacy file belongs to the active module compilation. Current module projects, assembly identity, DI, API and EF behavior are unchanged. DailyAdvices was inspected only and preserved.",
+      "reason": "Reviewed combined root guide and module map: Ai projects retain the source commit ownership; obsolete ContentReports guide link stays deleted. Navigation sources remain correct.",
       "baseRef": "HEAD",
-      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
-      "reviewedAtUtc": "2026-08-31T01:55:23.2853214Z"
+      "gitHead": "df532f21561c7f0260e8af436d3caa5514d5d2f2",
+      "reviewedAtUtc": "2026-08-31T03:31:23.1519759Z"
     },
     {
       "pageId": "module.frontend",
@@ -38,44 +42,36 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3348e9c376e9c4dcaed020ab3b9acf7b3296fe1b025a17b3c472a9a6137a5ab1"
+          "sha256": "0aa5f81c1e037ea60171eff13a32f97888f8dd0edf1aaf9dbdb94187f94301fd"
         }
       ],
-      "reason": "Reviewed root/scoped module guides, ownership inventories, ADR 0016 and 0006, and the combined integration report. Reconciled all three modules and solution/test grouping; remaining central seams and old scanner caveats are explicit.",
+      "reason": "Module map changed only Ai placement; mail service/client boundaries and external provider ownership remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:46.0731564Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T02:50:21.2068454Z"
     },
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "3d15aa6e4e7a6ad60ae9d0540795112051a1e9f54a2156cbec2fa894e57d00e3",
+      "pageSha256": "6d9ffec92f106cae627f4f9bae73e55edd685c9bdd65be86107bfbf75184e52f",
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b49e72216ddebd09e2a08641cf27e57facfab765b9d0a0844da9820a92b3382b"
+          "sha256": "3ddec72bc3e1fdbbec0e14ca095ba84b3c3c1816c23406984c272fbd83e92c3a"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3348e9c376e9c4dcaed020ab3b9acf7b3296fe1b025a17b3c472a9a6137a5ab1"
+          "sha256": "0aa5f81c1e037ea60171eff13a32f97888f8dd0edf1aaf9dbdb94187f94301fd"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "3ce2423811d4c365c9c42226da7fa22ae6c4b3a4d1d2496d756bfecdd341da1e"
-        },
-        {
-          "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "55920b1dd1a866b85615b5f461f74cb7f3dab700726cc7b0a6264593051b557b"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "377d8f1aad12ffb1da58a1a269f11a5a404053372a42979d2b30d3b03c1b435a"
+          "sha256": "d70c183e1557cc2279441c31a59b7250f31b50591388698d984aa9efc882c8ce"
         }
       ],
-      "reason": "Reviewed the three completed module inventories and merged host/project registrations. Module source bodies match their verified commits; HTTP snapshots and migration/model snapshot diff are empty; 825 Presentation and 175 non-performance HTTP integration tests pass, with EF no pending changes.",
+      "reason": "Updated central-only domain/port wording and added Ai module responsibilities with explicit central User/context and provider seams.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:46.3442632Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T02:50:25.084404Z"
     },
     {
       "pageId": "system.architecture",
@@ -84,21 +80,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b49e72216ddebd09e2a08641cf27e57facfab765b9d0a0844da9820a92b3382b"
+          "sha256": "3ddec72bc3e1fdbbec0e14ca095ba84b3c3c1816c23406984c272fbd83e92c3a"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "3348e9c376e9c4dcaed020ab3b9acf7b3296fe1b025a17b3c472a9a6137a5ab1"
+          "sha256": "0aa5f81c1e037ea60171eff13a32f97888f8dd0edf1aaf9dbdb94187f94301fd"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "9e87749696596c745ed4c16d5d77e2d44526f2918c02b1727455e796667d5bc8"
+          "sha256": "7c5a589bbd0e9f78064341470e21d9ff437870f95fe9b6dacd9273d2cdbb9aab"
         }
       ],
-      "reason": "Reviewed root/scoped module guides, ownership inventories, ADR 0016 and 0006, and the combined integration report. Reconciled all three modules and solution/test grouping; remaining central seams and old scanner caveats are explicit.",
+      "reason": "Explicit project matrix and full Architecture788 plus architecture-health confirm acyclic module/model/context composition. Runtime units unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:46.6102955Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T02:50:27.297553Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -137,13 +133,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f841c387237849b232f662b0a44a2d9695bd32f5817d9f7e271885b598bd87c3"
+          "sha256": "28b18ea282defd4e9e509610c826f55f484593f820547c0da73719bc1db6af87"
         }
       ],
-      "reason": "Removed unused legacy ContentReports AGENTS and AssemblyInfo files and the obsolete root guide link. MSBuild confirms no legacy file belongs to the active module compilation. Current module projects, assembly identity, DI, API and EF behavior are unchanged. DailyAdvices was inspected only and preserved.",
+      "reason": "Read knowledge-model page against merged AGENTS. Source authority and review rules did not change; only Ai guide routing and orphan cleanup were reconciled.",
       "baseRef": "HEAD",
-      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
-      "reviewedAtUtc": "2026-08-31T01:55:23.7274617Z"
+      "gitHead": "df532f21561c7f0260e8af436d3caa5514d5d2f2",
+      "reviewedAtUtc": "2026-08-31T03:31:23.9308963Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -152,13 +148,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b49e72216ddebd09e2a08641cf27e57facfab765b9d0a0844da9820a92b3382b"
+          "sha256": "3ddec72bc3e1fdbbec0e14ca095ba84b3c3c1816c23406984c272fbd83e92c3a"
         }
       ],
-      "reason": "Reviewed root/scoped module guides, ownership inventories, ADR 0016 and 0006, and the combined integration report. Reconciled all three modules and solution/test grouping; remaining central seams and old scanner caveats are explicit.",
+      "reason": "Regenerated catalog contains five real Ai production and three test projects; empty edges are still not treated as isolation.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:47.1733183Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T02:50:29.9443962Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -216,21 +212,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "259c6b8575edcdbbed1613442dc9d956ccd1ecc85854bc3862013a29fa636579"
+          "sha256": "c2e0d58e32e4c5fb58f139fad7931fe79f01fe7865c467ebfcc9554283e8d358"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b49e72216ddebd09e2a08641cf27e57facfab765b9d0a0844da9820a92b3382b"
+          "sha256": "3ddec72bc3e1fdbbec0e14ca095ba84b3c3c1816c23406984c272fbd83e92c3a"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "9e87749696596c745ed4c16d5d77e2d44526f2918c02b1727455e796667d5bc8"
+          "sha256": "7c5a589bbd0e9f78064341470e21d9ff437870f95fe9b6dacd9273d2cdbb9aab"
         }
       ],
-      "reason": "Combined full build and 5623 tests passed. Generic Git batching, dot-path normalization and oversized Node stdin transport regressions passed. Preserve the measured full Wiki search-gate baseline failure; do not weaken ranking, corpus queries or thresholds.",
+      "reason": "584 production and305 test edges checked without enforced drift; explicit reviewed matrix additions cover the new projects.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:47.4909762Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T02:50:31.1847963Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -239,17 +235,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "773cb320a26b2fd73680115e8b8f2fd79ecd131a81d9b317cee3edc832329758"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4360e7e65d6498161828e51e218cabd3a78f158bedbd2e4c350f64338b3fcf03"
+          "sha256": "197c6b5adcc5e91d7d04ea075a30d2261ea8c6a86c42e3f0c3591432ad4e81b8"
         }
       ],
-      "reason": "Reviewed the three completed module inventories and merged host/project registrations. Module source bodies match their verified commits; HTTP snapshots and migration/model snapshot diff are empty; 825 Presentation and 175 non-performance HTTP integration tests pass, with EF no pending changes.",
+      "reason": "Admin still consumes semantic prompt/usage services; namespace compatibility and full rebuild/consumer checks retained. No HTTP payload change.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:48.2025284Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T02:50:33.1177953Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -284,49 +276,37 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "4e6f774f1817d334504316d5d64c5a4bf62bc3a1234600d3293d028f8cbb731a",
+      "pageSha256": "8c9843eeb4fbb377b79e506bb7a2969dd0393e10cc6fc0a1ec924ccbd6ee22f9",
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "7b19546a9f7d98936ca4d86d8e5f8c9e511dea8eea56cc793ff60112fdb824b0"
+          "sha256": "46bdce257039fe528d6a87f7d611385f0a7149298d2b8ed878e3a32e7dd08122"
         },
         {
-          "path": ".llm-wiki/evals/context-search-probe-2.json",
-          "sha256": "eadbee5aaddcceb730fb8c4a0babad0ae4f492bb8fa97a375dc5772a272aaa89"
+          "path": ".llm-wiki/evals/context-search-holdout.json",
+          "sha256": "b3a675e785e8773679141e43667dd802bc6119517f179c6eacd69371f84fed74"
         },
         {
-          "path": ".llm-wiki/evals/context-search-probe-3.json",
-          "sha256": "62e46e51b47b02e29ac255eafa6ea5220e226ad3cff883b3a8afbbd46fbc4786"
+          "path": ".llm-wiki/evals/context-search-posttune-control-30.json",
+          "sha256": "376884eb7e2d79dd77151d54690764bd9de0847808680689d06a8e853bedf117"
         },
         {
-          "path": ".llm-wiki/evals/context-search-probe-5.json",
-          "sha256": "7aa8c858e84989357ed671bd35878a4fbb3895f769144ea3f3b74334e565cde2"
+          "path": ".llm-wiki/evals/context-search-probe-4.json",
+          "sha256": "b609f9bcfc2fc5282fb149601cfd64e1db5a861912ec6957c58d7687fd2eb5cd"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe-7.json",
+          "sha256": "4ad07ffefae75cfc762bf600b04f1c75f659cc4e9f87fdaae5fa66948079e36c"
         },
         {
           "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "116f3e8d8a3233cf2a4003ca954c5bb6b4ab307c3d2f2e067fff68dc22debea4"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "ae99b0d0ce38869e4b2e7c1f53c554fa10c88566db2b345d414af02c0479154c"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4360e7e65d6498161828e51e218cabd3a78f158bedbd2e4c350f64338b3fcf03"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-          "sha256": "1cb8d37e5128c9c2774014462b1510851ee2dbdb889ad0c9dfb3a8c6005905f2"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "5dbf6c13bf1a81f50acd1bc6a8729f5abacb13f8f7ccce325934f82eec1dfdf1"
+          "sha256": "f5c88370754972977b3cc8abdf7ba2e51b72f6997f5d9c288dc50bd3b1780281"
         }
       ],
-      "reason": "Combined 5623 tests, full build, and generic Wiki regressions pass. Oversized scope uses lossless UTF-8 stdin; OpenFoodFacts module-root smoke fixture follows its pre-existing relocation. Frozen holdout queries and thresholds remain unchanged; full Wiki baseline failure is explicit.",
+      "reason": "Twelve target paths follow identical moved sources; queries/cohorts/thresholds unchanged. Historical99/100 wording corrected; actual current holdout92/96 remains a blocker.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:50:36.6401444Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T02:50:36.384081Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -546,21 +526,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "7b9d0901122a9a263a2b074bf67f99376b06154355d5cd9ef016b62620445e7d"
-        },
-        {
-          "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "55920b1dd1a866b85615b5f461f74cb7f3dab700726cc7b0a6264593051b557b"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "377d8f1aad12ffb1da58a1a269f11a5a404053372a42979d2b30d3b03c1b435a"
+          "sha256": "5a9ae9d53bfc425353a9ccce45400fa4f5acbf1884348103b4957da940b24a76"
         }
       ],
-      "reason": "Combined full build and 5623 tests passed. Generic Git batching, dot-path normalization and oversized Node stdin transport regressions passed. Preserve the measured full Wiki search-gate baseline failure; do not weaken ranking, corpus queries or thresholds.",
+      "reason": "Two Ai aggregates and four configurations relocated unchanged. EF no pending model changes; one full real PostgreSQL suite116/116.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:49.2297660Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T02:50:37.7188757Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -665,7 +637,7 @@
       "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
       "baseRef": "HEAD",
       "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:56.4181700Z"
+      "reviewedAtUtc": "2026-08-29T23:51:56.41817Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -744,7 +716,7 @@
       "reason": "Reviewed query-context navigation after replacing stale Fasting examples with canonical Modules/Fasting paths.",
       "baseRef": "HEAD",
       "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:39:58.8078320Z"
+      "reviewedAtUtc": "2026-08-29T06:39:58.807832Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -836,17 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "87fa4f04ffb61860f9026c021cceb6b6680b3ea3b154edf690a33eee6a294269"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4360e7e65d6498161828e51e218cabd3a78f158bedbd2e4c350f64338b3fcf03"
+          "sha256": "fcc1e0d9d465113e5d4926899c5b5a552c1d9cea8a957915f42e6149d2cf3990"
         }
       ],
-      "reason": "No new collection, logging, provider transfer or credential behavior. Shared User and ShoppingList seams preserved. Corrected standalone assessments rerun for all child scopes with independently verified file hashes and zero false missing paths; this is not an exhaustive security audit or selected-bundle claim.",
+      "reason": "Sensitive-data index paths refreshed; consent, image ownership and provider sharing reviewed in unchanged source. Broad adjacent candidates remain navigation only.",
       "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-31T00:38:49.8105722Z"
+      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+      "reviewedAtUtc": "2026-08-31T02:50:39.2731032Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -885,13 +853,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "93100b47b3bd430a5e27b5decf98892697459ced69fefe59d74471540ee01f59"
+          "sha256": "99c79c1e690c06e9c3ea167db83f569b759d368f566aff63c6fb4eeecab04647"
         }
       ],
-      "reason": "Removed only uncompiled legacy ContentReports and DailyAdvices AssemblyInfo files, the obsolete ContentReports guide and its stale root link. MSBuild confirms each active module still compiles the same eight source files and no source from either legacy directory. NuGet lockfiles, application assemblies, runtime behavior, API and EF model are unchanged.",
+      "reason": "Read quality-risk workflow and regenerated index. Orphan AssemblyInfo/guide removal changes inventory only; symbol-reference hints remain distinct from execution coverage. Source Ai tests and deferred PDF failures are preserved in integration report.",
       "baseRef": "HEAD",
-      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
-      "reviewedAtUtc": "2026-08-31T02:01:29.2048676Z"
+      "gitHead": "df532f21561c7f0260e8af436d3caa5514d5d2f2",
+      "reviewedAtUtc": "2026-08-31T03:31:26.7768086Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -968,13 +936,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ce026e22a567202f7eef756c9fc2d33fbc6e481ef07af1ac500532d3a1aae1f3"
+          "sha256": "f71b102c112da4b84445a45d1236d19515d1511e26a9b44a7a7cabba641f0924"
         }
       ],
-      "reason": "Removed only uncompiled legacy ContentReports and DailyAdvices AssemblyInfo files, the obsolete ContentReports guide and its stale root link. MSBuild confirms each active module still compiles the same eight source files and no source from either legacy directory. NuGet lockfiles, application assemblies, runtime behavior, API and EF model are unchanged.",
+      "reason": "Read runtime-impact page against regenerated topology and source comparison: all compiled CSharp/project inputs match Ai commit; only uncompiled orphan files removed. Provider/DI/cancellation behavior not changed by integration.",
       "baseRef": "HEAD",
-      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
-      "reviewedAtUtc": "2026-08-31T02:01:33.0317132Z"
+      "gitHead": "df532f21561c7f0260e8af436d3caa5514d5d2f2",
+      "reviewedAtUtc": "2026-08-31T03:31:32.4576636Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -983,17 +951,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "93100b47b3bd430a5e27b5decf98892697459ced69fefe59d74471540ee01f59"
+          "sha256": "99c79c1e690c06e9c3ea167db83f569b759d368f566aff63c6fb4eeecab04647"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ce026e22a567202f7eef756c9fc2d33fbc6e481ef07af1ac500532d3a1aae1f3"
+          "sha256": "f71b102c112da4b84445a45d1236d19515d1511e26a9b44a7a7cabba641f0924"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "fcc1e0d9d465113e5d4926899c5b5a552c1d9cea8a957915f42e6149d2cf3990"
         }
       ],
-      "reason": "Removed only uncompiled legacy ContentReports and DailyAdvices AssemblyInfo files, the obsolete ContentReports guide and its stale root link. MSBuild confirms each active module still compiles the same eight source files and no source from either legacy directory. NuGet lockfiles, application assemblies, runtime behavior, API and EF model are unchanged.",
+      "reason": "Read evidence compiler workflow. No scanner, policy or sensitive-data code changed; regenerated quality/topology reflect Ai ownership and orphan cleanup only. This source review is not a security verdict.",
       "baseRef": "HEAD",
-      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
-      "reviewedAtUtc": "2026-08-31T02:01:34.9361203Z"
+      "gitHead": "df532f21561c7f0260e8af436d3caa5514d5d2f2",
+      "reviewedAtUtc": "2026-08-31T03:31:34.6170130Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1171,13 +1143,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f841c387237849b232f662b0a44a2d9695bd32f5817d9f7e271885b598bd87c3"
+          "sha256": "28b18ea282defd4e9e509610c826f55f484593f820547c0da73719bc1db6af87"
         }
       ],
-      "reason": "Removed unused legacy ContentReports AGENTS and AssemblyInfo files and the obsolete root guide link. MSBuild confirms no legacy file belongs to the active module compilation. Current module projects, assembly identity, DI, API and EF behavior are unchanged. DailyAdvices was inspected only and preserved.",
+      "reason": "Read change-policy workflow; policies and checks are unchanged. User explicitly deferred the documented Wiki/PDF failures for local integration, not a passing quality verdict.",
       "baseRef": "HEAD",
-      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
-      "reviewedAtUtc": "2026-08-31T01:55:24.1490971Z"
+      "gitHead": "df532f21561c7f0260e8af436d3caa5514d5d2f2",
+      "reviewedAtUtc": "2026-08-31T03:31:24.7247733Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1230,18 +1202,26 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-holdout-100.json",
+          "sha256": "46bdce257039fe528d6a87f7d611385f0a7149298d2b8ed878e3a32e7dd08122"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "f5c88370754972977b3cc8abdf7ba2e51b72f6997f5d9c288dc50bd3b1780281"
+        },
+        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "28344b60b6f2d1cbfd9128d92b2eb1cee752436900eaa5d66c80d66192ca7c1f"
+          "sha256": "abc1489b43daf493e3cf9f46b0679f4d864ba705defbc75e2ec45a0329109a9e"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "f841c387237849b232f662b0a44a2d9695bd32f5817d9f7e271885b598bd87c3"
+          "sha256": "28b18ea282defd4e9e509610c826f55f484593f820547c0da73719bc1db6af87"
         }
       ],
-      "reason": "Removed only uncompiled legacy ContentReports and DailyAdvices AssemblyInfo files, the obsolete ContentReports guide and its stale root link. MSBuild confirms each active module still compiles the same eight source files and no source from either legacy directory. NuGet lockfiles, application assemblies, runtime behavior, API and EF model are unchanged.",
+      "reason": "Read query-context workflow; same Ai source corpus relocations and ranking retained, catalog regenerated for removed orphans. No retrieval quality fix or new holdout pass is claimed; checkpoint92/96 regression remains documented.",
       "baseRef": "HEAD",
-      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
-      "reviewedAtUtc": "2026-08-31T02:01:31.0251180Z"
+      "gitHead": "df532f21561c7f0260e8af436d3caa5514d5d2f2",
+      "reviewedAtUtc": "2026-08-31T03:31:28.4899215Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1250,13 +1230,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f841c387237849b232f662b0a44a2d9695bd32f5817d9f7e271885b598bd87c3"
+          "sha256": "28b18ea282defd4e9e509610c826f55f484593f820547c0da73719bc1db6af87"
         }
       ],
-      "reason": "Removed unused legacy ContentReports AGENTS and AssemblyInfo files and the obsolete root guide link. MSBuild confirms no legacy file belongs to the active module compilation. Current module projects, assembly identity, DI, API and EF behavior are unchanged. DailyAdvices was inspected only and preserved.",
+      "reason": "Read review-diff workflow and native ledger implementation. Same hashing/review tooling, renewed combined sources after conflict resolution; both original histories remain in Git and archived evidence.",
       "baseRef": "HEAD",
-      "gitHead": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
-      "reviewedAtUtc": "2026-08-31T01:55:25.4217312Z"
+      "gitHead": "df532f21561c7f0260e8af436d3caa5514d5d2f2",
+      "reviewedAtUtc": "2026-08-31T03:31:30.5144910Z"
     }
   ]
 }

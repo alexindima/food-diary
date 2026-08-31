@@ -96,7 +96,7 @@
       "id": "application-ai-telemetry-probe-4",
       "query": "record application AI request counters and duration telemetry",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Ai/Services/ApplicationAiTelemetry.cs"]
+      "expectedPaths": ["Modules/Ai/Application/Services/ApplicationAiTelemetry.cs"]
     },
     {
       "id": "tdee-calculator-probe-4",

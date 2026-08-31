@@ -39,7 +39,7 @@ Source: `FoodDiary.Presentation.Api/Features/Marketing/MarketingAttributionContr
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: logical-module
+- Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: MarketingAttributionEvent
 - Public contract files: 6

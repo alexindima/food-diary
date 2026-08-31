@@ -4,9 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Infrastructure;
 
-public static partial class DependencyInjection {
+public static class ModuleRegistration {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    private static void AddAiPersistence(this IServiceCollection services) {
+    public static IServiceCollection AddAiPersistence(this IServiceCollection services) {
+        services.AddSingleton<IAiPromptProvider, AiPromptProvider>();
         services.AddScoped<IAiUsageRepository, AiUsageRepository>();
         services.AddScoped<IAiUsageReadRepository>(static provider => provider.GetRequiredService<IAiUsageRepository>());
         services.AddScoped<IAiUsageWriteRepository>(static provider => provider.GetRequiredService<IAiUsageRepository>());
@@ -16,5 +17,11 @@ public static partial class DependencyInjection {
         services.AddScoped<IAiPromptTemplateReadModelRepository>(static provider => provider.GetRequiredService<IAiPromptTemplateRepository>());
         services.AddScoped<IAiPromptTemplateWriteRepository>(static provider => provider.GetRequiredService<IAiPromptTemplateRepository>());
 
+        return services;
+    }
+
+    public static IServiceCollection AddAiModule(this IServiceCollection services) {
+        FoodDiary.Application.Ai.DependencyInjection.AddAiApplication(services);
+        return services.AddAiPersistence();
     }
 }

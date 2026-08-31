@@ -16,7 +16,6 @@
   },
   "applicationAbstractionOwnership": {
     "Admin": "Admin",
-    "Ai": "Ai",
     "Audit": "Application.Runtime",
     "Authentication": "Identity",
     "Billing": "Billing",
@@ -49,22 +48,34 @@
       }
     },
     "Ai": {
-      "role": "orchestrator",
-      "physicalIsolation": "project",
-      "enforcement": "project-reference-matrix",
-      "ownedEntities": [],
+      "role": "aggregate-owner",
+      "physicalIsolation": "module-root",
+
+      "enforcement": "assembly-isolated",
+      "ownedEntities": [
+        "AiUsage",
+        "AiPromptTemplate",
+        "AiQuotaPeriod",
+        "AiQuotaReservation"
+      ],
       "sourceMappings": {
+        "logicalRoot": "Modules/Ai",
+        "persistenceModelProjects": ["Modules/Ai/Infrastructure/Model"],
         "applicationProjects": [
-          "FoodDiary.Application.Ai"
+          "Modules/Ai/Application"
         ],
         "abstractionAreas": [
-          "Ai"
+          "Modules/Ai/Application/Abstractions"
         ],
-        "domainAreas": [
-          "Ai"
+        "domainProjects": [
+          "Modules/Ai/Domain"
         ],
-        "persistenceAreas": [
-          "Ai"
+        "infrastructureProjects": [
+          "Modules/Ai/Infrastructure"
+        ],
+        "adapterAreas": [
+          "FoodDiary.Integrations/Services/OpenAi",
+          "FoodDiary.Presentation.Api/Features/Ai"
         ]
       }
     },
@@ -85,7 +96,7 @@
     },
     "Billing": {
       "role": "aggregate-owner",
-      "physicalIsolation": "logical-module",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix-and-module-boundary-tests",
       "ownedEntities": [
         "BillingSubscription",
@@ -112,7 +123,7 @@
     },
     "BodyMetrics": {
       "role": "aggregate-owner",
-      "physicalIsolation": "logical-module",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix-and-module-boundary-tests",
       "ownedEntities": [
         "WaistEntry",
@@ -396,7 +407,7 @@
     },
     "Marketing": {
       "role": "aggregate-owner",
-      "physicalIsolation": "logical-module",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix-and-module-boundary-tests",
       "ownedEntities": [
         "MarketingAttributionEvent"
@@ -418,7 +429,7 @@
     },
     "MealPlanning": {
       "role": "aggregate-owner",
-      "physicalIsolation": "logical-module",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix",
       "ownedEntities": [
         "MealPlan",
@@ -456,7 +467,7 @@
     },
     "Notifications": {
       "role": "aggregate-owner",
-      "physicalIsolation": "logical-module",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix",
       "ownedEntities": [
         "Notification",
@@ -576,7 +587,7 @@
     },
     "Usda": {
       "role": "adapter",
-      "physicalIsolation": "logical-module",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix-and-module-boundary-tests",
       "ownedEntities": [],
       "sourceMappings": {

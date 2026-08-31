@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 570,
+    "productionProjectEdges": 584,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -103,7 +103,7 @@
       "fanIn": 1,
       "fanOut": 0,
       "level": "informational",
-      "role": "orchestrator"
+      "role": "aggregate-owner"
     },
     {
       "module": "ContentReports",

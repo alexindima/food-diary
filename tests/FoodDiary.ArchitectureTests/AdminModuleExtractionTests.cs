@@ -16,9 +16,9 @@ public sealed class AdminModuleExtractionTests {
             "FoodDiary.Application.Admin/FoodDiary.Application.Admin.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
-            "FoodDiary.Application.Ai",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.Ai.Application",
             "FoodDiary.Modules.ContentReports.Contracts",
             "FoodDiary.Modules.Gamification.Application",
             "FoodDiary.Modules.Lessons.Contracts",

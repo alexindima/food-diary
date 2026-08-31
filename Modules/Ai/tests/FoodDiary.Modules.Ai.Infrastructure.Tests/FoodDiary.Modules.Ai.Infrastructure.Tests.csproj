@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><RootNamespace>FoodDiary.Infrastructure.Tests</RootNamespace><IsPackable>false</IsPackable><IsTestProject>true</IsTestProject></PropertyGroup>
+  <ItemGroup><Using Include="Xunit" /><Using Include="NSubstitute" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
+    <ProjectReference Include="../../../../FoodDiary.Integrations/FoodDiary.Integrations.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+  </ItemGroup>
+</Project>
