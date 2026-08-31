@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Modules.Billing.Infrastructure;
@@ -35,7 +36,7 @@ builder.Services.AddUsersModule();
 builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
 builder.Services.AddMealsModule();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration).AddDashboardReadServices();
 builder.Services.AddImagesInfrastructure();
 builder.Services.AddIntegrations(builder.Configuration);
 builder.Services.AddDataProtection();

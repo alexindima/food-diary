@@ -491,6 +491,7 @@
           "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
@@ -677,6 +678,13 @@
           "FoodDiary.Modules.DailyAdvices.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.dashboard.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
         }
       },
       "fooddiary.modules.dietologist.domain": {

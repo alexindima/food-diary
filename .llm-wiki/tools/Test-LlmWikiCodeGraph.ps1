@@ -236,7 +236,7 @@ if (@($broadFrontendPlan.scopeTooBroad).Count -ne 1 -or $broadFrontendPlan.confi
 $auditRankingCases = @(
     @{ Query = 'OpenFoodFacts barcode lookup'; ChangeType = 'Backend'; ExpectedPrefix = 'Modules/OpenFoodFacts/Application/'; ExpectedPattern = '' }
     @{ Query = 'create meal command'; ChangeType = 'Backend'; ExpectedPrefix = 'FoodDiary.Application.Meals/'; ExpectedPattern = '' }
-    @{ Query = 'dashboard query'; ChangeType = 'Backend'; ExpectedPrefix = 'FoodDiary.Application.Dashboard/'; ExpectedPattern = '' }
+    @{ Query = 'dashboard query'; ChangeType = 'Backend'; ExpectedPrefix = 'Modules/Dashboard/Application/'; ExpectedPattern = '' }
     @{ Query = 'Telegram notification sender'; ChangeType = 'Backend'; ExpectedPrefix = ''; ExpectedPattern = '^(?:FoodDiary\.Telegram\.Bot|Modules/Notifications/(?:Application|Infrastructure)|FoodDiary\.Integrations)/' }
 )
 foreach ($case in $auditRankingCases) {

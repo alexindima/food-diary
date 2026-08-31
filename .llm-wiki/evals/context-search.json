@@ -105,7 +105,7 @@
       "id": "dashboard-snapshot",
       "query": "assemble dashboard snapshot for the user's local day",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs"]
+      "expectedPaths": ["Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs"]
     },
     {
       "id": "waist-history-chart",

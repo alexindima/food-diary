@@ -1,0 +1,592 @@
+{
+  "sourceComparisons": [
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs",
+      "baseNormalizedSha256": "37aace8df2763f5314e7a10fdc54cd296bb23ed5bb10cbcad730d46b4854c46f",
+      "targetNormalizedSha256": "37aace8df2763f5314e7a10fdc54cd296bb23ed5bb10cbcad730d46b4854c46f",
+      "alignedTargetSha256": "37aace8df2763f5314e7a10fdc54cd296bb23ed5bb10cbcad730d46b4854c46f",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs",
+      "baseNormalizedSha256": "b56af049b0e1f794f8c931bc5f8eec2dd14d7b9069683ef32baa153493861dff",
+      "targetNormalizedSha256": "b56af049b0e1f794f8c931bc5f8eec2dd14d7b9069683ef32baa153493861dff",
+      "alignedTargetSha256": "b56af049b0e1f794f8c931bc5f8eec2dd14d7b9069683ef32baa153493861dff",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs",
+      "baseNormalizedSha256": "ae19243633f804359e858b25f7f0a74b17f52dc8db8a815cbd9b7adad5de7d02",
+      "targetNormalizedSha256": "ae19243633f804359e858b25f7f0a74b17f52dc8db8a815cbd9b7adad5de7d02",
+      "alignedTargetSha256": "ae19243633f804359e858b25f7f0a74b17f52dc8db8a815cbd9b7adad5de7d02",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs",
+      "target": "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs",
+      "baseNormalizedSha256": "a382cc1fa7e020d98141b3a50d6403379bc49429592c8b6071e53b8fe3d310d1",
+      "targetNormalizedSha256": "a382cc1fa7e020d98141b3a50d6403379bc49429592c8b6071e53b8fe3d310d1",
+      "alignedTargetSha256": "a382cc1fa7e020d98141b3a50d6403379bc49429592c8b6071e53b8fe3d310d1",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardBodyReadModel.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardBodyReadModel.cs",
+      "baseNormalizedSha256": "f9303a3cbf5f8c94f273a05d62575fef86ab5e39a1c01c90bad7af87f2a54530",
+      "targetNormalizedSha256": "f9303a3cbf5f8c94f273a05d62575fef86ab5e39a1c01c90bad7af87f2a54530",
+      "alignedTargetSha256": "f9303a3cbf5f8c94f273a05d62575fef86ab5e39a1c01c90bad7af87f2a54530",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealAiItemReadModel.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealAiItemReadModel.cs",
+      "baseNormalizedSha256": "f741efa494c44bd4f2184aa30e9c6b185b54887ee90b0c564e965f3fb1f8900c",
+      "targetNormalizedSha256": "f741efa494c44bd4f2184aa30e9c6b185b54887ee90b0c564e965f3fb1f8900c",
+      "alignedTargetSha256": "f741efa494c44bd4f2184aa30e9c6b185b54887ee90b0c564e965f3fb1f8900c",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealAiSessionReadModel.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealAiSessionReadModel.cs",
+      "baseNormalizedSha256": "d6c5eeb139ef8d1208fc2af6f42b8d7490750ffe9bd06dee872473249168c109",
+      "targetNormalizedSha256": "d6c5eeb139ef8d1208fc2af6f42b8d7490750ffe9bd06dee872473249168c109",
+      "alignedTargetSha256": "d6c5eeb139ef8d1208fc2af6f42b8d7490750ffe9bd06dee872473249168c109",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealItemReadModel.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealItemReadModel.cs",
+      "baseNormalizedSha256": "5fb7f87de9b9bd8ae8787a3b4b296b8e564fa853b24227e76297792d763749a8",
+      "targetNormalizedSha256": "5fb7f87de9b9bd8ae8787a3b4b296b8e564fa853b24227e76297792d763749a8",
+      "alignedTargetSha256": "5fb7f87de9b9bd8ae8787a3b4b296b8e564fa853b24227e76297792d763749a8",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealReadModel.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealReadModel.cs",
+      "baseNormalizedSha256": "62824c79966680a944ed9f047a6bfa41497e28f0115d297ad8d7d11e01977a98",
+      "targetNormalizedSha256": "62824c79966680a944ed9f047a6bfa41497e28f0115d297ad8d7d11e01977a98",
+      "alignedTargetSha256": "62824c79966680a944ed9f047a6bfa41497e28f0115d297ad8d7d11e01977a98",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealsReadModel.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealsReadModel.cs",
+      "baseNormalizedSha256": "760afc352b5a831cd566b17031e329d7bc299e5128b8d4dc0f1da5eb5a369b95",
+      "targetNormalizedSha256": "760afc352b5a831cd566b17031e329d7bc299e5128b8d4dc0f1da5eb5a369b95",
+      "alignedTargetSha256": "760afc352b5a831cd566b17031e329d7bc299e5128b8d4dc0f1da5eb5a369b95",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardReadModel.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardReadModel.cs",
+      "baseNormalizedSha256": "0d3b3cb806508e9fd607c0b1d27ce93be0d1b163690b48e703100c628b88488d",
+      "targetNormalizedSha256": "0d3b3cb806508e9fd607c0b1d27ce93be0d1b163690b48e703100c628b88488d",
+      "alignedTargetSha256": "0d3b3cb806508e9fd607c0b1d27ce93be0d1b163690b48e703100c628b88488d",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardReadSections.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardReadSections.cs",
+      "baseNormalizedSha256": "d6fcf9a2f27490b03b3bbc1dde375caa0b7bd646d702b75edd54a534c270c075",
+      "targetNormalizedSha256": "d6fcf9a2f27490b03b3bbc1dde375caa0b7bd646d702b75edd54a534c270c075",
+      "alignedTargetSha256": "d6fcf9a2f27490b03b3bbc1dde375caa0b7bd646d702b75edd54a534c270c075",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardStatisticsBucketReadModel.cs",
+      "target": "Modules/Dashboard/Contracts/Models/DashboardStatisticsBucketReadModel.cs",
+      "baseNormalizedSha256": "6adc9ee8c98990ee04c5f019face910dd45426a82d897cd7508db6722c6c39e8",
+      "targetNormalizedSha256": "6adc9ee8c98990ee04c5f019face910dd45426a82d897cd7508db6722c6c39e8",
+      "alignedTargetSha256": "6adc9ee8c98990ee04c5f019face910dd45426a82d897cd7508db6722c6c39e8",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardWaistPointReadModel.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardWaistPointReadModel.cs",
+      "baseNormalizedSha256": "87155cc69e4a4212fd3d4dd9d2ef82969addf9269338f86a526c9655ba467210",
+      "targetNormalizedSha256": "87155cc69e4a4212fd3d4dd9d2ef82969addf9269338f86a526c9655ba467210",
+      "alignedTargetSha256": "87155cc69e4a4212fd3d4dd9d2ef82969addf9269338f86a526c9655ba467210",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardWaistSummaryReadModel.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardWaistSummaryReadModel.cs",
+      "baseNormalizedSha256": "e21eaa992a570d7f6d4c317489e175cbeb6856572b66a63b5c7fa4f588e683ba",
+      "targetNormalizedSha256": "e21eaa992a570d7f6d4c317489e175cbeb6856572b66a63b5c7fa4f588e683ba",
+      "alignedTargetSha256": "e21eaa992a570d7f6d4c317489e175cbeb6856572b66a63b5c7fa4f588e683ba",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardWeightPointReadModel.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardWeightPointReadModel.cs",
+      "baseNormalizedSha256": "7b78b8ff7c1594c7d549acce1a3b16c371d6ffc9573811e79371ab5c785617b6",
+      "targetNormalizedSha256": "7b78b8ff7c1594c7d549acce1a3b16c371d6ffc9573811e79371ab5c785617b6",
+      "alignedTargetSha256": "7b78b8ff7c1594c7d549acce1a3b16c371d6ffc9573811e79371ab5c785617b6",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardWeightSummaryReadModel.cs",
+      "target": "Modules/Dashboard/Application/Abstractions/Models/DashboardWeightSummaryReadModel.cs",
+      "baseNormalizedSha256": "4bfb3a418768aca6cca0c8d17d5b64cb45616492a94b499739c6ab86ec58e1fa",
+      "targetNormalizedSha256": "4bfb3a418768aca6cca0c8d17d5b64cb45616492a94b499739c6ab86ec58e1fa",
+      "alignedTargetSha256": "4bfb3a418768aca6cca0c8d17d5b64cb45616492a94b499739c6ab86ec58e1fa",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/AssemblyInfo.cs",
+      "target": "Modules/Dashboard/Application/AssemblyInfo.cs",
+      "baseNormalizedSha256": "0557f9e99a66a367f8ba32e0c483b5d5b557dd4fd679f71f24579d8e8479890b",
+      "targetNormalizedSha256": "0557f9e99a66a367f8ba32e0c483b5d5b557dd4fd679f71f24579d8e8479890b",
+      "alignedTargetSha256": "0557f9e99a66a367f8ba32e0c483b5d5b557dd4fd679f71f24579d8e8479890b",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs",
+      "target": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs",
+      "baseNormalizedSha256": "0190d43ccecabc142f040166defe8725a6ac71467378e68785c79b1b664cabaf",
+      "targetNormalizedSha256": "0190d43ccecabc142f040166defe8725a6ac71467378e68785c79b1b664cabaf",
+      "alignedTargetSha256": "0190d43ccecabc142f040166defe8725a6ac71467378e68785c79b1b664cabaf",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
+      "target": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
+      "baseNormalizedSha256": "e4d1159a79fd32ff715211b7d313749b4c1add4e345c498449a59bb52fcf1092",
+      "targetNormalizedSha256": "e4d1159a79fd32ff715211b7d313749b4c1add4e345c498449a59bb52fcf1092",
+      "alignedTargetSha256": "e4d1159a79fd32ff715211b7d313749b4c1add4e345c498449a59bb52fcf1092",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandValidator.cs",
+      "target": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandValidator.cs",
+      "baseNormalizedSha256": "b6c1f0caa9b51f1e457c56adb4d9753c4e5cfe1ea3de504db1cf45c247958759",
+      "targetNormalizedSha256": "b6c1f0caa9b51f1e457c56adb4d9753c4e5cfe1ea3de504db1cf45c247958759",
+      "alignedTargetSha256": "b6c1f0caa9b51f1e457c56adb4d9753c4e5cfe1ea3de504db1cf45c247958759",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs",
+      "target": "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs",
+      "baseNormalizedSha256": "e8b9b63a9beb5ada832c4f54f07950562af6eb81318de1ea2d5859507517d134",
+      "targetNormalizedSha256": "e8b9b63a9beb5ada832c4f54f07950562af6eb81318de1ea2d5859507517d134",
+      "alignedTargetSha256": "e8b9b63a9beb5ada832c4f54f07950562af6eb81318de1ea2d5859507517d134",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+      "target": "Modules/Dashboard/Application/DependencyInjection.cs",
+      "baseNormalizedSha256": "c488c0fb2d5743f96f8ffe0ad4ae5d22992f908ad63afec8416672c40bf7452e",
+      "targetNormalizedSha256": "c488c0fb2d5743f96f8ffe0ad4ae5d22992f908ad63afec8416672c40bf7452e",
+      "alignedTargetSha256": "c488c0fb2d5743f96f8ffe0ad4ae5d22992f908ad63afec8416672c40bf7452e",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Internal/UtcDateNormalizer.cs",
+      "target": "Modules/Dashboard/Application/Internal/UtcDateNormalizer.cs",
+      "baseNormalizedSha256": "933ea387b6be13b556dfccce946d787a54add7bfc37f13ccc91c7b95dbf3922a",
+      "targetNormalizedSha256": "933ea387b6be13b556dfccce946d787a54add7bfc37f13ccc91c7b95dbf3922a",
+      "alignedTargetSha256": "933ea387b6be13b556dfccce946d787a54add7bfc37f13ccc91c7b95dbf3922a",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Models/DailyCaloriesModel.cs",
+      "target": "Modules/Dashboard/Application/Models/DailyCaloriesModel.cs",
+      "baseNormalizedSha256": "15dae3dc89a7d59f4225457502633dee03e3a88749afc7b0d48a28a1afe3d927",
+      "targetNormalizedSha256": "15dae3dc89a7d59f4225457502633dee03e3a88749afc7b0d48a28a1afe3d927",
+      "alignedTargetSha256": "15dae3dc89a7d59f4225457502633dee03e3a88749afc7b0d48a28a1afe3d927",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Models/DashboardMealsModel.cs",
+      "target": "Modules/Dashboard/Application/Models/DashboardMealsModel.cs",
+      "baseNormalizedSha256": "9673a2cc3fe75fdc9abb5b7ab1fd2d871bad40a0b08b1460787b11033e83454c",
+      "targetNormalizedSha256": "9673a2cc3fe75fdc9abb5b7ab1fd2d871bad40a0b08b1460787b11033e83454c",
+      "alignedTargetSha256": "9673a2cc3fe75fdc9abb5b7ab1fd2d871bad40a0b08b1460787b11033e83454c",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Models/DashboardSnapshotModel.cs",
+      "target": "Modules/Dashboard/Application/Models/DashboardSnapshotModel.cs",
+      "baseNormalizedSha256": "30e30fe9bab36bc8190b4fc1202fde4e78d157f12f1de280eeba1cc73555ef33",
+      "targetNormalizedSha256": "30e30fe9bab36bc8190b4fc1202fde4e78d157f12f1de280eeba1cc73555ef33",
+      "alignedTargetSha256": "30e30fe9bab36bc8190b4fc1202fde4e78d157f12f1de280eeba1cc73555ef33",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Models/DashboardStatisticsModel.cs",
+      "target": "Modules/Dashboard/Application/Models/DashboardStatisticsModel.cs",
+      "baseNormalizedSha256": "f33a3a2f1d3bd91611b3344d2b8bd9b815f7a0dab34abc648f73d32cbc076811",
+      "targetNormalizedSha256": "f33a3a2f1d3bd91611b3344d2b8bd9b815f7a0dab34abc648f73d32cbc076811",
+      "alignedTargetSha256": "f33a3a2f1d3bd91611b3344d2b8bd9b815f7a0dab34abc648f73d32cbc076811",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Models/DashboardUserContextModel.cs",
+      "target": "Modules/Dashboard/Application/Models/DashboardUserContextModel.cs",
+      "baseNormalizedSha256": "558fd3947c470981be1dd8e6425d2d7fd404f15f37c9308541b86758324fc872",
+      "targetNormalizedSha256": "558fd3947c470981be1dd8e6425d2d7fd404f15f37c9308541b86758324fc872",
+      "alignedTargetSha256": "558fd3947c470981be1dd8e6425d2d7fd404f15f37c9308541b86758324fc872",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Models/DashboardWaistModel.cs",
+      "target": "Modules/Dashboard/Application/Models/DashboardWaistModel.cs",
+      "baseNormalizedSha256": "9eba3d9050e676dfcc537b46cb269ba6111eae45ca495707999a1bcb256aa595",
+      "targetNormalizedSha256": "9eba3d9050e676dfcc537b46cb269ba6111eae45ca495707999a1bcb256aa595",
+      "alignedTargetSha256": "9eba3d9050e676dfcc537b46cb269ba6111eae45ca495707999a1bcb256aa595",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Models/DashboardWeightModel.cs",
+      "target": "Modules/Dashboard/Application/Models/DashboardWeightModel.cs",
+      "baseNormalizedSha256": "bc6af6e334cf9d86b4ed3d44c26ecc3d9af6be362d7dcc9b437dc4791e641820",
+      "targetNormalizedSha256": "bc6af6e334cf9d86b4ed3d44c26ecc3d9af6be362d7dcc9b437dc4791e641820",
+      "alignedTargetSha256": "bc6af6e334cf9d86b4ed3d44c26ecc3d9af6be362d7dcc9b437dc4791e641820",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Models/WaistPointModel.cs",
+      "target": "Modules/Dashboard/Application/Models/WaistPointModel.cs",
+      "baseNormalizedSha256": "5869c34700d8e716382c7cb7a4772187697cab855690abe4fb77780edb10bbae",
+      "targetNormalizedSha256": "5869c34700d8e716382c7cb7a4772187697cab855690abe4fb77780edb10bbae",
+      "alignedTargetSha256": "5869c34700d8e716382c7cb7a4772187697cab855690abe4fb77780edb10bbae",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Models/WeightPointModel.cs",
+      "target": "Modules/Dashboard/Application/Models/WeightPointModel.cs",
+      "baseNormalizedSha256": "c3be6db0c610f2e95e19bf9070c2f7f0b21126c9c19c70adc5255b4a240ff4a9",
+      "targetNormalizedSha256": "c3be6db0c610f2e95e19bf9070c2f7f0b21126c9c19c70adc5255b4a240ff4a9",
+      "alignedTargetSha256": "c3be6db0c610f2e95e19bf9070c2f7f0b21126c9c19c70adc5255b4a240ff4a9",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
+      "target": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
+      "baseNormalizedSha256": "e7b9ae338b465037ff3f072ebbbbf0c42ef169791648d655963cfc8721b2c81b",
+      "targetNormalizedSha256": "e7b9ae338b465037ff3f072ebbbbf0c42ef169791648d655963cfc8721b2c81b",
+      "alignedTargetSha256": "e7b9ae338b465037ff3f072ebbbbf0c42ef169791648d655963cfc8721b2c81b",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+      "target": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+      "baseNormalizedSha256": "29cd799c6e5ecb77cfbe9569995d6aea1bebeb754ca7006af6f2acbaf94d0c1f",
+      "targetNormalizedSha256": "29cd799c6e5ecb77cfbe9569995d6aea1bebeb754ca7006af6f2acbaf94d0c1f",
+      "alignedTargetSha256": "29cd799c6e5ecb77cfbe9569995d6aea1bebeb754ca7006af6f2acbaf94d0c1f",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryValidator.cs",
+      "target": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryValidator.cs",
+      "baseNormalizedSha256": "04c52f6ce69f4ce022210dfdb9385701ded048b114d1d7880e94f76b771b87b3",
+      "targetNormalizedSha256": "04c52f6ce69f4ce022210dfdb9385701ded048b114d1d7880e94f76b771b87b3",
+      "alignedTargetSha256": "04c52f6ce69f4ce022210dfdb9385701ded048b114d1d7880e94f76b771b87b3",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
+      "target": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
+      "baseNormalizedSha256": "9c9495a6b169801be8730a5dc7af7f3635997008a6e3b87dacf06f17219e84e9",
+      "targetNormalizedSha256": "9c9495a6b169801be8730a5dc7af7f3635997008a6e3b87dacf06f17219e84e9",
+      "alignedTargetSha256": "9c9495a6b169801be8730a5dc7af7f3635997008a6e3b87dacf06f17219e84e9",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+      "target": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+      "baseNormalizedSha256": "f865fc6fc5ecb0e92fdfdf237d0a1b7a423e0c1608044b73ea9a0e449d6e5388",
+      "targetNormalizedSha256": "f865fc6fc5ecb0e92fdfdf237d0a1b7a423e0c1608044b73ea9a0e449d6e5388",
+      "alignedTargetSha256": "f865fc6fc5ecb0e92fdfdf237d0a1b7a423e0c1608044b73ea9a0e449d6e5388",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/ComposedDashboardReadService.cs",
+      "target": "Modules/Dashboard/Application/Services/ComposedDashboardReadService.cs",
+      "baseNormalizedSha256": "9e6d1d2c57b0d6c6fd2bc1c6869cee20bcfefbf87852599f445cb6341eb68a5b",
+      "targetNormalizedSha256": "9e6d1d2c57b0d6c6fd2bc1c6869cee20bcfefbf87852599f445cb6341eb68a5b",
+      "alignedTargetSha256": "9e6d1d2c57b0d6c6fd2bc1c6869cee20bcfefbf87852599f445cb6341eb68a5b",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/DashboardBodyMapper.cs",
+      "target": "Modules/Dashboard/Application/Services/DashboardBodyMapper.cs",
+      "baseNormalizedSha256": "67369e9410610b4941727b283d01a876ddfc4ffd0302fc3cabf9fc95c4dbaa1a",
+      "targetNormalizedSha256": "67369e9410610b4941727b283d01a876ddfc4ffd0302fc3cabf9fc95c4dbaa1a",
+      "alignedTargetSha256": "67369e9410610b4941727b283d01a876ddfc4ffd0302fc3cabf9fc95c4dbaa1a",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/DashboardBuildContext.cs",
+      "target": "Modules/Dashboard/Application/Services/DashboardBuildContext.cs",
+      "baseNormalizedSha256": "b2c88dfe84f5db930c71113c8a79adede7e0dc8c44183586ac4cca3fb1612e7b",
+      "targetNormalizedSha256": "b2c88dfe84f5db930c71113c8a79adede7e0dc8c44183586ac4cca3fb1612e7b",
+      "alignedTargetSha256": "b2c88dfe84f5db930c71113c8a79adede7e0dc8c44183586ac4cca3fb1612e7b",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/DashboardMapping.cs",
+      "target": "Modules/Dashboard/Application/Services/DashboardMapping.cs",
+      "baseNormalizedSha256": "e916269555aa68a0e22d9934ff9521b737ef6e8d4907aeebe1d177e11453f93d",
+      "targetNormalizedSha256": "e916269555aa68a0e22d9934ff9521b737ef6e8d4907aeebe1d177e11453f93d",
+      "alignedTargetSha256": "e916269555aa68a0e22d9934ff9521b737ef6e8d4907aeebe1d177e11453f93d",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/DashboardMealsMapper.cs",
+      "target": "Modules/Dashboard/Application/Services/DashboardMealsMapper.cs",
+      "baseNormalizedSha256": "57e682f6779281f5c3c8fd55b592908b87e7429f59306b0ac74b3dc33498fe49",
+      "targetNormalizedSha256": "57e682f6779281f5c3c8fd55b592908b87e7429f59306b0ac74b3dc33498fe49",
+      "alignedTargetSha256": "57e682f6779281f5c3c8fd55b592908b87e7429f59306b0ac74b3dc33498fe49",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
+      "target": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
+      "baseNormalizedSha256": "9037c7a1cc5227d36e4e6ab80a74288aaf19db14d2d60abe1975377dd9d5c7ff",
+      "targetNormalizedSha256": "9037c7a1cc5227d36e4e6ab80a74288aaf19db14d2d60abe1975377dd9d5c7ff",
+      "alignedTargetSha256": "9037c7a1cc5227d36e4e6ab80a74288aaf19db14d2d60abe1975377dd9d5c7ff",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
+      "target": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
+      "baseNormalizedSha256": "8442cb6e3a6d3b5917a5b2a0c3559ee1ac4e99b887f09d56cbf2fe0b7cf8a037",
+      "targetNormalizedSha256": "8442cb6e3a6d3b5917a5b2a0c3559ee1ac4e99b887f09d56cbf2fe0b7cf8a037",
+      "alignedTargetSha256": "8442cb6e3a6d3b5917a5b2a0c3559ee1ac4e99b887f09d56cbf2fe0b7cf8a037",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs",
+      "target": "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs",
+      "baseNormalizedSha256": "0306bb4d6241128bfaffaa0f096a83e416f33cbad885f9ef4eec0c881fef754b",
+      "targetNormalizedSha256": "0306bb4d6241128bfaffaa0f096a83e416f33cbad885f9ef4eec0c881fef754b",
+      "alignedTargetSha256": "0306bb4d6241128bfaffaa0f096a83e416f33cbad885f9ef4eec0c881fef754b",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotSections.cs",
+      "target": "Modules/Dashboard/Application/Services/DashboardSnapshotSections.cs",
+      "baseNormalizedSha256": "5d6fb8544856fe6ae1c90de3758972d6a601c96be09b1dbb5180e2c3da57c728",
+      "targetNormalizedSha256": "5d6fb8544856fe6ae1c90de3758972d6a601c96be09b1dbb5180e2c3da57c728",
+      "alignedTargetSha256": "5d6fb8544856fe6ae1c90de3758972d6a601c96be09b1dbb5180e2c3da57c728",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/DashboardStatisticsMapper.cs",
+      "target": "Modules/Dashboard/Application/Services/DashboardStatisticsMapper.cs",
+      "baseNormalizedSha256": "99e743f562c31ae49af26f046a53bb24c41696aa1e8b34a5989d912b0a2f45be",
+      "targetNormalizedSha256": "99e743f562c31ae49af26f046a53bb24c41696aa1e8b34a5989d912b0a2f45be",
+      "alignedTargetSha256": "99e743f562c31ae49af26f046a53bb24c41696aa1e8b34a5989d912b0a2f45be",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/DashboardUserContextService.cs",
+      "target": "Modules/Dashboard/Application/Services/DashboardUserContextService.cs",
+      "baseNormalizedSha256": "dae63fac4583901b463ae42c3e6599e904746c56efc1ab473a0ea45fe5ca2ea2",
+      "targetNormalizedSha256": "dae63fac4583901b463ae42c3e6599e904746c56efc1ab473a0ea45fe5ca2ea2",
+      "alignedTargetSha256": "dae63fac4583901b463ae42c3e6599e904746c56efc1ab473a0ea45fe5ca2ea2",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/IDashboardSectionDataLoader.cs",
+      "target": "Modules/Dashboard/Application/Services/IDashboardSectionDataLoader.cs",
+      "baseNormalizedSha256": "ea4aaf4197baf97841e767b11f8a61dd8bc3bd86f0c887a244443388e6157f03",
+      "targetNormalizedSha256": "ea4aaf4197baf97841e767b11f8a61dd8bc3bd86f0c887a244443388e6157f03",
+      "alignedTargetSha256": "ea4aaf4197baf97841e767b11f8a61dd8bc3bd86f0c887a244443388e6157f03",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs",
+      "target": "Modules/Dashboard/Application/Services/IDashboardSnapshotBuilder.cs",
+      "baseNormalizedSha256": "4de185f4f0a873c3f80ca71b60909f80f06e0fc88f15233b2b763c889d505e80",
+      "targetNormalizedSha256": "4de185f4f0a873c3f80ca71b60909f80f06e0fc88f15233b2b763c889d505e80",
+      "alignedTargetSha256": "4de185f4f0a873c3f80ca71b60909f80f06e0fc88f15233b2b763c889d505e80",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/MediatorDashboardMealsReadService.cs",
+      "target": "Modules/Dashboard/Application/Services/MediatorDashboardMealsReadService.cs",
+      "baseNormalizedSha256": "8aef0d1cc0c154b8cfbd183959a91b9098ac8da624c240a43130523e24bd1baf",
+      "targetNormalizedSha256": "8aef0d1cc0c154b8cfbd183959a91b9098ac8da624c240a43130523e24bd1baf",
+      "alignedTargetSha256": "8aef0d1cc0c154b8cfbd183959a91b9098ac8da624c240a43130523e24bd1baf",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/MediatorDashboardStatisticsReadService.cs",
+      "target": "Modules/Dashboard/Application/Services/MediatorDashboardStatisticsReadService.cs",
+      "baseNormalizedSha256": "476a3619b8bd42d0682af5597ccdeb892857ff39aab75e78fdb85925956ed39d",
+      "targetNormalizedSha256": "476a3619b8bd42d0682af5597ccdeb892857ff39aab75e78fdb85925956ed39d",
+      "alignedTargetSha256": "476a3619b8bd42d0682af5597ccdeb892857ff39aab75e78fdb85925956ed39d",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Application.Dashboard/Services/RepositoryDashboardBodyReadService.cs",
+      "target": "Modules/Dashboard/Application/Services/RepositoryDashboardBodyReadService.cs",
+      "baseNormalizedSha256": "eabc5f9104b86b711931ffbc28c27c31e53566e3e152e9c9f039e73a510ad0ce",
+      "targetNormalizedSha256": "eabc5f9104b86b711931ffbc28c27c31e53566e3e152e9c9f039e73a510ad0ce",
+      "alignedTargetSha256": "eabc5f9104b86b711931ffbc28c27c31e53566e3e152e9c9f039e73a510ad0ce",
+      "equal": true,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
+      "baseNormalizedSha256": "2521e499fa5fb9c37cc3bd3beab259edd436c324e236d2d76197b199c044eb39",
+      "targetNormalizedSha256": "3dcc2583fa13e0db4e47ed729f9acf5e3e05e4913701e26e20d028ad59857341",
+      "alignedTargetSha256": "2521e499fa5fb9c37cc3bd3beab259edd436c324e236d2d76197b199c044eb39",
+      "equal": false,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardFavoriteMealProjection.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardFavoriteMealProjection.cs",
+      "baseNormalizedSha256": "e0c0da64703a6ccd769df6321a832fdc9eadd4592c5ddd57f95f8bc70d207fba",
+      "targetNormalizedSha256": "991b4b25f2b972fd69c09a19d6be0ca34074fcf5c333bb48874f3eaf32d78d77",
+      "alignedTargetSha256": "e0c0da64703a6ccd769df6321a832fdc9eadd4592c5ddd57f95f8bc70d207fba",
+      "equal": false,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealAiSessionProjection.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionProjection.cs",
+      "baseNormalizedSha256": "df91b8108cae2bc36b82db9ed507973d005f5dca4fd9a4a7bac03e063749c230",
+      "targetNormalizedSha256": "5cc961ec376d7863a1ae5f956c5ccf03a3b867142e305d22b10c2ec3b35072e0",
+      "alignedTargetSha256": "df91b8108cae2bc36b82db9ed507973d005f5dca4fd9a4a7bac03e063749c230",
+      "equal": false,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealAiSessionsLoader.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionsLoader.cs",
+      "baseNormalizedSha256": "c165eed8654fb7ff682e815bad32d20a9f918c817b97077bfd7fa53a17b205ab",
+      "targetNormalizedSha256": "b4fcca6031a29a7aa877d5f5c105cb0077cb565d4324574174e369f77360e390",
+      "alignedTargetSha256": "c165eed8654fb7ff682e815bad32d20a9f918c817b97077bfd7fa53a17b205ab",
+      "equal": false,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealFavoritesLoader.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealFavoritesLoader.cs",
+      "baseNormalizedSha256": "da0cebd985080566e97329192e938bb17be4825556cf8ae17ce64702e8558f35",
+      "targetNormalizedSha256": "4d9d2ff896550b2c8ac004dbed98fccfcd0a3cde28140de8889d78242b00e6ae",
+      "alignedTargetSha256": "da0cebd985080566e97329192e938bb17be4825556cf8ae17ce64702e8558f35",
+      "equal": false,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
+      "baseNormalizedSha256": "4c5440825426822858b54c38b72094e9309ace52d088df38be4eb8aafeed6d3b",
+      "targetNormalizedSha256": "268662da89b834bf2ea4f6472b6beaa86d9d94d50c81b39f01e1e1c300a1ce34",
+      "alignedTargetSha256": "4c5440825426822858b54c38b72094e9309ace52d088df38be4eb8aafeed6d3b",
+      "equal": false,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealItemsLoader.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemsLoader.cs",
+      "baseNormalizedSha256": "4c1bc9c904e4a121d1a157e177f0dd910830d6b6b0e3bd1a54e164ab6d02b834",
+      "targetNormalizedSha256": "ff89f450f8c51075d8f9df96881fe4b4f4f1d3dae3e50885a53bc7d42859bf54",
+      "alignedTargetSha256": "4c1bc9c904e4a121d1a157e177f0dd910830d6b6b0e3bd1a54e164ab6d02b834",
+      "equal": false,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
+      "baseNormalizedSha256": "910e2f7b853f8058f11c8fbd6df77b772e5fb6de20a8e9c9c97e6d72167e1d4a",
+      "targetNormalizedSha256": "38b06ab7172b0a5f7cd333fd7e3c3fa3b2bf14271b897c3f8b95bc052081d9ef",
+      "alignedTargetSha256": "910e2f7b853f8058f11c8fbd6df77b772e5fb6de20a8e9c9c97e6d72167e1d4a",
+      "equal": false,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
+      "baseNormalizedSha256": "e42fa1364a3d5ee964d482af65b771ace16ff0cb9a77d1e9f748c43b1baf90cd",
+      "targetNormalizedSha256": "0bc1b36e4560445c25dddd128e1a08bfe2251ca7eb0641153eb0504652353491",
+      "alignedTargetSha256": "e42fa1364a3d5ee964d482af65b771ace16ff0cb9a77d1e9f748c43b1baf90cd",
+      "equal": false,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
+      "baseNormalizedSha256": "a8fa74a8b7a833b0576267d5976ee3e1fe55960053ed9fcc73ee39393dc51d1c",
+      "targetNormalizedSha256": "b2dbead25ec27627814f2e35c06945d0715c902df1b252b7f7027708e85e830b",
+      "alignedTargetSha256": "a8fa74a8b7a833b0576267d5976ee3e1fe55960053ed9fcc73ee39393dc51d1c",
+      "equal": false,
+      "namespaceOnlyOrEqual": true
+    },
+    {
+      "source": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
+      "target": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
+      "baseNormalizedSha256": "8bd720aba905fb9e3cb55410a79a567c1d1010b6b49d1d21f5b343b14dba75c3",
+      "targetNormalizedSha256": "8db85f95cced03a18bf081648a55918a30514213c7944a3c90281c1b69ae6419",
+      "alignedTargetSha256": "8bd720aba905fb9e3cb55410a79a567c1d1010b6b49d1d21f5b343b14dba75c3",
+      "equal": false,
+      "namespaceOnlyOrEqual": true
+    }
+  ],
+  "packageVersionChanges": [],
+  "base": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+  "normalization": "UTF-8 BOM removal and CRLF to LF; alignedTargetSha256 additionally reverses only the infrastructure namespace and central DbContext import."
+}

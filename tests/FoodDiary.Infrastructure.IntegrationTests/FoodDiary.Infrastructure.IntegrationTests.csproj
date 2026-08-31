@@ -53,4 +53,7 @@
     <ProjectReference Include="..\..\Modules\Exercises\Infrastructure\FoodDiary.Modules.Exercises.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup><ProjectReference Include="../../Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
+  </ItemGroup>
 </Project>

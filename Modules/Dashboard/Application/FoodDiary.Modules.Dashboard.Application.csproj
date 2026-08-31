@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Application.Dashboard</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Dashboard</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Abstractions/**/*.cs" />
+    <ProjectReference Include="Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Cycles/Application/FoodDiary.Application.Cycles.csproj" />
+    <ProjectReference Include="../../DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />
+    <ProjectReference Include="../../Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj" />
+    <ProjectReference Include="../../Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj" />
+    <ProjectReference Include="../../Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Exercises/Contracts/FoodDiary.Modules.Exercises.Contracts.csproj" />
+  </ItemGroup>
+</Project>

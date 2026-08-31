@@ -400,6 +400,7 @@
           "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
@@ -489,7 +490,7 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
-      "fooddiary.application.dashboard": {
+      "FoodDiary.Application.Dashboard": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
@@ -502,6 +503,7 @@
           "FoodDiary.Application.Tdee": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Dashboard.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Contracts": "[1.0.0, )",
@@ -938,6 +940,21 @@
           "FoodDiary.Modules.DailyAdvices.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.dashboard.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.dashboard.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
         }
       },
       "fooddiary.modules.dietologist.application.abstractions": {

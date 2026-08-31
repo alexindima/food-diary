@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj`
+- Extracted project: `Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Audit, Authentication, Dietologist, Fasting, Users, WaistEntries, WeightEntries
 - Business-module consumers: none observed
@@ -24,10 +24,11 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Dashboard`
-- `FoodDiary.Application.Dashboard`
-- `FoodDiary.Infrastructure/Persistence/Dashboard`
 - `FoodDiary.Presentation.Api/Features/Dashboard`
+- `Modules/Dashboard/Application`
+- `Modules/Dashboard/Application/Abstractions`
+- `Modules/Dashboard/Contracts`
+- `Modules/Dashboard/Infrastructure`
 
 ## HTTP Surface
 
@@ -45,21 +46,22 @@ Source: `FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 17
+- Public contract files: 19
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 17
-- Interfaces: 4
-- DTO/read-model/projection types: 12
+- Public contract types: 19
+- Interfaces: 5
+- DTO/read-model/projection types: 13
 - Enums: 0
 - Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
 - `interface IDashboardBodyReadService`
 - `interface IDashboardMealsReadService`
 - `interface IDashboardReadService`
+- `interface IDashboardStatisticsReadService`
 - `interface IDashboardStatisticsReadService`
 - `record DashboardBodyReadModel`
 - `record DashboardMealAiItemReadModel`
@@ -70,6 +72,7 @@ Source: `FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs`
 - `record DashboardReadModel`
 - `record DashboardReadSections`
 - `record DashboardStatisticsBucketReadModel`
+- `record DashboardStatisticsBucketReadModel`
 - `record DashboardWaistPointReadModel`
 - `record DashboardWaistSummaryReadModel`
 - `record DashboardWeightPointReadModel`
@@ -79,15 +82,18 @@ Source: `FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs`
+- [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs`
+- [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/FastingContractsGlobalUsings.cs`
+- [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardMealsReadServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardStatisticsReadServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dashboard/DashboardValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/DashboardModuleExtractionTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DashboardBodyReadServiceIntegrationTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardMealsReadServiceTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardStatisticsReadServiceTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/DashboardControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/DashboardHttpMappingsTests.cs`
 

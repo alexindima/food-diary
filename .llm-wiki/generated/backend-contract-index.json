@@ -2657,7 +2657,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs"
+        "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4697,7 +4697,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
+        "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4748,7 +4748,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+        "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8063,7 +8063,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8080,7 +8080,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8097,7 +8097,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8114,7 +8114,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSectionDataLoader.cs"
+        "Modules/Dashboard/Application/Services/IDashboardSectionDataLoader.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8131,7 +8131,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs"
+        "Modules/Dashboard/Application/Services/IDashboardSnapshotBuilder.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8148,7 +8148,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -8165,7 +8165,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs"
+        "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -16092,7 +16092,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
+        "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -28496,10 +28496,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs"
+        "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -28509,10 +28509,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs"
+        "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -28522,10 +28522,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs"
+        "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
       "isTest": false,
       "referenceCount": 3
     },
@@ -28535,10 +28535,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs"
+        "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -28548,10 +28548,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs"
+        "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/IDashboardSectionDataLoader.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/IDashboardSectionDataLoader.cs",
       "isTest": false,
       "referenceCount": 3
     },
@@ -28561,10 +28561,10 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs"
+        "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/IDashboardSnapshotBuilder.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -28574,7 +28574,33 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs"
+        "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 7
+    },
+    {
+      "contract": "DashboardSnapshotRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 14
+    },
+    {
+      "contract": "DashboardSnapshotRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
@@ -28587,38 +28613,12 @@
         "Request"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs"
+        "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
       "isTest": true,
       "referenceCount": 2
-    },
-    {
-      "contract": "DashboardSnapshotRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 7
-    },
-    {
-      "contract": "DashboardSnapshotRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
-      "isTest": true,
-      "referenceCount": 14
     },
     {
       "contract": "DashboardStatisticsHttpResponse",
@@ -35324,19 +35324,6 @@
         "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetCurrentCycleQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
@@ -35353,6 +35340,19 @@
       "consumerPath": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "GetCurrentCycleQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "GetCurrentCycleQuery",
@@ -35727,19 +35727,6 @@
         "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetDailyAdviceQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Dashboard/Mappings/DashboardHttpQueryMappings.cs",
       "isTest": false,
       "referenceCount": 2
@@ -35767,6 +35754,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetDailyAdviceQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -35945,33 +35945,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetDashboardSnapshotQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetDashboardSnapshotQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
+        "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Dashboard/Mappings/DashboardHttpQueryMappings.cs",
@@ -35984,10 +35958,36 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
+        "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetDashboardSnapshotQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetDashboardSnapshotQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -35997,10 +35997,10 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
+        "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardValidatorTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardValidatorTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -36010,7 +36010,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
+        "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/DashboardControllerTests.cs",
@@ -36023,7 +36023,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
+        "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/DashboardHttpMappingsTests.cs",
@@ -36192,20 +36192,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "GetDietologistClientDashboardQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+        "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Dietologist/Mappings/DietologistHttpMappings.cs",
@@ -36218,7 +36205,20 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+        "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetDietologistClientDashboardQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.ReadQueryTests.cs",
@@ -36231,7 +36231,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+        "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/DietologistClientsControllerTests.cs",
@@ -36244,7 +36244,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
+        "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/DietologistHttpMappingsTests.cs",
@@ -38873,19 +38873,6 @@
         "FoodDiary.Application.Meals/Queries/GetMeals/GetMealsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/MediatorDashboardMealsReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "GetMealsQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Meals/Queries/GetMeals/GetMealsQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/Queries/GetMeals/GetMealsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 3
@@ -38912,7 +38899,20 @@
         "FoodDiary.Application.Meals/Queries/GetMeals/GetMealsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/MediatorDashboardMealsReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetMealsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Meals/Queries/GetMeals/GetMealsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 6
     },
@@ -38925,7 +38925,7 @@
         "FoodDiary.Application.Meals/Queries/GetMeals/GetMealsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -40849,9 +40849,9 @@
         "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/MediatorDashboardStatisticsReadService.cs",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Statistics/Mappings/StatisticsHttpQueryMappings.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "GetStatisticsQuery",
@@ -40862,9 +40862,9 @@
         "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Features/Statistics/Mappings/StatisticsHttpQueryMappings.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/MediatorDashboardStatisticsReadService.cs",
       "isTest": false,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "GetStatisticsQuery",
@@ -40901,9 +40901,9 @@
         "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/StatisticsFeatureTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 3
     },
     {
       "contract": "GetStatisticsQuery",
@@ -40914,9 +40914,9 @@
         "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/StatisticsFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 10
     },
     {
       "contract": "GetStatisticsQuery",
@@ -41031,7 +41031,7 @@
         "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Tdee/Mappings/TdeeHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -41044,7 +41044,7 @@
         "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Features/Tdee/Mappings/TdeeHttpMappings.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -41863,7 +41863,7 @@
         "Modules/BodyMetrics/Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -42890,7 +42890,7 @@
         "Modules/BodyMetrics/Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -46283,19 +46283,6 @@
         "FoodDiary.Application.Abstractions/Audit/Common/IAuditEntryWriter.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAuditEntryWriter",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Audit/Common/IAuditEntryWriter.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Audit.cs",
       "isTest": false,
       "referenceCount": 1
@@ -46310,6 +46297,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Audit/AuditEntryService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAuditEntryWriter",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Audit/Common/IAuditEntryWriter.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -49377,19 +49377,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -50145,6 +50132,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -51301,19 +51301,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommandHandler",
-      "roles": [
-        "CommandHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -52069,6 +52056,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Application/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -53381,45 +53381,6 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardUserContextService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
@@ -54318,6 +54279,45 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardUserContextService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -55864,6 +55864,19 @@
         "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
       "isTest": true,
       "referenceCount": 12
@@ -56231,19 +56244,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
       "isTest": true,
       "referenceCount": 3
-    },
-    {
-      "contract": "ICurrentUserAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "ICurrentUserAccessService",
@@ -56992,10 +56992,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+      "consumerPath": "Modules/Dashboard/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57005,10 +57005,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/ComposedDashboardReadService.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/ComposedDashboardReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57018,10 +57018,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/RepositoryDashboardBodyReadService.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/RepositoryDashboardBodyReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57031,10 +57031,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Dashboard.cs",
+      "consumerPath": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -57044,10 +57044,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
+      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57057,10 +57057,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
+      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57070,111 +57070,20 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-      "isTest": true,
-      "referenceCount": 4
-    },
-    {
-      "contract": "IDashboardBodyReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
     {
-      "contract": "IDashboardMealsReadService",
+      "contract": "IDashboardBodyReadService",
       "roles": [
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardMealsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/ComposedDashboardReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardMealsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/MediatorDashboardMealsReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardMealsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Dashboard.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IDashboardMealsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardMealsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardMealsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -57187,23 +57096,114 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs",
+      "consumerPath": "Modules/Dashboard/Application/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardMealsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/ComposedDashboardReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardMealsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/MediatorDashboardMealsReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardMealsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDashboardMealsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardMealsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardMealsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs",
       "isTest": true,
       "referenceCount": 7
     },
     {
+      "contract": "IDashboardMealsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
       "contract": "IDashboardReadService",
       "roles": [
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+      "consumerPath": "Modules/Dashboard/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57213,10 +57213,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/ComposedDashboardReadService.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/ComposedDashboardReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57226,10 +57226,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57239,10 +57239,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Dashboard.cs",
+      "consumerPath": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -57252,10 +57252,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
+      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57265,10 +57265,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -57278,7 +57278,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -57291,7 +57291,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs"
+        "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -57304,10 +57304,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSectionDataLoader.cs"
+        "Modules/Dashboard/Application/Services/IDashboardSectionDataLoader.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+      "consumerPath": "Modules/Dashboard/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -57317,10 +57317,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSectionDataLoader.cs"
+        "Modules/Dashboard/Application/Services/IDashboardSectionDataLoader.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57330,10 +57330,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSectionDataLoader.cs"
+        "Modules/Dashboard/Application/Services/IDashboardSectionDataLoader.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -57343,7 +57343,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSectionDataLoader.cs"
+        "Modules/Dashboard/Application/Services/IDashboardSectionDataLoader.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -57356,10 +57356,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs"
+        "Modules/Dashboard/Application/Services/IDashboardSnapshotBuilder.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+      "consumerPath": "Modules/Dashboard/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57369,10 +57369,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs"
+        "Modules/Dashboard/Application/Services/IDashboardSnapshotBuilder.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57382,10 +57382,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs"
+        "Modules/Dashboard/Application/Services/IDashboardSnapshotBuilder.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57395,10 +57395,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs"
+        "Modules/Dashboard/Application/Services/IDashboardSnapshotBuilder.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57408,7 +57408,20 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs"
+        "Modules/Dashboard/Application/Services/IDashboardSnapshotBuilder.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "IDashboardSnapshotBuilder",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Services/IDashboardSnapshotBuilder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
@@ -57421,7 +57434,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs"
+        "Modules/Dashboard/Application/Services/IDashboardSnapshotBuilder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Common/ApplicationDependencyInjectionTests.cs",
@@ -57429,103 +57442,12 @@
       "referenceCount": 1
     },
     {
-      "contract": "IDashboardSnapshotBuilder",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 5
-    },
-    {
       "contract": "IDashboardStatisticsReadService",
       "roles": [
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/ComposedDashboardReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/MediatorDashboardStatisticsReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Dashboard.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Application/Services/CycleReadService.cs",
@@ -57538,7 +57460,85 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/ComposedDashboardReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/MediatorDashboardStatisticsReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/Application/Services/GamificationReadService.cs",
@@ -57551,7 +57551,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Statistics/Application/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
@@ -57564,7 +57564,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Statistics/Application/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
@@ -57577,7 +57577,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
@@ -57590,7 +57590,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
@@ -57603,7 +57603,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.cs",
@@ -57616,7 +57616,20 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 11
+    },
+    {
+      "contract": "IDashboardStatisticsReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/Export/ExportFeatureTests.cs",
@@ -57629,7 +57642,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/GamificationFeatureTests.cs",
@@ -57642,7 +57655,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/StatisticsFeatureTests.cs",
@@ -57655,7 +57668,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/StatisticsSummaryFeatureTests.cs",
@@ -57668,7 +57681,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
@@ -57681,7 +57694,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
@@ -57694,7 +57707,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
+        "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -57702,28 +57715,15 @@
       "referenceCount": 4
     },
     {
-      "contract": "IDashboardStatisticsReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs",
-      "isTest": true,
-      "referenceCount": 11
-    },
-    {
       "contract": "IDashboardUserContextService",
       "roles": [
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs"
+        "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
+      "consumerPath": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57733,10 +57733,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs"
+        "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+      "consumerPath": "Modules/Dashboard/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57746,10 +57746,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs"
+        "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57759,10 +57759,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs"
+        "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57772,10 +57772,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs"
+        "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57785,10 +57785,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs"
+        "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardUserContextService.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardUserContextService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57798,10 +57798,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs"
+        "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -57811,10 +57811,10 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs"
+        "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -58035,7 +58035,7 @@
         "Modules/Dietologist/Application/Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -59998,19 +59998,6 @@
         "FoodDiary.Application.Abstractions/Authentication/Common/IEmailSender.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEmailSender",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Authentication/Common/IEmailSender.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -60076,6 +60063,32 @@
         "FoodDiary.Application.Abstractions/Authentication/Common/IEmailSender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEmailSender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/IEmailSender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 9
+    },
+    {
+      "contract": "IEmailSender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/IEmailSender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/CreateAdminUserCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 7
@@ -60092,19 +60105,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "IEmailSender",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Authentication/Common/IEmailSender.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 9
     },
     {
       "contract": "IEmailSender",
@@ -61922,7 +61922,7 @@
         "Modules/Exercises/Contracts/Common/IExerciseEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -61935,7 +61935,7 @@
         "Modules/Exercises/Contracts/Common/IExerciseEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62000,6 +62000,19 @@
         "Modules/Exercises/Contracts/Common/IExerciseEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IExerciseEntryReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Exercises/Contracts/Common/IExerciseEntryReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/Exercises/ExercisesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -62014,19 +62027,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IExerciseEntryReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Exercises/Contracts/Common/IExerciseEntryReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -62065,6 +62065,19 @@
         "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IExerciseEntryRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/Exercises/ExercisesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -62081,19 +62094,6 @@
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
       "isTest": true,
       "referenceCount": 4
-    },
-    {
-      "contract": "IExerciseEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/Exercises/Application/Abstractions/Exercises/Common/IExerciseEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "IExerciseEntryRepository",
@@ -63417,7 +63417,7 @@
         "Modules/Fasting/Contracts/Read/IFastingReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63430,7 +63430,7 @@
         "Modules/Fasting/Contracts/Read/IFastingReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -63508,7 +63508,7 @@
         "Modules/Fasting/Contracts/Read/IFastingReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -65640,20 +65640,7 @@
         "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 4
-    },
-    {
-      "contract": "IHydrationEntryReadModelRepository",
-      "roles": [
-        "ReadModelRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryReadModelRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -65666,9 +65653,22 @@
         "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IHydrationEntryReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IHydrationEntryReadModelRepository",
@@ -65705,7 +65705,7 @@
         "Modules/Hydration/Contracts/Common/IHydrationEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65718,7 +65718,7 @@
         "Modules/Hydration/Contracts/Common/IHydrationEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/RepositoryDashboardBodyReadService.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/RepositoryDashboardBodyReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65887,9 +65887,9 @@
         "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "IHydrationEntryWriteRepository",
@@ -65900,9 +65900,9 @@
         "Modules/Hydration/Application/Abstractions/Common/IHydrationEntryWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IHydrationEntryWriteRepository",
@@ -77495,32 +77495,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Queries/GetActiveSessions/GetActiveSessionsQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -77925,6 +77899,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -78977,32 +78977,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQueryHandler",
-      "roles": [
-        "QueryHandler"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -79407,6 +79381,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -84710,6 +84710,32 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 8
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -84726,32 +84752,6 @@
       "consumerPath": "tests/FoodDiary.Application.Tests/Common/CommonAbstractionsTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "IRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/IRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/IRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
-      "isTest": true,
-      "referenceCount": 8
     },
     {
       "contract": "IRequest",
@@ -85675,58 +85675,6 @@
       "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
       "isTest": true,
       "referenceCount": 11
-    },
-    {
-      "contract": "ISender",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/ISender.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ISender",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/ISender.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ISender",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/ISender.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/MediatorDashboardMealsReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ISender",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/ISender.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/MediatorDashboardStatisticsReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
     },
     {
       "contract": "ISender",
@@ -86985,6 +86933,58 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/MediatorDashboardMealsReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/MediatorDashboardStatisticsReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Services/TestNotificationDeliveryDispatcher.cs",
       "isTest": false,
       "referenceCount": 1
@@ -87115,20 +87115,7 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "ISender",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/ISender.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -87141,9 +87128,22 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 7
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ISender",
@@ -88610,7 +88610,7 @@
         "Shared/FoodDiary.Mediator/IStreamRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -89169,19 +89169,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUnitOfWork",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Identity/Authentication/Services/InitialAdminBootstrapService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -89274,6 +89261,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -91639,19 +91639,6 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserDashboardProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardUserContextService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserDashboardProfileReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/IUserDashboardProfileReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Users/Common/UserContextService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -91678,7 +91665,20 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserDashboardProfileReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardUserContextService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserDashboardProfileReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserDashboardProfileReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -93095,32 +93095,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -93980,6 +93954,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -96124,7 +96124,7 @@
         "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -96228,32 +96228,6 @@
         "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/RepositoryDashboardBodyReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWaistEntryReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -96320,6 +96294,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWaistEntryReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWaistEntryReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/RepositoryDashboardBodyReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -96449,7 +96449,7 @@
         "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -96462,7 +96462,7 @@
         "Modules/BodyMetrics/Application/Abstractions/WaistEntries/Common/IWaistEntryRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -98698,7 +98698,7 @@
         "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -98789,32 +98789,6 @@
         "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWeightEntryReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/RepositoryDashboardBodyReadService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWeightEntryReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -98881,6 +98855,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWeightEntryReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWeightEntryReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/RepositoryDashboardBodyReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -99023,35 +99023,35 @@
         "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IWeightEntryRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IWeightEntryRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
       "isTest": true,
       "referenceCount": 3
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IWeightEntryRepository",
-      "roles": [
-        "Repository"
-      ],
-      "definitionPaths": [
-        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "IWeightEntryRepository",
@@ -103313,19 +103313,6 @@
         "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Services/MediatorDashboardMealsReadService.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Meals/Common/IMealReadService.cs",
       "isTest": false,
       "referenceCount": 1
@@ -103638,6 +103625,19 @@
         "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Services/MediatorDashboardMealsReadService.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -103781,6 +103781,32 @@
         "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Doubles.cs",
       "isTest": true,
       "referenceCount": 2
@@ -103860,32 +103886,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/UserLoginActivityFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 3
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
-      "isTest": true,
-      "referenceCount": 4
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
       "isTest": true,
       "referenceCount": 3
     },
@@ -108549,33 +108549,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "SendDashboardTestEmailCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "SendDashboardTestEmailCommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
+        "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Dashboard/Mappings/DashboardHttpQueryMappings.cs",
@@ -108588,10 +108562,36 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
+        "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+      "consumerPath": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "SendDashboardTestEmailCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SendDashboardTestEmailCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -108601,7 +108601,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
+        "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/DashboardControllerTests.cs",
@@ -108614,7 +108614,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
+        "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/DashboardHttpMappingsTests.cs",

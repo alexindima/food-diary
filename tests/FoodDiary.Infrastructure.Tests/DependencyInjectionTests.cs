@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.MealPlanning.Infrastructure;
 using FoodDiary.Modules.Exercises.Infrastructure.Persistence;
 using FoodDiary.Modules.Notifications.Infrastructure;
@@ -33,7 +34,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Dashboard;
+using FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
 using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Modules.Hydration.Infrastructure;
 using FoodDiary.Modules.BodyMetrics.Infrastructure;
@@ -486,7 +487,7 @@ public sealed class DependencyInjectionTests {
     }
 
     [Fact]
-    public void AddInfrastructure_DashboardReadServicesResolveThroughScopedConcreteInstances() {
+    public void AddInfrastructureAndDashboard_ReadServicesResolveThroughScopedConcreteInstances() {
         var services = new ServiceCollection();
         services.AddSingleton(Substitute.For<IPublisher>());
         services.AddScoped<IDashboardStatisticsReadService>(_ => Substitute.For<IDashboardStatisticsReadService>());
@@ -503,7 +504,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration);
+        services.AddInfrastructure(configuration).AddDashboardReadServices();
         Assert.Multiple(
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardStatisticsReadService))),
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardBodyReadService))),

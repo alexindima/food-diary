@@ -177,3 +177,16 @@ Exercises ownership: `Modules/Exercises/Application` owns slices and read-servic
 ## RecipeCommunity logical module
 
 `Modules/RecipeCommunity` owns Application (RecipeComments/RecipeLikes), Application/Abstractions, Domain, Infrastructure and Infrastructure/Model. Legacy application assembly and CLR namespaces remain stable. One-way User/Recipe navigations permit owned entities/IDs to leave central Domain without extracting Recipes. Shared context/migrations, HTTP and ContentReports reportability projection remain with their owners; no extra Contracts or provider layer. See `docs/ai/recipecommunity-ownership-inventory.md` for sources and compatibility seams.
+
+## Dashboard logical extraction
+
+`Modules/Dashboard` owns Application, Application/Abstractions, Contracts and
+Infrastructure. It is a read composer with no Domain or PersistenceModel. Stable
+statistics contracts retain their CLR namespaces and are referenced one-way by
+central Abstractions for Statistics/Cycles/WeeklyCheckIn/Tdee/Gamification consumers.
+Optimized projection readers own no contributing aggregates. Shared DbContext,
+migrations/model snapshot and HTTP transport remain central. Hosts explicitly call
+`AddDashboardReadServices` after infrastructure registration; Application fallback
+registration remains `AddDashboardModule`. Scoped concrete/interface aliases and
+query behavior are preserved. Owned application/adapter tests live under module
+tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.

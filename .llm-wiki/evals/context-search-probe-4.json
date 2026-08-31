@@ -72,7 +72,7 @@
       "id": "dashboard-snapshot-builder-probe-4",
       "query": "build a composed dashboard snapshot from section data",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs"]
+      "expectedPaths": ["Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs"]
     },
     {
       "id": "weekly-check-in-user-profile-probe-4",

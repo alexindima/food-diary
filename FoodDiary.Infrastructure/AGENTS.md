@@ -34,7 +34,7 @@ Rules for `FoodDiary.Infrastructure/`.
 - Add `[ExcludeFromCodeCoverage]` to the migration implementation class and model snapshot so generated EF code does not affect dotCover/code coverage.
 - **CRITICAL**: `dotnet ef migrations add` generates Allman-style braces, but the project requires K&R style. After generating, you MUST:
   1. Remove `using System;` (implicit usings are enabled)
-  2. Convert ALL `)\n{` and `=>\n{` patterns to `) {` / `=> {` — especially `constraints: table =>\n{`
+  2. Convert ALL `)\n{` and `=>\n{` patterns to `) {` / `=> {` â€” especially `constraints: table =>\n{`
   3. Strip UTF-8 BOM if present
   4. Ensure LF line endings (not CRLF)
 - Before commit, run a whitespace formatter/check on migration files. Preferred command: `dotnet format whitespace FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj`. This specifically avoids CI failures like `WHITESPACE: Fix whitespace formatting` in generated migrations.
@@ -49,3 +49,5 @@ in addition to AddInfrastructure. Central Infrastructure must not reference the
 module adapter project. User cleanup, DbContext and migrations remain here.
 
 - Exercises mapping is registered through ApplyExercisesPersistenceModel; its repository and complete DI belong to Modules/Exercises/Infrastructure. Keep the central context, migrations and snapshot here.
+
+- Dashboard projection readers live in Modules/Dashboard/Infrastructure; hosts explicitly call AddDashboardReadServices after AddInfrastructure. Shared context and migration ownership remain here.

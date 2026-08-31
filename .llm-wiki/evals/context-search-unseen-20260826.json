@@ -109,7 +109,7 @@
       "query": "implementation contract for dashboard body mapper",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Application.Dashboard/Services/DashboardBodyMapper.cs"
+        "Modules/Dashboard/Application/Services/DashboardBodyMapper.cs"
       ]
     },
     {
@@ -145,7 +145,7 @@
       "query": "storage or provider implementation for dashboard meal projection",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs"
+        "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs"
       ]
     },
     {

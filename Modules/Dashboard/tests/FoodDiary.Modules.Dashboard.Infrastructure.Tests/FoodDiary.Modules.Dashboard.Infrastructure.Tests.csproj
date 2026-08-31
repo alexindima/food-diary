@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Infrastructure.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="NSubstitute" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>

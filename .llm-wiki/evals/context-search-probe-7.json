@@ -49,7 +49,7 @@
       "expectedPaths": [
         "FoodDiary.Application.BodyMetrics/Common/UtcDateNormalizer.cs",
         "FoodDiary.Application.Meals/Common/Time/UtcDateNormalizer.cs",
-        "FoodDiary.Application.Dashboard/Internal/UtcDateNormalizer.cs",
+        "Modules/Dashboard/Application/Internal/UtcDateNormalizer.cs",
         "FoodDiary.Application.Cycles/Internal/UtcDateNormalizer.cs",
         "FoodDiary.Application.Export/Internal/UtcDateNormalizer.cs"
       ]
