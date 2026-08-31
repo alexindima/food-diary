@@ -24,13 +24,13 @@
       "id": "favorite-recipe-reader-probe-4",
       "query": "load a user's favorite recipe summaries",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Favorites/FavoriteRecipes/Services/FavoriteRecipeReadService.cs"]
+      "expectedPaths": ["Modules/Favorites/Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs"]
     },
     {
       "id": "dietologist-user-context-probe-4",
       "query": "resolve the current user context for dietologist operations",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Dietologist/Services/DietologistUserContextService.cs"]
+      "expectedPaths": ["Modules/Dietologist/Application/Services/DietologistUserContextService.cs"]
     },
     {
       "id": "meal-nutrition-applier-probe-4",
@@ -48,7 +48,7 @@
       "id": "content-report-administration-probe-4",
       "query": "administrator service changes content report status",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.ContentReports/Services/ContentReportAdministrationService.cs"]
+      "expectedPaths": ["Modules/ContentReports/Application/Services/ContentReportAdministrationService.cs"]
     },
     {
       "id": "fasting-historical-insight-builder-probe-4",
@@ -66,7 +66,7 @@
       "id": "product-usda-link-service-probe-4",
       "query": "link a product to its USDA food record",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Products/Services/ProductUsdaLinkService.cs"]
+      "expectedPaths": ["Modules/Products/Application/Services/ProductUsdaLinkService.cs"]
     },
     {
       "id": "dashboard-snapshot-builder-probe-4",
@@ -78,19 +78,19 @@
       "id": "weekly-check-in-user-profile-probe-4",
       "query": "load the user profile needed for a weekly check-in",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInUserProfileService.cs"]
+      "expectedPaths": ["Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInUserProfileService.cs"]
     },
     {
       "id": "billing-webhook-inbox-service-probe-4",
       "query": "process queued billing webhook inbox events",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs"]
+      "expectedPaths": ["Modules/Billing/Application/Services/BillingWebhookInboxService.cs"]
     },
     {
       "id": "web-push-subscription-reader-probe-4",
       "query": "read web push subscriptions for notification administration",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Notifications/Services/WebPushSubscriptionReadService.cs"]
+      "expectedPaths": ["Modules/Notifications/Application/Services/WebPushSubscriptionReadService.cs"]
     },
     {
       "id": "application-ai-telemetry-probe-4",

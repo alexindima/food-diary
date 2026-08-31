@@ -63,27 +63,7 @@ function Get-WorkspaceOverlayPaths {
     } else {
         @()
     })
-    # Bound quoted argument length below Windows' 32767-character command-line limit.
-    # Doubling leaves room for escaping, flags, and the Git executable path.
-    $maximumBatchLength = 12000
-    $batches = [Collections.Generic.List[object]]::new()
-    $batch = [Collections.Generic.List[string]]::new()
-    $batchLength = 0
-    foreach ($pathspec in $pathspecs) {
-        $argumentLength = (2 * $pathspec.Length) + 3
-        if ($argumentLength -gt $maximumBatchLength) {
-            throw 'A workspace overlay pathspec exceeds the safe Git command-line argument length.'
-        }
-        if ($batch.Count -gt 0 -and $batchLength + $argumentLength -gt $maximumBatchLength) {
-            $batches.Add($batch.ToArray())
-            $batch.Clear()
-            $batchLength = 0
-        }
-        $batch.Add($pathspec)
-        $batchLength += $argumentLength
-    }
-    # Empty scope deliberately enumerates the complete workspace once.
-    if ($batch.Count -gt 0 -or $batches.Count -eq 0) { $batches.Add($batch.ToArray()) }
+    $batches = @(Split-LlmWikiPositiveGitPathspecBatch -Pathspec $pathspecs)
     $paths = [Collections.Generic.List[string]]::new()
     foreach ($pathspecBatch in $batches) {
         # A rename must overlay both deletion and addition. Name-only rename

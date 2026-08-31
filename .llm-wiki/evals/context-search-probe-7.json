@@ -20,7 +20,7 @@
       "query": "где у нас собирают контекст вебхука оплаты: находят подписку, связанный платеж и пользователя, включая удаленного",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs"
+        "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs"
       ]
     },
     {
@@ -38,7 +38,7 @@
       "query": "где для body metrics разбирают обязательный строковый id и перекидывают его ошибку в обычный Result",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.BodyMetrics/Common/RequiredIdParser.cs"
+        "Modules/BodyMetrics/Application/Common/RequiredIdParser.cs"
       ]
     },
     {
@@ -47,11 +47,11 @@
       "query": "покажи маленький helper который дату без kind считает UTC, а local сначала переводит в UTC",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.BodyMetrics/Common/UtcDateNormalizer.cs",
+        "Modules/BodyMetrics/Application/Common/UtcDateNormalizer.cs",
         "FoodDiary.Application.Meals/Common/Time/UtcDateNormalizer.cs",
         "Modules/Dashboard/Application/Internal/UtcDateNormalizer.cs",
-        "FoodDiary.Application.Cycles/Internal/UtcDateNormalizer.cs",
-        "FoodDiary.Application.Export/Internal/UtcDateNormalizer.cs"
+        "Modules/Cycles/Application/Internal/UtcDateNormalizer.cs",
+        "Modules/Export/Application/Internal/UtcDateNormalizer.cs"
       ]
     },
     {
@@ -96,7 +96,7 @@
       "query": "billing webhook: где add-or-update payment, deduplicate provider payment id и resolve payment kind",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs"
+        "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs"
       ]
     },
     {
@@ -105,7 +105,7 @@
       "query": "после subscription event синхронизировать Premium role и record marketing conversion только когда premium начался",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs"
+        "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs"
       ]
     },
     {
@@ -186,7 +186,7 @@
       "query": "не billing user context и не checkout handler — helper получает текущего UserId, проверяет его и преобразует failure",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Billing/Common/BillingCurrentUserAccessResolver.cs"
+        "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs"
       ]
     },
     {
@@ -222,7 +222,7 @@
       "query": "не главный webhook handler и не context resolver: компонент применяет распознанное событие к billing entities через writer и sync helpers",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs"
+        "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs"
       ]
     },
     {
@@ -294,7 +294,7 @@
       "query": "какие tests покрывают confirm period start и update cycle consent: owner, missing profile, invalid user и validator failures",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs"
       ]
     },
     {

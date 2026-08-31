@@ -55,3 +55,13 @@ legacy Admin namespaces. Shared context/migrations/cleanup, SSO store/JWT provid
 HTTP authorization, structured audit and MailInbox client bridge remain central.
 Hosts call AddAdminModule; JobManager adds only AddAdminPersistence. See
 docs/ai/admin-ownership-inventory.md for current source evidence and test ownership.
+
+## Products physical ownership
+
+Products use cases, ports, consumed contracts, persistence adapters and EF model
+live under `Modules/Products`; focused application tests live under its nested
+tests folder. Central Product/User/RecipeIngredient/MealItem/USDA CLR navigations,
+shared context/migrations and composition lock remain unchanged. Hosts explicitly
+compose AddProductsModule; JobManager adds AddProductsPersistence without new
+handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
+coordinated-rebuild compatibility promise.

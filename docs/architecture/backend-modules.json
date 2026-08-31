@@ -30,7 +30,6 @@
     "Hydration": "Hydration",
     "Meals": "Meals",
     "Nutrition": "Shared",
-    "Products": "Products",
     "RecentItems": "Shared",
     "Users": "Users"
   },
@@ -526,14 +525,33 @@
     },
     "Products": {
       "role": "aggregate-owner",
-      "physicalIsolation": "project",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix",
       "ownedEntities": [
         "Product"
       ],
       "sourceMappings": {
+        "logicalRoot": "Modules/Products",
         "applicationProjects": [
-          "FoodDiary.Application.Products"
+          "Modules/Products/Application"
+        ],
+        "abstractionAreas": [
+          "Modules/Products/Application/Abstractions",
+          "Modules/Products/Contracts"
+        ],
+        "domainAreas": [
+          "FoodDiary.Domain/Entities/Products"
+        ],
+        "infrastructureAreas": [
+          "Modules/Products/Infrastructure"
+        ],
+        "adapterAreas": [
+          "FoodDiary.Presentation.Api/Features/Products"
+        ],
+        "testAreas": [
+          "Modules/Products/tests",
+          "tests/FoodDiary.Application.Tests/Products",
+          "tests/FoodDiary.Web.Api.IntegrationTests/ProductPostgresApiFlowTests.cs"
         ]
       }
     },

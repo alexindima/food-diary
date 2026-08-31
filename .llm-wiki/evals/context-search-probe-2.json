@@ -24,7 +24,7 @@
       "id": "web-push-client-adapter-probe-2",
       "query": "adapter wraps the web push client used by notification sending",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Services/WebPushClientAdapter.cs"]
+      "expectedPaths": ["Modules/Notifications/Infrastructure/Services/WebPushClientAdapter.cs"]
     },
     {
       "id": "telegram-auth-validator-probe-2",
@@ -36,13 +36,13 @@
       "id": "notification-writer-probe-2",
       "query": "write a new notification for a user",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Notifications/Services/NotificationWriter.cs"]
+      "expectedPaths": ["Modules/Notifications/Application/Services/NotificationWriter.cs"]
     },
     {
       "id": "notification-cleanup-service-probe-2",
       "query": "remove expired notification data in the application layer",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Notifications/Services/NotificationCleanupService.cs"]
+      "expectedPaths": ["Modules/Notifications/Application/Services/NotificationCleanupService.cs"]
     },
     {
       "id": "user-identity-mutation-service-probe-2",
@@ -60,7 +60,7 @@
       "id": "achievement-reconciliation-handler-probe-2",
       "query": "handler reconciles achievement state after domain changes",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Gamification/Services/AchievementReconciliationHandler.cs"]
+      "expectedPaths": ["Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs"]
     },
     {
       "id": "recipe-lookup-service-probe-2",
@@ -78,13 +78,13 @@
       "id": "exercise-entry-repository-probe-2",
       "query": "persist exercise tracking entries",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/ExerciseEntryRepository.cs"]
+      "expectedPaths": ["Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs"]
     },
     {
       "id": "daily-advice-repository-probe-2",
       "query": "store generated daily advice records",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/DailyAdviceRepository.cs"]
+      "expectedPaths": ["Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs"]
     },
     {
       "id": "shopping-list-repository-probe-2",

@@ -545,7 +545,7 @@
           {
             "id": "role-override",
             "severity": "high",
-            "pattern": "(?i)(you are now|act as|new system prompt|developer message follows)",
+            "pattern": "(?i)\\b(you are now|act as|new system prompt|developer message follows)\\b",
             "replacement": "[QUARANTINED: role override]"
           },
           {

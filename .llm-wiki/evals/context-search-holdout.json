@@ -48,7 +48,7 @@
       "id": "ru-cycle-prediction-revision",
       "query": "кто пересматривает прогноз цикла когда меняется история",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Cycles/Services/CyclePredictionRevisionService.cs"]
+      "expectedPaths": ["Modules/Cycles/Application/Services/CyclePredictionRevisionService.cs"]
     },
     {
       "id": "ru-inbound-smtp-store",
@@ -60,7 +60,7 @@
       "id": "ru-web-push-audience",
       "query": "как выбираются пользователи которым отправим web push",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Notifications/Services/WebPushDeliveryAudienceService.cs"]
+      "expectedPaths": ["Modules/Notifications/Application/Services/WebPushDeliveryAudienceService.cs"]
     },
     {
       "id": "ru-password-reset-request",
@@ -97,7 +97,7 @@
       "query": "purge old read notifications after their retention period",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Notifications/Services/NotificationCleanupService.cs",
+        "Modules/Notifications/Application/Services/NotificationCleanupService.cs",
         "FoodDiary.JobManager/Services/NotificationCleanupJob.cs"
       ]
     },
@@ -129,25 +129,25 @@
       "id": "start-premium-trial",
       "query": "grant the current user a free premium trial",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Billing/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs"]
+      "expectedPaths": ["Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs"]
     },
     {
       "id": "billing-renewal-service",
       "query": "renew a subscription after a successful recurring payment",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Billing/Services/BillingRenewalService.cs"]
+      "expectedPaths": ["Modules/Billing/Application/Services/BillingRenewalService.cs"]
     },
     {
       "id": "open-food-facts-cache-first-search",
       "query": "prefer cached Open Food Facts products before calling the provider",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs"]
+      "expectedPaths": ["Modules/OpenFoodFacts/Application/Services/OpenFoodFactsCachedProductSearch.cs"]
     },
     {
       "id": "daily-advice-selection",
       "query": "choose the personalized daily advice shown to a user",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.DailyAdvices/Services/DailyAdviceSelector.cs"]
+      "expectedPaths": ["Modules/DailyAdvices/Application/Services/DailyAdviceSelector.cs"]
     },
     {
       "id": "meal-nutrition-calculation",
@@ -171,13 +171,13 @@
       "id": "delete-image-asset-handler",
       "query": "delete a previously uploaded image asset",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs"]
+      "expectedPaths": ["Modules/Images/Application/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs"]
     },
     {
       "id": "presigned-image-upload-url",
       "query": "create a presigned URL for a client image upload",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs"]
+      "expectedPaths": ["Modules/Images/Application/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs"]
     },
     {
       "id": "structured-audit-logging",
@@ -207,7 +207,7 @@
       "id": "wearable-oauth-state",
       "query": "hold OAuth state between the wearable authorization redirect and callback",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Authentication/WearableOAuthStateService.cs"]
+      "expectedPaths": ["Modules/Wearables/Infrastructure/Authentication/WearableOAuthStateService.cs"]
     },
     {
       "id": "redis-api-idempotency",

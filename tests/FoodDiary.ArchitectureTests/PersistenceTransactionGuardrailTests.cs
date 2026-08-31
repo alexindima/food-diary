@@ -26,7 +26,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(persistenceRoot, "Email", "EmailOutbox.cs"),
             Path.Combine(persistenceRoot, "Outbox", "OutboxProcessingEngine.cs"),
             Path.Combine(persistenceRoot, "Outbox", "OutboxDeadLetterReplayService.cs"),
-            Path.Combine(persistenceRoot, "Products", "EfProductMutationTransactionRunner.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Products", "Infrastructure", "Persistence", "Products", "EfProductMutationTransactionRunner.cs"),
             Path.Combine(persistenceRoot, "RecentItems", "PostCommitRecentItemUsageRecorder.cs"),
             Path.Combine(persistenceRoot, "Users", "UserCleanupService.cs"),
             Path.Combine(persistenceRoot, "Wearables", "EfWearableTransactionRunner.cs"),
@@ -37,6 +37,7 @@ public sealed class PersistenceTransactionGuardrailTests {
 
         string[] violations = [.. SourceScanner.SourceFiles(persistenceRoot)
             .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence")))
+            .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Products", "Infrastructure", "Persistence")))
             .Where(path => !allowed.Contains(path))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
@@ -57,7 +58,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(infrastructureRoot, "Persistence", "Billing", "EfBillingTransactionRunner.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxDeadLetterReplayService.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxMessageClaimer.cs"),
-            Path.Combine(infrastructureRoot, "Persistence", "Products", "EfProductMutationTransactionRunner.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Products", "Infrastructure", "Persistence", "Products", "EfProductMutationTransactionRunner.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserCleanupService.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Wearables", "EfWearableTransactionRunner.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "WeeklyGoals", "EfWeeklyGoalTransactionRunner.cs"),
@@ -73,6 +74,7 @@ public sealed class PersistenceTransactionGuardrailTests {
 
         string[] violations = [.. SourceScanner.SourceFiles(infrastructureRoot)
             .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence")))
+            .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Products", "Infrastructure", "Persistence")))
             .Where(path => !allowed.Contains(path))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line })

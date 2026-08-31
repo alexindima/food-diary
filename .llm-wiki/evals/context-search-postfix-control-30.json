@@ -57,10 +57,10 @@
     { "id": "postfix-api-004", "cohort": "api-roles", "query": "атрибут требующий secret телеграм бота для API", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Security/RequireTelegramBotSecretAttribute.cs"] },
     { "id": "postfix-api-005", "cohort": "api-roles", "query": "presentation notification pusher отправляет доменное уведомление", "changeType": "Backend", "expectedPaths": ["FoodDiary.Presentation.Api/Services/NotificationPusher.cs"] },
 
-    { "id": "postfix-test-001", "cohort": "behavior-to-test", "query": "тест безопасности endpoint Web Push", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs"] },
+    { "id": "postfix-test-001", "cohort": "behavior-to-test", "query": "тест безопасности endpoint Web Push", "changeType": "Tests", "expectedPaths": ["Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs"] },
     { "id": "postfix-test-002", "cohort": "behavior-to-test", "query": "тест structured audit logger", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Infrastructure.Tests/Services/StructuredAuditLoggerTests.cs"] },
     { "id": "postfix-test-003", "cohort": "behavior-to-test", "query": "тест границ temporal repository", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Infrastructure.Tests/Persistence/TemporalRepositoryBoundaryTests.cs"] },
-    { "id": "postfix-test-004", "cohort": "behavior-to-test", "query": "тест валидатора даты wearable", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Application.Tests/Wearables/WearableDateValidatorTests.cs"] },
+    { "id": "postfix-test-004", "cohort": "behavior-to-test", "query": "тест валидатора даты wearable", "changeType": "Tests", "expectedPaths": ["Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearableDateValidatorTests.cs"] },
     { "id": "postfix-test-005", "cohort": "behavior-to-test", "query": "тест SQL primary и JSON fallback в Wiki query service", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs"] },
 
     { "id": "postfix-job-001", "cohort": "jobs-options", "query": "options еженедельного reminder цели", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/WeeklyGoalReminderOptions.cs"] },
@@ -81,10 +81,10 @@
     { "id": "postfix-front-004", "cohort": "frontend", "query": "route resolver рецепта", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/src/app/features/recipes/resolvers/recipe.resolver.ts"] },
     { "id": "postfix-front-005", "cohort": "frontend", "query": "диалог impersonation пользователя администратором", "changeType": "Frontend", "expectedPaths": ["FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-impersonation-dialog.ts"] },
 
-    { "id": "postfix-db-001", "cohort": "persistence", "query": "репозиторий подключения wearable", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Wearables/WearableConnectionRepository.cs"] },
-    { "id": "postfix-db-002", "cohort": "persistence", "query": "репозиторий уроков питания", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Content/NutritionLessonRepository.cs"] },
-    { "id": "postfix-db-003", "cohort": "persistence", "query": "repository подписок Web Push", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Notifications/WebPushSubscriptionRepository.cs"] },
-    { "id": "postfix-db-004", "cohort": "persistence", "query": "хранилище любимых рецептов пользователя", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs"] },
+    { "id": "postfix-db-001", "cohort": "persistence", "query": "репозиторий подключения wearable", "changeType": "Database", "expectedPaths": ["Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs"] },
+    { "id": "postfix-db-002", "cohort": "persistence", "query": "репозиторий уроков питания", "changeType": "Database", "expectedPaths": ["Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs"] },
+    { "id": "postfix-db-003", "cohort": "persistence", "query": "repository подписок Web Push", "changeType": "Database", "expectedPaths": ["Modules/Notifications/Infrastructure/Persistence/WebPushSubscriptionRepository.cs"] },
+    { "id": "postfix-db-004", "cohort": "persistence", "query": "хранилище любимых рецептов пользователя", "changeType": "Database", "expectedPaths": ["Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs"] },
     { "id": "postfix-db-005", "cohort": "persistence", "query": "repository основной сущности пользователя", "changeType": "Database", "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs"] }
   ]
 }

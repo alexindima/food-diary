@@ -148,7 +148,9 @@
       "pathPatterns": [
         "^FoodDiary\\.Infrastructure/(?:.*/)?(Repositories|Persistence)/.+\\.cs$",
         "^Mail(Relay|Inbox)/FoodDiary\\..*Infrastructure/(?:.*/)?(Persistence|Repositories)/.+\\.cs$",
-        "^(?:FoodDiary\\.Infrastructure|Mail(?:Relay|Inbox)/FoodDiary\\..*Infrastructure)/.+(?:Repository|Store|ReadService|QueryHandler)\\.cs$"
+        "^(?:FoodDiary\\.Infrastructure|Mail(?:Relay|Inbox)/FoodDiary\\..*Infrastructure)/.+(?:Repository|Store|ReadService|QueryHandler)\\.cs$",
+        "^Modules/[^/]+/Infrastructure/(?:.*/)?(Repositories|Persistence)/.+\\.cs$",
+        "^Modules/[^/]+/Infrastructure/.+(?:Repository|Store|ReadService|QueryHandler)\\.cs$"
       ],
       "excludePatterns": [
         "(^|/)tests/",

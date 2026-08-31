@@ -1,5 +1,33 @@
 Set-StrictMode -Version Latest
 
+function Split-LlmWikiPositiveGitPathspecBatch {
+    [CmdletBinding()]
+    param([AllowEmptyCollection()][string[]]$Pathspec = @())
+
+    # This helper is for repository path scopes, not arbitrary Git pathspec
+    # expressions: exclusions must not be split away from their positive scope.
+    $maximumBatchLength = 12000
+    $batches = [Collections.Generic.List[object]]::new()
+    $batch = [Collections.Generic.List[string]]::new()
+    $batchLength = 0
+    foreach ($path in $Pathspec) {
+        if ($path.StartsWith(':')) { throw 'Scoped Git batching accepts repository paths, not magic pathspec expressions.' }
+        # Reserve double length for quoting/escaping, below Windows argv limits.
+        $argumentLength = (2 * $path.Length) + 3
+        if ($argumentLength -gt $maximumBatchLength) { throw 'A repository path exceeds the safe Git command-line argument length.' }
+        if ($batch.Count -gt 0 -and $batchLength + $argumentLength -gt $maximumBatchLength) {
+            $batches.Add($batch.ToArray())
+            $batch.Clear()
+            $batchLength = 0
+        }
+        $batch.Add($path)
+        $batchLength += $argumentLength
+    }
+    # An empty scope enumerates the whole repository exactly once.
+    if ($batch.Count -gt 0 -or $batches.Count -eq 0) { $batches.Add($batch.ToArray()) }
+    foreach ($item in $batches) { ,$item }
+}
+
 function Test-LlmWikiWorkspaceHeadRef {
     param([AllowEmptyString()][string]$HeadRef)
 

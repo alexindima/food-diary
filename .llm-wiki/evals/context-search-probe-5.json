@@ -48,25 +48,25 @@
       "id": "wearable-read-service-probe-5",
       "query": "read wearable connections and synchronization state",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Wearables/Services/WearableReadService.cs"]
+      "expectedPaths": ["Modules/Wearables/Application/Services/WearableReadService.cs"]
     },
     {
       "id": "favorite-product-read-service-probe-5",
       "query": "load a user's favorite product summaries",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Favorites/FavoriteProducts/Services/FavoriteProductReadService.cs"]
+      "expectedPaths": ["Modules/Favorites/Application/FavoriteProducts/Services/FavoriteProductReadService.cs"]
     },
     {
       "id": "favorite-meal-read-service-probe-5",
       "query": "load a user's favorite meal summaries",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Favorites/FavoriteMeals/Services/FavoriteMealReadService.cs"]
+      "expectedPaths": ["Modules/Favorites/Application/FavoriteMeals/Services/FavoriteMealReadService.cs"]
     },
     {
       "id": "waist-entry-read-service-probe-5",
       "query": "read a user's waist measurement entries",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.BodyMetrics/WaistEntries/Services/WaistEntryReadService.cs"]
+      "expectedPaths": ["Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs"]
     },
     {
       "id": "email-template-administration-reader-probe-5",

@@ -5,7 +5,6 @@
   </Folder>
   <Folder Name="/Application/Food and Diary/">
     <Project Path="FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj" />
-    <Project Path="FoodDiary.Application.Products/FoodDiary.Application.Products.csproj" />
   </Folder>
   <Folder Name="/Application/Users and Access/">
     <Project Path="FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj" />
@@ -377,5 +376,17 @@
   <Folder Name="/Modules/Admin/tests/">
     <Project Path="Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FoodDiary.Modules.Admin.Application.Tests.csproj" />
     <Project Path="Modules/Admin/tests/FoodDiary.Modules.Admin.Domain.Tests/FoodDiary.Modules.Admin.Domain.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Products/">
+    <Project Path="Modules/Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj" />
+    <Project Path="Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj" />
+    <Project Path="Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
+    <Project Path="Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj" />
+    <Project Path="Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Products/tests/">
+    <Project Path="Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/FoodDiary.Modules.Products.Application.Tests.csproj" />
+    <Project Path="Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/FoodDiary.Modules.Products.Domain.Tests.csproj" />
+    <Project Path="Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests.csproj" />
   </Folder>
 </Solution>

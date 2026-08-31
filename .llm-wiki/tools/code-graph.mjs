@@ -6,6 +6,7 @@ import { basename, dirname, extname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
 import { traceCandidateMatchesScope } from './code-graph-trace-scope.mjs';
+import { directIdentifierTermMatchesMinimum, implicitImplementationIntent, rankingModuleIdentity, rankingPathIdentities } from './code-graph-path-layout.mjs';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
@@ -35,6 +36,9 @@ function publishGraphDependencyFingerprint(databasePath, result) {
     contextSearchFingerprint: result.contextSearch?.fingerprint ?? null,
     compiledIndexFingerprint: result.compiledIndexes?.fingerprint ?? null,
     contextSearchRankingFingerprint: sha256(contextSearchRankingText),
+    rankingImplementationFingerprint: sha256(
+      readFileSync(resolve(import.meta.dirname, 'code-graph.mjs'), 'utf8')
+      + readFileSync(resolve(import.meta.dirname, 'code-graph-path-layout.mjs'), 'utf8')),
     changeSetFingerprint: result.changeSetFingerprint ?? null,
   }));
   writeFileSync(graphDependencyFingerprintPath(databasePath), `${fingerprint}\n`, 'utf8');
@@ -2277,6 +2281,10 @@ function searchContext(database, query, limit, filters = {}) {
   const ranked = candidates.map((item, index) => {
     const path = String(item.path ?? '').replaceAll('\\', '/');
     const normalizedPath = path.toLowerCase();
+    const domainIntent = (contextSearchRanking.genericAffinities?.domainIntentTerms ?? [])
+      .some(term => boostTerms.includes(String(term).toLowerCase()));
+    const selectorPaths = rankingPathIdentities(path).filter(selectorPath =>
+      selectorPath === normalizedPath || domainIntent || !selectorPath.startsWith('fooddiary.domain/'));
     const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(path);
     const fileName = basename(path);
     const isExplicitTestCandidate = isTest ||
@@ -2300,11 +2308,7 @@ function searchContext(database, query, limit, filters = {}) {
     const searchablePath = expandSearchText(path).toLowerCase();
     const searchableIdentity = `${searchablePath} ${normalizedTitle}`;
     const searchableFileIdentity = expandSearchText(basename(path)).toLowerCase();
-    const topLevelModuleIdentity = normalizedPath.split('/')[0]
-      .replace(/^fooddiary\.application\./, '')
-      .replace(/^fooddiary\./, '')
-      .replace(/^mail(?:inbox|relay)\/fooddiary\.mail(?:inbox|relay)\./, '')
-      .replaceAll(/[^\p{L}\p{N}]/gu, '');
+    const topLevelModuleIdentity = rankingModuleIdentity(path);
     const normalizedDirectTerms = directTerms.map((term) => term.replaceAll(/[^\p{L}\p{N}]/gu, ''));
     const moduleIdentityMinimumLength = Number(contextSearchRanking.moduleIdentityMinimumLength ?? 8);
     const moduleIdentityLeadingTermCount = Number(contextSearchRanking.moduleIdentityLeadingTermCount ?? 1);
@@ -2336,7 +2340,7 @@ function searchContext(database, query, limit, filters = {}) {
     }
     const directFileNameAffinity = contextSearchRanking.directFileNameAffinity ?? {};
     const directFileNameMatches = directTerms.filter((term) =>
-      term.length >= Number(directFileNameAffinity.minimumTermLength ?? 3)
+      directIdentifierTermMatchesMinimum(term, Number(directFileNameAffinity.minimumTermLength ?? 3))
       && searchableFileIdentity.includes(term));
     const directFileNameScore = Math.min(
       directFileNameMatches.length * Number(directFileNameAffinity.scorePerMatch ?? 0),
@@ -2365,7 +2369,7 @@ function searchContext(database, query, limit, filters = {}) {
       const intentMatched = intentMatchCount >= Number(minimumMatches ?? 1);
       const pathMatched = (pathValues ?? []).some((candidate) => suffix
         ? normalizedPath.endsWith(String(candidate).toLowerCase())
-        : normalizedPath.includes(String(candidate).replaceAll('\\', '/').toLowerCase()));
+        : selectorPaths.some((selectorPath) => selectorPath.includes(String(candidate).replaceAll('\\', '/').toLowerCase())));
       if (!intentMatched || !pathMatched || Number(value ?? 0) === 0) return;
       score += Number(value);
       reasons.push(`generic ${id} affinity`);
@@ -2380,7 +2384,7 @@ function searchContext(database, query, limit, filters = {}) {
       genericAffinity.databasePathFragments, genericAffinity.databaseScore);
     const applyChangeTypePathAffinity = (id, expectedType, pathValues, value) => {
       if (changeType !== expectedType || !(pathValues ?? []).some((candidate) =>
-        normalizedPath.includes(String(candidate).replaceAll('\\', '/').toLowerCase()))) return;
+        selectorPaths.some((selectorPath) => selectorPath.includes(String(candidate).replaceAll('\\', '/').toLowerCase())))) return;
       score += Number(value ?? 0);
       reasons.push(`generic ${id} affinity`);
     };
@@ -2438,9 +2442,9 @@ function searchContext(database, query, limit, filters = {}) {
       if (boost.recordTypes?.length
         && !boost.recordTypes.some((candidate) => String(candidate).toLowerCase() === String(item.recordType ?? '').toLowerCase())) continue;
       if (boost.pathPrefixes?.length
-        && !boost.pathPrefixes.some((prefix) => normalizedPath.startsWith(String(prefix).replaceAll('\\', '/').toLowerCase()))) continue;
+        && !boost.pathPrefixes.some((prefix) => selectorPaths.some((selectorPath) => selectorPath.startsWith(String(prefix).replaceAll('\\', '/').toLowerCase())))) continue;
       if (boost.excludedPathPrefixes?.length
-        && boost.excludedPathPrefixes.some((prefix) => normalizedPath.startsWith(String(prefix).replaceAll('\\', '/').toLowerCase()))) continue;
+        && boost.excludedPathPrefixes.some((prefix) => selectorPaths.some((selectorPath) => selectorPath.startsWith(String(prefix).replaceAll('\\', '/').toLowerCase())))) continue;
       if (boost.pathSuffixes?.length
         && !boost.pathSuffixes.some((suffix) => normalizedPath.endsWith(String(suffix).toLowerCase()))) continue;
       const eligibleQueryTerms = boost.directOnly ? directTerms : boostTerms;
@@ -2469,7 +2473,7 @@ function searchContext(database, query, limit, filters = {}) {
       const matchedTerms = (boost.queryTerms ?? []).filter((term) => eligibleQueryTerms.includes(String(term).toLowerCase()));
       const matchesIntent = matchedTerms.length >= Number(boost.minimumMatches ?? 1);
       const matchesPath = (boost.pathPrefixes ?? []).some((pathPrefix) =>
-        normalizedPath.startsWith(String(pathPrefix).replaceAll('\\', '/').toLowerCase()));
+        selectorPaths.some((selectorPath) => selectorPath.startsWith(String(pathPrefix).replaceAll('\\', '/').toLowerCase())));
       if (matchesIntent && matchesPath) {
         score += Number(boost.score ?? 0);
         matchedRankingPolicy = true;
@@ -2521,12 +2525,14 @@ function searchContext(database, query, limit, filters = {}) {
       String(item.recordType ?? '').toLowerCase())
       || /(^|\/)AGENTS\.md$/i.test(path)
       || /^docs\/.+\.md$/i.test(path);
-    if (isDocumentationCandidate && implementationChangeTypes.includes(changeType) && !requestsDocumentation) {
+    if (isDocumentationCandidate && !requestsDocumentation &&
+      (implementationChangeTypes.includes(changeType) ||
+        implicitImplementationIntent(changeType, boostTerms, contextSearchRanking.genericAffinities ?? {}))) {
       score -= Number(documentationPenalty.score ?? 0);
       reasons.push('documentation candidate penalty for implementation intent');
     }
     const requestsAbstraction = terms.some((term) => ['interface', 'contract', 'abstraction'].includes(term));
-    if (!requestsAbstraction && normalizedPath.startsWith('fooddiary.application.abstractions/')) {
+    if (!requestsAbstraction && selectorPaths.some((selectorPath) => selectorPath.startsWith('fooddiary.application.abstractions/'))) {
       score -= Number(contextSearchRanking.applicationAbstractionPenalty ?? 0);
     }
     if (!requestsAbstraction && /\/I[A-Z][^/]*\.cs$/.test(path)) {

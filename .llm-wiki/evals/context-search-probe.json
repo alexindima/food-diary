@@ -24,7 +24,7 @@
       "id": "web-push-http-handler-factory-probe",
       "query": "factory creates the HTTP handler used for web push sockets",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs"]
+      "expectedPaths": ["Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs"]
     },
     {
       "id": "billing-public-config-provider-probe",
@@ -48,7 +48,7 @@
       "id": "notification-feed-reader-probe",
       "query": "read the current user's paged notification feed",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Notifications/Services/NotificationFeedReadService.cs"]
+      "expectedPaths": ["Modules/Notifications/Application/Services/NotificationFeedReadService.cs"]
     },
     {
       "id": "user-credential-verification-service-probe",
@@ -60,25 +60,25 @@
       "id": "billing-access-service-probe",
       "query": "decide whether the current user can access premium billing features",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Billing/Services/BillingAccessService.cs"]
+      "expectedPaths": ["Modules/Billing/Application/Services/BillingAccessService.cs"]
     },
     {
       "id": "gamification-calculator-probe",
       "query": "calculate gamification progress and achievement metrics",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Gamification/Services/GamificationCalculator.cs"]
+      "expectedPaths": ["Modules/Gamification/Application/Services/GamificationCalculator.cs"]
     },
     {
       "id": "achievement-award-service-probe",
       "query": "award newly earned achievements to a user",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Gamification/Services/AchievementAwardService.cs"]
+      "expectedPaths": ["Modules/Gamification/Application/Services/AchievementAwardService.cs"]
     },
     {
       "id": "product-lookup-service-probe",
       "query": "lookup one product from database persistence",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Services/ProductLookupService.cs"]
+      "expectedPaths": ["Modules/Products/Infrastructure/Services/ProductLookupService.cs"]
     },
     {
       "id": "recipe-access-service-probe",
@@ -102,13 +102,13 @@
       "id": "cycle-repository-probe",
       "query": "store menstrual cycle tracking records",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/CycleRepository.cs"]
+      "expectedPaths": ["Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs"]
     },
     {
       "id": "recommendation-comment-repository-probe",
       "query": "persist comments attached to dietologist recommendations",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Recommendations/RecommendationCommentRepository.cs"]
+      "expectedPaths": ["Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationCommentRepository.cs"]
     },
     {
       "id": "presentation-error-mapper-probe",

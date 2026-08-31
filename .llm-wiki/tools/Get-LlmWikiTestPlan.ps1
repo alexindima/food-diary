@@ -24,6 +24,8 @@ $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $toolsRoot 'LlmWikiQueryCache.ps1')
 . (Join-Path $toolsRoot 'LlmWikiVerificationReceipts.ps1')
+. (Join-Path $toolsRoot 'LlmWikiModuleTestRoots.ps1')
+$moduleTestRoots = @(Get-LlmWikiModuleTestRoots -RepositoryRoot $repositoryRoot)
 $verificationReceipts = @(Get-LlmWikiVerificationReceipts $repositoryRoot)
 $validReceiptFingerprint = Get-LlmWikiSha256 (@(
     $verificationReceipts |
@@ -239,6 +241,7 @@ if ($changedTypeNames.Count -gt 0) {
     $testRoots = [Collections.Generic.List[string]]::new()
     $testRoots.Add('tests')
     $testRoots.Add('FoodDiary.Web.Client/src')
+    foreach ($moduleTestRoot in $moduleTestRoots) { $testRoots.Add($moduleTestRoot) }
     if (@($effectivePaths | Where-Object { $_ -match '^MailRelay/' }).Count -gt 0) { $testRoots.Add('MailRelay/tests') }
     if (@($effectivePaths | Where-Object { $_ -match '^MailInbox/' }).Count -gt 0) { $testRoots.Add('MailInbox/tests') }
     foreach ($testRoot in $testRoots) {
@@ -247,8 +250,8 @@ if ($changedTypeNames.Count -gt 0) {
         $testFiles += @(
             Get-ChildItem -LiteralPath $absoluteTestRoot -Recurse -File -ErrorAction SilentlyContinue |
                 Where-Object {
-                    $_.Extension -eq '.cs' -or
-                    $_.Name -match '\.(spec|test)\.ts$'
+                    $_.FullName -notmatch '[\\/](?:bin|obj|\.artifacts|node_modules)[\\/]' -and
+                    ($_.Extension -eq '.cs' -or $_.Name -match '\.(spec|test)\.ts$')
                 }
         )
     }
@@ -302,11 +305,12 @@ if ($changedTypeNames.Count -gt 0) {
 if (-not [string]::IsNullOrWhiteSpace($Intent) -and $Intent -match '(?i)idempoten|duplicate|retry|replay|deduplic') {
     $behaviorAffinity = @($effectivePaths | ForEach-Object {
         [regex]::Matches(([string]$_).ToLowerInvariant(), '[a-z0-9]+') | ForEach-Object Value
-    } | Where-Object { $_.Length -ge 5 -and $_ -notin @('fooddiary', 'application', 'infrastructure', 'presentation', 'services') } | Sort-Object -Unique)
-    foreach ($testRoot in @('tests', 'MailRelay/tests', 'MailInbox/tests')) {
+    } | Where-Object { $_.Length -ge 5 -and $_ -notin @('fooddiary', 'modules', 'application', 'infrastructure', 'presentation', 'services') } | Sort-Object -Unique)
+    foreach ($testRoot in (@('tests', 'MailRelay/tests', 'MailInbox/tests') + $moduleTestRoots)) {
         $absoluteTestRoot = Join-Path $repositoryRoot $testRoot
         if (-not (Test-Path -LiteralPath $absoluteTestRoot -PathType Container)) { continue }
         foreach ($testFile in Get-ChildItem -LiteralPath $absoluteTestRoot -Recurse -File -Filter '*.cs' -ErrorAction SilentlyContinue) {
+            if ($testFile.FullName -match '[\\/](?:bin|obj|\.artifacts|node_modules)[\\/]') { continue }
             $relative = $testFile.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
             $content = [IO.File]::ReadAllText($testFile.FullName)
             if ($content -notmatch '(?i)idempoten|duplicate|retry|replay|deduplic') { continue }

@@ -16,10 +16,13 @@ function Get-LlmWikiChangeSetSnapshot {
     } else {
         @()
     })
-    $diffArguments = @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') + @($gitPathspecs)
-    $untrackedArguments = @('ls-files', '--others', '--exclude-standard', '--') + @($gitPathspecs)
-    $workspacePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments $diffArguments -FailureMessage 'Unable to resolve modified paths for the Wiki change-set snapshot.')
-    $workspacePaths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments $untrackedArguments -FailureMessage 'Unable to resolve untracked paths for the Wiki change-set snapshot.')
+    $workspacePaths = @(foreach ($batch in @(Split-LlmWikiPositiveGitPathspecBatch -Pathspec $gitPathspecs)) {
+        # Both endpoints of a move affect a snapshot; rename detection hides the deletion.
+        $diffArguments = @('diff', '--no-renames', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') + @($batch)
+        $untrackedArguments = @('ls-files', '--others', '--exclude-standard', '--') + @($batch)
+        Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments $diffArguments -FailureMessage 'Unable to resolve modified paths for the Wiki change-set snapshot.'
+        Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments $untrackedArguments -FailureMessage 'Unable to resolve untracked paths for the Wiki change-set snapshot.'
+    })
     $workspacePaths = @($workspacePaths | Sort-Object -Unique)
     if ($normalizedRelevantPaths.Count -gt 0) {
         $workspacePaths = @($workspacePaths | Where-Object {

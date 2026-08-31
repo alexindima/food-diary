@@ -4,6 +4,7 @@ param()
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiChangeSetSnapshot.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $guardAst = [Management.Automation.Language.Parser]::ParseFile(
     (Join-Path $PSScriptRoot 'Invoke-LlmWikiReadOnlyTool.ps1'), [ref]$null, [ref]$null)
@@ -52,6 +53,15 @@ try {
     if ('alpha/old-location.cs' -notin $actualScoped -or 'alpha/new-location.cs' -notin $actualScoped) {
         throw 'A staged rename must delete the old snapshot source and copy the new source.'
     }
+    $smallSnapshot = Get-LlmWikiChangeSetSnapshot -RepositoryRoot $fixture -RelevantPath $smallScopes
+    $largeSnapshot = Get-LlmWikiChangeSetSnapshot -RepositoryRoot $fixture -RelevantPath (@($largeScopes) + '.llm-wiki')
+    if ($smallSnapshot.fingerprint -cne $largeSnapshot.fingerprint -or
+        ($largeSnapshot.changedPaths -join "`n") -cne ($expectedScoped -join "`n")) {
+        throw 'Batched change-set snapshot lost paths or changed its content fingerprint.'
+    }
+    $magicRejected = $false
+    try { $null = Split-LlmWikiPositiveGitPathspecBatch -Pathspec @('alpha', ':(exclude)alpha/private') } catch { $magicRejected = $true }
+    if (-not $magicRejected) { throw 'Exclusion pathspecs must not silently change meaning across batches.' }
     $expectedAll = @(
         @(Invoke-LlmWikiGitPathList -RepositoryRoot $fixture -Arguments @('diff', '--no-renames', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--')) +
         @(Invoke-LlmWikiGitPathList -RepositoryRoot $fixture -Arguments @('ls-files', '--others', '--exclude-standard', '--')) |

@@ -90,7 +90,7 @@
       "id": "web-push-endpoint-validation",
       "query": "validate a web push subscription endpoint before sending",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Services/WebPushEndpointValidationHandler.cs"]
+      "expectedPaths": ["Modules/Notifications/Infrastructure/Services/WebPushEndpointValidationHandler.cs"]
     },
     {
       "id": "paddle-api-client",
@@ -192,13 +192,13 @@
       "id": "web-push-outbox-processor",
       "query": "processor sends pending notification outbox entries to web push",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Notifications/NotificationWebPushOutboxProcessor.cs"]
+      "expectedPaths": ["Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutboxProcessor.cs"]
     },
     {
       "id": "achievement-outbox-processor",
       "query": "evaluate achievements from persisted outbox records",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs"]
+      "expectedPaths": ["Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs"]
     },
     {
       "id": "dashboard-statistics-reader",
@@ -216,13 +216,13 @@
       "id": "product-overview-reader",
       "query": "database reader returns product overview information",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs"]
+      "expectedPaths": ["Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs"]
     },
     {
       "id": "open-food-facts-cache-repository",
       "query": "persist cached products received from Open Food Facts",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/OpenFoodFacts/OpenFoodFactsProductCacheRepository.cs"]
+      "expectedPaths": ["Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsProductCacheRepository.cs"]
     },
     {
       "id": "domain-event-dispatch-interceptor",

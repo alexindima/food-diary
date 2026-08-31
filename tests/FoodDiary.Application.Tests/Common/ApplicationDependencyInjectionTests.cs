@@ -38,10 +38,10 @@ public sealed class ApplicationDependencyInjectionTests {
     }
 
     [Fact]
-    public void AddProductsModule_RegistersProductServices() {
+    public void AddProductsApplication_RegistersProductServices() {
         var services = new ServiceCollection();
 
-        services.AddProductsModule();
+        services.AddProductsApplication();
 
         Assert.Equal(2, services.Count(descriptor => descriptor.ServiceType == typeof(IProductSearchSuggestionProvider)));
     }

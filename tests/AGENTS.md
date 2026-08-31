@@ -57,3 +57,13 @@ Rules for `tests/`.
   the User inverse navigation, scalar source IDs and deletion relationships.
 
 - Exercises application/domain suites live in Modules/Exercises/tests. Only Exercises methods moved out of TrackingEntryInvariantTests; Hydration and MealPlanning mixed coverage remains central.
+
+## Products physical ownership
+
+Products use cases, ports, consumed contracts, persistence adapters and EF model
+live under `Modules/Products`; focused application, Product invariant and repository PostgreSQL tests live under its nested
+tests folder. Central Product/User/RecipeIngredient/MealItem/USDA CLR navigations,
+shared context/migrations and composition lock remain unchanged. Hosts explicitly
+compose AddProductsModule; JobManager adds AddProductsPersistence without new
+handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
+coordinated-rebuild compatibility promise.

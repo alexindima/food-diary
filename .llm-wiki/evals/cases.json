@@ -73,7 +73,7 @@
     {
       "id": "repository-performance",
       "changedPaths": [
-        "FoodDiary.Infrastructure/Persistence/Products/ProductRepository.cs"
+        "Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs"
       ],
       "expectedModules": ["Products"],
       "expectedScopes": ["Backend"],

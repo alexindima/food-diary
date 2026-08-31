@@ -32,6 +32,51 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         CreateDatabase();
     }
 
+    [Theory]
+    [InlineData("FoodDiary.Domain/Entities/Stock.cs", "domain entity stock", "structural role domain-entity-layer-role", true)]
+    [InlineData("Modules/Inventory/Domain/Entities/Stock.cs", "domain entity stock", "structural role domain-entity-layer-role", true)]
+    [InlineData("Modules\\Inventory\\Domain\\Entities\\Stock.cs", "domain entity stock", "structural role domain-entity-layer-role", true)]
+    [InlineData("Modules/Inventory/Infrastructure/Model/StockReservation.cs", "entity stock reservation quota", "structural role persistence-reservation-entity-role", true)]
+    [InlineData("Modules/Inventory/Infrastructure/Persistence/StockReservation.cs", "entity stock reservation quota", "structural role persistence-reservation-entity-role", true)]
+    [InlineData("Modules/Inventory/Infrastructure/Services/StockReservation.cs", "entity stock reservation quota", "structural role persistence-reservation-entity-role", false)]
+    [InlineData("Modules/Inventory/Application/InventoryReader.cs", "inventory reader", "exact module identity inventory", true)]
+    [InlineData("Modules/InventoryExtras/Application/InventoryReader.cs", "inventory reader", "exact module identity inventory", false)]
+    [InlineData("ModulesExtra/Inventory/Domain/Entities/Stock.cs", "domain entity stock", "structural role domain-entity-layer-role", false)]
+    [InlineData("Modules/Inventory/Domain/tests/Stock.cs", "domain entity stock", "structural role domain-entity-layer-role", false)]
+    [InlineData("Modules/Inventory/Application/Abstractions/Entities/Stock.cs", "domain entity stock", "structural role domain-entity-layer-role", false)]
+    [InlineData("Modules/Inventory/Domain/Entities/Notifications/StockNotice.cs", "inventory user channel notification", "structural role notification-domain-entity-role", false)]
+    [InlineData("Modules/Inventory/Domain/Entities/Notifications/StockNotice.cs", "inventory domain user channel notification", "structural role notification-domain-entity-role", true)]
+    [InlineData("FoodDiary.Domain/Entities/Notifications/StockNotice.cs", "inventory user channel notification", "structural role notification-domain-entity-role", true)]
+    [InlineData("Modules/Inventory/Infrastructure/R7Probe.cs", "r7", "direct file-name affinity r7", true)]
+    public async Task SearchAsync_RecognizesModuleLayerSelectors(
+        string path,
+        string query,
+        string expectedReason,
+        bool expectedMatch) {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            INSERT INTO context_search VALUES
+                ('code', 'layout-fixture', $path, $path, 'csharp', 'Stock Inventory Reader Reservation', $body);
+            """;
+        command.Parameters.AddWithValue("$path", path);
+        command.Parameters.AddWithValue("$body", query);
+        await command.ExecuteNonQueryAsync();
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            query, limit: 10, changeType: "Backend", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.True(result.Ready, result.UnavailableReason);
+        WikiContextSearchCandidate candidate = Assert.Single(result.Candidates);
+        Assert.Equal(path, candidate.Path);
+        Assert.Equal(expectedMatch, candidate.Reasons.Any(reason =>
+            reason.StartsWith(expectedReason, StringComparison.Ordinal)));
+    }
+
     [Fact]
     public void Constructor_UsesResolvedRepositoryRoot() {
         var search = new SqliteWikiContextSearch(new WikiRuntimeTelemetry());
@@ -175,6 +220,36 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         Assert.DoesNotContain(programs, candidate => candidate.AmbiguityReason?.Contains(
             "equivalent",
             StringComparison.OrdinalIgnoreCase) == true);
+    }
+
+    [Theory]
+    [InlineData("coveragebranch domain entity", "Any", true)]
+    [InlineData("coveragebranch api endpoint", "Any", true)]
+    [InlineData("coveragebranch provider implementation", "Any", true)]
+    [InlineData("coveragebranch database persistence", "Any", true)]
+    [InlineData("coveragebranch domain guide", "Any", false)]
+    [InlineData("coveragebranch provider documentation", "Any", false)]
+    [InlineData("coveragebranch", "Any", false)]
+    [InlineData("coveragebranch implementation", "Any", false)]
+    [InlineData("coveragebranch", "Backend", true)]
+    public async Task SearchAsync_UsesDeclaredImplementationIntentForDocumentationPenalty(
+        string query,
+        string changeType,
+        bool expectedPenalty) {
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+        WikiContextSearchResult result = await search.SearchAsync(
+            query,
+            limit: 50,
+            changeType: changeType,
+            module: null,
+            scopePaths: null,
+            CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+
+        WikiContextSearchCandidate guide = Assert.Single(result.Candidates, candidate =>
+            string.Equals(candidate.RecordType, "agent-guide", StringComparison.Ordinal));
+        Assert.Equal(expectedPenalty, guide.Reasons.Contains(
+            "documentation candidate penalty for implementation intent", StringComparer.Ordinal));
     }
 
     [Fact]
@@ -383,8 +458,18 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         Assert.Contains("uri", result.QueryTerms, StringComparer.Ordinal);
     }
 
-    [Fact]
-    public async Task SearchAsync_PrefersBehaviorSpecificPartialTestForExplicitTestIntent() {
+    [Theory]
+    [InlineData("tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs")]
+    [InlineData("Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs")]
+    public async Task SearchAsync_PrefersBehaviorSpecificPartialTestForExplicitTestIntent(string testPath) {
+        await using (SqliteConnection connection = new($"Data Source={_databasePath}")) {
+            await connection.OpenAsync();
+            await using SqliteCommand command = connection.CreateCommand();
+            command.CommandText = "UPDATE context_search SET path=$path WHERE path=$old;";
+            command.Parameters.AddWithValue("$path", testPath);
+            command.Parameters.AddWithValue("$old", "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs");
+            await command.ExecuteNonQueryAsync();
+        }
         SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
 
         WikiContextSearchResult result = await search.SearchAsync(
@@ -397,7 +482,7 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
             expectedChangeSetFingerprint: "fixture-change-set");
 
         Assert.Equal(
-            "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs",
+            testPath,
             result.Candidates[0].Path);
         Assert.Contains(
             result.Candidates[0].Reasons,

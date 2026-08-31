@@ -8,21 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "58213f2bff3f73795f20c8087e41089b1455d4e498630402c5f6ec914505a1ef"
+          "sha256": "9805f2da1e15f27114b7f1c8d6bae74d05386e9e66f533c535494db355b20cc4"
         },
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "cd0108eabb52988986702beb81f5bfabe8c8275aa3fbb5db4173c047adcc7a91"
+          "sha256": "8bab56fb6add57212192206dd312cb1f954f102453c500d2e36feb01bfe55d4b"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "27de7e6b129439858654cd5fcad90c198090c1ffd9e020bf84e23f4509562087"
+          "sha256": "1cca2c792280697b1975c7fd4c534b48f4f4f9cb6839487abcc81c3c7e22ebaf"
         }
       ],
-      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:45.5225612Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:30.3546025Z"
     },
     {
       "pageId": "module.frontend",
@@ -46,17 +46,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "cd0108eabb52988986702beb81f5bfabe8c8275aa3fbb5db4173c047adcc7a91"
+          "sha256": "8bab56fb6add57212192206dd312cb1f954f102453c500d2e36feb01bfe55d4b"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "27de7e6b129439858654cd5fcad90c198090c1ffd9e020bf84e23f4509562087"
+          "sha256": "1cca2c792280697b1975c7fd4c534b48f4f4f9cb6839487abcc81c3c7e22ebaf"
         }
       ],
-      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:46.0782921Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:30.6284626Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -96,25 +96,25 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "cd0108eabb52988986702beb81f5bfabe8c8275aa3fbb5db4173c047adcc7a91"
+          "sha256": "8bab56fb6add57212192206dd312cb1f954f102453c500d2e36feb01bfe55d4b"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "60b9b7c92fe3def896bb93c697a82d622b6269862ff2cb42f963e135935e0d38"
+          "sha256": "25ce41c4730c48c0246732931c89400ff3215cde3b905031fdbdb92aa59810e8"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "27de7e6b129439858654cd5fcad90c198090c1ffd9e020bf84e23f4509562087"
+          "sha256": "1cca2c792280697b1975c7fd4c534b48f4f4f9cb6839487abcc81c3c7e22ebaf"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "6535eda4dc62a66f3b561c9faf2c03b3935374a394fa40aaf87bc01391ffb453"
+          "sha256": "c83c125a199dcb5b56e3d578e9117a3f8a9b58375b6914d05efcdd31af728076"
         }
       ],
-      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:46.5940241Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:30.8772866Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -153,13 +153,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "58213f2bff3f73795f20c8087e41089b1455d4e498630402c5f6ec914505a1ef"
+          "sha256": "9805f2da1e15f27114b7f1c8d6bae74d05386e9e66f533c535494db355b20cc4"
         }
       ],
-      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:47.1380777Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:31.1194585Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -168,13 +168,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "60b9b7c92fe3def896bb93c697a82d622b6269862ff2cb42f963e135935e0d38"
+          "sha256": "25ce41c4730c48c0246732931c89400ff3215cde3b905031fdbdb92aa59810e8"
         }
       ],
-      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:47.7139959Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:31.3845455Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -194,21 +194,17 @@
     {
       "pageId": "workflow-adaptive-development",
       "pagePath": ".llm-wiki/workflows/adaptive-development.md",
-      "pageSha256": "3bcd8f832445f89d012e571e85cfdc85ea328f6c3713a9427b8020d6a0a3438e",
+      "pageSha256": "c2e5e0aaf44c829b7d0ec32bd7ae6dc24cf2d5b5f5aa0edd3e102c65783488df",
       "sources": [
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "ddded0a588487f6e7825b0b559e5ce02a46f69ef986ac3eab7438964999ba0dc"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-          "sha256": "39b5ffdfc85f50576d0e148ef0bee03c3405c60f3df9add6cdd80e9869063077"
+          "sha256": "270a3f4d7627ae36d40a66034aa95c692c94347f79b10f73eefa1e7004f9a871"
         }
       ],
-      "reason": "Focused tests moved without duplicates; architecture767 and module179 passed; Windows Git batching regression passed.",
-      "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-30T22:50:56.8648696Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:31.6387441Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -232,21 +228,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "382cc9922a6efc6bfe7999dbc61750fc9772e3d6c1b5fb6d1ec9c9c2a8815bd0"
+          "sha256": "6336d68ae4f04b9cd67c0f58dced8b48fa4f06d8b48394cf095e31207b494e03"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "60b9b7c92fe3def896bb93c697a82d622b6269862ff2cb42f963e135935e0d38"
+          "sha256": "25ce41c4730c48c0246732931c89400ff3215cde3b905031fdbdb92aa59810e8"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "6535eda4dc62a66f3b561c9faf2c03b3935374a394fa40aaf87bc01391ffb453"
+          "sha256": "c83c125a199dcb5b56e3d578e9117a3f8a9b58375b6914d05efcdd31af728076"
         }
       ],
-      "reason": "Reviewed generated paths and workflow claims against actual Admin source moves and tests. Ranking maintenance changes only two source prefixes and one existing exclusion; complete candidate-set equivalence and seven engine-branch cases are preserved. Test-plan stale donor/irrelevant frontend suggestions and cold-index failures are recorded in docs/ai/admin-module-extraction-wiki-findings.md. Navigation and receipts are not execution or coverage proof; old context snapshot remains explicitly stale.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:48.3357035Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:31.9135114Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -255,13 +251,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "bf7f31eaea55ef64889d065727a813fd6323e361c5713c7cc191612b365c23d1"
+          "sha256": "6765a93114d2415575c10f35c58952da80962eb515190a21b3aee9dcebcf37e5"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "b632e8546632d256b8129677b8984ea82148cdbb7603fbab55be5d73f91ab167"
         }
       ],
-      "reason": "Reviewed unchanged HTTP transport and CLR namespaces, with legacy Admin application AssemblyName retained. New physical assemblies require coordinated host rebuilds; old binary compatibility is not asserted. EF mappings and shared migrations remain separate, and runtime test results are retained outside compiled navigation.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:49.2214697Z"
+      "reason": "Combined full HTTP182/Presentation825 and EF no model changes, unchanged snapshots; both module composition boundaries retained with coordinated rebuilt hosts.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T14:16:18.0462445Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -299,34 +299,86 @@
       "pageSha256": "8c9843eeb4fbb377b79e506bb7a2969dd0393e10cc6fc0a1ec924ccbd6ee22f9",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-generalization.json",
+          "sha256": "a45f82f22107578e66cd792cd1b8995dc4cecdc477817385179a41bbc0b0f559"
+        },
+        {
           "path": ".llm-wiki/evals/context-search-holdout-100.json",
           "sha256": "03dece972b46b6bf9f0e3d90f88d2a4bcdcdbbc81648c671ac0e040562626ca4"
         },
         {
+          "path": ".llm-wiki/evals/context-search-holdout.json",
+          "sha256": "8dca6a633d73f2b654c0df1617ce68d069032686d944c87700f074c337e2e532"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-postfix-control-30.json",
+          "sha256": "04aac76189ba5929a7902374ca863d0bdb18dcf0886a31bab9c2592a20ff9631"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-posttune-control-30.json",
+          "sha256": "214224989f549c836aa5b91af39824b12dfe27911e6b471bc956a04218e1cf8f"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe-2.json",
+          "sha256": "95766628e2f310bc6c230ad6e55c922229340feb655766d269109d9ae413b2ea"
+        },
+        {
           "path": ".llm-wiki/evals/context-search-probe-3.json",
-          "sha256": "79c9d0fdde0e82564a1c830d4fc0c574636b5428a4ec6876ff7dcc324cb4d248"
+          "sha256": "a8c30f541cae312938b0f3d82348ae60a7b4f86b7c9f8282539bbe82c19e6803"
         },
         {
           "path": ".llm-wiki/evals/context-search-probe-4.json",
-          "sha256": "8df5c7648e3696776a13003ad640d5b609350dc124b35221478614ea8f0eae41"
+          "sha256": "dcd54306854201dc91dead33d2570a71e10debdac944f79e356e33ff521e7371"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe-5.json",
+          "sha256": "6e4ca086128549d57fef8649e933d9b5caa500d9e7680ee86bfc92df7a1d4929"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe-6.json",
+          "sha256": "af3f32babcaa8764d6ebb9eaa4096ddd6e9aa07ff10831556813dea7ceae40be"
         },
         {
           "path": ".llm-wiki/evals/context-search-probe-7.json",
-          "sha256": "0d23bda0ecc10c33386fc14d6a6d70860ee77e9ef25345486f3fb82124e3ba36"
+          "sha256": "9a97aac9df1c2ef106930167b60b0c131a25b8e5fcc241c4c496962b5422bfc7"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe.json",
+          "sha256": "738f960bf316f5cdf89d65c90ea376798bf6fd9b6cc14c81234319bd36e08afe"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "20ab556641c78e72ea3bda50f344e67d82a7a6d74cc465216b9460826c915c0b"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-validation.json",
+          "sha256": "6a4b824ab8acce8a7b1ca4db33e68ceeed819c325a13b757e4ba84dae4b1119c"
         },
         {
           "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "ea8d35de9008b1f63a728ba7ff0bb5f6579249b6dc8e62fbb8ad7b8e51542846"
+          "sha256": "e0fae226f498fabb4f5e382ce997f521c156204a5fd1a561ff1736d02c2529a9"
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
           "sha256": "76755c5dbe9be19df4fb91ded9cd6eaad43ec04e83955a49eaf49a2c2c76bc35"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "b632e8546632d256b8129677b8984ea82148cdbb7603fbab55be5d73f91ab167"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          "sha256": "d74c997738bbf137ae73130fc1e652617a14321072039819569a5c7fb339214b"
+        },
+        {
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+          "sha256": "d3ad416b2118e7585903b63744208ee81321be9165d8a7af1f3201950ceafe3c"
         }
       ],
-      "reason": "Reviewed generated paths and workflow claims against actual Admin source moves and tests. Ranking maintenance changes only two source prefixes and one existing exclusion; complete candidate-set equivalence and seven engine-branch cases are preserved. Test-plan stale donor/irrelevant frontend suggestions and cold-index failures are recorded in docs/ai/admin-module-extraction-wiki-findings.md. Navigation and receipts are not execution or coverage proof; old context snapshot remains explicitly stale.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:49:01.8721115Z"
+      "reason": "Combined5589 unfiltered .NET tests pass; full MCP245, Architecture831. Actual Node/.NET parity200cases and nine non-quality smoke groups passed. Full Wiki remains explicitly non-green for five fresh exact-base-identical ranking cases; see report and measured comparison, not a fabricated PASS receipt.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T14:16:18.8830976Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -334,14 +386,14 @@
       "pageSha256": "d59b6b99ff0c566de2b31579a916ee8e62adbeedea3d928970b2200fa0b63eb6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:41:59.6172173Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:33.3626013Z"
     },
     {
       "pageId": "workflow-context-budget-optimization",
@@ -349,14 +401,14 @@
       "pageSha256": "79a057816a216c509d2f1d25849e93e19a32ce66f1f22b4e39db637ed292e1db",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "93577dd72dfc9702078990dfade28ffef39ca6d3bade54ae5c7cf857b8cc0547"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed optional SQL symbol metadata fallback; context selection, budgets, trust, learning, memory, and scheduling semantics remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
-      "reviewedAtUtc": "2026-08-26T23:39:15.0428918Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:33.6450482Z"
     },
     {
       "pageId": "workflow-context-bundles",
@@ -364,14 +416,14 @@
       "pageSha256": "2adbebf7ac1a14cca9d9ab6aa9a8bdd9502bef62346c9960e3c3d5901ba7545e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "78abe6bce9beb85703db631a347a6a1b05b7f74f64f322eb3ea066ae5cd8ceeb"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed architecture and repository navigation for the Fasting logical-module pilot; sources now point to Modules/Fasting while central Domain, Infrastructure, and Presentation ownership remains explicit.",
-      "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:18:28.9165353Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:33.9187587Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -380,13 +432,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed implementation and updated adaptive-development, developer-experience, task-workspace, review-report, tests, and facade documentation; planned paths dominate scoped research, empty lanes are removed, read sets are deduplicated, questions are grounded, and compact handoff preserves continuity.",
-      "baseRef": "HEAD",
-      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-      "reviewedAtUtc": "2026-08-21T19:09:39.7597941Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:34.2093102Z"
     },
     {
       "pageId": "workflow-context-security",
@@ -394,18 +446,18 @@
       "pageSha256": "893ec0218c13b7b7c053c337c5bf42d475f1143bf06f472905cb285f239b7395",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextSecurity.ps1",
-          "sha256": "2fe2065c8028f350da47b34789b3ac844f031d338a71ea78dbcd69fc33ec0b0c"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiWorkflowRecovery.ps1",
-          "sha256": "a3eec25a887ca01d355202a1e7be4588be35a25bf6433d7cc586b43bc0b69108"
+          "sha256": "7fea201e2113cd5fcce5bd4aa8f4829d27230b04093227085373405d29ffc866"
         }
       ],
-      "reason": "Strict context path normalization now scans existing dotfiles and rejects escapes; regression passed and standalone task assessment matches packet. Selected bundle size limitation remains documented.",
-      "baseRef": "HEAD",
-      "gitHead": "3851a98e0340fd12191c56cf41f261a678a632c8",
-      "reviewedAtUtc": "2026-08-30T23:30:33.4681273Z"
+      "reason": "Reviewed Admin impersonation/Users seams and Products provider/image/user scopes against both ownership inventories; no new application data flow or logs. Scanner word-boundary repair retains directive quarantine; test fixtures remain untrusted data, not instructions. Ranking aliases do not widen explicit path or module filters.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:34.4736356Z"
     },
     {
       "pageId": "workflow-context-strategy-experiments",
@@ -414,13 +466,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "b8165965b3f7522fe0dd05762cbf262c28b351c6f52ca481e86c7e5ca35ecf37"
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed the additive root instructions and isolated researchPlanning policy subtree; source authority, repository navigation, existing workflow semantics, and unrelated policy branches remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "0f31f550be4e3a5ca23a2107a2f717231674ab7b",
-      "reviewedAtUtc": "2026-08-21T19:09:40.4486361Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:34.7383298Z"
     },
     {
       "pageId": "workflow-context-strategy-outcome-learning",
@@ -428,14 +480,14 @@
       "pageSha256": "e4de9df2c7adeae34ec774eebca8f821c2a90f1b85fe27d16d59d8d581495c23",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:41:59.9477904Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:34.9788762Z"
     },
     {
       "pageId": "workflow-controlled-learning-promotion",
@@ -443,14 +495,14 @@
       "pageSha256": "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "93577dd72dfc9702078990dfade28ffef39ca6d3bade54ae5c7cf857b8cc0547"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed optional SQL symbol metadata fallback; context selection, budgets, trust, learning, memory, and scheduling semantics remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
-      "reviewedAtUtc": "2026-08-26T23:39:17.8080781Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:35.2888549Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -458,18 +510,14 @@
       "pageSha256": "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:00.6677098Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:35.5745515Z"
     },
     {
       "pageId": "workflow-cost-aware-verification",
@@ -477,18 +525,14 @@
       "pageSha256": "d6a287a6000b102cd9e007a1630184aabad98def8c1ced3ede421ebff7fe4c37",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-          "sha256": "5893e421c6a30e21400547b06d9d5b0b6959321f7f7132c9f1a301f2f017e8ae"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "383c1727051c2466855228d25afa3a12a1176b414699242e3abb7d8e457e3ec7"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve 'zero output objects' as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "c192eb68195dbbf020efcff1e647b8926267506d",
-      "reviewedAtUtc": "2026-08-23T13:04:34.4007857Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:35.8821183Z"
     },
     {
       "pageId": "workflow-decision-context",
@@ -515,14 +559,14 @@
       "pageSha256": "b8326a8fc44d9de804aa9a021771d97014a2ead8b3db08959f38add670525ba4",
       "sources": [
         {
-          "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "d0295a1b4e56429fa3c44dffbf3c4b7a4ea7476be5a1ddbbc238de072bcad602"
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
         }
       ],
-      "reason": "Module map guides and source indexes now describe owned domain ports persistence provider layers and evidence-backed central composition seams",
-      "baseRef": "HEAD",
-      "gitHead": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
-      "reviewedAtUtc": "2026-08-30T20:45:51.2973126Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:36.2325400Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -550,21 +594,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "a4b978528c15b9fd32cb2787594e28b61cc0eab6b9af46240f5ce8e0cc11eec5"
+          "sha256": "b9f4c629d114d9a1594457f6d8c4da1c43168afa2882f11444d14cfca7cda8a3"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "68add3c12f28c10258806b99a2e5d5c44b437cbfdddf795b2af518a2bcf294ce"
+          "sha256": "1ad86a6795766af3211f1ab022e6c3a86c72d95290e42093cb3861360d0e4d81"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "3829fafcc8fffd98cba6223e78dbc88014cb66b2e0918ba0a99d33519e2d6eb6"
+          "sha256": "950ae7fe035feb1fb253c567e537976b59d5aa5a00227040ca3715999a61fbac"
         }
       ],
-      "reason": "Reviewed generated paths and workflow claims against actual Admin source moves and tests. Ranking maintenance changes only two source prefixes and one existing exclusion; complete candidate-set equivalence and seven engine-branch cases are preserved. Test-plan stale donor/irrelevant frontend suggestions and cold-index failures are recorded in docs/ai/admin-module-extraction-wiki-findings.md. Navigation and receipts are not execution or coverage proof; old context snapshot remains explicitly stale.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:50.8163465Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:36.6547608Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -572,14 +616,14 @@
       "pageSha256": "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "93577dd72dfc9702078990dfade28ffef39ca6d3bade54ae5c7cf857b8cc0547"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed optional SQL symbol metadata fallback; context selection, budgets, trust, learning, memory, and scheduling semantics remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
-      "reviewedAtUtc": "2026-08-26T23:39:18.9068786Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:37.0833427Z"
     },
     {
       "pageId": "workflow-failure-knowledge",
@@ -602,14 +646,14 @@
       "pageSha256": "f329d54afe5274a4bfce5e5cc7e77455554286b51569c8b214ef3fd44fe8be83",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "383c1727051c2466855228d25afa3a12a1176b414699242e3abb7d8e457e3ec7"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve 'zero output objects' as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "c192eb68195dbbf020efcff1e647b8926267506d",
-      "reviewedAtUtc": "2026-08-23T13:04:37.3284681Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:38.2384933Z"
     },
     {
       "pageId": "workflow-frontend-visual-evidence",
@@ -632,14 +676,14 @@
       "pageSha256": "c779512a05454746e5f0fb6c7670c3a7095db50d3a5798251e6454153ab729a1",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextStrategy.ps1",
-          "sha256": "2e2d7fe7c129576f911e1ff14d7111b01054f41892bf17a93e370fd7e8cdaab5"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
-      "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:47.2679524Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:38.5645746Z"
     },
     {
       "pageId": "workflow-impact-simulation",
@@ -647,14 +691,18 @@
       "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
       "sources": [
         {
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+        },
+        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "d3bc52eec64f57fda69cd2445732f652203e0b438e89d9e8e5e1f1cadd0ccf44"
+          "sha256": "b632e8546632d256b8129677b8984ea82148cdbb7603fbab55be5d73f91ab167"
         }
       ],
-      "reason": "Only broad graph trace candidate filtering changed; compiled-context/impact contracts and simulation policy are unchanged. No impact result is substituted for PostgreSQL verification.",
-      "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:16.6248709Z"
+      "reason": "Reviewed272project graph, both ownership inventories, archived source evidence and final integration report.125 target references have113 proven Git rename chains; query/history/threshold fields unchanged. Baseline comparison uses revision-appropriate physical paths only.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T14:16:19.8180614Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -677,18 +725,14 @@
       "pageSha256": "d93e8bf4522a803da1d1a59bd2cd49e0d6a6b39360281f4df4f1792621027fb1",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:01.6359309Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:39.1824496Z"
     },
     {
       "pageId": "workflow-index-pipeline",
@@ -697,17 +741,21 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "921ec70dbc77cd75428318294cde5b9f7d1e3aba24faa155f27dbce6cbc3a721"
+          "sha256": "ec21c85f18c9b399dd7bd2559a0028571ba2b6ab4172aa941bb0a15a2cdf371e"
         },
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "5aa06255244983619104c53689fa4bb164efb9649e3ec08ecf66bf83a81ed2bc"
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "a84f2d52c7e100965178d1cb1bec0b1d5dd6e6c5f89892a39f9ad45551101868"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+          "sha256": "3d071158072d32c96f98eae69eaece75edc0ffb13334aee6541e63b1b3c23809"
         }
       ],
-      "reason": "Native update rebuilt merged indexes; no concurrency/timeout policy or pass receipt fabricated. A readiness attempt overlapping source/index edits correctly rejected stale input; stable smoke is recorded separately.",
-      "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:15:12.284766Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:39.4889490Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -715,14 +763,14 @@
       "pageSha256": "61d91d7cbe073b4d9d81be15b1391daea4fc698ef9abec557da5a9d9b45c26bb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiInstructionOutcome.ps1",
-          "sha256": "6d09ad63b03fecdb72fcef9357436c67e094170fd9bb63cbe0bd1504272ca3c6"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
-      "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:48.5515444Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:39.7487443Z"
     },
     {
       "pageId": "workflow-integration-scan",
@@ -746,13 +794,17 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/cases.json",
-          "sha256": "099fcb4723ce217bb78f5e342b05c927394de8517a18d9c861f0d4a654bdf79c"
+          "sha256": "d6fc38d2c24528977e11e8f6f9b43f6742b558291eba0a817c4a5b3d47105f83"
+        },
+        {
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed query-context navigation after replacing stale Fasting examples with canonical Modules/Fasting paths.",
-      "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:39:58.807832Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:40.0458944Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -760,14 +812,14 @@
       "pageSha256": "f2175e29d46c5bf4aca0b8bb756b10ce36fb1049494ab8ee1309f48f3f75fbe6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiModelRoutingOutcome.ps1",
-          "sha256": "37651c9e0fc9e96b40bd0a16e26bc3ac6fcd0a6ddd899b6051e5fd1066cefb55"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Changed implementations were compared with their declared workflow contracts during the complete Full audit and dependency-aware index rebuild; changes harden execution and preserve documented commands and outcomes.",
-      "baseRef": "HEAD",
-      "gitHead": "f07900785920a2798e41e7906270723a64a4affe",
-      "reviewedAtUtc": "2026-08-25T07:33:49.4231698Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:40.3213309Z"
     },
     {
       "pageId": "workflow-ownership-impact",
@@ -791,32 +843,28 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "13465b985d7050bd59ecdf5157c312b7151ce10ff0cc3304090209480e4a2090"
+          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
         }
       ],
-      "reason": "Reviewed workflow, policy, code-graph, eval, and verification pages against logical Modules paths; new ownership, routing, stale-path, and boundary cases are covered by passing regressions.",
-      "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:18:33.2173513Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:40.5657700Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
       "pagePath": ".llm-wiki/workflows/plan-diff-conformance.md",
-      "pageSha256": "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
+      "pageSha256": "bd822668f34d604e09bbacb4af4315b22b23dda78800c8fb26fe105ae693db36",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:02.5629277Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:40.7898583Z"
     },
     {
       "pageId": "workflow-post-task-retrospective",
@@ -824,18 +872,14 @@
       "pageSha256": "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
-          "sha256": "7ddb3feca21285c6b2fc8f0ee965dfc96b1a5f71fef0fb7c8328f0e94172adfa"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:03.0392468Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:41.0967780Z"
     },
     {
       "pageId": "workflow-privacy-review",
@@ -844,13 +888,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "8995fccb604699f3065bd137ad835359c385154a3148efaef7f66f72d0a3c9d4"
+          "sha256": "8583608f36daf0f25ad462192e869e7dba88ebb93e6b668a070f4cfb7b69c980"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "b632e8546632d256b8129677b8984ea82148cdbb7603fbab55be5d73f91ab167"
         }
       ],
-      "reason": "Reviewed unchanged impersonation session fields, central cleanup, handoff prefixes and two-minute TTL, single-use SSO store, role/consent checks and approved MailInbox integration. No provider, credential-storage, HTTP authorization, outbox, audit or retention implementation changes. Existing index/discovery limitations remain explicit; npm warnings are reported separately and not presented as baseline-confirmed.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:51.3022778Z"
+      "reason": "Reviewed Admin impersonation and Products data/provider boundaries against both inventories; no production dataflow change. Ranking aliases do not expand filtering, scanner retains malicious test fixtures in quarantine with unchanged limits.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T14:16:20.7196667Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -873,14 +921,14 @@
       "pageSha256": "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "51c1fa76def0a2f635f54e613e1dc70d21907b2615aed02183ba25bc8fede3a5"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed proof-of-change and requirement-intelligence consumers; adding explicit compiled-index source provenance does not change their mapping, resolution, or proof rules.",
-      "baseRef": "HEAD",
-      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
-      "reviewedAtUtc": "2026-08-29T22:35:36.8448089Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:41.6052352Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -889,13 +937,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "31959d0ab0958d1a5eea0dc25115f3af2193fddf99270251fd8ad24e6b52b460"
+          "sha256": "528e0785a376e9d1b38c3ae2d5f3a7ba5642151076dc1679f9f29a258e2faf63"
         }
       ],
-      "reason": "Reviewed generated paths and workflow claims against actual Admin source moves and tests. Ranking maintenance changes only two source prefixes and one existing exclusion; complete candidate-set equivalence and seven engine-branch cases are preserved. Test-plan stale donor/irrelevant frontend suggestions and cold-index failures are recorded in docs/ai/admin-module-extraction-wiki-findings.md. Navigation and receipts are not execution or coverage proof; old context snapshot remains explicitly stale.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:51.8704776Z"
+      "reason": "Combined5589 unfiltered .NET tests pass; full MCP245, Architecture831. Actual Node/.NET parity200cases and nine non-quality smoke groups passed. Full Wiki remains explicitly non-green for five fresh exact-base-identical ranking cases; see report and measured comparison, not a fabricated PASS receipt.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T14:16:21.6554613Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -926,14 +974,14 @@
       "pageSha256": "d6032fccda979d114e265f30e4f14d9593ded53c6b79d85a2dfc467b07fa3a61",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "51c1fa76def0a2f635f54e613e1dc70d21907b2615aed02183ba25bc8fede3a5"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed proof-of-change and requirement-intelligence consumers; adding explicit compiled-index source provenance does not change their mapping, resolution, or proof rules.",
-      "baseRef": "HEAD",
-      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
-      "reviewedAtUtc": "2026-08-29T22:35:38.9731324Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:42.5371767Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -956,14 +1004,14 @@
       "pageSha256": "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
-          "sha256": "96d3f022465a25766a92b6b339bc36de0205663d3151d66fb1ee9acd4761be83"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed current workflow guidance against the ranking-policy compaction, snapshot provenance, failure classification, telemetry semantics, durable workspace outcomes, and audit-helper extraction; the documented contract remains accurate.",
-      "baseRef": "HEAD",
-      "gitHead": "ac2278cb45329930eda7ebaa431d1b3124034fcf",
-      "reviewedAtUtc": "2026-08-25T14:42:05.9656819Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:43.0301327Z"
     },
     {
       "pageId": "workflow-runtime-impact",
@@ -972,13 +1020,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "16915e1910323ea89c6898a2b22b8c37f35c3551b59aa88296639719282686d7"
+          "sha256": "de42ed1207b6edc57a378f3497a89aa8298b51725f48e9a434413f57341a3ebb"
+        },
+        {
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
         }
       ],
-      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:53.2898881Z"
+      "reason": "Reviewed272project graph, both ownership inventories, archived source evidence and final integration report.125 target references have113 proven Git rename chains; query/history/threshold fields unchanged. Baseline comparison uses revision-appropriate physical paths only.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T14:16:23.0268709Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -987,25 +1039,25 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "31959d0ab0958d1a5eea0dc25115f3af2193fddf99270251fd8ad24e6b52b460"
+          "sha256": "528e0785a376e9d1b38c3ae2d5f3a7ba5642151076dc1679f9f29a258e2faf63"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "16915e1910323ea89c6898a2b22b8c37f35c3551b59aa88296639719282686d7"
+          "sha256": "de42ed1207b6edc57a378f3497a89aa8298b51725f48e9a434413f57341a3ebb"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "8995fccb604699f3065bd137ad835359c385154a3148efaef7f66f72d0a3c9d4"
+          "sha256": "8583608f36daf0f25ad462192e869e7dba88ebb93e6b668a070f4cfb7b69c980"
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
           "sha256": "76755c5dbe9be19df4fb91ded9cd6eaad43ec04e83955a49eaf49a2c2c76bc35"
         }
       ],
-      "reason": "Reviewed unchanged impersonation session fields, central cleanup, handoff prefixes and two-minute TTL, single-use SSO store, role/consent checks and approved MailInbox integration. No provider, credential-storage, HTTP authorization, outbox, audit or retention implementation changes. Existing index/discovery limitations remain explicit; npm warnings are reported separately and not presented as baseline-confirmed.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:53.8918402Z"
+      "reason": "Reviewed Admin impersonation and Products data/provider boundaries against both inventories; no production dataflow change. Ranking aliases do not expand filtering, scanner retains malicious test fixtures in quarantine with unchanged limits.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T14:16:23.8478565Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1013,14 +1065,14 @@
       "pageSha256": "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-          "sha256": "86a2326524b511174be5e32126d2bc42b8ae11c0be370814a5f4358e8df384ae"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
-      "baseRef": "HEAD",
-      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
-      "reviewedAtUtc": "2026-08-28T20:48:31.0325162Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:43.9907946Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -1088,29 +1140,29 @@
       "pageSha256": "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "93577dd72dfc9702078990dfade28ffef39ca6d3bade54ae5c7cf857b8cc0547"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed optional SQL symbol metadata fallback; context selection, budgets, trust, learning, memory, and scheduling semantics remain unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "873e553a3e714b23bec4930b2b662ac9f6946de5",
-      "reviewedAtUtc": "2026-08-26T23:39:20.0763691Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:44.2844430Z"
     },
     {
       "pageId": "workflow-task-workspace",
       "pagePath": ".llm-wiki/workflows/task-workspace.md",
-      "pageSha256": "19d360f7ae44b67345aa130aad1b1ab9d343d76912b945a5c75f9ce0627c3818",
+      "pageSha256": "29db37a4c99ffc488523bf72c8ad43f02e79b329dc88f83ca38813bdd2312683",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "e376094eb6b3a27464d6c3d72ec59c254d02de2332afc029a860845a278b881b"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
-      "baseRef": "HEAD",
-      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
-      "reviewedAtUtc": "2026-08-28T20:48:31.7783419Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:44.6221754Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1118,14 +1170,22 @@
       "pageSha256": "034a7fbc5f124bcf40175e3a37f52338dfec658615c7b91245322232f61f08d6",
       "sources": [
         {
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "a84f2d52c7e100965178d1cb1bec0b1d5dd6e6c5f89892a39f9ad45551101868"
+        },
+        {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "fc31b1e2db67722caebb67155bef41f1883e5a32ef7698e11663a8273972b3df"
+          "sha256": "a885b9c3c97d95ae5bd4028936a5d9cde6be5fad34f99ffca1d88296f6d5be18"
         }
       ],
-      "reason": "Reviewed generated paths and workflow claims against actual Admin source moves and tests. Ranking maintenance changes only two source prefixes and one existing exclusion; complete candidate-set equivalence and seven engine-branch cases are preserved. Test-plan stale donor/irrelevant frontend suggestions and cold-index failures are recorded in docs/ai/admin-module-extraction-wiki-findings.md. Navigation and receipts are not execution or coverage proof; old context snapshot remains explicitly stale.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:54.3899429Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:44.8804830Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1153,28 +1213,32 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "13465b985d7050bd59ecdf5157c312b7151ce10ff0cc3304090209480e4a2090"
+          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
+        },
+        {
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Reviewed workflow, policy, code-graph, eval, and verification pages against logical Modules paths; new ownership, routing, stale-path, and boundary cases are covered by passing regressions.",
-      "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:18:37.3373458Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:45.1385589Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
       "pagePath": ".llm-wiki/workflows/verification-telemetry.md",
-      "pageSha256": "9cc76f52e65dc93eb463ced774f1826e3433f33fb3ac620b0a5c280a106fd88d",
+      "pageSha256": "9155cfe3bfc300002234149cf92c8cecde096d0c583d322dc9b86538f0e3d14d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-          "sha256": "5893e421c6a30e21400547b06d9d5b0b6959321f7f7132c9f1a301f2f017e8ae"
+          "path": ".llm-wiki/policies/workspace-policies.json",
+          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
         }
       ],
-      "reason": "Fixed the same class of bug across ~18 files: $x = if (cond) {...} else { @() } assigns $null instead of an empty array when the else branch runs, because PowerShell does not preserve 'zero output objects' as a value across an if/else used as an expression (proven: $null -eq (if ($false) { 1 } else { @() }) is True). Confirmed via Manage-LlmWikiInstructionOutcome.ps1 crashing wiki.ps1 instruction-outcome-metrics on first real (non-empty) registry data. Wrapped each affected assignment in an outer @(...) so the else branch reliably yields an empty array instead of null. Documented output shapes and behavior for non-empty branches are unchanged.",
-      "baseRef": "HEAD",
-      "gitHead": "c192eb68195dbbf020efcff1e647b8926267506d",
-      "reviewedAtUtc": "2026-08-23T13:04:53.4410919Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:45.3905648Z"
     },
     {
       "pageId": "workflow.change-policy",
@@ -1182,14 +1246,18 @@
       "pageSha256": "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
       "sources": [
         {
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
+        },
+        {
           "path": "AGENTS.md",
-          "sha256": "58213f2bff3f73795f20c8087e41089b1455d4e498630402c5f6ec914505a1ef"
+          "sha256": "9805f2da1e15f27114b7f1c8d6bae74d05386e9e66f533c535494db355b20cc4"
         }
       ],
-      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:49.7262554Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:32.7450628Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1198,28 +1266,28 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/cases.json",
-          "sha256": "099fcb4723ce217bb78f5e342b05c927394de8517a18d9c861f0d4a654bdf79c"
+          "sha256": "d6fc38d2c24528977e11e8f6f9b43f6742b558291eba0a817c4a5b3d47105f83"
         }
       ],
-      "reason": "Reviewed query-context navigation after replacing stale Fasting examples with canonical Modules/Fasting paths.",
-      "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:39:58.2114551Z"
+      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:37.4451817Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
       "pagePath": ".llm-wiki/workflows/evidence-bundle.md",
-      "pageSha256": "f23f6110e42d7342e66693195c2772bf1325e0a2da4a3d51286d0fa18162353d",
+      "pageSha256": "818e187a74b8af0724240c6cea7e86f646f70a1c7d88f8f1ffaff8376038f179",
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "13465b985d7050bd59ecdf5157c312b7151ce10ff0cc3304090209480e4a2090"
+          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
         }
       ],
-      "reason": "Reviewed workflow, policy, code-graph, eval, and verification pages against logical Modules paths; new ownership, routing, stale-path, and boundary cases are covered by passing regressions.",
-      "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:18:30.7886211Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:37.8559169Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",
@@ -1246,18 +1314,26 @@
           "sha256": "03dece972b46b6bf9f0e3d90f88d2a4bcdcdbbc81648c671ac0e040562626ca4"
         },
         {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "20ab556641c78e72ea3bda50f344e67d82a7a6d74cc465216b9460826c915c0b"
+        },
+        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "15da50d92cb933df2eb0b0cae46cbc03518bbd479f1d9b6358e90663731756f6"
+          "sha256": "cdf4aa0c1f9f6163da909356c4086d104282920f5ca8ec512b934aebfa9fa95e"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "b632e8546632d256b8129677b8984ea82148cdbb7603fbab55be5d73f91ab167"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "58213f2bff3f73795f20c8087e41089b1455d4e498630402c5f6ec914505a1ef"
+          "sha256": "9805f2da1e15f27114b7f1c8d6bae74d05386e9e66f533c535494db355b20cc4"
         }
       ],
-      "reason": "Reviewed Admin physical ownership against module map, ADR0016, exact project graph and docs/ai/admin-ownership-inventory.md. Legacy application identity is retained, while foreign Email, Users audit, SSO and mail-service implementations stay with their owners. Primary-backend placement table now names the physical Admin module; generic discovery documentation remains valid.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:49:02.6058193Z"
+      "reason": "Reviewed272project graph, both ownership inventories, archived source evidence and final integration report.125 target references have113 proven Git rename chains; query/history/threshold fields unchanged. Baseline comparison uses revision-appropriate physical paths only.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T14:16:22.3390082Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1266,13 +1342,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "58213f2bff3f73795f20c8087e41089b1455d4e498630402c5f6ec914505a1ef"
+          "sha256": "9805f2da1e15f27114b7f1c8d6bae74d05386e9e66f533c535494db355b20cc4"
         }
       ],
-      "reason": "Reviewed generated paths and workflow claims against actual Admin source moves and tests. Ranking maintenance changes only two source prefixes and one existing exclusion; complete candidate-set equivalence and seven engine-branch cases are preserved. Test-plan stale donor/irrelevant frontend suggestions and cold-index failures are recorded in docs/ai/admin-module-extraction-wiki-findings.md. Navigation and receipts are not execution or coverage proof; old context snapshot remains explicitly stale.",
-      "baseRef": "HEAD",
-      "gitHead": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "reviewedAtUtc": "2026-08-31T10:39:52.8009552Z"
+      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
+      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
+      "reviewedAtUtc": "2026-08-31T13:06:42.8080633Z"
     }
   ]
 }

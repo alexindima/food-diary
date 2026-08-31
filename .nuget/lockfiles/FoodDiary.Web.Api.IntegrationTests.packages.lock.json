@@ -892,6 +892,8 @@
           "FoodDiary.Modules.Marketing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Contracts": "[1.0.0, )",
@@ -1204,7 +1206,7 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
-      "fooddiary.application.products": {
+      "FoodDiary.Application.Products": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
@@ -1215,6 +1217,8 @@
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Usda.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
@@ -1392,6 +1396,7 @@
           "FoodDiary.Modules.Notifications.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Domain": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.PersistenceModel": "[1.0.0, )",
+          "FoodDiary.Modules.Products.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Usda.PersistenceModel": "[1.0.0, )",
@@ -2102,6 +2107,38 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
+      "fooddiary.modules.products.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.products.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.products.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Products": "[1.0.0, )",
+          "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Products.PersistenceModel": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.products.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
+        }
+      },
       "fooddiary.modules.recipecommunity.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -2374,6 +2411,7 @@
           "FoodDiary.Modules.MealPlanning.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Usda.Infrastructure": "[1.0.0, )",

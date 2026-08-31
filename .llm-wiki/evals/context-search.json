@@ -30,7 +30,7 @@
       "id": "weekly-checkin",
       "query": "calculate weekly check in weight and calorie trends",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs"]
+      "expectedPaths": ["Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInCalculator.cs"]
     },
     {
       "id": "usda-provider",
@@ -48,7 +48,7 @@
       "id": "daily-advice",
       "query": "select daily advice for dashboard user",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.DailyAdvices/Services/DailyAdviceSelector.cs"]
+      "expectedPaths": ["Modules/DailyAdvices/Application/Services/DailyAdviceSelector.cs"]
     },
     {
       "id": "russian-plural",
@@ -129,7 +129,7 @@
       "id": "diary-export-read-service",
       "query": "read diary data for a personal export",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Export/Services/ExportDiaryReadService.cs"]
+      "expectedPaths": ["Modules/Export/Application/Services/ExportDiaryReadService.cs"]
     },
     {
       "id": "content-report-review",
@@ -141,7 +141,7 @@
       "id": "cycle-prediction",
       "query": "predict fertile window and future cycle dates",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Cycles/Services/CyclePredictionService.cs"]
+      "expectedPaths": ["Modules/Cycles/Application/Services/CyclePredictionService.cs"]
     },
     {
       "id": "yookassa-api-client",
@@ -225,25 +225,25 @@
       "id": "recipe-comment-read-service",
       "query": "read comments for a community recipe",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.RecipeCommunity/RecipeComments/Services/RecipeCommentReadService.cs"]
+      "expectedPaths": ["Modules/RecipeCommunity/Application/RecipeComments/Services/RecipeCommentReadService.cs"]
     },
     {
       "id": "toggle-recipe-like-handler",
       "query": "toggle whether a user likes a community recipe",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.RecipeCommunity/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs"]
+      "expectedPaths": ["Modules/RecipeCommunity/Application/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs"]
     },
     {
       "id": "dietologist-email-sender",
       "query": "send a dietologist invitation email",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Dietologist/Services/DietologistEmailSender.cs"]
+      "expectedPaths": ["Modules/Dietologist/Application/Services/DietologistEmailSender.cs"]
     },
     {
       "id": "client-task-reminder-processor",
       "query": "process reminders for overdue dietologist client tasks",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Dietologist/Services/ClientTaskDueReminderProcessor.cs"]
+      "expectedPaths": ["Modules/Dietologist/Application/Services/ClientTaskDueReminderProcessor.cs"]
     },
     {
       "id": "marketing-attribution-cleanup-job",
@@ -267,13 +267,13 @@
       "id": "achievement-award-service",
       "query": "award gamification achievements when user progress qualifies",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Gamification/Services/AchievementAwardService.cs"]
+      "expectedPaths": ["Modules/Gamification/Application/Services/AchievementAwardService.cs"]
     },
     {
       "id": "weight-entry-read-service",
       "query": "read weight measurement history for body metrics",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs"]
+      "expectedPaths": ["Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs"]
     },
     {
       "id": "shopping-list-creation-service",
@@ -285,19 +285,19 @@
       "id": "remove-favorite-meal-handler",
       "query": "remove a meal from the user's favorites",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs"]
+      "expectedPaths": ["Modules/Favorites/Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs"]
     },
     {
       "id": "cycle-prediction-revision",
       "query": "revise cycle predictions after menstrual history changes",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Cycles/Services/CyclePredictionRevisionService.cs"]
+      "expectedPaths": ["Modules/Cycles/Application/Services/CyclePredictionRevisionService.cs"]
     },
     {
       "id": "web-push-audience-service",
       "query": "select the web push delivery audience for a notification",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Notifications/Services/WebPushDeliveryAudienceService.cs"]
+      "expectedPaths": ["Modules/Notifications/Application/Services/WebPushDeliveryAudienceService.cs"]
     },
     {
       "id": "fasting-push-dispatcher",
@@ -345,25 +345,25 @@
       "id": "achievement-definition-admin-service",
       "query": "administer gamification achievement definitions",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Gamification/Services/AchievementDefinitionAdministrationService.cs"]
+      "expectedPaths": ["Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs"]
     },
     {
       "id": "dietologist-dashboard-access",
       "query": "check whether a dietologist may access a client dashboard",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Dietologist/Services/DietologistDashboardAccessService.cs"]
+      "expectedPaths": ["Modules/Dietologist/Application/Services/DietologistDashboardAccessService.cs"]
     },
     {
       "id": "marketing-attribution-repository",
       "query": "persist marketing attribution events in the database",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Tracking/MarketingAttributionEventRepository.cs"]
+      "expectedPaths": ["Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs"]
     },
     {
       "id": "recipe-like-read-service",
       "query": "read like status for a community recipe",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.RecipeCommunity/RecipeLikes/Services/RecipeLikeReadService.cs"]
+      "expectedPaths": ["Modules/RecipeCommunity/Application/RecipeLikes/Services/RecipeLikeReadService.cs"]
     },
     {
       "id": "frontend-state-ownership-check",

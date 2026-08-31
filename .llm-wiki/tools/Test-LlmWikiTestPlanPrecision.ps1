@@ -2,6 +2,7 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+& (Join-Path $PSScriptRoot 'Test-LlmWikiModuleTestRoots.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $tool = Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1'
 $changedPaths = @(
@@ -45,10 +46,10 @@ Write-Host "LLM Wiki test-plan precision passed: $($ids.Count) unique command ID
 
 $idempotencyPlan = & $tool `
     -Intent 'Harden billing renewal idempotency and retry behavior' `
-    -ProposedPath 'FoodDiary.Application.Billing/Services/BillingRenewalService.cs' `
+    -ProposedPath 'Modules/Billing/Application/Services/BillingRenewalService.cs' `
     -NoBaseline `
     -Format Json | ConvertFrom-Json
-if (@($idempotencyPlan.focusedTestFiles) -notcontains 'tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.RenewalAndAccessServiceTests.cs') {
+if (@($idempotencyPlan.focusedTestFiles) -notcontains 'Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.RenewalAndAccessServiceTests.cs') {
     throw 'Planned idempotency work did not select the symbol-adjacent renewal tests.'
 }
 $rootPlan = & $tool `
@@ -60,7 +61,7 @@ if (@($rootPlan.repositoryAntipatterns | Where-Object id -eq 'fixed-parent-repos
     throw 'Test plan did not discover repeated fixed-depth repository-root traversal.'
 }
 $repositoryPlan = & $tool `
-    -ChangedPath 'FoodDiary.Infrastructure/Persistence/Products/ProductRepository.cs' `
+    -ChangedPath 'Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs' `
     -Limit 15 `
     -Format Json | ConvertFrom-Json
 $declaredTypeTest = @($repositoryPlan.focusedTestDetails | Where-Object {

@@ -18,13 +18,13 @@
       "id": "export-date-range-policy-probe-6",
       "query": "политика экспорта дневника нормализует диапазон дат и безопасно применяет часовой сдвиг",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs"]
+      "expectedPaths": ["Modules/Export/Application/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs"]
     },
     {
       "id": "diary-csv-generator-probe-6",
       "query": "generate a UTF-8 CSV diary export with escaped meal comments and nutrition totals",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Export/Services/DiaryCsvGenerator.cs"]
+      "expectedPaths": ["Modules/Export/Application/Services/DiaryCsvGenerator.cs"]
     },
     {
       "id": "weekly-goal-progress-reader-probe-6",
@@ -36,31 +36,31 @@
       "id": "weekly-check-in-read-service-probe-6",
       "query": "build a seven-day check-in summary from nutrition meals weight waist and hydration",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs"]
+      "expectedPaths": ["Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs"]
     },
     {
       "id": "gamification-read-service-probe-6",
       "query": "load streaks badges weekly adherence and health score for a gamification profile",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Gamification/Services/GamificationReadService.cs"]
+      "expectedPaths": ["Modules/Gamification/Application/Services/GamificationReadService.cs"]
     },
     {
       "id": "web-push-endpoint-policy-probe-6",
       "query": "проверить endpoint web push: только HTTPS, без localhost, IP, userinfo и нестандартного порта",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Notifications/Common/WebPushEndpointPolicy.cs"]
+      "expectedPaths": ["Modules/Notifications/Application/Common/WebPushEndpointPolicy.cs"]
     },
     {
       "id": "notification-factory-probe-6",
       "query": "create domain notifications for recommendations client tasks invitations and fasting reminders",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Notifications/Common/NotificationFactory.cs"]
+      "expectedPaths": ["Modules/Notifications/Application/Common/NotificationFactory.cs"]
     },
     {
       "id": "content-report-target-parser-probe-6",
       "query": "разобрать обязательный тип цели жалобы без учета регистра или вернуть ошибку валидации",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.ContentReports/Common/ContentReportTargetTypeParser.cs"]
+      "expectedPaths": ["Modules/ContentReports/Application/Common/ContentReportTargetTypeParser.cs"]
     },
     {
       "id": "dashboard-section-data-loader-probe-6",

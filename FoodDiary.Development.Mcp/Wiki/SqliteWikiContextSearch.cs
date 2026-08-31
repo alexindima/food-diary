@@ -400,8 +400,12 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         for (int index = 0; index < candidates.Count; index++) {
             RawCandidate candidate = candidates[index];
             string normalizedPath = NormalizePath(candidate.Path).ToLowerInvariant();
-            bool isTest = TestPath.IsMatch(candidate.Path);
-            string fileName = Path.GetFileName(candidate.Path);
+            bool domainIntent = policy.GenericAffinities.DomainIntentTerms.Any(term => terms.Contains(term.ToLowerInvariant()));
+            string[] selectorPaths = [.. GetRankingPathIdentities(normalizedPath).Where(selectorPath =>
+                string.Equals(selectorPath, normalizedPath, StringComparison.Ordinal) || domainIntent ||
+                !selectorPath.StartsWith("fooddiary.domain/", StringComparison.Ordinal))];
+            bool isTest = TestPath.IsMatch(normalizedPath);
+            string fileName = Path.GetFileName(NormalizePath(candidate.Path));
             bool isExplicitTestCandidate = isTest ||
                 (fileName.StartsWith("Test", StringComparison.OrdinalIgnoreCase) &&
                     Path.GetExtension(fileName) is ".cs" or ".ps1" or ".ts" or ".js" or ".mjs" or ".cjs");
@@ -427,11 +431,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             string searchablePath = ExpandSearchText(NormalizePath(candidate.Path)).ToLowerInvariant();
             string searchableIdentity = $"{searchablePath} {normalizedTitle}";
             string searchableFileIdentity =
-                ExpandSearchText(Path.GetFileName(candidate.Path)).ToLowerInvariant();
-            string topLevelModuleIdentity = normalizedPath.Split('/', 2)[0]
-                .Replace("fooddiary.application.", string.Empty, StringComparison.Ordinal)
-                .Replace("fooddiary.", string.Empty, StringComparison.Ordinal);
-            topLevelModuleIdentity = new string([.. topLevelModuleIdentity.Where(char.IsLetterOrDigit)]);
+                ExpandSearchText(Path.GetFileName(NormalizePath(candidate.Path))).ToLowerInvariant();
+            string topLevelModuleIdentity = GetRankingModuleIdentity(normalizedPath);
             string[] normalizedDirectTerms = [.. directQueryTerms.Select(term =>
                 new string([.. term.Where(char.IsLetterOrDigit)]))];
             if (topLevelModuleIdentity.Length >= policy.ModuleIdentityMinimumLength &&
@@ -466,7 +467,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 reasons.Add($"path/title affinity {string.Join(", ", identityMatches)}");
             }
             string[] directFileNameMatches = [.. directTerms.Where(term =>
-                term.Length >= policy.DirectFileNameAffinity.MinimumTermLength &&
+                (term.Length >= policy.DirectFileNameAffinity.MinimumTermLength ||
+                    (term.Length >= 2 && term.All(char.IsLetterOrDigit) && term.Any(char.IsLetter) && term.Any(char.IsDigit))) &&
                 searchableFileIdentity.Contains(term, StringComparison.Ordinal))];
             int directFileNameScore = Math.Min(
                 directFileNameMatches.Length * policy.DirectFileNameAffinity.ScorePerMatch,
@@ -506,9 +508,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 bool intentMatched = intentMatchCount >= minimumMatches;
                 bool pathMatched = pathValues.Any(pathValue => suffix
                     ? normalizedPath.EndsWith(pathValue.ToLowerInvariant(), StringComparison.Ordinal)
-                    : normalizedPath.Contains(
+                    : selectorPaths.Any(selectorPath => selectorPath.Contains(
                         NormalizePath(pathValue).ToLowerInvariant(),
-                        StringComparison.Ordinal));
+                        StringComparison.Ordinal)));
                 if (!intentMatched || !pathMatched || value == 0) {
                     return;
                 }
@@ -521,9 +523,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 IReadOnlyList<string> pathValues,
                 int value) {
                 if (!string.Equals(changeType, expectedType, StringComparison.OrdinalIgnoreCase) ||
-                    !pathValues.Any(pathValue => normalizedPath.Contains(
+                    !pathValues.Any(pathValue => selectorPaths.Any(selectorPath => selectorPath.Contains(
                         NormalizePath(pathValue).ToLowerInvariant(),
-                        StringComparison.Ordinal))) {
+                        StringComparison.Ordinal)))) {
                     return;
                 }
                 score += value;
@@ -666,9 +668,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     (boost.RecordTypes is { Length: > 0 } && !boost.RecordTypes.Any(recordType =>
                         string.Equals(recordType, candidate.RecordType, StringComparison.OrdinalIgnoreCase))) ||
                     (boost.PathPrefixes is { Length: > 0 } && !boost.PathPrefixes.Any(prefix =>
-                        normalizedPath.StartsWith(NormalizePath(prefix).ToLowerInvariant(), StringComparison.Ordinal))) ||
+                        selectorPaths.Any(selectorPath => selectorPath.StartsWith(NormalizePath(prefix).ToLowerInvariant(), StringComparison.Ordinal)))) ||
                     (boost.ExcludedPathPrefixes is { Length: > 0 } && boost.ExcludedPathPrefixes.Any(prefix =>
-                        normalizedPath.StartsWith(NormalizePath(prefix).ToLowerInvariant(), StringComparison.Ordinal))) ||
+                        selectorPaths.Any(selectorPath => selectorPath.StartsWith(NormalizePath(prefix).ToLowerInvariant(), StringComparison.Ordinal)))) ||
                     (boost.PathSuffixes is { Length: > 0 } && !boost.PathSuffixes.Any(suffix =>
                         normalizedPath.EndsWith(suffix.ToLowerInvariant(), StringComparison.Ordinal)))) {
                     continue;
@@ -714,7 +716,7 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 int matchedTerms = boost.QueryTerms.Count(term =>
                     eligibleQueryTerms.Contains(term.ToLowerInvariant()));
                 bool matchesPath = boost.PathPrefixes.Any(prefix =>
-                    normalizedPath.StartsWith(NormalizePath(prefix).ToLowerInvariant(), StringComparison.Ordinal));
+                    selectorPaths.Any(selectorPath => selectorPath.StartsWith(NormalizePath(prefix).ToLowerInvariant(), StringComparison.Ordinal)));
                 if (matchedTerms >= boost.MinimumMatches && matchesPath) {
                     score += boost.Score;
                     matchedRankingPolicy = true;
@@ -780,17 +782,26 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 string.Equals(normalizedPath, "agents.md", StringComparison.Ordinal) ||
                 (normalizedPath.StartsWith("docs/", StringComparison.Ordinal) &&
                     normalizedPath.EndsWith(".md", StringComparison.Ordinal));
-            if (isDocumentationCandidate &&
-                policy.DocumentationImplementationPenalty.ChangeTypes.Any(candidateChangeType =>
-                    string.Equals(candidateChangeType, changeType, StringComparison.OrdinalIgnoreCase)) &&
-                !requestsDocumentation) {
+            bool implicitImplementationIntent = string.Equals(changeType, "Any", StringComparison.OrdinalIgnoreCase) &&
+                new[] {
+                    genericAffinity.DomainIntentTerms, genericAffinity.ApiIntentTerms,
+                    genericAffinity.DatabaseIntentTerms, genericAffinity.IntegrationIntentTerms,
+                }
+                .Any(intentTerms => intentTerms.Any(term => terms.Contains(term.ToLowerInvariant())));
+            implicitImplementationIntent |= string.Equals(changeType, "Any", StringComparison.OrdinalIgnoreCase) &&
+                !genericAffinity.InfrastructureExcludedIntentTerms.Any(term => terms.Contains(term.ToLowerInvariant())) &&
+                genericAffinity.InfrastructureIntentTerms.Count(term => terms.Contains(term.ToLowerInvariant())) >=
+                    genericAffinity.InfrastructureMinimumMatches;
+            if (isDocumentationCandidate && !requestsDocumentation &&
+                (implicitImplementationIntent || policy.DocumentationImplementationPenalty.ChangeTypes.Any(candidateChangeType =>
+                    string.Equals(candidateChangeType, changeType, StringComparison.OrdinalIgnoreCase)))) {
                 score -= policy.DocumentationImplementationPenalty.Score;
                 reasons.Add("documentation candidate penalty for implementation intent");
             }
             bool requestsAbstraction = terms.Overlaps(["interface", "contract", "abstraction"]);
-            if (!requestsAbstraction && normalizedPath.StartsWith(
+            if (!requestsAbstraction && selectorPaths.Any(selectorPath => selectorPath.StartsWith(
                 "fooddiary.application.abstractions/",
-                StringComparison.Ordinal)) {
+                StringComparison.Ordinal))) {
                 score -= policy.ApplicationAbstractionPenalty;
             }
             if (!requestsAbstraction && InterfacePath.IsMatch(candidate.Path)) {
@@ -1150,6 +1161,49 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
 
     private static double ElapsedMilliseconds(Stopwatch stopwatch) =>
         Math.Round(stopwatch.Elapsed.TotalMilliseconds, 2, MidpointRounding.AwayFromZero);
+
+    private static string[] GetRankingPathIdentities(string path) {
+        string[] parts = path.Split('/', 4);
+        if (parts.Length == 4 && string.Equals(parts[0], "modules", StringComparison.Ordinal) &&
+            string.Equals(parts[2], "tests", StringComparison.Ordinal)) {
+            string[] testParts = parts[3].Split('/', 2);
+            string prefix = $"fooddiary.modules.{parts[1]}.";
+            if (testParts.Length == 2 && testParts[0].StartsWith(prefix, StringComparison.Ordinal) &&
+                testParts[0].EndsWith(".tests", StringComparison.Ordinal)) {
+                string layer = testParts[0][prefix.Length..^".tests".Length];
+                if (layer is "application" or "domain" or "infrastructure" or "infrastructure.integration") {
+                    return [path, $"tests/fooddiary.{layer}.tests/{testParts[1]}"];
+                }
+            }
+        }
+        if (parts.Length != 4 || !string.Equals(parts[0], "modules", StringComparison.Ordinal) || parts[3].Length == 0 || TestPath.IsMatch(path)) {
+            return [path];
+        }
+        string tail = parts[3];
+        string? alias = parts[2] switch {
+            "application" => tail.StartsWith("abstractions/", StringComparison.Ordinal)
+                ? $"fooddiary.application.abstractions/{tail["abstractions/".Length..]}"
+                : $"fooddiary.application.{parts[1]}/{tail}",
+            "domain" => $"fooddiary.domain/{tail}",
+            "infrastructure" => tail.StartsWith("model/", StringComparison.Ordinal)
+                ? $"fooddiary.infrastructure/persistence/{tail["model/".Length..]}"
+                : $"fooddiary.infrastructure/{tail}",
+            _ => null,
+        };
+        return alias is null ? [path] : [path, alias];
+    }
+
+    private static string GetRankingModuleIdentity(string path) {
+        string[] parts = path.Split('/');
+        string root = parts.Length >= 4 && string.Equals(parts[0], "modules", StringComparison.Ordinal) ? parts[1] : parts[0];
+        if (root.StartsWith("fooddiary.application.", StringComparison.Ordinal)) {
+            root = root["fooddiary.application.".Length..];
+        }
+        if (root.StartsWith("fooddiary.", StringComparison.Ordinal)) {
+            root = root["fooddiary.".Length..];
+        }
+        return new string([.. root.Where(char.IsLetterOrDigit)]);
+    }
 
     private static string NormalizePath(string path) => path.Replace('\\', '/');
 

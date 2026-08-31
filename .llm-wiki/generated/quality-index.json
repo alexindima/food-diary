@@ -5,11 +5,11 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4754,
-    "wikiToolFiles": 202,
+    "productionFiles": 4757,
+    "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 783,
-    "criticalSymbolsWithTestReferences": 764,
+    "criticalSymbols": 784,
+    "criticalSymbolsWithTestReferences": 765,
     "criticalSymbolsWithoutTestReferences": 19,
     "debtMarkers": 11
   },
@@ -24,19 +24,19 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 1268,
-      "decisionPoints": 240,
+      "nonBlankLines": 1320,
+      "decisionPoints": 265,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 385.36
+      "structuralRiskScore": 423.9
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-      "nonBlankLines": 868,
-      "decisionPoints": 170,
+      "nonBlankLines": 872,
+      "decisionPoints": 172,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 274.36
+      "structuralRiskScore": 277.44
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
@@ -183,14 +183,6 @@
       "structuralRiskScore": 137.62
     },
     {
-      "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-      "nonBlankLines": 479,
-      "decisionPoints": 84,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 137.58
-    },
-    {
       "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
       "nonBlankLines": 508,
       "decisionPoints": 84,
@@ -221,6 +213,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 130.9
+    },
+    {
+      "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+      "nonBlankLines": 459,
+      "decisionPoints": 79,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 129.68
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
@@ -1426,11 +1426,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-      "nonBlankLines": 868,
-      "decisionPoints": 170,
+      "nonBlankLines": 872,
+      "decisionPoints": 172,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 274.36
+      "structuralRiskScore": 277.44
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiToolingContext.ps1",
@@ -1586,11 +1586,11 @@
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-      "nonBlankLines": 479,
-      "decisionPoints": 84,
+      "nonBlankLines": 459,
+      "decisionPoints": 79,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 137.58
+      "structuralRiskScore": 129.68
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
@@ -1634,11 +1634,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiChangeSetSnapshot.ps1",
-      "nonBlankLines": 59,
-      "decisionPoints": 11,
+      "nonBlankLines": 62,
+      "decisionPoints": 12,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.68
+      "structuralRiskScore": 21.24
     },
     {
       "path": ".llm-wiki/tools/LlmWikiCollections.ps1",
@@ -1682,11 +1682,11 @@
     },
     {
       "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
-      "nonBlankLines": 143,
-      "decisionPoints": 18,
+      "nonBlankLines": 169,
+      "decisionPoints": 26,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 31.86
+      "structuralRiskScore": 44.38
     },
     {
       "path": ".llm-wiki/tools/LlmWikiGitRenames.ps1",
@@ -1735,6 +1735,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 22.92
+    },
+    {
+      "path": ".llm-wiki/tools/LlmWikiModuleTestRoots.ps1",
+      "nonBlankLines": 13,
+      "decisionPoints": 5,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.76
     },
     {
       "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
@@ -3745,86 +3753,6 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductMutationTransactionRunner.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductOverviewReadService.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductReadRepository.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductRepository.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Products/Common/IProductWriteRepository.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Products/Common/ProductErrors.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Products/Models/ProductOverviewReadItem.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Products/Models/ProductQueryFilters.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
       "path": "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemReadRepository.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -5513,422 +5441,6 @@
       "structuralRiskScore": 3.94
     },
     {
-      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductCommand.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
-      "nonBlankLines": 54,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.58
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductCommandValidator.cs",
-      "nonBlankLines": 117,
-      "decisionPoints": 10,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.34
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductValuePreparer.cs",
-      "nonBlankLines": 69,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.38
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductValues.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/DeleteProduct/DeleteProductCommand.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
-      "nonBlankLines": 71,
-      "decisionPoints": 5,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.92
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/DeleteProduct/DeleteProductCommandValidator.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.86
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/DuplicateProduct/DuplicateProductCommand.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
-      "nonBlankLines": 69,
-      "decisionPoints": 3,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.88
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/DuplicateProduct/DuplicateProductCommandValidator.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.84
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateApplier.cs",
-      "nonBlankLines": 83,
-      "decisionPoints": 27,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 42.16
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
-      "nonBlankLines": 58,
-      "decisionPoints": 19,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 31.66
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
-      "nonBlankLines": 84,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.18
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
-      "nonBlankLines": 85,
-      "decisionPoints": 11,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.2
-    },
-    {
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/UpdateProductCommandValidator.cs",
-      "nonBlankLines": 160,
-      "decisionPoints": 17,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 30.7
-    },
-    {
-      "path": "FoodDiary.Application.Products/Common/IProductSearchSuggestionProvider.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Products/Common/IRecentProductReadService.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
-    },
-    {
-      "path": "FoodDiary.Application.Products/Common/ProductCommandParsers.cs",
-      "nonBlankLines": 61,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.72
-    },
-    {
-      "path": "FoodDiary.Application.Products/Common/ProductCommandValidation.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.98
-    },
-    {
-      "path": "FoodDiary.Application.Products/Common/ProductEnumFilterParser.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.34
-    },
-    {
-      "path": "FoodDiary.Application.Products/Common/ProductImageAssetResolution.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Products/Common/ProductImageAssetResolver.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.04
-    },
-    {
-      "path": "FoodDiary.Application.Products/Common/ProductRequiredIdParser.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
-    },
-    {
-      "path": "FoodDiary.Application.Products/Common/RecentProductOverviewLoader.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.9
-    },
-    {
-      "path": "FoodDiary.Application.Products/DependencyInjection.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
-      "path": "FoodDiary.Application.Products/Mappings/ProductMappings.cs",
-      "nonBlankLines": 44,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.88
-    },
-    {
-      "path": "FoodDiary.Application.Products/Mappings/ProductOverviewReadMappings.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.76
-    },
-    {
-      "path": "FoodDiary.Application.Products/Models/ProductModel.cs",
-      "nonBlankLines": 32,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
-    },
-    {
-      "path": "FoodDiary.Application.Products/Models/ProductOverviewModel.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Products/Models/ProductSearchSuggestionModel.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/GetProductById/GetProductByIdQuery.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
-      "nonBlankLines": 47,
-      "decisionPoints": 3,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.44
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/GetProductById/GetProductByIdQueryValidator.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.86
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/GetProducts/GetProductsQuery.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/GetProducts/GetProductsQueryHandler.cs",
-      "nonBlankLines": 53,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.56
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/GetProducts/GetProductsQueryValidator.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.96
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-      "nonBlankLines": 117,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.84
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.04
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.12
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/GetRecentProducts/GetRecentProductsQueryValidator.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.84
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.48
-    },
-    {
-      "path": "FoodDiary.Application.Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryValidator.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.28
-    },
-    {
-      "path": "FoodDiary.Application.Products/SearchSuggestions/OpenFoodFactsProductSearchSuggestionProvider.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
-    },
-    {
-      "path": "FoodDiary.Application.Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
-      "nonBlankLines": 42,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.34
-    },
-    {
-      "path": "FoodDiary.Application.Products/Services/ProductUsdaLinkService.cs",
-      "nonBlankLines": 45,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.9
-    },
-    {
-      "path": "FoodDiary.Application.Products/Services/RecentProductReadService.cs",
-      "nonBlankLines": 61,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.22
-    },
-    {
       "path": "FoodDiary.Application.Runtime/AssemblyInfo.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
@@ -6794,11 +6306,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 1268,
-      "decisionPoints": 240,
+      "nonBlankLines": 1320,
+      "decisionPoints": 265,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 385.36
+      "structuralRiskScore": 423.9
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",
@@ -8082,11 +7594,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Food.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.16
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Meals.cs",
@@ -8119,14 +7631,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.34
-    },
-    {
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Products.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.RecentItems.cs",
@@ -8385,14 +7889,6 @@
       "structuralRiskScore": 0.3
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Products/ProductConfiguration.cs",
-      "nonBlankLines": 54,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.08
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/RecentItems/RecentItemConfiguration.cs",
       "nonBlankLines": 27,
       "decisionPoints": 0,
@@ -8578,11 +8074,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 49,
+      "nonBlankLines": 50,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.98
+      "structuralRiskScore": 1
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -8689,38 +8185,6 @@
       "structuralRiskScore": 0.62
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Products/CachedProductRepository.cs",
-      "nonBlankLines": 63,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.76
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.24
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "nonBlankLines": 171,
-      "decisionPoints": 15,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.92
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Products/ProductRepository.cs",
-      "nonBlankLines": 83,
-      "decisionPoints": 12,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.66
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
       "nonBlankLines": 29,
       "decisionPoints": 3,
@@ -8810,11 +8274,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.2
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DatabaseCommandTelemetryInterceptor.cs",
@@ -8961,14 +8425,6 @@
       "structuralRiskScore": 6.54
     },
     {
-      "path": "FoodDiary.Infrastructure/Services/ProductLookupService.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
       "path": "FoodDiary.Infrastructure/Services/StructuredAuditLogger.cs",
       "nonBlankLines": 18,
       "decisionPoints": 3,
@@ -9018,11 +8474,11 @@
     },
     {
       "path": "FoodDiary.Initializer/Program.cs",
-      "nonBlankLines": 362,
+      "nonBlankLines": 361,
       "decisionPoints": 41,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 68.74
+      "structuralRiskScore": 68.72
     },
     {
       "path": "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -14234,11 +13690,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 138,
+      "nonBlankLines": 137,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.76
+      "structuralRiskScore": 5.74
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -36337,6 +35793,574 @@
       "structuralRiskScore": 31.08
     },
     {
+      "path": "Modules/Products/Application/Abstractions/Products/Common/IProductMutationTransactionRunner.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Products/Application/Abstractions/Products/Common/IProductReadRepository.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Products/Application/Abstractions/Products/Common/IProductRepository.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Products/Application/Abstractions/Products/Common/IProductWriteRepository.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Products/Application/Abstractions/Products/Common/ProductErrors.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommand.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.52
+    },
+    {
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommandHandler.cs",
+      "nonBlankLines": 54,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.58
+    },
+    {
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommandValidator.cs",
+      "nonBlankLines": 117,
+      "decisionPoints": 10,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 19.34
+    },
+    {
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValuePreparer.cs",
+      "nonBlankLines": 69,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.38
+    },
+    {
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
+      "nonBlankLines": 71,
+      "decisionPoints": 5,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.92
+    },
+    {
+      "path": "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommandValidator.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.86
+    },
+    {
+      "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommand.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
+      "nonBlankLines": 69,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.88
+    },
+    {
+      "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommandValidator.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.84
+    },
+    {
+      "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateApplier.cs",
+      "nonBlankLines": 83,
+      "decisionPoints": 27,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 42.16
+    },
+    {
+      "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
+      "nonBlankLines": 58,
+      "decisionPoints": 19,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 31.66
+    },
+    {
+      "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
+      "nonBlankLines": 84,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.18
+    },
+    {
+      "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommand.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.66
+    },
+    {
+      "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
+      "nonBlankLines": 85,
+      "decisionPoints": 11,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 20.2
+    },
+    {
+      "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommandValidator.cs",
+      "nonBlankLines": 160,
+      "decisionPoints": 17,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 30.7
+    },
+    {
+      "path": "Modules/Products/Application/Common/IProductSearchSuggestionProvider.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Products/Application/Common/IRecentProductReadService.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
+      "path": "Modules/Products/Application/Common/ProductCommandParsers.cs",
+      "nonBlankLines": 61,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.72
+    },
+    {
+      "path": "Modules/Products/Application/Common/ProductCommandValidation.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.98
+    },
+    {
+      "path": "Modules/Products/Application/Common/ProductEnumFilterParser.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.34
+    },
+    {
+      "path": "Modules/Products/Application/Common/ProductImageAssetResolution.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Products/Application/Common/ProductImageAssetResolver.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.04
+    },
+    {
+      "path": "Modules/Products/Application/Common/ProductRequiredIdParser.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
+      "path": "Modules/Products/Application/Common/RecentProductOverviewLoader.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.9
+    },
+    {
+      "path": "Modules/Products/Application/DependencyInjection.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Products/Application/Mappings/ProductMappings.cs",
+      "nonBlankLines": 44,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.88
+    },
+    {
+      "path": "Modules/Products/Application/Mappings/ProductOverviewReadMappings.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.76
+    },
+    {
+      "path": "Modules/Products/Application/Models/ProductModel.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.64
+    },
+    {
+      "path": "Modules/Products/Application/Models/ProductOverviewModel.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Products/Application/Models/ProductSearchSuggestionModel.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Products/Application/Queries/GetProductById/GetProductByIdQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Products/Application/Queries/GetProductById/GetProductByIdQueryHandler.cs",
+      "nonBlankLines": 47,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.44
+    },
+    {
+      "path": "Modules/Products/Application/Queries/GetProductById/GetProductByIdQueryValidator.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.86
+    },
+    {
+      "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQuery.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQueryHandler.cs",
+      "nonBlankLines": 53,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.56
+    },
+    {
+      "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQueryValidator.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.96
+    },
+    {
+      "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQuery.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
+      "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+      "nonBlankLines": 117,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.84
+    },
+    {
+      "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.04
+    },
+    {
+      "path": "Modules/Products/Application/Queries/GetRecentProducts/GetRecentProductsQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Products/Application/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
+      "nonBlankLines": 31,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.12
+    },
+    {
+      "path": "Modules/Products/Application/Queries/GetRecentProducts/GetRecentProductsQueryValidator.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.84
+    },
+    {
+      "path": "Modules/Products/Application/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Products/Application/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.48
+    },
+    {
+      "path": "Modules/Products/Application/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryValidator.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.28
+    },
+    {
+      "path": "Modules/Products/Application/SearchSuggestions/OpenFoodFactsProductSearchSuggestionProvider.cs",
+      "nonBlankLines": 31,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.62
+    },
+    {
+      "path": "Modules/Products/Application/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
+      "nonBlankLines": 42,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.34
+    },
+    {
+      "path": "Modules/Products/Application/Services/ProductUsdaLinkService.cs",
+      "nonBlankLines": 45,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.9
+    },
+    {
+      "path": "Modules/Products/Application/Services/RecentProductReadService.cs",
+      "nonBlankLines": 61,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.22
+    },
+    {
+      "path": "Modules/Products/Contracts/Products/Common/IProductLookupService.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Products/Contracts/Products/Common/IProductOverviewReadService.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
+      "path": "Modules/Products/Contracts/Products/Common/IProductUsdaLinkService.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
+      "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
+      "nonBlankLines": 31,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.62
+    },
+    {
+      "path": "Modules/Products/Contracts/Products/Models/ProductQueryFilters.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Products/Infrastructure/Model/Configurations/Products/ProductConfiguration.cs",
+      "nonBlankLines": 54,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.08
+    },
+    {
+      "path": "Modules/Products/Infrastructure/Model/ProductsPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Products/Infrastructure/Persistence/Products/CachedProductRepository.cs",
+      "nonBlankLines": 63,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.76
+    },
+    {
+      "path": "Modules/Products/Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.24
+    },
+    {
+      "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
+      "nonBlankLines": 171,
+      "decisionPoints": 15,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 25.92
+    },
+    {
+      "path": "Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs",
+      "nonBlankLines": 83,
+      "decisionPoints": 12,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 19.66
+    },
+    {
+      "path": "Modules/Products/Infrastructure/ProductsModuleRegistration.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Products/Infrastructure/Properties/AssemblyInfo.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Products/Infrastructure/Services/ProductLookupService.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
       "path": "Modules/RecipeCommunity/Application/Abstractions/RecipeComments/Common/IRecipeCommentReadModelRepository.cs",
       "nonBlankLines": 10,
       "decisionPoints": 0,
@@ -39278,11 +39302,11 @@
     {
       "name": "CreateProductCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommandHandler.cs",
       "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.CreateCommandTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.CreateCommandTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39510,11 +39534,11 @@
     {
       "name": "DeleteProductCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
+      "path": "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
       "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -39650,11 +39674,11 @@
     {
       "name": "DuplicateProductCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
+      "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
       "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40646,11 +40670,11 @@
     {
       "name": "UpdateProductCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
+      "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.UpdateCommandTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.UpdateCommandTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43096,11 +43120,11 @@
     {
       "name": "GetProductByIdQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
+      "path": "Modules/Products/Application/Queries/GetProductById/GetProductByIdQueryHandler.cs",
       "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43109,7 +43133,7 @@
     {
       "name": "GetProductsOverviewQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+      "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
       "line": 17,
       "testReferenceCount": 3,
       "testReferences": [
@@ -43123,11 +43147,11 @@
     {
       "name": "GetProductsQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Queries/GetProducts/GetProductsQueryHandler.cs",
+      "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQueryHandler.cs",
       "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43149,11 +43173,12 @@
     {
       "name": "GetRecentProductsQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
+      "path": "Modules/Products/Application/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
       "line": 9,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.cs",
         "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
@@ -43637,11 +43662,11 @@
     {
       "name": "SearchProductSuggestionsQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
+      "path": "Modules/Products/Application/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductSearchSuggestionTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44050,11 +44075,11 @@
     {
       "name": "CreateProductCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Commands/CreateProduct/CreateProductCommandValidator.cs",
+      "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommandValidator.cs",
       "line": 6,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44209,11 +44234,11 @@
     {
       "name": "DeleteProductCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Commands/DeleteProduct/DeleteProductCommandValidator.cs",
+      "path": "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44294,11 +44319,11 @@
     {
       "name": "DuplicateProductCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Commands/DuplicateProduct/DuplicateProductCommandValidator.cs",
+      "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44758,11 +44783,11 @@
     {
       "name": "GetProductByIdQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Queries/GetProductById/GetProductByIdQueryValidator.cs",
+      "path": "Modules/Products/Application/Queries/GetProductById/GetProductByIdQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44770,12 +44795,12 @@
     {
       "name": "GetProductsOverviewQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
+      "path": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44783,11 +44808,11 @@
     {
       "name": "GetProductsQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Queries/GetProducts/GetProductsQueryValidator.cs",
+      "path": "Modules/Products/Application/Queries/GetProducts/GetProductsQueryValidator.cs",
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44805,12 +44830,12 @@
     {
       "name": "GetRecentProductsQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Queries/GetRecentProducts/GetRecentProductsQueryValidator.cs",
+      "path": "Modules/Products/Application/Queries/GetRecentProducts/GetRecentProductsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45392,17 +45417,17 @@
     {
       "name": "ProductUpdateLimitValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
+      "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.UpdateCommandTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.UpdateCommandTests.cs"
       ],
       "coverageKind": "tested-consumer-reference",
       "coveredThrough": [
         {
           "symbol": "UpdateProductCommandHandler",
-          "path": "FoodDiary.Application.Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs"
+          "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommandHandler.cs"
         }
       ]
     },
@@ -45616,11 +45641,11 @@
     {
       "name": "SearchProductSuggestionsQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryValidator.cs",
+      "path": "Modules/Products/Application/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductSearchSuggestionTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46060,11 +46085,11 @@
     {
       "name": "UpdateProductCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Products/Commands/UpdateProduct/UpdateProductCommandValidator.cs",
+      "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommandValidator.cs",
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -47549,9 +47574,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiChangeSetSnapshot.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1"
+        ".llm-wiki/tools/Test-LlmWikiCriticalToolContracts.ps1",
+        ".llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -47709,6 +47735,19 @@
       "coveredThrough": []
     },
     {
+      "name": "LlmWikiModuleTestRoots",
+      "role": "WikiTool",
+      "path": ".llm-wiki/tools/LlmWikiModuleTestRoots.ps1",
+      "line": 1,
+      "testReferenceCount": 2,
+      "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiModuleTestRoots.ps1",
+        ".llm-wiki/tools/Test-LlmWikiTestPlanPrecision.ps1"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
       "name": "LlmWikiProcess",
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiProcess.ps1",
@@ -47772,7 +47811,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiSmokeSandbox.ps1",
       "line": 1,
-      "testReferenceCount": 28,
+      "testReferenceCount": 29,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
         ".llm-wiki/tools/Test-LlmWikiApplicationModulePaths.ps1",
@@ -47791,6 +47830,7 @@
         ".llm-wiki/tools/Test-LlmWikiKnowledgeIsolation.ps1",
         ".llm-wiki/tools/Test-LlmWikiLearningPromotionMigration.ps1",
         ".llm-wiki/tools/Test-LlmWikiMemoryIsolation.ps1",
+        ".llm-wiki/tools/Test-LlmWikiModuleTestRoots.ps1",
         ".llm-wiki/tools/Test-LlmWikiOperationalTelemetry.ps1",
         ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
         ".llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1",

@@ -1,0 +1,1362 @@
+{
+  "purpose": "Source-proven relocation of existing evaluation targets. No query, score, threshold, cohort or historical metric change.",
+  "base": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
+  "mappings": [
+    {
+      "old": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
+      "current": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
+          "new": "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+      "current": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+          "new": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
+          "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
+      "current": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
+          "new": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
+          "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+      "current": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+          "new": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
+          "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
+      "current": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
+          "new": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
+          "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
+      "current": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
+          "new": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPaymentRecorder.cs",
+          "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
+      "current": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
+          "new": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
+          "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+      "current": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+          "new": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs",
+          "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Billing/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
+      "current": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Billing/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
+          "new": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
+          "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Billing/Common/BillingCurrentUserAccessResolver.cs",
+      "current": "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Billing/Common/BillingCurrentUserAccessResolver.cs",
+          "new": "Modules/Billing/Application/Common/BillingCurrentUserAccessResolver.cs",
+          "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Billing/Services/BillingAccessService.cs",
+      "current": "Modules/Billing/Application/Services/BillingAccessService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Billing/Services/BillingAccessService.cs",
+          "new": "Modules/Billing/Application/Services/BillingAccessService.cs",
+          "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Billing/Services/BillingRenewalService.cs",
+      "current": "Modules/Billing/Application/Services/BillingRenewalService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Billing/Services/BillingRenewalService.cs",
+          "new": "Modules/Billing/Application/Services/BillingRenewalService.cs",
+          "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
+      "current": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
+          "new": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
+          "commit": "037bbc254b80b5e8c2cd683183fbec2cb4aa4315",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.BodyMetrics/Common/RequiredIdParser.cs",
+      "current": "Modules/BodyMetrics/Application/Common/RequiredIdParser.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.BodyMetrics/Common/RequiredIdParser.cs",
+          "new": "Modules/BodyMetrics/Application/Common/RequiredIdParser.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.BodyMetrics/Common/UtcDateNormalizer.cs",
+      "current": "Modules/BodyMetrics/Application/Common/UtcDateNormalizer.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.BodyMetrics/Common/UtcDateNormalizer.cs",
+          "new": "Modules/BodyMetrics/Application/Common/UtcDateNormalizer.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.BodyMetrics/WaistEntries/Services/WaistEntryReadService.cs",
+      "current": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.BodyMetrics/WaistEntries/Services/WaistEntryReadService.cs",
+          "new": "Modules/BodyMetrics/Application/WaistEntries/Services/WaistEntryReadService.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
+      "current": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
+          "new": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.ContentReports/Common/ContentReportTargetTypeParser.cs",
+      "current": "Modules/ContentReports/Application/Common/ContentReportTargetTypeParser.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.ContentReports/Common/ContentReportTargetTypeParser.cs",
+          "new": "Modules/ContentReports/Application/Common/ContentReportTargetTypeParser.cs",
+          "commit": "bbcb9f55b06346151e1b2ac9c65e4a40e890c7bc",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.ContentReports/Services/ContentReportAdministrationService.cs",
+      "current": "Modules/ContentReports/Application/Services/ContentReportAdministrationService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.ContentReports/Services/ContentReportAdministrationService.cs",
+          "new": "Modules/ContentReports/Application/Services/ContentReportAdministrationService.cs",
+          "commit": "bbcb9f55b06346151e1b2ac9c65e4a40e890c7bc",
+          "score": "R089"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Cycles/Internal/UtcDateNormalizer.cs",
+      "current": "Modules/Cycles/Application/Internal/UtcDateNormalizer.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Cycles/Internal/UtcDateNormalizer.cs",
+          "new": "Modules/Cycles/Application/Internal/UtcDateNormalizer.cs",
+          "commit": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Cycles/Services/CyclePredictionRevisionService.cs",
+      "current": "Modules/Cycles/Application/Services/CyclePredictionRevisionService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Cycles/Services/CyclePredictionRevisionService.cs",
+          "new": "Modules/Cycles/Application/Services/CyclePredictionRevisionService.cs",
+          "commit": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Cycles/Services/CyclePredictionService.cs",
+      "current": "Modules/Cycles/Application/Services/CyclePredictionService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Cycles/Services/CyclePredictionService.cs",
+          "new": "Modules/Cycles/Application/Services/CyclePredictionService.cs",
+          "commit": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
+      "current": "Modules/Cycles/Application/Services/CycleReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
+          "new": "Modules/Cycles/Application/Services/CycleReadService.cs",
+          "commit": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.DailyAdvices/Services/DailyAdviceSelector.cs",
+      "current": "Modules/DailyAdvices/Application/Services/DailyAdviceSelector.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.DailyAdvices/Services/DailyAdviceSelector.cs",
+          "new": "Modules/DailyAdvices/Application/Services/DailyAdviceSelector.cs",
+          "commit": "015e1bf192c08b74005d18ca0740e7ae937f920a",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Dietologist/Services/ClientTaskDueReminderProcessor.cs",
+      "current": "Modules/Dietologist/Application/Services/ClientTaskDueReminderProcessor.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Dietologist/Services/ClientTaskDueReminderProcessor.cs",
+          "new": "Modules/Dietologist/Application/Services/ClientTaskDueReminderProcessor.cs",
+          "commit": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Dietologist/Services/DietologistDashboardAccessService.cs",
+      "current": "Modules/Dietologist/Application/Services/DietologistDashboardAccessService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Dietologist/Services/DietologistDashboardAccessService.cs",
+          "new": "Modules/Dietologist/Application/Services/DietologistDashboardAccessService.cs",
+          "commit": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Dietologist/Services/DietologistEmailSender.cs",
+      "current": "Modules/Dietologist/Application/Services/DietologistEmailSender.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Dietologist/Services/DietologistEmailSender.cs",
+          "new": "Modules/Dietologist/Application/Services/DietologistEmailSender.cs",
+          "commit": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Dietologist/Services/DietologistUserContextService.cs",
+      "current": "Modules/Dietologist/Application/Services/DietologistUserContextService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Dietologist/Services/DietologistUserContextService.cs",
+          "new": "Modules/Dietologist/Application/Services/DietologistUserContextService.cs",
+          "commit": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Dietologist/Services/RecommendationDiscussionReadService.cs",
+      "current": "Modules/Dietologist/Application/Services/RecommendationDiscussionReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Dietologist/Services/RecommendationDiscussionReadService.cs",
+          "new": "Modules/Dietologist/Application/Services/RecommendationDiscussionReadService.cs",
+          "commit": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Exercises/Internal/RequiredIdParser.cs",
+      "current": "Modules/Exercises/Application/Internal/RequiredIdParser.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Exercises/Internal/RequiredIdParser.cs",
+          "new": "Modules/Exercises/Application/Internal/RequiredIdParser.cs",
+          "commit": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Export/Internal/UtcDateNormalizer.cs",
+      "current": "Modules/Export/Application/Internal/UtcDateNormalizer.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Export/Internal/UtcDateNormalizer.cs",
+          "new": "Modules/Export/Application/Internal/UtcDateNormalizer.cs",
+          "commit": "f6a59d96f303cf20a40b18fc337412aa3e546ea7",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs",
+      "current": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs",
+          "new": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryDateRangePolicy.cs",
+          "commit": "f6a59d96f303cf20a40b18fc337412aa3e546ea7",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Export/Services/DiaryCsvGenerator.cs",
+      "current": "Modules/Export/Application/Services/DiaryCsvGenerator.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Export/Services/DiaryCsvGenerator.cs",
+          "new": "Modules/Export/Application/Services/DiaryCsvGenerator.cs",
+          "commit": "f6a59d96f303cf20a40b18fc337412aa3e546ea7",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Export/Services/ExportDiaryReadService.cs",
+      "current": "Modules/Export/Application/Services/ExportDiaryReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Export/Services/ExportDiaryReadService.cs",
+          "new": "Modules/Export/Application/Services/ExportDiaryReadService.cs",
+          "commit": "f6a59d96f303cf20a40b18fc337412aa3e546ea7",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
+      "current": "Modules/Favorites/Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
+          "new": "Modules/Favorites/Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
+          "commit": "d3e05ce2df934ee279ef0566aaa812616369a04d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Favorites/FavoriteMeals/Services/FavoriteMealReadService.cs",
+      "current": "Modules/Favorites/Application/FavoriteMeals/Services/FavoriteMealReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Favorites/FavoriteMeals/Services/FavoriteMealReadService.cs",
+          "new": "Modules/Favorites/Application/FavoriteMeals/Services/FavoriteMealReadService.cs",
+          "commit": "d3e05ce2df934ee279ef0566aaa812616369a04d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
+      "current": "Modules/Favorites/Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
+          "new": "Modules/Favorites/Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
+          "commit": "d3e05ce2df934ee279ef0566aaa812616369a04d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Favorites/FavoriteProducts/Services/FavoriteProductReadService.cs",
+      "current": "Modules/Favorites/Application/FavoriteProducts/Services/FavoriteProductReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Favorites/FavoriteProducts/Services/FavoriteProductReadService.cs",
+          "new": "Modules/Favorites/Application/FavoriteProducts/Services/FavoriteProductReadService.cs",
+          "commit": "d3e05ce2df934ee279ef0566aaa812616369a04d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
+      "current": "Modules/Favorites/Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
+          "new": "Modules/Favorites/Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
+          "commit": "d3e05ce2df934ee279ef0566aaa812616369a04d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Favorites/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
+      "current": "Modules/Favorites/Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Favorites/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
+          "new": "Modules/Favorites/Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
+          "commit": "d3e05ce2df934ee279ef0566aaa812616369a04d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Gamification/Services/AchievementAwardService.cs",
+      "current": "Modules/Gamification/Application/Services/AchievementAwardService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Gamification/Services/AchievementAwardService.cs",
+          "new": "Modules/Gamification/Application/Services/AchievementAwardService.cs",
+          "commit": "05921b38bd760c89671e1ec0086749dd1433b6ee",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Gamification/Services/AchievementDefinitionAdministrationService.cs",
+      "current": "Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Gamification/Services/AchievementDefinitionAdministrationService.cs",
+          "new": "Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs",
+          "commit": "05921b38bd760c89671e1ec0086749dd1433b6ee",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Gamification/Services/AchievementReconciliationHandler.cs",
+      "current": "Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Gamification/Services/AchievementReconciliationHandler.cs",
+          "new": "Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs",
+          "commit": "05921b38bd760c89671e1ec0086749dd1433b6ee",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Gamification/Services/GamificationCalculator.cs",
+      "current": "Modules/Gamification/Application/Services/GamificationCalculator.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Gamification/Services/GamificationCalculator.cs",
+          "new": "Modules/Gamification/Application/Services/GamificationCalculator.cs",
+          "commit": "05921b38bd760c89671e1ec0086749dd1433b6ee",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Gamification/Services/GamificationReadService.cs",
+      "current": "Modules/Gamification/Application/Services/GamificationReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Gamification/Services/GamificationReadService.cs",
+          "new": "Modules/Gamification/Application/Services/GamificationReadService.cs",
+          "commit": "05921b38bd760c89671e1ec0086749dd1433b6ee",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
+      "current": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
+          "new": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
+          "commit": "18719b886bdbd9274ab94229c343d753cc81b6eb",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadResult.cs",
+      "current": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadResult.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Images/Commands/ConfirmUpload/ConfirmImageUploadResult.cs",
+          "new": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadResult.cs",
+          "commit": "18719b886bdbd9274ab94229c343d753cc81b6eb",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
+      "current": "Modules/Images/Application/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
+          "new": "Modules/Images/Application/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
+          "commit": "18719b886bdbd9274ab94229c343d753cc81b6eb",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+      "current": "Modules/Images/Application/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+          "new": "Modules/Images/Application/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+          "commit": "18719b886bdbd9274ab94229c343d753cc81b6eb",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs",
+      "current": "Modules/Images/Application/Services/ImageAssetCleanupService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs",
+          "new": "Modules/Images/Application/Services/ImageAssetCleanupService.cs",
+          "commit": "18719b886bdbd9274ab94229c343d753cc81b6eb",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Lessons/Services/LessonAdministrationReadService.cs",
+      "current": "Modules/Lessons/Application/Services/LessonAdministrationReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Lessons/Services/LessonAdministrationReadService.cs",
+          "new": "Modules/Lessons/Application/Services/LessonAdministrationReadService.cs",
+          "commit": "f1e9aedaa3b1fab53b7ee339cc95a2e9984d5424",
+          "score": "R080"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Marketing/Services/MarketingConversionRecorder.cs",
+      "current": "Modules/Marketing/Application/Services/MarketingConversionRecorder.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Marketing/Services/MarketingConversionRecorder.cs",
+          "new": "Modules/Marketing/Application/Services/MarketingConversionRecorder.cs",
+          "commit": "bc73bbf2b03fe6b86534d490fbc94320e146ac6b",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
+      "current": "Modules/Notifications/Application/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
+          "new": "Modules/Notifications/Application/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Notifications/Common/NotificationFactory.cs",
+      "current": "Modules/Notifications/Application/Common/NotificationFactory.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Notifications/Common/NotificationFactory.cs",
+          "new": "Modules/Notifications/Application/Common/NotificationFactory.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Notifications/Common/WebPushEndpointPolicy.cs",
+      "current": "Modules/Notifications/Application/Common/WebPushEndpointPolicy.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Notifications/Common/WebPushEndpointPolicy.cs",
+          "new": "Modules/Notifications/Application/Common/WebPushEndpointPolicy.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Notifications/Services/NotificationCleanupService.cs",
+      "current": "Modules/Notifications/Application/Services/NotificationCleanupService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Notifications/Services/NotificationCleanupService.cs",
+          "new": "Modules/Notifications/Application/Services/NotificationCleanupService.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Notifications/Services/NotificationClientRefreshService.cs",
+      "current": "Modules/Notifications/Application/Services/NotificationClientRefreshService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Notifications/Services/NotificationClientRefreshService.cs",
+          "new": "Modules/Notifications/Application/Services/NotificationClientRefreshService.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Notifications/Services/NotificationFeedReadService.cs",
+      "current": "Modules/Notifications/Application/Services/NotificationFeedReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Notifications/Services/NotificationFeedReadService.cs",
+          "new": "Modules/Notifications/Application/Services/NotificationFeedReadService.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Notifications/Services/NotificationPreferencesService.cs",
+      "current": "Modules/Notifications/Application/Services/NotificationPreferencesService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Notifications/Services/NotificationPreferencesService.cs",
+          "new": "Modules/Notifications/Application/Services/NotificationPreferencesService.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Notifications/Services/NotificationWriter.cs",
+      "current": "Modules/Notifications/Application/Services/NotificationWriter.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Notifications/Services/NotificationWriter.cs",
+          "new": "Modules/Notifications/Application/Services/NotificationWriter.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Notifications/Services/WebPushDeliveryAudienceService.cs",
+      "current": "Modules/Notifications/Application/Services/WebPushDeliveryAudienceService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Notifications/Services/WebPushDeliveryAudienceService.cs",
+          "new": "Modules/Notifications/Application/Services/WebPushDeliveryAudienceService.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Notifications/Services/WebPushSubscriptionReadService.cs",
+      "current": "Modules/Notifications/Application/Services/WebPushSubscriptionReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Notifications/Services/WebPushSubscriptionReadService.cs",
+          "new": "Modules/Notifications/Application/Services/WebPushSubscriptionReadService.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.OpenFoodFacts/AssemblyInfo.cs",
+      "current": "Modules/OpenFoodFacts/Application/AssemblyInfo.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.OpenFoodFacts/AssemblyInfo.cs",
+          "new": "Modules/OpenFoodFacts/Application/AssemblyInfo.cs",
+          "commit": "52e6e0d6b4b9ca110bced0245973f7efd8a22d98",
+          "score": "R054"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
+      "current": "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
+          "new": "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
+          "commit": "52e6e0d6b4b9ca110bced0245973f7efd8a22d98",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
+      "current": "Modules/OpenFoodFacts/Application/Services/OpenFoodFactsCachedProductSearch.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
+          "new": "Modules/OpenFoodFacts/Application/Services/OpenFoodFactsCachedProductSearch.cs",
+          "commit": "52e6e0d6b4b9ca110bced0245973f7efd8a22d98",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.RecipeCommunity/RecipeComments/Services/RecipeCommentReadService.cs",
+      "current": "Modules/RecipeCommunity/Application/RecipeComments/Services/RecipeCommentReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.RecipeCommunity/RecipeComments/Services/RecipeCommentReadService.cs",
+          "new": "Modules/RecipeCommunity/Application/RecipeComments/Services/RecipeCommentReadService.cs",
+          "commit": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs",
+      "current": "Modules/RecipeCommunity/Application/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs",
+          "new": "Modules/RecipeCommunity/Application/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs",
+          "commit": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Services/RecipeLikeReadService.cs",
+      "current": "Modules/RecipeCommunity/Application/RecipeLikes/Services/RecipeLikeReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.RecipeCommunity/RecipeLikes/Services/RecipeLikeReadService.cs",
+          "new": "Modules/RecipeCommunity/Application/RecipeLikes/Services/RecipeLikeReadService.cs",
+          "commit": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.Wearables/Services/WearableReadService.cs",
+      "current": "Modules/Wearables/Application/Services/WearableReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.Wearables/Services/WearableReadService.cs",
+          "new": "Modules/Wearables/Application/Services/WearableReadService.cs",
+          "commit": "ca33cd054e90da8b769bd807b80f6150efcff24a",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs",
+      "current": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInCalculator.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs",
+          "new": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInCalculator.cs",
+          "commit": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
+      "current": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
+          "new": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInReadService.cs",
+          "commit": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
+          "score": "R098"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInUserProfileService.cs",
+      "current": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInUserProfileService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInUserProfileService.cs",
+          "new": "Modules/WeeklyCheckIn/Application/Services/WeeklyCheckInUserProfileService.cs",
+          "commit": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
+      "current": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
+          "new": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
+          "commit": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Domain/Entities/Wearables/WearableSyncEntry.cs",
+      "current": "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Domain/Entities/Wearables/WearableSyncEntry.cs",
+          "new": "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs",
+          "commit": "ca33cd054e90da8b769bd807b80f6150efcff24a",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Domain/Enums/CycleFlowLevel.cs",
+      "current": "Modules/Cycles/Domain/Enums/CycleFlowLevel.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Domain/Enums/CycleFlowLevel.cs",
+          "new": "Modules/Cycles/Domain/Enums/CycleFlowLevel.cs",
+          "commit": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Domain/ValueObjects/Ids/ClientTaskId.cs",
+      "current": "Modules/Dietologist/Domain/ValueObjects/Ids/ClientTaskId.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Domain/ValueObjects/Ids/ClientTaskId.cs",
+          "new": "Modules/Dietologist/Domain/ValueObjects/Ids/ClientTaskId.cs",
+          "commit": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Domain/ValueObjects/Ids/UserAchievementId.cs",
+      "current": "Modules/Gamification/Domain/ValueObjects/Ids/UserAchievementId.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Domain/ValueObjects/Ids/UserAchievementId.cs",
+          "new": "Modules/Gamification/Domain/ValueObjects/Ids/UserAchievementId.cs",
+          "commit": "05921b38bd760c89671e1ec0086749dd1433b6ee",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Authentication/WearableOAuthStateService.cs",
+      "current": "Modules/Wearables/Infrastructure/Authentication/WearableOAuthStateService.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Authentication/WearableOAuthStateService.cs",
+          "new": "Modules/Wearables/Infrastructure/Authentication/WearableOAuthStateService.cs",
+          "commit": "ca33cd054e90da8b769bd807b80f6150efcff24a",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
+      "current": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
+          "new": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
+          "commit": "05921b38bd760c89671e1ec0086749dd1433b6ee",
+          "score": "R097"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs",
+      "current": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs",
+          "new": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs",
+          "commit": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageAssetConfiguration.cs",
+      "current": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageAssetConfiguration.cs",
+          "new": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs",
+          "commit": "18719b886bdbd9274ab94229c343d753cc81b6eb",
+          "score": "R092"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Content/NutritionLessonRepository.cs",
+      "current": "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Content/NutritionLessonRepository.cs",
+          "new": "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs",
+          "commit": "f1e9aedaa3b1fab53b7ee339cc95a2e9984d5424",
+          "score": "R097"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/ContentReports/ContentReportRepository.cs",
+      "current": "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/ContentReports/ContentReportRepository.cs",
+          "new": "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs",
+          "commit": "bbcb9f55b06346151e1b2ac9c65e4a40e890c7bc",
+          "score": "R096"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
+      "current": "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
+          "new": "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
+          "commit": "d3e05ce2df934ee279ef0566aaa812616369a04d",
+          "score": "R097"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
+      "current": "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
+          "new": "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
+          "commit": "d3e05ce2df934ee279ef0566aaa812616369a04d",
+          "score": "R097"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Images/ImageAssetRepository.cs",
+      "current": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Images/ImageAssetRepository.cs",
+          "new": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs",
+          "commit": "18719b886bdbd9274ab94229c343d753cc81b6eb",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
+      "current": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
+          "new": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
+          "commit": "18719b886bdbd9274ab94229c343d753cc81b6eb",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
+      "current": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
+          "new": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
+          "commit": "18719b886bdbd9274ab94229c343d753cc81b6eb",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Notifications/NotificationWebPushOutboxProcessor.cs",
+      "current": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutboxProcessor.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Notifications/NotificationWebPushOutboxProcessor.cs",
+          "new": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutboxProcessor.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Notifications/WebPushSubscriptionRepository.cs",
+      "current": "Modules/Notifications/Infrastructure/Persistence/WebPushSubscriptionRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Notifications/WebPushSubscriptionRepository.cs",
+          "new": "Modules/Notifications/Infrastructure/Persistence/WebPushSubscriptionRepository.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/OpenFoodFacts/OpenFoodFactsProductCacheRepository.cs",
+      "current": "Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsProductCacheRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/OpenFoodFacts/OpenFoodFactsProductCacheRepository.cs",
+          "new": "Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsProductCacheRepository.cs",
+          "commit": "52e6e0d6b4b9ca110bced0245973f7efd8a22d98",
+          "score": "R098"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Recommendations/RecommendationBulkDispatchRepository.cs",
+      "current": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationBulkDispatchRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Recommendations/RecommendationBulkDispatchRepository.cs",
+          "new": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationBulkDispatchRepository.cs",
+          "commit": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Recommendations/RecommendationCommentRepository.cs",
+      "current": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationCommentRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Recommendations/RecommendationCommentRepository.cs",
+          "new": "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationCommentRepository.cs",
+          "commit": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Tracking/CycleRepository.cs",
+      "current": "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Tracking/CycleRepository.cs",
+          "new": "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs",
+          "commit": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
+          "score": "R098"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Tracking/DailyAdviceRepository.cs",
+      "current": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Tracking/DailyAdviceRepository.cs",
+          "new": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs",
+          "commit": "015e1bf192c08b74005d18ca0740e7ae937f920a",
+          "score": "R092"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Tracking/ExerciseEntryRepository.cs",
+      "current": "Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Tracking/ExerciseEntryRepository.cs",
+          "new": "Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs",
+          "commit": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+          "score": "R096"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Tracking/MarketingAttributionEventRepository.cs",
+      "current": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Tracking/MarketingAttributionEventRepository.cs",
+          "new": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs",
+          "commit": "bc73bbf2b03fe6b86534d490fbc94320e146ac6b",
+          "score": "R098"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Usda/UsdaFoodRepository.cs",
+      "current": "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Usda/UsdaFoodRepository.cs",
+          "new": "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R098"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Wearables/WearableConnectionRepository.cs",
+      "current": "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Wearables/WearableConnectionRepository.cs",
+          "new": "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs",
+          "commit": "ca33cd054e90da8b769bd807b80f6150efcff24a",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Infrastructure/Persistence/Wearables/WearableSyncRepository.cs",
+      "current": "Modules/Wearables/Infrastructure/Persistence/WearableSyncRepository.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Infrastructure/Persistence/Wearables/WearableSyncRepository.cs",
+          "new": "Modules/Wearables/Infrastructure/Persistence/WearableSyncRepository.cs",
+          "commit": "ca33cd054e90da8b769bd807b80f6150efcff24a",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Integrations/Services/WebPushClientAdapter.cs",
+      "current": "Modules/Notifications/Infrastructure/Services/WebPushClientAdapter.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Integrations/Services/WebPushClientAdapter.cs",
+          "new": "Modules/Notifications/Infrastructure/Services/WebPushClientAdapter.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Integrations/Services/WebPushEndpointValidationHandler.cs",
+      "current": "Modules/Notifications/Infrastructure/Services/WebPushEndpointValidationHandler.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Integrations/Services/WebPushEndpointValidationHandler.cs",
+          "new": "Modules/Notifications/Infrastructure/Services/WebPushEndpointValidationHandler.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
+      "current": "Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs",
+      "gitRenameChain": [
+        {
+          "old": "FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs",
+          "new": "Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs",
+      "current": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs",
+      "gitRenameChain": [
+        {
+          "old": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs",
+          "new": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs",
+          "commit": "416a70f77a3cd1b21bbb324aecc3a442b6955577",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs",
+      "current": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs",
+      "gitRenameChain": [
+        {
+          "old": "tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs",
+          "new": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs",
+          "commit": "0ff1c97c03e5654a1c21c1164ca159f9837f5d2d",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs",
+      "current": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs",
+      "gitRenameChain": [
+        {
+          "old": "tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs",
+          "new": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "tests/FoodDiary.Application.Tests/Notifications/NotificationsValidatorTests.cs",
+      "current": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsValidatorTests.cs",
+      "gitRenameChain": [
+        {
+          "old": "tests/FoodDiary.Application.Tests/Notifications/NotificationsValidatorTests.cs",
+          "new": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsValidatorTests.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "tests/FoodDiary.Application.Tests/Wearables/WearableDateValidatorTests.cs",
+      "current": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearableDateValidatorTests.cs",
+      "gitRenameChain": [
+        {
+          "old": "tests/FoodDiary.Application.Tests/Wearables/WearableDateValidatorTests.cs",
+          "new": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearableDateValidatorTests.cs",
+          "commit": "ca33cd054e90da8b769bd807b80f6150efcff24a",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs",
+      "current": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs",
+      "gitRenameChain": [
+        {
+          "old": "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs",
+          "new": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs",
+          "commit": "4a54620d7061ccc246fc9c1c72e448d20b0309f7",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "tests/FoodDiary.Domain.Tests/Domain/FavoriteInvariantTests.cs",
+      "current": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FavoriteInvariantTests.cs",
+      "gitRenameChain": [
+        {
+          "old": "tests/FoodDiary.Domain.Tests/Domain/FavoriteInvariantTests.cs",
+          "new": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FavoriteInvariantTests.cs",
+          "commit": "d3e05ce2df934ee279ef0566aaa812616369a04d",
+          "score": "R099"
+        }
+      ]
+    },
+    {
+      "old": "tests/FoodDiary.Domain.Tests/Domain/TrackingAndMealPlanCoverageGapTests.cs",
+      "current": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/Domain/TrackingAndMealPlanCoverageGapTests.cs",
+      "gitRenameChain": [
+        {
+          "old": "tests/FoodDiary.Domain.Tests/Domain/TrackingAndMealPlanCoverageGapTests.cs",
+          "new": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/Domain/TrackingAndMealPlanCoverageGapTests.cs",
+          "commit": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "tests/FoodDiary.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs",
+      "current": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs",
+      "gitRenameChain": [
+        {
+          "old": "tests/FoodDiary.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs",
+          "new": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    },
+    {
+      "old": "tests/FoodDiary.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
+      "current": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
+      "gitRenameChain": [
+        {
+          "old": "tests/FoodDiary.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
+          "new": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
+          "commit": "3851a98e0340fd12191c56cf41f261a678a632c8",
+          "score": "R100"
+        }
+      ]
+    }
+  ]
+}

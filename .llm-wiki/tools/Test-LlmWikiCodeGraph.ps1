@@ -2,6 +2,8 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+& node (Join-Path $PSScriptRoot 'Test-LlmWikiRankingPathLayout.mjs')
+if ($LASTEXITCODE -ne 0) { throw 'Ranking path layout regression failed.' }
 $manager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
 $migrationTool = Join-Path $PSScriptRoot 'Get-LlmWikiCompiledIndexMigration.ps1'
 $repositoryRoot = (& git -C $PSScriptRoot rev-parse --show-toplevel).Trim()

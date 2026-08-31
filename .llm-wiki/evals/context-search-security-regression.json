@@ -20,7 +20,7 @@
       "cohort": "security-boundaries",
       "query": "WebPush connect-time DNS address control SocketsHttpHandlerFactory",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs"]
+      "expectedPaths": ["Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs"]
     },
     {
       "id": "security-mailgun-replay",

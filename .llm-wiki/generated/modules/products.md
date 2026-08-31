@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Products/FoodDiary.Application.Products.csproj`
+- Extracted project: `Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: FavoriteProducts, Images, OpenFoodFacts, RecentItems, Usda, Users
 - Business-module consumers: none observed
@@ -24,12 +24,10 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Products`
-- `FoodDiary.Application.Products`
-- `FoodDiary.Domain/Entities/Products`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Products`
-- `FoodDiary.Infrastructure/Persistence/Products`
 - `FoodDiary.Presentation.Api/Features/Products`
+- `Modules/Products/Application`
+- `Modules/Products/Application/Abstractions`
+- `Modules/Products/Contracts`
 
 ## HTTP Surface
 
@@ -55,7 +53,7 @@ Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: project
+- Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Product
 - Public contract files: 10
@@ -85,15 +83,23 @@ Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductSearchSuggestionTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductUsdaLinkServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.CreateCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.MappingTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.UpdateCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Support/AllowImageAssetAccessService.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Support/RecordingImageAssetAccessService.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Support/ResultAssert.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/Domain/ProductInvariantTests.cs`
+- [integration] `Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/Integration/ProductRepositoryIntegrationTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductUsdaLinkServiceTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.CreateCommandTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.MappingTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.UpdateCommandTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ProductsModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/ProductSuggestionsControllerTests.cs`
 

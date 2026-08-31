@@ -64,7 +64,7 @@
       "query": "automated checks for dietologist recommendation comment handler",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs"
       ]
     },
     {
@@ -127,7 +127,7 @@
       "query": "domain rule for enums cycle flow level",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/Enums/CycleFlowLevel.cs"
+        "Modules/Cycles/Domain/Enums/CycleFlowLevel.cs"
       ]
     },
     {
@@ -163,7 +163,7 @@
       "query": "implementation contract for common i weight entry read service",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
+        "Modules/BodyMetrics/Application/Abstractions/WeightEntries/Common/IWeightEntryReadService.cs"
       ]
     },
     {
@@ -181,7 +181,7 @@
       "query": "domain rule for wearables wearable sync entry",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/Entities/Wearables/WearableSyncEntry.cs"
+        "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs"
       ]
     },
     {
@@ -217,7 +217,7 @@
       "query": "implementation contract for product update applier",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Application.Products/Commands/UpdateProduct/ProductUpdateApplier.cs"
+        "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateApplier.cs"
       ]
     },
     {
@@ -226,7 +226,7 @@
       "query": "automated checks for tracking and meal plan coverage gap",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Domain.Tests/Domain/TrackingAndMealPlanCoverageGapTests.cs"
+        "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/Domain/TrackingAndMealPlanCoverageGapTests.cs"
       ]
     },
     {
@@ -271,7 +271,7 @@
       "query": "implementation contract for open facts assembly info",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Application.OpenFoodFacts/AssemblyInfo.cs"
+        "Modules/OpenFoodFacts/Application/AssemblyInfo.cs"
       ]
     },
     {
@@ -379,7 +379,7 @@
       "query": "implementation contract for search by barcode query handler",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs"
+        "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs"
       ]
     },
     {
@@ -415,7 +415,7 @@
       "query": "storage or provider implementation for dietologist recommendation bulk dispatch configuration",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Infrastructure/Persistence/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs"
+        "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationBulkDispatchConfiguration.cs"
       ]
     },
     {
@@ -442,7 +442,7 @@
       "query": "automated checks for weekly check in calculator",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs"
+        "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs"
       ]
     },
     {
@@ -451,7 +451,7 @@
       "query": "domain rule for ids user achievement identifier",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/ValueObjects/Ids/UserAchievementId.cs"
+        "Modules/Gamification/Domain/ValueObjects/Ids/UserAchievementId.cs"
       ]
     },
     {
@@ -550,7 +550,7 @@
       "query": "automated checks for notifications preferences",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs"
+        "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs"
       ]
     },
     {
@@ -775,7 +775,7 @@
       "query": "domain rule for tracking cycle consent",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs"
+        "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs"
       ]
     },
     {
@@ -829,7 +829,7 @@
       "query": "domain rule for ids client task identifier",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/ValueObjects/Ids/ClientTaskId.cs"
+        "Modules/Dietologist/Domain/ValueObjects/Ids/ClientTaskId.cs"
       ]
     },
     {
@@ -865,7 +865,7 @@
       "query": "implementation contract for process queued billing webhook command",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs"
+        "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessQueuedBillingWebhookCommand.cs"
       ]
     },
     {
@@ -928,7 +928,7 @@
       "query": "automated checks for notifications validator",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Application.Tests/Notifications/NotificationsValidatorTests.cs"
+        "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsValidatorTests.cs"
       ]
     },
     {

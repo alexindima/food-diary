@@ -24,7 +24,7 @@
       "id": "recommendation-discussion-reader-probe-3",
       "query": "load comments in a dietologist recommendation discussion",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Dietologist/Services/RecommendationDiscussionReadService.cs"]
+      "expectedPaths": ["Modules/Dietologist/Application/Services/RecommendationDiscussionReadService.cs"]
     },
     {
       "id": "meal-manual-item-appender-probe-3",
@@ -36,7 +36,7 @@
       "id": "image-asset-cleanup-service-probe-3",
       "query": "application service deletes unused and orphaned image assets",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs"]
+      "expectedPaths": ["Modules/Images/Application/Services/ImageAssetCleanupService.cs"]
     },
     {
       "id": "fasting-check-in-reminder-planner-probe-3",
@@ -66,13 +66,13 @@
       "id": "marketing-conversion-recorder-probe-3",
       "query": "record a marketing conversion when premium starts",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Marketing/Services/MarketingConversionRecorder.cs"]
+      "expectedPaths": ["Modules/Marketing/Application/Services/MarketingConversionRecorder.cs"]
     },
     {
       "id": "notification-client-refresh-service-probe-3",
       "query": "refresh notification state for connected clients",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Notifications/Services/NotificationClientRefreshService.cs"]
+      "expectedPaths": ["Modules/Notifications/Application/Services/NotificationClientRefreshService.cs"]
     },
     {
       "id": "openai-error-metadata-probe-3",
