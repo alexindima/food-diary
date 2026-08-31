@@ -2,7 +2,7 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Dashboard;
+using FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 

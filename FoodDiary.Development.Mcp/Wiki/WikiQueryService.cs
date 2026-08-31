@@ -437,6 +437,17 @@ public sealed class WikiQueryService(
 
     private static string? InferLayer(string path) {
         string normalized = path.Replace('\\', '/');
+        string[] segments = normalized.Split('/');
+        if (segments.Length >= 3 &&
+            string.Equals(segments[0], "Modules", StringComparison.OrdinalIgnoreCase) &&
+            !string.IsNullOrWhiteSpace(segments[1])) {
+            foreach (string layer in new[] { "Application", "Domain", "Infrastructure" }) {
+                if (string.Equals(segments[2], layer, StringComparison.OrdinalIgnoreCase)) {
+                    return layer;
+                }
+            }
+            return null;
+        }
         if (normalized.StartsWith("FoodDiary.Web.Client/", StringComparison.OrdinalIgnoreCase)) {
             return "Frontend";
         }

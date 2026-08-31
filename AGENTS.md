@@ -135,7 +135,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Daily advices domain: `Modules/DailyAdvices/Domain/AGENTS.md`
 - Daily advices infrastructure: `Modules/DailyAdvices/Infrastructure/AGENTS.md`
 - Daily advices persistence model: `Modules/DailyAdvices/Infrastructure/Model/AGENTS.md`
-- Dashboard application module: `FoodDiary.Application.Dashboard/AGENTS.md`
+- Dashboard logical module: `Modules/Dashboard/AGENTS.md`
+- Dashboard application: `Modules/Dashboard/Application/AGENTS.md`
+- Dashboard application ports: `Modules/Dashboard/Application/Abstractions/AGENTS.md`
+- Dashboard contracts: `Modules/Dashboard/Contracts/AGENTS.md`
+- Dashboard infrastructure: `Modules/Dashboard/Infrastructure/AGENTS.md`
+- Dashboard tests: `Modules/Dashboard/tests/AGENTS.md`
 - Domain layer: `FoodDiary.Domain/AGENTS.md`
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`
 - Integrations layer: `FoodDiary.Integrations/AGENTS.md`

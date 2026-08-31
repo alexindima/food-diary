@@ -11,7 +11,7 @@ Rules for `Modules/Statistics/`.
 - Consume Dashboard, Body Metrics, and user access only through `FoodDiary.Application.Abstractions` read contracts.
 - Preserve the legacy `FoodDiary.Application.Statistics` assembly name and CLR namespaces.
 - Do not add Contracts, Application Abstractions, Domain, Infrastructure, or persistence-model projects unless a separately proven responsibility appears.
-- Keep HTTP transport central in `FoodDiary.Presentation.Api` and the optimized Dashboard projection in central Infrastructure.
+- Keep HTTP transport central in `FoodDiary.Presentation.Api` and the optimized Dashboard projection in Modules/Dashboard/Infrastructure.
 
 ## Tests
 

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Application.Admin;
@@ -99,6 +100,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddBillingModule()
                 .AddMarketingModule()
                 .AddInfrastructure(configuration)
+                .AddDashboardReadServices()
                 .AddImagesInfrastructure()
                 .AddIntegrations(configuration)
                 .AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>()

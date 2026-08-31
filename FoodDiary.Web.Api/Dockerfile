@@ -70,7 +70,10 @@ COPY Modules/Cycles/Application/Abstractions/*.csproj Modules/Cycles/Application
 COPY Modules/Cycles/Domain/*.csproj Modules/Cycles/Domain/
 COPY Modules/Cycles/Infrastructure/*.csproj Modules/Cycles/Infrastructure/
 COPY Modules/Cycles/Infrastructure/Model/*.csproj Modules/Cycles/Infrastructure/Model/
-COPY FoodDiary.Application.Dashboard/*.csproj FoodDiary.Application.Dashboard/
+COPY Modules/Dashboard/Application/*.csproj Modules/Dashboard/Application/
+COPY Modules/Dashboard/Application/Abstractions/*.csproj Modules/Dashboard/Application/Abstractions/
+COPY Modules/Dashboard/Contracts/*.csproj Modules/Dashboard/Contracts/
+COPY Modules/Dashboard/Infrastructure/*.csproj Modules/Dashboard/Infrastructure/
 COPY Modules/Exercises/Application/Abstractions/*.csproj Modules/Exercises/Application/Abstractions/
 COPY Modules/Exercises/Application/*.csproj Modules/Exercises/Application/
 COPY Modules/Exercises/Contracts/*.csproj Modules/Exercises/Contracts/
@@ -217,7 +220,10 @@ COPY Modules/Cycles/Application/Abstractions/ Modules/Cycles/Application/Abstrac
 COPY Modules/Cycles/Domain/ Modules/Cycles/Domain/
 COPY Modules/Cycles/Infrastructure/ Modules/Cycles/Infrastructure/
 COPY Modules/Cycles/Infrastructure/Model/ Modules/Cycles/Infrastructure/Model/
-COPY FoodDiary.Application.Dashboard/ FoodDiary.Application.Dashboard/
+COPY Modules/Dashboard/Application/ Modules/Dashboard/Application/
+COPY Modules/Dashboard/Application/Abstractions/ Modules/Dashboard/Application/Abstractions/
+COPY Modules/Dashboard/Contracts/ Modules/Dashboard/Contracts/
+COPY Modules/Dashboard/Infrastructure/ Modules/Dashboard/Infrastructure/
 COPY Modules/Exercises/Application/Abstractions/ Modules/Exercises/Application/Abstractions/
 COPY Modules/Exercises/Application/ Modules/Exercises/Application/
 COPY Modules/Exercises/Contracts/ Modules/Exercises/Contracts/

@@ -21,7 +21,6 @@
     "Billing": "Billing",
     "Common": "Shared",
     "DailyAdvices": "DailyAdvices",
-    "Dashboard": "Dashboard",
     "Dietologist": "Dietologist",
     "Email": "Application.Runtime",
     "Fasting": "Fasting",
@@ -210,9 +209,12 @@
       "enforcement": "project-reference-matrix",
       "ownedEntities": [],
       "sourceMappings": {
-        "applicationProjects": ["FoodDiary.Application.Dashboard"],
-        "abstractionAreas": ["Dashboard"],
-        "persistenceAreas": ["Dashboard"]
+        "logicalRoot": "Modules/Dashboard",
+        "applicationProjects": ["Modules/Dashboard/Application"],
+        "applicationAbstractionProjects": ["Modules/Dashboard/Application/Abstractions"],
+        "contractProjects": ["Modules/Dashboard/Contracts"],
+        "infrastructureProjects": ["Modules/Dashboard/Infrastructure"],
+        "abstractionAreas": ["Modules/Dashboard/Application/Abstractions", "Modules/Dashboard/Contracts"]
       }
     },
     "DailyAdvices": {

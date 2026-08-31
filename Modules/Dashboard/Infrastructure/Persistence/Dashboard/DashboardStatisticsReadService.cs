@@ -1,0 +1,122 @@
+using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Validation;
+using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
+
+namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
+
+internal sealed class DashboardStatisticsReadService(FoodDiaryDbContext context) : IDashboardStatisticsReadService {
+    public async Task<Result<IReadOnlyList<DashboardStatisticsBucketReadModel>>> GetStatisticsAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        int quantizationDays,
+        CancellationToken cancellationToken = default) {
+        if (dateFrom > dateTo) {
+            return Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+                Errors.Validation.Invalid(nameof(dateFrom), "DateFrom must be earlier than DateTo"));
+        }
+
+        if (!TemporalRangePolicy.IsPeriodWithinLimit(dateFrom, dateTo)) {
+            return Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+                Errors.Validation.Invalid(
+                    nameof(dateTo),
+                    $"The period must not exceed {TemporalRangePolicy.MaxPeriodDays} days."));
+        }
+
+        if (!TemporalRangePolicy.IsQuantizationValid(quantizationDays)) {
+            return Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+                Errors.Validation.Invalid(
+                    nameof(quantizationDays),
+                    $"Value must be between 1 and {TemporalRangePolicy.MaxQuantizationDays}."));
+        }
+
+        DateTime normalizedFrom = NormalizeUtcInstant(dateFrom);
+        DateTime normalizedTo = NormalizeUtcInstant(dateTo);
+        IReadOnlyList<(DateTime Start, DateTime End)> buckets = TemporalRangePolicy.BuildInstantBuckets(
+            normalizedFrom,
+            normalizedTo,
+            quantizationDays);
+
+        List<MealNutritionProjection> meals = await context.Meals
+            .AsNoTracking()
+            .Where(meal => meal.UserId == userId && meal.Date >= normalizedFrom && meal.Date <= normalizedTo)
+            .Select(meal => new MealNutritionProjection(
+                meal.Date,
+                meal.TotalCalories,
+                meal.TotalProteins,
+                meal.TotalFats,
+                meal.TotalCarbs,
+                meal.TotalFiber,
+                meal.MealType))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
+        return Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+            [.. buckets.Select(bucket => BuildBucket(bucket.Start, bucket.End, meals))]);
+    }
+
+    private static DashboardStatisticsBucketReadModel BuildBucket(
+        DateTime bucketStart,
+        DateTime bucketEnd,
+        IReadOnlyCollection<MealNutritionProjection> meals) {
+        MealNutritionProjection[] bucketMeals = [.. meals.Where(meal => meal.Date >= bucketStart && meal.Date <= bucketEnd)];
+        if (bucketMeals.Length == 0) {
+            return new DashboardStatisticsBucketReadModel(bucketStart, bucketEnd, 0, 0, 0, 0, 0);
+        }
+
+        double totalCalories = bucketMeals.Sum(meal => meal.TotalCalories);
+        double totalProteins = bucketMeals.Sum(meal => meal.TotalProteins);
+        double totalFats = bucketMeals.Sum(meal => meal.TotalFats);
+        double totalCarbs = bucketMeals.Sum(meal => meal.TotalCarbs);
+        double totalFiber = bucketMeals.Sum(meal => meal.TotalFiber);
+        int effectiveDays = GetBucketDayCount(bucketStart, bucketEnd);
+
+        return new DashboardStatisticsBucketReadModel(
+            bucketStart,
+            bucketEnd,
+            Math.Round(totalCalories, 2, MidpointRounding.ToEven),
+            Math.Round(totalProteins / effectiveDays, 2, MidpointRounding.ToEven),
+            Math.Round(totalFats / effectiveDays, 2, MidpointRounding.ToEven),
+            Math.Round(totalCarbs / effectiveDays, 2, MidpointRounding.ToEven),
+            Math.Round(totalFiber / effectiveDays, 2, MidpointRounding.ToEven),
+            Math.Round(totalProteins, 2, MidpointRounding.ToEven),
+            Math.Round(totalFats, 2, MidpointRounding.ToEven),
+            Math.Round(totalCarbs, 2, MidpointRounding.ToEven),
+            Math.Round(totalFiber, 2, MidpointRounding.ToEven),
+            SumCalories(bucketMeals, MealType.Breakfast),
+            SumCalories(bucketMeals, MealType.Lunch),
+            SumCalories(bucketMeals, MealType.Dinner),
+            SumCalories(bucketMeals, MealType.Snack),
+            bucketMeals.Length,
+            bucketMeals.Select(meal => meal.Date.Date).Distinct().Count());
+    }
+
+    private static double SumCalories(IEnumerable<MealNutritionProjection> meals, MealType mealType) =>
+        Math.Round(meals.Where(meal => meal.MealType == mealType).Sum(meal => meal.TotalCalories), 2, MidpointRounding.ToEven);
+
+    private static int GetBucketDayCount(DateTime bucketStart, DateTime bucketEnd) {
+        double totalDays = (bucketEnd - bucketStart).TotalDays;
+        return Math.Max(1, (int)Math.Ceiling(totalDays));
+    }
+
+    private static DateTime NormalizeUtcInstant(DateTime value) =>
+        value.Kind switch {
+            DateTimeKind.Utc => value,
+            DateTimeKind.Local => value.ToUniversalTime(),
+            _ => DateTime.SpecifyKind(value, DateTimeKind.Utc),
+        };
+
+    private sealed record MealNutritionProjection(
+        DateTime Date,
+        double TotalCalories,
+        double TotalProteins,
+        double TotalFats,
+        double TotalCarbs,
+        double TotalFiber,
+        MealType? MealType);
+}

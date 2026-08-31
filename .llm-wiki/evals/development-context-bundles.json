@@ -86,7 +86,7 @@
       "intent": "Review the persisted dashboard meal projection",
       "query": "database dashboard meal projection implementation",
       "plannedPath": null,
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs"],
+      "expectedPaths": ["Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs"],
       "expectedLayers": ["Infrastructure"]
     },
     {

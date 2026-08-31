@@ -4,6 +4,7 @@ param()
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiExtractionPlanning.ps1')
+& (Join-Path $PSScriptRoot 'Test-LlmWikiExtractionProjectReferences.ps1')
 
 $objective = 'Strengthen and extract Dashboard into an isolated application module while preserving its composition dependencies'
 $plan = Get-LlmWikiExtractionPlan $objective $repositoryRoot
@@ -43,7 +44,7 @@ $hydrationJourneys = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1'
     -Query $hydrationObjective `
     -ChangedPath @(
         'Modules/Hydration/Application/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs'
-        'FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj'
+        'Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj'
     ) `
     -Format Json | ConvertFrom-Json
 if (@($hydrationJourneys.journeys | Where-Object id -eq 'FD-MEAL').Count -gt 0) {
@@ -80,8 +81,8 @@ if (@($fastingPlan.criteria | Where-Object { $_ -match '(?i)\bby\b' }).Count -gt
     throw 'Logical-root extraction criteria do not use the canonical Fasting application source mapping.'
 }
 foreach ($requiredPath in @(
-    'FoodDiary.Application.Dashboard'
-    'FoodDiary.Application.Abstractions/Dashboard'
+    'Modules/Dashboard/Application'
+    'Modules/Dashboard/Application/Abstractions'
     'FoodDiary.Initializer/Program.cs'
     'FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs'
     'FoodDiary.Web.Api/FoodDiary.Web.Api.csproj'
@@ -123,7 +124,7 @@ try {
 
 $workspace = New-LlmWikiSmokeFixtureRepositoryPath -RepositoryRoot $repositoryRoot -Name 'governed-extraction'
 $absoluteWorkspace = Join-Path $repositoryRoot $workspace
-$changedPath = 'FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj'
+$changedPath = 'Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj'
 $compound = 'Dashboard is extracted and isolated, composition roots remain compatible, and existing behavior stays unchanged.'
 try {
     & (Join-Path $PSScriptRoot 'Initialize-LlmWikiTaskWorkspace.ps1') `

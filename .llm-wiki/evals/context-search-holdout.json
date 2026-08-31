@@ -84,7 +84,7 @@
       "id": "ru-dashboard-snapshot",
       "query": "где собираем данные главного экрана за текущий день",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs"]
+      "expectedPaths": ["Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs"]
     },
     {
       "id": "image-cleanup-background-job",
@@ -189,7 +189,7 @@
       "id": "dashboard-meals-persistence-read",
       "query": "load dashboard meal data directly from persistence",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs"]
+      "expectedPaths": ["Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs"]
     },
     {
       "id": "email-outbox-processing",

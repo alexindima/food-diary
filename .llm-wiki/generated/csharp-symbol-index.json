@@ -8,7 +8,7 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3527,
+    "sourceFiles": 3528,
     "symbols": 3520,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 188,
@@ -1159,125 +1159,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/DailyAdvices/Common/DailyAdviceErrors.cs",
       "line": 4
-    },
-    {
-      "name": "IDashboardBodyReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IDashboardMealsReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IDashboardReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IDashboardStatisticsReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "DashboardBodyReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardBodyReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardMealAiItemReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealAiItemReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardMealAiSessionReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealAiSessionReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardMealItemReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealItemReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardMealReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardMealsReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardMealsReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardReadSections",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardReadSections.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardStatisticsBucketReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardStatisticsBucketReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardWaistPointReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardWaistPointReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardWaistSummaryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardWaistSummaryReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardWeightPointReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardWeightPointReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardWeightSummaryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dashboard/Models/DashboardWeightSummaryReadModel.cs",
-      "line": 2
     },
     {
       "name": "DietologistErrors",
@@ -3259,258 +3140,6 @@
       "role": "Service",
       "path": "FoodDiary.Application.Admin/Services/AdminUserReadService.cs",
       "line": 9
-    },
-    {
-      "name": "SendDashboardTestEmailCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "SendDashboardTestEmailCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "SendDashboardTestEmailCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "IDashboardUserContextService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs",
-      "line": 7
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
-      "line": 10
-    },
-    {
-      "name": "UtcDateNormalizer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Internal/UtcDateNormalizer.cs",
-      "line": 2
-    },
-    {
-      "name": "DailyCaloriesModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Models/DailyCaloriesModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardMealsModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Models/DashboardMealsModel.cs",
-      "line": 4
-    },
-    {
-      "name": "DashboardSnapshotModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Models/DashboardSnapshotModel.cs",
-      "line": 11
-    },
-    {
-      "name": "DashboardStatisticsModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Models/DashboardStatisticsModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardUserContextModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Models/DashboardUserContextModel.cs",
-      "line": 4
-    },
-    {
-      "name": "DashboardWaistModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Models/DashboardWaistModel.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardWeightModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Models/DashboardWeightModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WaistPointModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Models/WaistPointModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WeightPointModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Models/WeightPointModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetDashboardSnapshotQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetDashboardSnapshotQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "GetDashboardSnapshotQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "GetDietologistClientDashboardQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetDietologistClientDashboardQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
-      "line": 15
-    },
-    {
-      "name": "ComposedDashboardReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Dashboard/Services/ComposedDashboardReadService.cs",
-      "line": 9
-    },
-    {
-      "name": "DashboardBodyMapper",
-      "kind": "class",
-      "role": "Mapper",
-      "path": "FoodDiary.Application.Dashboard/Services/DashboardBodyMapper.cs",
-      "line": 7
-    },
-    {
-      "name": "DashboardBuildContext",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Services/DashboardBuildContext.cs",
-      "line": 5
-    },
-    {
-      "name": "DashboardMapping",
-      "kind": "class",
-      "role": "Mapping",
-      "path": "FoodDiary.Application.Dashboard/Services/DashboardMapping.cs",
-      "line": 8
-    },
-    {
-      "name": "DashboardMealsMapper",
-      "kind": "class",
-      "role": "Mapper",
-      "path": "FoodDiary.Application.Dashboard/Services/DashboardMealsMapper.cs",
-      "line": 7
-    },
-    {
-      "name": "DashboardSectionDataLoader",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
-      "line": 22
-    },
-    {
-      "name": "DashboardSnapshotBuilder",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
-      "line": 24
-    },
-    {
-      "name": "DashboardSnapshotRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs",
-      "line": 4
-    },
-    {
-      "name": "DashboardSnapshotSections",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotSections.cs",
-      "line": 2
-    },
-    {
-      "name": "DashboardStatisticsMapper",
-      "kind": "class",
-      "role": "Mapper",
-      "path": "FoodDiary.Application.Dashboard/Services/DashboardStatisticsMapper.cs",
-      "line": 6
-    },
-    {
-      "name": "DashboardUserContextService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Dashboard/Services/DashboardUserContextService.cs",
-      "line": 9
-    },
-    {
-      "name": "IDashboardSectionDataLoader",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Services/IDashboardSectionDataLoader.cs",
-      "line": 9
-    },
-    {
-      "name": "IDashboardSnapshotBuilder",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs",
-      "line": 5
-    },
-    {
-      "name": "MediatorDashboardMealsReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Dashboard/Services/MediatorDashboardMealsReadService.cs",
-      "line": 11
-    },
-    {
-      "name": "MediatorDashboardStatisticsReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Dashboard/Services/MediatorDashboardStatisticsReadService.cs",
-      "line": 10
-    },
-    {
-      "name": "RepositoryDashboardBodyReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Dashboard/Services/RepositoryDashboardBodyReadService.cs",
-      "line": 11
     },
     {
       "name": "AdminSsoExchangeCommand",
@@ -7079,13 +6708,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Dashboard.cs",
-      "line": 7
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Email.cs",
       "line": 6
     },
@@ -7543,83 +7165,6 @@
       "role": "ValueObject",
       "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
       "line": 78
-    },
-    {
-      "name": "DashboardBodyReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
-      "line": 8
-    },
-    {
-      "name": "DashboardFavoriteMealProjection",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardFavoriteMealProjection.cs",
-      "line": 4
-    },
-    {
-      "name": "DashboardMealAiSessionProjection",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealAiSessionProjection.cs",
-      "line": 4
-    },
-    {
-      "name": "DashboardMealAiSessionsLoader",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealAiSessionsLoader.cs",
-      "line": 6
-    },
-    {
-      "name": "DashboardMealFavoritesLoader",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealFavoritesLoader.cs",
-      "line": 5
-    },
-    {
-      "name": "DashboardMealItemProjection",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
-      "line": 5
-    },
-    {
-      "name": "DashboardMealItemsLoader",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealItemsLoader.cs",
-      "line": 8
-    },
-    {
-      "name": "DashboardMealProjection",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
-      "line": 4
-    },
-    {
-      "name": "DashboardMealsReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
-      "line": 10
-    },
-    {
-      "name": "DashboardReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
-      "line": 9
-    },
-    {
-      "name": "DashboardStatisticsReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
-      "line": 11
     },
     {
       "name": "EfUnitOfWork",
@@ -8158,7 +7703,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 398
+      "line": 399
     },
     {
       "name": "UsdaCsvReader",
@@ -8557,7 +8102,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 66
+      "line": 67
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -12701,7 +12246,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 51
+      "line": 52
     },
     {
       "name": "ApiTelemetry",
@@ -17329,6 +16874,461 @@
       "role": "Repository",
       "path": "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs",
       "line": 7
+    },
+    {
+      "name": "IDashboardBodyReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IDashboardMealsReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IDashboardReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "DashboardBodyReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardBodyReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardMealAiItemReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealAiItemReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardMealAiSessionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealAiSessionReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardMealItemReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealItemReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardMealReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardMealsReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardMealsReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardReadSections",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardReadSections.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardWaistPointReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardWaistPointReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardWaistSummaryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardWaistSummaryReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardWeightPointReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardWeightPointReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardWeightSummaryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Abstractions/Models/DashboardWeightSummaryReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "SendDashboardTestEmailCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "SendDashboardTestEmailCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "SendDashboardTestEmailCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Dashboard/Application/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "IDashboardUserContextService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs",
+      "line": 7
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/DependencyInjection.cs",
+      "line": 10
+    },
+    {
+      "name": "UtcDateNormalizer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Internal/UtcDateNormalizer.cs",
+      "line": 2
+    },
+    {
+      "name": "DailyCaloriesModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Models/DailyCaloriesModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardMealsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Models/DashboardMealsModel.cs",
+      "line": 4
+    },
+    {
+      "name": "DashboardSnapshotModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Models/DashboardSnapshotModel.cs",
+      "line": 11
+    },
+    {
+      "name": "DashboardStatisticsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Models/DashboardStatisticsModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardUserContextModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Models/DashboardUserContextModel.cs",
+      "line": 4
+    },
+    {
+      "name": "DashboardWaistModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Models/DashboardWaistModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardWeightModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Models/DashboardWeightModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WaistPointModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Models/WaistPointModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightPointModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Models/WeightPointModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetDashboardSnapshotQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetDashboardSnapshotQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "GetDashboardSnapshotQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "GetDietologistClientDashboardQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetDietologistClientDashboardQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Dashboard/Application/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "ComposedDashboardReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Dashboard/Application/Services/ComposedDashboardReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "DashboardBodyMapper",
+      "kind": "class",
+      "role": "Mapper",
+      "path": "Modules/Dashboard/Application/Services/DashboardBodyMapper.cs",
+      "line": 7
+    },
+    {
+      "name": "DashboardBuildContext",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Services/DashboardBuildContext.cs",
+      "line": 5
+    },
+    {
+      "name": "DashboardMapping",
+      "kind": "class",
+      "role": "Mapping",
+      "path": "Modules/Dashboard/Application/Services/DashboardMapping.cs",
+      "line": 8
+    },
+    {
+      "name": "DashboardMealsMapper",
+      "kind": "class",
+      "role": "Mapper",
+      "path": "Modules/Dashboard/Application/Services/DashboardMealsMapper.cs",
+      "line": 7
+    },
+    {
+      "name": "DashboardSectionDataLoader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
+      "line": 22
+    },
+    {
+      "name": "DashboardSnapshotBuilder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
+      "line": 24
+    },
+    {
+      "name": "DashboardSnapshotRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Modules/Dashboard/Application/Services/DashboardSnapshotRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "DashboardSnapshotSections",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Services/DashboardSnapshotSections.cs",
+      "line": 2
+    },
+    {
+      "name": "DashboardStatisticsMapper",
+      "kind": "class",
+      "role": "Mapper",
+      "path": "Modules/Dashboard/Application/Services/DashboardStatisticsMapper.cs",
+      "line": 6
+    },
+    {
+      "name": "DashboardUserContextService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Dashboard/Application/Services/DashboardUserContextService.cs",
+      "line": 9
+    },
+    {
+      "name": "IDashboardSectionDataLoader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Services/IDashboardSectionDataLoader.cs",
+      "line": 9
+    },
+    {
+      "name": "IDashboardSnapshotBuilder",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Dashboard/Application/Services/IDashboardSnapshotBuilder.cs",
+      "line": 5
+    },
+    {
+      "name": "MediatorDashboardMealsReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Dashboard/Application/Services/MediatorDashboardMealsReadService.cs",
+      "line": 11
+    },
+    {
+      "name": "MediatorDashboardStatisticsReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Dashboard/Application/Services/MediatorDashboardStatisticsReadService.cs",
+      "line": 10
+    },
+    {
+      "name": "RepositoryDashboardBodyReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Dashboard/Application/Services/RepositoryDashboardBodyReadService.cs",
+      "line": 11
+    },
+    {
+      "name": "IDashboardStatisticsReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "DashboardStatisticsBucketReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Contracts/Models/DashboardStatisticsBucketReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
+      "line": 7
+    },
+    {
+      "name": "DashboardBodyReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "DashboardFavoriteMealProjection",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardFavoriteMealProjection.cs",
+      "line": 4
+    },
+    {
+      "name": "DashboardMealAiSessionProjection",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionProjection.cs",
+      "line": 4
+    },
+    {
+      "name": "DashboardMealAiSessionsLoader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionsLoader.cs",
+      "line": 7
+    },
+    {
+      "name": "DashboardMealFavoritesLoader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealFavoritesLoader.cs",
+      "line": 6
+    },
+    {
+      "name": "DashboardMealItemProjection",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
+      "line": 5
+    },
+    {
+      "name": "DashboardMealItemsLoader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemsLoader.cs",
+      "line": 9
+    },
+    {
+      "name": "DashboardMealProjection",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
+      "line": 4
+    },
+    {
+      "name": "DashboardMealsReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
+      "line": 11
+    },
+    {
+      "name": "DashboardReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
+      "line": 9
+    },
+    {
+      "name": "DashboardStatisticsReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
+      "line": 12
     },
     {
       "name": "DietologistInvitationMessage",
@@ -25006,51 +25006,51 @@
     },
     {
       "interface": "IDashboardBodyReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardBodyReadService.cs",
+      "interfacePath": "Modules/Dashboard/Application/Abstractions/Common/IDashboardBodyReadService.cs",
       "implementation": "DashboardBodyReadService",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
+      "implementationPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDashboardMealsReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardMealsReadService.cs",
+      "interfacePath": "Modules/Dashboard/Application/Abstractions/Common/IDashboardMealsReadService.cs",
       "implementation": "DashboardMealsReadService",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
+      "implementationPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDashboardReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardReadService.cs",
+      "interfacePath": "Modules/Dashboard/Application/Abstractions/Common/IDashboardReadService.cs",
       "implementation": "DashboardReadService",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
+      "implementationPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDashboardSectionDataLoader",
-      "interfacePath": "FoodDiary.Application.Dashboard/Services/IDashboardSectionDataLoader.cs",
+      "interfacePath": "Modules/Dashboard/Application/Services/IDashboardSectionDataLoader.cs",
       "implementation": "DashboardSectionDataLoader",
-      "implementationPath": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
+      "implementationPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDashboardSnapshotBuilder",
-      "interfacePath": "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs",
+      "interfacePath": "Modules/Dashboard/Application/Services/IDashboardSnapshotBuilder.cs",
       "implementation": "DashboardSnapshotBuilder",
-      "implementationPath": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
+      "implementationPath": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDashboardStatisticsReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Dashboard/Common/IDashboardStatisticsReadService.cs",
+      "interfacePath": "Modules/Dashboard/Contracts/Common/IDashboardStatisticsReadService.cs",
       "implementation": "DashboardStatisticsReadService",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
+      "implementationPath": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDashboardUserContextService",
-      "interfacePath": "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs",
+      "interfacePath": "Modules/Dashboard/Application/Common/IDashboardUserContextService.cs",
       "implementation": "DashboardUserContextService",
-      "implementationPath": "FoodDiary.Application.Dashboard/Services/DashboardUserContextService.cs",
+      "implementationPath": "Modules/Dashboard/Application/Services/DashboardUserContextService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26379,48 +26379,6 @@
       "line": 20
     },
     {
-      "service": "IDashboardStatisticsReadService",
-      "implementation": "MediatorDashboardStatisticsReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
-      "line": 16
-    },
-    {
-      "service": "IDashboardBodyReadService",
-      "implementation": "RepositoryDashboardBodyReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IDashboardMealsReadService",
-      "implementation": "MediatorDashboardMealsReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "IDashboardReadService",
-      "implementation": "ComposedDashboardReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
-      "line": 19
-    },
-    {
-      "service": "IDashboardUserContextService",
-      "implementation": "DashboardUserContextService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
-      "line": 20
-    },
-    {
-      "service": "IDashboardSectionDataLoader",
-      "implementation": "DashboardSectionDataLoader",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Dashboard/DependencyInjection.cs",
-      "line": 21
-    },
-    {
       "service": "IAuthenticationLoginEventCleanupService",
       "implementation": "AuthenticationLoginEventCleanupService",
       "lifetime": "Scoped",
@@ -26701,13 +26659,6 @@
       "line": 25
     },
     {
-      "service": "IDashboardReadService",
-      "implementation": "DashboardReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Dashboard.cs",
-      "line": 21
-    },
-    {
       "service": "IEmailOutbox",
       "implementation": "EmailOutbox",
       "lifetime": "Scoped",
@@ -26901,14 +26852,14 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 127
+      "line": 128
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 128
+      "line": 129
     },
     {
       "service": "IGoogleTokenValidator",
@@ -26971,7 +26922,7 @@
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 58
+      "line": 59
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -27048,21 +26999,21 @@
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 104
+      "line": 106
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 105
+      "line": 107
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 137
+      "line": 139
     },
     {
       "service": "IMailInboxReadinessChecker",
@@ -27224,6 +27175,55 @@
       "lifetime": "Scoped",
       "path": "Modules/DailyAdvices/Application/DependencyInjection.cs",
       "line": 14
+    },
+    {
+      "service": "IDashboardStatisticsReadService",
+      "implementation": "MediatorDashboardStatisticsReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Dashboard/Application/DependencyInjection.cs",
+      "line": 16
+    },
+    {
+      "service": "IDashboardBodyReadService",
+      "implementation": "RepositoryDashboardBodyReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Dashboard/Application/DependencyInjection.cs",
+      "line": 17
+    },
+    {
+      "service": "IDashboardMealsReadService",
+      "implementation": "MediatorDashboardMealsReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Dashboard/Application/DependencyInjection.cs",
+      "line": 18
+    },
+    {
+      "service": "IDashboardReadService",
+      "implementation": "ComposedDashboardReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Dashboard/Application/DependencyInjection.cs",
+      "line": 19
+    },
+    {
+      "service": "IDashboardUserContextService",
+      "implementation": "DashboardUserContextService",
+      "lifetime": "Scoped",
+      "path": "Modules/Dashboard/Application/DependencyInjection.cs",
+      "line": 20
+    },
+    {
+      "service": "IDashboardSectionDataLoader",
+      "implementation": "DashboardSectionDataLoader",
+      "lifetime": "Scoped",
+      "path": "Modules/Dashboard/Application/DependencyInjection.cs",
+      "line": 21
+    },
+    {
+      "service": "IDashboardReadService",
+      "implementation": "DashboardReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Dashboard/Infrastructure/DependencyInjection.cs",
+      "line": 21
     },
     {
       "service": "IDietologistClientReadService",

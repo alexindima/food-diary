@@ -65,7 +65,6 @@ public sealed class JobManagerGuardrailTests {
         string[] expectedProjectReferences = [
             "FoodDiary.Application.Admin",
             "FoodDiary.Application.BodyMetrics",
-            "FoodDiary.Application.Dashboard",
             "FoodDiary.Application.Exercises",
             "FoodDiary.Application.Identity",
             "FoodDiary.Application.Images",
@@ -84,6 +83,8 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Modules.Ai.Infrastructure",
             "FoodDiary.Modules.Billing.Infrastructure",
             "FoodDiary.Modules.DailyAdvices.Application",
+            "FoodDiary.Modules.Dashboard.Application",
+            "FoodDiary.Modules.Dashboard.Infrastructure",
             "FoodDiary.Modules.Dietologist.Infrastructure",
             "FoodDiary.Modules.Export.Application",
             "FoodDiary.Modules.Fasting.Contracts",

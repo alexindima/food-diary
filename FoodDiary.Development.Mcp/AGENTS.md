@@ -18,6 +18,7 @@ Rules for `FoodDiary.Development.Mcp/`.
 - Keep queries and private path payloads out of persisted telemetry; record only bounded aggregate routing and timing data.
 - Preserve cancellation, timeout, output-size, and process-tree termination safeguards for PowerShell subprocesses.
 - Keep structured MCP contracts backward compatible. When a contract changes, update protocol types, tool mappings, README documentation, and focused tests together.
+- Infer production layers from exact `Modules/<module>/Application`, `Domain`, and `Infrastructure` segments as well as legacy roots. Preserve nested Abstractions/Model ownership; do not infer a production layer from module tests, Contracts, or similar directory names.
 - Use the in-process read-only SQLite path for interactive context selection. Recovery may refresh through the existing graph writer but must not silently fall back to stale JSON.
 
 ## Commands

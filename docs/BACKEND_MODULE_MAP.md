@@ -181,3 +181,16 @@ Exercises ownership: `Modules/Exercises/Application` owns slices and read-servic
 ## Ai physical ownership
 
 Ai owns Application, Application/Abstractions, Domain, Infrastructure/Model and Infrastructure under `Modules/Ai`. Application keeps its legacy assembly/CLR identity. AiUsage/AiPromptTemplate and quota ledger ownership, provider/cache/consent semantics, central User and DbContext seams and consumers are source-audited in `docs/ai/ai-ownership-inventory.md`. Admin invokes semantic administration capabilities; Meals AI entities remain Meals-owned. Provider HTTP/options remain Integrations. Focused tests live under Modules/Ai/tests; central PostgreSQL/HTTP/mixed suites remain with their owners.
+
+## Dashboard logical extraction
+
+`Modules/Dashboard` owns Application, Application/Abstractions, Contracts and
+Infrastructure. It is a read composer with no Domain or PersistenceModel. Stable
+statistics contracts retain their CLR namespaces and are referenced one-way by
+central Abstractions for Statistics/Cycles/WeeklyCheckIn/Tdee/Gamification consumers.
+Optimized projection readers own no contributing aggregates. Shared DbContext,
+migrations/model snapshot and HTTP transport remain central. Hosts explicitly call
+`AddDashboardReadServices` after infrastructure registration; Application fallback
+registration remains `AddDashboardModule`. Scoped concrete/interface aliases and
+query behavior are preserved. Owned application/adapter tests live under module
+tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.

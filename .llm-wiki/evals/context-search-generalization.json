@@ -204,7 +204,7 @@
       "id": "dashboard-statistics-reader",
       "query": "read aggregate dashboard statistics from persistence",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs"]
+      "expectedPaths": ["Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs"]
     },
     {
       "id": "recipe-overview-reader",

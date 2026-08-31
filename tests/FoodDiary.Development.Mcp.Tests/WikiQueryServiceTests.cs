@@ -837,17 +837,58 @@ public sealed class WikiQueryServiceTests {
             CancellationToken.None);
     }
 
+    [Theory]
+    [InlineData("Modules/Sample/Application/Handler.cs", "Application")]
+    [InlineData("Modules/Sample/Application/Abstractions/Port.cs", "Application")]
+    [InlineData("modules/Another/domain/Entity.cs", "Domain")]
+    [InlineData("MODULES/Sample/INFRASTRUCTURE/Reader.cs", "Infrastructure")]
+    [InlineData("Modules/Sample/Infrastructure/Model/Mapping.cs", "Infrastructure")]
+    [InlineData("Modules\\Another\\Application\\Handler.cs", "Application")]
+    [InlineData("Modules\\Another\\Infrastructure\\Model\\Mapping.cs", "Infrastructure")]
+    [InlineData("Modules/Sample/Infrastructure", "Infrastructure")]
+    [InlineData("Modules/Sample/tests/FoodDiary.Infrastructure.Tests/Test.cs", null)]
+    [InlineData("Modules/Sample/Tests/Domain/Test.cs", null)]
+    [InlineData("Modules/Sample/Unknown/Infrastructure/Reader.cs", null)]
+    [InlineData("Modules/Sample/InfrastructureExtra/Reader.cs", null)]
+    [InlineData("Modules/Sample/Contracts/Port.cs", null)]
+    [InlineData("Modules//Infrastructure/Reader.cs", null)]
+    [InlineData("ModulesExtra/Sample/Infrastructure/Reader.cs", null)]
+    [InlineData("Other/Modules/Sample/Domain/Entity.cs", null)]
+    [InlineData("FoodDiary.Infrastructure/Reader.cs", "Infrastructure")]
+    [InlineData("fooddiary.domain\\Entity.cs", "Domain")]
+    public async Task GetDevelopmentContextAsync_InfersExactModuleLayerSegments(string path, string? expectedLayer) {
+        DevelopmentContext result = await GetDevelopmentContextForPathsAsync([path]);
+
+        if (expectedLayer is null) {
+            Assert.Empty(result.EffectiveLayers);
+        } else {
+            Assert.Equal([expectedLayer], result.EffectiveLayers);
+        }
+        Assert.False(result.CrossLayerScope);
+    }
+
     [Fact]
     public async Task GetDevelopmentContextAsync_InfersInfrastructureDomainAndApiLayersAndIgnoresUnknownPaths() {
-        ChangeSetSnapshot snapshot = new("abc123", "clean-snapshot", [], DateTimeOffset.UtcNow);
-        _snapshots.GetAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
-        _snapshots.RefreshAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
         string[] paths = [
             "FoodDiary.Infrastructure/Persistence/UserRepository.cs",
             "FoodDiary.Domain/Users/User.cs",
             "FoodDiary.Web.Api/Controllers/UsersController.cs",
+            "Modules/Sample/Application/Abstractions/Port.cs",
+            "Modules/Sample/Infrastructure/Model/Mapping.cs",
+            "modules/Another/domain/Entity.cs",
+            "Modules/Sample/tests/Infrastructure.Tests/Test.cs",
             "docs/unrelated-notes.md",
         ];
+        DevelopmentContext result = await GetDevelopmentContextForPathsAsync(paths);
+
+        Assert.Equal(["Api", "Application", "Domain", "Infrastructure"], result.EffectiveLayers);
+        Assert.True(result.CrossLayerScope);
+    }
+
+    private async Task<DevelopmentContext> GetDevelopmentContextForPathsAsync(string[] paths) {
+        ChangeSetSnapshot snapshot = new("abc123", "clean-snapshot", [], DateTimeOffset.UtcNow);
+        _snapshots.GetAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
+        _snapshots.RefreshAsync(Arg.Any<IReadOnlyList<string>?>(), Arg.Any<CancellationToken>()).Returns(snapshot);
         IWikiContextSearch contextSearch = Substitute.For<IWikiContextSearch>();
         WikiContextSearchResult sqlContext = CreateSqlContext(ready: true, fresh: true) with {
             Candidates = [.. paths.Select((path, index) => new WikiContextSearchCandidate(
@@ -869,14 +910,12 @@ public sealed class WikiQueryServiceTests {
             Arg.Any<string?>()).Returns(sqlContext);
         WikiQueryService service = new(_executor, _snapshots, contextSearch: contextSearch);
 
-        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+        return await service.GetDevelopmentContextAsync(
             "Change user persistence",
             "UpdateUser",
             plannedPath: null,
             CancellationToken.None);
 
-        Assert.Equal(["Api", "Domain", "Infrastructure"], result.EffectiveLayers);
-        Assert.True(result.CrossLayerScope);
     }
 
     [Fact]

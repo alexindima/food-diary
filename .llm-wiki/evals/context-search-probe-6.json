@@ -66,7 +66,7 @@
       "id": "dashboard-section-data-loader-probe-6",
       "query": "validate dashboard date and timezone then conditionally load advice fasting exercise TDEE and cycle sections",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs"]
+      "expectedPaths": ["Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs"]
     },
     {
       "id": "job-execution-observer-probe-6",

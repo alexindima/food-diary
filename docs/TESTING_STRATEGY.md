@@ -94,3 +94,16 @@ For frontend feature changes:
 Before release or large PR:
 - `dotnet build FoodDiary.slnx`,
 - `cd FoodDiary.Web.Client && npm run verify`.
+
+## Dashboard logical extraction
+
+`Modules/Dashboard` owns Application, Application/Abstractions, Contracts and
+Infrastructure. It is a read composer with no Domain or PersistenceModel. Stable
+statistics contracts retain their CLR namespaces and are referenced one-way by
+central Abstractions for Statistics/Cycles/WeeklyCheckIn/Tdee/Gamification consumers.
+Optimized projection readers own no contributing aggregates. Shared DbContext,
+migrations/model snapshot and HTTP transport remain central. Hosts explicitly call
+`AddDashboardReadServices` after infrastructure registration; Application fallback
+registration remains `AddDashboardModule`. Scoped concrete/interface aliases and
+query behavior are preserved. Owned application/adapter tests live under module
+tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.

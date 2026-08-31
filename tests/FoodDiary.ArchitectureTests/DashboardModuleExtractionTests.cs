@@ -5,15 +5,28 @@ public sealed class DashboardModuleExtractionTests {
     [Fact]
     public void DashboardApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Dashboard");
-        string extractedRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Dashboard");
+        string extractedRoot = ArchitectureTestPaths.FromRoot("Modules/Dashboard/Application");
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.NotEmpty(SourceScanner.SourceFiles(extractedRoot));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Application.Dashboard")));
+    }
+
+    [Fact]
+    public void DashboardReadAdaptersAndPorts_HavePhysicalOwnersWithoutAggregateOwnership() {
+        Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Infrastructure/Persistence/Dashboard")));
+        Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Application/Abstractions")));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Domain")));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Infrastructure/Model")));
+        Assert.DoesNotContain("FoodDiary.Modules.Dashboard.Infrastructure",
+            ProjectReferenceReader.ReadProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"), StringComparer.Ordinal);
+        Assert.Equal(["FoodDiary.Domain", "FoodDiary.Results"],
+            ProjectReferenceReader.ReadProjectReferences("Modules/Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj"));
     }
 
     [Fact]
     public void ExtractedDashboardAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj");
+            "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Application.Cycles",
@@ -21,6 +34,7 @@ public sealed class DashboardModuleExtractionTests {
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
             "FoodDiary.Modules.DailyAdvices.Application",
+            "FoodDiary.Modules.Dashboard.Application.Abstractions",
             "FoodDiary.Modules.Dietologist.Application.Abstractions",
             "FoodDiary.Modules.Exercises.Contracts",
             "FoodDiary.Modules.Fasting.Contracts",
@@ -36,5 +50,6 @@ public sealed class DashboardModuleExtractionTests {
     public void ExecutableCompositionRoots_RegisterDashboardModule(string relativePath) {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(relativePath.Split('/')));
         Assert.Contains("AddDashboardModule()", source, StringComparison.Ordinal);
+        Assert.Contains("AddDashboardReadServices()", source, StringComparison.Ordinal);
     }
 }

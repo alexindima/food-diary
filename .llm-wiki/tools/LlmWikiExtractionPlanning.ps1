@@ -64,6 +64,21 @@ function Get-LlmWikiExtractionPlan([string]$Objective, [string]$RepositoryRoot) 
         'docs/backend/BACKEND_MODULE_OWNERSHIP.md'
     )
     $referencePattern = "Add$([regex]::Escape($module))Module|FoodDiary\.Application\.$([regex]::Escape($module))(?:\.csproj)?"
+    $mappedProjectFiles = @(
+        foreach ($mappedPath in $mappedProjectPaths) {
+            $absoluteMappedPath = Join-Path $RepositoryRoot $mappedPath
+            if (Test-Path -LiteralPath $absoluteMappedPath -PathType Container) {
+                Get-ChildItem -LiteralPath $absoluteMappedPath -Filter '*.csproj' -File
+            } elseif ((Test-Path -LiteralPath $absoluteMappedPath -PathType Leaf) -and
+                [IO.Path]::GetExtension($absoluteMappedPath) -eq '.csproj') {
+                Get-Item -LiteralPath $absoluteMappedPath
+            }
+        }
+    )
+    foreach ($projectName in @($mappedProjectFiles | ForEach-Object { $_.Name } | Sort-Object -Unique)) {
+        # Physical project identities are independent of legacy CLR assembly names.
+        $referencePattern += '|(?:^|[/\\\s"''=])' + [regex]::Escape($projectName) + '(?=$|[\s"''<>),])'
+    }
     $referencePaths = @(
         Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '*.cs', '*.csproj', '*.slnx', 'Dockerfile', '**/Dockerfile') -FailureMessage 'Unable to enumerate module extraction reference candidates.' |
             Where-Object {

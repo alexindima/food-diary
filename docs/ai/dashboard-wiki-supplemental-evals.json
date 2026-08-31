@@ -1,0 +1,389 @@
+{
+  "base": "a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6",
+  "baseline": "UNKNOWN for these supplemental evaluations",
+  "corpora": [
+    {
+      "corpus": ".llm-wiki/evals/context-search-generalization.json",
+      "caseCount": 70,
+      "metrics": {
+        "top1Count": 63,
+        "top1Rate": 0.9,
+        "top10Count": 66,
+        "top10Rate": 0.9429,
+        "meanReciprocalRank": 0.9214,
+        "averageSqlDurationMs": 214.36,
+        "p95SqlDurationMs": 338.42
+      },
+      "thresholds": {
+        "minimumTop1Rate": 0.95,
+        "minimumTop10Rate": 1.0,
+        "minimumMeanReciprocalRank": 0.97
+      },
+      "thresholdViolations": [
+        "top1Rate=0.9<0.95",
+        "top10Rate=0.9429<1.0",
+        "meanReciprocalRank=0.9214<0.97"
+      ],
+      "switchGaps": [
+        "top1=0.9<0.95",
+        "top10=0.9429<1",
+        "mrr=0.9214<0.97"
+      ],
+      "liveRegressionGaps": [],
+      "exitCode": 0,
+      "passed": false,
+      "baseline": "UNKNOWN",
+      "artifact": ".artifacts/dashboard-evidence/eval-context-search-generalization.json",
+      "artifactSha256": "d61ebd63876c3545a68aa297b0f0b4ee1cb6743ec8f9f645167950670d51189f",
+      "corpusSha256": "b2ee5ea54c6a1f07dad9d87c9cbd0907a686845484e4750fb36019db5c21ddf2",
+      "dashboardTargets": [
+        {
+          "id": "dashboard-statistics-reader",
+          "old": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
+          "new": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
+          "rank": 1,
+          "top1": true,
+          "top10": true
+        }
+      ]
+    },
+    {
+      "corpus": ".llm-wiki/evals/context-search-holdout.json",
+      "caseCount": 40,
+      "metrics": {
+        "top1Count": 30,
+        "top1Rate": 0.75,
+        "top10Count": 31,
+        "top10Rate": 0.775,
+        "meanReciprocalRank": 0.7625,
+        "averageSqlDurationMs": 199.72,
+        "p95SqlDurationMs": 340.8
+      },
+      "thresholds": {
+        "minimumTop1Rate": 0.85,
+        "minimumTop10Rate": 0.95,
+        "minimumMeanReciprocalRank": 0.85
+      },
+      "thresholdViolations": [
+        "top1Rate=0.75<0.85",
+        "top10Rate=0.775<0.95",
+        "meanReciprocalRank=0.7625<0.85"
+      ],
+      "switchGaps": [
+        "top1=0.75<0.95",
+        "top10=0.775<1",
+        "mrr=0.7625<0.97"
+      ],
+      "liveRegressionGaps": [],
+      "exitCode": 0,
+      "passed": false,
+      "baseline": "UNKNOWN",
+      "artifact": ".artifacts/dashboard-evidence/eval-context-search-holdout.json",
+      "artifactSha256": "b562c3421a618d19e4f531c7385c8315f3a7bcb6c3c0f40bc72a02cfe971807f",
+      "corpusSha256": "7cc1dae9529ef3e02390bdeded6b14e7e0528567b04fb962813daa2f4c5eeded",
+      "dashboardTargets": [
+        {
+          "id": "ru-dashboard-snapshot",
+          "old": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+          "new": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+          "rank": 1,
+          "top1": true,
+          "top10": true
+        },
+        {
+          "id": "dashboard-meals-persistence-read",
+          "old": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
+          "new": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
+          "rank": 1,
+          "top1": true,
+          "top10": true
+        }
+      ]
+    },
+    {
+      "corpus": ".llm-wiki/evals/context-search-probe-3.json",
+      "caseCount": 30,
+      "metrics": {
+        "top1Count": 26,
+        "top1Rate": 0.8667,
+        "top10Count": 26,
+        "top10Rate": 0.8667,
+        "meanReciprocalRank": 0.8667,
+        "averageSqlDurationMs": 200.62,
+        "p95SqlDurationMs": 334.83
+      },
+      "thresholds": {
+        "minimumTop1Rate": 0.95,
+        "minimumTop10Rate": 1.0,
+        "minimumMeanReciprocalRank": 0.97
+      },
+      "thresholdViolations": [
+        "top1Rate=0.8667<0.95",
+        "top10Rate=0.8667<1.0",
+        "meanReciprocalRank=0.8667<0.97"
+      ],
+      "switchGaps": [
+        "top1=0.8667<0.95",
+        "top10=0.8667<1",
+        "mrr=0.8667<0.97"
+      ],
+      "liveRegressionGaps": [],
+      "exitCode": 0,
+      "passed": false,
+      "baseline": "UNKNOWN",
+      "artifact": ".artifacts/dashboard-evidence/eval-context-search-probe-3.json",
+      "artifactSha256": "cd03bc4fc0a43da9e98de50f2fc0e01cb7c8fbae3c4238132853a5e3f1447ec2",
+      "corpusSha256": "510f79323c7cc3da8d75c2225f0ff6e3d9c63fcbb61f3a948b654b1ec754cbf4",
+      "dashboardTargets": [
+        {
+          "id": "dashboard-statistics-mapper-probe-3",
+          "old": "FoodDiary.Application.Dashboard/Services/DashboardStatisticsMapper.cs",
+          "new": "Modules/Dashboard/Application/Services/DashboardStatisticsMapper.cs",
+          "rank": 1,
+          "top1": true,
+          "top10": true
+        }
+      ]
+    },
+    {
+      "corpus": ".llm-wiki/evals/context-search-probe-4.json",
+      "caseCount": 30,
+      "metrics": {
+        "top1Count": 24,
+        "top1Rate": 0.8,
+        "top10Count": 24,
+        "top10Rate": 0.8,
+        "meanReciprocalRank": 0.8,
+        "averageSqlDurationMs": 212.42,
+        "p95SqlDurationMs": 365.45
+      },
+      "thresholds": {
+        "minimumTop1Rate": 0.95,
+        "minimumTop10Rate": 1.0,
+        "minimumMeanReciprocalRank": 0.97
+      },
+      "thresholdViolations": [
+        "top1Rate=0.8<0.95",
+        "top10Rate=0.8<1.0",
+        "meanReciprocalRank=0.8<0.97"
+      ],
+      "switchGaps": [
+        "top1=0.8<0.95",
+        "top10=0.8<1",
+        "mrr=0.8<0.97"
+      ],
+      "liveRegressionGaps": [],
+      "exitCode": 0,
+      "passed": false,
+      "baseline": "UNKNOWN",
+      "artifact": ".artifacts/dashboard-evidence/eval-context-search-probe-4.json",
+      "artifactSha256": "e469e41c0a9de058ecbbd05e80e94947d6adda3ac57f2cc808399dfbe42929d3",
+      "corpusSha256": "2549655825dc20bb1a14a2c77158db468fb5f009f78ae63b083da300e7815807",
+      "dashboardTargets": [
+        {
+          "id": "dashboard-snapshot-builder-probe-4",
+          "old": "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
+          "new": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
+          "rank": 1,
+          "top1": true,
+          "top10": true
+        }
+      ]
+    },
+    {
+      "corpus": ".llm-wiki/evals/context-search-probe-6.json",
+      "caseCount": 30,
+      "metrics": {
+        "top1Count": 23,
+        "top1Rate": 0.7667,
+        "top10Count": 23,
+        "top10Rate": 0.7667,
+        "meanReciprocalRank": 0.7667,
+        "averageSqlDurationMs": 241.64,
+        "p95SqlDurationMs": 393.4
+      },
+      "thresholds": {
+        "minimumTop1Rate": 0.95,
+        "minimumTop10Rate": 1.0,
+        "minimumMeanReciprocalRank": 0.97
+      },
+      "thresholdViolations": [
+        "top1Rate=0.7667<0.95",
+        "top10Rate=0.7667<1.0",
+        "meanReciprocalRank=0.7667<0.97"
+      ],
+      "switchGaps": [
+        "top1=0.7667<0.95",
+        "top10=0.7667<1",
+        "mrr=0.7667<0.97"
+      ],
+      "liveRegressionGaps": [],
+      "exitCode": 0,
+      "passed": false,
+      "baseline": "UNKNOWN",
+      "artifact": ".artifacts/dashboard-evidence/eval-context-search-probe-6.json",
+      "artifactSha256": "95c75116041fd2488a3bc0de5a17f32e0c356917bb82b355a0f512dc292d6fa1",
+      "corpusSha256": "c56c50ee77de13bbd4c684fa8ea2ef3ff9189b74b414111b66af4bee86542aeb",
+      "dashboardTargets": [
+        {
+          "id": "dashboard-section-data-loader-probe-6",
+          "old": "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
+          "new": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
+          "rank": 1,
+          "top1": true,
+          "top10": true
+        }
+      ]
+    },
+    {
+      "corpus": ".llm-wiki/evals/context-search-probe-7.json",
+      "caseCount": 40,
+      "metrics": {
+        "top1Count": 33,
+        "top1Rate": 0.825,
+        "top10Count": 33,
+        "top10Rate": 0.825,
+        "meanReciprocalRank": 0.825,
+        "averageSqlDurationMs": 246.22,
+        "p95SqlDurationMs": 336.49
+      },
+      "thresholds": {
+        "minimumTop1Rate": 0.95,
+        "minimumTop10Rate": 1.0,
+        "minimumMeanReciprocalRank": 0.97
+      },
+      "thresholdViolations": [
+        "top1Rate=0.825<0.95",
+        "top10Rate=0.825<1.0",
+        "meanReciprocalRank=0.825<0.97"
+      ],
+      "switchGaps": [
+        "top1=0.825<0.95",
+        "top10=0.825<1",
+        "mrr=0.825<0.97"
+      ],
+      "liveRegressionGaps": [],
+      "exitCode": 0,
+      "passed": false,
+      "baseline": "UNKNOWN",
+      "artifact": ".artifacts/dashboard-evidence/eval-context-search-probe-7.json",
+      "artifactSha256": "6909696f9a4c87ceee322661b48e42c0c5d6cc6cbabee8118291d1f8d1fd5e8d",
+      "corpusSha256": "1844078e72e823dd92ff6543d3cba7517e3404a12494998dbe6184c3287d620a",
+      "dashboardTargets": [
+        {
+          "id": "utc-date-normalizer-conversational-probe-7",
+          "old": "FoodDiary.Application.Dashboard/Internal/UtcDateNormalizer.cs",
+          "new": "Modules/Dashboard/Application/Internal/UtcDateNormalizer.cs",
+          "rank": 1,
+          "top1": true,
+          "top10": true
+        }
+      ]
+    },
+    {
+      "corpus": ".llm-wiki/evals/context-search-unseen-20260826.json",
+      "caseCount": 100,
+      "metrics": {
+        "top1Count": 58,
+        "top1Rate": 0.58,
+        "top10Count": 80,
+        "top10Rate": 0.8,
+        "meanReciprocalRank": 0.6628,
+        "averageSqlDurationMs": 236.46,
+        "p95SqlDurationMs": 346.88
+      },
+      "thresholds": {
+        "minimumTop1Rate": 0.68,
+        "minimumTop10Rate": 0.94,
+        "minimumMeanReciprocalRank": 0.77
+      },
+      "thresholdViolations": [
+        "top1Rate=0.58<0.68",
+        "top10Rate=0.8<0.94",
+        "meanReciprocalRank=0.6628<0.77"
+      ],
+      "switchGaps": [
+        "top1=0.58<0.68",
+        "top10=0.8<0.94",
+        "mrr=0.6628<0.77"
+      ],
+      "liveRegressionGaps": [
+        "top1=58<68",
+        "top10=80<94",
+        "mrr=0.6628<0.77",
+        "cohort:application-api=8<9",
+        "cohort:behavior-to-test=5<10",
+        "cohort:domain-invariants=8<12"
+      ],
+      "exitCode": 1,
+      "passed": false,
+      "baseline": "UNKNOWN",
+      "artifact": ".artifacts/dashboard-evidence/eval-context-search-unseen-20260826.json",
+      "artifactSha256": "03ed0c27dc69522773195c78383510192840d184041dc4d15fce075c820c3787",
+      "corpusSha256": "95d318088f14fa667481fdb40f97e4a0015f8704c2038ca7a63ff6f8fe4ceaf7",
+      "dashboardTargets": [
+        {
+          "id": "unseen-v2-007",
+          "old": "FoodDiary.Application.Dashboard/Services/DashboardBodyMapper.cs",
+          "new": "Modules/Dashboard/Application/Services/DashboardBodyMapper.cs",
+          "rank": 1,
+          "top1": true,
+          "top10": true
+        },
+        {
+          "id": "unseen-v2-011",
+          "old": "FoodDiary.Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
+          "new": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
+          "rank": 3,
+          "top1": false,
+          "top10": true
+        }
+      ]
+    },
+    {
+      "corpus": ".llm-wiki/evals/context-search.json",
+      "caseCount": 60,
+      "metrics": {
+        "top1Count": 43,
+        "top1Rate": 0.7167,
+        "top10Count": 43,
+        "top10Rate": 0.7167,
+        "meanReciprocalRank": 0.7167,
+        "averageSqlDurationMs": 218.91,
+        "p95SqlDurationMs": 366.03
+      },
+      "thresholds": {
+        "minimumTop1Rate": 0.85,
+        "minimumTop10Rate": 0.95,
+        "minimumMeanReciprocalRank": 0.85
+      },
+      "thresholdViolations": [
+        "top1Rate=0.7167<0.85",
+        "top10Rate=0.7167<0.95",
+        "meanReciprocalRank=0.7167<0.85"
+      ],
+      "switchGaps": [
+        "top1=0.7167<0.95",
+        "top10=0.7167<1",
+        "mrr=0.7167<0.97"
+      ],
+      "liveRegressionGaps": [],
+      "exitCode": 0,
+      "passed": false,
+      "baseline": "UNKNOWN",
+      "artifact": ".artifacts/dashboard-evidence/eval-context-search.json",
+      "artifactSha256": "4ae340f56cb8e0e3ba1439dbb86660f53f060445f343b05ae8ca9af89d72cde6",
+      "corpusSha256": "6e16378aa849b1f1dcd8096aa158223fd06ba8be2032a87c74f889d3e7d6d07f",
+      "dashboardTargets": [
+        {
+          "id": "dashboard-snapshot",
+          "old": "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+          "new": "Modules/Dashboard/Application/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+          "rank": 1,
+          "top1": true,
+          "top10": true
+        }
+      ]
+    }
+  ]
+}
