@@ -70,21 +70,21 @@
       "area": "FoodDiary",
       "name": "ShoppingListItemAddedDomainEvent",
       "role": "domain-type",
-      "path": "FoodDiary.Domain/Events/ShoppingListItemAddedDomainEvent.cs",
+      "path": "Modules/MealPlanning/Domain/Events/ShoppingListItemAddedDomainEvent.cs",
       "line": 6
     },
     {
       "area": "FoodDiary",
       "name": "ShoppingListItemsClearedDomainEvent",
       "role": "domain-type",
-      "path": "FoodDiary.Domain/Events/ShoppingListItemsClearedDomainEvent.cs",
+      "path": "Modules/MealPlanning/Domain/Events/ShoppingListItemsClearedDomainEvent.cs",
       "line": 5
     },
     {
       "area": "FoodDiary",
       "name": "ShoppingListNameUpdatedDomainEvent",
       "role": "domain-type",
-      "path": "FoodDiary.Domain/Events/ShoppingListNameUpdatedDomainEvent.cs",
+      "path": "Modules/MealPlanning/Domain/Events/ShoppingListNameUpdatedDomainEvent.cs",
       "line": 5
     },
     {
@@ -504,21 +504,21 @@
       "area": "FoodDiary",
       "name": "ShoppingList",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingList.cs",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingList.cs",
       "line": 8
     },
     {
       "area": "FoodDiary",
       "name": "ShoppingListItem",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
       "line": 9
     },
     {
       "area": "FoodDiary",
       "name": "ShoppingListItemSource",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
       "line": 7
     },
     {
@@ -896,7 +896,7 @@
       "area": "FoodDiary",
       "name": "ShoppingListItemSourceType",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/ShoppingListItemSourceType.cs",
+      "path": "Modules/MealPlanning/Domain/Enums/ShoppingListItemSourceType.cs",
       "line": 2
     },
     {
@@ -1274,14 +1274,14 @@
       "area": "FoodDiary",
       "name": "MealPlanId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MealPlanId.cs",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/MealPlanId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "MealPlanMealId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MealPlanMealId.cs",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/MealPlanMealId.cs",
       "line": 4
     },
     {
@@ -1491,21 +1491,21 @@
       "area": "FoodDiary",
       "name": "ShoppingListId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ShoppingListId.cs",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/ShoppingListId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "ShoppingListItemId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ShoppingListItemId.cs",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/ShoppingListItemId.cs",
       "line": 4
     },
     {
       "area": "FoodDiary",
       "name": "ShoppingListItemSourceId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ShoppingListItemSourceId.cs",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/ShoppingListItemSourceId.cs",
       "line": 4
     },
     {
@@ -2359,174 +2359,6 @@
     },
     {
       "area": "FoodDiary",
-      "type": "ArgumentNullException.ThrowIfNull",
-      "message": "ArgumentNullException.ThrowIfNull(itemIdsToKeep)",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingList.cs",
-      "line": 62
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Shopping list name is required.\", nameof(value))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingList.cs",
-      "line": 117
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Shopping list name must be at most {NameMaxLength} characters.\")",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingList.cs",
-      "line": 122
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingList.cs",
-      "line": 128
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(sortOrder), \"Sort order must be non-negative.\")",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 62
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(sortOrder), \"Sort order must be non-negative.\")",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 100
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Name is required.\", nameof(value))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 149
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Name must be at most {NameMaxLength} characters.\")",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 154
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 165
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Amount must be a finite number.\")",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 175
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Amount must be in range (0, {MaxAmount}].\"))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 179
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"ShoppingListId is required.\", nameof(shoppingListId))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 198
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"ProductId cannot be empty.\", nameof(productId))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 204
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"ShoppingListItemId cannot be empty.\", nameof(id))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 210
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(dayNumber), \"Day number must be positive.\")",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 45
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Source label is required.\", nameof(value))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 67
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Source label must be at most {LabelMaxLength} characters.\")",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 72
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 83
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Amount must be a finite number.\")",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 89
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Amount must be greater than zero.\")",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 93
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"ShoppingListItemId is required.\", nameof(shoppingListItemId))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 99
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"MealPlanId is required.\", nameof(mealPlanId))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 105
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"MealPlanMealId is required.\", nameof(mealPlanMealId))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 111
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"RecipeId is required.\", nameof(recipeId))",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 117
-    },
-    {
-      "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"User id is required.\", nameof(userId))",
       "path": "FoodDiary.Domain/Entities/Tracking/WaistGoal.cs",
@@ -2614,168 +2446,168 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Password hash is required.\", nameof(value)) : value",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 129
+      "line": 126
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Token hash is required.\", paramName)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 138
+      "line": 135
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 143
+      "line": 140
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Date must be in the future (UTC).\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 154
+      "line": 151
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Expiration must be later than issuance.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 160
+      "line": 157
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(birthDate), \"Birth date cannot be in the future.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 171
+      "line": 168
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, ex.Message)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 202
+      "line": 199
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Deleted user cannot be mutated. Use Restore() first.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 208
+      "line": 205
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Language must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 428
+      "line": 425
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Theme must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 438
+      "line": 435
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UI style must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 448
+      "line": 445
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, ex.Message)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 460
+      "line": 457
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, ex.Message)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 472
+      "line": 469
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be a finite number.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 482
+      "line": 479
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 486
+      "line": 483
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Activity level must be one of the supported values.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 492
+      "line": 489
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Gender must be one of the supported codes.\") : gender.Value",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 497
+      "line": 494
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Language must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 502
+      "line": 499
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"Theme must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 508
+      "line": 505
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UI style must be one of the supported codes.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 514
+      "line": 511
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(roles)",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 539
+      "line": 536
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Roles must not contain null elements.\", nameof(roles))",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 542
+      "line": 539
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(duration), \"Premium trial duration must be positive.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 605
+      "line": 602
     },
     {
       "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Premium trial has already been used.\")",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 609
+      "line": 606
     },
     {
       "area": "FoodDiary",
@@ -5002,6 +4834,174 @@
       "message": "throw new ArgumentOutOfRangeException(nameof(servings), \"Servings must be positive.\")",
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanMeal.cs",
       "line": 35
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentNullException.ThrowIfNull",
+      "message": "ArgumentNullException.ThrowIfNull(itemIdsToKeep)",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingList.cs",
+      "line": 62
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Shopping list name is required.\", nameof(value))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingList.cs",
+      "line": 117
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Shopping list name must be at most {NameMaxLength} characters.\")",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingList.cs",
+      "line": 122
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingList.cs",
+      "line": 128
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(sortOrder), \"Sort order must be non-negative.\")",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
+      "line": 62
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(sortOrder), \"Sort order must be non-negative.\")",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
+      "line": 100
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Name is required.\", nameof(value))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
+      "line": 149
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Name must be at most {NameMaxLength} characters.\")",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
+      "line": 154
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
+      "line": 165
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Amount must be a finite number.\")",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
+      "line": 175
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Amount must be in range (0, {MaxAmount}].\"))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
+      "line": 179
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"ShoppingListId is required.\", nameof(shoppingListId))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
+      "line": 198
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"ProductId cannot be empty.\", nameof(productId))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
+      "line": 204
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"ShoppingListItemId cannot be empty.\", nameof(id))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
+      "line": 210
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(dayNumber), \"Day number must be positive.\")",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "line": 45
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Source label is required.\", nameof(value))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "line": 67
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Source label must be at most {LabelMaxLength} characters.\")",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "line": 72
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "line": 83
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Amount must be a finite number.\")",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "line": 89
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Amount must be greater than zero.\")",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "line": 93
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"ShoppingListItemId is required.\", nameof(shoppingListItemId))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "line": 99
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"MealPlanId is required.\", nameof(mealPlanId))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "line": 105
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"MealPlanMealId is required.\", nameof(mealPlanMealId))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "line": 111
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"RecipeId is required.\", nameof(recipeId))",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "line": 117
     },
     {
       "area": "FoodDiary",

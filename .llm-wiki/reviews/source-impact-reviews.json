@@ -7,18 +7,14 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "f76e733102eb11194f1569f06dd09bb6d0879bfd1c96fa8b2775fba37903c8b7"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "77afe72c15bec622a9d4c3113e989630a80afbbc7f8d011fdb9b5eb16b2042b3"
+          "sha256": "5eaaabe75a3f8c5bfd59382067c7c775d4f612ab200554360db2ce24d5b00a84"
         }
       ],
-      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:05.8160085Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:23.0557358Z"
     },
     {
       "pageId": "module.frontend",
@@ -42,13 +38,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "77afe72c15bec622a9d4c3113e989630a80afbbc7f8d011fdb9b5eb16b2042b3"
+          "sha256": "5eaaabe75a3f8c5bfd59382067c7c775d4f612ab200554360db2ce24d5b00a84"
         }
       ],
-      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:06.0300818Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:23.2483110Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -57,21 +53,25 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "7282d4fdd12aca36ec8b73744475805f97148755834a71baa5d335cbdff9567b"
+          "sha256": "b638e411745b45cd996eb8288fa0aaea368cf0302434dc9998b76152a9753d1d"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "77afe72c15bec622a9d4c3113e989630a80afbbc7f8d011fdb9b5eb16b2042b3"
+          "sha256": "5eaaabe75a3f8c5bfd59382067c7c775d4f612ab200554360db2ce24d5b00a84"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "edca1bf2378caa85f857be5f454fa7dcf0c18e5a09cb9b4933432f054f56f9d7"
+          "sha256": "3ec0331e7c99fe56083a2af5efa11056685b9fc04d12b7b3f97a4b41fbc225e6"
+        },
+        {
+          "path": "FoodDiary.Domain/AGENTS.md",
+          "sha256": "af47f34e59a865304d0f8edf24ed0255bf75984906ac5b43a85b70c9742a2e2e"
         }
       ],
-      "reason": "Reviewed backend ownership and contract indexes; namespaces and HTTP payloads remain stable and full HTTP integration tests pass.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:06.2645610Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:23.4477325Z"
     },
     {
       "pageId": "system.architecture",
@@ -80,21 +80,17 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "7282d4fdd12aca36ec8b73744475805f97148755834a71baa5d335cbdff9567b"
+          "sha256": "b638e411745b45cd996eb8288fa0aaea368cf0302434dc9998b76152a9753d1d"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "77afe72c15bec622a9d4c3113e989630a80afbbc7f8d011fdb9b5eb16b2042b3"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "539f8ebacd7e0c68677051529158e43c52fca84199484242f55cd6ff4446edf6"
+          "sha256": "5eaaabe75a3f8c5bfd59382067c7c775d4f612ab200554360db2ce24d5b00a84"
         }
       ],
-      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:06.4882850Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:23.6467696Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -148,13 +144,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "7282d4fdd12aca36ec8b73744475805f97148755834a71baa5d335cbdff9567b"
+          "sha256": "b638e411745b45cd996eb8288fa0aaea368cf0302434dc9998b76152a9753d1d"
         }
       ],
-      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:06.9510717Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:23.8674037Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -207,22 +203,14 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "efa1a5bce06a260f6ed42ae3ae640b8726ed0f405e6507660e4fa3478fee5b0f"
-        },
-        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "7282d4fdd12aca36ec8b73744475805f97148755834a71baa5d335cbdff9567b"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "539f8ebacd7e0c68677051529158e43c52fca84199484242f55cd6ff4446edf6"
+          "sha256": "b638e411745b45cd996eb8288fa0aaea368cf0302434dc9998b76152a9753d1d"
         }
       ],
-      "reason": "Reviewed architecture, quality, and review guidance against updated dependency guardrails and focused plus integration verification evidence.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:07.2057967Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:24.0817284Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -231,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "522f9f0c83107e4692300ecb13174605b15429ce7f3a4a31ebf3494bca184669"
+          "sha256": "7c5263a922a60ab003438121581074d7b1339d90d6bf8cef810338812d3f42d0"
         }
       ],
-      "reason": "Reviewed backend ownership and contract indexes; namespaces and HTTP payloads remain stable and full HTTP integration tests pass.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:07.6678027Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:24.6034927Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -494,13 +482,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "a3bdd5f2daa12c26f373b112ada16012b2447f61fac54269a4db5a24fcc151ca"
+          "sha256": "cb9d5ae7080d2e2d10935b2c680c65283c1d598734601f09baa1df7d7abd1b14"
+        },
+        {
+          "path": "FoodDiary.Domain/AGENTS.md",
+          "sha256": "af47f34e59a865304d0f8edf24ed0255bf75984906ac5b43a85b70c9742a2e2e"
         }
       ],
-      "reason": "Reviewed architecture, quality, and review guidance against updated dependency guardrails and focused plus integration verification evidence.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:08.2737383Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:24.8378856Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -768,13 +760,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3103b00a530d80f4333e10f8e4640ca95a07732a73dcaf97c5bb4585addffda7"
+          "sha256": "4e3658dbd1456a56f83dc139bf17c43f82eaf74ab1a161036d3e1ba42e7f2901"
         }
       ],
-      "reason": "Reviewed sensitive-data and runtime indexes; image URL and ownership handling are unchanged and no new logging or provider sharing was introduced.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:08.5990140Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:25.1507094Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -813,13 +805,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5176ca0069e8c77d66bfa64531d8dda9dea4eb17055a7e753158931068bc3c5c"
+          "sha256": "a892c8feb4a1e1c10a833b597e922d4c5563c2db6b3a486d792a06710d23adad"
         }
       ],
-      "reason": "Reviewed architecture, quality, and review guidance against updated dependency guardrails and focused plus integration verification evidence.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:08.9868895Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:25.6069082Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -896,13 +888,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5c032a2f7ebb16e88bb65e90a656e026c6f39dcd4ca8504035f68cdee39cb7a0"
+          "sha256": "d2196b97501fb91d16d66c4e89133638edb345b01ef24286af18d6cd5a67a294"
         }
       ],
-      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:09.9991054Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:26.1585121Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -911,21 +903,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5176ca0069e8c77d66bfa64531d8dda9dea4eb17055a7e753158931068bc3c5c"
+          "sha256": "a892c8feb4a1e1c10a833b597e922d4c5563c2db6b3a486d792a06710d23adad"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5c032a2f7ebb16e88bb65e90a656e026c6f39dcd4ca8504035f68cdee39cb7a0"
+          "sha256": "d2196b97501fb91d16d66c4e89133638edb345b01ef24286af18d6cd5a67a294"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3103b00a530d80f4333e10f8e4640ca95a07732a73dcaf97c5bb4585addffda7"
+          "sha256": "4e3658dbd1456a56f83dc139bf17c43f82eaf74ab1a161036d3e1ba42e7f2901"
         }
       ],
-      "reason": "Reviewed sensitive-data and runtime indexes; image URL and ownership handling are unchanged and no new logging or provider sharing was introduced.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:10.4350857Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:26.6030603Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1163,17 +1155,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "4a85b394c16470bcb9e34111aa453460b7acb566f5887293b1d1a95e743582fe"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "f76e733102eb11194f1569f06dd09bb6d0879bfd1c96fa8b2775fba37903c8b7"
+          "sha256": "405d02d1e572aae6fafa1e9cfaaf3d5ca447c4973ab63b0a7d6ad197213c1173"
         }
       ],
-      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
+      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:09.2882874Z"
+      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
+      "reviewedAtUtc": "2026-09-01T20:50:25.8881489Z"
     },
     {
       "pageId": "workflow.review-diff",

@@ -160,17 +160,19 @@ Backend structure guardrails now enforce the high-level placement rules. In part
 `Modules/MealPlanning` groups two distinct aggregate areas, MealPlans and
 ShoppingLists. Application retains its legacy assembly and CLR namespaces;
 Application/Abstractions contains both areas' ports, read models and errors.
-Domain contains MealPlan, MealPlanDay, MealPlanMeal and MealPlanDayId.
+Domain contains the MealPlan and ShoppingList aggregate graphs, their IDs,
+ShoppingList domain events and source enum with stable CLR namespaces.
 Infrastructure contains both repositories and complete module DI; its Model
 project contains all six EF mappings, explicitly applied by the central context.
 
-The public `User.ShoppingLists` navigation requires the Shopping aggregate graph,
-its IDs/events/source enum to remain in central Domain. MealPlanId/MealPlanMealId
-also remain there because ShoppingListItemSource uses them. UserConfiguration
-configures the inverse field access; removing this navigation is not an extraction.
-The module Domain references central Domain one-way. Source provenance IDs are
-not foreign keys. Shared DbContext, migrations/snapshot, User cleanup orchestration
-and Presentation controllers remain central. No empty Contracts layer is created:
+The ShoppingList-to-User relationship is one-way: ShoppingList retains scalar
+`UserId` and its `User` navigation, while central User has no inverse ShoppingLists
+CLR collection. Its EF mapping uses schema-equivalent `WithMany()` with the same
+foreign key and cascade behavior. The module Domain references central Domain
+one-way for User/Product/Recipe and shared value types; central Domain has no
+reverse module reference. Source provenance IDs are not foreign keys. Shared
+DbContext, historical migrations/snapshot, User cleanup orchestration and
+Presentation controllers remain central. No empty Contracts layer is created:
 IShoppingListCreationService is the existing internal aggregate boundary.
 
 Module tests live under `Modules/MealPlanning/tests`; central projects retain mixed

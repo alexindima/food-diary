@@ -1,7 +1,3 @@
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -87,18 +83,40 @@ public sealed class MealPlanningModuleExtractionTests {
     }
 
     [Fact]
-    public void ShoppingListCompatibilityGraph_RetainsPublicUserNavigationAndSourceIds() {
-        string path = ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Users", "User.cs");
-        CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(File.ReadAllText(path)).GetCompilationUnitRoot();
-        PropertyDeclarationSyntax navigation = Assert.Single(root.DescendantNodes()
-            .OfType<PropertyDeclarationSyntax>(), property => string.Equals(property.Identifier.ValueText, "ShoppingLists", StringComparison.Ordinal));
-        Assert.Contains(navigation.Modifiers, modifier => modifier.IsKind(SyntaxKind.PublicKeyword));
-        Assert.Equal("IReadOnlyCollection<ShoppingList>", navigation.Type.ToString());
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Shopping", "ShoppingList.cs")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "ValueObjects", "Ids", "MealPlanId.cs")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "ValueObjects", "Ids", "MealPlanMealId.cs")));
+    public void ShoppingListDomain_LivesOnlyInModuleWithoutReverseDomainReference() {
+        string[] entityFiles = ["ShoppingList.cs", "ShoppingListItem.cs", "ShoppingListItemSource.cs"];
+        string[] idFiles = ["MealPlanId.cs", "MealPlanMealId.cs", "ShoppingListId.cs", "ShoppingListItemId.cs", "ShoppingListItemSourceId.cs"];
+        string[] eventFiles = ["ShoppingListItemAddedDomainEvent.cs", "ShoppingListItemsClearedDomainEvent.cs", "ShoppingListNameUpdatedDomainEvent.cs"];
+
+        Assert.All(entityFiles, fileName => {
+            Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "MealPlanning", "Domain", "Entities", "Shopping", fileName)));
+            Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Shopping", fileName)));
+        });
+        Assert.All(idFiles, fileName => {
+            Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "MealPlanning", "Domain", "ValueObjects", "Ids", fileName)));
+            Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "ValueObjects", "Ids", fileName)));
+        });
+        Assert.All(eventFiles, fileName => {
+            Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "MealPlanning", "Domain", "Events", fileName)));
+            Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Events", fileName)));
+        });
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "MealPlanning", "Domain", "Enums", "ShoppingListItemSourceType.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", "ShoppingListItemSourceType.cs")));
         Assert.DoesNotContain("FoodDiary.Modules.MealPlanning.Domain",
             ProjectReferenceReader.ReadProjectReferences("FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public void ShoppingListUserRelationship_IsOneWayAndExplicitlyMapped() {
+        string userSource = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Users", "User.cs"));
+        string mappingSource = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+            "Modules", "MealPlanning", "Infrastructure", "Model", "Configurations", "ShoppingLists", "ShoppingListConfiguration.cs"));
+
+        Assert.DoesNotContain("ShoppingLists", userSource, StringComparison.Ordinal);
+        Assert.Contains(".WithMany()", mappingSource, StringComparison.Ordinal);
+        Assert.DoesNotContain(".WithMany(u => u.ShoppingLists)", mappingSource, StringComparison.Ordinal);
+        Assert.Contains(".HasForeignKey(e => e.UserId)", mappingSource, StringComparison.Ordinal);
+        Assert.Contains(".OnDelete(DeleteBehavior.Cascade)", mappingSource, StringComparison.Ordinal);
     }
 
     [Theory]

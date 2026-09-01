@@ -2183,27 +2183,6 @@
       "line": 6
     },
     {
-      "name": "ShoppingList",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingList.cs",
-      "line": 8
-    },
-    {
-      "name": "ShoppingListItem",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 9
-    },
-    {
-      "name": "ShoppingListItemSource",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "line": 7
-    },
-    {
       "name": "WaistGoal",
       "kind": "class",
       "role": "Entity",
@@ -2243,7 +2222,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "User",
@@ -2393,13 +2372,6 @@
       "line": 2
     },
     {
-      "name": "ShoppingListItemSourceType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/ShoppingListItemSourceType.cs",
-      "line": 2
-    },
-    {
       "name": "UserRoleAuditAction",
       "kind": "enum",
       "role": "Other",
@@ -2446,27 +2418,6 @@
       "kind": "record",
       "role": "Event",
       "path": "FoodDiary.Domain/Events/RecipeManualNutritionSetDomainEvent.cs",
-      "line": 5
-    },
-    {
-      "name": "ShoppingListItemAddedDomainEvent",
-      "kind": "record",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Events/ShoppingListItemAddedDomainEvent.cs",
-      "line": 6
-    },
-    {
-      "name": "ShoppingListItemsClearedDomainEvent",
-      "kind": "record",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Events/ShoppingListItemsClearedDomainEvent.cs",
-      "line": 5
-    },
-    {
-      "name": "ShoppingListNameUpdatedDomainEvent",
-      "kind": "record",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Events/ShoppingListNameUpdatedDomainEvent.cs",
       "line": 5
     },
     {
@@ -2582,20 +2533,6 @@
       "line": 4
     },
     {
-      "name": "MealPlanId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MealPlanId.cs",
-      "line": 4
-    },
-    {
-      "name": "MealPlanMealId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MealPlanMealId.cs",
-      "line": 4
-    },
-    {
       "name": "ProductId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -2628,27 +2565,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/RoleId.cs",
-      "line": 4
-    },
-    {
-      "name": "ShoppingListId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ShoppingListId.cs",
-      "line": 4
-    },
-    {
-      "name": "ShoppingListItemId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ShoppingListItemId.cs",
-      "line": 4
-    },
-    {
-      "name": "ShoppingListItemSourceId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ShoppingListItemSourceId.cs",
       "line": 4
     },
     {
@@ -19844,10 +19760,94 @@
       "line": 8
     },
     {
+      "name": "ShoppingList",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingList.cs",
+      "line": 8
+    },
+    {
+      "name": "ShoppingListItem",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
+      "line": 9
+    },
+    {
+      "name": "ShoppingListItemSource",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "line": 7
+    },
+    {
+      "name": "ShoppingListItemSourceType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Domain/Enums/ShoppingListItemSourceType.cs",
+      "line": 2
+    },
+    {
+      "name": "ShoppingListItemAddedDomainEvent",
+      "kind": "record",
+      "role": "Event",
+      "path": "Modules/MealPlanning/Domain/Events/ShoppingListItemAddedDomainEvent.cs",
+      "line": 6
+    },
+    {
+      "name": "ShoppingListItemsClearedDomainEvent",
+      "kind": "record",
+      "role": "Event",
+      "path": "Modules/MealPlanning/Domain/Events/ShoppingListItemsClearedDomainEvent.cs",
+      "line": 5
+    },
+    {
+      "name": "ShoppingListNameUpdatedDomainEvent",
+      "kind": "record",
+      "role": "Event",
+      "path": "Modules/MealPlanning/Domain/Events/ShoppingListNameUpdatedDomainEvent.cs",
+      "line": 5
+    },
+    {
       "name": "MealPlanDayId",
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/MealPlanDayId.cs",
+      "line": 4
+    },
+    {
+      "name": "MealPlanId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/MealPlanId.cs",
+      "line": 4
+    },
+    {
+      "name": "MealPlanMealId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/MealPlanMealId.cs",
+      "line": 4
+    },
+    {
+      "name": "ShoppingListId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/ShoppingListId.cs",
+      "line": 4
+    },
+    {
+      "name": "ShoppingListItemId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/ShoppingListItemId.cs",
+      "line": 4
+    },
+    {
+      "name": "ShoppingListItemSourceId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/ShoppingListItemSourceId.cs",
       "line": 4
     },
     {

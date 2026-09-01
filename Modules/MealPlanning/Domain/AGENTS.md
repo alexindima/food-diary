@@ -1,6 +1,6 @@
 # MealPlanning domain
 
-Own MealPlans entities and MealPlanDayId. Preserve CLR namespaces, invariants and
-aggregate boundaries. Depend one-way on central Domain for User/Recipe and shared
-IDs. Do not move central ShoppingList graph or MealPlanId/MealPlanMealId without
-resolving the documented public CLR cycle. No EF or application dependencies.
+Own MealPlans and ShoppingLists entities, their IDs, ShoppingLists events and source
+enum. Preserve CLR namespaces, invariants and the two explicit aggregate boundaries.
+Depend one-way on central Domain for User, Product, Recipe and shared value types;
+central Domain must not reference this project. No EF or application dependencies.

@@ -118,7 +118,6 @@ public class UserInvariantTests {
             () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.Meal>>(user.Meals).IsReadOnly),
             () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Products.Product>>(user.Products).IsReadOnly),
             () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Recipes.Recipe>>(user.Recipes).IsReadOnly),
-            () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Shopping.ShoppingList>>(user.ShoppingLists).IsReadOnly),
             () => Assert.True(Assert.IsAssignableFrom<ICollection<UserRole>>(user.UserRoles).IsReadOnly));
     }
 

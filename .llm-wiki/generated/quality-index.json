@@ -4681,30 +4681,6 @@
       "structuralRiskScore": 9.2
     },
     {
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingList.cs",
-      "nonBlankLines": 112,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.74
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItem.cs",
-      "nonBlankLines": 188,
-      "decisionPoints": 15,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.26
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Shopping/ShoppingListItemSource.cs",
-      "nonBlankLines": 102,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.54
-    },
-    {
       "path": "FoodDiary.Domain/Entities/Tracking/WaistGoal.cs",
       "nonBlankLines": 53,
       "decisionPoints": 3,
@@ -4778,11 +4754,11 @@
     },
     {
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "nonBlankLines": 532,
+      "nonBlankLines": 529,
       "decisionPoints": 38,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.64
+      "structuralRiskScore": 67.58
     },
     {
       "path": "FoodDiary.Domain/Entities/Users/UserRole.cs",
@@ -4921,14 +4897,6 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "FoodDiary.Domain/Enums/ShoppingListItemSourceType.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
       "path": "FoodDiary.Domain/Enums/UserRoleAuditAction.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
@@ -4983,30 +4951,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.72
-    },
-    {
-      "path": "FoodDiary.Domain/Events/ShoppingListItemAddedDomainEvent.cs",
-      "nonBlankLines": 47,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
-    },
-    {
-      "path": "FoodDiary.Domain/Events/ShoppingListItemsClearedDomainEvent.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.82
-    },
-    {
-      "path": "FoodDiary.Domain/Events/ShoppingListNameUpdatedDomainEvent.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.88
     },
     {
       "path": "FoodDiary.Domain/Events/UserDeletedDomainEvent.cs",
@@ -5137,22 +5081,6 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MealPlanId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MealPlanMealId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
       "path": "FoodDiary.Domain/ValueObjects/Ids/ProductId.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
@@ -5186,30 +5114,6 @@
     },
     {
       "path": "FoodDiary.Domain/ValueObjects/Ids/RoleId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ShoppingListId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ShoppingListItemId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ShoppingListItemSourceId.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -33145,7 +33049,103 @@
       "structuralRiskScore": 5.32
     },
     {
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingList.cs",
+      "nonBlankLines": 112,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.74
+    },
+    {
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
+      "nonBlankLines": 188,
+      "decisionPoints": 15,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 26.26
+    },
+    {
+      "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
+      "nonBlankLines": 102,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.54
+    },
+    {
+      "path": "Modules/MealPlanning/Domain/Enums/ShoppingListItemSourceType.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/MealPlanning/Domain/Events/ShoppingListItemAddedDomainEvent.cs",
+      "nonBlankLines": 47,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.44
+    },
+    {
+      "path": "Modules/MealPlanning/Domain/Events/ShoppingListItemsClearedDomainEvent.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.82
+    },
+    {
+      "path": "Modules/MealPlanning/Domain/Events/ShoppingListNameUpdatedDomainEvent.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.88
+    },
+    {
       "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/MealPlanDayId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/MealPlanId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/MealPlanMealId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/ShoppingListId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/ShoppingListItemId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/MealPlanning/Domain/ValueObjects/Ids/ShoppingListItemSourceId.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -37866,11 +37866,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserConfiguration.cs",
-      "nonBlankLines": 116,
+      "nonBlankLines": 114,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.32
+      "structuralRiskScore": 2.28
     },
     {
       "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserRoleAuditEventConfiguration.cs",

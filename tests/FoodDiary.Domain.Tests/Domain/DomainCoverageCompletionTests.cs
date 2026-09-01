@@ -43,33 +43,13 @@ public sealed class DomainCoverageCompletionTests {
     public void EventProperties_ExposeConstructorValues() {
         var recipeId = RecipeId.New();
         var userId = UserId.New();
-        var shoppingListId = ShoppingListId.New();
-        var shoppingListItemId = ShoppingListItemId.New();
-        var productId = ProductId.New();
         var occurredOnUtc = new DateTime(2026, 7, 8, 10, 0, 0, DateTimeKind.Utc);
         DateTime deletedAtUtc = occurredOnUtc.AddMinutes(-1);
-        DateTime checkedOnUtc = occurredOnUtc.AddMinutes(-2);
 
         var autoNutrition = new RecipeAutoNutritionEnabledDomainEvent(recipeId, occurredOnUtc);
         var manualNutrition = new RecipeManualNutritionSetDomainEvent(recipeId, occurredOnUtc);
         var userDeleted = new UserDeletedDomainEvent(userId, deletedAtUtc, occurredOnUtc);
         var userRestored = new UserRestoredDomainEvent(userId, occurredOnUtc);
-        var itemAdded = new ShoppingListItemAddedDomainEvent(
-            shoppingListId,
-            shoppingListItemId,
-            productId,
-            "Apple",
-            2,
-            MeasurementUnit.Pcs,
-            "Fruit",
-            "A1",
-            "Ripe",
-            isChecked: true,
-            checkedOnUtc,
-            sortOrder: 3,
-            occurredOnUtc);
-        var itemsCleared = new ShoppingListItemsClearedDomainEvent(shoppingListId, 2, occurredOnUtc);
-        var nameUpdated = new ShoppingListNameUpdatedDomainEvent(shoppingListId, "Old", "New", occurredOnUtc);
 
         Assert.Multiple(
             () => Assert.Equal(recipeId, autoNutrition.RecipeId),
@@ -80,24 +60,7 @@ public sealed class DomainCoverageCompletionTests {
             () => Assert.Equal(deletedAtUtc, userDeleted.DeletedAtUtc),
             () => Assert.Equal(occurredOnUtc, userDeleted.OccurredOnUtc),
             () => Assert.Equal(userId, userRestored.UserId),
-            () => Assert.Equal(occurredOnUtc, userRestored.OccurredOnUtc),
-            () => Assert.Equal(productId, itemAdded.ProductId),
-            () => Assert.Equal("Apple", itemAdded.Name),
-            () => Assert.Equal(2, itemAdded.Amount),
-            () => Assert.Equal(MeasurementUnit.Pcs, itemAdded.Unit),
-            () => Assert.Equal("Fruit", itemAdded.Category),
-            () => Assert.Equal("A1", itemAdded.Aisle),
-            () => Assert.Equal("Ripe", itemAdded.Note),
-            () => Assert.True(itemAdded.IsChecked),
-            () => Assert.Equal(checkedOnUtc, itemAdded.CheckedOnUtc),
-            () => Assert.Equal(3, itemAdded.SortOrder),
-            () => Assert.Equal(shoppingListId, itemsCleared.ShoppingListId),
-            () => Assert.Equal(2, itemsCleared.ClearedItemsCount),
-            () => Assert.Equal(occurredOnUtc, itemsCleared.OccurredOnUtc),
-            () => Assert.Equal(shoppingListId, nameUpdated.ShoppingListId),
-            () => Assert.Equal("Old", nameUpdated.PreviousName),
-            () => Assert.Equal("New", nameUpdated.CurrentName),
-            () => Assert.Equal(occurredOnUtc, nameUpdated.OccurredOnUtc));
+            () => Assert.Equal(occurredOnUtc, userRestored.OccurredOnUtc));
     }
 
     [Fact]

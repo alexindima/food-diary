@@ -24,7 +24,6 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Domain/Entities/Shopping`
 - `Modules/MealPlanning/Application`
 - `Modules/MealPlanning/Application/Abstractions`
 - `Modules/MealPlanning/Application/Abstractions/MealPlans`

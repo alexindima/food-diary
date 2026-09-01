@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 215,
-    "documentationPages": 115
+    "documentationPages": 116
   },
   "dotnet": {
     "projects": [
@@ -11927,6 +11927,7 @@
       "docs/ai/identity-ownership-inventory.md",
       "docs/ai/images-domain-extraction.md",
       "docs/ai/mealplanning-module-extraction-wiki-findings.md",
+      "docs/ai/mealplanning-shopping-domain-extraction.md",
       "docs/ai/meals-module-extraction-wiki-findings.md",
       "docs/ai/meals-ownership-inventory.md",
       "docs/ai/module-integration-20260831.md",

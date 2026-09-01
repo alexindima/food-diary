@@ -24,7 +24,7 @@ internal sealed class ShoppingListConfiguration : IEntityTypeConfiguration<Shopp
             .HasMaxLength(128);
 
         builder.HasOne(e => e.User)
-            .WithMany(u => u.ShoppingLists)
+            .WithMany()
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 

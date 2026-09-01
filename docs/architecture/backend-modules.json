@@ -482,6 +482,7 @@
           "Modules/MealPlanning/Domain"
         ],
         "domainAreas": [
+          "MealPlans",
           "Shopping"
         ],
         "infrastructureProjects": [
