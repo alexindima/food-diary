@@ -865,13 +865,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9c0433d7c181d0500d53489921df687d803ddf31b29a52c07ab369ff72c55cd6"
+          "sha256": "206ce7a0a870e9553e29c1c9b189bc69eabcf3216cc7ccbee325333297fe59de"
         }
       ],
-      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
-      "baseRef": "HEAD",
-      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
-      "reviewedAtUtc": "2026-08-28T20:48:29.0426282Z"
+      "reason": "Regression coverage proves the integrations meter is exported by Job Manager; focused and architecture suites plus full build pass.",
+      "baseRef": "origin/master",
+      "gitHead": "ff07ed49396a7d791e5a4ffc94176936faeaf7be",
+      "reviewedAtUtc": "2026-09-01T05:32:35.5495499Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -940,21 +940,17 @@
     {
       "pageId": "workflow-runtime-impact",
       "pagePath": ".llm-wiki/workflows/runtime-impact.md",
-      "pageSha256": "6b362e1e892d8259af8d9c085e45a942632b1331bcdda099af53546e9bf215e4",
+      "pageSha256": "be8e261d7fdfddf0e283cb15cc99ec689bba8876b0f76794a40a01cdaea52b0d",
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a25c798b6cb29a2bd6c4c3b1d86f2e7954662d1599dbcc7ae7c83c22ec3e997e"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiRuntimeTopology.ps1",
-          "sha256": "d46c30f401c7f7b4f90cb9f1ad2ba34fece072b3804b7844042ca686338a5c5e"
+          "sha256": "3cb26634e8a74a7cecf3fe5000566da24131cd5b13b65a98e8129e2c7d450923"
         }
       ],
-      "reason": "Reviewed remaining workflow pages: regenerated indexes and clearer abstention/retry guidance do not change their documented ownership, rollout, or runtime-impact contracts.",
-      "baseRef": "HEAD",
-      "gitHead": "ed5f4241acf5f36e70bf06ffcacfe664aa82c399",
-      "reviewedAtUtc": "2026-08-28T15:54:30.4575092Z"
+      "reason": "Runtime topology was reviewed; the change only selects an existing meter and does not alter services, dependencies, jobs, or deployment topology.",
+      "baseRef": "origin/master",
+      "gitHead": "ff07ed49396a7d791e5a4ffc94176936faeaf7be",
+      "reviewedAtUtc": "2026-09-01T05:32:36.0532436Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -963,17 +959,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9c0433d7c181d0500d53489921df687d803ddf31b29a52c07ab369ff72c55cd6"
+          "sha256": "206ce7a0a870e9553e29c1c9b189bc69eabcf3216cc7ccbee325333297fe59de"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d864a0fa7a20868c5fbc97251847dd4d793fa07b473f8be4e2f8aab9d375e657"
+          "sha256": "3cb26634e8a74a7cecf3fe5000566da24131cd5b13b65a98e8129e2c7d450923"
         }
       ],
-      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
-      "baseRef": "HEAD",
-      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
-      "reviewedAtUtc": "2026-08-28T20:48:30.8045955Z"
+      "reason": "The host exports existing privacy-safe integration counters only; no new labels, payloads, credentials, object keys, or user data are introduced.",
+      "baseRef": "origin/master",
+      "gitHead": "ff07ed49396a7d791e5a4ffc94176936faeaf7be",
+      "reviewedAtUtc": "2026-09-01T05:32:36.6631604Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
