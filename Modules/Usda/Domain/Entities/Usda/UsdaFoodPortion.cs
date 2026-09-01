@@ -1,5 +1,3 @@
-using FoodDiary.Domain.Common;
-
 namespace FoodDiary.Domain.Entities.Usda;
 
 /// <summary>
@@ -12,31 +10,31 @@ public sealed class UsdaFoodPortion {
 
     public required int Id {
         get;
-        init => field = DomainGuard.Positive(value, nameof(Id));
+        init => field = UsdaDomainGuard.Positive(value, nameof(Id));
     }
     public required int FdcId {
         get;
-        init => field = DomainGuard.Positive(value, nameof(FdcId));
+        init => field = UsdaDomainGuard.Positive(value, nameof(FdcId));
     }
     public required double Amount {
         get;
-        init => field = DomainGuard.PositiveFinite(value, nameof(Amount));
+        init => field = UsdaDomainGuard.PositiveFinite(value, nameof(Amount));
     }
     public required string MeasureUnitName {
         get;
-        init => field = DomainGuard.RequiredText(value, MeasureUnitNameMaxLength, nameof(MeasureUnitName));
+        init => field = UsdaDomainGuard.RequiredText(value, MeasureUnitNameMaxLength, nameof(MeasureUnitName));
     }
     public required double GramWeight {
         get;
-        init => field = DomainGuard.PositiveFinite(value, nameof(GramWeight));
+        init => field = UsdaDomainGuard.PositiveFinite(value, nameof(GramWeight));
     }
     public string? PortionDescription {
         get;
-        init => field = DomainGuard.OptionalText(value, PortionDescriptionMaxLength, nameof(PortionDescription));
+        init => field = UsdaDomainGuard.OptionalText(value, PortionDescriptionMaxLength, nameof(PortionDescription));
     }
     public string? Modifier {
         get;
-        init => field = DomainGuard.OptionalText(value, ModifierMaxLength, nameof(Modifier));
+        init => field = UsdaDomainGuard.OptionalText(value, ModifierMaxLength, nameof(Modifier));
     }
 
     public UsdaFood Food { get; init; } = null!;

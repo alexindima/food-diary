@@ -169,8 +169,10 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - USDA application: `Modules/Usda/Application/AGENTS.md`
 - USDA application abstractions: `Modules/Usda/Application/Abstractions/AGENTS.md`
 - USDA contracts: `Modules/Usda/Contracts/AGENTS.md`
+- USDA domain: `Modules/Usda/Domain/AGENTS.md`
 - USDA infrastructure: `Modules/Usda/Infrastructure/AGENTS.md`
 - USDA persistence model: `Modules/Usda/Infrastructure/Model/AGENTS.md`
+- USDA tests: `Modules/Usda/tests/AGENTS.md`
 - Weekly check-in logical module: `Modules/WeeklyCheckIn/AGENTS.md`
 - Weekly check-in application tests: `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/AGENTS.md`
 - Daily advices logical module: `Modules/DailyAdvices/AGENTS.md`

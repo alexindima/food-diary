@@ -4,7 +4,7 @@
     "domainTypes": 262,
     "entities": 78,
     "valueObjects": 115,
-    "invariants": 501,
+    "invariants": 508,
     "persistenceMappings": 86,
     "indexes": 155,
     "relationships": 97
@@ -224,8 +224,8 @@
       "area": "FoodDiary",
       "name": "DailyReferenceValue",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Usda/DailyReferenceValue.cs",
-      "line": 8
+      "path": "Modules/Usda/Domain/Entities/Usda/DailyReferenceValue.cs",
+      "line": 6
     },
     {
       "area": "FoodDiary",
@@ -525,29 +525,29 @@
       "area": "FoodDiary",
       "name": "UsdaFood",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaFood.cs",
-      "line": 8
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaFood.cs",
+      "line": 6
     },
     {
       "area": "FoodDiary",
       "name": "UsdaFoodNutrient",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodNutrient.cs",
-      "line": 8
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaFoodNutrient.cs",
+      "line": 6
     },
     {
       "area": "FoodDiary",
       "name": "UsdaFoodPortion",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodPortion.cs",
-      "line": 8
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaFoodPortion.cs",
+      "line": 6
     },
     {
       "area": "FoodDiary",
       "name": "UsdaNutrient",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaNutrient.cs",
-      "line": 8
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaNutrient.cs",
+      "line": 6
     },
     {
       "area": "FoodDiary",
@@ -5173,6 +5173,55 @@
     },
     {
       "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\")",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaDomainGuard.cs",
+      "line": 9
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be greater than zero.\")",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaDomainGuard.cs",
+      "line": 16
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be greater than zero.\")",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaDomainGuard.cs",
+      "line": 22
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaDomainGuard.cs",
+      "line": 32
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaDomainGuard.cs",
+      "line": 37
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaDomainGuard.cs",
+      "line": 50
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Value must be a finite number.\")",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaDomainGuard.cs",
+      "line": 59
+    },
+    {
+      "area": "FoodDiary",
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Tokens cannot be updated for an inactive wearable connection.\")",
       "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
@@ -5701,7 +5750,7 @@
           "expression": "e => e.Nutrient)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Nutrition/DailyReferenceValueConfiguration.cs"
+      "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/DailyReferenceValueConfiguration.cs"
     },
     {
       "area": "FoodDiary",

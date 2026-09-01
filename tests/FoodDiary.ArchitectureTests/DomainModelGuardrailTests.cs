@@ -10,13 +10,13 @@ public class DomainModelGuardrailTests {
     private static readonly HashSet<string> AllowedWideMutators = new(StringComparer.Ordinal);
 
     [Fact]
-    public void DomainProject_ReferencesOnlySharedDomainPrimitives() {
+    public void DomainProject_ReferencesOnlyApprovedDomainDependencies() {
         const string relativeProjectPath = "FoodDiary.Domain/FoodDiary.Domain.csproj";
 
         string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
         string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
 
-        Assert.Equal(["FoodDiary.Domain.Primitives"], projectReferences);
+        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Modules.Usda.Domain"], projectReferences);
         Assert.Empty(packageReferences);
     }
 

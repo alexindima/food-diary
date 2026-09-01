@@ -195,7 +195,8 @@
       "fooddiary.domain": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain.Primitives": "[1.0.0, )"
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Usda.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.domain.primitives": {
@@ -435,6 +436,9 @@
         }
       },
       "fooddiary.modules.usda.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.modules.usda.domain": {
         "type": "Project"
       },
       "fooddiary.modules.wearables.application.abstractions": {

@@ -236,9 +236,11 @@
     <Project Path="Modules/Usda/Application/FoodDiary.Application.Usda.csproj" />
     <Project Path="Modules/Usda/Application/Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj" />
     <Project Path="Modules/Usda/Contracts/FoodDiary.Modules.Usda.Contracts.csproj" />
+    <Project Path="Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj" />
     <Project Path="Modules/Usda/Infrastructure/FoodDiary.Modules.Usda.Infrastructure.csproj" />
     <Project Path="Modules/Usda/Infrastructure/Model/FoodDiary.Modules.Usda.PersistenceModel.csproj" />
     <Project Path="Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/FoodDiary.Modules.Usda.Application.Tests.csproj" />
+    <Project Path="Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/FoodDiary.Modules.Usda.Domain.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Wearables/">
     <Project Path="Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj" />

@@ -13,15 +13,15 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 298,
-    "testProjects": 111,
+    "dotnetProjects": 300,
+    "testProjects": 112,
     "frontendProjects": 4,
     "applicationModules": 1,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 34,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 209,
+    "agentGuides": 211,
     "documentationPages": 114
   },
   "dotnet": {
@@ -148,6 +148,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
+          "Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
         ],
         "packageReferences": []
@@ -7411,6 +7412,19 @@
         "packageReferences": []
       },
       {
+        "name": "FoodDiary.Modules.Usda.Domain",
+        "assemblyName": "FoodDiary.Modules.Usda.Domain",
+        "path": "Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [],
+        "packageReferences": []
+      },
+      {
         "name": "FoodDiary.Modules.Usda.Infrastructure",
         "assemblyName": "FoodDiary.Modules.Usda.Infrastructure",
         "path": "Modules/Usda/Infrastructure/FoodDiary.Modules.Usda.Infrastructure.csproj",
@@ -7447,7 +7461,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+          "Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj"
         ],
         "packageReferences": [
           {
@@ -7491,6 +7505,34 @@
           },
           {
             "name": "NSubstitute",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Usda.Domain.Tests",
+        "assemblyName": "FoodDiary.Modules.Usda.Domain.Tests",
+        "path": "Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/FoodDiary.Modules.Usda.Domain.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.NET.Test.Sdk",
             "version": null
           },
           {
@@ -9212,6 +9254,7 @@
       "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/FoodDiary.Modules.Statistics.Application.Tests.csproj",
       "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/FoodDiary.Modules.Tdee.Application.Tests.csproj",
       "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/FoodDiary.Modules.Usda.Application.Tests.csproj",
+      "Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/FoodDiary.Modules.Usda.Domain.Tests.csproj",
       "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/FoodDiary.Modules.Users.Application.Tests.csproj",
       "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/FoodDiary.Modules.Wearables.Application.Tests.csproj",
       "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/FoodDiary.Modules.Wearables.Domain.Tests.csproj",
@@ -11666,8 +11709,10 @@
       "Modules/Usda/Application/AGENTS.md",
       "Modules/Usda/Application/Abstractions/AGENTS.md",
       "Modules/Usda/Contracts/AGENTS.md",
+      "Modules/Usda/Domain/AGENTS.md",
       "Modules/Usda/Infrastructure/AGENTS.md",
       "Modules/Usda/Infrastructure/Model/AGENTS.md",
+      "Modules/Usda/tests/AGENTS.md",
       "Modules/Users/AGENTS.md",
       "Modules/Users/Application/AGENTS.md",
       "Modules/Users/Infrastructure/AGENTS.md",

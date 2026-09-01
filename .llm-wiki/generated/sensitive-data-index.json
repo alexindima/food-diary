@@ -2546,27 +2546,6 @@
     },
     {
       "category": "health",
-      "name": "Gender",
-      "type": "string",
-      "path": "FoodDiary.Domain/Entities/Usda/DailyReferenceValue.cs",
-      "line": 33
-    },
-    {
-      "category": "health",
-      "name": "GenderMaxLength",
-      "type": "value,",
-      "path": "FoodDiary.Domain/Entities/Usda/DailyReferenceValue.cs",
-      "line": 35
-    },
-    {
-      "category": "health",
-      "name": "GramWeight",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodPortion.cs",
-      "line": 29
-    },
-    {
-      "category": "health",
       "name": "BirthDate",
       "type": "DateTime?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
@@ -6302,6 +6281,27 @@
       "type": "double",
       "path": "Modules/Usda/Contracts/Models/UsdaFoodPortionModel.cs",
       "line": 7
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "string",
+      "path": "Modules/Usda/Domain/Entities/Usda/DailyReferenceValue.cs",
+      "line": 31
+    },
+    {
+      "category": "health",
+      "name": "GenderMaxLength",
+      "type": "value,",
+      "path": "Modules/Usda/Domain/Entities/Usda/DailyReferenceValue.cs",
+      "line": 33
+    },
+    {
+      "category": "health",
+      "name": "GramWeight",
+      "type": "double",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaFoodPortion.cs",
+      "line": 27
     },
     {
       "category": "health",

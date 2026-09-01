@@ -4,7 +4,7 @@
     <RootNamespace>FoodDiary.Modules.Usda.Infrastructure.Model</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
+    <ProjectReference Include="..\..\Domain\FoodDiary.Modules.Usda.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />

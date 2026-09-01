@@ -1,5 +1,3 @@
-using FoodDiary.Domain.Common;
-
 namespace FoodDiary.Domain.Entities.Usda;
 
 /// <summary>
@@ -14,19 +12,19 @@ public sealed class UsdaFood {
 
     public required int FdcId {
         get;
-        init => field = DomainGuard.Positive(value, nameof(FdcId));
+        init => field = UsdaDomainGuard.Positive(value, nameof(FdcId));
     }
     public required string Description {
         get;
-        init => field = DomainGuard.RequiredText(value, DescriptionMaxLength, nameof(Description));
+        init => field = UsdaDomainGuard.RequiredText(value, DescriptionMaxLength, nameof(Description));
     }
     public int? FoodCategoryId {
         get;
-        init => field = DomainGuard.Positive(value, nameof(FoodCategoryId));
+        init => field = UsdaDomainGuard.Positive(value, nameof(FoodCategoryId));
     }
     public string? FoodCategory {
         get;
-        init => field = DomainGuard.OptionalText(value, FoodCategoryMaxLength, nameof(FoodCategory));
+        init => field = UsdaDomainGuard.OptionalText(value, FoodCategoryMaxLength, nameof(FoodCategory));
     }
 
     public IReadOnlyCollection<UsdaFoodNutrient> FoodNutrients => _foodNutrients.AsReadOnly();

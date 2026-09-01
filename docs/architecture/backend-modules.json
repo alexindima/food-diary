@@ -663,14 +663,21 @@
       }
     },
     "Usda": {
-      "role": "adapter",
+      "role": "reference-data-owner",
       "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix-and-module-boundary-tests",
-      "ownedEntities": [],
+      "ownedEntities": [
+        "DailyReferenceValue",
+        "UsdaFood",
+        "UsdaFoodNutrient",
+        "UsdaFoodPortion",
+        "UsdaNutrient"
+      ],
       "sourceMappings": {
         "applicationProjects": ["Modules/Usda/Application"],
         "applicationAbstractionProjects": ["Modules/Usda/Application/Abstractions"],
         "contractProjects": ["Modules/Usda/Contracts"],
+        "domainProjects": ["Modules/Usda/Domain"],
         "persistenceAreas": ["Modules/Usda/Infrastructure"]
       }
     },

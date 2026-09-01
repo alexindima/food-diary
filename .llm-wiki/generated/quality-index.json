@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4764,
+    "productionFiles": 4765,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -4729,46 +4729,6 @@
       "structuralRiskScore": 5.56
     },
     {
-      "path": "FoodDiary.Domain/Entities/Usda/DailyReferenceValue.cs",
-      "nonBlankLines": 35,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.2
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaFood.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.58
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodNutrient.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.5
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodPortion.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.28
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaNutrient.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
-    },
-    {
       "path": "FoodDiary.Domain/Entities/Users/Role.cs",
       "nonBlankLines": 29,
       "decisionPoints": 1,
@@ -5879,14 +5839,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.4
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Nutrition/DailyReferenceValueConfiguration.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Outbox/OutboxReplayAuditConfiguration.cs",
@@ -37233,12 +37185,68 @@
       "structuralRiskScore": 0.12
     },
     {
+      "path": "Modules/Usda/Domain/Entities/Usda/DailyReferenceValue.cs",
+      "nonBlankLines": 34,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
+    },
+    {
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaDomainGuard.cs",
+      "nonBlankLines": 51,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.02
+    },
+    {
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaFood.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.56
+    },
+    {
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaFoodNutrient.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.48
+    },
+    {
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaFoodPortion.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.26
+    },
+    {
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaNutrient.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
       "path": "Modules/Usda/Infrastructure/AssemblyInfo.cs",
       "nonBlankLines": 2,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/DailyReferenceValueConfiguration.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.48
     },
     {
       "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/UsdaFoodConfiguration.cs",

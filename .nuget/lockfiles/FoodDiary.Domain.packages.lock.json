@@ -16,6 +16,9 @@
       },
       "fooddiary.domain.primitives": {
         "type": "Project"
+      },
+      "fooddiary.modules.usda.domain": {
+        "type": "Project"
       }
     }
   }

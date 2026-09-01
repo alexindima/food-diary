@@ -29,6 +29,7 @@ sources:
 - `Modules/Usda/Application`
 - `Modules/Usda/Application/Abstractions`
 - `Modules/Usda/Contracts`
+- `Modules/Usda/Domain`
 
 ## HTTP Surface
 
@@ -44,10 +45,10 @@ Source: `FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs`
 
 ## Boundary Health
 
-- Role: adapter
+- Role: reference-data-owner
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
-- Declared owned entities: not yet enumerated
+- Declared owned entities: DailyReferenceValue, UsdaFood, UsdaFoodNutrient, UsdaFoodPortion, UsdaNutrient
 - Public contract files: 11
 - Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
@@ -80,6 +81,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaQueryHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/Domain/ReferenceDataInvariantTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsdaModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/UsdaFoodSearchServiceTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs`

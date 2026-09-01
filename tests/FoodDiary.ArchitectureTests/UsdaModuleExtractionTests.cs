@@ -23,6 +23,30 @@ public sealed class UsdaModuleExtractionTests {
         ], references);
     }
 
+    [Fact]
+    public void UsdaDomain_LivesOnlyInModuleProject() {
+        string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Usda");
+        string moduleRoot = ArchitectureTestPaths.FromRoot("Modules", "Usda", "Domain", "Entities", "Usda");
+
+        Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
+        Assert.Equal(6, SourceScanner.SourceFiles(moduleRoot).Count());
+
+        string[] references = ProjectReferenceReader.ReadProjectReferences(
+            "Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj");
+        Assert.Empty(references);
+    }
+
+    [Fact]
+    public void UsdaPersistenceMappings_LiveOnlyInModuleProject() {
+        string legacyRoot = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Infrastructure", "Persistence", "Configurations", "Nutrition");
+        string moduleRoot = ArchitectureTestPaths.FromRoot(
+            "Modules", "Usda", "Infrastructure", "Model", "Configurations", "Usda");
+
+        Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
+        Assert.Equal(5, SourceScanner.SourceFiles(moduleRoot).Count());
+    }
+
     [Theory]
     [InlineData("FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs")]
     [InlineData("FoodDiary.Initializer/Program.cs")]

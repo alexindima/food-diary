@@ -141,6 +141,7 @@ COPY Modules/WeeklyGoals/Infrastructure/Model/*.csproj Modules/WeeklyGoals/Infra
 COPY Modules/Usda/Application/*.csproj Modules/Usda/Application/
 COPY Modules/Usda/Application/Abstractions/*.csproj Modules/Usda/Application/Abstractions/
 COPY Modules/Usda/Contracts/*.csproj Modules/Usda/Contracts/
+COPY Modules/Usda/Domain/*.csproj Modules/Usda/Domain/
 COPY Modules/Usda/Infrastructure/*.csproj Modules/Usda/Infrastructure/
 COPY Modules/Usda/Infrastructure/Model/*.csproj Modules/Usda/Infrastructure/Model/
 COPY Modules/WeeklyCheckIn/Application/*.csproj Modules/WeeklyCheckIn/Application/
@@ -317,6 +318,7 @@ COPY Modules/WeeklyGoals/Infrastructure/Model/ Modules/WeeklyGoals/Infrastructur
 COPY Modules/Usda/Application/ Modules/Usda/Application/
 COPY Modules/Usda/Application/Abstractions/ Modules/Usda/Application/Abstractions/
 COPY Modules/Usda/Contracts/ Modules/Usda/Contracts/
+COPY Modules/Usda/Domain/ Modules/Usda/Domain/
 COPY Modules/Usda/Infrastructure/ Modules/Usda/Infrastructure/
 COPY Modules/Usda/Infrastructure/Model/ Modules/Usda/Infrastructure/Model/
 COPY Modules/WeeklyCheckIn/Application/ Modules/WeeklyCheckIn/Application/

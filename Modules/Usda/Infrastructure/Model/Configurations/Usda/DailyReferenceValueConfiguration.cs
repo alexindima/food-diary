@@ -2,7 +2,7 @@ using FoodDiary.Domain.Entities.Usda;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.Nutrition;
+namespace FoodDiary.Modules.Usda.Infrastructure.Model.Configurations.Usda;
 
 internal sealed class DailyReferenceValueConfiguration : IEntityTypeConfiguration<DailyReferenceValue> {
     public void Configure(EntityTypeBuilder<DailyReferenceValue> builder) {

@@ -322,7 +322,7 @@ Direct acquisition of `FoodDiaryDbContext` is confined to `FoodDiary.Infrastruct
 
 Every EF entity configuration is grouped under an owning module folder. The `Persistence/Configurations` root must contain no loose configuration classes; an architecture test enforces this invariant. Shared use of `FoodDiaryDbContext` therefore remains a physical deployment choice rather than an implicit shared-ownership signal.
 
-Remaining central technical adapters use explicit folders such as `Admin`, `Ai`, `Email`, `Notifications` and `Nutrition`. Extracted USDA and OpenFoodFacts persistence lives under `Modules/Usda` and `Modules/OpenFoodFacts`; folder placement identifies lifecycle ownership without bypassing application dependency rules. USDA entities remain central because Product's EF navigation is a shared compatibility seam; provider HTTP and in-memory detail caching remain in Integrations.
+Remaining central technical adapters use explicit folders such as `Admin`, `Ai`, `Email`, `Notifications` and `Nutrition`. Extracted USDA domain and persistence live under `Modules/Usda`; central Domain references USDA Domain one-way to preserve Product's EF navigation compatibility seam. Provider HTTP and in-memory detail caching remain in Integrations.
 
 Executable hosts, Presentation, Initializer, JobManager and Integrations may not inject repository contracts. They invoke application capabilities or implement external ports. This is enforced across all primary backend adapter projects by a single architecture guardrail.
 

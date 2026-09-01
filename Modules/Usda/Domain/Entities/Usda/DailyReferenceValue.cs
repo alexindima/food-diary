@@ -1,5 +1,3 @@
-using FoodDiary.Domain.Common;
-
 namespace FoodDiary.Domain.Entities.Usda;
 
 /// <summary>
@@ -12,27 +10,27 @@ public sealed class DailyReferenceValue {
 
     public int Id {
         get;
-        init => field = DomainGuard.Positive(value, nameof(Id));
+        init => field = UsdaDomainGuard.Positive(value, nameof(Id));
     }
     public required int NutrientId {
         get;
-        init => field = DomainGuard.Positive(value, nameof(NutrientId));
+        init => field = UsdaDomainGuard.Positive(value, nameof(NutrientId));
     }
     public required double Value {
         get;
-        init => field = DomainGuard.PositiveFinite(value, nameof(Value));
+        init => field = UsdaDomainGuard.PositiveFinite(value, nameof(Value));
     }
     public required string Unit {
         get;
-        init => field = DomainGuard.RequiredText(value, UnitMaxLength, nameof(Unit));
+        init => field = UsdaDomainGuard.RequiredText(value, UnitMaxLength, nameof(Unit));
     }
     public required string AgeGroup {
         get;
-        init => field = DomainGuard.RequiredText(value, AgeGroupMaxLength, nameof(AgeGroup));
+        init => field = UsdaDomainGuard.RequiredText(value, AgeGroupMaxLength, nameof(AgeGroup));
     }
     public required string Gender {
         get;
-        init => field = DomainGuard.RequiredText(value, GenderMaxLength, nameof(Gender));
+        init => field = UsdaDomainGuard.RequiredText(value, GenderMaxLength, nameof(Gender));
     }
 
     public UsdaNutrient Nutrient { get; init; } = null!;

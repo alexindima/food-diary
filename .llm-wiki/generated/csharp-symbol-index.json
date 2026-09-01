@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3541,
-    "symbols": 3530,
+    "sourceFiles": 3542,
+    "symbols": 3531,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 166,
     "kinds": {
-      "class": 1857,
+      "class": 1858,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -24,7 +24,7 @@
       "CommandHandler": 159,
       "Configuration": 90,
       "Controller": 92,
-      "Entity": 87,
+      "Entity": 88,
       "Event": 19,
       "Factory": 11,
       "Handler": 9,
@@ -2225,41 +2225,6 @@
       "line": 7
     },
     {
-      "name": "DailyReferenceValue",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Usda/DailyReferenceValue.cs",
-      "line": 8
-    },
-    {
-      "name": "UsdaFood",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaFood.cs",
-      "line": 8
-    },
-    {
-      "name": "UsdaFoodNutrient",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodNutrient.cs",
-      "line": 8
-    },
-    {
-      "name": "UsdaFoodPortion",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaFoodPortion.cs",
-      "line": 8
-    },
-    {
-      "name": "UsdaNutrient",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Usda/UsdaNutrient.cs",
-      "line": 8
-    },
-    {
       "name": "Role",
       "kind": "class",
       "role": "Entity",
@@ -3230,13 +3195,6 @@
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageObjectDeletionOutboxMessageConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "DailyReferenceValueConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Nutrition/DailyReferenceValueConfiguration.cs",
       "line": 6
     },
     {
@@ -23321,6 +23279,55 @@
       "role": "Other",
       "path": "Modules/Usda/Contracts/Models/UsdaNutrientReadModel.cs",
       "line": 2
+    },
+    {
+      "name": "DailyReferenceValue",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Usda/Domain/Entities/Usda/DailyReferenceValue.cs",
+      "line": 6
+    },
+    {
+      "name": "UsdaDomainGuard",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaDomainGuard.cs",
+      "line": 4
+    },
+    {
+      "name": "UsdaFood",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaFood.cs",
+      "line": 6
+    },
+    {
+      "name": "UsdaFoodNutrient",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaFoodNutrient.cs",
+      "line": 6
+    },
+    {
+      "name": "UsdaFoodPortion",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaFoodPortion.cs",
+      "line": 6
+    },
+    {
+      "name": "UsdaNutrient",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Usda/Domain/Entities/Usda/UsdaNutrient.cs",
+      "line": 6
+    },
+    {
+      "name": "DailyReferenceValueConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/DailyReferenceValueConfiguration.cs",
+      "line": 6
     },
     {
       "name": "UsdaFoodConfiguration",

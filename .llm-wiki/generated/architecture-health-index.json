@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 694,
+    "productionProjectEdges": 695,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -96,7 +96,7 @@
       "fanIn": 1,
       "fanOut": 1,
       "level": "informational",
-      "role": "adapter"
+      "role": "reference-data-owner"
     },
     {
       "module": "Ai",

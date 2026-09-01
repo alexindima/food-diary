@@ -374,7 +374,8 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Modules.Usda.PersistenceModel",
             ],
-            ["FoodDiary.Modules.Usda.PersistenceModel"] = ["FoodDiary.Domain"],
+            ["FoodDiary.Modules.Usda.Domain"] = [],
+            ["FoodDiary.Modules.Usda.PersistenceModel"] = ["FoodDiary.Modules.Usda.Domain"],
             ["FoodDiary.Modules.WeeklyCheckIn.Application"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Domain",
@@ -496,7 +497,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Products.Application.Abstractions",
                 "FoodDiary.Modules.Products.Contracts",
             ],
-            ["FoodDiary.Domain"] = ["FoodDiary.Domain.Primitives"],
+            ["FoodDiary.Domain"] = ["FoodDiary.Domain.Primitives", "FoodDiary.Modules.Usda.Domain"],
             ["FoodDiary.Infrastructure"] = [
                 "FoodDiary.Modules.Admin.PersistenceModel",
 
@@ -865,6 +866,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Meals.Application.Abstractions",
                 "FoodDiary.Modules.Products.Application",
             ],
+            ["FoodDiary.Modules.Usda.Domain.Tests"] = ["FoodDiary.Modules.Usda.Domain"],
             ["FoodDiary.Modules.BodyMetrics.Application.Tests"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Application.BodyMetrics",
