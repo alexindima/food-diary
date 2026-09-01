@@ -2871,7 +2871,7 @@
     },
     {
       "id": "backend-policy-role",
-      "queryTerms": ["policy", "safe", "range", "https", "localhost", "port", "retry", "batch", "behavior", "control", "processing"],
+      "queryTerms": ["policy", "safe", "unsafe", "prevent", "range", "https", "localhost", "port", "retry", "batch", "behavior", "control", "processing"],
       "minimumMatches": 2,
       "candidateTerms": ["policy"],
       "minimumCandidateMatches": 1,
@@ -3999,7 +3999,7 @@
     {
       "id": "dns-mx-resolver-role",
       "queryTerms": ["resolve", "resolver", "dns", "mx"],
-      "minimumMatches": 2,
+      "minimumMatches": 3,
       "candidateTerms": ["dns", "mx", "resolver"],
       "minimumCandidateMatches": 2,
       "minimumQueryIdentityMatches": 2,

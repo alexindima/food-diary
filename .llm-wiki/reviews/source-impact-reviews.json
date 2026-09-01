@@ -275,78 +275,14 @@
       "pageSha256": "8c9843eeb4fbb377b79e506bb7a2969dd0393e10cc6fc0a1ec924ccbd6ee22f9",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-generalization.json",
-          "sha256": "533a3c4779fe02c138ff37f02d61ad9aeb9d7cbd6b7c9de425c0f143bd869ba8"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "4157009ca722eebf1cdf3a426a44a3b28ae6eaa3dcc2bf0f69e2e52971b8afda"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-holdout.json",
-          "sha256": "876de7fac0348941bd90abea531ce69d726c90549b0e0255a323f4638d641400"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-posttune-control-30.json",
-          "sha256": "d182c3642999eea5856093625d536f2b2137ec14a5b902fd090f0df3c768454f"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-2.json",
-          "sha256": "84ca4fa814b2adc7383cbb0b666958d2b8fe8839e56a07f9afc83f219e5c6c2c"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-3.json",
-          "sha256": "9686637ca5fcdf14b657c2064c39e15d9a78efedabe5880bd7104fa34a7fcf2e"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-4.json",
-          "sha256": "d160e190716fa3a49ff1458457b8bd7f066019502270d68814a0532c20f04491"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-5.json",
-          "sha256": "8f437385839e37c5a0b42a968ac0402d56196bdb42c9c7df2fd7f849d7792d8c"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-7.json",
-          "sha256": "cb021bba154bb9ff17e2b681ec94e4a2e7b3b7867e5c7ff02b3c7bf2e4f15b18"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe.json",
-          "sha256": "6791c99b33d1f4986186c438dce71864c47111c6afb5d95f341a237288b997c7"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "44686209ca65a15b99f5cb0a69549fca168f9b4cc88a8673c506970ea2b051f8"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-validation.json",
-          "sha256": "ec5b0bca3a32f11d752130c28c9abf5dff1b24aa07862e113a676a461152eded"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "b6338d99218c1ee5238300e0189dc8a110c0f5933bfab56c980f36bada5d17db"
-        },
-        {
-          "path": ".llm-wiki/evals/development-context-bundles.json",
-          "sha256": "1b6bf0f8fe2955ebc66180c814b8d17209633d5bab8071a2a2a72e0cf2bfcdb0"
-        },
-        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "8cceb8be1522c84fe6c313b96ee8722e1199f489731cd8e12320f97d20e6a99d"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
-          "sha256": "f91cfab8cb7f894bb8ffea990340238909e7cfe9d5955925b8e17714fc6438ec"
+          "sha256": "3373b00375e420471388bb33fa8a34eed7e0098c959c1eb4619357e33f63f38e"
         }
       ],
-      "reason": "Reviewed strict-mode planner and routing fixes plus evaluation target refresh; coverage, ranking policy, frozen metrics, and live thresholds remain unchanged.",
+      "reason": "Reviewed generic context-ranking changes across all promoted, holdout, unseen, control, and Node/.NET parity corpora; no path-specific rule or threshold change was introduced.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T15:15:16.8445510Z"
+      "gitHead": "7b104c4996e63fddd2c1ec964f43ddbb2bf4b72b",
+      "reviewedAtUtc": "2026-09-01T16:13:21.9386448Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -978,18 +914,14 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "56ee5f0cb4e91949d0af85df75c197210ea4f9bce6b1f91aaa7131580dfee1c5"
-        },
-        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "8cceb8be1522c84fe6c313b96ee8722e1199f489731cd8e12320f97d20e6a99d"
+          "sha256": "3373b00375e420471388bb33fa8a34eed7e0098c959c1eb4619357e33f63f38e"
         }
       ],
-      "reason": "Reviewed security workflow and Identity authentication corpus changes; current paths restore evaluation accuracy without relaxing security thresholds.",
+      "reason": "Reviewed stricter DNS/MX role matching and preventive safety-policy vocabulary; WebPush security routing improves without weakening any security gate.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:51:54.8344183Z"
+      "gitHead": "7b104c4996e63fddd2c1ec964f43ddbb2bf4b72b",
+      "reviewedAtUtc": "2026-09-01T16:13:22.5523537Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
