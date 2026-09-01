@@ -7,14 +7,22 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
+          "path": "AGENTS.md",
+          "sha256": "22dcb8cdd23add015dc1f9ee5fb73a9823d361454fbd0e239f5beec8e278e363"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "6509d03496eee7c1673f92f259eafec834a7b16e95c1b4fa68d5db047d134f43"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "5eaaabe75a3f8c5bfd59382067c7c775d4f612ab200554360db2ce24d5b00a84"
+          "sha256": "e6ca3ae33e4e7d18f564ce0ffad2dfc425363e63adc7746d79de1b38f71fde89"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:23.0557358Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:04.3313260Z"
     },
     {
       "pageId": "module.frontend",
@@ -37,14 +45,18 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "6509d03496eee7c1673f92f259eafec834a7b16e95c1b4fa68d5db047d134f43"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "5eaaabe75a3f8c5bfd59382067c7c775d4f612ab200554360db2ce24d5b00a84"
+          "sha256": "e6ca3ae33e4e7d18f564ce0ffad2dfc425363e63adc7746d79de1b38f71fde89"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:23.2483110Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:04.6122777Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -52,18 +64,30 @@
       "pageSha256": "1e1f4453a594ad85326267450f3f408797d4ccac7e34d13f5d5b06b12d2fe5bc",
       "sources": [
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "cbdf7db7316f1e5c37fdc518d08b68c4a1bf94a1720beb3061c1dab5fa5400e4"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "e6ca3ae33e4e7d18f564ce0ffad2dfc425363e63adc7746d79de1b38f71fde89"
+        },
+        {
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "4033d4051540e954f009c83b243ad8b65e9e3603c147d3e28b809772a4aad071"
+        },
+        {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "7ea06373465434e70b3e4d399bf09ff248e65d4f97ee8b60e1a0ca806e431cbe"
+          "sha256": "2554f7cef51a1053a3421f99c8fcd3f3d2eeca78c44ea4583cf13bb7d7b326ea"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "69fbdeb41e72eb0dfe7d4138daf9329c736386f5a99938b69119461852950904"
+          "sha256": "8eac1153f5169dbf71aff9fcf9dacaac5f9ab652f867d930c7822f0d1903ac22"
         }
       ],
-      "reason": "No HTTP contract changed; assembly moves preserve CLR namespaces and coordinated host builds.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
-      "reviewedAtUtc": "2026-09-01T21:48:55.2110593Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:04.8861354Z"
     },
     {
       "pageId": "system.architecture",
@@ -71,14 +95,26 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "6509d03496eee7c1673f92f259eafec834a7b16e95c1b4fa68d5db047d134f43"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "cbdf7db7316f1e5c37fdc518d08b68c4a1bf94a1720beb3061c1dab5fa5400e4"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "e6ca3ae33e4e7d18f564ce0ffad2dfc425363e63adc7746d79de1b38f71fde89"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "68ab71a30e18e68fdef0d3eff45fd341f99f3001c482d4a76eaf1ab54affc726"
+          "sha256": "1e8d39b8aa6d021c540966da0d9194ca7817b151a692e6c3926de62bc4836d4b"
         }
       ],
-      "reason": "Reviewed generated catalog and architecture documentation against the new Recipes Domain ownership.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
-      "reviewedAtUtc": "2026-09-01T21:48:55.4511802Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:05.1469993Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -117,13 +153,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f76e733102eb11194f1569f06dd09bb6d0879bfd1c96fa8b2775fba37903c8b7"
+          "sha256": "22dcb8cdd23add015dc1f9ee5fb73a9823d361454fbd0e239f5beec8e278e363"
         }
       ],
-      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:06.7462948Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:05.4121447Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -132,13 +168,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b638e411745b45cd996eb8288fa0aaea368cf0302434dc9998b76152a9753d1d"
+          "sha256": "cbdf7db7316f1e5c37fdc518d08b68c4a1bf94a1720beb3061c1dab5fa5400e4"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:23.8674037Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:05.6674482Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -192,17 +228,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "ab1b9d46fc00ad94cddeb0c1b27ba5fc6940b3b997548d1168b440d85b9d0e71"
+          "sha256": "ef55b92b32866498048a3b2849fbd54a68cbb1bb32324ebba5c9511c145c06fd"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "cbdf7db7316f1e5c37fdc518d08b68c4a1bf94a1720beb3061c1dab5fa5400e4"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "68ab71a30e18e68fdef0d3eff45fd341f99f3001c482d4a76eaf1ab54affc726"
+          "sha256": "1e8d39b8aa6d021c540966da0d9194ca7817b151a692e6c3926de62bc4836d4b"
         }
       ],
-      "reason": "Dependency matrix and architecture ownership guardrails cover the new projects and pass.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
-      "reviewedAtUtc": "2026-09-01T21:51:04.8538931Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:05.9466453Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -211,13 +251,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "65daa2e06c3c95d3aef9327ab006c41c17cf38b3925e06ac02281c046b634aa0"
+          "sha256": "2d383d464ca9ed01ea17b4d08b2722b32ee5263f2fa8087eea62d04554090594"
         }
       ],
-      "reason": "No HTTP contract changed; assembly moves preserve CLR namespaces and coordinated host builds.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
-      "reviewedAtUtc": "2026-09-01T21:48:56.4028610Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:06.5192770Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -225,14 +265,14 @@
       "pageSha256": "21ab43d3671a8a24506a2e1bc714f1e3490986d71f1bb1c45e2a896e7cc89b7f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
+          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+          "sha256": "7fbe087d35b01c5a36cf1d7837aa3ed5e08698a0feaef9eab6c4b5546044137c"
         }
       ],
-      "reason": "Reviewed documentation impact from current modular Identity paths in task briefs, test plans, and evaluation fixtures.",
+      "reason": "Reviewed final bounded product metadata lookup and PostgreSQL snapshot regression; current ProductType is retained while snapshot nutrition wins. No API, schema, privacy, deployment, or ownership boundary changed beyond the documented extraction.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:56:16.2526704Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:39:42.4249191Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -240,14 +280,14 @@
       "pageSha256": "23c1a9278403a636f6ec63e87fa3f5afd67333592db3e51c8c24dcb542ed6ec8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
+          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+          "sha256": "7fbe087d35b01c5a36cf1d7837aa3ed5e08698a0feaef9eab6c4b5546044137c"
         }
       ],
-      "reason": "Reviewed documentation impact from current modular Identity paths in task briefs, test plans, and evaluation fixtures.",
+      "reason": "Reviewed final bounded product metadata lookup and PostgreSQL snapshot regression; current ProductType is retained while snapshot nutrition wins. No API, schema, privacy, deployment, or ownership boundary changed beyond the documented extraction.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:56:16.7731599Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:39:43.3079431Z"
     },
     {
       "pageId": "workflow-code-graph",
@@ -474,21 +514,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "0eb777651c7bfb09c23ee125a856b61d3efcbe3ca745479960554792f9a33f83"
+          "sha256": "aca8d2e1adf15fe6fe81ebf116338ea4885916b4a263b03328e60b28c9ee8751"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "7ea06373465434e70b3e4d399bf09ff248e65d4f97ee8b60e1a0ca806e431cbe"
+          "sha256": "2554f7cef51a1053a3421f99c8fcd3f3d2eeca78c44ea4583cf13bb7d7b326ea"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "69fbdeb41e72eb0dfe7d4138daf9329c736386f5a99938b69119461852950904"
+          "sha256": "8eac1153f5169dbf71aff9fcf9dacaac5f9ab652f867d930c7822f0d1903ac22"
         }
       ],
-      "reason": "Dependency matrix and architecture ownership guardrails cover the new projects and pass.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
-      "reviewedAtUtc": "2026-09-01T21:48:56.7613472Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:07.2326563Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -586,14 +626,18 @@
       "pageSha256": "d45851e16e3d49ceca62d5cb5f1eb187c9b829e6a19c634ecd85a6238241dfe8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
+          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+          "sha256": "7fbe087d35b01c5a36cf1d7837aa3ed5e08698a0feaef9eab6c4b5546044137c"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
+          "sha256": "7a041f902be75ba4348569ab306cf7684ccf3b935ec204760bb974f418dcd149"
         }
       ],
-      "reason": "Reviewed verification, model-routing, query parity, and Identity-session regression changes; all gates and selection invariants remain intact.",
+      "reason": "Reviewed final bounded product metadata lookup and PostgreSQL snapshot regression; current ProductType is retained while snapshot nutrition wins. No API, schema, privacy, deployment, or ownership boundary changed beyond the documented extraction.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:56:18.8239719Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:39:44.2045376Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -756,13 +800,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "f2605e9a89429ed9689da6b54681686ae5190c89e2e8a4d53e6daaa84588a683"
+          "sha256": "5947ab0ab670c7a877cac7bebb8c8ccb06b025b460e52ef5549bbfa3030031b6"
         }
       ],
-      "reason": "No authorization, sensitive-data flow, logging, provider, or secret behavior changed.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
-      "reviewedAtUtc": "2026-09-01T21:48:57.1493444Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:07.6556010Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -801,13 +845,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "19c8d3286cd4ac8eb52d880e220cdcf4bed81dd3891c061e11584dd44adf7875"
+          "sha256": "b79a871adb5ff8a3772608a4d4d0386ff1eb4a765fa57aa7ecbc2099d2539237"
         }
       ],
-      "reason": "Dependency matrix and architecture ownership guardrails cover the new projects and pass.",
+      "reason": "Reviewed final bounded product metadata lookup and PostgreSQL snapshot regression; current ProductType is retained while snapshot nutrition wins. No API, schema, privacy, deployment, or ownership boundary changed beyond the documented extraction.",
       "baseRef": "HEAD",
-      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
-      "reviewedAtUtc": "2026-09-01T21:51:05.5788871Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:39:45.1736251Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -884,13 +928,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d9acbd33280068bb616372806ed47815cdc009fe03e3bc1492d91d216648656b"
+          "sha256": "194165a132f6a8f005c4001ce0a053c2d896d6acfb0be65ec0bef365ba721556"
         }
       ],
-      "reason": "Reviewed generated catalog and architecture documentation against the new Recipes Domain ownership.",
+      "reason": "Reviewed final bounded product metadata lookup and PostgreSQL snapshot regression; current ProductType is retained while snapshot nutrition wins. No API, schema, privacy, deployment, or ownership boundary changed beyond the documented extraction.",
       "baseRef": "HEAD",
-      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
-      "reviewedAtUtc": "2026-09-01T21:51:06.1810978Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:39:45.9795623Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -899,21 +943,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "19c8d3286cd4ac8eb52d880e220cdcf4bed81dd3891c061e11584dd44adf7875"
+          "sha256": "b79a871adb5ff8a3772608a4d4d0386ff1eb4a765fa57aa7ecbc2099d2539237"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d9acbd33280068bb616372806ed47815cdc009fe03e3bc1492d91d216648656b"
+          "sha256": "194165a132f6a8f005c4001ce0a053c2d896d6acfb0be65ec0bef365ba721556"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "f2605e9a89429ed9689da6b54681686ae5190c89e2e8a4d53e6daaa84588a683"
+          "sha256": "5947ab0ab670c7a877cac7bebb8c8ccb06b025b460e52ef5549bbfa3030031b6"
         }
       ],
-      "reason": "No authorization, sensitive-data flow, logging, provider, or secret behavior changed.",
+      "reason": "Reviewed final bounded product metadata lookup and PostgreSQL snapshot regression; current ProductType is retained while snapshot nutrition wins. No API, schema, privacy, deployment, or ownership boundary changed beyond the documented extraction.",
       "baseRef": "HEAD",
-      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
-      "reviewedAtUtc": "2026-09-01T21:51:06.9291540Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:39:46.9124400Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -921,14 +965,14 @@
       "pageSha256": "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
+          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+          "sha256": "7fbe087d35b01c5a36cf1d7837aa3ed5e08698a0feaef9eab6c4b5546044137c"
         }
       ],
-      "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
+      "reason": "Reviewed final bounded product metadata lookup and PostgreSQL snapshot regression; current ProductType is retained while snapshot nutrition wins. No API, schema, privacy, deployment, or ownership boundary changed beyond the documented extraction.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:42:11.9273587Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:39:47.7211957Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -1026,14 +1070,14 @@
       "pageSha256": "034a7fbc5f124bcf40175e3a37f52338dfec658615c7b91245322232f61f08d6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "e3b11837b4815f79b9a5dab108eecb8ce799ceb32a134a39c23f5913c2f091f7"
+          "path": "docs/TESTING_STRATEGY.md",
+          "sha256": "49fe1c0529a0742920027bcaa6b829e98b61b10cc10e20462ba18f9154b534e4"
         }
       ],
-      "reason": "Reviewed verification, model-routing, query parity, and Identity-session regression changes; all gates and selection invariants remain intact.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:56:21.7613260Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:09.9743060Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1091,13 +1135,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f76e733102eb11194f1569f06dd09bb6d0879bfd1c96fa8b2775fba37903c8b7"
+          "sha256": "22dcb8cdd23add015dc1f9ee5fb73a9823d361454fbd0e239f5beec8e278e363"
         }
       ],
-      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:07.9173324Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:06.8619922Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1151,13 +1195,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "57ef38320421a7aaf6d65591e2894719fb05c31fee9c8584a22ec4a3f195a27e"
+          "sha256": "e7eb9a5262f462d5371899932e60b651fece690ecf7afc71188f34b6dfbec521"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "22dcb8cdd23add015dc1f9ee5fb73a9823d361454fbd0e239f5beec8e278e363"
         }
       ],
-      "reason": "Reviewed generated catalog and architecture documentation against the new Recipes Domain ownership.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
-      "reviewedAtUtc": "2026-09-01T21:48:58.0906218Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:08.4962191Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1166,13 +1214,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f76e733102eb11194f1569f06dd09bb6d0879bfd1c96fa8b2775fba37903c8b7"
+          "sha256": "22dcb8cdd23add015dc1f9ee5fb73a9823d361454fbd0e239f5beec8e278e363"
         }
       ],
-      "reason": "Reviewed architecture, quality, and review guidance against updated dependency guardrails and focused plus integration verification evidence.",
+      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
       "baseRef": "HEAD",
-      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
-      "reviewedAtUtc": "2026-09-01T19:54:09.6523841Z"
+      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
+      "reviewedAtUtc": "2026-09-01T23:22:08.8172845Z"
     }
   ]
 }

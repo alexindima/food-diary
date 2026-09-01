@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Domain</RootNamespace>
+    <NoWarn>$(NoWarn);RCS1170</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />
+    <ProjectReference Include="../../Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj" />
+    <ProjectReference Include="../../Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj" />
+  </ItemGroup>
+</Project>

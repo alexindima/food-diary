@@ -38,31 +38,6 @@ public class ValueObjectsInvariantTests {
         Assert.Throws<ArgumentOutOfRangeException>(() => ProfileHeightCm.Create(value));
     }
 
-    [Fact]
-    public void ProductNutrition_Create_WithNegativeValue_Throws() {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            ProductNutrition.Create(-1, 0, 0, 0, 0, 0));
-    }
-
-    [Theory]
-    [InlineData(double.NaN)]
-    [InlineData(double.PositiveInfinity)]
-    [InlineData(double.NegativeInfinity)]
-    public void ProductNutrition_Create_WithNonFiniteValue_Throws(double value) {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            ProductNutrition.Create(value, 0, 0, 0, 0, 0));
-    }
-
-    [Fact]
-    public void ProductNutrition_IsCloseTo_RespectsEpsilon() {
-        var left = ProductNutrition.Create(100, 10, 5, 20, 3, 0);
-        var right = ProductNutrition.Create(100.0000005, 10, 5, 20, 3, 0);
-        var far = ProductNutrition.Create(100.1, 10, 5, 20, 3, 0);
-
-        Assert.True(left.IsCloseTo(right, 0.000001));
-        Assert.False(left.IsCloseTo(far, 0.000001));
-    }
-
     [Theory]
     [InlineData(double.NaN)]
     [InlineData(double.PositiveInfinity)]

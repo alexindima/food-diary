@@ -512,7 +512,9 @@ public sealed class DiaryPdfGeneratorTests {
         var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Lunch);
         Product product = CreateProduct(userId, "rice", imageUrl: "");
         MealItem productItem = meal.AddProduct(product.Id, 50);
-        typeof(MealItem).GetProperty(nameof(MealItem.Product))!.SetValue(productItem, product);
+        productItem.ApplyProductSnapshot(product.Name, product.ImageUrl, product.BaseUnit, product.BaseAmount,
+            product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase, product.CarbsPerBase,
+            product.FiberPerBase, product.AlcoholPerBase);
         var recipe = Recipe.Create(userId, "soup", servings: 2);
         recipe.ApplyComputedNutrition(200, 10, 4, 30, 6, 0);
         MealItem recipeItem = meal.AddRecipe(recipe.Id, 1);
@@ -939,17 +941,9 @@ public sealed class DiaryPdfGeneratorTests {
             item.MealId.Value,
             item.Amount,
             item.ProductId?.Value,
-            item.SnapshotName ?? item.Product?.Name,
-            item.SnapshotImageUrl ?? item.Product?.ImageUrl,
-            item.SnapshotUnit ?? item.Product?.BaseUnit.ToString(),
-            item.SnapshotBaseAmount ?? item.Product?.BaseAmount,
-            item.SnapshotCaloriesPerBase ?? item.Product?.CaloriesPerBase,
-            item.SnapshotProteinsPerBase ?? item.Product?.ProteinsPerBase,
-            item.SnapshotFatsPerBase ?? item.Product?.FatsPerBase,
-            item.SnapshotCarbsPerBase ?? item.Product?.CarbsPerBase,
-            item.SnapshotFiberPerBase ?? item.Product?.FiberPerBase,
-            item.SnapshotAlcoholPerBase ?? item.Product?.AlcoholPerBase,
-            item.Product?.ProductType,
+            item.SnapshotName, item.SnapshotImageUrl, item.SnapshotUnit, item.SnapshotBaseAmount,
+            item.SnapshotCaloriesPerBase, item.SnapshotProteinsPerBase, item.SnapshotFatsPerBase,
+            item.SnapshotCarbsPerBase, item.SnapshotFiberPerBase, item.SnapshotAlcoholPerBase, ProductType: null,
             item.RecipeId?.Value,
             item.SnapshotName,
             item.SnapshotImageUrl,
@@ -1013,9 +1007,9 @@ public sealed class DiaryPdfGeneratorTests {
 
     private static void AddProductItem(Meal meal, Product product, double amount) {
         MealItem item = meal.AddProduct(product.Id, amount);
-        typeof(MealItem)
-            .GetProperty(nameof(MealItem.Product))!
-            .SetValue(item, product);
+        item.ApplyProductSnapshot(product.Name, product.ImageUrl, product.BaseUnit, product.BaseAmount,
+            product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase, product.CarbsPerBase,
+            product.FiberPerBase, product.AlcoholPerBase);
     }
 
     private static KeyValuePair<ImageAssetId, string> AddAiSessionWithImage(Meal meal, UserId userId, string imageUrl) {

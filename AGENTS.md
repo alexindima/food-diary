@@ -97,6 +97,8 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Products application: `Modules/Products/Application/AGENTS.md`
 - Products ports: `Modules/Products/Application/Abstractions/AGENTS.md`
 - Products contracts: `Modules/Products/Contracts/AGENTS.md`
+- Products domain contracts: `Modules/Products/Domain.Contracts/AGENTS.md`
+- Products domain: `Modules/Products/Domain/AGENTS.md`
 - Products infrastructure: `Modules/Products/Infrastructure/AGENTS.md`
 - Products persistence model: `Modules/Products/Infrastructure/Model/AGENTS.md`
 - Products tests: `Modules/Products/tests/AGENTS.md`

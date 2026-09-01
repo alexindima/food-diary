@@ -77,7 +77,7 @@ public sealed class ProductRepository(FoodDiaryDbContext context) : IProductRepo
             .Where(p => p.Id == id && (includePublic
                 ? p.UserId == userId || p.Visibility == Visibility.Public
                 : p.UserId == userId))
-            .Select(p => p.MealItems.Count + context.RecipeIngredients.Count(ingredient => ingredient.ProductId == p.Id))
+            .Select(p => context.MealItems.Count(item => item.ProductId == p.Id) + context.RecipeIngredients.Count(ingredient => ingredient.ProductId == p.Id))
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
     public async Task UpdateAsync(Product product, CancellationToken cancellationToken = default) {

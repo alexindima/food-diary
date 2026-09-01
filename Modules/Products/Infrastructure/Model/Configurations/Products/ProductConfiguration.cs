@@ -32,7 +32,7 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
             .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(e => e.User)
-            .WithMany(u => u.Products)
+            .WithMany()
             .HasForeignKey(e => e.UserId);
 
         builder.HasOne(e => e.UsdaFood)
@@ -55,9 +55,6 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
         builder.HasIndex(e => e.Barcode)
             .HasMethod("gin")
             .HasOperators("gin_trgm_ops");
-
-        builder.Metadata.FindNavigation(nameof(Product.MealItems))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
 
     }
 }

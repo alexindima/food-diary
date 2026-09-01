@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -889,12 +888,4 @@ public class ProductInvariantTests {
         Assert.NotNull(product.ModifiedOnUtc);
     }
 
-    [Fact]
-    public void NavigationCollections_AreExposedAsReadOnly() {
-        Product product = CreateValidProduct();
-
-        ICollection<MealItem> mealItems = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.MealItem>>(product.MealItems);
-
-        Assert.True(mealItems.IsReadOnly);
-    }
 }

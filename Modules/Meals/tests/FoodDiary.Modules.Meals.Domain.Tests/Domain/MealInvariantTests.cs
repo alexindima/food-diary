@@ -312,7 +312,9 @@ public class MealInvariantTests {
         Product product = CreateProduct();
         SetPrivateProperty(product, nameof(Product.CaloriesPerBase), caloriesPerBase);
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => item.ApplyProductSnapshot(product));
+        Assert.Throws<ArgumentOutOfRangeException>(() => item.ApplyProductSnapshot(product.Name, product.ImageUrl,
+            product.BaseUnit, product.BaseAmount, product.CaloriesPerBase, product.ProteinsPerBase,
+            product.FatsPerBase, product.CarbsPerBase, product.FiberPerBase, product.AlcoholPerBase));
     }
 
     [Fact]

@@ -1,7 +1,6 @@
 using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -34,7 +33,6 @@ public sealed class MealItem : Entity<MealItemId> {
     public double? SnapshotAlcoholPerBase { get; private set; }
 
     public Meal Meal { get; private set; } = null!;
-    public Product? Product { get; private set; }
 
     private MealItem() { }
 
@@ -70,21 +68,6 @@ public sealed class MealItem : Entity<MealItemId> {
         };
         item.SetCreated();
         return item;
-    }
-
-    public void ApplyProductSnapshot(Product product) {
-        ArgumentNullException.ThrowIfNull(product);
-        ApplySnapshot(
-            product.Name,
-            product.ImageUrl,
-            product.BaseUnit.ToString(),
-            product.BaseAmount,
-            product.CaloriesPerBase,
-            product.ProteinsPerBase,
-            product.FatsPerBase,
-            product.CarbsPerBase,
-            product.FiberPerBase,
-            product.AlcoholPerBase);
     }
 
     public void ApplyProductSnapshot(

@@ -8,7 +8,7 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3543,
+    "sourceFiles": 3544,
     "symbols": 3531,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 166,
@@ -2152,14 +2152,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-      "line": 9
-    },
-    {
-      "name": "Product",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 12
+      "line": 8
     },
     {
       "name": "WaistGoal",
@@ -2201,7 +2194,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "User",
@@ -2498,13 +2491,6 @@
       "line": 4
     },
     {
-      "name": "ProductId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ProductId.cs",
-      "line": 4
-    },
-    {
       "name": "RoleId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -2566,48 +2552,6 @@
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/MealNutritionUpdate.cs",
       "line": 2
-    },
-    {
-      "name": "ProductIdentityState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/ProductIdentityState.cs",
-      "line": 4
-    },
-    {
-      "name": "ProductIdentityUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/ProductIdentityUpdate.cs",
-      "line": 4
-    },
-    {
-      "name": "ProductMeasurementNutritionUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/ProductMeasurementNutritionUpdate.cs",
-      "line": 7
-    },
-    {
-      "name": "ProductMeasurementState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/ProductMeasurementState.cs",
-      "line": 7
-    },
-    {
-      "name": "ProductMediaState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/ProductMediaState.cs",
-      "line": 4
-    },
-    {
-      "name": "ProductNutrition",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/ProductNutrition.cs",
-      "line": 6
     },
     {
       "name": "ProfileHeightCm",
@@ -20408,7 +20352,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "DietologistInvitationDecisionNotificationPayload",
@@ -21802,6 +21746,62 @@
       "role": "Other",
       "path": "Modules/Products/Contracts/Products/Models/ProductQueryFilters.cs",
       "line": 4
+    },
+    {
+      "name": "ProductId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain.Contracts/ValueObjects/Ids/ProductId.cs",
+      "line": 4
+    },
+    {
+      "name": "Product",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Products/Domain/Entities/Products/Product.cs",
+      "line": 11
+    },
+    {
+      "name": "ProductIdentityState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/ProductIdentityState.cs",
+      "line": 4
+    },
+    {
+      "name": "ProductIdentityUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/ProductIdentityUpdate.cs",
+      "line": 4
+    },
+    {
+      "name": "ProductMeasurementNutritionUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/ProductMeasurementNutritionUpdate.cs",
+      "line": 7
+    },
+    {
+      "name": "ProductMeasurementState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/ProductMeasurementState.cs",
+      "line": 7
+    },
+    {
+      "name": "ProductMediaState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/ProductMediaState.cs",
+      "line": 4
+    },
+    {
+      "name": "ProductNutrition",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/ProductNutrition.cs",
+      "line": 6
     },
     {
       "name": "ProductConfiguration",

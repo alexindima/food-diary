@@ -111,7 +111,7 @@ internal sealed class ProductOverviewReadService(FoodDiaryDbContext context) : I
             product.CarbsPerBase,
             product.FiberPerBase,
             product.AlcoholPerBase,
-            product.MealItems.Count + context.RecipeIngredients.Count(ingredient => ingredient.ProductId == product.Id),
+            context.MealItems.Count(item => item.ProductId == product.Id) + context.RecipeIngredients.Count(ingredient => ingredient.ProductId == product.Id),
             product.Visibility,
             product.CreatedOnUtc,
             product.UsdaFdcId));

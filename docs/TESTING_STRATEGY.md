@@ -130,10 +130,9 @@ docs/ai/admin-ownership-inventory.md for current source evidence and test owners
 
 ## Products physical ownership
 
-Products use cases, ports, consumed contracts, persistence adapters and EF model
-live under `Modules/Products`; focused application, Product invariant and repository PostgreSQL tests live under its nested
-tests folder. Central Product/User/RecipeIngredient/MealItem/USDA CLR navigations,
-shared context/migrations and composition lock remain unchanged. Hosts explicitly
+Products aggregate/value-object invariants, application behavior and focused
+persistence tests live under `Modules/Products`. Central mixed-domain, HTTP and
+full PostgreSQL suites verify unidirectional mappings and legacy snapshots. Hosts explicitly
 compose AddProductsModule; JobManager adds AddProductsPersistence without new
 handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
 coordinated-rebuild compatibility promise.

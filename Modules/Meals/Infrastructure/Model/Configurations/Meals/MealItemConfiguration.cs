@@ -50,8 +50,8 @@ internal sealed class MealItemConfiguration : IEntityTypeConfiguration<MealItem>
             .WithMany(m => m.Items)
             .HasForeignKey(e => e.MealId);
 
-        builder.HasOne(e => e.Product)
-            .WithMany(p => p.MealItems)
+        builder.HasOne<FoodDiary.Domain.Entities.Products.Product>()
+            .WithMany()
             .HasForeignKey(e => e.ProductId)
             .IsRequired(false);
 

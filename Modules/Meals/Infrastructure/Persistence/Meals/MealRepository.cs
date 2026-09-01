@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
@@ -204,8 +205,6 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         query
             .AsSplitQuery()
             .Include(m => m.Items)
-            .ThenInclude(i => i.Product)
-            .Include(m => m.Items)
             .Include(m => m.AiSessions)
             .ThenInclude(s => s.Items);
 
@@ -288,7 +287,6 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .AsNoTracking()
             .AsSplitQuery()
             .Include(m => m.Items)
-            .ThenInclude(i => i.Product)
             .Where(m => m.UserId == userId && m.Date >= from && m.Date <= toInclusive)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -308,14 +306,13 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
                 item.Meal.UserId == userId &&
                 item.Meal.Date >= from &&
                 item.Meal.Date <= toInclusive &&
-                item.ProductId != null &&
-                item.Product != null)
+                item.ProductId != null)
             .OrderBy(static item => item.Id)
             .Take(limit)
             .Select(item => new MealProductNutritionReadModel(
                 item.Amount,
-                item.Product!.BaseAmount,
-                item.Product.UsdaFdcId))
+                context.Products.Where(product => product.Id == item.ProductId).Select(product => product.BaseAmount).Single(),
+                context.Products.Where(product => product.Id == item.ProductId).Select(product => product.UsdaFdcId).Single()))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -350,13 +347,28 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
                 .ToDictionaryAsync(recipe => recipe.Id, cancellationToken)
                 .ConfigureAwait(false);
 
-        return [.. meals.Select(meal => ToMealProjectionReadModel(meal, imageUrlsById, legacyRecipesById))];
+        // Product type is not snapshotted, so even complete snapshots need current metadata.
+        // One bounded lookup also supplies fallback fields for legacy rows.
+        ProductId[] legacyProductIds = [.. meals
+            .SelectMany(static meal => meal.Items)
+            .Where(static item => item.ProductId.HasValue)
+            .Select(static item => item.ProductId!.Value)
+            .Distinct()];
+
+        Dictionary<ProductId, Product> legacyProductsById = legacyProductIds.Length == 0
+            ? []
+            : await context.Products.AsNoTracking()
+                .Where(product => ((IEnumerable<ProductId>)legacyProductIds).Contains(product.Id))
+                .ToDictionaryAsync(product => product.Id, cancellationToken).ConfigureAwait(false);
+
+        return [.. meals.Select(meal => ToMealProjectionReadModel(meal, imageUrlsById, legacyRecipesById, legacyProductsById))];
     }
 
     private static MealProjectionReadModel ToMealProjectionReadModel(
         Meal meal,
         IReadOnlyDictionary<ImageAssetId, string> imageUrlsById,
-        IReadOnlyDictionary<RecipeId, Recipe> legacyRecipesById) {
+        IReadOnlyDictionary<RecipeId, Recipe> legacyRecipesById,
+        IReadOnlyDictionary<ProductId, Product> legacyProductsById) {
         return new MealProjectionReadModel(
             meal.Id.Value,
             meal.Date,
@@ -379,42 +391,46 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             meal.ManualAlcohol,
             meal.PreMealSatietyLevel,
             meal.PostMealSatietyLevel,
-            ToMealItemProjectionReadModels(meal, legacyRecipesById),
+            ToMealItemProjectionReadModels(meal, legacyRecipesById, legacyProductsById),
             ToMealAiSessionProjectionReadModels(meal, imageUrlsById));
     }
 
     private static List<MealItemProjectionReadModel> ToMealItemProjectionReadModels(
         Meal meal,
-        IReadOnlyDictionary<RecipeId, Recipe> legacyRecipesById) {
+        IReadOnlyDictionary<RecipeId, Recipe> legacyRecipesById,
+        IReadOnlyDictionary<ProductId, Product> legacyProductsById) {
         return [.. meal.Items
             .OrderBy(static item => item.Id.Value)
-            .Select(item => ToMealItemProjectionReadModel(item, legacyRecipesById))];
+            .Select(item => ToMealItemProjectionReadModel(item, legacyRecipesById, legacyProductsById))];
     }
 
     private static MealItemProjectionReadModel ToMealItemProjectionReadModel(
         MealItem item,
-        IReadOnlyDictionary<RecipeId, Recipe> legacyRecipesById) {
+        IReadOnlyDictionary<RecipeId, Recipe> legacyRecipesById,
+        IReadOnlyDictionary<ProductId, Product> legacyProductsById) {
         Recipe? legacyRecipe = item.RecipeId is { } recipeId
             && legacyRecipesById.TryGetValue(recipeId, out Recipe? recipe)
                 ? recipe
                 : null;
+        Product? legacyProduct = item.ProductId is { } productId
+            && legacyProductsById.TryGetValue(productId, out Product? product) ? product : null;
 
         return new MealItemProjectionReadModel(
             item.Id.Value,
             item.MealId.Value,
             item.Amount,
             item.ProductId?.Value,
-            item.SnapshotName ?? item.Product?.Name,
-            item.SnapshotImageUrl ?? item.Product?.ImageUrl,
-            item.SnapshotUnit ?? item.Product?.BaseUnit.ToString(),
-            item.SnapshotBaseAmount ?? item.Product?.BaseAmount,
-            item.SnapshotCaloriesPerBase ?? item.Product?.CaloriesPerBase,
-            item.SnapshotProteinsPerBase ?? item.Product?.ProteinsPerBase,
-            item.SnapshotFatsPerBase ?? item.Product?.FatsPerBase,
-            item.SnapshotCarbsPerBase ?? item.Product?.CarbsPerBase,
-            item.SnapshotFiberPerBase ?? item.Product?.FiberPerBase,
-            item.SnapshotAlcoholPerBase ?? item.Product?.AlcoholPerBase,
-            item.Product?.ProductType,
+            item.SnapshotName ?? legacyProduct?.Name,
+            item.SnapshotImageUrl ?? legacyProduct?.ImageUrl,
+            item.SnapshotUnit ?? legacyProduct?.BaseUnit.ToString(),
+            item.SnapshotBaseAmount ?? legacyProduct?.BaseAmount,
+            item.SnapshotCaloriesPerBase ?? legacyProduct?.CaloriesPerBase,
+            item.SnapshotProteinsPerBase ?? legacyProduct?.ProteinsPerBase,
+            item.SnapshotFatsPerBase ?? legacyProduct?.FatsPerBase,
+            item.SnapshotCarbsPerBase ?? legacyProduct?.CarbsPerBase,
+            item.SnapshotFiberPerBase ?? legacyProduct?.FiberPerBase,
+            item.SnapshotAlcoholPerBase ?? legacyProduct?.AlcoholPerBase,
+            legacyProduct?.ProductType,
             item.RecipeId?.Value,
             item.SnapshotName ?? legacyRecipe?.Name,
             item.SnapshotImageUrl ?? legacyRecipe?.ImageUrl,

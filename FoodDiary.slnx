@@ -10,6 +10,7 @@
   <Folder Name="/Application/Content and Engagement/">
   </Folder>
   <Folder Name="/Modules/" />
+  <Folder Name="/Modules/Usda/Domain/" />
   <Folder Name="/Modules/Users/">
     <Project Path="Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj" />
     <Project Path="Modules/Users/Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj" />
@@ -210,6 +211,7 @@
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/FoodDiary.Modules.Hydration.Domain.Tests.csproj" />
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/FoodDiary.Modules.Hydration.Infrastructure.Tests.csproj" />
   </Folder>
+  <Folder Name="/Modules/Images/Contracts/" />
   <Folder Name="/Modules/Lessons/">
     <Project Path="Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj" />
     <Project Path="Modules/Lessons/Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
@@ -421,6 +423,12 @@
     <Project Path="Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
     <Project Path="Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj" />
     <Project Path="Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Products/Domain.Contracts/">
+    <Project Path="Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Products/Domain/">
+    <Project Path="Modules/Products/Domain/FoodDiary.Modules.Products.Domain.csproj" />
   </Folder>
   <Folder Name="/Modules/Products/tests/">
     <Project Path="Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/FoodDiary.Modules.Products.Application.Tests.csproj" />

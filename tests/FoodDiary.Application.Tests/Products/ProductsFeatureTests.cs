@@ -129,7 +129,7 @@ public partial class ProductsFeatureTests {
             UserId userId,
             bool includePublic = true,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult(product.MealItems.Count);
+            Task.FromResult(0);
 
         public Task UpdateAsync(Product product, CancellationToken cancellationToken = default) {
             UpdateCalled = true;

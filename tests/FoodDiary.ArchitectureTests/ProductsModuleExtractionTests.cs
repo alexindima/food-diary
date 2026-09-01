@@ -6,6 +6,8 @@ public sealed class ProductsModuleExtractionTests {
     [InlineData("Application/FoodDiary.Modules.Products.Application.csproj")]
     [InlineData("Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj")]
     [InlineData("Contracts/FoodDiary.Modules.Products.Contracts.csproj")]
+    [InlineData("Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj")]
+    [InlineData("Domain/FoodDiary.Modules.Products.Domain.csproj")]
     [InlineData("Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj")]
     [InlineData("Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj")]
     [InlineData("tests/FoodDiary.Modules.Products.Application.Tests/FoodDiary.Modules.Products.Application.Tests.csproj")]
@@ -26,21 +28,39 @@ public sealed class ProductsModuleExtractionTests {
     }
 
     [Fact]
-    public void CentralDomainCompatibilityGraph_IsPreserved() {
-        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Products", "Domain")));
+    public void ProductDomainOwnership_IsPhysicalAndAcyclic() {
         string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Users/User.cs"));
-        string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Products/Product.cs"));
+        string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Products/Domain/Entities/Products/Product.cs"));
         string ingredient = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Recipes/Domain/Entities/Recipes/RecipeIngredient.cs"));
         string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Meals/MealItem.cs"));
-        Assert.Contains("IReadOnlyCollection<Product> Products", user, StringComparison.Ordinal);
-        Assert.Contains("IReadOnlyCollection<MealItem> MealItems", product, StringComparison.Ordinal);
+        Assert.DoesNotContain("IReadOnlyCollection<Product> Products", user, StringComparison.Ordinal);
+        Assert.DoesNotContain("IReadOnlyCollection<MealItem> MealItems", product, StringComparison.Ordinal);
         Assert.DoesNotContain("RecipeIngredient", product, StringComparison.Ordinal);
         Assert.Contains("UsdaFood? UsdaFood", product, StringComparison.Ordinal);
         Assert.Contains("Product? Product", ingredient, StringComparison.Ordinal);
-        Assert.Contains("Product? Product", mealItem, StringComparison.Ordinal);
-        Assert.Contains("ApplyProductSnapshot(Product product)", mealItem, StringComparison.Ordinal);
-        Assert.DoesNotContain("FoodDiary.Modules.Products", File.ReadAllText(
+        Assert.DoesNotContain("Product? Product", mealItem, StringComparison.Ordinal);
+        Assert.DoesNotContain("ApplyProductSnapshot(Product product)", mealItem, StringComparison.Ordinal);
+        Assert.Contains("FoodDiary.Modules.Products.Domain.Contracts", File.ReadAllText(
             ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")), StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.Products.Domain.csproj", File.ReadAllText(
+            ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void CentralDomainTests_DoNotOwnProductAggregateCoverage() {
+        string tests = ArchitectureTestPaths.FromRoot("tests/FoodDiary.Domain.Tests");
+        Assert.Empty(SourceScanner.FindLinePatternViolations(tests, [
+            "Entities.Products",
+            "ProductNutrition",
+            "ProductIdentityState",
+            "ProductIdentityUpdate",
+            "ProductMeasurementState",
+            "ProductMeasurementNutritionUpdate",
+            "ProductMediaState",
+        ]));
+        Assert.DoesNotContain("FoodDiary.Modules.Products.Domain.csproj", File.ReadAllText(
+            ArchitectureTestPaths.FromRoot("tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj")),
+            StringComparison.Ordinal);
     }
 
     [Fact]

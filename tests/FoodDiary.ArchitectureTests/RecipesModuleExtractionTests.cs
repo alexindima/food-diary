@@ -31,7 +31,7 @@ public sealed class RecipesModuleExtractionTests {
         Assert.True(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Domain")));
         string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Users/User.cs"));
         string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Meals/MealItem.cs"));
-        string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Products/Product.cs"));
+        string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Products/Domain/Entities/Products/Product.cs"));
         Assert.DoesNotContain("IReadOnlyCollection<Recipe> Recipes", user, StringComparison.Ordinal);
         Assert.DoesNotContain("RecipeIngredient", product, StringComparison.Ordinal);
         Assert.DoesNotContain("Recipe? Recipe", mealItem, StringComparison.Ordinal);

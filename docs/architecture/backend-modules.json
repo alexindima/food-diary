@@ -547,9 +547,10 @@
           "Modules/Products/Application/Abstractions",
           "Modules/Products/Contracts"
         ],
-        "domainAreas": [
-          "FoodDiary.Domain/Entities/Products"
-        ],
+          "domainAreas": [
+            "Modules/Products/Domain",
+            "Modules/Products/Domain.Contracts"
+          ],
         "infrastructureAreas": [
           "Modules/Products/Infrastructure"
         ],

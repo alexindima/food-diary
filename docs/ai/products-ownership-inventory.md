@@ -1,6 +1,6 @@
 # Products ownership inventory
 
-Source audit base: `4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149`.
+Source audit base: `47d0dd4d3698a4729d3cb117ea74824793698096`.
 
 | Responsibility | Physical owner and compatibility boundary |
 | --- | --- |
@@ -9,11 +9,13 @@ Source audit base: `4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149`.
 | IProductLookupService, IProductOverviewReadService, IProductUsdaLinkService, ProductOverviewReadItem, ProductQueryFilters | `Modules/Products/Contracts`; existing projection and semantic mutation API, preserving CLR namespaces. Meals, Recipes, Favorites and MealPlanning consume lookup projections; USDA consumes owner-side linking capability. No foreign aggregate is exported by these contracts. |
 | ProductRepository, CachedProductRepository, ProductOverviewReadService, EfProductMutationTransactionRunner, ProductLookupService | `Modules/Products/Infrastructure`; shared context, five-minute cache/access recheck, scoped aliases, row locks, SQL, transaction/save boundaries and cancellation remain unchanged |
 | ProductConfiguration | `Modules/Products/Infrastructure/Model`; explicit registration from shared context, unchanged xmin, indexes, conversions, FKs, navigation access and delete behavior |
-| Product, ProductId, enums/value objects and related domain behavior | Central Domain seam: User.Products and Product.User; Product.RecipeIngredients and RecipeIngredient.Product; Product.MealItems and MealItem.Product plus ApplyProductSnapshot(Product) form public bidirectional CLR graphs. Product.UsdaFood also preserves the USDA compatibility seam. An independent Domain assembly would create a cycle or require changes to foreign aggregates. |
+| Product and product-only value objects | `Modules/Products/Domain`, preserving `FoodDiary.Domain.*` namespaces and invariant behavior. It references central User/shared types, USDA Domain and Images Contracts one-way. `ProductType` remains central because `FoodQualityScore` and cross-module projections share its semantics. |
+| ProductId | Dependency-free `Modules/Products/Domain.Contracts`; central Domain references only this seam. |
+| Foreign relationships and snapshots | Product retains one-way User and USDA navigations; RecipeIngredient retains a one-way Product navigation. User.Products, Product.MealItems and MealItem.Product are removed. EF preserves the same FKs through unidirectional mappings. MealItem accepts scalar snapshot inputs; complete snapshots remain authoritative and legacy rows are resolved with one bounded product lookup. |
 | RecipeCompositionTransactionLock | Central Infrastructure internal seam, shared with Recipes mutation. Products gets explicit friend access; lock keys and lifetime are not duplicated or changed. |
 | FoodDiaryDbContext, migrations/snapshot, User cleanup, foreign projections, HTTP/auth and host configuration | Existing central/consumer owners; no database, route, payload or authorization change |
 | Provider HTTP, credentials, cache policy and cleanup/outbox | Integrations and catalog owners retain HTTP/options. Products retains suggestion orchestration only. Images retains media deletion/outbox and RecentItems retains usage recording/ordering. |
-| Tests | Products-only application tests, ProductInvariantTests and three repository PostgreSQL cases move to three separate nested module test projects; mixed Favorites overview composition, mixed central domain, shared PostgreSQL fixture, HTTP, host and architecture suites remain with their existing owners. The module Domain.Tests project references the central Domain assembly without requiring a production Domain project. |
+| Tests | Products-only application, domain invariant and repository PostgreSQL tests live in three nested module test projects. Mixed cross-module, shared PostgreSQL, HTTP, host and architecture suites remain with their existing owners. Domain.Tests references Products.Domain directly. |
 
 Compatibility means coordinated rebuilding of consumers and executable hosts. CLR namespaces and the legacy application assembly identity are retained; relocation of ports/adapters does not promise compatibility with old precompiled binaries.
 
@@ -27,7 +29,7 @@ and one page projection. Usage counts remain projected rather than materializing
 navigation collections, and another owner's private Comment is redacted.
 ProductConfiguration retains owner/creation and visibility/creation indexes,
 four trigram indexes, xmin concurrency, optional image/USDA SetNull relationships
-and field access for inverse usage collections. Source equality is evidence of
+with unidirectional User and MealItem relationships. Source equality is evidence of
 preservation; PostgreSQL execution and EF comparison are separate required checks.
 
 `CachedProductRepository` retains its five-minute cache and access check on every
@@ -51,5 +53,4 @@ is outside this task and was not performed.
 
 The physical boundary implements the existing ownership/abstraction ADRs; it does
 not introduce a new logical module dependency or service boundary. The narrow
-central Domain and advisory-lock seams above remain explicit limitations rather
-than claims of independent aggregate or binary deployment.
+central ID and advisory-lock seams above remain explicit coordinated-build boundaries.

@@ -5,7 +5,6 @@ using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
@@ -88,7 +87,6 @@ public sealed class DomainCoverageCompletionTests {
 
     [Fact]
     public void EntityNavigationAndPrivateConstructors_AreCoveredForEfOnlyMembers() {
-        Product product = CreateProduct();
         Recipe recipe = CreateRecipe();
         var mealPlan = MealPlan.CreateForUser(
             UserId.New(),
@@ -134,7 +132,6 @@ public sealed class DomainCoverageCompletionTests {
             CreatePrivate<ImageAsset>(),
             CreatePrivate<UserRole>(),
             CreatePrivate<CycleProfile>(),
-            product,
             recipe,
             mealPlan,
             invitation,
@@ -148,7 +145,6 @@ public sealed class DomainCoverageCompletionTests {
         }
 
         Assert.Multiple(
-            () => Assert.Null(product.UsdaFood),
             () => Assert.Null(mealPlan.User),
             () => Assert.Null(invitation.DietologistUser),
             () => Assert.Null(fastingSession.User),
@@ -183,10 +179,11 @@ public sealed class DomainCoverageCompletionTests {
         MealAiItem aiItem = Assert.Single(aiSession.Items);
         RecipeStep step = CreateRecipe().AddStep(1, "Step");
         RecipeIngredient ingredient = step.AddProductIngredient(ProductId.New(), 100);
-        Product product = CreateProduct();
         Recipe recipe = CreateRecipe();
 
-        source.ApplyProductSnapshot(product);
+        source.ApplyProductSnapshot("Apple", imageUrl: null, MeasurementUnit.G, baseAmount: 100,
+            caloriesPerBase: 52, proteinsPerBase: 0.3, fatsPerBase: 0.2, carbsPerBase: 14,
+            fiberPerBase: 2.4, alcoholPerBase: 0);
         source.ApplySource(MealAiItemId.New(), MealItemOrigin.AiText);
         source.ApplySource(source.SourceAiItemId, MealItemOrigin.AiText);
         target.CopySourceAndSnapshotFrom(source);
@@ -294,20 +291,6 @@ public sealed class DomainCoverageCompletionTests {
             () => Assert.Equal(CycleConfidence.Medium, profile.Confidence),
             () => Assert.Equal("updated", profile.Notes));
     }
-
-    private static Product CreateProduct() =>
-        Product.Create(
-            UserId.New(),
-            "Apple",
-            MeasurementUnit.G,
-            baseAmount: 100,
-            defaultPortionAmount: 100,
-            caloriesPerBase: 52,
-            proteinsPerBase: 0.3,
-            fatsPerBase: 0.2,
-            carbsPerBase: 14,
-            fiberPerBase: 2.4,
-            alcoholPerBase: 0);
 
     private static Recipe CreateRecipe() {
         var recipe = Recipe.Create(

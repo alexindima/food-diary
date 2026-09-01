@@ -20,6 +20,7 @@ namespace FoodDiary.Application.Tests.Products;
 
 [ExcludeFromCodeCoverage]
 public partial class ProductsFeatureTests {
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<ProductId, int> UsageCounts = new();
 
     private static IProductMutationTransactionRunner ProductTransactionRunner { get; } =
         new ImmediateProductMutationTransactionRunner();
@@ -113,7 +114,7 @@ public partial class ProductsFeatureTests {
             UserId userId,
             bool includePublic = true,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult(product.MealItems.Count);
+            Task.FromResult(UsageCounts.GetValueOrDefault(id));
 
         public Task UpdateAsync(Product product, CancellationToken cancellationToken = default) {
             UpdateCalled = true;
@@ -294,19 +295,7 @@ public partial class ProductsFeatureTests {
             visibility: Visibility.Private);
 
     private static void SetProductUsageCollections(Product product, int mealItemsCount, int recipeIngredientsCount) {
-        var mealItems = Enumerable.Range(0, mealItemsCount)
-            .Select(_ => (FoodDiary.Domain.Entities.Meals.MealItem)null!)
-            .ToList();
-        var recipeIngredients = Enumerable.Range(0, recipeIngredientsCount)
-            .Select(_ => (FoodDiary.Domain.Entities.Recipes.RecipeIngredient)null!)
-            .ToList();
-
-        typeof(Product)
-            .GetField("_mealItems", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
-            .SetValue(product, mealItems);
-        typeof(Product)
-            .GetField("_recipeIngredients", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
-            .SetValue(product, recipeIngredients);
+        UsageCounts[product.Id] = mealItemsCount + recipeIngredientsCount;
     }
 
     private static CreateProductCommand CreateProductCommand(

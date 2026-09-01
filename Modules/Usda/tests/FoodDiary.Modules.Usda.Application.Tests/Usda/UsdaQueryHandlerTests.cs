@@ -20,6 +20,7 @@ namespace FoodDiary.Application.Tests.Usda;
 
 [ExcludeFromCodeCoverage]
 public sealed class UsdaQueryHandlerTests {
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<ProductId, int?> ProductUsdaLinks = new();
     [Fact]
     public async Task SearchUsdaFoods_WhenLocalResultsAreSparse_AddsNonDuplicateBrandedResults() {
         IUsdaFoodRepository repository = CreateUsdaFoodRepository(
@@ -552,11 +553,11 @@ public sealed class UsdaQueryHandlerTests {
             .Returns(Task.FromResult<IReadOnlyList<MealProductNutritionReadModel>>([
                 .. meals
                     .SelectMany(static meal => meal.Items)
-                    .Where(static item => item.IsProduct && item.Product is not null)
+                    .Where(static item => item.IsProduct && item.SnapshotBaseAmount.HasValue)
                     .Select(static item => new MealProductNutritionReadModel(
                         item.Amount,
-                        item.Product!.BaseAmount,
-                        item.Product.UsdaFdcId)),
+                        item.SnapshotBaseAmount!.Value,
+                        ProductUsdaLinks.GetValueOrDefault(item.ProductId!.Value))),
             ]));
 
         return repository;
@@ -564,6 +565,9 @@ public sealed class UsdaQueryHandlerTests {
 
     private static void AddProductItem(Meal meal, Product product, double amount) {
         MealItem item = meal.AddProduct(product.Id, amount);
-        typeof(MealItem).GetProperty(nameof(MealItem.Product))!.SetValue(item, product);
+        item.ApplyProductSnapshot(product.Name, product.ImageUrl, product.BaseUnit, product.BaseAmount,
+            product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase, product.CarbsPerBase,
+            product.FiberPerBase, product.AlcoholPerBase);
+        ProductUsdaLinks[product.Id] = product.UsdaFdcId;
     }
 }

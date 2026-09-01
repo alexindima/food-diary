@@ -15,4 +15,5 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Exercises.Domain")]
 [assembly: InternalsVisibleTo("FoodDiary.Modules.RecentItems.Domain")]
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Recipes.Domain")]
+[assembly: InternalsVisibleTo("FoodDiary.Modules.Products.Domain")]
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Hydration.Domain")]

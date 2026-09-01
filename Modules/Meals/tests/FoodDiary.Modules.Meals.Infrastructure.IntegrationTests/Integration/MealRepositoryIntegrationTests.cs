@@ -16,6 +16,30 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task GetByIdMealProjectionAsync_WithSnapshot_PreservesNutritionAndProductType() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"snapshot-type-{Guid.NewGuid():N}@example.com", "hash");
+        var product = Product.Create(user.Id, "Apple", MeasurementUnit.G, 100, 100,
+            52, 0.3, 0.2, 14, 2.4, 0, productType: ProductType.Fruit);
+        var meal = Meal.Create(user.Id, DateTime.UtcNow);
+        MealItem item = meal.AddProduct(product.Id, 100);
+        item.ApplyProductSnapshot("Original apple", imageUrl: null, MeasurementUnit.G, 100,
+            40, 0.2, 0.1, 10, 2, 0);
+        context.Users.Add(user);
+        context.Products.Add(product);
+        context.Meals.Add(meal);
+        await context.SaveChangesAsync();
+
+        var repository = new MealRepository(context);
+        MealProjectionReadModel? projection = await repository.GetByIdMealProjectionAsync(meal.Id, user.Id);
+
+        Assert.NotNull(projection);
+        MealItemProjectionReadModel projected = Assert.Single(projection.Items);
+        Assert.Equal(ProductType.Fruit, projected.ProductType);
+        Assert.Equal(40, projected.ProductCaloriesPerBase);
+    }
+
+    [RequiresDockerFact]
     public async Task GetPagedAsync_AppliesDateFilterAndKeepsPagingMetadata() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"meals-{Guid.NewGuid():N}@example.com", "hash");

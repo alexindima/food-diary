@@ -1,6 +1,5 @@
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -79,12 +78,10 @@ public sealed partial class User : AggregateRoot<UserId> {
     public long SecurityVersion { get; private set; }
 
     private readonly List<Meal> _meals = [];
-    private readonly List<Product> _products = [];
     private readonly List<WeightGoal> _weightGoals = [];
     private readonly List<WaistGoal> _waistGoals = [];
     private readonly List<UserRole> _userRoles = [];
     public IReadOnlyCollection<Meal> Meals => _meals.AsReadOnly();
-    public IReadOnlyCollection<Product> Products => _products.AsReadOnly();
     public IReadOnlyCollection<WeightGoal> WeightGoals => _weightGoals.AsReadOnly();
     public IReadOnlyCollection<WaistGoal> WaistGoals => _waistGoals.AsReadOnly();
     public IReadOnlyCollection<UserRole> UserRoles => _userRoles.AsReadOnly();

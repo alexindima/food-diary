@@ -112,6 +112,8 @@ COPY Modules/Recipes/Contracts/*.csproj Modules/Recipes/Contracts/
 COPY Modules/Recipes/Domain.Contracts/*.csproj Modules/Recipes/Domain.Contracts/
 COPY Modules/Recipes/Domain/*.csproj Modules/Recipes/Domain/
 COPY Modules/Products/Contracts/*.csproj Modules/Products/Contracts/
+COPY Modules/Products/Domain.Contracts/*.csproj Modules/Products/Domain.Contracts/
+COPY Modules/Products/Domain/*.csproj Modules/Products/Domain/
 COPY Modules/Recipes/Infrastructure/*.csproj Modules/Recipes/Infrastructure/
 COPY Modules/Products/Infrastructure/*.csproj Modules/Products/Infrastructure/
 COPY Modules/Recipes/Infrastructure/Model/*.csproj Modules/Recipes/Infrastructure/Model/
@@ -284,6 +286,8 @@ COPY Modules/Recipes/Contracts/ Modules/Recipes/Contracts/
 COPY Modules/Recipes/Domain.Contracts/ Modules/Recipes/Domain.Contracts/
 COPY Modules/Recipes/Domain/ Modules/Recipes/Domain/
 COPY Modules/Products/Contracts/ Modules/Products/Contracts/
+COPY Modules/Products/Domain.Contracts/ Modules/Products/Domain.Contracts/
+COPY Modules/Products/Domain/ Modules/Products/Domain/
 COPY Modules/Recipes/Infrastructure/ Modules/Recipes/Infrastructure/
 COPY Modules/Products/Infrastructure/ Modules/Products/Infrastructure/
 COPY Modules/Recipes/Infrastructure/Model/ Modules/Recipes/Infrastructure/Model/

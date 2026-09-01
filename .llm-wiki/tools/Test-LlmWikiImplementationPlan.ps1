@@ -39,6 +39,17 @@ if (@($plan.acceptanceInputs.relatedAdrs).Count -ne 1 -or $plan.acceptanceInputs
 $context = @($plan.phases | Where-Object id -eq 'context')[0]
 if ($expectedAdr -notin @($context.files)) { throw 'Context phase lost a valid ADR path.' }
 
+$brief.structuralViolations = @([pscustomobject]@{ rule = 'legacy-rule-shape'; message = 'Fixture violation.' })
+$legacyViolationPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiImplementationPlan.ps1') `
+    -BriefInput $brief `
+    -Objective 'Accept current policy violation shapes' `
+    -Format Json | ConvertFrom-Json
+$legacyViolationStop = @($legacyViolationPlan.phases | Where-Object id -eq 'context')[0].stopConditions
+if ('Resolve policy violation [legacy-rule-shape]: Fixture violation.' -notin @($legacyViolationStop)) {
+    throw 'Implementation plan did not normalize the current rule-based policy violation shape.'
+}
+$brief.structuralViolations = @()
+
 $brief.PSObject.Properties.Remove('decisionContext')
 $brief.PSObject.Properties.Remove('rolloutPlan')
 $brief.PSObject.Properties.Remove('architectureHealthImpact')

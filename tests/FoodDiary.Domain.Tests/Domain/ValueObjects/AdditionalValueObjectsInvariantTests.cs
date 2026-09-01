@@ -518,40 +518,6 @@ public class AdditionalValueObjectsInvariantTests {
             () => Assert.Null(state.PasswordResetSentAtUtc));
     }
 
-    // --- ProductNutrition.With ---
-
-    [Fact]
-    public void ProductNutrition_With_UpdatesOnlyProvidedValues() {
-        var original = ProductNutrition.Create(100, 10, 5, 20, 3, 0);
-
-        ProductNutrition updated = original.With(caloriesPerBase: 200);
-
-        Assert.Multiple(
-            () => Assert.Equal(200, updated.CaloriesPerBase),
-            () => Assert.Equal(10, updated.ProteinsPerBase),
-            () => Assert.Equal(5, updated.FatsPerBase),
-            () => Assert.Equal(20, updated.CarbsPerBase),
-            () => Assert.Equal(3, updated.FiberPerBase),
-            () => Assert.Equal(0, updated.AlcoholPerBase));
-    }
-
-    [Fact]
-    public void ProductNutrition_With_WithNegativeValue_Throws() {
-        var nutrition = ProductNutrition.Create(100, 10, 5, 20, 3, 0);
-
-        Assert.Throws<ArgumentOutOfRangeException>(() => nutrition.With(fatsPerBase: -1));
-    }
-
-    [Theory]
-    [InlineData(double.NaN)]
-    [InlineData(double.PositiveInfinity)]
-    [InlineData(double.NegativeInfinity)]
-    public void ProductNutrition_With_WithNonFiniteValue_Throws(double value) {
-        var nutrition = ProductNutrition.Create(100, 10, 5, 20, 3, 0);
-
-        Assert.Throws<ArgumentOutOfRangeException>(() => nutrition.With(proteinsPerBase: value));
-    }
-
     // --- RecipeNutrition ---
 
     [Fact]

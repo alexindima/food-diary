@@ -219,10 +219,10 @@ docs/ai/admin-ownership-inventory.md for current source evidence and test owners
 
 ## Products physical ownership
 
-Products use cases, ports, consumed contracts, persistence adapters and EF model
-live under `Modules/Products`; focused application, Product invariant and repository PostgreSQL tests live under its nested
-tests folder. Central Product/User/RecipeIngredient/MealItem/USDA CLR navigations,
-shared context/migrations and composition lock remain unchanged. Hosts explicitly
+Products owns Product, ProductId contracts, product-only value objects, use cases,
+ports, persistence adapters, EF model and focused tests under `Modules/Products`.
+User/Product and Product/MealItem are unidirectional EF relationships; shared
+context/migrations and composition lock remain central. Hosts explicitly
 compose AddProductsModule; JobManager adds AddProductsPersistence without new
 handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
 coordinated-rebuild compatibility promise.

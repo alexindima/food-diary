@@ -126,23 +126,19 @@ public static class MealMappings {
     }
 
     private static MealItemModel ToItemModel(MealItem item) {
-        FoodQualityScore? quality = item.Product?.GetQualityScore();
+        FoodQualityScore? quality = item.HasNutritionSnapshot ? FoodQualityScore.Calculate(
+            item.SnapshotCaloriesPerBase!.Value, item.SnapshotProteinsPerBase!.Value,
+            item.SnapshotFatsPerBase!.Value, item.SnapshotCarbsPerBase!.Value,
+            item.SnapshotFiberPerBase!.Value, item.SnapshotAlcoholPerBase!.Value) : null;
         bool hasSnapshot = item.HasNutritionSnapshot;
         return new MealItemModel(
             item.Id.Value,
             item.MealId.Value,
             item.Amount,
             item.ProductId?.Value,
-            item.SnapshotName ?? item.Product?.Name,
-            item.SnapshotImageUrl ?? item.Product?.ImageUrl,
-            item.SnapshotUnit ?? item.Product?.BaseUnit.ToString(),
-            item.SnapshotBaseAmount ?? item.Product?.BaseAmount,
-            item.SnapshotCaloriesPerBase ?? item.Product?.CaloriesPerBase,
-            item.SnapshotProteinsPerBase ?? item.Product?.ProteinsPerBase,
-            item.SnapshotFatsPerBase ?? item.Product?.FatsPerBase,
-            item.SnapshotCarbsPerBase ?? item.Product?.CarbsPerBase,
-            item.SnapshotFiberPerBase ?? item.Product?.FiberPerBase,
-            item.SnapshotAlcoholPerBase ?? item.Product?.AlcoholPerBase,
+            item.SnapshotName, item.SnapshotImageUrl, item.SnapshotUnit, item.SnapshotBaseAmount,
+            item.SnapshotCaloriesPerBase, item.SnapshotProteinsPerBase, item.SnapshotFatsPerBase,
+            item.SnapshotCarbsPerBase, item.SnapshotFiberPerBase, item.SnapshotAlcoholPerBase,
             item.RecipeId?.Value,
             item.SnapshotName,
             item.SnapshotImageUrl,

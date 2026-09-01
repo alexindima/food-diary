@@ -43,6 +43,16 @@ function Get-PlanPropertyValues([object[]]$InputObject, [string]$PropertyName) {
     })
 }
 
+function Get-StructuralViolationLabel([object]$Violation) {
+    foreach ($propertyName in @('ruleId', 'rule', 'id')) {
+        if ($null -ne $Violation -and $Violation.PSObject.Properties[$propertyName]) {
+            $value = $Violation.$propertyName
+            if (-not [string]::IsNullOrWhiteSpace([string]$value)) { return [string]$value }
+        }
+    }
+    return 'unidentified'
+}
+
 function Add-Phase {
     param(
         [string]$Id,
@@ -66,7 +76,7 @@ function Add-Phase {
 }
 
 $preflightStops = @(
-    @($brief.structuralViolations | ForEach-Object { "Resolve policy violation [$($_.ruleId)]: $($_.message)" }) +
+    @($brief.structuralViolations | ForEach-Object { "Resolve policy violation [$(Get-StructuralViolationLabel $_)]: $($_.message)" }) +
     @($brief.architectureHealthImpact.dependencyViolations | ForEach-Object { "Resolve forbidden project edge: $($_.source) -> $($_.target)" }) +
     @($brief.architectureHealthImpact.untrackedProductionProjects | ForEach-Object { "Govern production project in dependency matrix: $($_.name)" }) +
     @($brief.architectureHealthImpact.moduleCycleNodes | ForEach-Object { "Resolve module cycle involving: $_" })

@@ -2,7 +2,6 @@ using System.Reflection;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.OpenFoodFacts;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
@@ -15,25 +14,6 @@ namespace FoodDiary.Domain.Tests.Domain;
 [ExcludeFromCodeCoverage]
 public sealed class DomainHardeningInvariantTests {
     private static readonly DateTime Now = new(2026, 4, 28, 10, 0, 0, DateTimeKind.Utc);
-
-    [Theory]
-    [InlineData(double.NaN)]
-    [InlineData(double.PositiveInfinity)]
-    [InlineData(double.NegativeInfinity)]
-    public void Product_Create_WithNonFiniteBaseAmount_Throws(double value) {
-        Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(
-            UserId.New(),
-            "Apple",
-            MeasurementUnit.G,
-            value,
-            defaultPortionAmount: 100,
-            caloriesPerBase: 52,
-            proteinsPerBase: 0.3,
-            fatsPerBase: 0.2,
-            carbsPerBase: 14,
-            fiberPerBase: 2.4,
-            alcoholPerBase: 0));
-    }
 
     [Fact]
     public void WearableSyncEntry_RejectsNonFiniteValuesAndNormalizesDateToUtc() {

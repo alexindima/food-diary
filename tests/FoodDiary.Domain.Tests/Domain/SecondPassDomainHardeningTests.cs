@@ -4,7 +4,6 @@ using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Notifications;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Entities.Tracking;
@@ -29,15 +28,11 @@ public sealed class SecondPassDomainHardeningTests {
     [Fact]
     public void CompositeUpdates_WhenLateValidationFails_AreAtomic() {
         var recipe = Recipe.Create(UserId.New(), "Original", servings: 1);
-        Product product = CreateProduct();
         var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 1, 1));
 
         Assert.Throws<ArgumentOutOfRangeException>(() => recipe.Update(new RecipeUpdate(
             Name: "Changed",
             ImageUrl: new string('x', 2049))));
-        Assert.Throws<ArgumentOutOfRangeException>(() => product.UpdateIdentity(new ProductIdentityUpdate(
-            Name: "Changed",
-            Description: new string('x', 2049))));
         Assert.Throws<ArgumentOutOfRangeException>(() => profile.UpdateSettings(new CycleProfileSettings(
             CycleTrackingMode.TryingToConceive,
             AverageCycleLength: 28,
@@ -52,8 +47,6 @@ public sealed class SecondPassDomainHardeningTests {
         Assert.Multiple(
             () => Assert.Equal("Original", recipe.Name),
             () => Assert.Null(recipe.ModifiedOnUtc),
-            () => Assert.Equal("Product", product.Name),
-            () => Assert.Null(product.ModifiedOnUtc),
             () => Assert.Equal(CycleTrackingMode.PeriodTracking, profile.Mode),
             () => Assert.Equal(5, profile.AveragePeriodLength),
             () => Assert.Null(profile.ModifiedOnUtc));
@@ -241,19 +234,6 @@ public sealed class SecondPassDomainHardeningTests {
             new Dictionary<int, double> { [1092] = double.PositiveInfinity },
             new Dictionary<int, double> { [1092] = 100 }));
     }
-
-    private static Product CreateProduct() => Product.Create(
-        UserId.New(),
-        "Product",
-        MeasurementUnit.G,
-        100,
-        defaultPortionAmount: null,
-        caloriesPerBase: 100,
-        proteinsPerBase: 10,
-        fatsPerBase: 5,
-        carbsPerBase: 10,
-        fiberPerBase: 2,
-        alcoholPerBase: 0);
 
     private static BillingPayment CreatePayment(
         decimal? amount = null,
