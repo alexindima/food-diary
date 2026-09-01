@@ -17792,7 +17792,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs"
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -60466,7 +60466,7 @@
         "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
+      "consumerPath": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -60479,7 +60479,7 @@
         "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationReadService.cs",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -60557,7 +60557,7 @@
         "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -60596,7 +60596,7 @@
         "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 4
     },
@@ -60609,7 +60609,7 @@
         "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
+      "consumerPath": "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -60687,7 +60687,7 @@
         "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
+      "consumerPath": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -60700,7 +60700,7 @@
         "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -83930,7 +83930,7 @@
         "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
+      "consumerPath": "Modules/Identity/Application/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -83943,7 +83943,7 @@
         "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Identity/Application/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -83982,7 +83982,7 @@
         "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 3
     },
@@ -83995,7 +83995,7 @@
         "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
+      "consumerPath": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -84061,19 +84061,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRefreshTokenSessionWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -84178,6 +84165,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRefreshTokenSessionWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -115907,7 +115907,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs"
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs",
@@ -115920,20 +115920,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Configurations/Authentication/UserLoginEventConfiguration.cs",
-      "isTest": false,
-      "referenceCount": 2
-    },
-    {
-      "contract": "UserLoginEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs"
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Users.cs",
@@ -115946,7 +115933,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs"
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
@@ -115959,7 +115946,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs"
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
@@ -115972,7 +115959,20 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs"
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserLoginEventConfiguration.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "UserLoginEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs",
@@ -115985,7 +115985,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs"
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/UserDataLifecycleGuardrailTests.cs",
@@ -115998,7 +115998,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs"
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/UserAuditEventInvariantTests.cs",
@@ -116011,7 +116011,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs"
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
@@ -116024,7 +116024,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs"
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserLoginEventRepositoryIntegrationTests.cs",
@@ -116037,7 +116037,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs"
+        "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/UserLoginEventCleanupJobTests.cs",

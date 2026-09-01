@@ -36,6 +36,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Modules.Gamification.Infrastructure",
             "FoodDiary.Modules.Hydration.Infrastructure",
             "FoodDiary.Modules.Identity.Application",
+            "FoodDiary.Modules.Identity.Infrastructure",
             "FoodDiary.Modules.Images.Infrastructure",
             "FoodDiary.Modules.Lessons.Infrastructure",
             "FoodDiary.Modules.Marketing.Infrastructure",

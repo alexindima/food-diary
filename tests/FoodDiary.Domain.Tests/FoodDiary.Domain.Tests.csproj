@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Identity\Domain\FoodDiary.Modules.Identity.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Billing\Domain\FoodDiary.Modules.Billing.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\ContentReports\Domain\FoodDiary.Modules.ContentReports.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Gamification\Domain\FoodDiary.Modules.Gamification.Domain.csproj" />

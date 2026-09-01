@@ -95,6 +95,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddBillingModule()
                 .AddMarketingModule()
                 .AddInfrastructure(configuration)
+                .AddIdentityPersistence()
                 .AddDashboardReadServices()
                 .AddImagesInfrastructure()
                 .AddIntegrations(configuration)

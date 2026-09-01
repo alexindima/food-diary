@@ -5,9 +5,7 @@
   </Folder>
   <Folder Name="/Application/Food and Diary/">
   </Folder>
-  <Folder Name="/Application/Users and Access/">
-    <Project Path="Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj" />
-  </Folder>
+  <Folder Name="/Application/Users and Access/" />
   <Folder Name="/Application/" />
   <Folder Name="/Application/Content and Engagement/">
   </Folder>
@@ -19,7 +17,16 @@
   </Folder>
   <Folder Name="/Modules/Users/tests/">
     <Project Path="Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/FoodDiary.Modules.Users.Application.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Identity/">
+    <Project Path="Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj" />
+    <Project Path="Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj" />
+    <Project Path="Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj" />
+    <Project Path="Modules/Identity/Infrastructure/Model/FoodDiary.Modules.Identity.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Identity/tests/">
     <Project Path="Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/FoodDiary.Modules.Identity.Application.Tests.csproj" />
+    <Project Path="Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/FoodDiary.Modules.Identity.Domain.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Ai/">
     <Project Path="Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />

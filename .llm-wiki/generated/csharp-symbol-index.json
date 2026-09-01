@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3538,
-    "symbols": 3527,
+    "sourceFiles": 3540,
+    "symbols": 3529,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 170,
+    "dependencyInjectionRegistrations": 168,
     "kinds": {
-      "class": 1854,
+      "class": 1856,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1378,
+      "Other": 1380,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -2176,13 +2176,6 @@
       "line": 6
     },
     {
-      "name": "EmailTemplate",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Content/EmailTemplate.cs",
-      "line": 6
-    },
-    {
       "name": "Meal",
       "kind": "class",
       "role": "Entity",
@@ -2398,20 +2391,6 @@
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Users/User.Tdee.cs",
       "line": 5
-    },
-    {
-      "name": "UserLoginEvent",
-      "kind": "class",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs",
-      "line": 5
-    },
-    {
-      "name": "UserRefreshTokenSession",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 6
     },
     {
       "name": "UserRole",
@@ -3296,13 +3275,6 @@
       "line": 7
     },
     {
-      "name": "EmailTemplateRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
-      "line": 7
-    },
-    {
       "name": "AuditEntry",
       "kind": "class",
       "role": "Other",
@@ -3352,20 +3324,6 @@
       "line": 6
     },
     {
-      "name": "UserLoginEventConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Authentication/UserLoginEventConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "UserRefreshTokenSessionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs",
-      "line": 7
-    },
-    {
       "name": "WaistGoalConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -3384,13 +3342,6 @@
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Email/EmailOutboxMessageConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "EmailTemplateConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Email/EmailTemplateConfiguration.cs",
       "line": 6
     },
     {
@@ -3749,13 +3700,6 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Shared/RecipeCompositionTransactionLock.cs",
       "line": 4
-    },
-    {
-      "name": "RefreshTokenSessionRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "line": 7
     },
     {
       "name": "UserLoginEventRepository",
@@ -18717,6 +18661,76 @@
       "line": 6
     },
     {
+      "name": "EmailTemplate",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
+      "line": 6
+    },
+    {
+      "name": "UserLoginEvent",
+      "kind": "class",
+      "role": "Event",
+      "path": "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs",
+      "line": 5
+    },
+    {
+      "name": "UserRefreshTokenSession",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 6
+    },
+    {
+      "name": "IdentityModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
+      "line": 8
+    },
+    {
+      "name": "UserLoginEventConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserLoginEventConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "UserRefreshTokenSessionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "EmailTemplateConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/Infrastructure/Model/Configurations/Email/EmailTemplateConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "IdentityPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Model/IdentityPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "EmailTemplateRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
+      "line": 7
+    },
+    {
+      "name": "RefreshTokenSessionRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
+      "line": 7
+    },
+    {
       "name": "DeleteImageAssetResult",
       "kind": "record",
       "role": "Other",
@@ -25316,7 +25330,7 @@
       "interface": "IEmailTemplateRepository",
       "interfacePath": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs",
       "implementation": "EmailTemplateRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
+      "implementationPath": "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26023,7 +26037,7 @@
       "interface": "IRefreshTokenSessionRepository",
       "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
       "implementation": "RefreshTokenSessionRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
+      "implementationPath": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26519,25 +26533,11 @@
       "line": 20
     },
     {
-      "service": "IRefreshTokenSessionRepository",
-      "implementation": "RefreshTokenSessionRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 24
-    },
-    {
       "service": "IAdminUserRoleAuditRepository",
       "implementation": "AdminUserRoleAuditRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 28
-    },
-    {
-      "service": "IEmailTemplateRepository",
-      "implementation": "EmailTemplateRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 30
+      "line": 24
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -26691,21 +26691,21 @@
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 101
+      "line": 102
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 102
+      "line": 103
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 134
+      "line": 135
     },
     {
       "service": "IMailInboxReadinessChecker",

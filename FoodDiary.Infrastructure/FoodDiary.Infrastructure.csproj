@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <ProjectReference Include="..\Modules\Identity\Domain\FoodDiary.Modules.Identity.Domain.csproj" />
+    <ProjectReference Include="..\Modules\Identity\Infrastructure\Model\FoodDiary.Modules.Identity.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\Notifications\Domain\FoodDiary.Modules.Notifications.Domain.csproj" />
     <ProjectReference Include="..\Modules\Notifications\Infrastructure\Model\FoodDiary.Modules.Notifications.PersistenceModel.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Outbox.Abstractions\FoodDiary.Outbox.Abstractions.csproj" />

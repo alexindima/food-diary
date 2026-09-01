@@ -194,27 +194,6 @@
     },
     {
       "category": "credential",
-      "name": "RefreshTokenHash",
-      "type": "string",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 9
-    },
-    {
-      "category": "credential",
-      "name": "PreviousRefreshTokenHash",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 16
-    },
-    {
-      "category": "credential",
-      "name": "PreviousRefreshTokenValidUntilUtc",
-      "type": "DateTime?",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 17
-    },
-    {
-      "category": "credential",
       "name": "Password",
       "type": "string",
       "path": "FoodDiary.Domain/ValueObjects/UserSecurityState.cs",
@@ -982,6 +961,27 @@
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Models/AuthenticationModel.cs",
       "line": 7
+    },
+    {
+      "category": "credential",
+      "name": "RefreshTokenHash",
+      "type": "string",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "PreviousRefreshTokenHash",
+      "type": "string?",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 16
+    },
+    {
+      "category": "credential",
+      "name": "PreviousRefreshTokenValidUntilUtc",
+      "type": "DateTime?",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 17
     },
     {
       "category": "credential",
@@ -6781,34 +6781,6 @@
     },
     {
       "category": "identity",
-      "name": "IpAddress",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs",
-      "line": 9
-    },
-    {
-      "category": "identity",
-      "name": "UserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs",
-      "line": 10
-    },
-    {
-      "category": "identity",
-      "name": "IpAddress",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 12
-    },
-    {
-      "category": "identity",
-      "name": "UserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 13
-    },
-    {
-      "category": "identity",
       "name": "TelegramUserId",
       "type": "long?",
       "path": "FoodDiary.Domain/ValueObjects/UserAccountState.cs",
@@ -7520,6 +7492,34 @@
       "type": "long",
       "path": "Modules/Identity/Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
       "line": 9
+    },
+    {
+      "category": "identity",
+      "name": "IpAddress",
+      "type": "string?",
+      "path": "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs",
+      "line": 9
+    },
+    {
+      "category": "identity",
+      "name": "UserAgent",
+      "type": "string?",
+      "path": "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs",
+      "line": 10
+    },
+    {
+      "category": "identity",
+      "name": "IpAddress",
+      "type": "string?",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 12
+    },
+    {
+      "category": "identity",
+      "name": "UserAgent",
+      "type": "string?",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 13
     },
     {
       "category": "identity",

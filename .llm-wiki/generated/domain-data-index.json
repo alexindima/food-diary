@@ -238,7 +238,7 @@
       "area": "FoodDiary",
       "name": "EmailTemplate",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Content/EmailTemplate.cs",
+      "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
       "line": 6
     },
     {
@@ -567,14 +567,14 @@
       "area": "FoodDiary",
       "name": "UserLoginEvent",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs",
+      "path": "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs",
       "line": 5
     },
     {
       "area": "FoodDiary",
       "name": "UserRefreshTokenSession",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
       "line": 6
     },
     {
@@ -1960,27 +1960,6 @@
     },
     {
       "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Value must be at most {LocaleMaxLength} characters.\")",
-      "path": "FoodDiary.Domain/Entities/Content/EmailTemplate.cs",
-      "line": 78
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Content/EmailTemplate.cs",
-      "line": 84
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength.Value} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Content/EmailTemplate.cs",
-      "line": 89
-    },
-    {
-      "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(item)",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
@@ -2916,76 +2895,6 @@
       "message": "throw new ArgumentOutOfRangeException(nameof(level), \"Activity level must be one of the supported values.\"),",
       "path": "FoodDiary.Domain/Entities/Users/User.Tdee.cs",
       "line": 60
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"User id must not be empty.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs",
-      "line": 31
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs",
-      "line": 52
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
-      "path": "FoodDiary.Domain/Entities/Users/UserLoginEvent.cs",
-      "line": 69
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Session id must not be empty.\", nameof(id))",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 33
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"User id must not be empty.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 37
-    },
-    {
-      "area": "FoodDiary",
-      "type": "InvalidOperationException",
-      "message": "throw new InvalidOperationException(\"Revoked refresh token session cannot be rotated.\")",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 60
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 91
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 96
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 110
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(paramName, \"Timestamp cannot be earlier than the last token rotation.\")",
-      "path": "FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs",
-      "line": 115
     },
     {
       "area": "FoodDiary",
@@ -4873,6 +4782,97 @@
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Value must be at most {LocaleMaxLength} characters.\")",
+      "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
+      "line": 78
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
+      "line": 84
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength.Value} characters.\"))",
+      "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
+      "line": 89
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"User id must not be empty.\", nameof(userId))",
+      "path": "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs",
+      "line": 31
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs",
+      "line": 52
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
+      "path": "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs",
+      "line": 69
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Session id must not be empty.\", nameof(id))",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 33
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"User id must not be empty.\", nameof(userId))",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 37
+    },
+    {
+      "area": "FoodDiary",
+      "type": "InvalidOperationException",
+      "message": "throw new InvalidOperationException(\"Revoked refresh token session cannot be rotated.\")",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 60
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 91
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 96
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 110
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(paramName, \"Timestamp cannot be earlier than the last token rotation.\")",
+      "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
+      "line": 115
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName)",
       "path": "Modules/Lessons/Domain/Entities/Content/LessonsDomainGuard.cs",
       "line": 6
@@ -5745,7 +5745,7 @@
         "e => new { e.Key, e.Locale })"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Email/EmailTemplateConfiguration.cs"
+      "path": "Modules/Identity/Infrastructure/Model/Configurations/Email/EmailTemplateConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6644,7 +6644,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Authentication/UserLoginEventConfiguration.cs"
+      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserLoginEventConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6662,7 +6662,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs"
+      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs"
     },
     {
       "area": "FoodDiary",

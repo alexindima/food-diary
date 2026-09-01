@@ -162,6 +162,12 @@
           "FoodDiary.Domain": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.identity.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.mealplanning.domain": {
         "type": "Project",
         "dependencies": {

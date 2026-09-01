@@ -26,6 +26,7 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         modelBuilder.ApplyAdminPersistenceModel();
         modelBuilder.ApplyAiPersistenceModel();
         modelBuilder.ApplyUsersPersistenceModel();
+        modelBuilder.ApplyIdentityPersistenceModel();
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(FoodDiaryDbContext).Assembly);
         modelBuilder.ApplyWearablesPersistenceModel();
         modelBuilder.ApplyFastingPersistenceModel();

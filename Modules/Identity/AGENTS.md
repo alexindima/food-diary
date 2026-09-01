@@ -10,3 +10,9 @@ credential state, shared DbContext, migrations/snapshot, and combined UserReposi
 central as compatibility seams. Provider implementations, JWT/SSO/Redis adapters,
 MailInbox/MailRelay integration, HTTP transport, and hosts remain with their current
 owners.
+
+Identity physically owns EmailTemplate, UserRefreshTokenSession, and UserLoginEvent
+through its Domain project, plus their EF model and independent template/session
+adapters. Central FoodDiaryDbContext applies the Identity persistence model; central
+migrations/snapshot and the mixed UserLoginEventRepository remain central. See
+`docs/ai/identity-domain-extraction.md`.

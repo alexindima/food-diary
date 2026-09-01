@@ -72,6 +72,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RegisterCommandValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/Services/InitialAdminBootstrapServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UserAgentParserTests.cs`
+- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/EmailTemplateInvariantTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/IdentityModuleExtractionTests.cs`
 
 ## Working Rule

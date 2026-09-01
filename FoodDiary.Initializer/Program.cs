@@ -118,7 +118,7 @@ builder.Services.AddRecipesModule();
 builder.Services.AddUsersModule();
 builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
-builder.Services.AddInfrastructure(builder.Configuration).AddDashboardReadServices();
+builder.Services.AddInfrastructure(builder.Configuration).AddIdentityPersistence().AddDashboardReadServices();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddScoped<IEmailVerificationNotifier, NoOpEmailVerificationNotifier>();
 builder.Services.AddScoped<INotificationPusher, NoOpNotificationPusher>();

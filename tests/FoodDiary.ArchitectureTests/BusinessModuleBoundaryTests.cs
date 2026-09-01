@@ -859,7 +859,7 @@ public sealed class BusinessModuleBoundaryTests {
         string expectedRelativeDirectory) {
         string expectedPath = string.Equals(expectedRelativeDirectory, "Configurations/Users", StringComparison.Ordinal)
             ? ArchitectureTestPaths.FromRoot("Modules", "Users", "Infrastructure", "Model", "Persistence", "Configurations", "Users", fileName)
-            : ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Configurations", "Authentication", fileName);
+            : ArchitectureTestPaths.FromRoot("Modules", "Identity", "Infrastructure", "Model", "Configurations", "Authentication", fileName);
 
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in {expectedRelativeDirectory}.");
     }
