@@ -121,7 +121,10 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .Take(pageSize)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        return ([.. meals.Select(ToMealProjectionReadModel)], totalItems);
+        IReadOnlyList<MealProjectionReadModel> projections = await ToMealProjectionReadModelsAsync(
+            meals,
+            cancellationToken).ConfigureAwait(false);
+        return (projections, totalItems);
     }
 
     public async Task<MealProjectionReadModel?> GetByIdMealProjectionAsync(
@@ -132,7 +135,14 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .Where(m => m.Id == id && m.UserId == userId)
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
-        return meal is null ? null : ToMealProjectionReadModel(meal);
+        if (meal is null) {
+            return null;
+        }
+
+        IReadOnlyList<MealProjectionReadModel> projections = await ToMealProjectionReadModelsAsync(
+            [meal],
+            cancellationToken).ConfigureAwait(false);
+        return projections[0];
     }
 
     public async Task<int> GetCountAsync(
@@ -197,9 +207,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .Include(m => m.Items)
             .ThenInclude(i => i.Recipe)
             .Include(m => m.AiSessions)
-            .ThenInclude(s => s.Items)
-            .Include(m => m.AiSessions)
-            .ThenInclude(s => s.ImageAsset);
+            .ThenInclude(s => s.Items);
 
     public async Task<IReadOnlyList<Meal>> GetByPeriodAsync(
         UserId userId,
@@ -222,7 +230,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
         IReadOnlyList<Meal> meals = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
-        return [.. meals.Select(ToMealProjectionReadModel)];
+        return await ToMealProjectionReadModelsAsync(meals, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<MealProjectionReadModel>> GetByPeriodMealProjectionsAsync(
@@ -241,7 +249,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .ThenBy(meal => meal.CreatedOnUtc)
             .Take(limit)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
-        return [.. meals.Select(ToMealProjectionReadModel)];
+        return await ToMealProjectionReadModelsAsync(meals, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
@@ -311,7 +319,29 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    private static MealProjectionReadModel ToMealProjectionReadModel(Meal meal) {
+    private async Task<IReadOnlyList<MealProjectionReadModel>> ToMealProjectionReadModelsAsync(
+        IReadOnlyCollection<Meal> meals,
+        CancellationToken cancellationToken) {
+        ImageAssetId[] imageAssetIds = [.. meals
+            .SelectMany(static meal => meal.AiSessions)
+            .Where(static session => session.ImageAssetId.HasValue)
+            .Select(static session => session.ImageAssetId!.Value)
+            .Distinct()];
+
+        Dictionary<ImageAssetId, string> imageUrlsById = imageAssetIds.Length == 0
+            ? []
+            : await context.ImageAssets
+                .AsNoTracking()
+                .Where(asset => ((IEnumerable<ImageAssetId>)imageAssetIds).Contains(asset.Id))
+                .ToDictionaryAsync(asset => asset.Id, asset => asset.Url, cancellationToken)
+                .ConfigureAwait(false);
+
+        return [.. meals.Select(meal => ToMealProjectionReadModel(meal, imageUrlsById))];
+    }
+
+    private static MealProjectionReadModel ToMealProjectionReadModel(
+        Meal meal,
+        IReadOnlyDictionary<ImageAssetId, string> imageUrlsById) {
         return new MealProjectionReadModel(
             meal.Id.Value,
             meal.Date,
@@ -335,7 +365,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             meal.PreMealSatietyLevel,
             meal.PostMealSatietyLevel,
             ToMealItemProjectionReadModels(meal),
-            ToMealAiSessionProjectionReadModels(meal));
+            ToMealAiSessionProjectionReadModels(meal, imageUrlsById));
     }
 
     private static List<MealItemProjectionReadModel> ToMealItemProjectionReadModels(Meal meal) {
@@ -383,18 +413,25 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         return item.Recipe?.Servings;
     }
 
-    private static List<MealAiSessionProjectionReadModel> ToMealAiSessionProjectionReadModels(Meal meal) {
+    private static List<MealAiSessionProjectionReadModel> ToMealAiSessionProjectionReadModels(
+        Meal meal,
+        IReadOnlyDictionary<ImageAssetId, string> imageUrlsById) {
         return [.. meal.AiSessions
             .OrderBy(static session => session.RecognizedAtUtc)
-            .Select(ToMealAiSessionProjectionReadModel)];
+            .Select(session => ToMealAiSessionProjectionReadModel(session, imageUrlsById))];
     }
 
-    private static MealAiSessionProjectionReadModel ToMealAiSessionProjectionReadModel(MealAiSession session) {
+    private static MealAiSessionProjectionReadModel ToMealAiSessionProjectionReadModel(
+        MealAiSession session,
+        IReadOnlyDictionary<ImageAssetId, string> imageUrlsById) {
+        string? imageUrl = session.ImageAssetId.HasValue && imageUrlsById.TryGetValue(session.ImageAssetId.Value, out string? url)
+            ? url
+            : null;
         return new MealAiSessionProjectionReadModel(
             session.Id.Value,
             session.MealId.Value,
             session.ImageAssetId?.Value,
-            session.ImageAsset?.Url,
+            imageUrl,
             session.Source,
             session.Status,
             session.RecognizedAtUtc,

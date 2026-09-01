@@ -67,7 +67,11 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Identity infrastructure: `Modules/Identity/Infrastructure/AGENTS.md`
 - Identity persistence model: `Modules/Identity/Infrastructure/Model/AGENTS.md`
 - Identity tests: `Modules/Identity/tests/AGENTS.md`
-- Images logical module: `Modules/Images/Application/AGENTS.md`
+- Images logical module: `Modules/Images/AGENTS.md`
+- Images application: `Modules/Images/Application/AGENTS.md`
+- Images contracts: `Modules/Images/Contracts/AGENTS.md`
+- Images domain: `Modules/Images/Domain/AGENTS.md`
+- Images tests: `Modules/Images/tests/AGENTS.md`
 - Lessons logical module: `Modules/Lessons/AGENTS.md`
 - Meal planning logical module: `Modules/MealPlanning/AGENTS.md`
 - Meal planning Application: `Modules/MealPlanning/Application/AGENTS.md`

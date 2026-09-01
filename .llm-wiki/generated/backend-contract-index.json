@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7632,
-    "productionConsumerEdges": 4559,
+    "consumerEdges": 7633,
+    "productionConsumerEdges": 4560,
     "testConsumerEdges": 3073,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
@@ -61038,19 +61038,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/ImageAssetId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/MealAiItemId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61702,6 +61689,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Hydration/Domain/ValueObjects/Ids/HydrationEntryId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Contracts/ValueObjects/Ids/ImageAssetId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -70399,6 +70399,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Abstractions/Meals/Common/IMealRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMealProjectionReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Application/Abstractions/Meals/Common/IMealProjectionReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },

@@ -8,17 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "97132fa5390afce83d5bff5642f28526cd0ba5126b3e3ad70c0232ec0b368099"
+          "sha256": "f76e733102eb11194f1569f06dd09bb6d0879bfd1c96fa8b2775fba37903c8b7"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "f88fcbe9e49a22f172456b0121beec1f67da2ba74d7ab444ac9308cfecbb76e6"
+          "sha256": "77afe72c15bec622a9d4c3113e989630a80afbbc7f8d011fdb9b5eb16b2042b3"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:47.5086951Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:05.8160085Z"
     },
     {
       "pageId": "module.frontend",
@@ -42,13 +42,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "f88fcbe9e49a22f172456b0121beec1f67da2ba74d7ab444ac9308cfecbb76e6"
+          "sha256": "77afe72c15bec622a9d4c3113e989630a80afbbc7f8d011fdb9b5eb16b2042b3"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:47.7321229Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:06.0300818Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -57,21 +57,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "fea7c87b6d92868c8f65a9263743a9c45b96c5e681c03528b6e08fac898e5f78"
+          "sha256": "7282d4fdd12aca36ec8b73744475805f97148755834a71baa5d335cbdff9567b"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "f88fcbe9e49a22f172456b0121beec1f67da2ba74d7ab444ac9308cfecbb76e6"
+          "sha256": "77afe72c15bec622a9d4c3113e989630a80afbbc7f8d011fdb9b5eb16b2042b3"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "d146a6f199fadcc783820f632aca39f88925336c01b230ba251453b0e97999b8"
+          "sha256": "edca1bf2378caa85f857be5f454fa7dcf0c18e5a09cb9b4933432f054f56f9d7"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed backend ownership and contract indexes; namespaces and HTTP payloads remain stable and full HTTP integration tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:47.9489682Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:06.2645610Z"
     },
     {
       "pageId": "system.architecture",
@@ -80,21 +80,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "fea7c87b6d92868c8f65a9263743a9c45b96c5e681c03528b6e08fac898e5f78"
+          "sha256": "7282d4fdd12aca36ec8b73744475805f97148755834a71baa5d335cbdff9567b"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "f88fcbe9e49a22f172456b0121beec1f67da2ba74d7ab444ac9308cfecbb76e6"
+          "sha256": "77afe72c15bec622a9d4c3113e989630a80afbbc7f8d011fdb9b5eb16b2042b3"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "3e4f7253a3a8ba9e8d7c53d79f0318b13d296389b478209d0dd1f86673f269d4"
+          "sha256": "539f8ebacd7e0c68677051529158e43c52fca84199484242f55cd6ff4446edf6"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:48.1712380Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:06.4882850Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -133,13 +133,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "97132fa5390afce83d5bff5642f28526cd0ba5126b3e3ad70c0232ec0b368099"
+          "sha256": "f76e733102eb11194f1569f06dd09bb6d0879bfd1c96fa8b2775fba37903c8b7"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:48.3789027Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:06.7462948Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -148,13 +148,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "fea7c87b6d92868c8f65a9263743a9c45b96c5e681c03528b6e08fac898e5f78"
+          "sha256": "7282d4fdd12aca36ec8b73744475805f97148755834a71baa5d335cbdff9567b"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:48.5986866Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:06.9510717Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -208,21 +208,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "3cccee40a05b682d10ae78caaf629ab853818ae86f59b55bd7ed6ff495549003"
+          "sha256": "efa1a5bce06a260f6ed42ae3ae640b8726ed0f405e6507660e4fa3478fee5b0f"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "fea7c87b6d92868c8f65a9263743a9c45b96c5e681c03528b6e08fac898e5f78"
+          "sha256": "7282d4fdd12aca36ec8b73744475805f97148755834a71baa5d335cbdff9567b"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "3e4f7253a3a8ba9e8d7c53d79f0318b13d296389b478209d0dd1f86673f269d4"
+          "sha256": "539f8ebacd7e0c68677051529158e43c52fca84199484242f55cd6ff4446edf6"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed architecture, quality, and review guidance against updated dependency guardrails and focused plus integration verification evidence.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:48.8659686Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:07.2057967Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -231,13 +231,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "935816a4579470a92ea8162af2912e6f225d5266cd1630b47de7b9b28b099ed9"
+          "sha256": "522f9f0c83107e4692300ecb13174605b15429ce7f3a4a31ebf3494bca184669"
         }
       ],
-      "reason": "RecentItems extraction updates physical ownership, dependency manifests, solution catalog, architecture guardrails, and generated indexes; reviewed against the completed implementation and green architecture/provider/HTTP verification.",
+      "reason": "Reviewed backend ownership and contract indexes; namespaces and HTTP payloads remain stable and full HTTP integration tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
-      "reviewedAtUtc": "2026-09-01T17:19:47.9142388Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:07.6678027Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -494,13 +494,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "e0403b3f6133a7045c583510692a64201646f3eeef13c28289f686efa776a6b3"
+          "sha256": "a3bdd5f2daa12c26f373b112ada16012b2447f61fac54269a4db5a24fcc151ca"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed architecture, quality, and review guidance against updated dependency guardrails and focused plus integration verification evidence.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:49.4110847Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:08.2737383Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -768,13 +768,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "adb8d5e1924b20012413a313a35379405e223d16a5e6ca632915a33cd15a83f5"
+          "sha256": "3103b00a530d80f4333e10f8e4640ca95a07732a73dcaf97c5bb4585addffda7"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed sensitive-data and runtime indexes; image URL and ownership handling are unchanged and no new logging or provider sharing was introduced.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:49.6995324Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:08.5990140Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -813,13 +813,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f337a0df9e942735f08df9952a1ab4c671179341e1613220ddc85e216f44f7f5"
+          "sha256": "5176ca0069e8c77d66bfa64531d8dda9dea4eb17055a7e753158931068bc3c5c"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed architecture, quality, and review guidance against updated dependency guardrails and focused plus integration verification evidence.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:50.1460106Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:08.9868895Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -896,13 +896,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e5054ba2d5e9c07a2804f4350e9ba45b0515199be240fab47af2f5095e3c398c"
+          "sha256": "5c032a2f7ebb16e88bb65e90a656e026c6f39dcd4ca8504035f68cdee39cb7a0"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:51.0689802Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:09.9991054Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -911,21 +911,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f337a0df9e942735f08df9952a1ab4c671179341e1613220ddc85e216f44f7f5"
+          "sha256": "5176ca0069e8c77d66bfa64531d8dda9dea4eb17055a7e753158931068bc3c5c"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e5054ba2d5e9c07a2804f4350e9ba45b0515199be240fab47af2f5095e3c398c"
+          "sha256": "5c032a2f7ebb16e88bb65e90a656e026c6f39dcd4ca8504035f68cdee39cb7a0"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "adb8d5e1924b20012413a313a35379405e223d16a5e6ca632915a33cd15a83f5"
+          "sha256": "3103b00a530d80f4333e10f8e4640ca95a07732a73dcaf97c5bb4585addffda7"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed sensitive-data and runtime indexes; image URL and ownership handling are unchanged and no new logging or provider sharing was introduced.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:51.5462297Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:10.4350857Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1103,13 +1103,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "97132fa5390afce83d5bff5642f28526cd0ba5126b3e3ad70c0232ec0b368099"
+          "sha256": "f76e733102eb11194f1569f06dd09bb6d0879bfd1c96fa8b2775fba37903c8b7"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:49.1244841Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:07.9173324Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1163,17 +1163,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "7a4d7e1cfcf9c81ac4e5912345ccd5c17adc0f8bb02043924d009041fc2253fc"
+          "sha256": "4a85b394c16470bcb9e34111aa453460b7acb566f5887293b1d1a95e743582fe"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "97132fa5390afce83d5bff5642f28526cd0ba5126b3e3ad70c0232ec0b368099"
+          "sha256": "f76e733102eb11194f1569f06dd09bb6d0879bfd1c96fa8b2775fba37903c8b7"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed ownership maps and repository navigation after relocating ImageAsset and ImageAssetId; current pages remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:50.4843406Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:09.2882874Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1182,13 +1182,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "97132fa5390afce83d5bff5642f28526cd0ba5126b3e3ad70c0232ec0b368099"
+          "sha256": "f76e733102eb11194f1569f06dd09bb6d0879bfd1c96fa8b2775fba37903c8b7"
         }
       ],
-      "reason": "Reviewed USDA domain physical ownership extraction against current source, dependency matrix, unchanged EF model, and green architecture/consumer/provider/HTTP verification; generated indexes were refreshed and no runtime, privacy, or contract behavior changed.",
+      "reason": "Reviewed architecture, quality, and review guidance against updated dependency guardrails and focused plus integration verification evidence.",
       "baseRef": "HEAD",
-      "gitHead": "c0afb0edb14b6bfb81a45525711ec4ace67e3214",
-      "reviewedAtUtc": "2026-09-01T18:16:50.7586345Z"
+      "gitHead": "7cd127a6e52cf29fbe6c214b28bf575bbfccc192",
+      "reviewedAtUtc": "2026-09-01T19:54:09.6523841Z"
     }
   ]
 }

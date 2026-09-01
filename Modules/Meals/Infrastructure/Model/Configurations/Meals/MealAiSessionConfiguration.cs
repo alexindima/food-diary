@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ internal sealed class MealAiSessionConfiguration : IEntityTypeConfiguration<Meal
             id => id.HasValue ? id.Value.Value : (Guid?)null,
             value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
-        builder.HasOne(e => e.ImageAsset)
+        builder.HasOne<ImageAsset>()
             .WithMany()
             .HasForeignKey(e => e.ImageAssetId)
             .OnDelete(DeleteBehavior.SetNull);

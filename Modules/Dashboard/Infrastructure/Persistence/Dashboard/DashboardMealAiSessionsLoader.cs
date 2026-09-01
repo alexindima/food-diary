@@ -9,16 +9,19 @@ internal sealed class DashboardMealAiSessionsLoader(FoodDiaryDbContext context) 
     public async Task<ILookup<MealId, DashboardMealAiSessionReadModel>> LoadAsync(
         IReadOnlyCollection<MealId> mealIds,
         CancellationToken cancellationToken) {
-        List<DashboardMealAiSessionProjection> sessions = await context.MealAiSessions
-            .AsNoTracking()
-            .Where(session => mealIds.Contains(session.MealId))
-            .Select(session => new DashboardMealAiSessionProjection(
+        List<DashboardMealAiSessionProjection> sessions = await (
+            from session in context.MealAiSessions.AsNoTracking()
+            join imageAsset in context.ImageAssets.AsNoTracking()
+                on session.ImageAssetId equals (ImageAssetId?)imageAsset.Id into imageAssets
+            from imageAsset in imageAssets.DefaultIfEmpty()
+            where mealIds.Contains(session.MealId)
+            select new DashboardMealAiSessionProjection(
                 session.MealId,
                 session.Id,
                 session.Id.Value,
                 session.MealId.Value,
                 session.ImageAssetId.HasValue ? session.ImageAssetId.Value.Value : null,
-                session.ImageAsset == null ? null : session.ImageAsset.Url,
+                imageAsset == null ? null : imageAsset.Url,
                 session.Source.ToString(),
                 session.Status.ToString(),
                 session.RecognizedAtUtc,

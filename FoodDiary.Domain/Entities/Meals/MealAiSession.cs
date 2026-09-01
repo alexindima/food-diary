@@ -1,6 +1,5 @@
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Common;
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Diagnostics.CodeAnalysis;
@@ -19,7 +18,6 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
     public string? Notes { get; private set; }
 
     public Meal Meal { get; private set; } = null!;
-    public ImageAsset? ImageAsset { get; private set; }
     private readonly List<MealAiItem> _items = [];
     public IReadOnlyCollection<MealAiItem> Items => _items.AsReadOnly();
 

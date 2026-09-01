@@ -406,7 +406,8 @@
         ],
         "abstractionAreas": ["Modules/Images/Application/Abstractions"],
         "domainAreas": [
-          "Assets"
+          "Modules/Images/Contracts",
+          "Modules/Images/Domain"
         ],
         "persistenceAreas": ["Modules/Images/Infrastructure"]
       }

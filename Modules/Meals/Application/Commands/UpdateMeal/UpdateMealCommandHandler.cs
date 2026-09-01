@@ -2,19 +2,20 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Meals.Mappings;
 using FoodDiary.Application.Meals.Models;
 using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Meals.Commands.UpdateMeal;
 
 public sealed class UpdateMealCommandHandler(
     IMealReadRepository mealReadRepository,
+    IMealProjectionReadRepository mealProjectionReadRepository,
     IMealWriteRepository mealWriteRepository,
     IMealNutritionService mealNutritionService,
     IRecentItemUsageRecorder recentItemUsageRecorder,
@@ -66,11 +67,10 @@ public sealed class UpdateMealCommandHandler(
         MealId mealId,
         UserId userId,
         CancellationToken cancellationToken) {
-        Meal? updated = await mealReadRepository.GetByIdAsync(
+        MealProjectionReadModel? updated = await mealProjectionReadRepository.GetByIdMealProjectionAsync(
             mealId,
             userId,
-            includeItems: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken).ConfigureAwait(false);
 
         return updated is null
             ? Result.Failure<MealModel>(Errors.Meal.InvalidData("Failed to load updated meal."))

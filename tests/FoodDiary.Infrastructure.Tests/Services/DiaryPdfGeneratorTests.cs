@@ -46,7 +46,7 @@ public sealed class DiaryPdfGeneratorTests {
         var generator = new DiaryPdfGenerator();
 
         byte[] pdf = await generator.GenerateAsync(
-            meals.Select(ToReadModel).ToArray(),
+            meals.Select(static meal => ToReadModel(meal)).ToArray(),
             new DateTime(2026, 5, 1, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -219,13 +219,14 @@ public sealed class DiaryPdfGeneratorTests {
     public async Task GenerateAsync_WithAiSessionImagesAndNoMealImage_DownloadsCollageSources() {
         var userId = UserId.New();
         Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 410, 12, 10, 40, 6);
-        AddAiSessionWithImage(meal, userId, "https://93.184.216.34/ai-1.png");
-        AddAiSessionWithImage(meal, userId, "https://93.184.216.34/ai-2.png");
+        KeyValuePair<ImageAssetId, string> firstImage = AddAiSessionWithImage(meal, userId, "https://93.184.216.34/ai-1.png");
+        KeyValuePair<ImageAssetId, string> secondImage = AddAiSessionWithImage(meal, userId, "https://93.184.216.34/ai-2.png");
+        Dictionary<ImageAssetId, string> imageUrlsById = new([firstImage, secondImage]);
         var imageHandler = new RecordingImageHandler(successfulImageResponse: true);
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
         byte[] pdf = await generator.GenerateAsync(
-            [ToReadModel(meal)],
+            [ToReadModel(meal, imageUrlsById)],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             locale: null,
@@ -263,7 +264,7 @@ public sealed class DiaryPdfGeneratorTests {
     public async Task GenerateAsync_WithRecognizedItemsOnly_ReturnsPdfDocument() {
         var userId = UserId.New();
         Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 946, 59, 45, 76, 7);
-        meal.AddAiSession(
+        MealAiSession session = meal.AddAiSession(
             imageAssetId: null,
             AiRecognitionSource.Text,
             new DateTime(2026, 5, 4, 15, 3, 0, DateTimeKind.Utc),
@@ -902,7 +903,9 @@ public sealed class DiaryPdfGeneratorTests {
         return meal;
     }
 
-    private static MealProjectionReadModel ToReadModel(Meal meal) =>
+    private static MealProjectionReadModel ToReadModel(
+        Meal meal,
+        IReadOnlyDictionary<ImageAssetId, string>? imageUrlsById = null) =>
         new(
             meal.Id.Value,
             meal.Date,
@@ -926,7 +929,9 @@ public sealed class DiaryPdfGeneratorTests {
             meal.PreMealSatietyLevel,
             meal.PostMealSatietyLevel,
             [.. meal.Items.OrderBy(static item => item.Id.Value).Select(ToReadModel)],
-            [.. meal.AiSessions.OrderBy(static session => session.RecognizedAtUtc).Select(ToReadModel)]);
+            [.. meal.AiSessions
+                .OrderBy(static session => session.RecognizedAtUtc)
+                .Select(session => ToReadModel(session, imageUrlsById))]);
 
     private static MealItemProjectionReadModel ToReadModel(MealItem item) =>
         new(
@@ -958,12 +963,16 @@ public sealed class DiaryPdfGeneratorTests {
             item.SourceAiItemId?.Value,
             item.Origin);
 
-    private static MealAiSessionProjectionReadModel ToReadModel(MealAiSession session) =>
+    private static MealAiSessionProjectionReadModel ToReadModel(
+        MealAiSession session,
+        IReadOnlyDictionary<ImageAssetId, string>? imageUrlsById = null) =>
         new(
             session.Id.Value,
             session.MealId.Value,
             session.ImageAssetId?.Value,
-            session.ImageAsset?.Url,
+            session.ImageAssetId.HasValue && imageUrlsById is not null && imageUrlsById.TryGetValue(session.ImageAssetId.Value, out string? imageUrl)
+                ? imageUrl
+                : null,
             session.Source,
             session.Status,
             session.RecognizedAtUtc,
@@ -1009,9 +1018,9 @@ public sealed class DiaryPdfGeneratorTests {
             .SetValue(item, product);
     }
 
-    private static void AddAiSessionWithImage(Meal meal, UserId userId, string imageUrl) {
+    private static KeyValuePair<ImageAssetId, string> AddAiSessionWithImage(Meal meal, UserId userId, string imageUrl) {
         var asset = ImageAsset.Create(userId, $"meals/{Guid.NewGuid():N}.png", imageUrl);
-        MealAiSession session = meal.AddAiSession(
+        meal.AddAiSession(
             asset.Id,
             AiRecognitionSource.Photo,
             DateTime.UtcNow,
@@ -1019,9 +1028,7 @@ public sealed class DiaryPdfGeneratorTests {
             [
                 MealAiItemData.Create("rice", nameLocal: null, 100, "g", 120, 3, 1, 20, 2, 0),
             ]);
-        typeof(MealAiSession)
-            .GetProperty(nameof(MealAiSession.ImageAsset))!
-            .SetValue(session, asset);
+        return KeyValuePair.Create(asset.Id, asset.Url);
     }
 
     private static T InvokePrivateStatic<T>(string methodName, params object?[] arguments) {

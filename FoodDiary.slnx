@@ -140,9 +140,13 @@
   <Folder Name="/Modules/Images/">
     <Project Path="Modules/Images/Application/FoodDiary.Application.Images.csproj" />
     <Project Path="Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <Project Path="Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj" />
+    <Project Path="Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
     <Project Path="Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj" />
     <Project Path="Modules/Images/Infrastructure/Model/FoodDiary.Modules.Images.PersistenceModel.csproj" />
     <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FoodDiary.Modules.Images.Application.Tests.csproj" />
+    <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/FoodDiary.Modules.Images.Domain.Tests.csproj" />
+    <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests.csproj" />
   </Folder>
   <Folder Name="/Modules/DailyAdvices/">
     <Project Path="Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />

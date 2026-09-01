@@ -19,7 +19,30 @@ public sealed class ImagesModuleExtractionTests {
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
             "FoodDiary.Modules.Images.Application.Abstractions",
+            "FoodDiary.Modules.Images.Domain",
         ], references);
+    }
+
+    [Fact]
+    public void ImagesDomainOwnership_IsPhysicalAndAcyclic() {
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Assets", "ImageAsset.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "ValueObjects", "Ids", "ImageAssetId.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Images", "Domain", "Entities", "Assets", "ImageAsset.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Images", "Contracts", "ValueObjects", "Ids", "ImageAssetId.cs")));
+
+        Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
+            "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj"));
+        Assert.Equal(["FoodDiary.Domain", "FoodDiary.Modules.Images.Contracts"], ProjectReferenceReader.ReadProjectReferences(
+            "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj"));
+    }
+
+    [Fact]
+    public void CentralMealAiSession_HasNoImagesDomainNavigation() {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Domain", "Entities", "Meals", "MealAiSession.cs"));
+
+        Assert.DoesNotContain("ImageAsset? ImageAsset", source, StringComparison.Ordinal);
+        Assert.Contains("ImageAssetId? ImageAssetId", source, StringComparison.Ordinal);
     }
 
     [Theory]

@@ -212,7 +212,7 @@ public static class MealMappings {
             session.Id.Value,
             session.MealId.Value,
             session.ImageAssetId?.Value,
-            session.ImageAsset?.Url,
+            ImageUrl: null,
             session.Source.ToString(),
             session.Status.ToString(),
             session.RecognizedAtUtc,

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 262,
+    "domainTypes": 261,
     "entities": 78,
-    "valueObjects": 115,
+    "valueObjects": 114,
     "invariants": 508,
     "persistenceMappings": 86,
     "indexes": 155,
@@ -322,7 +322,7 @@
       "area": "FoodDiary",
       "name": "ImageAsset",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Assets/ImageAsset.cs",
+      "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
       "line": 6
     },
     {
@@ -358,7 +358,7 @@
       "name": "MealAiSession",
       "role": "entity",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 10
+      "line": 9
     },
     {
       "area": "FoodDiary",
@@ -1195,13 +1195,6 @@
     },
     {
       "area": "FoodDiary",
-      "name": "ImageAssetId",
-      "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ImageAssetId.cs",
-      "line": 4
-    },
-    {
-      "area": "FoodDiary",
       "name": "LanguageCode",
       "role": "value-object",
       "path": "FoodDiary.Domain/ValueObjects/LanguageCode.cs",
@@ -1946,20 +1939,6 @@
     },
     {
       "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Assets/ImageAsset.cs",
-      "line": 40
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
-      "path": "FoodDiary.Domain/Entities/Assets/ImageAsset.cs",
-      "line": 46
-    },
-    {
-      "area": "FoodDiary",
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(item)",
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
@@ -2033,42 +2012,42 @@
       "type": "ArgumentNullException.ThrowIfNull",
       "message": "ArgumentNullException.ThrowIfNull(items)",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 53
+      "line": 51
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"AI session item cannot be null.\", nameof(items))",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 61
+      "line": 59
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"AI item must be attached to this session before adding.\", nameof(items))",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 65
+      "line": 63
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 74
+      "line": 72
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 84
+      "line": 82
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"MealId is required.\", nameof(mealId))",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 90
+      "line": 88
     },
     {
       "area": "FoodDiary",
@@ -4851,6 +4830,20 @@
     },
     {
       "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
+      "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
+      "line": 40
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Value is required.\", paramName)",
+      "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
+      "line": 46
+    },
+    {
+      "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName)",
       "path": "Modules/Lessons/Domain/Entities/Content/LessonsDomainGuard.cs",
@@ -6068,8 +6061,8 @@
       "relationships": [
         {
           "kind": "HasOne",
-          "target": "",
-          "expression": "e => e.ImageAsset)"
+          "target": "ImageAsset",
+          "expression": ")"
         },
         {
           "kind": "HasMany",

@@ -6,12 +6,12 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1380,
+    "candidateFields": 1379,
     "credential": 146,
     "identity": 153,
     "health": 660,
     "financial": 120,
-    "privateContent": 301,
+    "privateContent": 300,
     "boundaryFiles": 171,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
@@ -7687,28 +7687,21 @@
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 15
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 19
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAsset",
-      "type": "ImageAsset?",
-      "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 22
+      "line": 18
     },
     {
       "category": "privateContent",
       "name": "NotesMaxLength",
       "type": "notes,",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 46
+      "line": 44
     },
     {
       "category": "privateContent",

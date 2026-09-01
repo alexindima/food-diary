@@ -41,6 +41,7 @@ public partial class MealsFeatureTests {
         new(
             repository,
             repository,
+            repository,
             mealNutritionService,
             recentItemRepository,
             imageAssetCleanupService,
@@ -255,7 +256,7 @@ public partial class MealsFeatureTests {
             session.Id.Value,
             session.MealId.Value,
             session.ImageAssetId?.Value,
-            session.ImageAsset?.Url,
+            ImageUrl: null,
             session.Source,
             session.Status,
             session.RecognizedAtUtc,

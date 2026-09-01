@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <ProjectReference Include="..\Modules\Images\Domain\FoodDiary.Modules.Images.Domain.csproj" />
     <ProjectReference Include="..\Modules\RecentItems\Domain\FoodDiary.Modules.RecentItems.Domain.csproj" />
     <ProjectReference Include="..\Modules\RecentItems\Infrastructure\Model\FoodDiary.Modules.RecentItems.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\Identity\Domain\FoodDiary.Modules.Identity.Domain.csproj" />

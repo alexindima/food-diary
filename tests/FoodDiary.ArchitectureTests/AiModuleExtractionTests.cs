@@ -60,6 +60,7 @@ public sealed class AiModuleExtractionTests {
             "FoodDiary.Mediator",
             "FoodDiary.Modules.Ai.Application.Abstractions",
             "FoodDiary.Modules.Ai.Domain",
+            "FoodDiary.Modules.Images.Domain",
         ], references);
     }
 

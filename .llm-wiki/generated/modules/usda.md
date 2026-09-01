@@ -24,7 +24,6 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Domain/Entities/Usda`
 - `FoodDiary.Presentation.Api/Features/Usda`
 - `Modules/Usda/Application`
 - `Modules/Usda/Application/Abstractions`

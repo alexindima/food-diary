@@ -639,6 +639,14 @@
       "structuralRiskScore": 85.48
     },
     {
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
+      "nonBlankLines": 398,
+      "decisionPoints": 51,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 84.46
+    },
+    {
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
       "nonBlankLines": 291,
       "decisionPoints": 52,
@@ -661,14 +669,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 81.14
-    },
-    {
-      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "nonBlankLines": 365,
-      "decisionPoints": 49,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 80.8
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiModelRoutingOutcome.ps1",
@@ -4609,14 +4609,6 @@
       "structuralRiskScore": 17.46
     },
     {
-      "path": "FoodDiary.Domain/Entities/Assets/ImageAsset.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.28
-    },
-    {
       "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
       "nonBlankLines": 365,
       "decisionPoints": 48,
@@ -4642,11 +4634,11 @@
     },
     {
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "nonBlankLines": 77,
+      "nonBlankLines": 75,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.54
+      "structuralRiskScore": 10.5
     },
     {
       "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
@@ -5106,14 +5098,6 @@
     },
     {
       "path": "FoodDiary.Domain/ValueObjects/Ids/CycleId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ImageAssetId.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -26810,11 +26794,11 @@
     },
     {
       "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionsLoader.cs",
-      "nonBlankLines": 71,
+      "nonBlankLines": 74,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.42
+      "structuralRiskScore": 1.48
     },
     {
       "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealFavoritesLoader.cs",
@@ -31889,6 +31873,22 @@
       "structuralRiskScore": 13.12
     },
     {
+      "path": "Modules/Images/Contracts/ValueObjects/Ids/ImageAssetId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
+      "nonBlankLines": 39,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.28
+    },
+    {
       "path": "Modules/Images/Infrastructure/AssemblyInfo.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
@@ -33874,11 +33874,11 @@
     },
     {
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealAiSessionConfiguration.cs",
-      "nonBlankLines": 44,
+      "nonBlankLines": 45,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.88
+      "structuralRiskScore": 0.9
     },
     {
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealConfiguration.cs",
@@ -33906,11 +33906,11 @@
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "nonBlankLines": 365,
-      "decisionPoints": 49,
+      "nonBlankLines": 398,
+      "decisionPoints": 51,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 80.8
+      "structuralRiskScore": 84.46
     },
     {
       "path": "Modules/Notifications/Application/Abstractions/Common/DietologistInvitationDecisionNotificationPayload.cs",

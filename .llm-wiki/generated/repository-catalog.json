@@ -13,16 +13,16 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 300,
-    "testProjects": 112,
+    "dotnetProjects": 304,
+    "testProjects": 114,
     "frontendProjects": 4,
     "applicationModules": 1,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 34,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 211,
-    "documentationPages": 114
+    "agentGuides": 215,
+    "documentationPages": 115
   },
   "dotnet": {
     "projects": [
@@ -148,6 +148,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
+          "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj",
           "Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
         ],
@@ -194,6 +195,7 @@
           "Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj",
           "Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj",
           "Modules/Identity/Infrastructure/Model/FoodDiary.Modules.Identity.PersistenceModel.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Modules/Images/Infrastructure/Model/FoodDiary.Modules.Images.PersistenceModel.csproj",
           "Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj",
           "Modules/Lessons/Infrastructure/Model/FoodDiary.Modules.Lessons.PersistenceModel.csproj",
@@ -1875,6 +1877,7 @@
           "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
           "Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
           "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": [
@@ -4935,6 +4938,7 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": []
@@ -4953,6 +4957,7 @@
           "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": [
@@ -4965,6 +4970,37 @@
             "version": null
           }
         ]
+      },
+      {
+        "name": "FoodDiary.Modules.Images.Contracts",
+        "assemblyName": "FoodDiary.Modules.Images.Contracts",
+        "path": "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.Modules.Images.Domain",
+        "assemblyName": "FoodDiary.Modules.Images.Domain",
+        "path": "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj"
+        ],
+        "packageReferences": []
       },
       {
         "name": "FoodDiary.Modules.Images.Infrastructure",
@@ -5007,7 +5043,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj"
         ],
         "packageReferences": [
           {
@@ -5041,6 +5077,87 @@
           },
           {
             "name": "NSubstitute",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Images.Domain.Tests",
+        "assemblyName": "FoodDiary.Modules.Images.Domain.Tests",
+        "path": "Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/FoodDiary.Modules.Images.Domain.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Images.Infrastructure.IntegrationTests",
+        "assemblyName": "FoodDiary.Modules.Images.Infrastructure.IntegrationTests",
+        "path": "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
+          "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.EntityFrameworkCore",
+            "version": null
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          },
+          {
+            "name": "SSH.NET",
+            "version": null
+          },
+          {
+            "name": "Testcontainers.PostgreSql",
             "version": null
           },
           {
@@ -5843,7 +5960,8 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+          "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj"
         ],
         "packageReferences": [
           {
@@ -6557,7 +6675,8 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+          "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj"
         ],
         "packageReferences": [
           {
@@ -7163,7 +7282,8 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+          "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj"
         ],
         "packageReferences": [
           {
@@ -7558,6 +7678,7 @@
         "projectReferences": [
           "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": [
@@ -7613,7 +7734,8 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+          "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj"
         ],
         "packageReferences": [
           {
@@ -8557,6 +8679,7 @@
           "Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj",
           "Modules/Gamification/Domain/FoodDiary.Modules.Gamification.Domain.csproj",
           "Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
           "Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj",
           "Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj",
           "Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj",
@@ -9224,6 +9347,8 @@
       "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/FoodDiary.Modules.Identity.Application.Tests.csproj",
       "Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/FoodDiary.Modules.Identity.Domain.Tests.csproj",
       "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FoodDiary.Modules.Images.Application.Tests.csproj",
+      "Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/FoodDiary.Modules.Images.Domain.Tests.csproj",
+      "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests.csproj",
       "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/FoodDiary.Modules.Lessons.Application.Tests.csproj",
       "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Domain.Tests/FoodDiary.Modules.Lessons.Domain.Tests.csproj",
       "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Infrastructure.Tests/FoodDiary.Modules.Lessons.Infrastructure.Tests.csproj",
@@ -11645,7 +11770,11 @@
       "Modules/Identity/Infrastructure/AGENTS.md",
       "Modules/Identity/Infrastructure/Model/AGENTS.md",
       "Modules/Identity/tests/AGENTS.md",
+      "Modules/Images/AGENTS.md",
       "Modules/Images/Application/AGENTS.md",
+      "Modules/Images/Contracts/AGENTS.md",
+      "Modules/Images/Domain/AGENTS.md",
+      "Modules/Images/tests/AGENTS.md",
       "Modules/Lessons/AGENTS.md",
       "Modules/Marketing/AGENTS.md",
       "Modules/Marketing/Application/AGENTS.md",
@@ -11796,6 +11925,7 @@
       "docs/ai/identity-domain-extraction.md",
       "docs/ai/identity-module-extraction-wiki-findings.md",
       "docs/ai/identity-ownership-inventory.md",
+      "docs/ai/images-domain-extraction.md",
       "docs/ai/mealplanning-module-extraction-wiki-findings.md",
       "docs/ai/meals-module-extraction-wiki-findings.md",
       "docs/ai/meals-ownership-inventory.md",

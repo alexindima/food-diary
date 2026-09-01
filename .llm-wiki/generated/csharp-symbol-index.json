@@ -2120,13 +2120,6 @@
       "line": 5
     },
     {
-      "name": "ImageAsset",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Assets/ImageAsset.cs",
-      "line": 6
-    },
-    {
       "name": "Meal",
       "kind": "class",
       "role": "Entity",
@@ -2152,7 +2145,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "MealItem",
@@ -2558,13 +2551,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/CycleId.cs",
-      "line": 4
-    },
-    {
-      "name": "ImageAssetId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/ImageAssetId.cs",
       "line": 4
     },
     {
@@ -18773,6 +18759,20 @@
       "line": 8
     },
     {
+      "name": "ImageAssetId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Images/Contracts/ValueObjects/Ids/ImageAssetId.cs",
+      "line": 4
+    },
+    {
+      "name": "ImageAsset",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
+      "line": 6
+    },
+    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
@@ -20471,7 +20471,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealAiSessionConfiguration.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "MealConfiguration",
