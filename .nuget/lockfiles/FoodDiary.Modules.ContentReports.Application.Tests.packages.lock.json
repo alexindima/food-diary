@@ -232,8 +232,14 @@
       "fooddiary.modules.bodymetrics.application.abstractions": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Domain": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.bodymetrics.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.contentreports.application.abstractions": {

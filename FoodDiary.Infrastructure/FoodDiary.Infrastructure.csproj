@@ -6,6 +6,7 @@
     <ProjectReference Include="..\Modules\Notifications\Infrastructure\Model\FoodDiary.Modules.Notifications.PersistenceModel.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Outbox.Abstractions\FoodDiary.Outbox.Abstractions.csproj" />
     <ProjectReference Include="..\Modules\BodyMetrics\Infrastructure\Model\FoodDiary.Modules.BodyMetrics.PersistenceModel.csproj" />
+    <ProjectReference Include="..\Modules\BodyMetrics\Domain\FoodDiary.Modules.BodyMetrics.Domain.csproj" />
     <ProjectReference Include="..\Modules\Billing\Domain\FoodDiary.Modules.Billing.Domain.csproj" />
     <ProjectReference Include="..\Modules\Billing\Infrastructure\Model\FoodDiary.Modules.Billing.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\OpenFoodFacts\Domain\FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />

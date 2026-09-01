@@ -26,8 +26,10 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - BodyMetrics logical module: `Modules/BodyMetrics/AGENTS.md`
 - BodyMetrics application: `Modules/BodyMetrics/Application/AGENTS.md`
 - BodyMetrics application abstractions: `Modules/BodyMetrics/Application/Abstractions/AGENTS.md`
+- BodyMetrics domain: `Modules/BodyMetrics/Domain/AGENTS.md`
 - BodyMetrics infrastructure: `Modules/BodyMetrics/Infrastructure/AGENTS.md`
 - BodyMetrics persistence model: `Modules/BodyMetrics/Infrastructure/Model/AGENTS.md`
+- BodyMetrics tests: `Modules/BodyMetrics/tests/AGENTS.md`
 - Cycles logical module: `Modules/Cycles/AGENTS.md`
 - Cycles application: `Modules/Cycles/Application/AGENTS.md`
 - Cycles application abstractions: `Modules/Cycles/Application/Abstractions/AGENTS.md`

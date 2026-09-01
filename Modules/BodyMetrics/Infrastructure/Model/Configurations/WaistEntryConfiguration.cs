@@ -21,7 +21,7 @@ internal sealed class WaistEntryConfiguration : IEntityTypeConfiguration<WaistEn
         builder.HasIndex(e => new { e.UserId, e.Date }).IsUnique();
 
         builder.HasOne(e => e.User)
-            .WithMany(u => u.WaistEntries)
+            .WithMany()
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }

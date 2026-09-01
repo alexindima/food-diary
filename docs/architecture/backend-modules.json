@@ -156,9 +156,7 @@
           "Modules/BodyMetrics/Application/Abstractions"
         ],
         "domainAreas": [
-          "FoodDiary.Domain/Entities/Tracking",
-          "FoodDiary.Domain/ValueObjects/Ids",
-          "FoodDiary.Domain/Entities/Users"
+          "Modules/BodyMetrics/Domain"
         ],
         "persistenceAreas": [
           "Modules/BodyMetrics/Infrastructure"

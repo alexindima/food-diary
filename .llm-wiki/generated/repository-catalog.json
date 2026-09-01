@@ -13,16 +13,16 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 289,
-    "testProjects": 107,
+    "dotnetProjects": 291,
+    "testProjects": 108,
     "frontendProjects": 4,
     "applicationModules": 0,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 33,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 201,
-    "documentationPages": 111
+    "agentGuides": 203,
+    "documentationPages": 112
   },
   "dotnet": {
     "projects": [
@@ -169,6 +169,7 @@
           "Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj",
           "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj",
           "Modules/Billing/Infrastructure/Model/FoodDiary.Modules.Billing.PersistenceModel.csproj",
+          "Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj",
           "Modules/BodyMetrics/Infrastructure/Model/FoodDiary.Modules.BodyMetrics.PersistenceModel.csproj",
           "Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj",
           "Modules/ContentReports/Infrastructure/Model/FoodDiary.Modules.ContentReports.PersistenceModel.csproj",
@@ -2291,7 +2292,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": []
@@ -2308,8 +2309,8 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
-          "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "Modules/BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj",
+          "Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": [
@@ -2326,6 +2327,21 @@
             "version": null
           }
         ]
+      },
+      {
+        "name": "FoodDiary.Modules.BodyMetrics.Domain",
+        "assemblyName": "FoodDiary.Modules.BodyMetrics.Domain",
+        "path": "Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+        ],
+        "packageReferences": []
       },
       {
         "name": "FoodDiary.Modules.BodyMetrics.Infrastructure",
@@ -2364,7 +2380,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+          "Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj"
         ],
         "packageReferences": [
           {
@@ -2403,6 +2419,34 @@
           },
           {
             "name": "NSubstitute",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.BodyMetrics.Domain.Tests",
+        "assemblyName": "FoodDiary.Modules.BodyMetrics.Domain.Tests",
+        "path": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/FoodDiary.Modules.BodyMetrics.Domain.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.NET.Test.Sdk",
             "version": null
           },
           {
@@ -8896,6 +8940,7 @@
       "Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/FoodDiary.Modules.Billing.Domain.Tests.csproj",
       "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/FoodDiary.Modules.Billing.Infrastructure.Tests.csproj",
       "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/FoodDiary.Modules.BodyMetrics.Application.Tests.csproj",
+      "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/FoodDiary.Modules.BodyMetrics.Domain.Tests.csproj",
       "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/FoodDiary.Modules.ContentReports.Application.Tests.csproj",
       "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Domain.Tests/FoodDiary.Modules.ContentReports.Domain.Tests.csproj",
       "Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests.csproj",
@@ -11283,8 +11328,10 @@
       "Modules/BodyMetrics/AGENTS.md",
       "Modules/BodyMetrics/Application/AGENTS.md",
       "Modules/BodyMetrics/Application/Abstractions/AGENTS.md",
+      "Modules/BodyMetrics/Domain/AGENTS.md",
       "Modules/BodyMetrics/Infrastructure/AGENTS.md",
       "Modules/BodyMetrics/Infrastructure/Model/AGENTS.md",
+      "Modules/BodyMetrics/tests/AGENTS.md",
       "Modules/ContentReports/AGENTS.md",
       "Modules/Cycles/AGENTS.md",
       "Modules/Cycles/Application/AGENTS.md",
@@ -11454,6 +11501,7 @@
       "docs/adr/0022-images-logical-module-extraction.md",
       "docs/adr/0023-dietologist-logical-module-extraction.md",
       "docs/adr/0024-open-food-facts-logical-module-extraction.md",
+      "docs/adr/0025-bodymetrics-measurement-domain-extraction.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/CODE_REVIEW.md",

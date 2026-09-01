@@ -4777,28 +4777,12 @@
       "structuralRiskScore": 15.54
     },
     {
-      "path": "FoodDiary.Domain/Entities/Tracking/WaistEntry.cs",
-      "nonBlankLines": 71,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.92
-    },
-    {
       "path": "FoodDiary.Domain/Entities/Tracking/WaistGoal.cs",
       "nonBlankLines": 53,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 5.56
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Tracking/WeightEntry.cs",
-      "nonBlankLines": 71,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.92
     },
     {
       "path": "FoodDiary.Domain/Entities/Tracking/WeightGoal.cs",
@@ -4906,11 +4890,11 @@
     },
     {
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "nonBlankLines": 536,
+      "nonBlankLines": 532,
       "decisionPoints": 38,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.72
+      "structuralRiskScore": 67.64
     },
     {
       "path": "FoodDiary.Domain/Entities/Users/UserRole.cs",
@@ -5377,28 +5361,12 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WaistEntryId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
       "path": "FoodDiary.Domain/ValueObjects/Ids/WaistGoalId.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WeightEntryId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
     },
     {
       "path": "FoodDiary.Domain/ValueObjects/Ids/WeightGoalId.cs",
@@ -25281,6 +25249,38 @@
       "structuralRiskScore": 4.18
     },
     {
+      "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs",
+      "nonBlankLines": 71,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.92
+    },
+    {
+      "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
+      "nonBlankLines": 71,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.92
+    },
+    {
+      "path": "Modules/BodyMetrics/Domain/ValueObjects/Ids/WaistEntryId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/BodyMetrics/Domain/ValueObjects/Ids/WeightEntryId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
       "path": "Modules/BodyMetrics/Infrastructure/Model/BodyMetricsPersistenceModelRegistration.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -37850,11 +37850,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserConfiguration.cs",
-      "nonBlankLines": 128,
+      "nonBlankLines": 116,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.56
+      "structuralRiskScore": 2.32
     },
     {
       "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserRoleAuditEventConfiguration.cs",

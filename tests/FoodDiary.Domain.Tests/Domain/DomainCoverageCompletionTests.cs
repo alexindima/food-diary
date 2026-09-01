@@ -168,8 +168,6 @@ public sealed class DomainCoverageCompletionTests {
         };
 
         object[] instances = [
-            CreatePrivate<WeightEntry>(),
-            CreatePrivate<WaistEntry>(),
             CreatePrivate<ImageAsset>(),
             CreatePrivate<UserRole>(),
             CreatePrivate<CycleProfile>(),

@@ -176,21 +176,21 @@
       "name": "HasPassword",
       "type": "Password,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 375
+      "line": 371
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenHash",
       "type": "EmailConfirmationSentAtUtc,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 381
+      "line": 377
     },
     {
       "category": "credential",
       "name": "PasswordResetSentAtUtc",
       "type": "PasswordResetTokenExpiresAtUtc,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 383
+      "line": 379
     },
     {
       "category": "credential",
@@ -2525,13 +2525,6 @@
     },
     {
       "category": "health",
-      "name": "WeightKg",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Tracking/WeightEntry.cs",
-      "line": 14
-    },
-    {
-      "category": "health",
       "name": "TargetWeightKg",
       "type": "double",
       "path": "FoodDiary.Domain/Entities/Tracking/WeightGoal.cs",
@@ -2703,98 +2696,98 @@
       "name": "TuesdayCalories",
       "type": "MondayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 242
+      "line": 238
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "WednesdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 244
+      "line": 240
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "FridayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 246
+      "line": 242
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "DesiredWeightKg,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 259
+      "line": 255
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "CalorieCyclingEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 261
+      "line": 257
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "TuesdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 263
+      "line": 259
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "ThursdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 265
+      "line": 261
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "SaturdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 267
+      "line": 263
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "StepGoal,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 302
+      "line": 298
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 314
+      "line": 310
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 316
+      "line": 312
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 318
+      "line": 314
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 326
+      "line": 322
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "SocialPushNotificationsEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 328
+      "line": 324
     },
     {
       "category": "health",
@@ -4559,6 +4552,13 @@
       "type": "double?",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
       "line": 10
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double",
+      "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
+      "line": 14
     },
     {
       "category": "health",
@@ -6770,14 +6770,14 @@
       "name": "IsEmailConfirmed",
       "type": "MustChangePassword,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 377
+      "line": 373
     },
     {
       "category": "identity",
       "name": "EmailConfirmationTokenExpiresAtUtc",
       "type": "EmailConfirmationTokenHash,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 379
+      "line": 375
     },
     {
       "category": "identity",
@@ -7890,7 +7890,7 @@
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 320
+      "line": 316
     },
     {
       "category": "privateContent",

@@ -21,7 +21,7 @@ internal sealed class WeightEntryConfiguration : IEntityTypeConfiguration<Weight
         builder.HasIndex(e => new { e.UserId, e.Date }).IsUnique();
 
         builder.HasOne(e => e.User)
-            .WithMany(u => u.WeightEntries)
+            .WithMany()
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }

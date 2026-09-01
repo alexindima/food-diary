@@ -92,19 +92,9 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
     }
 
     private static void ConfigureRelationships(EntityTypeBuilder<User> builder) {
-        builder.HasMany(e => e.WeightEntries)
-            .WithOne(w => w.User)
-            .HasForeignKey(w => w.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasMany(e => e.WeightGoals)
             .WithOne()
             .HasForeignKey(goal => goal.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasMany(e => e.WaistEntries)
-            .WithOne(w => w.User)
-            .HasForeignKey(w => w.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(e => e.WaistGoals)
@@ -126,11 +116,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(User.Recipes))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
-        builder.Metadata.FindNavigation(nameof(User.WeightEntries))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(User.WeightGoals))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
-        builder.Metadata.FindNavigation(nameof(User.WaistEntries))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(User.WaistGoals))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);

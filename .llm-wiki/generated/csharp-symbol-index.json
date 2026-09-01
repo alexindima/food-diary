@@ -2267,25 +2267,11 @@
       "line": 7
     },
     {
-      "name": "WaistEntry",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/WaistEntry.cs",
-      "line": 8
-    },
-    {
       "name": "WaistGoal",
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Tracking/WaistGoal.cs",
       "line": 7
-    },
-    {
-      "name": "WeightEntry",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/WeightEntry.cs",
-      "line": 8
     },
     {
       "name": "WeightGoal",
@@ -2792,24 +2778,10 @@
       "line": 4
     },
     {
-      "name": "WaistEntryId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WaistEntryId.cs",
-      "line": 4
-    },
-    {
       "name": "WaistGoalId",
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/WaistGoalId.cs",
-      "line": 4
-    },
-    {
-      "name": "WeightEntryId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WeightEntryId.cs",
       "line": 4
     },
     {
@@ -13108,6 +13080,34 @@
       "role": "Service",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Services/WeightEntryReadService.cs",
       "line": 8
+    },
+    {
+      "name": "WaistEntry",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs",
+      "line": 8
+    },
+    {
+      "name": "WeightEntry",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
+      "line": 8
+    },
+    {
+      "name": "WaistEntryId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/BodyMetrics/Domain/ValueObjects/Ids/WaistEntryId.cs",
+      "line": 4
+    },
+    {
+      "name": "WeightEntryId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/BodyMetrics/Domain/ValueObjects/Ids/WeightEntryId.cs",
+      "line": 4
     },
     {
       "name": "BodyMetricsPersistenceModelRegistration",
