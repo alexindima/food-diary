@@ -91,6 +91,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddOpenFoodFactsModule()
                 .AddProductsModule()
                 .AddRecipesModule()
+                .AddRecentItemsModule()
                 .AddUsersModule()
                 .AddBillingModule()
                 .AddMarketingModule()

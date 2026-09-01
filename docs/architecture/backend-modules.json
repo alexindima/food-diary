@@ -3,8 +3,8 @@
   "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
   "inventory": {
     "folderModules": 0,
-    "extractedModules": 33,
-    "totalModules": 33
+    "extractedModules": 34,
+    "totalModules": 34
   },
   "analysis": {
     "compileTime": "Roslyn/syntax and project-reference evidence; unresolved or runtime-only DI edges are reported separately.",
@@ -559,6 +559,18 @@
           "tests/FoodDiary.Application.Tests/Products",
           "tests/FoodDiary.Web.Api.IntegrationTests/ProductPostgresApiFlowTests.cs"
         ]
+      }
+    },
+    "RecentItems": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "project",
+      "enforcement": "project-reference-matrix",
+      "ownedEntities": ["RecentItem"],
+      "sourceMappings": {
+        "logicalRoot": "Modules/RecentItems",
+        "abstractionAreas": ["Modules/RecentItems/Application/Abstractions"],
+        "domainAreas": ["Modules/RecentItems/Domain"],
+        "persistenceAreas": ["Modules/RecentItems/Infrastructure"]
       }
     },
     "RecipeCommunity": {

@@ -73,3 +73,7 @@ Meals application, ports/contracts, persistence adapter and EF model live under
 objects central: User.Meals and Product/Recipe MealItems are public inverse graphs.
 Do not create a symmetric Meals Domain project without redesigning those seams.
 See `docs/ai/meals-ownership-inventory.md`.
+
+## RecentItems physical ownership
+
+RecentItem, RecentItemType and RecentItemId live under `Modules/RecentItems/Domain` with stable CLR namespaces. The one-way User navigation remains; User/UserId and the absence of an inverse navigation are central seams. See `docs/ai/recent-items-ownership-inventory.md`.

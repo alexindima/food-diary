@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3540,
-    "symbols": 3529,
+    "sourceFiles": 3541,
+    "symbols": 3530,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 168,
+    "dependencyInjectionRegistrations": 166,
     "kinds": {
-      "class": 1856,
+      "class": 1857,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1380,
+      "Other": 1381,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -1287,55 +1287,6 @@
       "line": 2
     },
     {
-      "name": "IRecentItemReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemReadRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IRecentItemRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IRecentItemUsageReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs",
-      "line": 4
-    },
-    {
-      "name": "IRecentItemUsageRecorder",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs",
-      "line": 4
-    },
-    {
-      "name": "IRecentItemWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "RecentProductUsage",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/RecentItems/Common/RecentProductUsage.cs",
-      "line": 4
-    },
-    {
-      "name": "RecentRecipeUsage",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/RecentItems/Common/RecentRecipeUsage.cs",
-      "line": 4
-    },
-    {
       "name": "CurrentUserAccessResolver",
       "kind": "class",
       "role": "Other",
@@ -2218,13 +2169,6 @@
       "line": 13
     },
     {
-      "name": "RecentItem",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Recents/RecentItem.cs",
-      "line": 8
-    },
-    {
       "name": "Recipe",
       "kind": "class",
       "role": "Entity",
@@ -2470,13 +2414,6 @@
       "line": 2
     },
     {
-      "name": "RecentItemType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/RecentItemType.cs",
-      "line": 2
-    },
-    {
       "name": "ReportStatus",
       "kind": "enum",
       "role": "Other",
@@ -2712,13 +2649,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/ProductId.cs",
-      "line": 4
-    },
-    {
-      "name": "RecentItemId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecentItemId.cs",
       "line": 4
     },
     {
@@ -3166,13 +3096,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.RecentItems.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Repositories.cs",
       "line": 4
     },
@@ -3322,13 +3245,6 @@
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Outbox/OutboxReplayAuditConfiguration.cs",
       "line": 6
-    },
-    {
-      "name": "RecentItemConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/RecentItems/RecentItemConfiguration.cs",
-      "line": 7
     },
     {
       "name": "StronglyTypedIdConverters",
@@ -3639,20 +3555,6 @@
       "line": 2
     },
     {
-      "name": "PostCommitRecentItemUsageRecorder",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
-      "line": 6
-    },
-    {
-      "name": "RecentItemRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
-      "line": 8
-    },
-    {
       "name": "RecipeCompositionTransactionLock",
       "kind": "class",
       "role": "Other",
@@ -3846,7 +3748,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 394
+      "line": 395
     },
     {
       "name": "UsdaCsvReader",
@@ -4245,7 +4147,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 65
+      "line": 66
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -22091,6 +21993,111 @@
       "line": 6
     },
     {
+      "name": "IRecentItemReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemReadRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IRecentItemRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IRecentItemUsageReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs",
+      "line": 4
+    },
+    {
+      "name": "IRecentItemUsageRecorder",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs",
+      "line": 4
+    },
+    {
+      "name": "IRecentItemWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "RecentProductUsage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/RecentProductUsage.cs",
+      "line": 4
+    },
+    {
+      "name": "RecentRecipeUsage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/RecentRecipeUsage.cs",
+      "line": 4
+    },
+    {
+      "name": "RecentItem",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/RecentItems/Domain/Entities/Recents/RecentItem.cs",
+      "line": 8
+    },
+    {
+      "name": "RecentItemType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/RecentItems/Domain/Enums/RecentItemType.cs",
+      "line": 2
+    },
+    {
+      "name": "RecentItemId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/RecentItems/Domain/ValueObjects/Ids/RecentItemId.cs",
+      "line": 4
+    },
+    {
+      "name": "RecentItemConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/RecentItems/Infrastructure/Model/Configurations/RecentItems/RecentItemConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "RecentItemsPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/RecentItems/Infrastructure/Model/RecentItemsPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
+      "line": 6
+    },
+    {
+      "name": "PostCommitRecentItemUsageRecorder",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
+      "line": 6
+    },
+    {
+      "name": "RecentItemRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
+      "line": 8
+    },
+    {
       "name": "IRecipeCommentReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -25916,9 +25923,9 @@
     },
     {
       "interface": "IRecentItemRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs",
+      "interfacePath": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs",
       "implementation": "RecentItemRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
+      "implementationPath": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26512,20 +26519,6 @@
       "line": 22
     },
     {
-      "service": "IRecentItemRepository",
-      "implementation": "RecentItemRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.RecentItems.cs",
-      "line": 9
-    },
-    {
-      "service": "IRecentItemUsageRecorder",
-      "implementation": "PostCommitRecentItemUsageRecorder",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.RecentItems.cs",
-      "line": 13
-    },
-    {
       "service": "IUserLoginEventRepository",
       "implementation": "UserLoginEventRepository",
       "lifetime": "Scoped",
@@ -26544,14 +26537,14 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 123
+      "line": 124
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 124
+      "line": 125
     },
     {
       "service": "IGoogleTokenValidator",
@@ -26614,7 +26607,7 @@
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 57
+      "line": 58
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -26691,21 +26684,21 @@
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 102
+      "line": 103
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 103
+      "line": 104
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 135
+      "line": 136
     },
     {
       "service": "IMailInboxReadinessChecker",

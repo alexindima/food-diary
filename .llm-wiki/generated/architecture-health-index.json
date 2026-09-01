@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 678,
+    "productionProjectEdges": 694,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
     "moduleCycleNodes": 0,
-    "backendBusinessModules": 33,
+    "backendBusinessModules": 34,
     "moduleHotspotReviewCandidates": 1,
     "ambiguousBackendContracts": 0,
     "unconsumedBackendContracts": 0,
@@ -205,6 +205,13 @@
     },
     {
       "module": "Notifications",
+      "fanIn": 0,
+      "fanOut": 0,
+      "level": "informational",
+      "role": "aggregate-owner"
+    },
+    {
+      "module": "RecentItems",
       "fanIn": 0,
       "fanOut": 0,
       "level": "informational",

@@ -274,6 +274,12 @@
           "FoodDiary.Domain": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.recentitems.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.recipecommunity.application.abstractions": {
         "type": "Project",
         "dependencies": {

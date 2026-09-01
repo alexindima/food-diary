@@ -8,17 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "30c2b936aaa25d9ec6c90848df8a3a0ffbe979f640faf73b7c52621e919710f4"
+          "sha256": "24aa6b2525190bc8150be4dafeeb21653830e01e2422f260c9109cefc8703ec6"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "dd71cc44864847b5d9fb70970d7c083332aa05a465fb37d61a77a7e2e7762647"
+          "sha256": "89cc1d588f4963c3f9aed406f74e00d184b541897904309af4ce64bd4f089a00"
         }
       ],
-      "reason": "BodyMetrics measurement domain ownership and scoped guides were updated while goal ownership remains central",
+      "reason": "Reviewed RecentItems extraction against current source, module map, ADR 0026, dependency matrix, unchanged HTTP contracts, and explicit central EF/User seams",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:14.4852503Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T16:46:47.1647946Z"
     },
     {
       "pageId": "module.frontend",
@@ -42,13 +42,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "dd71cc44864847b5d9fb70970d7c083332aa05a465fb37d61a77a7e2e7762647"
+          "sha256": "89cc1d588f4963c3f9aed406f74e00d184b541897904309af4ce64bd4f089a00"
         }
       ],
-      "reason": "BodyMetrics measurement domain ownership and scoped guides were updated while goal ownership remains central",
+      "reason": "Reviewed RecentItems extraction against current source, module map, ADR 0026, dependency matrix, unchanged HTTP contracts, and explicit central EF/User seams",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:14.7229595Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T16:46:47.4578889Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -57,21 +57,25 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "5476d20d497b32c901183d119b08d05ae2f44b87caf2ed37ec1c810722725260"
+          "sha256": "9bcded0fc729061cb1a4c62969cf25d0cf6e1274b538359b53dfcc9c72988bac"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "dd71cc44864847b5d9fb70970d7c083332aa05a465fb37d61a77a7e2e7762647"
+          "sha256": "89cc1d588f4963c3f9aed406f74e00d184b541897904309af4ce64bd4f089a00"
         },
         {
-          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "ac0f5e0deaa21dd875221a9046343f15d34ca76818089fcf4596a47850e81a7b"
+          "path": "FoodDiary.Domain/AGENTS.md",
+          "sha256": "463fbb6104d737241ae414061af0b9c90fbe3f5ca7575a27235902cee15f1c37"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "1a5eb32e612e7ba495fd4f6e1bb59265f70ccefee4177f88fa763c88866ce647"
         }
       ],
-      "reason": "Reviewed generated and authored knowledge impact: BodyMetrics measurement ownership moved to module Domain, inverse User measurement navigations removed, goals remain central, EF/API/schema behavior unchanged.",
+      "reason": "RecentItems extraction updates physical ownership, dependency manifests, solution catalog, architecture guardrails, and generated indexes; reviewed against the completed implementation and green architecture/provider/HTTP verification.",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:29.7353558Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T17:19:46.8406003Z"
     },
     {
       "pageId": "system.architecture",
@@ -80,21 +84,29 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "5476d20d497b32c901183d119b08d05ae2f44b87caf2ed37ec1c810722725260"
+          "sha256": "9bcded0fc729061cb1a4c62969cf25d0cf6e1274b538359b53dfcc9c72988bac"
+        },
+        {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "fc9d34919fc39aa4a548d283336a21800ad5a7868c8a1f0a910bc0ff3c90e038"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "dd71cc44864847b5d9fb70970d7c083332aa05a465fb37d61a77a7e2e7762647"
+          "sha256": "89cc1d588f4963c3f9aed406f74e00d184b541897904309af4ce64bd4f089a00"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs",
+          "sha256": "28a5728a0d8e44f3b712ab31a79e8eceda2e36d33773d7fbaed8e303d97082f9"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "628e096710938df00748c0aeab7a47c1f0b273497c6642ffffcabab7a2b42067"
+          "sha256": "b3a3570b651d7fa6a1f54153174c9562fab1c004619ce7d1d625b85f1222be57"
         }
       ],
-      "reason": "Reviewed generated and authored knowledge impact: BodyMetrics measurement ownership moved to module Domain, inverse User measurement navigations removed, goals remain central, EF/API/schema behavior unchanged.",
+      "reason": "RecentItems extraction updates physical ownership, dependency manifests, solution catalog, architecture guardrails, and generated indexes; reviewed against the completed implementation and green architecture/provider/HTTP verification.",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:30.0288662Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T17:19:47.0455299Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -133,13 +145,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "30c2b936aaa25d9ec6c90848df8a3a0ffbe979f640faf73b7c52621e919710f4"
+          "sha256": "24aa6b2525190bc8150be4dafeeb21653830e01e2422f260c9109cefc8703ec6"
+        },
+        {
+          "path": "docs/adr/README.md",
+          "sha256": "30f6f57a967cce930ff1abe264be15fdb44cea4268f797d6a0c499ceff5acc8f"
         }
       ],
-      "reason": "Reviewed generated and authored knowledge impact: BodyMetrics measurement ownership moved to module Domain, inverse User measurement navigations removed, goals remain central, EF/API/schema behavior unchanged.",
+      "reason": "Reviewed RecentItems extraction against current source, module map, ADR 0026, dependency matrix, unchanged HTTP contracts, and explicit central EF/User seams",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:30.2867539Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T16:46:48.3105402Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -148,13 +164,17 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "5476d20d497b32c901183d119b08d05ae2f44b87caf2ed37ec1c810722725260"
+          "sha256": "9bcded0fc729061cb1a4c62969cf25d0cf6e1274b538359b53dfcc9c72988bac"
+        },
+        {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "fc9d34919fc39aa4a548d283336a21800ad5a7868c8a1f0a910bc0ff3c90e038"
         }
       ],
-      "reason": "Reviewed generated and authored knowledge impact: BodyMetrics measurement ownership moved to module Domain, inverse User measurement navigations removed, goals remain central, EF/API/schema behavior unchanged.",
+      "reason": "RecentItems extraction updates physical ownership, dependency manifests, solution catalog, architecture guardrails, and generated indexes; reviewed against the completed implementation and green architecture/provider/HTTP verification.",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:30.5358430Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T17:19:47.2442495Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -208,21 +228,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "7445020f8ae525105b0281ac375eba123ac622accf67d2ab0486e707dd45130b"
+          "sha256": "2eede281baba51c922a5e46dbb802f0850d10be4b3763fd05ad5cbae05685ff9"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "5476d20d497b32c901183d119b08d05ae2f44b87caf2ed37ec1c810722725260"
+          "sha256": "9bcded0fc729061cb1a4c62969cf25d0cf6e1274b538359b53dfcc9c72988bac"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "628e096710938df00748c0aeab7a47c1f0b273497c6642ffffcabab7a2b42067"
+          "sha256": "b3a3570b651d7fa6a1f54153174c9562fab1c004619ce7d1d625b85f1222be57"
         }
       ],
-      "reason": "Reviewed generated and authored knowledge impact: BodyMetrics measurement ownership moved to module Domain, inverse User measurement navigations removed, goals remain central, EF/API/schema behavior unchanged.",
+      "reason": "RecentItems extraction updates physical ownership, dependency manifests, solution catalog, architecture guardrails, and generated indexes; reviewed against the completed implementation and green architecture/provider/HTTP verification.",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:30.8070091Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T17:19:47.4610077Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -231,13 +251,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "092e1f8198c554c447d4f6b2656f1cbab82fce284eecbfb4c5c46cae347e2c5b"
+          "sha256": "935816a4579470a92ea8162af2912e6f225d5266cd1630b47de7b9b28b099ed9"
         }
       ],
-      "reason": "Reviewed generated and authored knowledge impact: BodyMetrics measurement ownership moved to module Domain, inverse User measurement navigations removed, goals remain central, EF/API/schema behavior unchanged.",
+      "reason": "RecentItems extraction updates physical ownership, dependency manifests, solution catalog, architecture guardrails, and generated indexes; reviewed against the completed implementation and green architecture/provider/HTTP verification.",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:31.4214096Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T17:19:47.9142388Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -444,18 +464,14 @@
       "pageSha256": "8b4cb2d28a12dabbacea071dc05d656bf06ccbaec42ac12f5b35408b708a161a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
-          "sha256": "4b4ff477406d81846c8b82a6a1499fcccdf43622efea49fdd0c883d6780cc0d2"
-        },
-        {
           "path": "docs/adr/README.md",
-          "sha256": "8dc0d549db3588ed96c18cf9b8a6fe793111ad38f5e688d4ec5eedc7da127684"
+          "sha256": "30f6f57a967cce930ff1abe264be15fdb44cea4268f797d6a0c499ceff5acc8f"
         }
       ],
-      "reason": "ADR 0019, scoped AGENTS, backend module maps, ownership docs, catalog, module page, and domain-data index now describe the extracted WeeklyGoals Domain boundary; the remaining navigation pages stay semantically accurate.",
+      "reason": "Reviewed RecentItems extraction against current source, module map, ADR 0026, dependency matrix, unchanged HTTP contracts, and explicit central EF/User seams",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:53.4989514Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T16:46:50.2056894Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -498,13 +514,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "fab6fb1d4185a346a6ccd974ba0a83f93d0d9bb864b8a40b9a649c7544b776b5"
+          "sha256": "bd9975fe6265d3395fdb83eb5d07b1d59c5f0441fdee9a17eabf62800c747377"
+        },
+        {
+          "path": "FoodDiary.Domain/AGENTS.md",
+          "sha256": "463fbb6104d737241ae414061af0b9c90fbe3f5ca7575a27235902cee15f1c37"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "1a5eb32e612e7ba495fd4f6e1bb59265f70ccefee4177f88fa763c88866ce647"
         }
       ],
-      "reason": "Reviewed generated and authored knowledge impact: BodyMetrics measurement ownership moved to module Domain, inverse User measurement navigations removed, goals remain central, EF/API/schema behavior unchanged.",
+      "reason": "Reviewed RecentItems extraction against current source, module map, ADR 0026, dependency matrix, unchanged HTTP contracts, and explicit central EF/User seams",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:31.9466078Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T16:46:50.5815808Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -712,13 +736,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "e8ba4bbfa4a0ece976425eb3dba2c218679c1e4950aa2de2785e391e16d20a0b"
+          "sha256": "fc9d34919fc39aa4a548d283336a21800ad5a7868c8a1f0a910bc0ff3c90e038"
         }
       ],
-      "reason": "Reviewed architecture and repository navigation for the Fasting logical-module pilot; sources now point to Modules/Fasting while central Domain, Infrastructure, and Presentation ownership remains explicit.",
+      "reason": "RecentItems extraction updates physical ownership, dependency manifests, solution catalog, architecture guardrails, and generated indexes; reviewed against the completed implementation and green architecture/provider/HTTP verification.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:18:32.7515126Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T17:19:48.2007398Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -817,13 +841,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "56ee5f0cb4e91949d0af85df75c197210ea4f9bce6b1f91aaa7131580dfee1c5"
+          "sha256": "73cfb488392ce5a7a76b9fc41bf526655805237e421f892ef31591657916b2c6"
         }
       ],
-      "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
+      "reason": "Reviewed RecentItems extraction against current source, module map, ADR 0026, dependency matrix, unchanged HTTP contracts, and explicit central EF/User seams",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:42:09.9282024Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T16:46:51.1493455Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -900,13 +924,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a8305b1d04f38274eac0d63398a7c05f1cd95aaa2d6fa424716528bd351cc743"
+          "sha256": "eac9725df9dd088782bf6e10cc025e9088e94fef0fd63d8bdecda9fd1cd85ae3"
         }
       ],
-      "reason": "Reviewed generated and authored knowledge impact: BodyMetrics measurement ownership moved to module Domain, inverse User measurement navigations removed, goals remain central, EF/API/schema behavior unchanged.",
+      "reason": "Reviewed RecentItems extraction against current source, module map, ADR 0026, dependency matrix, unchanged HTTP contracts, and explicit central EF/User seams",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:33.5259885Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T16:46:52.3555475Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,14 +938,18 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "3373b00375e420471388bb33fa8a34eed7e0098c959c1eb4619357e33f63f38e"
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "73cfb488392ce5a7a76b9fc41bf526655805237e421f892ef31591657916b2c6"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "eac9725df9dd088782bf6e10cc025e9088e94fef0fd63d8bdecda9fd1cd85ae3"
         }
       ],
-      "reason": "Reviewed stricter DNS/MX role matching and preventive safety-policy vocabulary; WebPush security routing improves without weakening any security gate.",
+      "reason": "Reviewed RecentItems extraction against current source, module map, ADR 0026, dependency matrix, unchanged HTTP contracts, and explicit central EF/User seams",
       "baseRef": "HEAD",
-      "gitHead": "7b104c4996e63fddd2c1ec964f43ddbb2bf4b72b",
-      "reviewedAtUtc": "2026-09-01T16:13:22.5523537Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T16:46:52.9745939Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1099,13 +1127,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "30c2b936aaa25d9ec6c90848df8a3a0ffbe979f640faf73b7c52621e919710f4"
+          "sha256": "24aa6b2525190bc8150be4dafeeb21653830e01e2422f260c9109cefc8703ec6"
         }
       ],
-      "reason": "Reviewed generated and authored knowledge impact: BodyMetrics measurement ownership moved to module Domain, inverse User measurement navigations removed, goals remain central, EF/API/schema behavior unchanged.",
+      "reason": "Reviewed RecentItems extraction against current source, module map, ADR 0026, dependency matrix, unchanged HTTP contracts, and explicit central EF/User seams",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:31.6785334Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T16:46:49.8483149Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1158,26 +1186,18 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "4157009ca722eebf1cdf3a426a44a3b28ae6eaa3dcc2bf0f69e2e52971b8afda"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "b52c560399ab84632c3218026c9c2b132fa4aaf31eabea45882d56582cba7180"
         },
         {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "44686209ca65a15b99f5cb0a69549fca168f9b4cc88a8673c506970ea2b051f8"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
-          "sha256": "f91cfab8cb7f894bb8ffea990340238909e7cfe9d5955925b8e17714fc6438ec"
+          "path": "AGENTS.md",
+          "sha256": "24aa6b2525190bc8150be4dafeeb21653830e01e2422f260c9109cefc8703ec6"
         }
       ],
-      "reason": "Reviewed documentation and evaluation corpus impact from migrated module paths; references now resolve to current repository owners.",
+      "reason": "RecentItems extraction updates physical ownership, dependency manifests, solution catalog, architecture guardrails, and generated indexes; reviewed against the completed implementation and green architecture/provider/HTTP verification.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T15:06:06.7246267Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T17:19:48.5111000Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1186,13 +1206,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "30c2b936aaa25d9ec6c90848df8a3a0ffbe979f640faf73b7c52621e919710f4"
+          "sha256": "24aa6b2525190bc8150be4dafeeb21653830e01e2422f260c9109cefc8703ec6"
         }
       ],
-      "reason": "Reviewed generated and authored knowledge impact: BodyMetrics measurement ownership moved to module Domain, inverse User measurement navigations removed, goals remain central, EF/API/schema behavior unchanged.",
+      "reason": "Reviewed RecentItems extraction against current source, module map, ADR 0026, dependency matrix, unchanged HTTP contracts, and explicit central EF/User seams",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:33.2057567Z"
+      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
+      "reviewedAtUtc": "2026-09-01T16:46:51.9427198Z"
     }
   ]
 }

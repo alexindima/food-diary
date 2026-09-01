@@ -11569,7 +11569,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemReadRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11586,7 +11586,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11603,7 +11603,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11620,7 +11620,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -11637,7 +11637,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -61142,19 +61142,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/RecentItemId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/RecipeId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61793,6 +61780,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Domain/ValueObjects/Ids/WebPushSubscriptionId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecentItems/Domain/ValueObjects/Ids/RecentItemId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -75987,19 +75987,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IPostCommitActionQueue",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -76182,6 +76169,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPostCommitActionQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/Dietologist/DietologistFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -76247,6 +76247,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Infrastructure.Tests/Persistence/PostCommitRecentItemUsageRecorderTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "IPostCommitActionQueue",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Behaviors/BehaviorTests.cs",
       "isTest": true,
       "referenceCount": 8
@@ -76276,19 +76289,6 @@
       "consumerPath": "tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "IPostCommitActionQueue",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/PostCommitRecentItemUsageRecorderTests.cs",
-      "isTest": true,
-      "referenceCount": 6
     },
     {
       "contract": "IProductLookupService",
@@ -80469,10 +80469,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemReadRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs",
+      "consumerPath": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80482,10 +80482,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemReadRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.RecentItems.cs",
+      "consumerPath": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80495,7 +80495,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemReadRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -80508,7 +80508,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemReadRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -80521,7 +80521,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemReadRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -80534,10 +80534,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.RecentItems.cs",
+      "consumerPath": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 4
     },
@@ -80547,10 +80547,10 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
+      "consumerPath": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80560,7 +80560,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.cs",
@@ -80573,7 +80573,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.cs",
@@ -80586,7 +80586,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs",
@@ -80599,7 +80599,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs",
@@ -80612,7 +80612,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -80625,7 +80625,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -80638,12 +80638,12 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "IRecentItemUsageReadService",
@@ -80651,33 +80651,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemReadRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRecentItemUsageReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.RecentItems.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRecentItemUsageReadService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Application/Services/RecentProductReadService.cs",
@@ -80690,7 +80664,33 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemReadRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecentItemUsageReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecentItemUsageReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Application/Services/RecentRecipeReadService.cs",
@@ -80703,7 +80703,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -80716,46 +80716,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRecentItemUsageRecorder",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.RecentItems.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRecentItemUsageRecorder",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRecentItemUsageRecorder",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommandHandler.cs",
@@ -80768,7 +80729,7 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommandHandler.cs",
@@ -80781,7 +80742,46 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecentItemUsageRecorder",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecentItemUsageRecorder",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRecentItemUsageRecorder",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemUsageRecorder.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -80794,10 +80794,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemRepository.cs",
+      "consumerPath": "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80807,10 +80807,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.RecentItems.cs",
+      "consumerPath": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80820,10 +80820,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
+      "consumerPath": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80833,7 +80833,20 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Infrastructure.Tests/Persistence/PostCommitRecentItemUsageRecorderTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "IRecentItemWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -80846,25 +80859,12 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
+        "Modules/RecentItems/Application/Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "IRecentItemWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/PostCommitRecentItemUsageRecorderTests.cs",
-      "isTest": true,
-      "referenceCount": 6
     },
     {
       "contract": "IRecentProductReadService",
@@ -89533,19 +89533,6 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUnitOfWork",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -89664,6 +89651,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -89858,6 +89858,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Infrastructure.Tests/Persistence/PostCommitRecentItemUsageRecorderTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "IUnitOfWork",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -89952,19 +89965,6 @@
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/RecipeRepositoryIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 2
-    },
-    {
-      "contract": "IUnitOfWork",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/PostCommitRecentItemUsageRecorderTests.cs",
-      "isTest": true,
-      "referenceCount": 6
     },
     {
       "contract": "IUnitOfWork",

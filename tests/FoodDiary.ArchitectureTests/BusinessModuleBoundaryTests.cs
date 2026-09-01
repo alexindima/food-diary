@@ -694,7 +694,7 @@ public sealed class BusinessModuleBoundaryTests {
 
         Assert.DoesNotContain(".AddProductsPersistence()", source, StringComparison.Ordinal);
         Assert.DoesNotContain(".AddRecipesPersistence()", source, StringComparison.Ordinal);
-        Assert.Contains(".AddRecentItemsPersistence()", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("AddRecentItems", source, StringComparison.Ordinal);
         Assert.DoesNotContain(".AddMealsPersistence()", source, StringComparison.Ordinal);
         Assert.DoesNotContain("AddScoped<", source, StringComparison.Ordinal);
     }
@@ -786,7 +786,7 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("MealItemConfiguration.cs", "Modules/Meals/Infrastructure/Model/Configurations/Meals")]
     [InlineData("MealAiSessionConfiguration.cs", "Modules/Meals/Infrastructure/Model/Configurations/Meals")]
     [InlineData("MealAiItemConfiguration.cs", "Modules/Meals/Infrastructure/Model/Configurations/Meals")]
-    [InlineData("RecentItemConfiguration.cs", "Configurations/RecentItems")]
+    [InlineData("RecentItemConfiguration.cs", "Modules/RecentItems/Infrastructure/Model/Configurations/RecentItems")]
     public void MealAndRecentItemConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {

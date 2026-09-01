@@ -31,6 +31,7 @@ public sealed class JobManagerGuardrailTests {
             "AddMarketingModule",
             "AddMealsPersistence",
             "AddNotificationsModule",
+            "AddRecentItemsModule",
             "AddUsersModule",
             "AddWeeklyGoalsModule",
         ];
@@ -96,6 +97,7 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Modules.OpenFoodFacts.Application",
             "FoodDiary.Modules.Products.Application",
             "FoodDiary.Modules.Products.Infrastructure",
+            "FoodDiary.Modules.RecentItems.Infrastructure",
             "FoodDiary.Modules.Recipes.Application",
             "FoodDiary.Modules.Recipes.Infrastructure",
             "FoodDiary.Modules.Statistics.Application",

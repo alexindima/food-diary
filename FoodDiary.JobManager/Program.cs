@@ -34,6 +34,7 @@ builder.Services.AddUsersModule();
 builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
 builder.Services.AddMealsPersistence();
+builder.Services.AddRecentItemsModule();
 builder.Services.AddInfrastructure(builder.Configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddProductsPersistence().AddDashboardReadServices();
 builder.Services.AddImagesInfrastructure();
 builder.Services.AddIntegrations(builder.Configuration);

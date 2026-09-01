@@ -20,10 +20,7 @@ public sealed class BackendModuleManifestTests {
         string modulesRoot = ArchitectureTestPaths.FromRoot("Modules");
         string[] logicalFolderModules = Directory.Exists(modulesRoot)
             ? [.. Directory.GetDirectories(modulesRoot, "*", SearchOption.TopDirectoryOnly)
-                .Where(directory => Directory.GetFiles(
-                    Path.Combine(directory, "Application"),
-                    "*Application*.csproj",
-                    SearchOption.TopDirectoryOnly).Length == 1)
+                .Where(HasApplicationBoundary)
                 .Select(directory => Path.GetFileName(directory))
                 .Order(StringComparer.Ordinal)]
             : [];
@@ -34,6 +31,15 @@ public sealed class BackendModuleManifestTests {
         Assert.Equal(manifest.Inventory.ExtractedModules, extractedModules.Length);
         Assert.Equal(manifest.Inventory.TotalModules, actualModules.Length);
         Assert.Equal(manifest.Modules.Keys.Order(StringComparer.Ordinal), actualModules, StringComparer.Ordinal);
+    }
+
+    private static bool HasApplicationBoundary(string moduleDirectory) {
+        string applicationDirectory = Path.Combine(moduleDirectory, "Application");
+        string abstractionsDirectory = Path.Combine(applicationDirectory, "Abstractions");
+        return Directory.Exists(applicationDirectory) &&
+               (Directory.GetFiles(applicationDirectory, "*Application*.csproj", SearchOption.TopDirectoryOnly).Length == 1 ||
+                (Directory.Exists(abstractionsDirectory) &&
+                 Directory.GetFiles(abstractionsDirectory, "*Application.Abstractions.csproj", SearchOption.TopDirectoryOnly).Length == 1));
     }
 
     [Fact]

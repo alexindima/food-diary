@@ -22,6 +22,7 @@ public sealed class MealsModuleExtractionTests {
             "FoodDiary.Modules.Gamification.Application.Abstractions",
             "FoodDiary.Modules.Meals.Application.Abstractions",
             "FoodDiary.Modules.Meals.Contracts",
+            "FoodDiary.Modules.RecentItems.Application.Abstractions",
         ], references);
     }
 

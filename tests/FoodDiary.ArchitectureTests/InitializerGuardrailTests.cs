@@ -46,6 +46,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Modules.OpenFoodFacts.Infrastructure",
             "FoodDiary.Modules.Products.Application",
             "FoodDiary.Modules.Products.Infrastructure",
+            "FoodDiary.Modules.RecentItems.Infrastructure",
             "FoodDiary.Modules.RecipeCommunity.Infrastructure",
             "FoodDiary.Modules.Recipes.Application",
             "FoodDiary.Modules.Recipes.Infrastructure",

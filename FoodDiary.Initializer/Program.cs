@@ -115,6 +115,7 @@ builder.Services.AddNotificationsModule().AddNotificationsPersistence();
 builder.Services.AddOpenFoodFactsModule();
 builder.Services.AddProductsModule();
 builder.Services.AddRecipesModule();
+builder.Services.AddRecentItemsModule();
 builder.Services.AddUsersModule();
 builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();

@@ -921,6 +921,7 @@
           "FoodDiary.Modules.Gamification.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.RecentItems.Application.Abstractions": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
         }
@@ -963,6 +964,7 @@
           "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Products.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Products.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.RecentItems.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Usda.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
@@ -988,6 +990,7 @@
           "FoodDiary.Application.Images": "[1.0.0, )",
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.RecentItems.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
@@ -1149,6 +1152,8 @@
           "FoodDiary.Modules.OpenFoodFacts.Domain": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Products.PersistenceModel": "[1.0.0, )",
+          "FoodDiary.Modules.RecentItems.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.RecentItems.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Usda.PersistenceModel": "[1.0.0, )",
@@ -1219,6 +1224,7 @@
           "FoodDiary.Modules.Notifications.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Products.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.RecentItems.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Usda.Infrastructure": "[1.0.0, )",
@@ -1978,6 +1984,36 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
+      "fooddiary.modules.recentitems.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recentitems.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recentitems.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.RecentItems.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.RecentItems.PersistenceModel": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.recentitems.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.RecentItems.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
       "fooddiary.modules.recipecommunity.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -2076,6 +2112,7 @@
         "dependencies": {
           "FoodDiary.Application.Users": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.RecentItems.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.PersistenceModel": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"

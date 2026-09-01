@@ -114,6 +114,10 @@ COPY Modules/Recipes/Infrastructure/*.csproj Modules/Recipes/Infrastructure/
 COPY Modules/Products/Infrastructure/*.csproj Modules/Products/Infrastructure/
 COPY Modules/Recipes/Infrastructure/Model/*.csproj Modules/Recipes/Infrastructure/Model/
 COPY Modules/Products/Infrastructure/Model/*.csproj Modules/Products/Infrastructure/Model/
+COPY Modules/RecentItems/Application/Abstractions/*.csproj Modules/RecentItems/Application/Abstractions/
+COPY Modules/RecentItems/Domain/*.csproj Modules/RecentItems/Domain/
+COPY Modules/RecentItems/Infrastructure/*.csproj Modules/RecentItems/Infrastructure/
+COPY Modules/RecentItems/Infrastructure/Model/*.csproj Modules/RecentItems/Infrastructure/Model/
 COPY Modules/Images/Application/*.csproj Modules/Images/Application/
 COPY Modules/Images/Application/Abstractions/*.csproj Modules/Images/Application/Abstractions/
 COPY Modules/Images/Infrastructure/*.csproj Modules/Images/Infrastructure/
@@ -277,6 +281,10 @@ COPY Modules/Recipes/Infrastructure/ Modules/Recipes/Infrastructure/
 COPY Modules/Products/Infrastructure/ Modules/Products/Infrastructure/
 COPY Modules/Recipes/Infrastructure/Model/ Modules/Recipes/Infrastructure/Model/
 COPY Modules/Products/Infrastructure/Model/ Modules/Products/Infrastructure/Model/
+COPY Modules/RecentItems/Application/Abstractions/ Modules/RecentItems/Application/Abstractions/
+COPY Modules/RecentItems/Domain/ Modules/RecentItems/Domain/
+COPY Modules/RecentItems/Infrastructure/ Modules/RecentItems/Infrastructure/
+COPY Modules/RecentItems/Infrastructure/Model/ Modules/RecentItems/Infrastructure/Model/
 COPY Modules/Images/Application/ Modules/Images/Application/
 COPY Modules/Images/Application/Abstractions/ Modules/Images/Application/Abstractions/
 COPY Modules/Images/Infrastructure/ Modules/Images/Infrastructure/

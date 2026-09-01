@@ -102,6 +102,7 @@ public sealed class ProductsModuleExtractionTests {
             "FoodDiary.Modules.OpenFoodFacts.Contracts",
             "FoodDiary.Modules.Products.Application.Abstractions",
             "FoodDiary.Modules.Products.Contracts",
+            "FoodDiary.Modules.RecentItems.Application.Abstractions",
             "FoodDiary.Modules.Usda.Contracts",
         ], references);
     }

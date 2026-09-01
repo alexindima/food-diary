@@ -84,3 +84,7 @@ MealRepository and the four Meals EF mappings live under `Modules/Meals`; the sh
 context explicitly applies `ApplyMealsPersistenceModel`. Keep UserConfiguration,
 user cleanup, Meals DbSets, migrations and snapshot central. Hosts use AddMealsModule;
 JobManager uses AddMealsPersistence only. See `docs/ai/meals-ownership-inventory.md`.
+
+## RecentItems physical ownership
+
+RecentItems repository, post-commit recorder, DI and EF mapping live under `Modules/RecentItems`. The shared context applies its model; migrations/snapshot and post-commit queue/UoW stay central. See `docs/ai/recent-items-ownership-inventory.md`.

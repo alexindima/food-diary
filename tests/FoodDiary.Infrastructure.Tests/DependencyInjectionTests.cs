@@ -19,6 +19,7 @@ using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
+using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
@@ -593,7 +594,8 @@ public sealed class DependencyInjectionTests {
             .AddLessonsModule()
             .AddMealPlanningModule()
             .AddMealsPersistence()
-            .AddRecipeCommunityModule();
+            .AddRecipeCommunityModule()
+            .AddRecentItemsModule();
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 
@@ -1231,7 +1233,8 @@ public sealed class DependencyInjectionTests {
     }
 
     private static Type FindType(string fullName) {
-        return AppDomain.CurrentDomain.GetAssemblies()
+        return typeof(IRecentItemRepository).Assembly.GetType(fullName, throwOnError: false) ??
+            AppDomain.CurrentDomain.GetAssemblies()
             .Select(assembly => assembly.GetType(fullName, throwOnError: false))
             .FirstOrDefault(type => type is not null)
             ?? throw new InvalidOperationException($"Type '{fullName}' was not found.");

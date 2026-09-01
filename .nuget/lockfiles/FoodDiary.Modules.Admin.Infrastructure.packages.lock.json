@@ -425,6 +425,8 @@
           "FoodDiary.Modules.OpenFoodFacts.Domain": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Products.PersistenceModel": "[1.0.0, )",
+          "FoodDiary.Modules.RecentItems.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.RecentItems.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Usda.PersistenceModel": "[1.0.0, )",
@@ -871,6 +873,20 @@
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
+        }
+      },
+      "fooddiary.modules.recentitems.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recentitems.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.RecentItems.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
       "fooddiary.modules.recipecommunity.application.abstractions": {

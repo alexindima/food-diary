@@ -96,6 +96,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Products infrastructure: `Modules/Products/Infrastructure/AGENTS.md`
 - Products persistence model: `Modules/Products/Infrastructure/Model/AGENTS.md`
 - Products tests: `Modules/Products/tests/AGENTS.md`
+- RecentItems logical module: `Modules/RecentItems/AGENTS.md`
+- RecentItems application abstractions: `Modules/RecentItems/Application/Abstractions/AGENTS.md`
+- RecentItems domain: `Modules/RecentItems/Domain/AGENTS.md`
+- RecentItems infrastructure: `Modules/RecentItems/Infrastructure/AGENTS.md`
+- RecentItems persistence model: `Modules/RecentItems/Infrastructure/Model/AGENTS.md`
+- RecentItems tests: `Modules/RecentItems/tests/AGENTS.md`
 - Recipe community logical module: `Modules/RecipeCommunity/AGENTS.md`
 - Recipe community Application: `Modules/RecipeCommunity/Application/AGENTS.md`
 - Recipe community Application/Abstractions: `Modules/RecipeCommunity/Application/Abstractions/AGENTS.md`

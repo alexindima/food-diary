@@ -353,6 +353,17 @@
     <Project Path="Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/FoodDiary.Modules.MealPlanning.Domain.Tests.csproj" />
     <Project Path="Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests.csproj" />
   </Folder>
+  <Folder Name="/Modules/RecentItems/">
+    <Project Path="Modules/RecentItems/Application/Abstractions/FoodDiary.Modules.RecentItems.Application.Abstractions.csproj" />
+    <Project Path="Modules/RecentItems/Domain/FoodDiary.Modules.RecentItems.Domain.csproj" />
+    <Project Path="Modules/RecentItems/Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj" />
+    <Project Path="Modules/RecentItems/Infrastructure/Model/FoodDiary.Modules.RecentItems.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/RecentItems/tests/">
+    <Project Path="Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Domain.Tests/FoodDiary.Modules.RecentItems.Domain.Tests.csproj" />
+    <Project Path="Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Infrastructure.IntegrationTests/FoodDiary.Modules.RecentItems.Infrastructure.IntegrationTests.csproj" />
+    <Project Path="Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Infrastructure.Tests/FoodDiary.Modules.RecentItems.Infrastructure.Tests.csproj" />
+  </Folder>
   <Folder Name="/Modules/RecipeCommunity/">
     <Project Path="Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj" />
     <Project Path="Modules/RecipeCommunity/Application/Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj" />

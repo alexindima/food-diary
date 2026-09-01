@@ -234,3 +234,7 @@ shared DbContext, migrations and snapshot remain central. API and Initializer co
 `AddMealsModule`; JobManager adds `AddMealsPersistence` only. Legacy application
 assembly/CLR identity and HTTP/Swagger behavior are preserved. See
 `docs/ai/meals-ownership-inventory.md` for the evidence and compatibility boundary.
+
+## RecentItems physical ownership
+
+RecentItems aggregate/ID/enum, narrow usage abstractions, repository, post-commit recorder and EF model live under `Modules/RecentItems`; focused tests are nested there. Central User/UserId, DbContext, migrations/snapshot, post-commit queue/UoW and Users cleanup orchestration remain compatibility seams. Products, Recipes and Meals consume narrow module abstractions, and hosts compose `AddRecentItemsModule`. See `docs/ai/recent-items-ownership-inventory.md`.

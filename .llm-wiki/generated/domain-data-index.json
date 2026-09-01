@@ -427,7 +427,7 @@
       "area": "FoodDiary",
       "name": "RecentItem",
       "role": "entity",
-      "path": "FoodDiary.Domain/Entities/Recents/RecentItem.cs",
+      "path": "Modules/RecentItems/Domain/Entities/Recents/RecentItem.cs",
       "line": 8
     },
     {
@@ -875,7 +875,7 @@
       "area": "FoodDiary",
       "name": "RecentItemType",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/RecentItemType.cs",
+      "path": "Modules/RecentItems/Domain/Enums/RecentItemType.cs",
       "line": 2
     },
     {
@@ -1386,7 +1386,7 @@
       "area": "FoodDiary",
       "name": "RecentItemId",
       "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecentItemId.cs",
+      "path": "Modules/RecentItems/Domain/ValueObjects/Ids/RecentItemId.cs",
       "line": 4
     },
     {
@@ -2244,27 +2244,6 @@
       "message": "throw new ArgumentException($\"{clearParamName} cannot be true when {valueParamName} is provided.\", clearParamName)",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
       "line": 595
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"UserId cannot be empty.\", nameof(userId))",
-      "path": "FoodDiary.Domain/Entities/Recents/RecentItem.cs",
-      "line": 23
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"ItemId cannot be empty.\", nameof(itemId))",
-      "path": "FoodDiary.Domain/Entities/Recents/RecentItem.cs",
-      "line": 27
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
-      "path": "FoodDiary.Domain/Entities/Recents/RecentItem.cs",
-      "line": 61
     },
     {
       "area": "FoodDiary",
@@ -5132,6 +5111,27 @@
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"UserId cannot be empty.\", nameof(userId))",
+      "path": "Modules/RecentItems/Domain/Entities/Recents/RecentItem.cs",
+      "line": 23
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"ItemId cannot be empty.\", nameof(itemId))",
+      "path": "Modules/RecentItems/Domain/Entities/Recents/RecentItem.cs",
+      "line": 27
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentOutOfRangeException",
+      "message": "throw new ArgumentOutOfRangeException(nameof(value), \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
+      "path": "Modules/RecentItems/Domain/Entities/Recents/RecentItem.cs",
+      "line": 61
+    },
+    {
+      "area": "FoodDiary",
+      "type": "ArgumentException",
       "message": "throw new ArgumentException(\"RecipeId is required.\", nameof(recipeId))",
       "path": "Modules/RecipeCommunity/Domain/Entities/Recipes/RecipeComment.cs",
       "line": 24
@@ -6229,7 +6229,7 @@
           "expression": "e => e.User)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/RecentItems/RecentItemConfiguration.cs"
+      "path": "Modules/RecentItems/Infrastructure/Model/Configurations/RecentItems/RecentItemConfiguration.cs"
     },
     {
       "area": "FoodDiary",

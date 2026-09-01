@@ -61,10 +61,7 @@ public sealed class ModuleDependencyGraphTests {
             })
             .Concat(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules"))
                 ? Directory.GetDirectories(ArchitectureTestPaths.FromRoot("Modules"), "*", SearchOption.TopDirectoryOnly)
-                    .Where(directory => Directory.GetFiles(
-                        Path.Combine(directory, "Application"),
-                        "*Application*.csproj",
-                        SearchOption.TopDirectoryOnly).Length == 1)
+                    .Where(HasApplicationBoundary)
                     .Select(directory => new { Name = Path.GetFileName(directory), Root = Path.Combine(directory, "Application") })
                 : [])
             .Where(module => declaredModules.Contains(module.Name))
@@ -81,6 +78,15 @@ public sealed class ModuleDependencyGraphTests {
                 .Order(StringComparer.Ordinal)
                 .ToArray(),
             StringComparer.Ordinal);
+    }
+
+    private static bool HasApplicationBoundary(string moduleDirectory) {
+        string applicationDirectory = Path.Combine(moduleDirectory, "Application");
+        string abstractionsDirectory = Path.Combine(applicationDirectory, "Abstractions");
+        return Directory.Exists(applicationDirectory) &&
+               (Directory.GetFiles(applicationDirectory, "*Application*.csproj", SearchOption.TopDirectoryOnly).Length == 1 ||
+                (Directory.Exists(abstractionsDirectory) &&
+                 Directory.GetFiles(abstractionsDirectory, "*Application.Abstractions.csproj", SearchOption.TopDirectoryOnly).Length == 1));
     }
 
     private static IEnumerable<string> ReadReferencedApplicationModules(string path) {

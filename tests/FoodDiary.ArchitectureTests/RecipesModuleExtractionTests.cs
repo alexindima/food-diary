@@ -70,6 +70,7 @@ public sealed class RecipesModuleExtractionTests {
             "FoodDiary.Application.Images",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
+            "FoodDiary.Modules.RecentItems.Application.Abstractions",
             "FoodDiary.Modules.Recipes.Application.Abstractions",
             "FoodDiary.Modules.Recipes.Contracts",
         ], references);

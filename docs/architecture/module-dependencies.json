@@ -24,6 +24,7 @@
     "Notifications": [],
     "OpenFoodFacts": [],
     "Products": ["Images", "OpenFoodFacts", "Usda"],
+    "RecentItems": [],
     "RecipeCommunity": [],
     "Recipes": ["Images"],
     "Statistics": [],

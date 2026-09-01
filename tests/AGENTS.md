@@ -74,3 +74,7 @@ Meals-only application tests, Meal/MealAI invariant tests and MealRepository
 PostgreSQL tests live in the three projects under `Modules/Meals/tests`. Keep mixed
 Domain/DI and cross-module/provider/HTTP suites with their established owners; do
 not duplicate them. See `docs/ai/meals-ownership-inventory.md`.
+
+## RecentItems physical ownership
+
+RecentItems-only domain, unit and PostgreSQL repository suites live under `Modules/RecentItems/tests`. Mixed Users cleanup, shared-context/provider and HTTP suites remain central. See `docs/ai/recent-items-ownership-inventory.md`.
