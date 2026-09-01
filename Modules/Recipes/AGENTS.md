@@ -1,5 +1,7 @@
 # Recipes logical module
 
+Recipes owns the Recipe aggregate, steps, ingredients, recipe-only value objects/events, and focused domain tests. Keep stable `FoodDiary.Domain.*` namespaces. Recipe IDs are owned by dependency-free `Domain.Contracts`; central Domain may reference only that ID seam. Recipes Domain may reference central Domain one-way for User/Product/shared types. Do not restore User.Recipes, Product.RecipeIngredients, Recipe.MealItems, or MealItem.Recipe inverse CLR navigations; preserve their database relationships through explicit unidirectional EF mappings.
+
 Own recipe use cases, aggregate ports, projection contracts, EF mappings and adapters. Preserve legacy Application assembly and CLR namespaces. No Recipes.Domain project: central User.Recipes, Recipe.MealItems, MealItem.Recipe/ApplyRecipeSnapshot and Product.RecipeIngredients are public compatibility seams. RecipeCommunity stays a separate owner. Never remove navigations or change FK/delete/schema semantics to force isolation.
 
 Central DbContext/DbSets/migrations/snapshot remain central; explicitly apply ApplyRecipesPersistenceModel. Shared RecipeCompositionTransactionLock remains central with narrowly granted friend access for Recipes infrastructure and unchanged Products coordination. Hosts call AddRecipesModule; JobManager calls AddRecipesPersistence only, preserving its application registration set.

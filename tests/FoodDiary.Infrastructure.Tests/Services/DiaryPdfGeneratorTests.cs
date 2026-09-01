@@ -516,7 +516,7 @@ public sealed class DiaryPdfGeneratorTests {
         var recipe = Recipe.Create(userId, "soup", servings: 2);
         recipe.ApplyComputedNutrition(200, 10, 4, 30, 6, 0);
         MealItem recipeItem = meal.AddRecipe(recipe.Id, 1);
-        typeof(MealItem).GetProperty(nameof(MealItem.Recipe))!.SetValue(recipeItem, recipe);
+        recipeItem.ApplyRecipeSnapshot(recipe.Name, recipe.ImageUrl, recipe.Servings, recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs, recipe.TotalFiber, recipe.TotalAlcohol);
         MealItem fallbackItem = meal.AddProduct(ProductId.New(), 25);
         MealAiSession session = meal.AddAiSession(
             imageAssetId: null,
@@ -939,27 +939,27 @@ public sealed class DiaryPdfGeneratorTests {
             item.MealId.Value,
             item.Amount,
             item.ProductId?.Value,
-            item.Product?.Name,
-            item.Product?.ImageUrl,
-            item.Product?.BaseUnit.ToString(),
-            item.Product?.BaseAmount,
-            item.Product?.CaloriesPerBase,
-            item.Product?.ProteinsPerBase,
-            item.Product?.FatsPerBase,
-            item.Product?.CarbsPerBase,
-            item.Product?.FiberPerBase,
-            item.Product?.AlcoholPerBase,
+            item.SnapshotName ?? item.Product?.Name,
+            item.SnapshotImageUrl ?? item.Product?.ImageUrl,
+            item.SnapshotUnit ?? item.Product?.BaseUnit.ToString(),
+            item.SnapshotBaseAmount ?? item.Product?.BaseAmount,
+            item.SnapshotCaloriesPerBase ?? item.Product?.CaloriesPerBase,
+            item.SnapshotProteinsPerBase ?? item.Product?.ProteinsPerBase,
+            item.SnapshotFatsPerBase ?? item.Product?.FatsPerBase,
+            item.SnapshotCarbsPerBase ?? item.Product?.CarbsPerBase,
+            item.SnapshotFiberPerBase ?? item.Product?.FiberPerBase,
+            item.SnapshotAlcoholPerBase ?? item.Product?.AlcoholPerBase,
             item.Product?.ProductType,
             item.RecipeId?.Value,
-            item.Recipe?.Name,
-            item.Recipe?.ImageUrl,
-            item.HasNutritionSnapshot ? 1 : item.Recipe?.Servings,
-            item.Recipe?.TotalCalories,
-            item.Recipe?.TotalProteins,
-            item.Recipe?.TotalFats,
-            item.Recipe?.TotalCarbs,
-            item.Recipe?.TotalFiber,
-            item.Recipe?.TotalAlcohol,
+            item.SnapshotName,
+            item.SnapshotImageUrl,
+            item.HasNutritionSnapshot ? 1 : null,
+            item.SnapshotCaloriesPerBase,
+            item.SnapshotProteinsPerBase,
+            item.SnapshotFatsPerBase,
+            item.SnapshotCarbsPerBase,
+            item.SnapshotFiberPerBase,
+            item.SnapshotAlcoholPerBase,
             item.SourceAiItemId?.Value,
             item.Origin);
 

@@ -349,6 +349,7 @@
           "FoodDiary.Modules.RecentItems.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
       },
@@ -357,6 +358,7 @@
         "dependencies": {
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Usda.Domain": "[1.0.0, )"
         }
       },
@@ -416,6 +418,7 @@
           "FoodDiary.Modules.RecentItems.Domain": "[1.0.0, )",
           "FoodDiary.Modules.RecentItems.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.PersistenceModel": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Usda.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Users.PersistenceModel": "[1.0.0, )",
@@ -646,7 +649,8 @@
       "fooddiary.modules.favorites.domain": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )"
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.favorites.persistencemodel": {
@@ -776,13 +780,15 @@
       "fooddiary.modules.mealplanning.domain": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )"
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.mealplanning.persistencemodel": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Modules.MealPlanning.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
@@ -800,6 +806,7 @@
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Images.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
@@ -895,7 +902,8 @@
       "fooddiary.modules.recipecommunity.domain": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )"
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.recipecommunity.persistencemodel": {
@@ -910,6 +918,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
@@ -919,11 +928,25 @@
           "FoodDiary.Domain": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.recipes.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recipes.domain.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.recipes.persistencemodel": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Images.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"

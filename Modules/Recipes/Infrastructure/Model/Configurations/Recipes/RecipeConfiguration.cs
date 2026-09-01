@@ -26,7 +26,7 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
         builder.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);
         builder.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(value: true);
         builder.HasOne(e => e.User)
-            .WithMany(u => u.Recipes)
+            .WithMany()
             .HasForeignKey(e => e.UserId);
 
         builder.HasIndex(e => new { e.UserId, e.CreatedOnUtc });
@@ -41,15 +41,7 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
             .HasMethod("gin")
             .HasOperators("gin_trgm_ops");
 
-        builder.HasMany(e => e.MealItems)
-            .WithOne(mi => mi.Recipe)
-            .HasForeignKey(mi => mi.RecipeId)
-            .IsRequired(false);
-
         builder.Metadata.FindNavigation(nameof(Recipe.Steps))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
-
-        builder.Metadata.FindNavigation(nameof(Recipe.MealItems))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
 
         builder.Metadata.FindNavigation(nameof(Recipe.NestedRecipeUsages))!

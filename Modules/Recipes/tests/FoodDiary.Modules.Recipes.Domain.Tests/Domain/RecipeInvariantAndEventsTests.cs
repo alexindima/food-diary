@@ -4,7 +4,6 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Reflection;
-using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Domain.Tests.Domain;
 
@@ -625,12 +624,10 @@ public class RecipeInvariantAndEventsTests {
     public void NavigationCollections_AreExposedAsReadOnly() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
 
-        ICollection<MealItem> mealItems = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.MealItem>>(recipe.MealItems);
         ICollection<RecipeIngredient> nestedRecipeUsages = Assert.IsAssignableFrom<ICollection<RecipeIngredient>>(recipe.NestedRecipeUsages);
         ICollection<RecipeStep> steps = Assert.IsAssignableFrom<ICollection<RecipeStep>>(recipe.Steps);
 
         Assert.Multiple(
-            () => Assert.True(mealItems.IsReadOnly),
             () => Assert.True(nestedRecipeUsages.IsReadOnly),
             () => Assert.True(steps.IsReadOnly));
     }

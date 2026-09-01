@@ -1,6 +1,5 @@
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -895,9 +894,7 @@ public class ProductInvariantTests {
         Product product = CreateValidProduct();
 
         ICollection<MealItem> mealItems = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.MealItem>>(product.MealItems);
-        ICollection<RecipeIngredient> recipeIngredients = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Recipes.RecipeIngredient>>(product.RecipeIngredients);
 
         Assert.True(mealItems.IsReadOnly);
-        Assert.True(recipeIngredients.IsReadOnly);
     }
 }

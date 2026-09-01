@@ -6,9 +6,12 @@ public sealed class RecipesModuleExtractionTests {
     [InlineData("Application/FoodDiary.Modules.Recipes.Application.csproj")]
     [InlineData("Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj")]
     [InlineData("Contracts/FoodDiary.Modules.Recipes.Contracts.csproj")]
+    [InlineData("Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj")]
+    [InlineData("Domain/FoodDiary.Modules.Recipes.Domain.csproj")]
     [InlineData("Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj")]
     [InlineData("Infrastructure/Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj")]
     [InlineData("tests/FoodDiary.Modules.Recipes.Application.Tests/FoodDiary.Modules.Recipes.Application.Tests.csproj")]
+    [InlineData("tests/FoodDiary.Modules.Recipes.Domain.Tests/FoodDiary.Modules.Recipes.Domain.Tests.csproj")]
     public void OwnedLayer_HasPhysicalProject(string relativePath) {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Recipes", relativePath)));
     }
@@ -24,17 +27,19 @@ public sealed class RecipesModuleExtractionTests {
     }
 
     [Fact]
-    public void CentralDomainCompatibilityGraph_IsPreserved() {
-        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Domain")));
+    public void RecipeDomainOwnership_IsPhysicalAndOneWay() {
+        Assert.True(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Domain")));
         string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Users/User.cs"));
-        string recipe = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Recipes/Recipe.cs"));
         string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Meals/MealItem.cs"));
-        Assert.Contains("IReadOnlyCollection<Recipe> Recipes", user, StringComparison.Ordinal);
-        Assert.Contains("IReadOnlyCollection<MealItem> MealItems", recipe, StringComparison.Ordinal);
-        Assert.Contains("Recipe? Recipe", mealItem, StringComparison.Ordinal);
-        Assert.Contains("ApplyRecipeSnapshot(Recipe recipe)", mealItem, StringComparison.Ordinal);
-        Assert.DoesNotContain("FoodDiary.Modules.Recipes", File.ReadAllText(
+        string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Products/Product.cs"));
+        Assert.DoesNotContain("IReadOnlyCollection<Recipe> Recipes", user, StringComparison.Ordinal);
+        Assert.DoesNotContain("RecipeIngredient", product, StringComparison.Ordinal);
+        Assert.DoesNotContain("Recipe? Recipe", mealItem, StringComparison.Ordinal);
+        Assert.DoesNotContain("ApplyRecipeSnapshot(Recipe recipe)", mealItem, StringComparison.Ordinal);
+        Assert.Contains("FoodDiary.Modules.Recipes.Domain.Contracts", File.ReadAllText(
             ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")), StringComparison.Ordinal);
+        Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
+            "Modules/Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj"));
     }
 
     [Fact]
@@ -73,6 +78,7 @@ public sealed class RecipesModuleExtractionTests {
             "FoodDiary.Modules.RecentItems.Application.Abstractions",
             "FoodDiary.Modules.Recipes.Application.Abstractions",
             "FoodDiary.Modules.Recipes.Contracts",
+            "FoodDiary.Modules.Recipes.Domain",
         ], references);
     }
 

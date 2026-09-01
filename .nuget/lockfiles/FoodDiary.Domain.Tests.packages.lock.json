@@ -110,6 +110,7 @@
         "dependencies": {
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Usda.Domain": "[1.0.0, )"
         }
       },
@@ -155,7 +156,8 @@
       "fooddiary.modules.favorites.domain": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )"
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.gamification.domain": {
@@ -186,7 +188,8 @@
       "fooddiary.modules.mealplanning.domain": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )"
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.notifications.domain": {
@@ -204,7 +207,21 @@
       "fooddiary.modules.recipecommunity.domain": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )"
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recipes.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recipes.domain.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )"
         }
       },
       "fooddiary.modules.usda.domain": {

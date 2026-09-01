@@ -42,7 +42,7 @@ relationships to central User/Product/Recipe types are one-way; do not add a cen
 
 ## Recipes physical ownership
 
-Recipes use cases, ports, read contracts, persistence model and adapters live under `Modules/Recipes`. Recipe/Steps/Ingredients, IDs/value objects/events remain central Domain because public User/MealItem/Product inverse navigations prohibit a one-way extraction. Shared context/migrations/snapshot and cross-module tests stay central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers. See `docs/ai/recipes-ownership-inventory.md`; this is not full Domain/database isolation.
+Recipes owns Recipe/Steps/Ingredients, recipe-only value objects/events and focused domain tests under `Modules/Recipes/Domain`. Recipe IDs live in dependency-free `Modules/Recipes/Domain.Contracts` with stable namespaces; central Domain references only that seam. User/Product/MealItem expose no Recipe inverse CLR navigations, while EF preserves the relationships unidirectionally. Shared context/migrations/snapshot and mixed cross-module tests stay central.
 
 ## Admin physical ownership
 

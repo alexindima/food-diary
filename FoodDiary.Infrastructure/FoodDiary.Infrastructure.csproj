@@ -52,6 +52,7 @@
     <ProjectReference Include="../Modules/RecipeCommunity/Infrastructure/Model/FoodDiary.Modules.RecipeCommunity.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Recipes/Infrastructure/Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
     <ProjectReference Include="../Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj" />

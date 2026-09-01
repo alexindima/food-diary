@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
@@ -205,7 +206,6 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .Include(m => m.Items)
             .ThenInclude(i => i.Product)
             .Include(m => m.Items)
-            .ThenInclude(i => i.Recipe)
             .Include(m => m.AiSessions)
             .ThenInclude(s => s.Items);
 
@@ -336,12 +336,27 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
                 .ToDictionaryAsync(asset => asset.Id, asset => asset.Url, cancellationToken)
                 .ConfigureAwait(false);
 
-        return [.. meals.Select(meal => ToMealProjectionReadModel(meal, imageUrlsById))];
+        RecipeId[] legacyRecipeIds = [.. meals
+            .SelectMany(static meal => meal.Items)
+            .Where(static item => item.RecipeId.HasValue && !item.HasNutritionSnapshot)
+            .Select(static item => item.RecipeId!.Value)
+            .Distinct()];
+
+        Dictionary<RecipeId, Recipe> legacyRecipesById = legacyRecipeIds.Length == 0
+            ? []
+            : await context.Recipes
+                .AsNoTracking()
+                .Where(recipe => ((IEnumerable<RecipeId>)legacyRecipeIds).Contains(recipe.Id))
+                .ToDictionaryAsync(recipe => recipe.Id, cancellationToken)
+                .ConfigureAwait(false);
+
+        return [.. meals.Select(meal => ToMealProjectionReadModel(meal, imageUrlsById, legacyRecipesById))];
     }
 
     private static MealProjectionReadModel ToMealProjectionReadModel(
         Meal meal,
-        IReadOnlyDictionary<ImageAssetId, string> imageUrlsById) {
+        IReadOnlyDictionary<ImageAssetId, string> imageUrlsById,
+        IReadOnlyDictionary<RecipeId, Recipe> legacyRecipesById) {
         return new MealProjectionReadModel(
             meal.Id.Value,
             meal.Date,
@@ -364,17 +379,26 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             meal.ManualAlcohol,
             meal.PreMealSatietyLevel,
             meal.PostMealSatietyLevel,
-            ToMealItemProjectionReadModels(meal),
+            ToMealItemProjectionReadModels(meal, legacyRecipesById),
             ToMealAiSessionProjectionReadModels(meal, imageUrlsById));
     }
 
-    private static List<MealItemProjectionReadModel> ToMealItemProjectionReadModels(Meal meal) {
+    private static List<MealItemProjectionReadModel> ToMealItemProjectionReadModels(
+        Meal meal,
+        IReadOnlyDictionary<RecipeId, Recipe> legacyRecipesById) {
         return [.. meal.Items
             .OrderBy(static item => item.Id.Value)
-            .Select(ToMealItemProjectionReadModel)];
+            .Select(item => ToMealItemProjectionReadModel(item, legacyRecipesById))];
     }
 
-    private static MealItemProjectionReadModel ToMealItemProjectionReadModel(MealItem item) {
+    private static MealItemProjectionReadModel ToMealItemProjectionReadModel(
+        MealItem item,
+        IReadOnlyDictionary<RecipeId, Recipe> legacyRecipesById) {
+        Recipe? legacyRecipe = item.RecipeId is { } recipeId
+            && legacyRecipesById.TryGetValue(recipeId, out Recipe? recipe)
+                ? recipe
+                : null;
+
         return new MealItemProjectionReadModel(
             item.Id.Value,
             item.MealId.Value,
@@ -392,25 +416,25 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             item.SnapshotAlcoholPerBase ?? item.Product?.AlcoholPerBase,
             item.Product?.ProductType,
             item.RecipeId?.Value,
-            item.SnapshotName ?? item.Recipe?.Name,
-            item.SnapshotImageUrl ?? item.Recipe?.ImageUrl,
-            GetRecipeServings(item),
-            item.SnapshotCaloriesPerBase ?? item.Recipe?.TotalCalories,
-            item.SnapshotProteinsPerBase ?? item.Recipe?.TotalProteins,
-            item.SnapshotFatsPerBase ?? item.Recipe?.TotalFats,
-            item.SnapshotCarbsPerBase ?? item.Recipe?.TotalCarbs,
-            item.SnapshotFiberPerBase ?? item.Recipe?.TotalFiber,
-            item.SnapshotAlcoholPerBase ?? item.Recipe?.TotalAlcohol,
+            item.SnapshotName ?? legacyRecipe?.Name,
+            item.SnapshotImageUrl ?? legacyRecipe?.ImageUrl,
+            GetRecipeServings(item, legacyRecipe),
+            item.SnapshotCaloriesPerBase ?? legacyRecipe?.TotalCalories,
+            item.SnapshotProteinsPerBase ?? legacyRecipe?.TotalProteins,
+            item.SnapshotFatsPerBase ?? legacyRecipe?.TotalFats,
+            item.SnapshotCarbsPerBase ?? legacyRecipe?.TotalCarbs,
+            item.SnapshotFiberPerBase ?? legacyRecipe?.TotalFiber,
+            item.SnapshotAlcoholPerBase ?? legacyRecipe?.TotalAlcohol,
             item.SourceAiItemId?.Value,
             item.Origin);
     }
 
-    private static int? GetRecipeServings(MealItem item) {
+    private static int? GetRecipeServings(MealItem item, Recipe? legacyRecipe) {
         if (item.HasNutritionSnapshot) {
             return 1;
         }
 
-        return item.Recipe?.Servings;
+        return legacyRecipe?.Servings;
     }
 
     private static List<MealAiSessionProjectionReadModel> ToMealAiSessionProjectionReadModels(

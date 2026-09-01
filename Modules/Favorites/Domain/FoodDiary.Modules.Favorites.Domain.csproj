@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
+    <ProjectReference Include="../../Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
   </ItemGroup>
 
 </Project>

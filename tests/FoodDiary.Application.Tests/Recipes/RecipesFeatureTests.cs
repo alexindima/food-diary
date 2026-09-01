@@ -217,7 +217,7 @@ public partial class RecipesFeatureTests {
             UserId userId,
             bool includePublic = true,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult(recipe.MealItems.Count + recipe.NestedRecipeUsages.Count);
+            Task.FromResult(recipe.NestedRecipeUsages.Count);
 
         public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
 

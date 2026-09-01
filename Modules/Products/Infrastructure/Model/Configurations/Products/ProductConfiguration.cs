@@ -59,7 +59,5 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
         builder.Metadata.FindNavigation(nameof(Product.MealItems))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Metadata.FindNavigation(nameof(Product.RecipeIngredients))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

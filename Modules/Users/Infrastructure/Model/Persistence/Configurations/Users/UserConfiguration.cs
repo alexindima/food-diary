@@ -114,8 +114,6 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(User.Products))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
-        builder.Metadata.FindNavigation(nameof(User.Recipes))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(User.WeightGoals))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(User.WaistGoals))!

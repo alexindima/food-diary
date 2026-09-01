@@ -89,7 +89,7 @@ internal sealed class ProductOverviewReadService(FoodDiaryDbContext context) : I
         return query;
     }
 
-    private static IQueryable<ProductOverviewReadRow> ProjectRows(IQueryable<Product> query) =>
+    private IQueryable<ProductOverviewReadRow> ProjectRows(IQueryable<Product> query) =>
         query.Select(product => new ProductOverviewReadRow(
             product.Id,
             product.UserId,
@@ -111,7 +111,7 @@ internal sealed class ProductOverviewReadService(FoodDiaryDbContext context) : I
             product.CarbsPerBase,
             product.FiberPerBase,
             product.AlcoholPerBase,
-            product.MealItems.Count + product.RecipeIngredients.Count,
+            product.MealItems.Count + context.RecipeIngredients.Count(ingredient => ingredient.ProductId == product.Id),
             product.Visibility,
             product.CreatedOnUtc,
             product.UsdaFdcId));

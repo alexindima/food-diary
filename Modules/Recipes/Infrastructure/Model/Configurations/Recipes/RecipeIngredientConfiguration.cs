@@ -29,7 +29,7 @@ internal sealed class RecipeIngredientConfiguration : IEntityTypeConfiguration<R
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(e => e.Product)
-            .WithMany(p => p.RecipeIngredients)
+            .WithMany()
             .HasForeignKey(e => e.ProductId)
             .IsRequired(false);
 

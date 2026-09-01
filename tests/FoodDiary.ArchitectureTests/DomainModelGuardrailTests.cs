@@ -19,6 +19,7 @@ public class DomainModelGuardrailTests {
         Assert.Equal([
             "FoodDiary.Domain.Primitives",
             "FoodDiary.Modules.Images.Contracts",
+            "FoodDiary.Modules.Recipes.Domain.Contracts",
             "FoodDiary.Modules.Usda.Domain",
         ], projectReferences);
         Assert.Empty(packageReferences);

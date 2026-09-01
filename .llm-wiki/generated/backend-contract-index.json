@@ -15208,7 +15208,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs"
+        "Modules/Recipes/Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -15310,7 +15310,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/RecipeManualNutritionSetDomainEvent.cs"
+        "Modules/Recipes/Domain/Events/RecipeManualNutritionSetDomainEvent.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -59556,32 +59556,6 @@
         "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/Events/RecipeManualNutritionSetDomainEvent.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/Events/UserDeletedDomainEvent.cs",
       "isTest": false,
       "referenceCount": 1
@@ -59726,6 +59700,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Domain/Events/ShoppingListNameUpdatedDomainEvent.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Domain/Events/RecipeManualNutritionSetDomainEvent.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -61103,45 +61103,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/RecipeId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/RecipeIngredientId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/RecipeStepId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/RoleId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61819,6 +61780,45 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/RecipeCommunity/Domain/ValueObjects/Ids/RecipeLikeId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Domain.Contracts/ValueObjects/Ids/RecipeId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Domain.Contracts/ValueObjects/Ids/RecipeIngredientId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Recipes/Domain.Contracts/ValueObjects/Ids/RecipeStepId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -104935,10 +104935,10 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs"
+        "Modules/Recipes/Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
+      "consumerPath": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -104948,10 +104948,10 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs"
+        "Modules/Recipes/Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/Domain/RecipeInvariantAndEventsTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -104961,10 +104961,10 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs"
+        "Modules/Recipes/Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/RecipeInvariantAndEventsTests.cs",
+      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -105286,10 +105286,10 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/RecipeManualNutritionSetDomainEvent.cs"
+        "Modules/Recipes/Domain/Events/RecipeManualNutritionSetDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
+      "consumerPath": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -105299,10 +105299,10 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/RecipeManualNutritionSetDomainEvent.cs"
+        "Modules/Recipes/Domain/Events/RecipeManualNutritionSetDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
+      "consumerPath": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/Domain/RecipeInvariantAndEventsTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -105312,10 +105312,10 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/RecipeManualNutritionSetDomainEvent.cs"
+        "Modules/Recipes/Domain/Events/RecipeManualNutritionSetDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/RecipeInvariantAndEventsTests.cs",
+      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

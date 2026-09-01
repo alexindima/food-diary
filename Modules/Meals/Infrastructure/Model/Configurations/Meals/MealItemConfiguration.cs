@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -54,8 +55,8 @@ internal sealed class MealItemConfiguration : IEntityTypeConfiguration<MealItem>
             .HasForeignKey(e => e.ProductId)
             .IsRequired(false);
 
-        builder.HasOne(e => e.Recipe)
-            .WithMany(r => r.MealItems)
+        builder.HasOne<Recipe>()
+            .WithMany()
             .HasForeignKey(e => e.RecipeId)
             .IsRequired(false);
     }

@@ -1,6 +1,5 @@
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
@@ -44,10 +43,8 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public UserId UserId { get; private set; }
     public User User { get; private set; } = null!;
     private readonly List<RecipeStep> _steps = [];
-    private readonly List<MealItem> _mealItems = [];
     private readonly List<RecipeIngredient> _nestedRecipeUsages = [];
     public IReadOnlyCollection<RecipeStep> Steps => _steps.AsReadOnly();
-    public IReadOnlyCollection<MealItem> MealItems => _mealItems.AsReadOnly();
     public IReadOnlyCollection<RecipeIngredient> NestedRecipeUsages => _nestedRecipeUsages.AsReadOnly();
 
     private Recipe() {

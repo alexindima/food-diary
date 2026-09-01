@@ -2,7 +2,6 @@ using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -51,9 +50,7 @@ public sealed class Product : AggregateRoot<ProductId> {
     public UserId UserId { get; private set; }
     public User User { get; private set; } = null!;
     private readonly List<MealItem> _mealItems = [];
-    private readonly List<RecipeIngredient> _recipeIngredients = [];
     public IReadOnlyCollection<MealItem> MealItems => _mealItems.AsReadOnly();
-    public IReadOnlyCollection<RecipeIngredient> RecipeIngredients => _recipeIngredients.AsReadOnly();
     public UsdaFood? UsdaFood { get; private set; }
 
     private Product() {

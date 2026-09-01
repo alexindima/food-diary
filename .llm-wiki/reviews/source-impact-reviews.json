@@ -52,26 +52,18 @@
       "pageSha256": "1e1f4453a594ad85326267450f3f408797d4ccac7e34d13f5d5b06b12d2fe5bc",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "b638e411745b45cd996eb8288fa0aaea368cf0302434dc9998b76152a9753d1d"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "5eaaabe75a3f8c5bfd59382067c7c775d4f612ab200554360db2ce24d5b00a84"
-        },
-        {
-          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "3ec0331e7c99fe56083a2af5efa11056685b9fc04d12b7b3f97a4b41fbc225e6"
-        },
-        {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "af47f34e59a865304d0f8edf24ed0255bf75984906ac5b43a85b70c9742a2e2e"
+          "sha256": "7ea06373465434e70b3e4d399bf09ff248e65d4f97ee8b60e1a0ca806e431cbe"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "69fbdeb41e72eb0dfe7d4138daf9329c736386f5a99938b69119461852950904"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "No HTTP contract changed; assembly moves preserve CLR namespaces and coordinated host builds.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:23.4477325Z"
+      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
+      "reviewedAtUtc": "2026-09-01T21:48:55.2110593Z"
     },
     {
       "pageId": "system.architecture",
@@ -79,18 +71,14 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "b638e411745b45cd996eb8288fa0aaea368cf0302434dc9998b76152a9753d1d"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "5eaaabe75a3f8c5bfd59382067c7c775d4f612ab200554360db2ce24d5b00a84"
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "68ab71a30e18e68fdef0d3eff45fd341f99f3001c482d4a76eaf1ab54affc726"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "Reviewed generated catalog and architecture documentation against the new Recipes Domain ownership.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:23.6467696Z"
+      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
+      "reviewedAtUtc": "2026-09-01T21:48:55.4511802Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -203,14 +191,18 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "b638e411745b45cd996eb8288fa0aaea368cf0302434dc9998b76152a9753d1d"
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "ab1b9d46fc00ad94cddeb0c1b27ba5fc6940b3b997548d1168b440d85b9d0e71"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "68ab71a30e18e68fdef0d3eff45fd341f99f3001c482d4a76eaf1ab54affc726"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "Dependency matrix and architecture ownership guardrails cover the new projects and pass.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:24.0817284Z"
+      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
+      "reviewedAtUtc": "2026-09-01T21:51:04.8538931Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -219,13 +211,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7c5263a922a60ab003438121581074d7b1339d90d6bf8cef810338812d3f42d0"
+          "sha256": "65daa2e06c3c95d3aef9327ab006c41c17cf38b3925e06ac02281c046b634aa0"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "No HTTP contract changed; assembly moves preserve CLR namespaces and coordinated host builds.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:24.6034927Z"
+      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
+      "reviewedAtUtc": "2026-09-01T21:48:56.4028610Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -482,17 +474,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "cb9d5ae7080d2e2d10935b2c680c65283c1d598734601f09baa1df7d7abd1b14"
+          "sha256": "0eb777651c7bfb09c23ee125a856b61d3efcbe3ca745479960554792f9a33f83"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "af47f34e59a865304d0f8edf24ed0255bf75984906ac5b43a85b70c9742a2e2e"
+          "sha256": "7ea06373465434e70b3e4d399bf09ff248e65d4f97ee8b60e1a0ca806e431cbe"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "69fbdeb41e72eb0dfe7d4138daf9329c736386f5a99938b69119461852950904"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "Dependency matrix and architecture ownership guardrails cover the new projects and pass.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:24.8378856Z"
+      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
+      "reviewedAtUtc": "2026-09-01T21:48:56.7613472Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -760,13 +756,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4e3658dbd1456a56f83dc139bf17c43f82eaf74ab1a161036d3e1ba42e7f2901"
+          "sha256": "f2605e9a89429ed9689da6b54681686ae5190c89e2e8a4d53e6daaa84588a683"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "No authorization, sensitive-data flow, logging, provider, or secret behavior changed.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:25.1507094Z"
+      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
+      "reviewedAtUtc": "2026-09-01T21:48:57.1493444Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -805,13 +801,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a892c8feb4a1e1c10a833b597e922d4c5563c2db6b3a486d792a06710d23adad"
+          "sha256": "19c8d3286cd4ac8eb52d880e220cdcf4bed81dd3891c061e11584dd44adf7875"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "Dependency matrix and architecture ownership guardrails cover the new projects and pass.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:25.6069082Z"
+      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
+      "reviewedAtUtc": "2026-09-01T21:51:05.5788871Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -888,13 +884,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d2196b97501fb91d16d66c4e89133638edb345b01ef24286af18d6cd5a67a294"
+          "sha256": "d9acbd33280068bb616372806ed47815cdc009fe03e3bc1492d91d216648656b"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "Reviewed generated catalog and architecture documentation against the new Recipes Domain ownership.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:26.1585121Z"
+      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
+      "reviewedAtUtc": "2026-09-01T21:51:06.1810978Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -903,21 +899,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a892c8feb4a1e1c10a833b597e922d4c5563c2db6b3a486d792a06710d23adad"
+          "sha256": "19c8d3286cd4ac8eb52d880e220cdcf4bed81dd3891c061e11584dd44adf7875"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d2196b97501fb91d16d66c4e89133638edb345b01ef24286af18d6cd5a67a294"
+          "sha256": "d9acbd33280068bb616372806ed47815cdc009fe03e3bc1492d91d216648656b"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4e3658dbd1456a56f83dc139bf17c43f82eaf74ab1a161036d3e1ba42e7f2901"
+          "sha256": "f2605e9a89429ed9689da6b54681686ae5190c89e2e8a4d53e6daaa84588a683"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "No authorization, sensitive-data flow, logging, provider, or secret behavior changed.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:26.6030603Z"
+      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
+      "reviewedAtUtc": "2026-09-01T21:51:06.9291540Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1155,13 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "405d02d1e572aae6fafa1e9cfaaf3d5ca447c4973ab63b0a7d6ad197213c1173"
+          "sha256": "57ef38320421a7aaf6d65591e2894719fb05c31fee9c8584a22ec4a3f195a27e"
         }
       ],
-      "reason": "Reviewed regenerated source-impact pages against current source, project graph, EF mappings and passing architecture/provider/HTTP evidence; changes reflect only MealPlanning ShoppingLists Domain ownership and removal of the unused central inverse CLR navigation.",
+      "reason": "Reviewed generated catalog and architecture documentation against the new Recipes Domain ownership.",
       "baseRef": "HEAD",
-      "gitHead": "2650ae47fbf6658b83c3c7066f9c07308bb74585",
-      "reviewedAtUtc": "2026-09-01T20:50:25.8881489Z"
+      "gitHead": "5ae72264297b650288703079aef4c9f73d22cc50",
+      "reviewedAtUtc": "2026-09-01T21:48:58.0906218Z"
     },
     {
       "pageId": "workflow.review-diff",

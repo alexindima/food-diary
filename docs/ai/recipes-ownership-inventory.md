@@ -1,6 +1,6 @@
 # Recipes extraction ownership inventory
 
-Base: `a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6`. Recorded before production edits in the clean `1db9/FD` worktree.
+Current domain extraction base: `5ae72264297b650288703079aef4c9f73d22cc50`.
 
 | Responsibility | Destination or retained owner |
 | --- | --- |
@@ -9,13 +9,14 @@ Base: `a11d9a5d2c4dce2682abb4691b2b23fb6b38b9a6`. Recorded before production edi
 | IRecipeAccessService, IRecipeLookupService, IRecipeOverviewReadService and their four projection/filter models | `Modules/Recipes/Contracts`, preserving CLR namespaces; Meals, Favorites and RecipeCommunity consume the existing access/projection surface |
 | RecipeRepository, RecipeOverviewReadService, RecipeAccessService, RecipeLookupService, EfRecipeMutationTransactionRunner and scoped registration | `Modules/Recipes/Infrastructure`; same shared context, tracking, access predicates, aliases, execution strategy and transaction boundaries |
 | Recipe, RecipeStep and RecipeIngredient EF mappings | `Modules/Recipes/Infrastructure/Model`, explicitly applied by the central context; no relationship, FK, delete rule, index, conversion or schema change |
-| Recipe aggregate, steps, ingredients, three IDs, Recipe value objects and nutrition domain events | Remain central Domain: User.Recipes, Recipe.User, Recipe.MealItems, MealItem.Recipe and ApplyRecipeSnapshot(Recipe) require a bidirectional assembly graph if extracted. RecipeIngredient.Product and Product.RecipeIngredients add another central inverse relationship. No independent Recipes.Domain project is justified. |
-| RecipeCommunity RecipeComment.Recipe | Remains in RecipeCommunity Domain with a one-way reference to central Recipe; moving that neighbor or removing its navigation is outside scope. ContentReports reportability keeps its current recipe visibility/ownership projection. |
+| Recipe aggregate, steps, ingredients, Recipe-only value objects and nutrition domain events | `Modules/Recipes/Domain`, preserving CLR namespaces. Cross-owner relationships are unidirectional from Recipes; central User/Product and Meals no longer own Recipe inverse navigations. Legacy MealItem rows without snapshots use an explicit read-side Recipe lookup. |
+| RecipeId, RecipeStepId and RecipeIngredientId | `Modules/Recipes/Domain.Contracts`; central Domain may reference only this dependency-light identity project, avoiding a central Domain -> Recipes Domain cycle. |
+| RecipeCommunity RecipeComment.Recipe | Remains in RecipeCommunity Domain with a one-way reference to Recipes Domain. ContentReports reportability keeps its current recipe visibility/ownership projection. |
 | RecipeCompositionTransactionLock | Remains central, shared by Product and Recipe mutation runners. Grant only explicit module infrastructure friend access; do not duplicate lock keys or widen public API. |
 | FoodDiaryDbContext/DbSets, migration history/snapshot, User cleanup, Meals/Product aggregates and mixed projections | Remain central/current owner; this is physical cohesion of owned layers, not full domain or database isolation. |
 | Providers/jobs/outbox | Recipes owns no external provider or scheduled job. Images owns media lifecycle and object-deletion outbox; RecentItems owns usage ordering; Favorites owns favorite relations. Preserve calls and cancellation/retries. |
 | Focused application tests | Move Recipes-only test slices to `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests`; retain mixed Favorites service cases at the existing owner if present. Shared test helpers must not create cross-test-project dependencies. |
-| Domain, PostgreSQL, HTTP, host and mixed tests | Central Domain tests retain central aggregate and Meal snapshot coverage. RecipeRepositoryIntegrationTests contains Product transaction and Favorites scenarios and retains the shared PostgreSQL fixture. RecipePostgresApiFlowTests/AuthAndRecipesFlowTests, Presentation mappings/controllers, DI and cross-module suites remain at their current owners; no duplicated suites. |
+| Domain, PostgreSQL, HTTP, host and mixed tests | Recipe aggregate invariants move to `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests`. Central Meal/User tests retain only their owners' behavior. RecipeRepositoryIntegrationTests contains Product transaction and Favorites scenarios and retains the shared PostgreSQL fixture. HTTP, Presentation, DI and cross-module suites remain at their current owners; no duplicated suites. |
 
 Required verification includes module application tests, central Domain/Meals snapshots, PostgreSQL nested/access/transaction/duplicate/delete flows, mixed repositories, Favorites/RecipeCommunity/ContentReports consumers, DI, Presentation/HTTP and full architecture. Existing test references are navigation only until execution succeeds. Full Infrastructure.IntegrationTests must execute once without a filter when demanded by policy; EF pending-model comparison is independent evidence.
 

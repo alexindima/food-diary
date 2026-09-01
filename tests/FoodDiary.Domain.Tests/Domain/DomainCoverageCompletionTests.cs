@@ -190,7 +190,7 @@ public sealed class DomainCoverageCompletionTests {
         source.ApplySource(MealAiItemId.New(), MealItemOrigin.AiText);
         source.ApplySource(source.SourceAiItemId, MealItemOrigin.AiText);
         target.CopySourceAndSnapshotFrom(source);
-        target.ApplyRecipeSnapshot(recipe);
+        target.ApplyRecipeSnapshot(recipe.Name, recipe.ImageUrl, recipe.Servings, recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs, recipe.TotalFiber, recipe.TotalAlcohol);
         target.ApplySource(sourceAiItemId: null, MealItemOrigin.Barcode);
         ReadPublicProperties(source);
         ReadPublicProperties(target);

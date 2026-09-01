@@ -132,7 +132,7 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
             .Where(r => r.Id == id && (includePublic
                 ? r.UserId == userId || r.Visibility == Visibility.Public
                 : r.UserId == userId))
-            .Select(r => r.MealItems.Count + r.NestedRecipeUsages.Count)
+            .Select(r => context.MealItems.Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count)
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
 }

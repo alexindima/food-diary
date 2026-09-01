@@ -395,11 +395,14 @@
     <Project Path="Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" />
     <Project Path="Modules/Recipes/Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" />
     <Project Path="Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
+    <Project Path="Modules/Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj" />
+    <Project Path="Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
     <Project Path="Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj" />
     <Project Path="Modules/Recipes/Infrastructure/Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj" />
   </Folder>
   <Folder Name="/Modules/Recipes/tests/">
     <Project Path="Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/FoodDiary.Modules.Recipes.Application.Tests.csproj" />
+    <Project Path="Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/FoodDiary.Modules.Recipes.Domain.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Admin/">
     <Project Path="Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />

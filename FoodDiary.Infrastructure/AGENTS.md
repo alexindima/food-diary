@@ -54,7 +54,7 @@ module adapter project. User cleanup, DbContext and migrations remain here.
 
 ## Recipes physical ownership
 
-Recipes use cases, ports, read contracts, persistence model and adapters live under `Modules/Recipes`. Recipe/Steps/Ingredients, IDs/value objects/events remain central Domain because public User/MealItem/Product inverse navigations prohibit a one-way extraction. Shared context/migrations/snapshot and cross-module tests stay central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers. See `docs/ai/recipes-ownership-inventory.md`; this is not full Domain/database isolation.
+Recipes aggregate ownership lives under `Modules/Recipes/Domain`; IDs live in dependency-free `Domain.Contracts`. Recipe mappings preserve User, Product and MealItem relationships with unidirectional Fluent API mappings. Shared context/migrations/snapshot and mixed integration tests remain central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers.
 
 ## Admin physical ownership
 

@@ -8,7 +8,7 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3542,
+    "sourceFiles": 3543,
     "symbols": 3531,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 166,
@@ -2152,35 +2152,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "Product",
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Products/Product.cs",
-      "line": 13
-    },
-    {
-      "name": "Recipe",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Recipes/Recipe.cs",
       "line": 12
-    },
-    {
-      "name": "RecipeIngredient",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Recipes/RecipeIngredient.cs",
-      "line": 7
-    },
-    {
-      "name": "RecipeStep",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Recipes/RecipeStep.cs",
-      "line": 6
     },
     {
       "name": "WaistGoal",
@@ -2222,7 +2201,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "User",
@@ -2407,20 +2386,6 @@
       "line": 5
     },
     {
-      "name": "RecipeAutoNutritionEnabledDomainEvent",
-      "kind": "record",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs",
-      "line": 5
-    },
-    {
-      "name": "RecipeManualNutritionSetDomainEvent",
-      "kind": "record",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Events/RecipeManualNutritionSetDomainEvent.cs",
-      "line": 5
-    },
-    {
       "name": "UserDeletedDomainEvent",
       "kind": "record",
       "role": "Event",
@@ -2537,27 +2502,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/ProductId.cs",
-      "line": 4
-    },
-    {
-      "name": "RecipeId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecipeId.cs",
-      "line": 4
-    },
-    {
-      "name": "RecipeIngredientId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecipeIngredientId.cs",
-      "line": 4
-    },
-    {
-      "name": "RecipeStepId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RecipeStepId.cs",
       "line": 4
     },
     {
@@ -2678,41 +2622,6 @@
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/ProfileWeightKg.cs",
       "line": 4
-    },
-    {
-      "name": "RecipeDetailsState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/RecipeDetailsState.cs",
-      "line": 5
-    },
-    {
-      "name": "RecipeNutrition",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/RecipeNutrition.cs",
-      "line": 6
-    },
-    {
-      "name": "RecipeNutritionState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/RecipeNutritionState.cs",
-      "line": 2
-    },
-    {
-      "name": "RecipeStepContentState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/RecipeStepContentState.cs",
-      "line": 6
-    },
-    {
-      "name": "RecipeUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/RecipeUpdate.cs",
-      "line": 5
     },
     {
       "name": "ThemeCode",
@@ -20485,7 +20394,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealItemConfiguration.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "MealsPersistenceModelRegistration",
@@ -20499,7 +20408,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "DietologistInvitationDecisionNotificationPayload",
@@ -22810,6 +22719,97 @@
       "role": "Other",
       "path": "Modules/Recipes/Contracts/Recipes/Models/RecipeQueryFilters.cs",
       "line": 2
+    },
+    {
+      "name": "RecipeId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Recipes/Domain.Contracts/ValueObjects/Ids/RecipeId.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipeIngredientId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Recipes/Domain.Contracts/ValueObjects/Ids/RecipeIngredientId.cs",
+      "line": 4
+    },
+    {
+      "name": "RecipeStepId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Recipes/Domain.Contracts/ValueObjects/Ids/RecipeStepId.cs",
+      "line": 4
+    },
+    {
+      "name": "Recipe",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
+      "line": 11
+    },
+    {
+      "name": "RecipeIngredient",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Recipes/Domain/Entities/Recipes/RecipeIngredient.cs",
+      "line": 7
+    },
+    {
+      "name": "RecipeStep",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Recipes/Domain/Entities/Recipes/RecipeStep.cs",
+      "line": 6
+    },
+    {
+      "name": "RecipeAutoNutritionEnabledDomainEvent",
+      "kind": "record",
+      "role": "Event",
+      "path": "Modules/Recipes/Domain/Events/RecipeAutoNutritionEnabledDomainEvent.cs",
+      "line": 5
+    },
+    {
+      "name": "RecipeManualNutritionSetDomainEvent",
+      "kind": "record",
+      "role": "Event",
+      "path": "Modules/Recipes/Domain/Events/RecipeManualNutritionSetDomainEvent.cs",
+      "line": 5
+    },
+    {
+      "name": "RecipeDetailsState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Recipes/Domain/ValueObjects/RecipeDetailsState.cs",
+      "line": 5
+    },
+    {
+      "name": "RecipeNutrition",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Recipes/Domain/ValueObjects/RecipeNutrition.cs",
+      "line": 6
+    },
+    {
+      "name": "RecipeNutritionState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Recipes/Domain/ValueObjects/RecipeNutritionState.cs",
+      "line": 2
+    },
+    {
+      "name": "RecipeStepContentState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Recipes/Domain/ValueObjects/RecipeStepContentState.cs",
+      "line": 6
+    },
+    {
+      "name": "RecipeUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Recipes/Domain/ValueObjects/RecipeUpdate.cs",
+      "line": 5
     },
     {
       "name": "RecipeConfiguration",

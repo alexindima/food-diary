@@ -74,7 +74,7 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
 
         int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         IQueryable<Recipe> orderedQuery = string.Equals(sortBy, "popular", StringComparison.OrdinalIgnoreCase)
-            ? query.OrderByDescending(r => r.MealItems.Count + r.NestedRecipeUsages.Count).ThenByDescending(r => r.CreatedOnUtc)
+            ? query.OrderByDescending(r => context.MealItems.Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count).ThenByDescending(r => r.CreatedOnUtc)
             : query.OrderByDescending(r => r.CreatedOnUtc);
 
         List<RecipeOverviewReadRow> rows = await ProjectRows(orderedQuery
@@ -153,7 +153,7 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
         return query;
     }
 
-    private static IQueryable<RecipeOverviewReadRow> ProjectRows(IQueryable<Recipe> query, UserId currentUserId) =>
+    private IQueryable<RecipeOverviewReadRow> ProjectRows(IQueryable<Recipe> query, UserId currentUserId) =>
         query.Select(recipe => new RecipeOverviewReadRow(
             recipe.Id, recipe.UserId, recipe.Name, recipe.Description, recipe.Comment,
             recipe.Category, recipe.ImageUrl, recipe.ImageAssetId, recipe.PrepTime, recipe.CookTime,
@@ -161,7 +161,7 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
             recipe.TotalFiber, recipe.TotalAlcohol, recipe.IsNutritionAutoCalculated,
             recipe.ManualCalories, recipe.ManualProteins, recipe.ManualFats, recipe.ManualCarbs,
             recipe.ManualFiber, recipe.ManualAlcohol, recipe.Visibility,
-            recipe.MealItems.Count + recipe.NestedRecipeUsages.Count, recipe.CreatedOnUtc,
+            context.MealItems.Count(item => item.RecipeId == recipe.Id) + recipe.NestedRecipeUsages.Count, recipe.CreatedOnUtc,
             recipe.Steps
                 .OrderBy(step => step.StepNumber)
                 .Select(step => new RecipeOverviewStepReadItem(
