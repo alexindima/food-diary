@@ -37,6 +37,7 @@ public static class JobManagerTelemetryServiceCollectionExtensions {
                     .AddMeter(JobManagerTelemetry.MeterName)
                     .AddMeter("FoodDiary.Application.Runtime")
                     .AddMeter("FoodDiary.Infrastructure")
+                    .AddMeter("FoodDiary.Integrations")
                     .AddRuntimeInstrumentation()
                     .AddOtlpExporter(exporter => exporter.Endpoint = endpointUri));
 

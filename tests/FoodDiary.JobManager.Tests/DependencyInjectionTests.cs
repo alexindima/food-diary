@@ -1,3 +1,5 @@
+using System.Diagnostics.Metrics;
+using OpenTelemetry;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.Dietologist;
@@ -108,6 +110,30 @@ public sealed class DependencyInjectionTests {
         Assert.Contains("valid absolute URI", exception.Message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void AddJobManagerOpenTelemetry_ExportsIntegrationsMetrics() {
+        const string metricName = "fooddiary.test.job_manager.integrations";
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase) {
+                ["OpenTelemetry:Otlp:Endpoint"] = "http://localhost:4317",
+            })
+            .Build();
+        var services = new ServiceCollection();
+        var exporter = new RecordingMetricExporter(metricName);
+
+        services.AddJobManagerOpenTelemetry(configuration);
+        services.AddOpenTelemetry().WithMetrics(metrics => metrics.AddReader(
+            new PeriodicExportingMetricReader(exporter, Timeout.Infinite, 1_000)));
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using MeterProvider meterProvider = provider.GetRequiredService<MeterProvider>();
+        using var meter = new Meter("FoodDiary.Integrations");
+        meter.CreateCounter<long>(metricName).Add(1);
+
+        meterProvider.ForceFlush(5_000);
+        Assert.True(exporter.SawExpectedMetric);
+    }
+
     private static ServiceCollection CreateProductionServices(IConfiguration configuration) {
         var services = new ServiceCollection();
 
@@ -200,5 +226,22 @@ public sealed class DependencyInjectionTests {
         return new ConfigurationBuilder()
             .AddInMemoryCollection(values)
             .Build();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingMetricExporter(string expectedMetricName) : BaseExporter<Metric> {
+        private int _sawExpectedMetric;
+
+        public bool SawExpectedMetric => Volatile.Read(ref _sawExpectedMetric) == 1;
+
+        public override ExportResult Export(in Batch<Metric> batch) {
+            foreach (Metric metric in batch) {
+                if (string.Equals(metric.Name, expectedMetricName, StringComparison.Ordinal)) {
+                    Interlocked.Exchange(ref _sawExpectedMetric, 1);
+                }
+            }
+
+            return ExportResult.Success;
+        }
     }
 }
