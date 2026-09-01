@@ -41,6 +41,18 @@ function Get-Hash([object]$Value) {
 function Get-FileSha([string]$Path) {
     (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
 }
+function Get-ItemIds([object[]]$Items) {
+    @($Items | ForEach-Object {
+        if ($null -eq $_) { return }
+        if ($_ -is [string]) {
+            if (-not [string]::IsNullOrWhiteSpace([string]$_)) { [string]$_ }
+            return
+        }
+        if ($_.PSObject.Properties['id'] -and -not [string]::IsNullOrWhiteSpace([string]$_.id)) {
+            [string]$_.id
+        }
+    } | Sort-Object -Unique)
+}
 function Get-Payload([object]$Receipt) {
     [pscustomobject][ordered]@{
         schemaVersion = [int]$Receipt.schemaVersion
@@ -68,7 +80,7 @@ function Get-Current {
 }
 function Get-CanonicalRoute([object]$Current) {
     $scopes = @($Current.packet.brief.change.scopes | ForEach-Object { [string]$_ } | Sort-Object -Unique)
-    $reviewIds = @($Current.packet.policy.reviewObligations.id)
+    $reviewIds = @(Get-ItemIds @($Current.packet.policy.reviewObligations))
     $maximumFailure = [int](($Current.prediction.prediction.predictions | ForEach-Object { $_.probabilityPercent } | Measure-Object -Maximum).Maximum)
     $executionCount = @($Current.verification.plan.executions).Count
     $failurePoints = [int][Math]::Round($maximumFailure * [double]$routingPolicy.predictedFailureWeightPercent / 100)

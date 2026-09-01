@@ -199,6 +199,14 @@
       "structuralRiskScore": 135.06
     },
     {
+      "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+      "nonBlankLines": 361,
+      "decisionPoints": 83,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 133.72
+    },
+    {
       "path": ".llm-wiki/tools/Build-LlmWikiModulePages.ps1",
       "nonBlankLines": 484,
       "decisionPoints": 80,
@@ -229,14 +237,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 129.36
-    },
-    {
-      "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-      "nonBlankLines": 349,
-      "decisionPoints": 79,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 127.48
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextExperiment.ps1",
@@ -487,6 +487,14 @@
       "structuralRiskScore": 99.98
     },
     {
+      "path": ".llm-wiki/tools/Manage-LlmWikiModelRouting.ps1",
+      "nonBlankLines": 316,
+      "decisionPoints": 58,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 95.32
+    },
+    {
       "path": "Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs",
       "nonBlankLines": 116,
       "decisionPoints": 61,
@@ -573,14 +581,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 89.66
-    },
-    {
-      "path": ".llm-wiki/tools/Manage-LlmWikiModelRouting.ps1",
-      "nonBlankLines": 304,
-      "decisionPoints": 54,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 89.08
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
@@ -2042,11 +2042,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiModelRouting.ps1",
-      "nonBlankLines": 304,
-      "decisionPoints": 54,
+      "nonBlankLines": 316,
+      "decisionPoints": 58,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 89.08
+      "structuralRiskScore": 95.32
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiModelRoutingOutcome.ps1",
@@ -2218,11 +2218,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-      "nonBlankLines": 349,
-      "decisionPoints": 79,
+      "nonBlankLines": 361,
+      "decisionPoints": 83,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 127.48
+      "structuralRiskScore": 133.72
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationReceipts.ps1",
@@ -48306,8 +48306,9 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiModelRouting.ps1",
       "line": 1,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        ".llm-wiki/tools/Test-LlmWikiModelRoutingItemIds.ps1",
         ".llm-wiki/tools/Test-LlmWikiTools.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -48580,9 +48581,10 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiTools.ps1",
+        ".llm-wiki/tools/Test-LlmWikiVerificationPlanItemIds.ps1",
         ".llm-wiki/tools/Test-LlmWikiWorkflowRecovery.ps1"
       ],
       "coverageKind": "direct-symbol-reference",

@@ -48,7 +48,7 @@
       "changeType": "Backend",
       "expectedPaths": [
         "Modules/BodyMetrics/Application/Common/UtcDateNormalizer.cs",
-        "FoodDiary.Application.Meals/Common/Time/UtcDateNormalizer.cs",
+        "Modules/Meals/Application/Common/Time/UtcDateNormalizer.cs",
         "Modules/Dashboard/Application/Internal/UtcDateNormalizer.cs",
         "Modules/Cycles/Application/Internal/UtcDateNormalizer.cs",
         "Modules/Export/Application/Internal/UtcDateNormalizer.cs"
@@ -258,7 +258,7 @@
       "query": "в каком тестовом файле проверены desktop mobile tablet user agents, browser OS device и маркер версии без значения",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Application.Tests/Authentication/UserAgentParserTests.cs"
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UserAgentParserTests.cs"
       ]
     },
     {

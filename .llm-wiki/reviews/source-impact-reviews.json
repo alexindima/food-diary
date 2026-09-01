@@ -177,14 +177,14 @@
       "pageSha256": "c2e5e0aaf44c829b7d0ec32bd7ae6dc24cf2d5b5f5aa0edd3e102c65783488df",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "270a3f4d7627ae36d40a66034aa95c692c94347f79b10f73eefa1e7004f9a871"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:31.6387441Z"
+      "reason": "Reviewed verification, model-routing, query parity, and Identity-session regression changes; all gates and selection invariants remain intact.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:56:15.7400191Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -242,32 +242,32 @@
     {
       "pageId": "workflow-change-manifest",
       "pagePath": ".llm-wiki/workflows/change-manifest.md",
-      "pageSha256": "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
+      "pageSha256": "21ab43d3671a8a24506a2e1bc714f1e3490986d71f1bb1c45e2a896e7cc89b7f",
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b1386e1d8c063bba53baa2edcddd6004773977989ca17e24e18a4e4cab3bc3a4"
+          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
         }
       ],
-      "reason": "Manifest planning now receives the exact caller-supplied diff, preventing research-only persistence anchors from becoming mandatory changed files.",
+      "reason": "Reviewed documentation impact from current modular Identity paths in task briefs, test plans, and evaluation fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:52:14.9760626Z"
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:56:16.2526704Z"
     },
     {
       "pageId": "workflow-change-packet",
       "pagePath": ".llm-wiki/workflows/change-packet.md",
-      "pageSha256": "ade9cba84ee4d80106e27801da37606734ef5646dcd2f5615df367eae91ad881",
+      "pageSha256": "23c1a9278403a636f6ec63e87fa3f5afd67333592db3e51c8c24dcb542ed6ec8",
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "04127ee7498994e5dbea3f2f18805caf690559470e30d5e28ac16d11daee8b98"
+          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
         }
       ],
-      "reason": "Reviewed the affected workflow navigation against the updated generators and session journey; existing workflow guidance remains accurate and generated module/workflow pages passed lint and source generator validation.",
+      "reason": "Reviewed documentation impact from current modular Identity paths in task briefs, test plans, and evaluation fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
-      "reviewedAtUtc": "2026-08-29T03:56:39.9043583Z"
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:56:16.7731599Z"
     },
     {
       "pageId": "workflow-code-graph",
@@ -276,85 +276,77 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-generalization.json",
-          "sha256": "a45f82f22107578e66cd792cd1b8995dc4cecdc477817385179a41bbc0b0f559"
+          "sha256": "533a3c4779fe02c138ff37f02d61ad9aeb9d7cbd6b7c9de425c0f143bd869ba8"
         },
         {
           "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "03dece972b46b6bf9f0e3d90f88d2a4bcdcdbbc81648c671ac0e040562626ca4"
+          "sha256": "4157009ca722eebf1cdf3a426a44a3b28ae6eaa3dcc2bf0f69e2e52971b8afda"
         },
         {
           "path": ".llm-wiki/evals/context-search-holdout.json",
-          "sha256": "8dca6a633d73f2b654c0df1617ce68d069032686d944c87700f074c337e2e532"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-postfix-control-30.json",
-          "sha256": "04aac76189ba5929a7902374ca863d0bdb18dcf0886a31bab9c2592a20ff9631"
+          "sha256": "876de7fac0348941bd90abea531ce69d726c90549b0e0255a323f4638d641400"
         },
         {
           "path": ".llm-wiki/evals/context-search-posttune-control-30.json",
-          "sha256": "214224989f549c836aa5b91af39824b12dfe27911e6b471bc956a04218e1cf8f"
+          "sha256": "d182c3642999eea5856093625d536f2b2137ec14a5b902fd090f0df3c768454f"
         },
         {
           "path": ".llm-wiki/evals/context-search-probe-2.json",
-          "sha256": "95766628e2f310bc6c230ad6e55c922229340feb655766d269109d9ae413b2ea"
+          "sha256": "84ca4fa814b2adc7383cbb0b666958d2b8fe8839e56a07f9afc83f219e5c6c2c"
         },
         {
           "path": ".llm-wiki/evals/context-search-probe-3.json",
-          "sha256": "a8c30f541cae312938b0f3d82348ae60a7b4f86b7c9f8282539bbe82c19e6803"
+          "sha256": "9686637ca5fcdf14b657c2064c39e15d9a78efedabe5880bd7104fa34a7fcf2e"
         },
         {
           "path": ".llm-wiki/evals/context-search-probe-4.json",
-          "sha256": "dcd54306854201dc91dead33d2570a71e10debdac944f79e356e33ff521e7371"
+          "sha256": "d160e190716fa3a49ff1458457b8bd7f066019502270d68814a0532c20f04491"
         },
         {
           "path": ".llm-wiki/evals/context-search-probe-5.json",
-          "sha256": "6e4ca086128549d57fef8649e933d9b5caa500d9e7680ee86bfc92df7a1d4929"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-6.json",
-          "sha256": "af3f32babcaa8764d6ebb9eaa4096ddd6e9aa07ff10831556813dea7ceae40be"
+          "sha256": "8f437385839e37c5a0b42a968ac0402d56196bdb42c9c7df2fd7f849d7792d8c"
         },
         {
           "path": ".llm-wiki/evals/context-search-probe-7.json",
-          "sha256": "9a97aac9df1c2ef106930167b60b0c131a25b8e5fcc241c4c496962b5422bfc7"
+          "sha256": "cb021bba154bb9ff17e2b681ec94e4a2e7b3b7867e5c7ff02b3c7bf2e4f15b18"
         },
         {
           "path": ".llm-wiki/evals/context-search-probe.json",
-          "sha256": "738f960bf316f5cdf89d65c90ea376798bf6fd9b6cc14c81234319bd36e08afe"
+          "sha256": "6791c99b33d1f4986186c438dce71864c47111c6afb5d95f341a237288b997c7"
         },
         {
           "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "20ab556641c78e72ea3bda50f344e67d82a7a6d74cc465216b9460826c915c0b"
+          "sha256": "44686209ca65a15b99f5cb0a69549fca168f9b4cc88a8673c506970ea2b051f8"
         },
         {
           "path": ".llm-wiki/evals/context-search-validation.json",
-          "sha256": "6a4b824ab8acce8a7b1ca4db33e68ceeed819c325a13b757e4ba84dae4b1119c"
+          "sha256": "ec5b0bca3a32f11d752130c28c9abf5dff1b24aa07862e113a676a461152eded"
         },
         {
           "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "e0fae226f498fabb4f5e382ce997f521c156204a5fd1a561ff1736d02c2529a9"
+          "sha256": "b6338d99218c1ee5238300e0189dc8a110c0f5933bfab56c980f36bada5d17db"
+        },
+        {
+          "path": ".llm-wiki/evals/development-context-bundles.json",
+          "sha256": "1b6bf0f8fe2955ebc66180c814b8d17209633d5bab8071a2a2a72e0cf2bfcdb0"
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "76755c5dbe9be19df4fb91ded9cd6eaad43ec04e83955a49eaf49a2c2c76bc35"
+          "sha256": "8cceb8be1522c84fe6c313b96ee8722e1199f489731cd8e12320f97d20e6a99d"
         },
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "b632e8546632d256b8129677b8984ea82148cdbb7603fbab55be5d73f91ab167"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "d74c997738bbf137ae73130fc1e652617a14321072039819569a5c7fb339214b"
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-          "sha256": "d3ad416b2118e7585903b63744208ee81321be9165d8a7af1f3201950ceafe3c"
+          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
+          "sha256": "f91cfab8cb7f894bb8ffea990340238909e7cfe9d5955925b8e17714fc6438ec"
         }
       ],
-      "reason": "Combined5589 unfiltered .NET tests pass; full MCP245, Architecture831. Actual Node/.NET parity200cases and nine non-quality smoke groups passed. Full Wiki remains explicitly non-green for five fresh exact-base-identical ranking cases; see report and measured comparison, not a fabricated PASS receipt.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T14:16:18.8830976Z"
+      "reason": "Reviewed strict-mode planner and routing fixes plus evaluation target refresh; coverage, ranking policy, frozen metrics, and live thresholds remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T15:15:16.8445510Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -501,14 +493,14 @@
       "pageSha256": "d6a287a6000b102cd9e007a1630184aabad98def8c1ced3ede421ebff7fe4c37",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:35.8821183Z"
+      "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:42:07.8085495Z"
     },
     {
       "pageId": "workflow-decision-context",
@@ -614,14 +606,14 @@
       "pageSha256": "f329d54afe5274a4bfce5e5cc7e77455554286b51569c8b214ef3fd44fe8be83",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:38.2384933Z"
+      "reason": "Reviewed workflow documentation impact; behavior remains the same except empty and legacy identifier collections no longer terminate strict-mode facade execution.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:42:08.4643244Z"
     },
     {
       "pageId": "workflow-frontend-visual-evidence",
@@ -659,18 +651,14 @@
       "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "b632e8546632d256b8129677b8984ea82148cdbb7603fbab55be5d73f91ab167"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
         }
       ],
-      "reason": "Reviewed272project graph, both ownership inventories, archived source evidence and final integration report.125 target references have113 proven Git rename chains; query/history/threshold fields unchanged. Baseline comparison uses revision-appropriate physical paths only.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T14:16:19.8180614Z"
+      "reason": "Reviewed documentation impact from current modular Identity paths in task briefs, test plans, and evaluation fixtures.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:56:18.1401243Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -678,14 +666,14 @@
       "pageSha256": "d45851e16e3d49ceca62d5cb5f1eb187c9b829e6a19c634ecd85a6238241dfe8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
-          "sha256": "4b4ff477406d81846c8b82a6a1499fcccdf43622efea49fdd0c883d6780cc0d2"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
         }
       ],
-      "reason": "Build, locked restore, EF model check, module/donor/infrastructure/architecture tests, and focused Wiki regressions passed; facade forwarding and modular domain indexing are covered without changing documented workflow semantics.",
+      "reason": "Reviewed verification, model-routing, query parity, and Identity-session regression changes; all gates and selection invariants remain intact.",
       "baseRef": "HEAD",
-      "gitHead": "80ce4f7a328684de2f8edc849216d1ea1ad4dd5d",
-      "reviewedAtUtc": "2026-08-29T23:51:56.41817Z"
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:56:18.8239719Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -708,22 +696,14 @@
       "pageSha256": "ca4122ad45c7918953e4e7acf1974a72586f53a72a9d3f06fe574edb9a5f8533",
       "sources": [
         {
-          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
-          "sha256": "ec21c85f18c9b399dd7bd2559a0028571ba2b6ab4172aa941bb0a15a2cdf371e"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "a84f2d52c7e100965178d1cb1bec0b1d5dd6e6c5f89892a39f9ad45551101868"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-          "sha256": "3d071158072d32c96f98eae69eaece75edc0ffb13334aee6541e63b1b3c23809"
+          "sha256": "e3b11837b4815f79b9a5dab108eecb8ce799ceb32a134a39c23f5913c2f091f7"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:39.4889490Z"
+      "reason": "Reviewed verification, model-routing, query parity, and Identity-session regression changes; all gates and selection invariants remain intact.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:56:19.4570793Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -746,14 +726,14 @@
       "pageSha256": "a952661d5073668178342e7b7131b00a3ea21d502dae2ea219a05a41d7094cdb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "21732e8d0658c7d454743409cd19a285d4533428fdfd62d0318f0967a2ba6823"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
         }
       ],
-      "reason": "Module source lookup includes current Recipes root; integration advice still requires source confirmation. Providers, jobs and shared context remain at their documented owners.",
+      "reason": "Reviewed documentation impact from current modular Identity paths in task briefs, test plans, and evaluation fixtures.",
       "baseRef": "HEAD",
-      "gitHead": "c91a3fe3f898081fed1f1b6a9e10fdec2a421609",
-      "reviewedAtUtc": "2026-08-31T08:06:17.796051Z"
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:56:20.0296602Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -762,17 +742,13 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/cases.json",
-          "sha256": "d6fc38d2c24528977e11e8f6f9b43f6742b558291eba0a817c4a5b3d47105f83"
-        },
-        {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "sha256": "91c8b3bff8dec9fc2d373fbab97ef8158a78d76ce30f62b53734f6ead1ade7a1"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:40.0458944Z"
+      "reason": "Reviewed workflow documentation impact from strict-mode collection handling and refreshed Identity navigation references.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:51:53.6379941Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -780,14 +756,18 @@
       "pageSha256": "f2175e29d46c5bf4aca0b8bb756b10ce36fb1049494ab8ee1309f48f3f75fbe6",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiModelRouting.ps1",
+          "sha256": "c1dc42d2862b62fc0847143f69bc99320b2e80e06786e86c0b3f4db6356f6128"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:40.3213309Z"
+      "reason": "Reviewed workflow documentation impact; behavior remains the same except empty and legacy identifier collections no longer terminate strict-mode facade execution.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:42:09.1598456Z"
     },
     {
       "pageId": "workflow-ownership-impact",
@@ -901,13 +881,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f5a90fed5cabdaf8ba321b7ca01de79f60ca2f45a0f8de4611c2ba37f54a0b7e"
+          "sha256": "56ee5f0cb4e91949d0af85df75c197210ea4f9bce6b1f91aaa7131580dfee1c5"
         }
       ],
-      "reason": "Reviewed generated and authored knowledge impact: BodyMetrics measurement ownership moved to module Domain, inverse User measurement navigations removed, goals remain central, EF/API/schema behavior unchanged.",
+      "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:32.6138912Z"
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:42:09.9282024Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -968,14 +948,14 @@
       "pageSha256": "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:43.0301327Z"
+      "reason": "Reviewed workflow documentation impact; behavior remains the same except empty and legacy identifier collections no longer terminate strict-mode facade execution.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:42:10.6568318Z"
     },
     {
       "pageId": "workflow-runtime-impact",
@@ -999,21 +979,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f5a90fed5cabdaf8ba321b7ca01de79f60ca2f45a0f8de4611c2ba37f54a0b7e"
+          "sha256": "56ee5f0cb4e91949d0af85df75c197210ea4f9bce6b1f91aaa7131580dfee1c5"
         },
         {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a8305b1d04f38274eac0d63398a7c05f1cd95aaa2d6fa424716528bd351cc743"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "0a7f08f2dbcf1e30e0459d85f56ba1565e576596b2df44f6d138ac099f0aff8f"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "8cceb8be1522c84fe6c313b96ee8722e1199f489731cd8e12320f97d20e6a99d"
         }
       ],
-      "reason": "Reviewed generated and authored knowledge impact: BodyMetrics measurement ownership moved to module Domain, inverse User measurement navigations removed, goals remain central, EF/API/schema behavior unchanged.",
+      "reason": "Reviewed security workflow and Identity authentication corpus changes; current paths restore evaluation accuracy without relaxing security thresholds.",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:08:33.9324195Z"
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:51:54.8344183Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1021,14 +997,14 @@
       "pageSha256": "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:43.9907946Z"
+      "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:42:11.9273587Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -1037,13 +1013,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "b1386e1d8c063bba53baa2edcddd6004773977989ca17e24e18a4e4cab3bc3a4"
+          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
         }
       ],
-      "reason": "Regression coverage confirms database wording cannot append persistence files to an explicit ChangedPath boundary; intent-only grounding remains available.",
+      "reason": "Reviewed verification, model-routing, query parity, and Identity-session regression changes; all gates and selection invariants remain intact.",
       "baseRef": "HEAD",
-      "gitHead": "cae9b9c2d0d2aea2047c98179d62115b3068c173",
-      "reviewedAtUtc": "2026-08-29T06:52:20.2778558Z"
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:56:21.2130028Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1111,14 +1087,14 @@
       "pageSha256": "29db37a4c99ffc488523bf72c8ad43f02e79b329dc88f83ca38813bdd2312683",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:44.6221754Z"
+      "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:42:12.4568250Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1126,14 +1102,14 @@
       "pageSha256": "034a7fbc5f124bcf40175e3a37f52338dfec658615c7b91245322232f61f08d6",
       "sources": [
         {
-          "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "5bbf9a88219163d75d76c2b632cfcebac48bbd55bfa0da1595bb3c6e6dcbac4a"
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "e3b11837b4815f79b9a5dab108eecb8ce799ceb32a134a39c23f5913c2f091f7"
         }
       ],
-      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
+      "reason": "Reviewed verification, model-routing, query parity, and Identity-session regression changes; all gates and selection invariants remain intact.",
       "baseRef": "HEAD",
-      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
-      "reviewedAtUtc": "2026-09-01T10:02:36.2362699Z"
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:56:21.7613260Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1160,18 +1136,14 @@
       "pageSha256": "368dfe1e9684ead7a5e3207edd05e55477d432ae1f9627814d62bfeb9559fb84",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
-        },
-        {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:45.1385589Z"
+      "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:42:12.9514864Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
@@ -1210,13 +1182,13 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/cases.json",
-          "sha256": "d6fc38d2c24528977e11e8f6f9b43f6742b558291eba0a817c4a5b3d47105f83"
+          "sha256": "91c8b3bff8dec9fc2d373fbab97ef8158a78d76ce30f62b53734f6ead1ade7a1"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:37.4451817Z"
+      "reason": "Reviewed workflow documentation impact from strict-mode collection handling and refreshed Identity navigation references.",
+      "baseRef": "HEAD",
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T14:51:50.6474335Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1254,18 +1226,26 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "30baefd5cee69c63646edaf31e0515014d0a1929c99128f5d02b8866e96a74c1"
+          "path": ".llm-wiki/evals/context-search-holdout-100.json",
+          "sha256": "4157009ca722eebf1cdf3a426a44a3b28ae6eaa3dcc2bf0f69e2e52971b8afda"
         },
         {
-          "path": "AGENTS.md",
-          "sha256": "30c2b936aaa25d9ec6c90848df8a3a0ffbe979f640faf73b7c52621e919710f4"
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "44686209ca65a15b99f5cb0a69549fca168f9b4cc88a8673c506970ea2b051f8"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
+          "sha256": "f91cfab8cb7f894bb8ffea990340238909e7cfe9d5955925b8e17714fc6438ec"
         }
       ],
-      "reason": "Reviewed refreshed repository catalog after adding BodyMetrics Domain and Domain.Tests; query routing and knowledge workflow semantics are unchanged.",
+      "reason": "Reviewed documentation and evaluation corpus impact from migrated module paths; references now resolve to current repository owners.",
       "baseRef": "HEAD",
-      "gitHead": "4673a98e4f533034d3fefef48bad2c13de2e3762",
-      "reviewedAtUtc": "2026-09-01T14:23:32.4404119Z"
+      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
+      "reviewedAtUtc": "2026-09-01T15:06:06.7246267Z"
     },
     {
       "pageId": "workflow.review-diff",

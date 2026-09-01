@@ -81,7 +81,7 @@
       "id": "refresh-token-rotation",
       "query": "rotate refresh token during authentication and revoke old session",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs"]
     },
     {
       "id": "open-food-facts-provider",
@@ -183,7 +183,7 @@
       "id": "user-login-handler",
       "query": "authenticate a user login and issue tokens",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandHandler.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Commands/Login/LoginCommandHandler.cs"]
     },
     {
       "id": "open-food-facts-http-endpoint",
@@ -201,7 +201,7 @@
       "id": "confirm-password-reset",
       "query": "confirm a password reset token and update the user password",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs"]
     },
     {
       "id": "start-fasting-command",
@@ -321,13 +321,13 @@
       "id": "request-password-reset",
       "query": "request a password reset email for an account",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs"]
     },
     {
       "id": "telegram-bot-auth-handler",
       "query": "authenticate a user payload received from the Telegram bot",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs"]
     },
     {
       "id": "fasting-insights-query",

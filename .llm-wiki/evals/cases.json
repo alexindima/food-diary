@@ -95,7 +95,7 @@
     {
       "id": "critical-flow-observability",
       "changedPaths": [
-        "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandHandler.cs"
+        "Modules/Identity/Application/Authentication/Commands/Login/LoginCommandHandler.cs"
       ],
       "expectedModules": ["Identity"],
       "expectedScopes": ["Backend"],

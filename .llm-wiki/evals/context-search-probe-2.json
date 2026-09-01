@@ -48,13 +48,13 @@
       "id": "user-identity-mutation-service-probe-2",
       "query": "change persisted login identities linked to a user",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Users/Services/UserIdentityMutationService.cs"]
+      "expectedPaths": ["Modules/Users/Application/Services/UserIdentityMutationService.cs"]
     },
     {
       "id": "user-administration-reader-probe-2",
       "query": "read administrator views of user accounts",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Users/Services/UserAdministrationReadService.cs"]
+      "expectedPaths": ["Modules/Users/Application/Services/UserAdministrationReadService.cs"]
     },
     {
       "id": "achievement-reconciliation-handler-probe-2",
@@ -72,7 +72,7 @@
       "id": "current-waist-provider-probe-2",
       "query": "retrieve the user's current waist measurement",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs"]
+      "expectedPaths": ["Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs"]
     },
     {
       "id": "exercise-entry-repository-probe-2",

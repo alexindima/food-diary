@@ -48,7 +48,7 @@
       "id": "profile-overview-reader-validation",
       "query": "assemble the current user's profile overview",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Users/Services/ProfileOverviewReadService.cs"]
+      "expectedPaths": ["Modules/Users/Application/Services/ProfileOverviewReadService.cs"]
     },
     {
       "id": "password-hasher",
@@ -102,13 +102,13 @@
       "id": "user-role-catalog",
       "query": "read the catalog of assignable user roles from persistence",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/UserRoleCatalogService.cs"]
+      "expectedPaths": ["Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs"]
     },
     {
       "id": "current-weight-provider",
       "query": "retrieve a user's latest recorded weight",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs"]
+      "expectedPaths": ["Modules/Users/Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs"]
     },
     {
       "id": "recommendation-bulk-dispatch-repository",
@@ -144,7 +144,7 @@
       "id": "update-user-appearance-command",
       "query": "command changes a user's theme and appearance preferences",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs"]
+      "expectedPaths": ["Modules/Users/Application/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs"]
     },
     {
       "id": "create-checkout-session-command",

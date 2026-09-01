@@ -174,19 +174,19 @@
       "id": "email-template-repository",
       "query": "persist administrator managed email templates",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Admin/EmailTemplateRepository.cs"]
+      "expectedPaths": ["Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs"]
     },
     {
       "id": "refresh-token-session-repository",
       "query": "database repository for refresh token sessions and revocation",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs"]
+      "expectedPaths": ["Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs"]
     },
     {
       "id": "inactive-user-cleanup-service",
       "query": "service deletes user accounts after the inactivity retention window",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/UserCleanupService.cs"]
+      "expectedPaths": ["Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs"]
     },
     {
       "id": "web-push-outbox-processor",

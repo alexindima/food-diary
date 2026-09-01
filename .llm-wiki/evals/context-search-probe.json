@@ -54,7 +54,7 @@
       "id": "user-credential-verification-service-probe",
       "query": "verify a user's current password credential",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Users/Services/UserCredentialVerificationService.cs"]
+      "expectedPaths": ["Modules/Users/Application/Services/UserCredentialVerificationService.cs"]
     },
     {
       "id": "billing-access-service-probe",
@@ -90,7 +90,7 @@
       "id": "user-role-membership-service-probe",
       "query": "add and remove persisted role memberships for a user",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Users/UserRoleMembershipService.cs"]
+      "expectedPaths": ["Modules/Users/Infrastructure/Persistence/Users/UserRoleMembershipService.cs"]
     },
     {
       "id": "hydration-entry-repository-probe",

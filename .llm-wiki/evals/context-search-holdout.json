@@ -66,7 +66,7 @@
       "id": "ru-password-reset-request",
       "query": "обработчик запроса на восстановление пароля",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs"]
     },
     {
       "id": "ru-frontend-state-ownership",
@@ -105,25 +105,25 @@
       "id": "email-template-administration",
       "query": "administrator changes transactional email templates",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationService.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs"]
     },
     {
       "id": "user-agent-parsing",
       "query": "detect the browser and operating system from a User-Agent header",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Services/UserAgents/UserAgentParser.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Services/UserAgents/UserAgentParser.cs"]
     },
     {
       "id": "restore-deleted-account",
       "query": "undelete a user account while it is still inside retention",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs"]
     },
     {
       "id": "verify-email-token",
       "query": "consume an email verification token and mark the address verified",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs"]
     },
     {
       "id": "start-premium-trial",
@@ -153,19 +153,19 @@
       "id": "meal-nutrition-calculation",
       "query": "compute calorie and macro totals across meal items",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Meals/Services/MealNutritionCalculator.cs"]
+      "expectedPaths": ["Modules/Meals/Application/Services/MealNutritionCalculator.cs"]
     },
     {
       "id": "meal-ai-session-append",
       "query": "append AI-recognized food into the meal being edited",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Meals/Services/MealAiSessionAppender.cs"]
+      "expectedPaths": ["Modules/Meals/Application/Services/MealAiSessionAppender.cs"]
     },
     {
       "id": "satiety-level-validation",
       "query": "reject an impossible satiety score on a meal",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Meals/Services/SatietyLevelValidator.cs"]
+      "expectedPaths": ["Modules/Meals/Application/Services/SatietyLevelValidator.cs"]
     },
     {
       "id": "delete-image-asset-handler",

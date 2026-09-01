@@ -78,8 +78,8 @@
       "query": "delete user account purge rows images providers lifecycle",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommandHandler.cs",
-        "FoodDiary.Infrastructure/Persistence/Users/UserCleanupService.cs"
+        "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommandHandler.cs",
+        "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs"
       ]
     },
     {

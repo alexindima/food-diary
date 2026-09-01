@@ -156,7 +156,7 @@ if (@($requiredSessionScopes | Where-Object { $_ -notin @($sessionBrief.change.s
 if (@($sessionBrief.change.directModules | Where-Object { $_ -in @('Fasting', 'Meals') }).Count -gt 0) {
     throw 'Identity-session brief leaked unrelated fasting or meal-session modules.'
 }
-if (@($sessionBrief.analysis.inferredPaths) -notcontains 'FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs' -or
+if (@($sessionBrief.analysis.inferredPaths) -notcontains 'Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs' -or
     @($sessionBrief.analysis.inferredPaths) -notcontains 'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts') {
     throw 'Identity-session brief omitted the reviewed persistence or frontend route.'
 }

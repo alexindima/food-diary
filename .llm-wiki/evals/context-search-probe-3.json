@@ -30,7 +30,7 @@
       "id": "meal-manual-item-appender-probe-3",
       "query": "append manually entered nutrition items to a meal",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Meals/Services/MealManualItemAppender.cs"]
+      "expectedPaths": ["Modules/Meals/Application/Services/MealManualItemAppender.cs"]
     },
     {
       "id": "image-asset-cleanup-service-probe-3",
@@ -48,7 +48,7 @@
       "id": "authentication-token-service-probe-3",
       "query": "issue authentication access and refresh tokens from a principal",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs"]
     },
     {
       "id": "shopping-list-item-builder-probe-3",

@@ -548,7 +548,7 @@
       "id": "email-template-application",
       "queryTerms": ["email", "template", "administrator"],
       "minimumMatches": 2,
-      "pathPrefixes": ["FoodDiary.Application.Identity/Email/"],
+      "pathPrefixes": ["Modules/Identity/Application/Email/"],
       "score": 150
     },
     {

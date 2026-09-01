@@ -69,9 +69,9 @@ $repositoryAssessment = $normalizedIntent -match '\b(audit|assessment|evaluate|r
 if ($identitySessionIntent) {
     $identitySessionGroundingPaths = @(
         'FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs'
-        'FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs'
-        'FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs'
-        'FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs'
+        'Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs'
+        'Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs'
+        'Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs'
         'FoodDiary.Infrastructure/Persistence/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs'
         'FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs'
         'FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs'

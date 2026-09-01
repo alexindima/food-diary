@@ -37,6 +37,18 @@ function Get-Hash([object]$Value) {
     $sha = [Security.Cryptography.SHA256]::Create()
     try { return ([BitConverter]::ToString($sha.ComputeHash($bytes)) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
 }
+function Get-ItemIds([object[]]$Items) {
+    @($Items | ForEach-Object {
+        if ($null -eq $_) { return }
+        if ($_ -is [string]) {
+            if (-not [string]::IsNullOrWhiteSpace([string]$_)) { [string]$_ }
+            return
+        }
+        if ($_.PSObject.Properties['id'] -and -not [string]::IsNullOrWhiteSpace([string]$_.id)) {
+            [string]$_.id
+        }
+    } | Sort-Object -Unique)
+}
 function Get-PlanPayload([object]$Plan) {
     [pscustomobject][ordered]@{
         schemaVersion = [int]$Plan.schemaVersion
@@ -100,7 +112,7 @@ function Get-Selection([object]$Current, [bool]$RequestedIncludePassed) {
             }
         }
         foreach ($group in @($eligible | Group-Object command)) {
-            $ids = @($group.Group.id | Sort-Object)
+            $ids = @(Get-ItemIds @($group.Group))
             $primary = @($ids | Where-Object { $primaryById[$_] -eq $_ } | Select-Object -First 1)
             if ($primary.Count -eq 0) { $primary = @($ids[0]) }
             foreach ($id in $ids) {
@@ -110,7 +122,7 @@ function Get-Selection([object]$Current, [bool]$RequestedIncludePassed) {
     }
     $executions = @($eligible | Where-Object { $primaryById[[string]$_.id] -eq [string]$_.id } | ForEach-Object {
         $primaryId = [string]$_.id
-        $coveredIds = @($eligible.id | Where-Object { $primaryById[[string]$_] -eq $primaryId } | Sort-Object)
+        $coveredIds = @(Get-ItemIds @($eligible) | Where-Object { $primaryById[[string]$_] -eq $primaryId } | Sort-Object)
         $failureProbability = [int](($Current.prediction.prediction.predictions | Where-Object checkId -in $coveredIds | ForEach-Object { $_.probabilityPercent } | Measure-Object -Maximum).Maximum)
         $costEstimates = @($Current.cost.forecast.estimates | Where-Object checkId -in $coveredIds)
         $basePriority = Get-Priority $primaryId
@@ -226,15 +238,15 @@ function Test-Plan([object]$Plan) {
     if ((Get-Hash $Plan.selectionSummary) -cne (Get-Hash $expectedSelection.selectionSummary)) {
         $issues.Add('Verification selection economics are invalid.')
     }
-    $required = @($current.policy.requiredChecks.id | Sort-Object -Unique)
+    $required = @(Get-ItemIds @($current.policy.requiredChecks))
     $recorded = @($Plan.requiredCheckIds | Sort-Object -Unique)
     if ($required.Count -ne $recorded.Count -or @(Compare-Object $required $recorded).Count -ne 0) { $issues.Add('Required check set drifted.') }
-    $covered = @($Plan.coverage.checkId | Sort-Object -Unique)
+    $covered = @($Plan.coverage | ForEach-Object { [string]$_.checkId } | Sort-Object -Unique)
     $duplicateCoverage = @($Plan.coverage | Group-Object checkId | Where-Object Count -ne 1)
     if ($covered.Count -ne $required.Count -or @(Compare-Object $covered $required).Count -ne 0 -or $duplicateCoverage.Count -gt 0) {
         $issues.Add('Plan does not cover every required check exactly once.')
     }
-    $executionIds = @($Plan.executions.primaryCheckId)
+    $executionIds = @($Plan.executions | ForEach-Object { [string]$_.primaryCheckId })
     foreach ($coverageItem in @($Plan.coverage | Where-Object mode -in @('execute', 'covered'))) {
         if ([string]$coverageItem.primaryCheckId -notin $executionIds) { $issues.Add("Coverage for '$($coverageItem.checkId)' references a missing execution.") }
     }
@@ -286,7 +298,7 @@ if ($Action -eq 'create') {
         riskLevel = [string]$riskCalibration.calibration.level
         riskScore = [int]$riskCalibration.calibration.score
         executionMode = [string]$selection.executionMode
-        requiredCheckIds = @($selection.checks.id | Sort-Object -Unique)
+        requiredCheckIds = @(Get-ItemIds @($selection.checks))
         executions = @($selection.executions)
         coverage = @($selection.coverage)
         decisions = @($selection.decisions)

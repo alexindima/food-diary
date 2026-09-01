@@ -325,7 +325,7 @@
       "query": "implementation contract for repeat meal command handler",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Application.Meals/Commands/RepeatMeal/RepeatMealCommandHandler.cs"
+        "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommandHandler.cs"
       ]
     },
     {
@@ -343,7 +343,7 @@
       "query": "domain rule for tracking waist entry",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/Entities/Tracking/WaistEntry.cs"
+        "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs"
       ]
     },
     {
@@ -541,7 +541,7 @@
       "query": "implementation contract for user mappings",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Application.Users/Mappings/UserMappings.cs"
+        "Modules/Users/Application/Mappings/UserMappings.cs"
       ]
     },
     {

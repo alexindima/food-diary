@@ -36,13 +36,13 @@
       "id": "meal-nutrition-applier-probe-4",
       "query": "apply calculated nutrition values to a meal",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Meals/Services/MealNutritionApplier.cs"]
+      "expectedPaths": ["Modules/Meals/Application/Services/MealNutritionApplier.cs"]
     },
     {
       "id": "manual-nutrition-validator-probe-4",
       "query": "validate manually entered meal nutrition values",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Meals/Services/ManualNutritionValidator.cs"]
+      "expectedPaths": ["Modules/Meals/Application/Services/ManualNutritionValidator.cs"]
     },
     {
       "id": "content-report-administration-probe-4",
@@ -60,7 +60,7 @@
       "id": "initial-admin-bootstrap-service-probe-4",
       "query": "bootstrap the initial administrator account during startup",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Services/InitialAdminBootstrapService.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Services/InitialAdminBootstrapService.cs"]
     },
     {
       "id": "product-usda-link-service-probe-4",

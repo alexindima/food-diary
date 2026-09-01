@@ -29,8 +29,8 @@
       "id": "authentication-cleanup-bundle",
       "intent": "Harden cleanup of old authentication login events",
       "query": "cleanup old authentication login events",
-      "plannedPath": "FoodDiary.Application.Identity/Authentication/",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventCleanupService.cs"],
+      "plannedPath": "Modules/Identity/Application/Authentication/",
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs"],
       "expectedLayers": ["Application"]
     },
     {

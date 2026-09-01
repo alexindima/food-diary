@@ -72,13 +72,13 @@
       "id": "email-template-administration-reader-probe-5",
       "query": "administrator reads email template definitions",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationReadService.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Email/Services/EmailTemplateAdministrationReadService.cs"]
     },
     {
       "id": "authentication-login-event-cleanup-probe-5",
       "query": "cleanup old authentication login events",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventCleanupService.cs"]
+      "expectedPaths": ["Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs"]
     },
     {
       "id": "shopping-list-read-service-probe-5",

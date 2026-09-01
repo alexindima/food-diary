@@ -10,10 +10,10 @@ $null = & $manager -Action build -Format Json
 
 $cases = @(
     @{ Module = 'Recipes'; Query = 'Recipe nutrition updater'; ScopePath = 'Modules/Recipes/Application'; ChangeType = 'Backend'; ExpectedPath = '^Modules/Recipes/Application/' }
-    @{ Module = 'Users'; Query = 'password reset command handler'; ScopePath = 'FoodDiary.Application.Users'; ChangeType = 'Backend'; ExpectedPath = '^FoodDiary\.Application\.Users/' }
+    @{ Module = 'Identity'; Query = 'password reset command handler'; ScopePath = 'Modules/Identity/Application'; ChangeType = 'Backend'; ExpectedPath = '^Modules/Identity/Application/' }
     @{ Module = ''; Query = 'achievement definitions controller route'; ScopePath = 'FoodDiary.Presentation.Api'; ChangeType = 'Api'; ExpectedPath = '^FoodDiary\.Presentation\.Api/' }
     @{ Module = ''; Query = 'SQLite Wiki context search'; ScopePath = '.llm-wiki/tools'; ChangeType = 'Tests'; ExpectedPath = '^\.llm-wiki/tools/' }
-    @{ Module = 'Meals'; Query = 'meal projection read repository'; ScopePath = 'FoodDiary.Application.Meals'; ChangeType = 'Backend'; ExpectedPath = '^FoodDiary\.Application\.Meals/' }
+    @{ Module = 'Meals'; Query = 'meal projection read repository'; ScopePath = 'Modules/Meals/Application'; ChangeType = 'Backend'; ExpectedPath = '^Modules/Meals/Application/' }
     @{ Module = ''; Query = 'autocomplete product search component'; ScopePath = 'FoodDiary.Web.Client/src/app/features/products'; ChangeType = 'Frontend'; ExpectedPath = '^FoodDiary\.Web\.Client/src/app/features/products/' }
     @{ Module = ''; Query = 'responsive dashboard component layout'; ScopePath = 'FoodDiary.Web.Client/src/app/features/dashboard'; ChangeType = 'Frontend'; ExpectedPath = '^FoodDiary\.Web\.Client/src/app/features/dashboard/' }
     @{ Module = ''; Query = 'AI dashboard'; ScopePath = 'FoodDiary.Web.Client/src/app/features/dashboard;FoodDiary.Web.Client/src/app/components/shared/ai-input-bar'; ChangeType = 'Frontend'; ExpectedPaths = @('^FoodDiary\.Web\.Client/src/app/features/dashboard/', '^FoodDiary\.Web\.Client/src/app/components/shared/ai-input-bar/') }
