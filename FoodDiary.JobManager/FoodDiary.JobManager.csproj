@@ -18,9 +18,6 @@
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\FoodDiary.Application.Runtime\FoodDiary.Application.Runtime.csproj" />
     <ProjectReference Include="../Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj" />
     <ProjectReference Include="../Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" />
@@ -55,13 +52,12 @@
     <ProjectReference Include="..\Modules\Gamification\Infrastructure\FoodDiary.Modules.Gamification.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Export\Application\FoodDiary.Modules.Export.Application.csproj" />
     <ProjectReference Include="..\Modules\Notifications\Infrastructure\FoodDiary.Modules.Notifications.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="../Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj" />
   </ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj" /></ItemGroup>
+
+
 </Project>

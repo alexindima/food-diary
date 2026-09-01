@@ -25,7 +25,6 @@ sources:
 ## Source Areas
 
 - `FoodDiary.Infrastructure/Persistence/Configurations/Meals`
-- `FoodDiary.Infrastructure/Persistence/Meals`
 - `FoodDiary.Presentation.Api/Features/Meals`
 - `Modules/Meals/Application`
 - `Modules/Meals/Application/Abstractions`

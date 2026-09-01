@@ -45,6 +45,14 @@
     <ProjectReference Include="..\Modules\Gamification\Infrastructure\FoodDiary.Modules.Gamification.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Export\Application\FoodDiary.Modules.Export.Application.csproj" />
     <ProjectReference Include="..\Modules\Notifications\Infrastructure\FoodDiary.Modules.Notifications.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\MealPlanning\Infrastructure\FoodDiary.Modules.MealPlanning.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Exercises\Infrastructure\FoodDiary.Modules.Exercises.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" />
+    <ProjectReference Include="../Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,16 +61,4 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" />
   </ItemGroup>
 
-  <ItemGroup><ProjectReference Include="..\Modules\MealPlanning\Infrastructure\FoodDiary.Modules.MealPlanning.Infrastructure.csproj" /></ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Modules\Exercises\Infrastructure\FoodDiary.Modules.Exercises.Infrastructure.csproj" />
-  </ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj" /></ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
-    <ProjectReference Include="../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
-  </ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj" /></ItemGroup>
 </Project>

@@ -15,13 +15,6 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Wearables\Domain\FoodDiary.Modules.Wearables.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Favorites\Domain\FoodDiary.Modules.Favorites.Domain.csproj" />
@@ -30,9 +23,14 @@
     <ProjectReference Include="..\..\Modules\Cycles\Domain\FoodDiary.Modules.Cycles.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\OpenFoodFacts\Domain\FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Notifications\Domain\FoodDiary.Modules.Notifications.Domain.csproj" />
+    <ProjectReference Include="..\..\Modules\MealPlanning\Domain\FoodDiary.Modules.MealPlanning.Domain.csproj" />
+    <ProjectReference Include="../../Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup><ProjectReference Include="..\..\Modules\MealPlanning\Domain\FoodDiary.Modules.MealPlanning.Domain.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../../Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../../Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" /></ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+
 </Project>

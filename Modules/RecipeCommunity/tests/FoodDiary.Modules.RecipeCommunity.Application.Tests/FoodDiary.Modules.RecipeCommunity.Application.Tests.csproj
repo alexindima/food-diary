@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Application/FoodDiary.Application.RecipeCommunity.csproj" />
+    <ProjectReference Include="../../../Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -13,5 +14,4 @@
   </ItemGroup>
   <ItemGroup><Using Include="Xunit" /><Using Include="NSubstitute" /></ItemGroup>
   <ItemGroup><Using Include="FoodDiary.Application.Tests.Support" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../../../Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" /></ItemGroup>
 </Project>

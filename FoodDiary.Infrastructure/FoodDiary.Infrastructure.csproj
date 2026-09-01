@@ -3,9 +3,6 @@
     <ProjectReference Include="..\Modules\Notifications\Domain\FoodDiary.Modules.Notifications.Domain.csproj" />
     <ProjectReference Include="..\Modules\Notifications\Infrastructure\Model\FoodDiary.Modules.Notifications.PersistenceModel.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Outbox.Abstractions\FoodDiary.Outbox.Abstractions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Modules\BodyMetrics\Infrastructure\Model\FoodDiary.Modules.BodyMetrics.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\Billing\Domain\FoodDiary.Modules.Billing.Domain.csproj" />
     <ProjectReference Include="..\Modules\Billing\Infrastructure\Model\FoodDiary.Modules.Billing.PersistenceModel.csproj" />
@@ -41,7 +38,19 @@
     <ProjectReference Include="..\Modules\Cycles\Domain\FoodDiary.Modules.Cycles.Domain.csproj" />
     <ProjectReference Include="..\Modules\Cycles\Infrastructure\Model\FoodDiary.Modules.Cycles.PersistenceModel.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="..\Modules\MealPlanning\Infrastructure\Model\FoodDiary.Modules.MealPlanning.PersistenceModel.csproj" />
+    <ProjectReference Include="..\Modules\MealPlanning\Domain\FoodDiary.Modules.MealPlanning.Domain.csproj" />
+    <ProjectReference Include="..\Modules\Exercises\Infrastructure\Model\FoodDiary.Modules.Exercises.PersistenceModel.csproj" />
+    <ProjectReference Include="..\Modules\Exercises\Domain\FoodDiary.Modules.Exercises.Domain.csproj" />
+    <ProjectReference Include="../Modules/RecipeCommunity/Infrastructure/Model/FoodDiary.Modules.RecipeCommunity.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Recipes/Infrastructure/Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Users/Infrastructure/Model/FoodDiary.Modules.Users.PersistenceModel.csproj" />
   </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" />
@@ -66,21 +75,4 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>
 
-  <ItemGroup><ProjectReference Include="..\Modules\MealPlanning\Infrastructure\Model\FoodDiary.Modules.MealPlanning.PersistenceModel.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="..\Modules\MealPlanning\Domain\FoodDiary.Modules.MealPlanning.Domain.csproj" /></ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Modules\Exercises\Infrastructure\Model\FoodDiary.Modules.Exercises.PersistenceModel.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Modules\Exercises\Domain\FoodDiary.Modules.Exercises.Domain.csproj" />
-  </ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/RecipeCommunity/Infrastructure/Model/FoodDiary.Modules.RecipeCommunity.PersistenceModel.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/Ai/Infrastructure/Model/FoodDiary.Modules.Ai.PersistenceModel.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/Recipes/Infrastructure/Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj" /></ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../Modules/Users/Infrastructure/Model/FoodDiary.Modules.Users.PersistenceModel.csproj" />
-  </ItemGroup>
 </Project>

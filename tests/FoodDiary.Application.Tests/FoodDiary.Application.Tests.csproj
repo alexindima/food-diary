@@ -20,15 +20,6 @@
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="FoodDiary.Application.Tests.Support" />
-    <Using Include="NSubstitute" />
-    <Using Include="Xunit" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\FoodDiary.Application.Runtime\FoodDiary.Application.Runtime.csproj" />
     <ProjectReference Include="../../Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj" />
     <ProjectReference Include="..\..\Modules\OpenFoodFacts\Application\FoodDiary.Modules.OpenFoodFacts.Application.csproj" />
@@ -51,5 +42,12 @@
     <ProjectReference Include="..\..\Modules\Usda\Application\FoodDiary.Application.Usda.csproj" />
     <ProjectReference Include="..\..\Modules\Export\Application\FoodDiary.Modules.Export.Application.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="NSubstitute" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
 
 </Project>

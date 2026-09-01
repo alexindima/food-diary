@@ -18,6 +18,7 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 - `ClientPackageBoundaryTests` protects MailRelay/MailInbox client packages from server-side coupling.
 - `HostCompositionBoundaryTests` protects host-only concerns from leaking into application/presentation/resource projects.
 - `ContainerSupplyChainGuardrailTests` requires production images to carry provenance and SBOM metadata, resolve to image indexes, and be signed and verified before deployment.
+- `ProjectFileConventionTests` keeps unconditional `ProjectReference` items in one `ItemGroup` and rejects empty `ItemGroup` elements.
 
 ## Rules
 - Prefer Roslyn-based checks for C# syntax over regex when inspecting declarations.

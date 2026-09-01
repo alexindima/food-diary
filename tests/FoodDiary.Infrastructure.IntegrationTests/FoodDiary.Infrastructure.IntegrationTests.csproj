@@ -28,15 +28,6 @@
     <PackageReference Include="Testcontainers.PostgreSql" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="NSubstitute" />
-    <Using Include="FoodDiary.Testing" />
-    <Using Include="Xunit" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Modules\Dietologist\Infrastructure\FoodDiary.Modules.Dietologist.Infrastructure.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Gamification\Infrastructure\FoodDiary.Modules.Gamification.Infrastructure.csproj" />
@@ -47,18 +38,21 @@
     <ProjectReference Include="..\..\FoodDiary.Integrations\FoodDiary.Integrations.csproj" />
     <ProjectReference Include="..\FoodDiary.Testing\FoodDiary.Testing.csproj" />
     <ProjectReference Include="..\..\Modules\Notifications\Infrastructure\FoodDiary.Modules.Notifications.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup><ProjectReference Include="..\..\Modules\MealPlanning\Infrastructure\FoodDiary.Modules.MealPlanning.Infrastructure.csproj" /></ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\Modules\MealPlanning\Infrastructure\FoodDiary.Modules.MealPlanning.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Exercises\Infrastructure\FoodDiary.Modules.Exercises.Infrastructure.csproj" />
-  </ItemGroup>
-  <ItemGroup><ProjectReference Include="../../Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj" /></ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="../../Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
+    <ProjectReference Include="../../Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj" />
+    <ProjectReference Include="../../Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" />
+    <ProjectReference Include="../../Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj" />
   </ItemGroup>
-  <ItemGroup><ProjectReference Include="../../Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../../Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="../../Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj" /></ItemGroup>
+
+  <ItemGroup>
+    <Using Include="NSubstitute" />
+    <Using Include="FoodDiary.Testing" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+
 </Project>

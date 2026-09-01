@@ -12,14 +12,12 @@
     <ProjectReference Include="../../Usda/Contracts/FoodDiary.Modules.Usda.Contracts.csproj" />
     <ProjectReference Include="../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj" />
-    <ProjectReference Include="../Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
   </ItemGroup>
 </Project>
