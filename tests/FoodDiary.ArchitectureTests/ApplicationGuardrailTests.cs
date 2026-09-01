@@ -2924,14 +2924,14 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] migratedFiles = [
-            Path.Combine(root, "FoodDiary.Application.Identity", "Authentication", "Commands", "ConfirmPasswordReset", "ConfirmPasswordResetCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Identity", "Authentication", "Commands", "GoogleLogin", "GoogleLoginCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Identity", "Authentication", "Commands", "LinkTelegram", "LinkTelegramCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Identity", "Authentication", "Commands", "RequestPasswordReset", "RequestPasswordResetCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Identity", "Authentication", "Commands", "ResendEmailVerification", "ResendEmailVerificationCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Identity", "Authentication", "Commands", "RestoreAccount", "RestoreAccountCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Identity", "Authentication", "Commands", "VerifyEmail", "VerifyEmailCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Identity", "Authentication", "Services", "AuthenticationTokenService.cs"),
+            Path.Combine(root, "Modules", "Identity", "Application", "Authentication", "Commands", "ConfirmPasswordReset", "ConfirmPasswordResetCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Identity", "Application", "Authentication", "Commands", "GoogleLogin", "GoogleLoginCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Identity", "Application", "Authentication", "Commands", "LinkTelegram", "LinkTelegramCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Identity", "Application", "Authentication", "Commands", "RequestPasswordReset", "RequestPasswordResetCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Identity", "Application", "Authentication", "Commands", "ResendEmailVerification", "ResendEmailVerificationCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Identity", "Application", "Authentication", "Commands", "RestoreAccount", "RestoreAccountCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Identity", "Application", "Authentication", "Commands", "VerifyEmail", "VerifyEmailCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Identity", "Application", "Authentication", "Services", "AuthenticationTokenService.cs"),
         ];
 
         string[] violations = FindReferencesInFiles(root, migratedFiles, "CurrentUserAccessPolicy");
@@ -3203,7 +3203,7 @@ public sealed class ApplicationGuardrailTests {
     public void BusinessEmailSenders_UseRequiredOutboxInsteadOfDirectTransportFallback() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string emailSenderPath = Path.Combine(root, "FoodDiary.Application.Identity", "Authentication", "Services", "EmailSender.cs");
+        string emailSenderPath = Path.Combine(root, "Modules", "Identity", "Application", "Authentication", "Services", "EmailSender.cs");
         string dietologistEmailSenderPath = Path.Combine(root, "Modules", "Dietologist", "Application", "Services", "DietologistEmailSender.cs");
 
         string emailSenderSource = File.ReadAllText(emailSenderPath);

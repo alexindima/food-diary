@@ -344,7 +344,7 @@ Evidence: `FoodDiary.Infrastructure/Authentication/JwtTokenGenerator.cs`, `UserR
 
 Every successful refresh rotates the stored token hash. The immediately previous hash remains valid for a short grace period, accommodating concurrent browser requests without permanently accepting an old token. The senior-level trade-off is security versus distributed-client race tolerance: no grace window can produce false logout; a long window increases replay exposure.
 
-Evidence: `FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs`, `RefreshTokenCommandHandler.cs`, `UserRefreshTokenSession.Rotate`.
+Evidence: `Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs`, `RefreshTokenCommandHandler.cs`, `UserRefreshTokenSession.Rotate`.
 
 ### 55. Secret hashing at rest
 

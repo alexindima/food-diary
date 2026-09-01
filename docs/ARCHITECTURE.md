@@ -158,6 +158,8 @@ tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.
 
 Users application slices, application-owned services, focused tests, persistence adapters, cleanup, and the explicit User/Role/UserRole/UserRoleAuditEvent EF model live under `Modules/Users`. The application project preserves `FoodDiary.Application.Users` as its AssemblyName and RootNamespace. Central `FoodDiary.Application.Abstractions/Users`, the User aggregate and related CLR types, `UserRepository`, the shared DbContext, migrations, and snapshot remain compatibility seams because current consumers and bidirectional navigations prevent a one-way extraction. Identity remains outside this move: credentials, password/reset/email-confirmation/security state, authentication ports and services, external login/token issuance, refresh-token/login-event persistence, and email templates remain central Identity responsibilities. Hosts compose `AddUsersModule`; no schema delta or migration is introduced.
 
+Identity application ownership is physically grouped under `Modules/Identity/Application`, while preserving the `FoodDiary.Application.Identity` AssemblyName, RootNamespace, public types, and `AddIdentityModule` composition contract. Authentication and Email remain logical areas in that one application project. Shared Authentication/Email abstractions, the User CLR/security graph, combined `UserRepository`, refresh-token/login-event entities and persistence, shared DbContext, migrations/snapshot, provider integrations, HTTP transport, and executable hosts remain with their current owners. The physical extraction has no EF model delta and introduces no migration.
+
 ## Admin physical ownership
 
 Admin owns application slices, billing-report/impersonation/mail-reader ports,

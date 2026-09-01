@@ -754,7 +754,7 @@
           "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )"
         }
       },
-      "fooddiary.application.identity": {
+      "FoodDiary.Application.Identity": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",

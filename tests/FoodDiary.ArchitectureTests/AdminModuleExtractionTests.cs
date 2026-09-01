@@ -31,7 +31,7 @@ public sealed class AdminModuleExtractionTests {
     public void ForeignEmailAndUserAudit_StayWithExistingOwners() {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/Persistence/Admin/EmailTemplateRepository.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationService.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Users/Application/Services/UserAdministrationMutationService.cs")));
         Assert.Empty(SourceScanner.FindLinePatternViolations(ArchitectureTestPaths.FromRoot("Modules/Admin/Domain"),
             ["class EmailTemplate", "class UserRoleAuditEvent"]));

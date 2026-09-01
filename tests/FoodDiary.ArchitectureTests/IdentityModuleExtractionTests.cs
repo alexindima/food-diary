@@ -10,11 +10,18 @@ public sealed class IdentityModuleExtractionTests {
     }
 
     [Fact]
-    public void IdentityProject_DoesNotReferenceCoreApplicationProject() {
+    public void IdentityProject_IsPhysicallyOwnedByModule_AndDoesNotReferenceCoreApplicationProject() {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application.Identity",
-            "FoodDiary.Application.Identity.csproj"));
+            "Modules",
+            "Identity",
+            "Application",
+            "FoodDiary.Modules.Identity.Application.csproj"));
 
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Application.Identity",
+            "FoodDiary.Application.Identity.csproj")));
+        Assert.Contains("<AssemblyName>FoodDiary.Application.Identity</AssemblyName>", source, StringComparison.Ordinal);
+        Assert.Contains("<RootNamespace>FoodDiary.Application.Identity</RootNamespace>", source, StringComparison.Ordinal);
         Assert.DoesNotContain("..\\FoodDiary.Application\\FoodDiary.Application.csproj", source, StringComparison.OrdinalIgnoreCase);
     }
 

@@ -40,7 +40,7 @@ COPY Modules/Favorites/Application/*.csproj Modules/Favorites/Application/
 COPY Modules/Favorites/Domain/*.csproj Modules/Favorites/Domain/
 COPY Modules/Favorites/Infrastructure/*.csproj Modules/Favorites/Infrastructure/
 COPY Modules/Favorites/Infrastructure/Model/*.csproj Modules/Favorites/Infrastructure/Model/
-COPY FoodDiary.Application.Identity/*.csproj FoodDiary.Application.Identity/
+COPY Modules/Identity/Application/*.csproj Modules/Identity/Application/
 COPY Modules/MealPlanning/Application/*.csproj Modules/MealPlanning/Application/
 COPY Modules/MealPlanning/Application/Abstractions/*.csproj Modules/MealPlanning/Application/Abstractions/
 COPY Modules/MealPlanning/Domain/*.csproj Modules/MealPlanning/Domain/
@@ -207,7 +207,7 @@ COPY Modules/Favorites/Application/ Modules/Favorites/Application/
 COPY Modules/Favorites/Domain/ Modules/Favorites/Domain/
 COPY Modules/Favorites/Infrastructure/ Modules/Favorites/Infrastructure/
 COPY Modules/Favorites/Infrastructure/Model/ Modules/Favorites/Infrastructure/Model/
-COPY FoodDiary.Application.Identity/ FoodDiary.Application.Identity/
+COPY Modules/Identity/Application/ Modules/Identity/Application/
 COPY Modules/MealPlanning/Application/ Modules/MealPlanning/Application/
 COPY Modules/MealPlanning/Application/Abstractions/ Modules/MealPlanning/Application/Abstractions/
 COPY Modules/MealPlanning/Domain/ Modules/MealPlanning/Domain/

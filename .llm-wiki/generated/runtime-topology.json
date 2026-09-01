@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "d535e8fe4e72017648c87b861c5cef2e85d99359ad28f44f6a2bb9cbacd97727",
+    "sourceFingerprint": "8fe1d7da0c2bf80e866cf7760b06ed031e11edf91727004c7ce6372d6bf87d76",
     "sourceFileCount": 3539
   },
   "summary": {
@@ -1143,7 +1143,7 @@
     },
     {
       "name": "EmailSender",
-      "path": "FoodDiary.Application.Identity/Authentication/Services/EmailSender.cs",
+      "path": "Modules/Identity/Application/Authentication/Services/EmailSender.cs",
       "securitySignals": [
         "ip-address-policy",
         "uri-policy"

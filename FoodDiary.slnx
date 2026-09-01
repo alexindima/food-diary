@@ -6,7 +6,7 @@
   <Folder Name="/Application/Food and Diary/">
   </Folder>
   <Folder Name="/Application/Users and Access/">
-    <Project Path="FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj" />
+    <Project Path="Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj" />
   </Folder>
   <Folder Name="/Application/" />
   <Folder Name="/Application/Content and Engagement/">
@@ -19,6 +19,7 @@
   </Folder>
   <Folder Name="/Modules/Users/tests/">
     <Project Path="Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/FoodDiary.Modules.Users.Application.Tests.csproj" />
+    <Project Path="Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/FoodDiary.Modules.Identity.Application.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Ai/">
     <Project Path="Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />

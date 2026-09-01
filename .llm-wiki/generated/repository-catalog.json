@@ -13,16 +13,16 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 282,
-    "testProjects": 104,
+    "dotnetProjects": 283,
+    "testProjects": 105,
     "frontendProjects": 4,
     "applicationModules": 0,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 33,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 194,
-    "documentationPages": 108
+    "agentGuides": 196,
+    "documentationPages": 110
   },
   "dotnet": {
     "projects": [
@@ -80,40 +80,6 @@
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": []
-      },
-      {
-        "name": "FoodDiary.Application.Identity",
-        "assemblyName": "FoodDiary.Application.Identity",
-        "path": "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
-          "FoodDiary.Domain/FoodDiary.Domain.csproj",
-          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "FluentValidation",
-            "version": null
-          },
-          {
-            "name": "FluentValidation.DependencyInjectionExtensions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
-          }
-        ]
       },
       {
         "name": "FoodDiary.Application.Runtime",
@@ -328,7 +294,6 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
           "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
@@ -351,6 +316,7 @@
           "Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj",
           "Modules/Gamification/Infrastructure/FoodDiary.Modules.Gamification.Infrastructure.csproj",
           "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj",
+          "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Images/Application/FoodDiary.Application.Images.csproj",
           "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
           "Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj",
@@ -471,7 +437,6 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
           "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
@@ -492,6 +457,7 @@
           "Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj",
           "Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj",
           "Modules/Gamification/Infrastructure/FoodDiary.Modules.Gamification.Infrastructure.csproj",
+          "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Images/Application/FoodDiary.Application.Images.csproj",
           "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
@@ -575,7 +541,6 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
-          "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj",
           "Modules/Billing/Application/FoodDiary.Application.Billing.csproj",
@@ -592,6 +557,7 @@
           "Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj",
           "Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj",
           "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj",
+          "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Images/Application/FoodDiary.Application.Images.csproj",
           "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj",
           "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj",
@@ -673,7 +639,6 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
           "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
@@ -699,6 +664,7 @@
           "Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj",
           "Modules/Gamification/Infrastructure/FoodDiary.Modules.Gamification.Infrastructure.csproj",
           "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj",
+          "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Images/Application/FoodDiary.Application.Images.csproj",
           "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
           "Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj",
@@ -4692,6 +4658,77 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Identity.Application",
+        "assemblyName": "FoodDiary.Application.Identity",
+        "path": "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+          "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "FluentValidation",
+            "version": null
+          },
+          {
+            "name": "FluentValidation.DependencyInjectionExtensions",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Logging.Abstractions",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Identity.Application.Tests",
+        "assemblyName": "FoodDiary.Application.Tests",
+        "path": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/FoodDiary.Modules.Identity.Application.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
+          "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj",
+          "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
+          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "NSubstitute",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Images.Application.Abstractions",
         "assemblyName": "FoodDiary.Modules.Images.Application.Abstractions",
         "path": "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
@@ -7163,7 +7200,6 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
           "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
@@ -7174,6 +7210,7 @@
           "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj",
           "Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj",
           "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj",
+          "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj",
           "Modules/Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj",
           "Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj",
@@ -7897,7 +7934,6 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
           "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
@@ -7913,6 +7949,7 @@
           "Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj",
           "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj",
           "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj",
+          "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Lessons/Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj",
           "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj",
           "Modules/Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj",
@@ -8207,7 +8244,6 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
           "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
@@ -8224,6 +8260,7 @@
           "Modules/Exercises/Infrastructure/FoodDiary.Modules.Exercises.Infrastructure.csproj",
           "Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj",
           "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj",
+          "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj",
           "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
           "Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj",
@@ -8295,7 +8332,6 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
           "FoodDiary.JobManager/FoodDiary.JobManager.csproj",
           "Modules/Billing/Application/FoodDiary.Application.Billing.csproj",
           "Modules/Billing/Infrastructure/FoodDiary.Modules.Billing.Infrastructure.csproj",
@@ -8305,6 +8341,7 @@
           "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj",
           "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
           "Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj",
+          "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Images/Application/FoodDiary.Application.Images.csproj",
           "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
           "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
@@ -8393,7 +8430,6 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
@@ -8412,6 +8448,7 @@
           "Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj",
           "Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj",
           "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj",
+          "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Images/Application/FoodDiary.Application.Images.csproj",
           "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj",
           "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
@@ -8742,6 +8779,7 @@
       "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/FoodDiary.Modules.Gamification.Infrastructure.Tests.csproj",
       "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/FoodDiary.Modules.Hydration.Application.Tests.csproj",
       "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/FoodDiary.Modules.Hydration.Infrastructure.Tests.csproj",
+      "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/FoodDiary.Modules.Identity.Application.Tests.csproj",
       "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FoodDiary.Modules.Images.Application.Tests.csproj",
       "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/FoodDiary.Modules.Lessons.Application.Tests.csproj",
       "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Domain.Tests/FoodDiary.Modules.Lessons.Domain.Tests.csproj",
@@ -8911,7 +8949,7 @@
     },
     {
       "name": "Identity",
-      "project": "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj"
+      "project": "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj"
     },
     {
       "name": "Images",
@@ -11040,7 +11078,6 @@
       "AGENTS.md",
       "FoodDiary.Analyzers/AGENTS.md",
       "FoodDiary.Application.Abstractions/AGENTS.md",
-      "FoodDiary.Application.Identity/AGENTS.md",
       "FoodDiary.Application.Runtime/AGENTS.md",
       "FoodDiary.Development.Mcp/AGENTS.md",
       "FoodDiary.Domain/AGENTS.md",
@@ -11146,6 +11183,9 @@
       "Modules/Hydration/Contracts/AGENTS.md",
       "Modules/Hydration/Infrastructure/AGENTS.md",
       "Modules/Hydration/Infrastructure/Model/AGENTS.md",
+      "Modules/Identity/AGENTS.md",
+      "Modules/Identity/Application/AGENTS.md",
+      "Modules/Identity/tests/AGENTS.md",
       "Modules/Images/Application/AGENTS.md",
       "Modules/Lessons/AGENTS.md",
       "Modules/Marketing/AGENTS.md",
@@ -11284,6 +11324,8 @@
       "docs/ai/dashboard-wiki-supplemental-evals.md",
       "docs/ai/exercises-module-extraction-wiki-findings.md",
       "docs/ai/exercises-ownership-inventory.md",
+      "docs/ai/identity-module-extraction-wiki-findings.md",
+      "docs/ai/identity-ownership-inventory.md",
       "docs/ai/mealplanning-module-extraction-wiki-findings.md",
       "docs/ai/meals-module-extraction-wiki-findings.md",
       "docs/ai/meals-ownership-inventory.md",

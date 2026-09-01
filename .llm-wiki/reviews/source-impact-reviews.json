@@ -8,21 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "d8e3a02a266088974514bf884eca26cc808b66f0fbddb7631044c612efb6b1b6"
+          "sha256": "e8a9b539aa4ca08522f61414e6b205557ce60eba5f6cb889d3c52275cbf96da3"
         },
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "abd32a88d405e90ef3daa7cd948f5af6422a681e6b568b7bf60728da9c59d54a"
+          "sha256": "120d78c247e4f1d495f62f8ce8557598d72d8d684c53bb74d32df20f9e33993a"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "329ff6e97b4cb1e0b2b4ae382a872c6dcbb69382854537db8493e0884734e3eb"
+          "sha256": "e613f1e40a06e42548622b4bde6328d8fb5626c40d03f51ace269da82b652b80"
         }
       ],
-      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:22.5633853Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:30.9962639Z"
     },
     {
       "pageId": "module.frontend",
@@ -46,17 +46,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "abd32a88d405e90ef3daa7cd948f5af6422a681e6b568b7bf60728da9c59d54a"
+          "sha256": "120d78c247e4f1d495f62f8ce8557598d72d8d684c53bb74d32df20f9e33993a"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "329ff6e97b4cb1e0b2b4ae382a872c6dcbb69382854537db8493e0884734e3eb"
+          "sha256": "e613f1e40a06e42548622b4bde6328d8fb5626c40d03f51ace269da82b652b80"
         }
       ],
-      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:23.1299923Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:31.2873910Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -65,17 +65,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "48935d99e1e588fe7fd6f9cb034b7f35c7c67d1c85a9768197283363c569016c"
+          "sha256": "c35703de8e4a6bf2ac1749ee4fb1da9066be214062f789f44d89e3e1ba7cad00"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "329ff6e97b4cb1e0b2b4ae382a872c6dcbb69382854537db8493e0884734e3eb"
+          "sha256": "e613f1e40a06e42548622b4bde6328d8fb5626c40d03f51ace269da82b652b80"
+        },
+        {
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "4834631596da680bf557ff1500969941b96deab15187c201d5d14105395b02dc"
         }
       ],
-      "reason": "No HTTP or Swagger surface changed; assembly identity and contracts remain stable",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:23.6498995Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:31.5842131Z"
     },
     {
       "pageId": "system.architecture",
@@ -84,25 +88,25 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "abd32a88d405e90ef3daa7cd948f5af6422a681e6b568b7bf60728da9c59d54a"
+          "sha256": "120d78c247e4f1d495f62f8ce8557598d72d8d684c53bb74d32df20f9e33993a"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "48935d99e1e588fe7fd6f9cb034b7f35c7c67d1c85a9768197283363c569016c"
+          "sha256": "c35703de8e4a6bf2ac1749ee4fb1da9066be214062f789f44d89e3e1ba7cad00"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "329ff6e97b4cb1e0b2b4ae382a872c6dcbb69382854537db8493e0884734e3eb"
+          "sha256": "e613f1e40a06e42548622b4bde6328d8fb5626c40d03f51ace269da82b652b80"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "0bb7110ea7e2c7477986e7ee9f2ddec97f6f9745ffe164806962cae58d98e4c9"
+          "sha256": "c28025212e4d30e54de0cfa05d38bf3a933c5dcda55150e63f16373b9da4c0eb"
         }
       ],
-      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:24.1761273Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:31.9057036Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -141,13 +145,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "d8e3a02a266088974514bf884eca26cc808b66f0fbddb7631044c612efb6b1b6"
+          "sha256": "e8a9b539aa4ca08522f61414e6b205557ce60eba5f6cb889d3c52275cbf96da3"
         }
       ],
-      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:24.6832204Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:32.1747004Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -156,13 +160,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "48935d99e1e588fe7fd6f9cb034b7f35c7c67d1c85a9768197283363c569016c"
+          "sha256": "c35703de8e4a6bf2ac1749ee4fb1da9066be214062f789f44d89e3e1ba7cad00"
         }
       ],
-      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:25.2255206Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:32.4698113Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -216,21 +220,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "9b3d1af2158e2aee2c01c27e8e171a15a89b77fd194c000b781596b15774b8b4"
+          "sha256": "9afc701b837bc9fe6580b43917fbac3ec024dd499e87403dda97404f7e66cfa0"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "48935d99e1e588fe7fd6f9cb034b7f35c7c67d1c85a9768197283363c569016c"
+          "sha256": "c35703de8e4a6bf2ac1749ee4fb1da9066be214062f789f44d89e3e1ba7cad00"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "0bb7110ea7e2c7477986e7ee9f2ddec97f6f9745ffe164806962cae58d98e4c9"
+          "sha256": "c28025212e4d30e54de0cfa05d38bf3a933c5dcda55150e63f16373b9da4c0eb"
         }
       ],
-      "reason": "Architecture matrix, focused and integration receipts, EF check, and generated quality indexes were reviewed",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:25.8390352Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:32.7009872Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -239,13 +243,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "05f638540c076d86438fc5a7db5a9b44b1138a4fc8db230ad177351ae7a32f0a"
+          "sha256": "97f50d1a8f959a8128300946763a8bf5d1066cbad7b6258f4ebaeb1c17c70faf"
         }
       ],
-      "reason": "No HTTP or Swagger surface changed; assembly identity and contracts remain stable",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:26.6031421Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:33.2910460Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -864,13 +868,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "5c0d01690e5c74c967acd246edadecf5c10b7537d2e8987e02122ed7fad4ada5"
+          "sha256": "55f6f979b860cf2ee52237fca25733b03e9f49a134a14439c7642edd7c2a3ec1"
         }
       ],
-      "reason": "Identity and sensitive credential/token state remain central; generated privacy/security indexes were reviewed",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:28.2718090Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:34.0807074Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -909,13 +913,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f812058d35a551f770627a4cdcd54deb01ce6e52f4b6638331808845d280bc50"
+          "sha256": "ac9dd98ee1add88c89800a4c26518a0b5f874d826d11091ceac2d3bdc1050300"
         }
       ],
-      "reason": "Architecture matrix, focused and integration receipts, EF check, and generated quality indexes were reviewed",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:28.8993304Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:34.5474149Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -992,13 +996,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7521b8cd9b9cddb4ee025d66932bfffee743f6df5e0ea3109d4d893a99d58b41"
+          "sha256": "7004f027abb24d7a2c85a89d9c45dff8e766a81ed1455e601c41ff48da972790"
         }
       ],
-      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:30.4816900Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:35.4495055Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1007,21 +1011,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f812058d35a551f770627a4cdcd54deb01ce6e52f4b6638331808845d280bc50"
+          "sha256": "ac9dd98ee1add88c89800a4c26518a0b5f874d826d11091ceac2d3bdc1050300"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7521b8cd9b9cddb4ee025d66932bfffee743f6df5e0ea3109d4d893a99d58b41"
+          "sha256": "7004f027abb24d7a2c85a89d9c45dff8e766a81ed1455e601c41ff48da972790"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "5c0d01690e5c74c967acd246edadecf5c10b7537d2e8987e02122ed7fad4ada5"
+          "sha256": "55f6f979b860cf2ee52237fca25733b03e9f49a134a14439c7642edd7c2a3ec1"
         }
       ],
-      "reason": "Identity and sensitive credential/token state remain central; generated privacy/security indexes were reviewed",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:31.1787473Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:35.9043730Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1135,13 +1139,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "f132cedf5d94963b4180833c8de71967f256074f69791d7f4bf78b2e89200d15"
+          "sha256": "5bbf9a88219163d75d76c2b632cfcebac48bbd55bfa0da1595bb3c6e6dcbac4a"
         }
       ],
-      "reason": "Architecture matrix, focused and integration receipts, EF check, and generated quality indexes were reviewed",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:31.6822872Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:36.2362699Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1203,13 +1207,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "d8e3a02a266088974514bf884eca26cc808b66f0fbddb7631044c612efb6b1b6"
+          "sha256": "e8a9b539aa4ca08522f61414e6b205557ce60eba5f6cb889d3c52275cbf96da3"
         }
       ],
-      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:27.1256587Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:33.6512227Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1263,17 +1267,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "d08bdc121507f090ede1817566d08c1c2bc83441cc053efcf53d721906f7188f"
+          "sha256": "19f2584d49cbd1fbf9a7520504fe71c92daff63085f2f5cd3cf7292d1bcf6266"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "d8e3a02a266088974514bf884eca26cc808b66f0fbddb7631044c612efb6b1b6"
+          "sha256": "e8a9b539aa4ca08522f61414e6b205557ce60eba5f6cb889d3c52275cbf96da3"
         }
       ],
-      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:29.4125809Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:34.8706071Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1282,13 +1286,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "d8e3a02a266088974514bf884eca26cc808b66f0fbddb7631044c612efb6b1b6"
+          "sha256": "e8a9b539aa4ca08522f61414e6b205557ce60eba5f6cb889d3c52275cbf96da3"
         }
       ],
-      "reason": "Architecture matrix, focused and integration receipts, EF check, and generated quality indexes were reviewed",
+      "reason": "Identity physical extraction preserves assembly/runtime/EF contracts; source pages and regenerated indexes were reviewed against current project graph, ownership inventory, architecture matrix, tests, and Users compatibility seams",
       "baseRef": "HEAD",
-      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
-      "reviewedAtUtc": "2026-09-01T08:50:29.9252427Z"
+      "gitHead": "1e85022a63b1efaecf03312a4abf37b26e8b5ee4",
+      "reviewedAtUtc": "2026-09-01T10:02:35.1740292Z"
     }
   ]
 }

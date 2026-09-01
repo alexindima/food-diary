@@ -4800,7 +4800,7 @@
     {
       "name": "RevokeOtherSessionsCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommandHandler.cs",
+      "path": "Modules/Identity/Application/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommandHandler.cs",
       "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -4810,7 +4810,7 @@
     {
       "name": "RevokeSessionCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeSession/RevokeSessionCommandHandler.cs",
+      "path": "Modules/Identity/Application/Authentication/Commands/RevokeSession/RevokeSessionCommandHandler.cs",
       "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],

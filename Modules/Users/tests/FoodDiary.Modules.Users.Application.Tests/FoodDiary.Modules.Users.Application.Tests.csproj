@@ -19,7 +19,7 @@
     <Compile Include="../../../../tests/FoodDiary.Application.Tests/Support/**/*.cs" Link="Support/%(RecursiveDir)%(Filename)%(Extension)" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.Users.Application.csproj" />
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj" />
-    <ProjectReference Include="../../../../FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj" />
+    <ProjectReference Include="../../../Identity/Application/FoodDiary.Modules.Identity.Application.csproj" />
     <ProjectReference Include="../../../../FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj" />
     <ProjectReference Include="../../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />
     <ProjectReference Include="../../../BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj" />

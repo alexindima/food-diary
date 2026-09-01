@@ -1805,524 +1805,6 @@
       "line": 2
     },
     {
-      "name": "AdminSsoExchangeCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "AdminSsoExchangeCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "AdminSsoExchangeCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "AdminSsoStartCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoStart/AdminSsoStartCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "AdminSsoStartCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "AdminSsoStartCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "BootstrapInitialAdminCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "BootstrapInitialAdminCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommandHandler.cs",
-      "line": 5
-    },
-    {
-      "name": "BootstrapInitialAdminModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminModel.cs",
-      "line": 2
-    },
-    {
-      "name": "BootstrapInitialAdminStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "IInitialAdminBootstrapService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/IInitialAdminBootstrapService.cs",
-      "line": 4
-    },
-    {
-      "name": "ConfirmPasswordResetCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "ConfirmPasswordResetCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "ConfirmPasswordResetCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "GoogleLoginCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "GoogleLoginCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "GoogleLoginCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "LinkGoogleCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "LinkGoogleCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "LinkGoogleCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "LinkTelegramCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "LinkTelegramCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "LinkTelegramCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "LoginCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "LoginCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "LoginCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "LogoutCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/Logout/LogoutCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "LogoutCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/Logout/LogoutCommandHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "RefreshTokenCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "RefreshTokenCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-      "line": 14
-    },
-    {
-      "name": "RefreshTokenCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "RegisterCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "RegisterCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommandHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "RegisterCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "RequestPasswordResetCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "RequestPasswordResetCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "RequestPasswordResetCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "ResendEmailVerificationCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "ResendEmailVerificationCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "ResendEmailVerificationCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "RestoreAccountCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "RestoreAccountCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "RestoreAccountCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "RevokeOtherSessionsCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "RevokeOtherSessionsCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommandHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "RevokeSessionCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeSession/RevokeSessionCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "RevokeSessionCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/RevokeSession/RevokeSessionCommandHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "TelegramBotAuthCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "TelegramBotAuthCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "TelegramBotAuthCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "TelegramLoginWidgetCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "TelegramLoginWidgetCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "TelegramLoginWidgetCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "TelegramVerifyCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommand.cs",
-      "line": 7
-    },
-    {
-      "name": "TelegramVerifyCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "TelegramVerifyCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "VerifyEmailCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "VerifyEmailCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "VerifyEmailCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "ActiveSessionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Identity/Authentication/Models/ActiveSessionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AdminSsoStartModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Identity/Authentication/Models/AdminSsoStartModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AuthenticationModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Identity/Authentication/Models/AuthenticationModel.cs",
-      "line": 4
-    },
-    {
-      "name": "GetActiveSessionsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Identity/Authentication/Queries/GetActiveSessions/GetActiveSessionsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetActiveSessionsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Identity/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "AuthenticationLoginEventCleanupService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
-      "line": 4
-    },
-    {
-      "name": "AuthenticationLoginEventReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "AuthenticationTokenService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs",
-      "line": 11
-    },
-    {
-      "name": "EmailSender",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Identity/Authentication/Services/EmailSender.cs",
-      "line": 6
-    },
-    {
-      "name": "InitialAdminBootstrapService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Identity/Authentication/Services/InitialAdminBootstrapService.cs",
-      "line": 9
-    },
-    {
-      "name": "ParsedUserAgent",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Identity/Authentication/Services/UserAgents/ParsedUserAgent.cs",
-      "line": 2
-    },
-    {
-      "name": "UserAgentParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Identity/Authentication/Services/UserAgents/UserAgentParser.cs",
-      "line": 2
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Identity/DependencyInjection.cs",
-      "line": 12
-    },
-    {
-      "name": "EmailTemplateAdministrationReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "EmailTemplateAdministrationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationService.cs",
-      "line": 6
-    },
-    {
       "name": "CommandTransactionBehavior",
       "kind": "class",
       "role": "Other",
@@ -18717,6 +18199,524 @@
       "line": 10
     },
     {
+      "name": "AdminSsoExchangeCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "AdminSsoExchangeCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "AdminSsoExchangeCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "AdminSsoStartCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "AdminSsoStartCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "AdminSsoStartCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "BootstrapInitialAdminCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "BootstrapInitialAdminCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommandHandler.cs",
+      "line": 5
+    },
+    {
+      "name": "BootstrapInitialAdminModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminModel.cs",
+      "line": 2
+    },
+    {
+      "name": "BootstrapInitialAdminStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "IInitialAdminBootstrapService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/IInitialAdminBootstrapService.cs",
+      "line": 4
+    },
+    {
+      "name": "ConfirmPasswordResetCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "ConfirmPasswordResetCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "ConfirmPasswordResetCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "GoogleLoginCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "GoogleLoginCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "GoogleLoginCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "LinkGoogleCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "LinkGoogleCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "LinkGoogleCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "LinkTelegramCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/LinkTelegram/LinkTelegramCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "LinkTelegramCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "LinkTelegramCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "LoginCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/Login/LoginCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "LoginCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/Login/LoginCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "LoginCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/Login/LoginCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "LogoutCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/Logout/LogoutCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "LogoutCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/Logout/LogoutCommandHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "RefreshTokenCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "RefreshTokenCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "RefreshTokenCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "RegisterCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/Register/RegisterCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "RegisterCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/Register/RegisterCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "RegisterCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/Register/RegisterCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "RequestPasswordResetCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "RequestPasswordResetCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "RequestPasswordResetCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "ResendEmailVerificationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "ResendEmailVerificationCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "ResendEmailVerificationCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "RestoreAccountCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/RestoreAccount/RestoreAccountCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "RestoreAccountCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "RestoreAccountCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "RevokeOtherSessionsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "RevokeOtherSessionsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommandHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "RevokeSessionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/RevokeSession/RevokeSessionCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "RevokeSessionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/RevokeSession/RevokeSessionCommandHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "TelegramBotAuthCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "TelegramBotAuthCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "TelegramBotAuthCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "TelegramLoginWidgetCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "TelegramLoginWidgetCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "TelegramLoginWidgetCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "TelegramVerifyCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommand.cs",
+      "line": 7
+    },
+    {
+      "name": "TelegramVerifyCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "TelegramVerifyCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "VerifyEmailCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Identity/Application/Authentication/Commands/VerifyEmail/VerifyEmailCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "VerifyEmailCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Identity/Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "VerifyEmailCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "ActiveSessionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Models/ActiveSessionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminSsoStartModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Models/AdminSsoStartModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AuthenticationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Models/AuthenticationModel.cs",
+      "line": 4
+    },
+    {
+      "name": "GetActiveSessionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Identity/Application/Authentication/Queries/GetActiveSessions/GetActiveSessionsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetActiveSessionsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Identity/Application/Authentication/Queries/GetActiveSessions/GetActiveSessionsQueryHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "AuthenticationLoginEventCleanupService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
+      "line": 4
+    },
+    {
+      "name": "AuthenticationLoginEventReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "AuthenticationTokenService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
+      "line": 11
+    },
+    {
+      "name": "EmailSender",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Services/EmailSender.cs",
+      "line": 6
+    },
+    {
+      "name": "InitialAdminBootstrapService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Authentication/Services/InitialAdminBootstrapService.cs",
+      "line": 9
+    },
+    {
+      "name": "ParsedUserAgent",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Services/UserAgents/ParsedUserAgent.cs",
+      "line": 2
+    },
+    {
+      "name": "UserAgentParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Authentication/Services/UserAgents/UserAgentParser.cs",
+      "line": 2
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Application/DependencyInjection.cs",
+      "line": 12
+    },
+    {
+      "name": "EmailTemplateAdministrationReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "EmailTemplateAdministrationService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs",
+      "line": 6
+    },
+    {
       "name": "DeleteImageAssetResult",
       "kind": "record",
       "role": "Other",
@@ -24931,21 +24931,21 @@
       "interface": "IAuthenticationLoginEventCleanupService",
       "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
       "implementation": "AuthenticationLoginEventCleanupService",
-      "implementationPath": "FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
+      "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAuthenticationLoginEventReadService",
       "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IAuthenticationLoginEventReadService.cs",
       "implementation": "AuthenticationLoginEventReadService",
-      "implementationPath": "FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventReadService.cs",
+      "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAuthenticationTokenService",
       "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
       "implementation": "AuthenticationTokenService",
-      "implementationPath": "FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs",
+      "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25288,21 +25288,21 @@
       "interface": "IEmailSender",
       "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IEmailSender.cs",
       "implementation": "EmailSender",
-      "implementationPath": "FoodDiary.Application.Identity/Authentication/Services/EmailSender.cs",
+      "implementationPath": "Modules/Identity/Application/Authentication/Services/EmailSender.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailTemplateAdministrationReadService",
       "interfacePath": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs",
       "implementation": "EmailTemplateAdministrationReadService",
-      "implementationPath": "FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationReadService.cs",
+      "implementationPath": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailTemplateAdministrationService",
       "interfacePath": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs",
       "implementation": "EmailTemplateAdministrationService",
-      "implementationPath": "FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationService.cs",
+      "implementationPath": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25531,9 +25531,9 @@
     },
     {
       "interface": "IInitialAdminBootstrapService",
-      "interfacePath": "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/IInitialAdminBootstrapService.cs",
+      "interfacePath": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/IInitialAdminBootstrapService.cs",
       "implementation": "InitialAdminBootstrapService",
-      "implementationPath": "FoodDiary.Application.Identity/Authentication/Services/InitialAdminBootstrapService.cs",
+      "implementationPath": "Modules/Identity/Application/Authentication/Services/InitialAdminBootstrapService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26379,55 +26379,6 @@
   ],
   "dependencyInjectionRegistrations": [
     {
-      "service": "IAuthenticationLoginEventCleanupService",
-      "implementation": "AuthenticationLoginEventCleanupService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Identity/DependencyInjection.cs",
-      "line": 19
-    },
-    {
-      "service": "IAuthenticationLoginEventReadService",
-      "implementation": "AuthenticationLoginEventReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Identity/DependencyInjection.cs",
-      "line": 20
-    },
-    {
-      "service": "IAuthenticationTokenService",
-      "implementation": "AuthenticationTokenService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Identity/DependencyInjection.cs",
-      "line": 21
-    },
-    {
-      "service": "IInitialAdminBootstrapService",
-      "implementation": "InitialAdminBootstrapService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Identity/DependencyInjection.cs",
-      "line": 22
-    },
-    {
-      "service": "IEmailSender",
-      "implementation": "EmailSender",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Identity/DependencyInjection.cs",
-      "line": 23
-    },
-    {
-      "service": "IEmailTemplateAdministrationService",
-      "implementation": "EmailTemplateAdministrationService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Identity/DependencyInjection.cs",
-      "line": 24
-    },
-    {
-      "service": "IEmailTemplateAdministrationReadService",
-      "implementation": "EmailTemplateAdministrationReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Identity/DependencyInjection.cs",
-      "line": 25
-    },
-    {
       "service": "IPostCommitActionQueue",
       "implementation": "PostCommitActionQueue",
       "lifetime": "Scoped",
@@ -27196,6 +27147,55 @@
       "lifetime": "Scoped",
       "path": "Modules/Hydration/Application/DependencyInjection.cs",
       "line": 16
+    },
+    {
+      "service": "IAuthenticationLoginEventCleanupService",
+      "implementation": "AuthenticationLoginEventCleanupService",
+      "lifetime": "Scoped",
+      "path": "Modules/Identity/Application/DependencyInjection.cs",
+      "line": 19
+    },
+    {
+      "service": "IAuthenticationLoginEventReadService",
+      "implementation": "AuthenticationLoginEventReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Identity/Application/DependencyInjection.cs",
+      "line": 20
+    },
+    {
+      "service": "IAuthenticationTokenService",
+      "implementation": "AuthenticationTokenService",
+      "lifetime": "Scoped",
+      "path": "Modules/Identity/Application/DependencyInjection.cs",
+      "line": 21
+    },
+    {
+      "service": "IInitialAdminBootstrapService",
+      "implementation": "InitialAdminBootstrapService",
+      "lifetime": "Scoped",
+      "path": "Modules/Identity/Application/DependencyInjection.cs",
+      "line": 22
+    },
+    {
+      "service": "IEmailSender",
+      "implementation": "EmailSender",
+      "lifetime": "Scoped",
+      "path": "Modules/Identity/Application/DependencyInjection.cs",
+      "line": 23
+    },
+    {
+      "service": "IEmailTemplateAdministrationService",
+      "implementation": "EmailTemplateAdministrationService",
+      "lifetime": "Scoped",
+      "path": "Modules/Identity/Application/DependencyInjection.cs",
+      "line": 24
+    },
+    {
+      "service": "IEmailTemplateAdministrationReadService",
+      "implementation": "EmailTemplateAdministrationReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Identity/Application/DependencyInjection.cs",
+      "line": 25
     },
     {
       "service": "IImageAssetAccessService",

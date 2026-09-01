@@ -102,8 +102,9 @@
       "enforcement": "assembly-isolated",
       "ownedEntities": [],
       "sourceMappings": {
+        "logicalRoot": "Modules/Identity",
         "applicationProjects": [
-          "FoodDiary.Application.Identity"
+          "Modules/Identity/Application"
         ],
         "applicationAreas": [
           "Authentication",
@@ -682,7 +683,7 @@
         "domainCompatibilityAreas": ["FoodDiary.Domain/Entities/Users"],
         "persistenceAreas": ["Modules/Users/Infrastructure", "Modules/Users/Infrastructure/Model"],
         "centralPersistenceSeams": ["FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs"],
-        "identitySeams": ["FoodDiary.Application.Identity", "FoodDiary.Infrastructure/Persistence/Authentication"]
+        "identitySeams": ["Modules/Identity/Application", "FoodDiary.Infrastructure/Persistence/Authentication"]
       }
     },
     "Wearables": {
