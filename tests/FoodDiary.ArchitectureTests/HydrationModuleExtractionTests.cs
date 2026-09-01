@@ -16,21 +16,28 @@ public sealed class HydrationModuleExtractionTests {
             "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj");
         Assert.Equal([
             "FoodDiary.Application.Abstractions",
-            "FoodDiary.Domain",
             "FoodDiary.Mediator",
             "FoodDiary.Modules.Hydration.Application.Abstractions",
             "FoodDiary.Modules.Hydration.Contracts",
+            "FoodDiary.Modules.Hydration.Domain",
         ], references);
     }
 
     [Fact]
-    public void HydrationDomainCompatibilitySeam_RemainsCentral() {
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Tracking", "HydrationEntry.cs")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "ValueObjects", "Ids", "HydrationEntryId.cs")));
-        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Hydration", "Domain", "FoodDiary.Modules.Hydration.Domain.csproj")));
+    public void HydrationDomain_LivesOnlyInModuleProject_WithoutInverseUserNavigation() {
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Tracking", "HydrationEntry.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "ValueObjects", "Ids", "HydrationEntryId.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Hydration", "Domain", "FoodDiary.Modules.Hydration.Domain.csproj")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Hydration", "Domain", "Entities", "Tracking", "HydrationEntry.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Hydration", "Domain", "ValueObjects", "Ids", "HydrationEntryId.cs")));
 
         string userSource = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Users", "User.cs"));
-        Assert.Contains("IReadOnlyCollection<HydrationEntry> HydrationEntries", userSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("HydrationEntry", userSource, StringComparison.Ordinal);
+
+        string configurationSource = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+            "Modules", "Hydration", "Infrastructure", "Model", "Configurations", "HydrationEntryConfiguration.cs"));
+        Assert.Contains(".WithMany()", configurationSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("u => u.HydrationEntries", configurationSource, StringComparison.Ordinal);
     }
 
     [Fact]

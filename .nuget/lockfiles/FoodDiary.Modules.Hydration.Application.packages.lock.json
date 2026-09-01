@@ -168,11 +168,17 @@
       "fooddiary.modules.hydration.application.abstractions": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Domain": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
       "fooddiary.modules.hydration.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.hydration.domain": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )"

@@ -2267,13 +2267,6 @@
       "line": 7
     },
     {
-      "name": "HydrationEntry",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/HydrationEntry.cs",
-      "line": 8
-    },
-    {
       "name": "WaistEntry",
       "kind": "class",
       "role": "Entity",
@@ -2677,13 +2670,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/CycleId.cs",
-      "line": 4
-    },
-    {
-      "name": "HydrationEntryId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/HydrationEntryId.cs",
       "line": 4
     },
     {
@@ -18113,6 +18099,20 @@
       "role": "Other",
       "path": "Modules/Hydration/Contracts/Models/HydrationEntryModel.cs",
       "line": 2
+    },
+    {
+      "name": "HydrationEntry",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationEntry.cs",
+      "line": 8
+    },
+    {
+      "name": "HydrationEntryId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Hydration/Domain/ValueObjects/Ids/HydrationEntryId.cs",
+      "line": 4
     },
     {
       "name": "HydrationEntryConfiguration",

@@ -112,11 +112,6 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .HasForeignKey(goal => goal.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(e => e.HydrationEntries)
-            .WithOne(h => h.User)
-            .HasForeignKey(h => h.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasOne<ImageAsset>()
             .WithMany()
             .HasForeignKey(e => e.ProfileImageAssetId)
@@ -138,8 +133,6 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
         builder.Metadata.FindNavigation(nameof(User.WaistEntries))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(User.WaistGoals))!
-            .SetPropertyAccessMode(PropertyAccessMode.Field);
-        builder.Metadata.FindNavigation(nameof(User.HydrationEntries))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Metadata.FindNavigation(nameof(User.ShoppingLists))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);

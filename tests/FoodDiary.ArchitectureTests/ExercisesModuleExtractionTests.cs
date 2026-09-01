@@ -30,9 +30,8 @@ public sealed class ExercisesModuleExtractionTests {
     public void FocusedTests_HaveNoDonorCopies() {
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("tests", "FoodDiary.Application.Tests", "Exercises")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("tests", "FoodDiary.Domain.Tests", "Domain", "ExerciseEntryInvariantTests.cs")));
-        string mixed = File.ReadAllText(ArchitectureTestPaths.FromRoot("tests", "FoodDiary.Domain.Tests", "Domain", "TrackingEntryInvariantTests.cs"));
-        Assert.DoesNotContain("ExerciseEntry", mixed, StringComparison.Ordinal);
-        Assert.Contains("HydrationEntry", mixed, StringComparison.Ordinal);
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
+            "tests", "FoodDiary.Domain.Tests", "Domain", "TrackingEntryInvariantTests.cs")));
     }
 
     [Fact]

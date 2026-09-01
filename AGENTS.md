@@ -55,10 +55,15 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Hydration logical module: `Modules/Hydration/AGENTS.md`
 - Hydration application abstractions: `Modules/Hydration/Application/Abstractions/AGENTS.md`
 - Hydration contracts: `Modules/Hydration/Contracts/AGENTS.md`
+- Hydration domain: `Modules/Hydration/Domain/AGENTS.md`
 - Hydration infrastructure: `Modules/Hydration/Infrastructure/AGENTS.md`
 - Hydration persistence model: `Modules/Hydration/Infrastructure/Model/AGENTS.md`
+- Hydration tests: `Modules/Hydration/tests/AGENTS.md`
 - Identity logical module: `Modules/Identity/AGENTS.md`
 - Identity application: `Modules/Identity/Application/AGENTS.md`
+- Identity domain: `Modules/Identity/Domain/AGENTS.md`
+- Identity infrastructure: `Modules/Identity/Infrastructure/AGENTS.md`
+- Identity persistence model: `Modules/Identity/Infrastructure/Model/AGENTS.md`
 - Identity tests: `Modules/Identity/tests/AGENTS.md`
 - Images logical module: `Modules/Images/Application/AGENTS.md`
 - Lessons logical module: `Modules/Lessons/AGENTS.md`

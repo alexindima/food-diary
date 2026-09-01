@@ -13,15 +13,15 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 287,
-    "testProjects": 106,
+    "dotnetProjects": 289,
+    "testProjects": 107,
     "frontendProjects": 4,
     "applicationModules": 0,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 33,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 199,
+    "agentGuides": 201,
     "documentationPages": 111
   },
   "dotnet": {
@@ -188,6 +188,7 @@
           "Modules/Gamification/Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj",
           "Modules/Gamification/Domain/FoodDiary.Modules.Gamification.Domain.csproj",
           "Modules/Gamification/Infrastructure/Model/FoodDiary.Modules.Gamification.PersistenceModel.csproj",
+          "Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj",
           "Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj",
           "Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj",
           "Modules/Identity/Infrastructure/Model/FoodDiary.Modules.Identity.PersistenceModel.csproj",
@@ -4479,7 +4480,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": []
@@ -4496,9 +4497,9 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
-          "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "Modules/Hydration/Application/Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj",
           "Modules/Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj",
+          "Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
         ],
         "packageReferences": [
@@ -4520,6 +4521,21 @@
         "name": "FoodDiary.Modules.Hydration.Contracts",
         "assemblyName": "FoodDiary.Modules.Hydration.Contracts",
         "path": "Modules/Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.Modules.Hydration.Domain",
+        "assemblyName": "FoodDiary.Modules.Hydration.Domain",
+        "path": "Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -4568,7 +4584,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj"
+          "Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj"
         ],
         "packageReferences": [
           {
@@ -4605,6 +4621,34 @@
           },
           {
             "name": "NSubstitute",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Hydration.Domain.Tests",
+        "assemblyName": "FoodDiary.Modules.Hydration.Domain.Tests",
+        "path": "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/FoodDiary.Modules.Hydration.Domain.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.NET.Test.Sdk",
             "version": null
           },
           {
@@ -8879,6 +8923,7 @@
       "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/FoodDiary.Modules.Gamification.Domain.Tests.csproj",
       "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/FoodDiary.Modules.Gamification.Infrastructure.Tests.csproj",
       "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/FoodDiary.Modules.Hydration.Application.Tests.csproj",
+      "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/FoodDiary.Modules.Hydration.Domain.Tests.csproj",
       "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/FoodDiary.Modules.Hydration.Infrastructure.Tests.csproj",
       "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/FoodDiary.Modules.Identity.Application.Tests.csproj",
       "Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/FoodDiary.Modules.Identity.Domain.Tests.csproj",
@@ -11283,8 +11328,10 @@
       "Modules/Hydration/AGENTS.md",
       "Modules/Hydration/Application/Abstractions/AGENTS.md",
       "Modules/Hydration/Contracts/AGENTS.md",
+      "Modules/Hydration/Domain/AGENTS.md",
       "Modules/Hydration/Infrastructure/AGENTS.md",
       "Modules/Hydration/Infrastructure/Model/AGENTS.md",
+      "Modules/Hydration/tests/AGENTS.md",
       "Modules/Identity/AGENTS.md",
       "Modules/Identity/Application/AGENTS.md",
       "Modules/Identity/Domain/AGENTS.md",

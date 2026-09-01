@@ -389,9 +389,7 @@
         "abstractionAreas": ["Modules/Hydration/Application/Abstractions"],
         "contractAreas": ["Modules/Hydration/Contracts"],
         "domainAreas": [
-          "FoodDiary.Domain/Entities/Tracking",
-          "FoodDiary.Domain/ValueObjects/Ids",
-          "FoodDiary.Domain/Entities/Users"
+          "Modules/Hydration/Domain"
         ],
         "persistenceAreas": ["Modules/Hydration/Infrastructure"]
       }

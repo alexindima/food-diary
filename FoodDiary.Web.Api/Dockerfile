@@ -159,6 +159,7 @@ COPY Modules/Export/Application/*.csproj Modules/Export/Application/
 COPY Modules/Hydration/Application/*.csproj Modules/Hydration/Application/
 COPY Modules/Hydration/Application/Abstractions/*.csproj Modules/Hydration/Application/Abstractions/
 COPY Modules/Hydration/Contracts/*.csproj Modules/Hydration/Contracts/
+COPY Modules/Hydration/Domain/*.csproj Modules/Hydration/Domain/
 COPY Modules/Hydration/Infrastructure/*.csproj Modules/Hydration/Infrastructure/
 COPY Modules/Hydration/Infrastructure/Model/*.csproj Modules/Hydration/Infrastructure/Model/
 COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
@@ -334,6 +335,7 @@ COPY Modules/Hydration/ Modules/Hydration/
 COPY Modules/Hydration/Application/ Modules/Hydration/Application/
 COPY Modules/Hydration/Application/Abstractions/ Modules/Hydration/Application/Abstractions/
 COPY Modules/Hydration/Contracts/ Modules/Hydration/Contracts/
+COPY Modules/Hydration/Domain/ Modules/Hydration/Domain/
 COPY Modules/Hydration/Infrastructure/ Modules/Hydration/Infrastructure/
 COPY Modules/Hydration/Infrastructure/Model/ Modules/Hydration/Infrastructure/Model/
 COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/

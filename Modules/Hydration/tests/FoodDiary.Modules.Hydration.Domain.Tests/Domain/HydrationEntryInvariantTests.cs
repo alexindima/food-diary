@@ -25,7 +25,11 @@ public class HydrationEntryInvariantTests {
 
         var entry = HydrationEntry.Create(UserId.New(), localTimestamp, 250);
 
-        Assert.Equal(DateTimeKind.Utc, entry.Timestamp.Kind);
+        Assert.Multiple(
+            () => Assert.Equal(DateTimeKind.Utc, entry.Timestamp.Kind),
+            () => Assert.Equal(localTimestamp.ToUniversalTime(), entry.Timestamp),
+            () => Assert.Equal(250, entry.AmountMl),
+            () => Assert.NotEqual(HydrationEntryId.Empty, entry.Id));
     }
 
     [Fact]
@@ -66,6 +70,17 @@ public class HydrationEntryInvariantTests {
         var entry = HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => entry.Update(amountMl: amountMl));
+    }
+
+    [Fact]
+    public void Update_WithLocalTimestamp_NormalizesToUtc() {
+        var entry = HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250);
+        var localTimestamp = new DateTime(2026, 3, 27, 14, 30, 0, DateTimeKind.Local);
+
+        entry.Update(timestampUtc: localTimestamp);
+
+        Assert.Equal(localTimestamp.ToUniversalTime(), entry.Timestamp);
+        Assert.NotNull(entry.ModifiedOnUtc);
     }
 
     [Fact]

@@ -61038,19 +61038,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/HydrationEntryId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/ImageAssetId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61715,6 +61702,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/Domain/ValueObjects/Ids/UserAchievementId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Hydration/Domain/ValueObjects/Ids/HydrationEntryId.cs",
       "isTest": false,
       "referenceCount": 1
     },

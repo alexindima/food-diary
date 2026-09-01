@@ -197,9 +197,11 @@
     <Project Path="Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj" />
     <Project Path="Modules/Hydration/Application/Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
     <Project Path="Modules/Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj" />
+    <Project Path="Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj" />
     <Project Path="Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj" />
     <Project Path="Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/FoodDiary.Modules.Hydration.Application.Tests.csproj" />
+    <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/FoodDiary.Modules.Hydration.Domain.Tests.csproj" />
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/FoodDiary.Modules.Hydration.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Lessons/">

@@ -32,7 +32,7 @@ internal sealed class HydrationEntryConfiguration : IEntityTypeConfiguration<Hyd
             .HasDatabaseName("IX_HydrationEntries_User_Timestamp");
 
         builder.HasOne(e => e.User)
-            .WithMany(u => u.HydrationEntries)
+            .WithMany()
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
