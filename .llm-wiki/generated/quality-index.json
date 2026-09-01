@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4758,
+    "productionFiles": 4761,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -567,7 +567,7 @@
       "structuralRiskScore": 89.84
     },
     {
-      "path": "FoodDiary.Application.Users/Services/UserAuthenticationIdentityService.cs",
+      "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
       "nonBlankLines": 358,
       "decisionPoints": 55,
       "criticalSymbols": 0,
@@ -4881,550 +4881,6 @@
       "structuralRiskScore": 0.36
     },
     {
-      "path": "FoodDiary.Application.Users/AssemblyInfo.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/AcceptAiConsent/AcceptAiConsentCommandHandler.cs",
-      "nonBlankLines": 28,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.56
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommandHandler.cs",
-      "nonBlankLines": 44,
-      "decisionPoints": 4,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.88
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommandValidator.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.24
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommand.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommandHandler.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.78
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommandValidator.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.78
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/RevokeAiConsent/RevokeAiConsentCommand.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/RevokeAiConsent/RevokeAiConsentCommandHandler.cs",
-      "nonBlankLines": 28,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.56
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommand.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommandHandler.cs",
-      "nonBlankLines": 40,
-      "decisionPoints": 3,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.3
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommandValidator.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.02
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandHandler.cs",
-      "nonBlankLines": 59,
-      "decisionPoints": 8,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.18
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandValidator.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.98
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommand.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
-      "nonBlankLines": 59,
-      "decisionPoints": 9,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.68
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandValidator.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.98
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommand.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
-      "nonBlankLines": 86,
-      "decisionPoints": 13,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.22
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommandValidator.cs",
-      "nonBlankLines": 140,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.8
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "nonBlankLines": 189,
-      "decisionPoints": 17,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 31.28
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandValidator.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.22
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommand.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 3,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.28
-    },
-    {
-      "path": "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandValidator.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.36
-    },
-    {
-      "path": "FoodDiary.Application.Users/Common/CurrentUserAccessPolicy.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.86
-    },
-    {
-      "path": "FoodDiary.Application.Users/Common/IProfileOverviewReadService.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Users/Common/IUserContextService.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Users/Common/IUserIdentityMutationService.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Users/Common/UserAppearancePreferences.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Application.Users/Common/UserAppearancePreferencesParser.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.42
-    },
-    {
-      "path": "FoodDiary.Application.Users/Common/UserContextService.cs",
-      "nonBlankLines": 260,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.7
-    },
-    {
-      "path": "FoodDiary.Application.Users/Common/UserInputParser.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.46
-    },
-    {
-      "path": "FoodDiary.Application.Users/Common/UserPreferenceCodeParser.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.76
-    },
-    {
-      "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "nonBlankLines": 35,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
-    },
-    {
-      "path": "FoodDiary.Application.Users/Mappings/UserMappings.cs",
-      "nonBlankLines": 133,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.66
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQueryHandler.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.98
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQueryValidator.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.78
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWeight/GetDesiredWeightQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWeight/GetDesiredWeightQueryHandler.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.98
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWeight/GetDesiredWeightQueryValidator.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.78
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQuery.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQueryHandler.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.96
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.78
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetUserById/GetUserByIdQuery.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetUserById/GetUserByIdQueryHandler.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.92
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetUserById/GetUserByIdQueryValidator.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.78
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetUserGoals/GetUserGoalsQuery.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.92
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetUserGoals/GetUserGoalsQueryValidator.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.78
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Application.Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4
-    },
-    {
-      "path": "FoodDiary.Application.Users/Services/ProfileOverviewReadService.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.22
-    },
-    {
-      "path": "FoodDiary.Application.Users/Services/UserAdministrationMutationService.cs",
-      "nonBlankLines": 202,
-      "decisionPoints": 30,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 49.04
-    },
-    {
-      "path": "FoodDiary.Application.Users/Services/UserAdministrationReadService.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
-    },
-    {
-      "path": "FoodDiary.Application.Users/Services/UserAuthenticationIdentityService.cs",
-      "nonBlankLines": 358,
-      "decisionPoints": 55,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 89.66
-    },
-    {
-      "path": "FoodDiary.Application.Users/Services/UserAuthenticationRegistrationService.cs",
-      "nonBlankLines": 70,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.4
-    },
-    {
-      "path": "FoodDiary.Application.Users/Services/UserBillingService.cs",
-      "nonBlankLines": 61,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.72
-    },
-    {
-      "path": "FoodDiary.Application.Users/Services/UserCredentialVerificationService.cs",
-      "nonBlankLines": 28,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.56
-    },
-    {
-      "path": "FoodDiary.Application.Users/Services/UserIdentityMutationService.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Application.Users/Services/UserNotificationProfileService.cs",
-      "nonBlankLines": 48,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.46
-    },
-    {
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshot.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -6954,11 +6410,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.4
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Email.cs",
@@ -7026,11 +6482,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "nonBlankLines": 35,
+      "nonBlankLines": 31,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.7
+      "structuralRiskScore": 0.62
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
@@ -7241,38 +6697,6 @@
       "structuralRiskScore": 0.54
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/RoleConfiguration.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/UserConfiguration.cs",
-      "nonBlankLines": 134,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.68
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/UserRoleAuditEventConfiguration.cs",
-      "nonBlankLines": 44,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.88
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/UserRoleConfiguration.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
       "nonBlankLines": 70,
       "decisionPoints": 0,
@@ -7418,11 +6842,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 51,
+      "nonBlankLines": 52,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.02
+      "structuralRiskScore": 1.04
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -7553,30 +6977,6 @@
       "structuralRiskScore": 62.06
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserCleanupService.cs",
-      "nonBlankLines": 189,
-      "decisionPoints": 20,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 33.78
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
       "nonBlankLines": 123,
       "decisionPoints": 17,
@@ -7593,28 +6993,12 @@
       "structuralRiskScore": 45.22
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserRoleCatalogService.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.94
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
-      "nonBlankLines": 90,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.8
-    },
-    {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.24
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DatabaseCommandTelemetryInterceptor.cs",
@@ -7810,11 +7194,11 @@
     },
     {
       "path": "FoodDiary.Initializer/Program.cs",
-      "nonBlankLines": 360,
+      "nonBlankLines": 359,
       "decisionPoints": 41,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 68.7
+      "structuralRiskScore": 68.68
     },
     {
       "path": "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -8274,11 +7658,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Program.cs",
-      "nonBlankLines": 59,
+      "nonBlankLines": 58,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.68
+      "structuralRiskScore": 2.66
     },
     {
       "path": "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -13026,11 +12410,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 136,
+      "nonBlankLines": 135,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.72
+      "structuralRiskScore": 5.7
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -37889,6 +37273,646 @@
       "structuralRiskScore": 9.2
     },
     {
+      "path": "Modules/Users/Application/AssemblyInfo.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Users/Application/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Application/Commands/AcceptAiConsent/AcceptAiConsentCommandHandler.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.56
+    },
+    {
+      "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommand.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommandHandler.cs",
+      "nonBlankLines": 44,
+      "decisionPoints": 4,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.88
+    },
+    {
+      "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommandValidator.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.24
+    },
+    {
+      "path": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommandHandler.cs",
+      "nonBlankLines": 39,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.78
+    },
+    {
+      "path": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommandValidator.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.78
+    },
+    {
+      "path": "Modules/Users/Application/Commands/RevokeAiConsent/RevokeAiConsentCommand.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Application/Commands/RevokeAiConsent/RevokeAiConsentCommandHandler.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.56
+    },
+    {
+      "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommand.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommandHandler.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.3
+    },
+    {
+      "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommandValidator.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.02
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandHandler.cs",
+      "nonBlankLines": 59,
+      "decisionPoints": 8,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.18
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandValidator.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.98
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommand.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
+      "nonBlankLines": 59,
+      "decisionPoints": 9,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 16.68
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandValidator.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.98
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommand.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.46
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
+      "nonBlankLines": 86,
+      "decisionPoints": 13,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 23.22
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommandValidator.cs",
+      "nonBlankLines": 140,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.8
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.54
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+      "nonBlankLines": 189,
+      "decisionPoints": 17,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 31.28
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandValidator.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.22
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateUserAppearance/UpdateUserAppearanceCommand.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs",
+      "nonBlankLines": 39,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.28
+    },
+    {
+      "path": "Modules/Users/Application/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandValidator.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.36
+    },
+    {
+      "path": "Modules/Users/Application/Common/CurrentUserAccessPolicy.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.86
+    },
+    {
+      "path": "Modules/Users/Application/Common/IProfileOverviewReadService.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Users/Application/Common/IUserContextService.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Users/Application/Common/IUserIdentityMutationService.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Users/Application/Common/UserAppearancePreferences.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Users/Application/Common/UserAppearancePreferencesParser.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.42
+    },
+    {
+      "path": "Modules/Users/Application/Common/UserContextService.cs",
+      "nonBlankLines": 260,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 18.7
+    },
+    {
+      "path": "Modules/Users/Application/Common/UserInputParser.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.46
+    },
+    {
+      "path": "Modules/Users/Application/Common/UserPreferenceCodeParser.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.76
+    },
+    {
+      "path": "Modules/Users/Application/DependencyInjection.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.7
+    },
+    {
+      "path": "Modules/Users/Application/Mappings/UserMappings.cs",
+      "nonBlankLines": 133,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.66
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetDesiredWaist/GetDesiredWaistQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetDesiredWaist/GetDesiredWaistQueryHandler.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.98
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetDesiredWaist/GetDesiredWaistQueryValidator.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.78
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetDesiredWeight/GetDesiredWeightQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetDesiredWeight/GetDesiredWeightQueryHandler.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.98
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetDesiredWeight/GetDesiredWeightQueryValidator.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.78
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQueryHandler.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.96
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 8.78
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetUserById/GetUserByIdQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetUserById/GetUserByIdQueryHandler.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.92
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetUserById/GetUserByIdQueryValidator.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.78
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQuery.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.92
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQueryValidator.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.78
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Application/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4
+    },
+    {
+      "path": "Modules/Users/Application/Services/ProfileOverviewReadService.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.22
+    },
+    {
+      "path": "Modules/Users/Application/Services/UserAdministrationMutationService.cs",
+      "nonBlankLines": 202,
+      "decisionPoints": 30,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 49.04
+    },
+    {
+      "path": "Modules/Users/Application/Services/UserAdministrationReadService.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.42
+    },
+    {
+      "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
+      "nonBlankLines": 358,
+      "decisionPoints": 55,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 89.66
+    },
+    {
+      "path": "Modules/Users/Application/Services/UserAuthenticationRegistrationService.cs",
+      "nonBlankLines": 70,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.4
+    },
+    {
+      "path": "Modules/Users/Application/Services/UserBillingService.cs",
+      "nonBlankLines": 61,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.72
+    },
+    {
+      "path": "Modules/Users/Application/Services/UserCredentialVerificationService.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.56
+    },
+    {
+      "path": "Modules/Users/Application/Services/UserIdentityMutationService.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Users/Application/Services/UserNotificationProfileService.cs",
+      "nonBlankLines": 48,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.46
+    },
+    {
+      "path": "Modules/Users/Infrastructure/AssemblyInfo.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/RoleConfiguration.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserConfiguration.cs",
+      "nonBlankLines": 134,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.68
+    },
+    {
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserRoleAuditEventConfiguration.cs",
+      "nonBlankLines": 44,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.88
+    },
+    {
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserRoleConfiguration.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.48
+    },
+    {
+      "path": "Modules/Users/Infrastructure/Model/UsersPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
+      "nonBlankLines": 189,
+      "decisionPoints": 20,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 33.78
+    },
+    {
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
+    },
+    {
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.94
+    },
+    {
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
+      "nonBlankLines": 90,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.8
+    },
+    {
+      "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
+    },
+    {
       "path": "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs",
       "nonBlankLines": 18,
       "decisionPoints": 0,
@@ -38885,11 +38909,11 @@
     {
       "name": "AcceptAiConsentCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/AcceptAiConsent/AcceptAiConsentCommandHandler.cs",
+      "path": "Modules/Users/Application/Commands/AcceptAiConsent/AcceptAiConsentCommandHandler.cs",
       "line": 9,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/AiConsentTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/AiConsentTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -39086,11 +39110,11 @@
     {
       "name": "ChangePasswordCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommandHandler.cs",
+      "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommandHandler.cs",
       "line": 10,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -39594,11 +39618,11 @@
     {
       "name": "DeleteUserCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommandHandler.cs",
+      "path": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommandHandler.cs",
       "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40226,11 +40250,11 @@
     {
       "name": "RevokeAiConsentCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/RevokeAiConsent/RevokeAiConsentCommandHandler.cs",
+      "path": "Modules/Users/Application/Commands/RevokeAiConsent/RevokeAiConsentCommandHandler.cs",
       "line": 9,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/AiConsentTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/AiConsentTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40332,11 +40356,11 @@
     {
       "name": "SetPasswordCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommandHandler.cs",
+      "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommandHandler.cs",
       "line": 10,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40548,12 +40572,12 @@
     {
       "name": "UpdateDesiredWaistCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandHandler.cs",
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandHandler.cs",
       "line": 10,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.DesiredGoalIdempotency.cs",
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.DesiredGoalIdempotency.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40562,12 +40586,12 @@
     {
       "name": "UpdateDesiredWeightCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
       "line": 10,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.DesiredGoalIdempotency.cs",
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.DesiredGoalIdempotency.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40613,11 +40637,11 @@
     {
       "name": "UpdateGoalsCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
+      "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
       "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40746,11 +40770,11 @@
     {
       "name": "UpdateUserAppearanceCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs",
+      "path": "Modules/Users/Application/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs",
       "line": 12,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40759,11 +40783,11 @@
     {
       "name": "UpdateUserCommandHandler",
       "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
       "line": 16,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UpdateUserCommandHandlerTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UpdateUserCommandHandlerTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42607,11 +42631,11 @@
     {
       "name": "GetDesiredWaistQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQueryHandler.cs",
+      "path": "Modules/Users/Application/Queries/GetDesiredWaist/GetDesiredWaistQueryHandler.cs",
       "line": 8,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42620,11 +42644,11 @@
     {
       "name": "GetDesiredWeightQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWeight/GetDesiredWeightQueryHandler.cs",
+      "path": "Modules/Users/Application/Queries/GetDesiredWeight/GetDesiredWeightQueryHandler.cs",
       "line": 8,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43168,11 +43192,11 @@
     {
       "name": "GetProfileOverviewQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQueryHandler.cs",
+      "path": "Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQueryHandler.cs",
       "line": 9,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43391,11 +43415,11 @@
     {
       "name": "GetUserByIdQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetUserById/GetUserByIdQueryHandler.cs",
+      "path": "Modules/Users/Application/Queries/GetUserById/GetUserByIdQueryHandler.cs",
       "line": 8,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43404,11 +43428,11 @@
     {
       "name": "GetUserGoalsQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
+      "path": "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
       "line": 8,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43430,11 +43454,11 @@
     {
       "name": "GetWaistGoalHistoryQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
+      "path": "Modules/Users/Application/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/HistoryProfileCoverageTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/HistoryProfileCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43446,7 +43470,7 @@
       "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43570,11 +43594,11 @@
     {
       "name": "GetWeightGoalHistoryQueryHandler",
       "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
+      "path": "Modules/Users/Application/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/HistoryProfileCoverageTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/HistoryProfileCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43586,7 +43610,7 @@
       "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43883,12 +43907,12 @@
     {
       "name": "ChangePasswordCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommandValidator.cs",
+      "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommandValidator.cs",
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs",
+        "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44279,11 +44303,11 @@
     {
       "name": "DeleteUserCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommandValidator.cs",
+      "path": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44543,12 +44567,12 @@
     {
       "name": "GetDesiredWaistQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQueryValidator.cs",
+      "path": "Modules/Users/Application/Queries/GetDesiredWaist/GetDesiredWaistQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44556,12 +44580,12 @@
     {
       "name": "GetDesiredWeightQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWeight/GetDesiredWeightQueryValidator.cs",
+      "path": "Modules/Users/Application/Queries/GetDesiredWeight/GetDesiredWeightQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44828,7 +44852,7 @@
     {
       "name": "GetProfileOverviewQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
+      "path": "Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -44974,11 +44998,11 @@
     {
       "name": "GetUserByIdQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Queries/GetUserById/GetUserByIdQueryValidator.cs",
+      "path": "Modules/Users/Application/Queries/GetUserById/GetUserByIdQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44986,12 +45010,12 @@
     {
       "name": "GetUserGoalsQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Queries/GetUserGoals/GetUserGoalsQueryValidator.cs",
+      "path": "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45734,12 +45758,12 @@
     {
       "name": "SetPasswordCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommandValidator.cs",
+      "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommandValidator.cs",
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs",
+        "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45986,11 +46010,11 @@
     {
       "name": "UpdateDesiredWaistCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandValidator.cs",
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandValidator.cs",
       "line": 6,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45998,11 +46022,11 @@
     {
       "name": "UpdateDesiredWeightCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandValidator.cs",
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandValidator.cs",
       "line": 6,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46032,11 +46056,11 @@
     {
       "name": "UpdateGoalsCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommandValidator.cs",
+      "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommandValidator.cs",
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46143,11 +46167,11 @@
     {
       "name": "UpdateUserAppearanceCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandValidator.cs",
+      "path": "Modules/Users/Application/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46155,11 +46179,11 @@
     {
       "name": "UpdateUserCommandValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandValidator.cs",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandValidator.cs",
       "line": 6,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

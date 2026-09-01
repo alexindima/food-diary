@@ -6435,7 +6435,7 @@
         "e => e.Name)"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/RoleConfiguration.cs"
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/RoleConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6585,7 +6585,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/UserConfiguration.cs"
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6681,7 +6681,7 @@
           "expression": "e => e.Role)"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/UserRoleConfiguration.cs"
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserRoleConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6707,7 +6707,7 @@
           "expression": ")"
         }
       ],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/UserRoleAuditEventConfiguration.cs"
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserRoleAuditEventConfiguration.cs"
     },
     {
       "area": "FoodDiary",

@@ -794,7 +794,7 @@
           "FoodDiary.Modules.Usda.Contracts": "[1.0.0, )"
         }
       },
-      "fooddiary.application.users": {
+      "FoodDiary.Application.Users": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
@@ -899,6 +899,7 @@
           "FoodDiary.Modules.RecipeCommunity.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Usda.PersistenceModel": "[1.0.0, )",
+          "FoodDiary.Modules.Users.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Wearables.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.PersistenceModel": "[1.0.0, )",
@@ -1715,6 +1716,23 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
+      "fooddiary.modules.users.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Users": "[1.0.0, )",
+          "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Users.PersistenceModel": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.users.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
+        }
+      },
       "fooddiary.modules.wearables.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -1860,7 +1878,6 @@
           "FoodDiary.Application.Statistics": "[1.0.0, )",
           "FoodDiary.Application.Tdee": "[1.0.0, )",
           "FoodDiary.Application.Usda": "[1.0.0, )",
-          "FoodDiary.Application.Users": "[1.0.0, )",
           "FoodDiary.Application.WeeklyCheckIn": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Integrations": "[1.0.0, )",
@@ -1889,6 +1906,7 @@
           "FoodDiary.Modules.RecipeCommunity.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Usda.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Wearables.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Infrastructure": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )",

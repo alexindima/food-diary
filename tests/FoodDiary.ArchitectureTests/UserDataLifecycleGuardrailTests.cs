@@ -36,7 +36,9 @@ public sealed class UserDataLifecycleGuardrailTests {
     [Fact]
     public void RestrictedUserRelationships_AreExplicitlyHandledByCleanupService() {
         string cleanupSource = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Infrastructure",
+            "Modules",
+            "Users",
+            "Infrastructure",
             "Persistence",
             "Users",
             "UserCleanupService.cs"));

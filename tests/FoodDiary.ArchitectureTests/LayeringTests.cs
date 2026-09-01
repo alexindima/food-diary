@@ -369,7 +369,7 @@ public class LayeringTests {
         HashSet<string> references = GetProjectReferences("FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application.Runtime", references);
-        Assert.Contains("FoodDiary.Application.Users", references);
+        Assert.Contains("FoodDiary.Modules.Users.Application", references);
         Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Resources", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);

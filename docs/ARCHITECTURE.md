@@ -154,6 +154,10 @@ registration remains `AddDashboardModule`. Scoped concrete/interface aliases and
 query behavior are preserved. Owned application/adapter tests live under module
 tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.
 
+## Users physical ownership
+
+Users application slices, application-owned services, focused tests, persistence adapters, cleanup, and the explicit User/Role/UserRole/UserRoleAuditEvent EF model live under `Modules/Users`. The application project preserves `FoodDiary.Application.Users` as its AssemblyName and RootNamespace. Central `FoodDiary.Application.Abstractions/Users`, the User aggregate and related CLR types, `UserRepository`, the shared DbContext, migrations, and snapshot remain compatibility seams because current consumers and bidirectional navigations prevent a one-way extraction. Identity remains outside this move: credentials, password/reset/email-confirmation/security state, authentication ports and services, external login/token issuance, refresh-token/login-event persistence, and email templates remain central Identity responsibilities. Hosts compose `AddUsersModule`; no schema delta or migration is introduced.
+
 ## Admin physical ownership
 
 Admin owns application slices, billing-report/impersonation/mail-reader ports,

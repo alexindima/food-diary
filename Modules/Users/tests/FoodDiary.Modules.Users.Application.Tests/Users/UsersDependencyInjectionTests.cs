@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Application.Tests.Users;

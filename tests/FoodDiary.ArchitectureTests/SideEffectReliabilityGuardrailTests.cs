@@ -321,7 +321,9 @@ public sealed class SideEffectReliabilityGuardrailTests {
             "Services",
             "ImageAssetCleanupService.cs");
         string userCleanupPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Infrastructure",
+            "Modules",
+            "Users",
+            "Infrastructure",
             "Persistence",
             "Users",
             "UserCleanupService.cs");

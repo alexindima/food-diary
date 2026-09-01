@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 657,
+    "productionProjectEdges": 662,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -4880,7 +4880,7 @@
     {
       "name": "GetProfileOverviewQueryValidator",
       "role": "Validator",
-      "path": "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
+      "path": "Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],

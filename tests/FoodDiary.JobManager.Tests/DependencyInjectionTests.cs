@@ -11,7 +11,6 @@ using FoodDiary.Application.Images;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Application.Notifications;
-using FoodDiary.Application.Users;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Infrastructure;
 using FoodDiary.Integrations;

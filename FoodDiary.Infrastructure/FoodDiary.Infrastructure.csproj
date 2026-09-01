@@ -80,4 +80,7 @@
   <ItemGroup><ProjectReference Include="../Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj" /></ItemGroup>
   <ItemGroup><ProjectReference Include="../Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj" /></ItemGroup>
   <ItemGroup><ProjectReference Include="../Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Modules/Users/Infrastructure/Model/FoodDiary.Modules.Users.PersistenceModel.csproj" />
+  </ItemGroup>
 </Project>

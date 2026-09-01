@@ -17,7 +17,7 @@
     <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\FoodDiary.Application.Users\FoodDiary.Application.Users.csproj" />
+    <ProjectReference Include="..\..\..\..\Modules\Users\Application\FoodDiary.Modules.Users.Application.csproj" />
     <ProjectReference Include="..\..\Application\FoodDiary.Modules.WeeklyCheckIn.Application.csproj" />
     <ProjectReference Include="../../../Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
   </ItemGroup>

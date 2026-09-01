@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3535,
-    "symbols": 3525,
+    "sourceFiles": 3538,
+    "symbols": 3527,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 175,
+    "dependencyInjectionRegistrations": 170,
     "kinds": {
-      "class": 1852,
+      "class": 1854,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1376,
+      "Other": 1378,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -2365,475 +2365,6 @@
       "line": 8
     },
     {
-      "name": "AcceptAiConsentCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Users/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "AcceptAiConsentCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/AcceptAiConsent/AcceptAiConsentCommandHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "ChangePasswordCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "ChangePasswordCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommandHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "ChangePasswordCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteUserCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "DeleteUserCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommandHandler.cs",
-      "line": 11
-    },
-    {
-      "name": "DeleteUserCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "RevokeAiConsentCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Users/Commands/RevokeAiConsent/RevokeAiConsentCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "RevokeAiConsentCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/RevokeAiConsent/RevokeAiConsentCommandHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "SetPasswordCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "SetPasswordCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommandHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "SetPasswordCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommandValidator.cs",
-      "line": 5
-    },
-    {
-      "name": "UpdateDesiredWaistCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateDesiredWaistCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "UpdateDesiredWaistCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateDesiredWeightCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateDesiredWeightCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
-      "line": 10
-    },
-    {
-      "name": "UpdateDesiredWeightCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateGoalsCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateGoalsCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
-      "line": 13
-    },
-    {
-      "name": "UpdateGoalsCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommandValidator.cs",
-      "line": 7
-    },
-    {
-      "name": "UpdateUserCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateUserCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 16
-    },
-    {
-      "name": "UpdateUserCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandValidator.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateUserAppearanceCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommand.cs",
-      "line": 6
-    },
-    {
-      "name": "UpdateUserAppearanceCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs",
-      "line": 12
-    },
-    {
-      "name": "UpdateUserAppearanceCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "CurrentUserAccessPolicy",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Users/Common/CurrentUserAccessPolicy.cs",
-      "line": 6
-    },
-    {
-      "name": "IProfileOverviewReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Common/IProfileOverviewReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IUserContextService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Common/IUserContextService.cs",
-      "line": 7
-    },
-    {
-      "name": "IUserIdentityMutationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Common/IUserIdentityMutationService.cs",
-      "line": 4
-    },
-    {
-      "name": "UserAppearancePreferences",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Users/Common/UserAppearancePreferences.cs",
-      "line": 2
-    },
-    {
-      "name": "UserAppearancePreferencesParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Users/Common/UserAppearancePreferencesParser.cs",
-      "line": 4
-    },
-    {
-      "name": "UserContextService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Common/UserContextService.cs",
-      "line": 10
-    },
-    {
-      "name": "UserInputParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Users/Common/UserInputParser.cs",
-      "line": 6
-    },
-    {
-      "name": "UserPreferenceCodeParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Users/Common/UserPreferenceCodeParser.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 9
-    },
-    {
-      "name": "UserMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Users/Mappings/UserMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "GetDesiredWaistQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetDesiredWaistQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetDesiredWaistQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetDesiredWeightQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWeight/GetDesiredWeightQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetDesiredWeightQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWeight/GetDesiredWeightQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetDesiredWeightQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Queries/GetDesiredWeight/GetDesiredWeightQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetProfileOverviewQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetProfileOverviewQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQueryHandler.cs",
-      "line": 9
-    },
-    {
-      "name": "GetProfileOverviewQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetUserByIdQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Users/Queries/GetUserById/GetUserByIdQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetUserByIdQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetUserById/GetUserByIdQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetUserByIdQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Queries/GetUserById/GetUserByIdQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetUserGoalsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Users/Queries/GetUserGoals/GetUserGoalsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetUserGoalsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetUserGoalsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Users/Queries/GetUserGoals/GetUserGoalsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetWaistGoalHistoryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Users/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWaistGoalHistoryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetWeightGoalHistoryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "FoodDiary.Application.Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetWeightGoalHistoryQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "ProfileOverviewReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Services/ProfileOverviewReadService.cs",
-      "line": 8
-    },
-    {
-      "name": "UserAdministrationMutationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Services/UserAdministrationMutationService.cs",
-      "line": 13
-    },
-    {
-      "name": "UserAdministrationReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Services/UserAdministrationReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "UserAuthenticationIdentityService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Services/UserAuthenticationIdentityService.cs",
-      "line": 15
-    },
-    {
-      "name": "UserAuthenticationRegistrationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Services/UserAuthenticationRegistrationService.cs",
-      "line": 10
-    },
-    {
-      "name": "UserBillingService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Services/UserBillingService.cs",
-      "line": 10
-    },
-    {
-      "name": "UserCredentialVerificationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Services/UserCredentialVerificationService.cs",
-      "line": 9
-    },
-    {
-      "name": "UserIdentityMutationService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Services/UserIdentityMutationService.cs",
-      "line": 6
-    },
-    {
-      "name": "UserNotificationProfileService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Application.Users/Services/UserNotificationProfileService.cs",
-      "line": 10
-    },
-    {
       "name": "ChangeSetSnapshot",
       "kind": "record",
       "role": "Other",
@@ -4161,7 +3692,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 13
+      "line": 11
     },
     {
       "name": "DependencyInjection",
@@ -4406,34 +3937,6 @@
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/RecentItems/RecentItemConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "RoleConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/RoleConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "UserConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/UserConfiguration.cs",
-      "line": 8
-    },
-    {
-      "name": "UserRoleAuditEventConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/UserRoleAuditEventConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "UserRoleConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Users/UserRoleConfiguration.cs",
       "line": 7
     },
     {
@@ -4773,27 +4276,6 @@
       "line": 7
     },
     {
-      "name": "UserCleanupService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserCleanupService.cs",
-      "line": 9
-    },
-    {
-      "name": "UserCurrentWaistProvider",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs",
-      "line": 6
-    },
-    {
-      "name": "UserCurrentWeightProvider",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
-      "line": 6
-    },
-    {
       "name": "UserLoginEventRepository",
       "kind": "class",
       "role": "Repository",
@@ -4806,20 +4288,6 @@
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
       "line": 10
-    },
-    {
-      "name": "UserRoleCatalogService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserRoleCatalogService.cs",
-      "line": 6
-    },
-    {
-      "name": "UserRoleMembershipService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
-      "line": 7
     },
     {
       "name": "DatabaseCommandTelemetryInterceptor",
@@ -4994,7 +4462,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 395
+      "line": 394
     },
     {
       "name": "UsdaCsvReader",
@@ -5393,7 +4861,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 66
+      "line": 65
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -9537,7 +9005,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 48
+      "line": 47
     },
     {
       "name": "ApiTelemetry",
@@ -23883,6 +23351,552 @@
       "line": 8
     },
     {
+      "name": "AcceptAiConsentCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Application/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "AcceptAiConsentCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/AcceptAiConsent/AcceptAiConsentCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "ChangePasswordCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "ChangePasswordCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "ChangePasswordCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteUserCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteUserCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommandHandler.cs",
+      "line": 11
+    },
+    {
+      "name": "DeleteUserCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "RevokeAiConsentCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Application/Commands/RevokeAiConsent/RevokeAiConsentCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "RevokeAiConsentCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/RevokeAiConsent/RevokeAiConsentCommandHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "SetPasswordCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "SetPasswordCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "SetPasswordCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommandValidator.cs",
+      "line": 5
+    },
+    {
+      "name": "UpdateDesiredWaistCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateDesiredWaistCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "UpdateDesiredWaistCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateDesiredWeightCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateDesiredWeightCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
+      "line": 10
+    },
+    {
+      "name": "UpdateDesiredWeightCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateGoalsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateGoalsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
+      "line": 13
+    },
+    {
+      "name": "UpdateGoalsCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommandValidator.cs",
+      "line": 7
+    },
+    {
+      "name": "UpdateUserCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateUserCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+      "line": 16
+    },
+    {
+      "name": "UpdateUserCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandValidator.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateUserAppearanceCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Users/Application/Commands/UpdateUserAppearance/UpdateUserAppearanceCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateUserAppearanceCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Modules/Users/Application/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "UpdateUserAppearanceCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "CurrentUserAccessPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Application/Common/CurrentUserAccessPolicy.cs",
+      "line": 6
+    },
+    {
+      "name": "IProfileOverviewReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Application/Common/IProfileOverviewReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IUserContextService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Application/Common/IUserContextService.cs",
+      "line": 7
+    },
+    {
+      "name": "IUserIdentityMutationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Application/Common/IUserIdentityMutationService.cs",
+      "line": 4
+    },
+    {
+      "name": "UserAppearancePreferences",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Application/Common/UserAppearancePreferences.cs",
+      "line": 2
+    },
+    {
+      "name": "UserAppearancePreferencesParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Application/Common/UserAppearancePreferencesParser.cs",
+      "line": 4
+    },
+    {
+      "name": "UserContextService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Application/Common/UserContextService.cs",
+      "line": 10
+    },
+    {
+      "name": "UserInputParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Application/Common/UserInputParser.cs",
+      "line": 6
+    },
+    {
+      "name": "UserPreferenceCodeParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Application/Common/UserPreferenceCodeParser.cs",
+      "line": 6
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Application/DependencyInjection.cs",
+      "line": 9
+    },
+    {
+      "name": "UserMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Application/Mappings/UserMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "GetDesiredWaistQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Application/Queries/GetDesiredWaist/GetDesiredWaistQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetDesiredWaistQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetDesiredWaist/GetDesiredWaistQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetDesiredWaistQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Queries/GetDesiredWaist/GetDesiredWaistQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetDesiredWeightQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Application/Queries/GetDesiredWeight/GetDesiredWeightQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetDesiredWeightQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetDesiredWeight/GetDesiredWeightQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetDesiredWeightQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Queries/GetDesiredWeight/GetDesiredWeightQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetProfileOverviewQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetProfileOverviewQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQueryHandler.cs",
+      "line": 9
+    },
+    {
+      "name": "GetProfileOverviewQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetUserByIdQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Application/Queries/GetUserById/GetUserByIdQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetUserByIdQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetUserById/GetUserByIdQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetUserByIdQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Queries/GetUserById/GetUserByIdQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetUserGoalsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetUserGoalsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetUserGoalsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Users/Application/Queries/GetUserGoals/GetUserGoalsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetWaistGoalHistoryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Application/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWaistGoalHistoryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetWeightGoalHistoryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Users/Application/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetWeightGoalHistoryQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Users/Application/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "ProfileOverviewReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Application/Services/ProfileOverviewReadService.cs",
+      "line": 8
+    },
+    {
+      "name": "UserAdministrationMutationService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Application/Services/UserAdministrationMutationService.cs",
+      "line": 13
+    },
+    {
+      "name": "UserAdministrationReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Application/Services/UserAdministrationReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "UserAuthenticationIdentityService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
+      "line": 15
+    },
+    {
+      "name": "UserAuthenticationRegistrationService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Application/Services/UserAuthenticationRegistrationService.cs",
+      "line": 10
+    },
+    {
+      "name": "UserBillingService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Application/Services/UserBillingService.cs",
+      "line": 10
+    },
+    {
+      "name": "UserCredentialVerificationService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Application/Services/UserCredentialVerificationService.cs",
+      "line": 9
+    },
+    {
+      "name": "UserIdentityMutationService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Application/Services/UserIdentityMutationService.cs",
+      "line": 6
+    },
+    {
+      "name": "UserNotificationProfileService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Application/Services/UserNotificationProfileService.cs",
+      "line": 10
+    },
+    {
+      "name": "RoleConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/RoleConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "UserConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserConfiguration.cs",
+      "line": 8
+    },
+    {
+      "name": "UserRoleAuditEventConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserRoleAuditEventConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "UserRoleConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserRoleConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "UsersPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Model/UsersPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "UserCleanupService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
+      "line": 9
+    },
+    {
+      "name": "UserCurrentWaistProvider",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs",
+      "line": 6
+    },
+    {
+      "name": "UserCurrentWeightProvider",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
+      "line": 6
+    },
+    {
+      "name": "UserRoleCatalogService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs",
+      "line": 6
+    },
+    {
+      "name": "UserRoleMembershipService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
+      "line": 7
+    },
+    {
+      "name": "UsersModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
+      "line": 7
+    },
+    {
       "name": "IWearableClient",
       "kind": "interface",
       "role": "Other",
@@ -25881,9 +25895,9 @@
     },
     {
       "interface": "IProfileOverviewReadService",
-      "interfacePath": "FoodDiary.Application.Users/Common/IProfileOverviewReadService.cs",
+      "interfacePath": "Modules/Users/Application/Common/IProfileOverviewReadService.cs",
       "implementation": "ProfileOverviewReadService",
-      "implementationPath": "FoodDiary.Application.Users/Services/ProfileOverviewReadService.cs",
+      "implementationPath": "Modules/Users/Application/Services/ProfileOverviewReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26121,14 +26135,14 @@
       "interface": "IUserAdministrationMutationService",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserAdministrationMutationService.cs",
       "implementation": "UserAdministrationMutationService",
-      "implementationPath": "FoodDiary.Application.Users/Services/UserAdministrationMutationService.cs",
+      "implementationPath": "Modules/Users/Application/Services/UserAdministrationMutationService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserAdministrationReadService",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserAdministrationReadService.cs",
       "implementation": "UserAdministrationReadService",
-      "implementationPath": "FoodDiary.Application.Users/Services/UserAdministrationReadService.cs",
+      "implementationPath": "Modules/Users/Application/Services/UserAdministrationReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26142,63 +26156,63 @@
       "interface": "IUserAuthenticationIdentityService",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationIdentityService.cs",
       "implementation": "UserAuthenticationIdentityService",
-      "implementationPath": "FoodDiary.Application.Users/Services/UserAuthenticationIdentityService.cs",
+      "implementationPath": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserAuthenticationRegistrationService",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationRegistrationService.cs",
       "implementation": "UserAuthenticationRegistrationService",
-      "implementationPath": "FoodDiary.Application.Users/Services/UserAuthenticationRegistrationService.cs",
+      "implementationPath": "Modules/Users/Application/Services/UserAuthenticationRegistrationService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserBillingService",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserBillingService.cs",
       "implementation": "UserBillingService",
-      "implementationPath": "FoodDiary.Application.Users/Services/UserBillingService.cs",
+      "implementationPath": "Modules/Users/Application/Services/UserBillingService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserCleanupService",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserCleanupService.cs",
       "implementation": "UserCleanupService",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Users/UserCleanupService.cs",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserContextService",
-      "interfacePath": "FoodDiary.Application.Users/Common/IUserContextService.cs",
+      "interfacePath": "Modules/Users/Application/Common/IUserContextService.cs",
       "implementation": "UserContextService",
-      "implementationPath": "FoodDiary.Application.Users/Common/UserContextService.cs",
+      "implementationPath": "Modules/Users/Application/Common/UserContextService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserCredentialVerificationService",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserCredentialVerificationService.cs",
       "implementation": "UserCredentialVerificationService",
-      "implementationPath": "FoodDiary.Application.Users/Services/UserCredentialVerificationService.cs",
+      "implementationPath": "Modules/Users/Application/Services/UserCredentialVerificationService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserCurrentWaistProvider",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWaistProvider.cs",
       "implementation": "UserCurrentWaistProvider",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserCurrentWeightProvider",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWeightProvider.cs",
       "implementation": "UserCurrentWeightProvider",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserIdentityMutationService",
-      "interfacePath": "FoodDiary.Application.Users/Common/IUserIdentityMutationService.cs",
+      "interfacePath": "Modules/Users/Application/Common/IUserIdentityMutationService.cs",
       "implementation": "UserIdentityMutationService",
-      "implementationPath": "FoodDiary.Application.Users/Services/UserIdentityMutationService.cs",
+      "implementationPath": "Modules/Users/Application/Services/UserIdentityMutationService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26212,7 +26226,7 @@
       "interface": "IUserNotificationProfileService",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserNotificationProfileService.cs",
       "implementation": "UserNotificationProfileService",
-      "implementationPath": "FoodDiary.Application.Users/Services/UserNotificationProfileService.cs",
+      "implementationPath": "Modules/Users/Application/Services/UserNotificationProfileService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26226,14 +26240,14 @@
       "interface": "IUserRoleCatalogService",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserRoleCatalogService.cs",
       "implementation": "UserRoleCatalogService",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Users/UserRoleCatalogService.cs",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserRoleMembershipService",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserRoleMembershipService.cs",
       "implementation": "UserRoleMembershipService",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26421,69 +26435,6 @@
       "line": 17
     },
     {
-      "service": "IUserAdministrationMutationService",
-      "implementation": "UserAdministrationMutationService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 16
-    },
-    {
-      "service": "IUserAdministrationReadService",
-      "implementation": "UserAdministrationReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 17
-    },
-    {
-      "service": "IUserIdentityMutationService",
-      "implementation": "UserIdentityMutationService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 18
-    },
-    {
-      "service": "IUserAuthenticationIdentityService",
-      "implementation": "UserAuthenticationIdentityService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 19
-    },
-    {
-      "service": "IUserAuthenticationRegistrationService",
-      "implementation": "UserAuthenticationRegistrationService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 20
-    },
-    {
-      "service": "IUserCredentialVerificationService",
-      "implementation": "UserCredentialVerificationService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 21
-    },
-    {
-      "service": "IUserBillingService",
-      "implementation": "UserBillingService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 22
-    },
-    {
-      "service": "IUserNotificationProfileService",
-      "implementation": "UserNotificationProfileService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 23
-    },
-    {
-      "service": "IProfileOverviewReadService",
-      "implementation": "ProfileOverviewReadService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 35
-    },
-    {
       "service": "IWikiContextSearch",
       "implementation": "SqliteWikiContextSearch",
       "lifetime": "Singleton",
@@ -26516,56 +26467,49 @@
       "implementation": "JwtTokenGenerator",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 16
+      "line": 14
     },
     {
       "service": "IPasswordHasher",
       "implementation": "PasswordHasher",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 17
+      "line": 15
     },
     {
       "service": "IAdminSsoCodeStore",
       "implementation": "InMemoryAdminSsoCodeStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 18
+      "line": 16
     },
     {
       "service": "IAdminSsoService",
       "implementation": "AdminSsoService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 19
+      "line": 17
     },
     {
       "service": "ITelegramAssertionReplayGuard",
       "implementation": "TelegramAssertionReplayGuard",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 20
-    },
-    {
-      "service": "IUserCleanupService",
-      "implementation": "UserCleanupService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 21
+      "line": 18
     },
     {
       "service": "IEmailTemplateProvider",
       "implementation": "EmailTemplateProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 22
+      "line": 19
     },
     {
       "service": "IAuditLogger",
       "implementation": "StructuredAuditLogger",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 23
+      "line": 20
     },
     {
       "service": "IEmailOutbox",
@@ -26617,74 +26561,46 @@
       "line": 13
     },
     {
-      "service": "IUserRoleCatalogService",
-      "implementation": "UserRoleCatalogService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 20
-    },
-    {
-      "service": "IUserRoleMembershipService",
-      "implementation": "UserRoleMembershipService",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 21
-    },
-    {
-      "service": "IUserCurrentWeightProvider",
-      "implementation": "UserCurrentWeightProvider",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 22
-    },
-    {
-      "service": "IUserCurrentWaistProvider",
-      "implementation": "UserCurrentWaistProvider",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 23
-    },
-    {
       "service": "IUserLoginEventRepository",
       "implementation": "UserLoginEventRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 25
+      "line": 20
     },
     {
       "service": "IRefreshTokenSessionRepository",
       "implementation": "RefreshTokenSessionRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 29
+      "line": 24
     },
     {
       "service": "IAdminUserRoleAuditRepository",
       "implementation": "AdminUserRoleAuditRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 33
+      "line": 28
     },
     {
       "service": "IEmailTemplateRepository",
       "implementation": "EmailTemplateRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 35
+      "line": 30
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 124
+      "line": 123
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 125
+      "line": 124
     },
     {
       "service": "IGoogleTokenValidator",
@@ -26747,7 +26663,7 @@
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 58
+      "line": 57
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -26824,21 +26740,21 @@
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 102
+      "line": 101
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 103
+      "line": 102
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 135
+      "line": 134
     },
     {
       "service": "IMailInboxReadinessChecker",
@@ -27553,6 +27469,69 @@
       "lifetime": "Scoped",
       "path": "Modules/Usda/Application/DependencyInjection.cs",
       "line": 17
+    },
+    {
+      "service": "IUserAdministrationMutationService",
+      "implementation": "UserAdministrationMutationService",
+      "lifetime": "Scoped",
+      "path": "Modules/Users/Application/DependencyInjection.cs",
+      "line": 16
+    },
+    {
+      "service": "IUserAdministrationReadService",
+      "implementation": "UserAdministrationReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Users/Application/DependencyInjection.cs",
+      "line": 17
+    },
+    {
+      "service": "IUserIdentityMutationService",
+      "implementation": "UserIdentityMutationService",
+      "lifetime": "Scoped",
+      "path": "Modules/Users/Application/DependencyInjection.cs",
+      "line": 18
+    },
+    {
+      "service": "IUserAuthenticationIdentityService",
+      "implementation": "UserAuthenticationIdentityService",
+      "lifetime": "Scoped",
+      "path": "Modules/Users/Application/DependencyInjection.cs",
+      "line": 19
+    },
+    {
+      "service": "IUserAuthenticationRegistrationService",
+      "implementation": "UserAuthenticationRegistrationService",
+      "lifetime": "Scoped",
+      "path": "Modules/Users/Application/DependencyInjection.cs",
+      "line": 20
+    },
+    {
+      "service": "IUserCredentialVerificationService",
+      "implementation": "UserCredentialVerificationService",
+      "lifetime": "Scoped",
+      "path": "Modules/Users/Application/DependencyInjection.cs",
+      "line": 21
+    },
+    {
+      "service": "IUserBillingService",
+      "implementation": "UserBillingService",
+      "lifetime": "Scoped",
+      "path": "Modules/Users/Application/DependencyInjection.cs",
+      "line": 22
+    },
+    {
+      "service": "IUserNotificationProfileService",
+      "implementation": "UserNotificationProfileService",
+      "lifetime": "Scoped",
+      "path": "Modules/Users/Application/DependencyInjection.cs",
+      "line": 23
+    },
+    {
+      "service": "IProfileOverviewReadService",
+      "implementation": "ProfileOverviewReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Users/Application/DependencyInjection.cs",
+      "line": 35
     },
     {
       "service": "IWearableReadService",

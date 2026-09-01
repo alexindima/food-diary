@@ -208,27 +208,6 @@
     },
     {
       "category": "credential",
-      "name": "CurrentPassword",
-      "type": "string",
-      "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs",
-      "line": 8
-    },
-    {
-      "category": "credential",
-      "name": "NewPassword",
-      "type": "string",
-      "path": "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs",
-      "line": 9
-    },
-    {
-      "category": "credential",
-      "name": "NewPassword",
-      "type": "string",
-      "path": "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommand.cs",
-      "line": 8
-    },
-    {
-      "category": "credential",
       "name": "PasswordResetSentAtUtc",
       "type": "normalizedIssuedAtUtc,",
       "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
@@ -421,7 +400,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 83
+      "line": 82
     },
     {
       "category": "credential",
@@ -1010,6 +989,27 @@
       "type": "bool",
       "path": "Modules/Notifications/Application/Common/NotificationUserContext.cs",
       "line": 5
+    },
+    {
+      "category": "credential",
+      "name": "CurrentPassword",
+      "type": "string",
+      "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommand.cs",
+      "line": 8
+    },
+    {
+      "category": "credential",
+      "name": "NewPassword",
+      "type": "string",
+      "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommand.cs",
+      "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "NewPassword",
+      "type": "string",
+      "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommand.cs",
+      "line": 8
     },
     {
       "category": "credential",
@@ -2389,111 +2389,6 @@
       "type": "double?",
       "path": "FoodDiary.Application.Abstractions/Users/Models/WeightHistoryProfileModel.cs",
       "line": 4
-    },
-    {
-      "category": "health",
-      "name": "DesiredWaistCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "DesiredWeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommand.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "DesiredWeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommand.cs",
-      "line": 15
-    },
-    {
-      "category": "health",
-      "name": "DesiredWaistCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommand.cs",
-      "line": 16
-    },
-    {
-      "category": "health",
-      "name": "BirthDate",
-      "type": "DateTime?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "Gender",
-      "type": "string?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
-      "line": 14
-    },
-    {
-      "category": "health",
-      "name": "HeightCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
-      "line": 15
-    },
-    {
-      "category": "health",
-      "name": "ActivityLevel",
-      "type": "string?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
-      "line": 16
-    },
-    {
-      "category": "health",
-      "name": "HydrationGoal",
-      "type": "double?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "FastingPushNotificationsEnabled",
-      "type": "bool?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
-      "line": 23
-    },
-    {
-      "category": "health",
-      "name": "ActivityLevel",
-      "type": "ActivityLevel?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 25
-    },
-    {
-      "category": "health",
-      "name": "Gender",
-      "type": "string?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 29
-    },
-    {
-      "category": "health",
-      "name": "ActivityLevel",
-      "type": "ActivityLevel?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 35
-    },
-    {
-      "category": "health",
-      "name": "Gender",
-      "type": "string?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 39
     },
     {
       "category": "health",
@@ -6410,6 +6305,111 @@
     },
     {
       "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Application/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommand.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommand.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Application/Commands/UpdateGoals/UpdateGoalsCommand.cs",
+      "line": 16
+    },
+    {
+      "category": "health",
+      "name": "BirthDate",
+      "type": "DateTime?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "string?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
+      "name": "ActivityLevel",
+      "type": "string?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
+      "line": 16
+    },
+    {
+      "category": "health",
+      "name": "HydrationGoal",
+      "type": "double?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "FastingPushNotificationsEnabled",
+      "type": "bool?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
+      "line": 23
+    },
+    {
+      "category": "health",
+      "name": "ActivityLevel",
+      "type": "ActivityLevel?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+      "line": 25
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "string?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+      "line": 29
+    },
+    {
+      "category": "health",
+      "name": "ActivityLevel",
+      "type": "ActivityLevel?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+      "line": 35
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "string?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+      "line": 39
+    },
+    {
+      "category": "health",
       "name": "CaloriesBurned",
       "type": "double?",
       "path": "Modules/Wearables/Application/Abstractions/Models/WearableDailySummaryModel.cs",
@@ -7625,20 +7625,6 @@
       "type": "Guid?",
       "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
       "line": 37
-    },
-    {
-      "category": "privateContent",
-      "name": "ProfileImageAssetId",
-      "type": "Guid?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
-      "line": 26
-    },
-    {
-      "category": "privateContent",
-      "name": "ProfileImageAssetId",
-      "type": "ImageAssetId?",
-      "path": "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 30
     },
     {
       "category": "privateContent",
@@ -9676,6 +9662,20 @@
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
       "line": 357
+    },
+    {
+      "category": "privateContent",
+      "name": "ProfileImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommand.cs",
+      "line": 26
+    },
+    {
+      "category": "privateContent",
+      "name": "ProfileImageAssetId",
+      "type": "ImageAssetId?",
+      "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+      "line": 30
     }
   ],
   "boundaryFiles": [

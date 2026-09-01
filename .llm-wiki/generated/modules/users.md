@@ -15,20 +15,19 @@ sources:
 ## Graph
 
 - Origin: extracted-project
-- Extracted project: `FoodDiary.Application.Users/FoodDiary.Application.Users.csproj`
+- Extracted project: `Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: none observed
+- Abstraction-contract dependencies: Authentication, Images
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Users`
 - `FoodDiary.Domain/Entities/Users`
-- `FoodDiary.Infrastructure/Persistence/Configurations/Users`
-- `FoodDiary.Infrastructure/Persistence/Users`
 - `FoodDiary.Presentation.Api/Features/Users`
+- `Modules/Users/Application`
 
 ## HTTP Surface
 
@@ -80,11 +79,11 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: assembly
-- Architecture guardrails: explicit-boundary-tests
+- Physical isolation: module-root-with-central-domain-and-identity-seams
+- Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent
 - Public contract files: 67
-- Observed external consumer groups: 4
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -129,7 +128,7 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 
 ## Extraction Readiness
 
-- Abstraction-owned profile-read consumers: 12 across 2 group(s)
+- Abstraction-owned profile-read consumers: 12 across 1 group(s)
 - Implementation-owned IUserContextService consumers: 12 across 1 group(s)
 - Consumers receiving the User aggregate: 0
 - Consumers with aggregate mutation access: 10
@@ -139,25 +138,25 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 
 | Consumer | Contract | Owning assembly | Methods/data | Access | Extraction |
 | --- | --- | --- | --- | --- | --- |
-| Users | IUserContextService | FoodDiary.Application.Users | GetAccessibleUserAsync, UpdateUserAsync => Task, Task<Result<User>> | mutation, narrow-read-or-access | migration-required |
+| Modules | IUserContextService | Modules | GetAccessibleUserAsync, UpdateUserAsync => Task, Task<Result<User>> | mutation, narrow-read-or-access | migration-required |
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/AiConsentTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/CurrentUserAccessPolicyTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/HistoryProfileCoverageTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UpdateUserCommandHandlerTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserApplicationServiceDelegationTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserBillingServiceTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserCredentialVerificationServiceTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserNotificationProfileServiceTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersDependencyInjectionTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.DesiredGoalIdempotency.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/AiConsentTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/CurrentUserAccessPolicyTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/HistoryProfileCoverageTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UpdateUserCommandHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserApplicationServiceDelegationTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserBillingServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserCredentialVerificationServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UserNotificationProfileServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersDependencyInjectionTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.DesiredGoalIdempotency.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsersModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/UserSecurityVersionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsersControllerTests.cs`

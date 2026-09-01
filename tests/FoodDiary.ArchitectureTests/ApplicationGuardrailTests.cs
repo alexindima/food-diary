@@ -1084,21 +1084,21 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "Modules", "Wearables", "Application", "Queries", "GetWearableAuthUrl", "GetWearableAuthUrlQueryHandler.cs"),
             Path.Combine(root, "Modules", "Wearables", "Application", "Queries", "GetWearableConnections", "GetWearableConnectionsQueryHandler.cs"),
             Path.Combine(root, "Modules", "Wearables", "Application", "Queries", "GetWearableDailySummary", "GetWearableDailySummaryQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "AcceptAiConsent", "AcceptAiConsentCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "ChangePassword", "ChangePasswordCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "DeleteUser", "DeleteUserCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "RevokeAiConsent", "RevokeAiConsentCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "SetPassword", "SetPasswordCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateDesiredWaist", "UpdateDesiredWaistCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateDesiredWeight", "UpdateDesiredWeightCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateGoals", "UpdateGoalsCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateUser", "UpdateUserCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateUserAppearance", "UpdateUserAppearanceCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetDesiredWaist", "GetDesiredWaistQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetDesiredWeight", "GetDesiredWeightQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetProfileOverview", "GetProfileOverviewQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "AcceptAiConsent", "AcceptAiConsentCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "ChangePassword", "ChangePasswordCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "DeleteUser", "DeleteUserCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "RevokeAiConsent", "RevokeAiConsentCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "SetPassword", "SetPasswordCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "UpdateDesiredWaist", "UpdateDesiredWaistCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "UpdateDesiredWeight", "UpdateDesiredWeightCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "UpdateGoals", "UpdateGoalsCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "UpdateUser", "UpdateUserCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "UpdateUserAppearance", "UpdateUserAppearanceCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Queries", "GetDesiredWaist", "GetDesiredWaistQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Queries", "GetDesiredWeight", "GetDesiredWeightQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Queries", "GetProfileOverview", "GetProfileOverviewQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
             Path.Combine(root, "Modules", "Ai", "Application", "Commands", "ParseFoodText", "ParseFoodTextCommandHandler.cs"),
             Path.Combine(root, "Modules", "Meals", "Application", "Commands", "DeleteMeal", "DeleteMealCommandHandler.cs"),
             Path.Combine(root, "Modules", "Meals", "Application", "Queries", "GetMealById", "GetMealByIdQueryHandler.cs"),
@@ -1880,7 +1880,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void UserQueries_UseProfileReadServiceModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
-        string userQueriesRoot = Path.Combine(root, "FoodDiary.Application.Users", "Queries");
+        string userQueriesRoot = Path.Combine(root, "Modules", "Users", "Application", "Queries");
         string[] userQueryFiles = [.. SourceScanner.SourceFiles(userQueriesRoot)];
 
         string[] violations = [
@@ -1900,7 +1900,9 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.Users",
+            "Modules",
+            "Users",
+            "Application",
             "Services",
             "ProfileOverviewReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -1919,7 +1921,9 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application.Users",
+            "Modules",
+            "Users",
+            "Application",
             "Services",
             "ProfileOverviewReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -1953,7 +1957,7 @@ public sealed class ApplicationGuardrailTests {
     public void DietologistReadServices_UseReadModelsInsteadOfDietologistAggregates() {
         string root = GetRepositoryRoot();
         string dietologistServicesRoot = Path.Combine(root, "Modules", "Dietologist", "Application", "Services");
-        string userServicesRoot = Path.Combine(root, "FoodDiary.Application.Users", "Services");
+        string userServicesRoot = Path.Combine(root, "Modules", "Users", "Application", "Services");
         string[] readServiceFiles = [
             Path.Combine(dietologistServicesRoot, "DietologistInvitationReadService.cs"),
             Path.Combine(dietologistServicesRoot, "DietologistClientReadService.cs"),
@@ -2948,7 +2952,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void UsersSlice_DoesNotRegrowStandaloneCurrentUserAccessService() {
         string root = GetRepositoryRoot();
-        string usersCommonRoot = Path.Combine(root, "FoodDiary.Application.Users", "Common");
+        string usersCommonRoot = Path.Combine(root, "Modules", "Users", "Application", "Common");
         string servicePath = Path.Combine(usersCommonRoot, "CurrentUserAccessService.cs");
 
         Assert.False(File.Exists(servicePath), "UserContextService should remain the single current-user access implementation.");
@@ -3046,21 +3050,21 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] migratedFiles = [
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "AcceptAiConsent", "AcceptAiConsentCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "ChangePassword", "ChangePasswordCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "DeleteUser", "DeleteUserCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "RevokeAiConsent", "RevokeAiConsentCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "SetPassword", "SetPasswordCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateDesiredWaist", "UpdateDesiredWaistCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateDesiredWeight", "UpdateDesiredWeightCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateGoals", "UpdateGoalsCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateUser", "UpdateUserCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateUserAppearance", "UpdateUserAppearanceCommandHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetDesiredWaist", "GetDesiredWaistQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetDesiredWeight", "GetDesiredWeightQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetProfileOverview", "GetProfileOverviewQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
-            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "AcceptAiConsent", "AcceptAiConsentCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "ChangePassword", "ChangePasswordCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "DeleteUser", "DeleteUserCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "RevokeAiConsent", "RevokeAiConsentCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "SetPassword", "SetPasswordCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "UpdateDesiredWaist", "UpdateDesiredWaistCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "UpdateDesiredWeight", "UpdateDesiredWeightCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "UpdateGoals", "UpdateGoalsCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "UpdateUser", "UpdateUserCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Commands", "UpdateUserAppearance", "UpdateUserAppearanceCommandHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Queries", "GetDesiredWaist", "GetDesiredWaistQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Queries", "GetDesiredWeight", "GetDesiredWeightQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Queries", "GetProfileOverview", "GetProfileOverviewQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
         ];
 
         string[] violations = FindReferencesInFiles(root, migratedFiles, "CurrentUserAccessPolicy");

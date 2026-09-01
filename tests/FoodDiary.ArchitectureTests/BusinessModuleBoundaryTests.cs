@@ -855,12 +855,9 @@ public sealed class BusinessModuleBoundaryTests {
     public void IdentityConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {
-        string expectedPath = Path.Combine(
-            ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Infrastructure",
-            "Persistence",
-            expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar),
-            fileName);
+        string expectedPath = string.Equals(expectedRelativeDirectory, "Configurations/Users", StringComparison.Ordinal)
+            ? ArchitectureTestPaths.FromRoot("Modules", "Users", "Infrastructure", "Model", "Persistence", "Configurations", "Users", fileName)
+            : ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "Configurations", "Authentication", fileName);
 
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in {expectedRelativeDirectory}.");
     }

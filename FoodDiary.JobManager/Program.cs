@@ -10,7 +10,6 @@ using FoodDiary.Application.Identity;
 using FoodDiary.Application.Images;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Modules.Marketing.Infrastructure;
-using FoodDiary.Application.Users;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Infrastructure;

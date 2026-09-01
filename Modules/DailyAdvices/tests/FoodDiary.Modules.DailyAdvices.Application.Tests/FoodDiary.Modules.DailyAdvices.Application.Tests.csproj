@@ -13,6 +13,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Application\FoodDiary.Modules.DailyAdvices.Application.csproj" />
-    <ProjectReference Include="..\..\..\..\FoodDiary.Application.Users\FoodDiary.Application.Users.csproj" />
+    <ProjectReference Include="..\..\..\..\Modules\Users\Application\FoodDiary.Modules.Users.Application.csproj" />
   </ItemGroup>
 </Project>

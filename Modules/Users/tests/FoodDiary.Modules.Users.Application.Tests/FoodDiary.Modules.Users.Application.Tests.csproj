@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>FoodDiary.Application.Tests</AssemblyName>
+    <RootNamespace>FoodDiary.Application.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="NSubstitute" />
+    <Using Include="Xunit" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../../../tests/FoodDiary.Application.Tests/Support/**/*.cs" Link="Support/%(RecursiveDir)%(Filename)%(Extension)" />
+    <ProjectReference Include="../../Application/FoodDiary.Modules.Users.Application.csproj" />
+    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj" />
+    <ProjectReference Include="../../../../FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj" />
+    <ProjectReference Include="../../../../FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj" />
+    <ProjectReference Include="../../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />
+    <ProjectReference Include="../../../BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj" />
+    <ProjectReference Include="../../../Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
+    <ProjectReference Include="../../../Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj" />
+    <ProjectReference Include="../../../Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj" />
+    <ProjectReference Include="../../../Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj" />
+    <ProjectReference Include="../../../Notifications/Application/FoodDiary.Application.Notifications.csproj" />
+    <ProjectReference Include="../../../ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj" />
+    <ProjectReference Include="../../../ContentReports/Contracts/FoodDiary.Modules.ContentReports.Contracts.csproj" />
+    <ProjectReference Include="../../../ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
+    <ProjectReference Include="../../../Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj" />
+    <ProjectReference Include="../../../Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj" />
+    <ProjectReference Include="../../../Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj" />
+  </ItemGroup>
+</Project>

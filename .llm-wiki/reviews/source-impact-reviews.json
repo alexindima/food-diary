@@ -8,21 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "452373be7a80dfe2b6e6fd144cdc15fd7b37ed9a17c8b51b5abee947a39b9dea"
+          "sha256": "d8e3a02a266088974514bf884eca26cc808b66f0fbddb7631044c612efb6b1b6"
         },
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "8ceb660f2954b8a9bde19a425dd389acc93769ce0f392cb75c72da437c0d47ce"
+          "sha256": "abd32a88d405e90ef3daa7cd948f5af6422a681e6b568b7bf60728da9c59d54a"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "ffe657b156794abfc66075947dbd4e1f92f1770f0d133276657493adc5b1dc85"
+          "sha256": "329ff6e97b4cb1e0b2b4ae382a872c6dcbb69382854537db8493e0884734e3eb"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:25.1529274Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:22.5633853Z"
     },
     {
       "pageId": "module.frontend",
@@ -46,17 +46,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "8ceb660f2954b8a9bde19a425dd389acc93769ce0f392cb75c72da437c0d47ce"
+          "sha256": "abd32a88d405e90ef3daa7cd948f5af6422a681e6b568b7bf60728da9c59d54a"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "ffe657b156794abfc66075947dbd4e1f92f1770f0d133276657493adc5b1dc85"
+          "sha256": "329ff6e97b4cb1e0b2b4ae382a872c6dcbb69382854537db8493e0884734e3eb"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:25.5036738Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:23.1299923Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -65,25 +65,17 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "a3c0e39984dd241073bd0659669bffcb4bf2a3a9550e584db6341130710469f5"
+          "sha256": "48935d99e1e588fe7fd6f9cb034b7f35c7c67d1c85a9768197283363c569016c"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "ffe657b156794abfc66075947dbd4e1f92f1770f0d133276657493adc5b1dc85"
-        },
-        {
-          "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "4d170dc58d0cdd7af216310e72751fc77ab3fe1d5fb838ca5faf6bd16a159429"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "46a02baaac7b32a5915b571dccd448938c03359b56ed495688dbc27fc3d9e465"
+          "sha256": "329ff6e97b4cb1e0b2b4ae382a872c6dcbb69382854537db8493e0884734e3eb"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "No HTTP or Swagger surface changed; assembly identity and contracts remain stable",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:25.7870329Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:23.6498995Z"
     },
     {
       "pageId": "system.architecture",
@@ -92,25 +84,25 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "8ceb660f2954b8a9bde19a425dd389acc93769ce0f392cb75c72da437c0d47ce"
+          "sha256": "abd32a88d405e90ef3daa7cd948f5af6422a681e6b568b7bf60728da9c59d54a"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "a3c0e39984dd241073bd0659669bffcb4bf2a3a9550e584db6341130710469f5"
+          "sha256": "48935d99e1e588fe7fd6f9cb034b7f35c7c67d1c85a9768197283363c569016c"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "ffe657b156794abfc66075947dbd4e1f92f1770f0d133276657493adc5b1dc85"
+          "sha256": "329ff6e97b4cb1e0b2b4ae382a872c6dcbb69382854537db8493e0884734e3eb"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "de20eab119c3cce7ba2c9beff87f7c4f0c557572e6e96cf89cb4a8d25f144974"
+          "sha256": "0bb7110ea7e2c7477986e7ee9f2ddec97f6f9745ffe164806962cae58d98e4c9"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:26.0328469Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:24.1761273Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -149,13 +141,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "452373be7a80dfe2b6e6fd144cdc15fd7b37ed9a17c8b51b5abee947a39b9dea"
+          "sha256": "d8e3a02a266088974514bf884eca26cc808b66f0fbddb7631044c612efb6b1b6"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:26.2999090Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:24.6832204Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -164,13 +156,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "a3c0e39984dd241073bd0659669bffcb4bf2a3a9550e584db6341130710469f5"
+          "sha256": "48935d99e1e588fe7fd6f9cb034b7f35c7c67d1c85a9768197283363c569016c"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:26.5658656Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:25.2255206Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -224,21 +216,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "4a92d53ed44b4fdc57a2df981ad5c0169f975a087e2c2c72d79e47921a33daac"
+          "sha256": "9b3d1af2158e2aee2c01c27e8e171a15a89b77fd194c000b781596b15774b8b4"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "a3c0e39984dd241073bd0659669bffcb4bf2a3a9550e584db6341130710469f5"
+          "sha256": "48935d99e1e588fe7fd6f9cb034b7f35c7c67d1c85a9768197283363c569016c"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "de20eab119c3cce7ba2c9beff87f7c4f0c557572e6e96cf89cb4a8d25f144974"
+          "sha256": "0bb7110ea7e2c7477986e7ee9f2ddec97f6f9745ffe164806962cae58d98e4c9"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "Architecture matrix, focused and integration receipts, EF check, and generated quality indexes were reviewed",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:26.8358670Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:25.8390352Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -247,13 +239,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "184f6ce5399c736065e687fe048356fedafc442b65de09cb04cf583d0fc4a348"
+          "sha256": "05f638540c076d86438fc5a7db5a9b44b1138a4fc8db230ad177351ae7a32f0a"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "No HTTP or Swagger surface changed; assembly identity and contracts remain stable",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:27.3423463Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:26.6031421Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -586,21 +578,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "1f0837ee7700d54adda38dbdad33bf75fd846446df710c10bad8350a6d9a2326"
-        },
-        {
-          "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "4d170dc58d0cdd7af216310e72751fc77ab3fe1d5fb838ca5faf6bd16a159429"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "46a02baaac7b32a5915b571dccd448938c03359b56ed495688dbc27fc3d9e465"
+          "sha256": "a0e64cdd727bfcfe1a6d459d4b30e5cdce01c3d45527686a3e88a801df4fedf1"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "Architecture matrix, focused and integration receipts, EF check, and generated quality indexes were reviewed",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:27.8943494Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:27.6791209Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -880,13 +864,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "e4ef4047cc7ef85575d7ea81c1d8c8b3ac313452dfc8d2f782cc83259d060646"
+          "sha256": "5c0d01690e5c74c967acd246edadecf5c10b7537d2e8987e02122ed7fad4ada5"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "Identity and sensitive credential/token state remain central; generated privacy/security indexes were reviewed",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:28.1567137Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:28.2718090Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -925,13 +909,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6dcd3f9027de46fb0bf6a2a3709d9abed13239db144f9f524f2513c49c4a9fc2"
+          "sha256": "f812058d35a551f770627a4cdcd54deb01ce6e52f4b6638331808845d280bc50"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "Architecture matrix, focused and integration receipts, EF check, and generated quality indexes were reviewed",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:28.6171768Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:28.8993304Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1008,13 +992,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4dce8efee8ebf5b44859220bf037c8283dfcf641703cc4bee93aa9b5d21beaa7"
+          "sha256": "7521b8cd9b9cddb4ee025d66932bfffee743f6df5e0ea3109d4d893a99d58b41"
         }
       ],
-      "reason": "Reviewed post-graph-build runtime topology and repository catalog against the final Meals solution graph, hosts, dependency matrix and retained verification evidence.",
+      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T23:18:35.6530565Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:30.4816900Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1023,21 +1007,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6dcd3f9027de46fb0bf6a2a3709d9abed13239db144f9f524f2513c49c4a9fc2"
+          "sha256": "f812058d35a551f770627a4cdcd54deb01ce6e52f4b6638331808845d280bc50"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4dce8efee8ebf5b44859220bf037c8283dfcf641703cc4bee93aa9b5d21beaa7"
+          "sha256": "7521b8cd9b9cddb4ee025d66932bfffee743f6df5e0ea3109d4d893a99d58b41"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "e4ef4047cc7ef85575d7ea81c1d8c8b3ac313452dfc8d2f782cc83259d060646"
+          "sha256": "5c0d01690e5c74c967acd246edadecf5c10b7537d2e8987e02122ed7fad4ada5"
         }
       ],
-      "reason": "Reviewed post-graph-build runtime topology and repository catalog against the final Meals solution graph, hosts, dependency matrix and retained verification evidence.",
+      "reason": "Identity and sensitive credential/token state remain central; generated privacy/security indexes were reviewed",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T23:18:36.4255465Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:31.1787473Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1151,13 +1135,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "0c3dac1f70aea744155d4467d4f3cec132f1442f08f140cff70434b5d59c17c3"
+          "sha256": "f132cedf5d94963b4180833c8de71967f256074f69791d7f4bf78b2e89200d15"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "Architecture matrix, focused and integration receipts, EF check, and generated quality indexes were reviewed",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:30.3194594Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:31.6822872Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1219,13 +1203,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "452373be7a80dfe2b6e6fd144cdc15fd7b37ed9a17c8b51b5abee947a39b9dea"
+          "sha256": "d8e3a02a266088974514bf884eca26cc808b66f0fbddb7631044c612efb6b1b6"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:27.5927257Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:27.1256587Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1279,17 +1263,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "271612851713d5c1154effc6b55d2662c061fe19d8d6f38e02ccf1642238e0dc"
+          "sha256": "d08bdc121507f090ede1817566d08c1c2bc83441cc053efcf53d721906f7188f"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "452373be7a80dfe2b6e6fd144cdc15fd7b37ed9a17c8b51b5abee947a39b9dea"
+          "sha256": "d8e3a02a266088974514bf884eca26cc808b66f0fbddb7631044c612efb6b1b6"
         }
       ],
-      "reason": "Reviewed final Meals extraction findings, exact verification evidence, known generator limitations, final solution graph and central compatibility seams against source and retained logs.",
+      "reason": "Users ownership docs, guides, catalog, and generated navigation were synchronized with current source",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:53:51.2093363Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:29.4125809Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1298,13 +1282,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "452373be7a80dfe2b6e6fd144cdc15fd7b37ed9a17c8b51b5abee947a39b9dea"
+          "sha256": "d8e3a02a266088974514bf884eca26cc808b66f0fbddb7631044c612efb6b1b6"
         }
       ],
-      "reason": "Reviewed Meals extraction against current solution graph, moved source and tests, central User/DbContext/migration seams, scoped AGENTS, ownership inventory, architecture matrix and generated indexes.",
+      "reason": "Architecture matrix, focused and integration receipts, EF check, and generated quality indexes were reviewed",
       "baseRef": "HEAD",
-      "gitHead": "c2412773f66604d4143d170ee50031f1f1f58367",
-      "reviewedAtUtc": "2026-08-31T22:37:29.2549002Z"
+      "gitHead": "464fb66e1960cae58139afe07680c398082e847f",
+      "reviewedAtUtc": "2026-09-01T08:50:29.9252427Z"
     }
   ]
 }

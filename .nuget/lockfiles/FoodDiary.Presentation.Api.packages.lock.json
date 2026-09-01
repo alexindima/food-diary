@@ -417,7 +417,7 @@
           "FoodDiary.Modules.Usda.Contracts": "[1.0.0, )"
         }
       },
-      "fooddiary.application.users": {
+      "FoodDiary.Application.Users": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",

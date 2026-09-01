@@ -19,7 +19,6 @@ using FoodDiary.Application.Tdee;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
 using FoodDiary.Modules.Marketing.Infrastructure;
-using FoodDiary.Application.Users;
 using FoodDiary.Modules.Wearables.Infrastructure;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Modules.Usda.Infrastructure;

@@ -22,7 +22,9 @@ COPY Modules/Marketing/Application/Abstractions/*.csproj Modules/Marketing/Appli
 COPY Modules/Marketing/Domain/*.csproj Modules/Marketing/Domain/
 COPY Modules/Marketing/Infrastructure/*.csproj Modules/Marketing/Infrastructure/
 COPY Modules/Marketing/Infrastructure/Model/*.csproj Modules/Marketing/Infrastructure/Model/
-COPY FoodDiary.Application.Users/*.csproj FoodDiary.Application.Users/
+COPY Modules/Users/Application/*.csproj Modules/Users/Application/
+COPY Modules/Users/Infrastructure/*.csproj Modules/Users/Infrastructure/
+COPY Modules/Users/Infrastructure/Model/*.csproj Modules/Users/Infrastructure/Model/
 COPY Modules/Dietologist/Application/*.csproj Modules/Dietologist/Application/
 COPY Modules/Dietologist/Application/Abstractions/*.csproj Modules/Dietologist/Application/Abstractions/
 COPY Modules/Dietologist/Domain/*.csproj Modules/Dietologist/Domain/
@@ -175,7 +177,9 @@ COPY Modules/Marketing/Application/Abstractions/ Modules/Marketing/Application/A
 COPY Modules/Marketing/Domain/ Modules/Marketing/Domain/
 COPY Modules/Marketing/Infrastructure/ Modules/Marketing/Infrastructure/
 COPY Modules/Marketing/Infrastructure/Model/ Modules/Marketing/Infrastructure/Model/
-COPY FoodDiary.Application.Users/ FoodDiary.Application.Users/
+COPY Modules/Users/Application/ Modules/Users/Application/
+COPY Modules/Users/Infrastructure/ Modules/Users/Infrastructure/
+COPY Modules/Users/Infrastructure/Model/ Modules/Users/Infrastructure/Model/
 COPY Modules/Dietologist/Application/ Modules/Dietologist/Application/
 COPY Modules/Dietologist/Application/Abstractions/ Modules/Dietologist/Application/Abstractions/
 COPY Modules/Dietologist/Domain/ Modules/Dietologist/Domain/

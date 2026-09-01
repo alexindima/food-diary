@@ -15,6 +15,6 @@
   <ItemGroup>
     <Compile Include="..\..\..\..\tests\FoodDiary.Application.Tests\Support\ResultAssert.cs" Link="Support\ResultAssert.cs" />
     <ProjectReference Include="..\..\Application\FoodDiary.Application.Billing.csproj" />
-    <ProjectReference Include="..\..\..\..\FoodDiary.Application.Users\FoodDiary.Application.Users.csproj" />
+    <ProjectReference Include="..\..\..\..\Modules\Users\Application\FoodDiary.Modules.Users.Application.csproj" />
   </ItemGroup>
 </Project>

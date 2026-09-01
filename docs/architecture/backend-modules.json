@@ -667,15 +667,23 @@
     },
     "Users": {
       "role": "aggregate-owner",
-      "physicalIsolation": "assembly",
-      "enforcement": "explicit-boundary-tests",
+      "physicalIsolation": "module-root-with-central-domain-and-identity-seams",
+      "enforcement": "project-reference-matrix-and-module-boundary-tests",
       "ownedEntities": [
         "User",
         "Role",
         "UserRole",
         "UserRoleAuditEvent"
       ],
-      "sourceMappings": {}
+      "sourceMappings": {
+        "logicalRoot": "Modules/Users",
+        "applicationProjects": ["Modules/Users/Application"],
+        "applicationAbstractionAreas": ["FoodDiary.Application.Abstractions/Users"],
+        "domainCompatibilityAreas": ["FoodDiary.Domain/Entities/Users"],
+        "persistenceAreas": ["Modules/Users/Infrastructure", "Modules/Users/Infrastructure/Model"],
+        "centralPersistenceSeams": ["FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs"],
+        "identitySeams": ["FoodDiary.Application.Identity", "FoodDiary.Infrastructure/Persistence/Authentication"]
+      }
     },
     "Wearables": {
       "role": "aggregate-owner",

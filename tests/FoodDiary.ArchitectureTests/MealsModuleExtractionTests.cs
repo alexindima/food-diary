@@ -37,12 +37,12 @@ public sealed class MealsModuleExtractionTests {
     public void SharedDomainAndContext_RetainTheCentralRelationshipAndMigrationSeams() {
         string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Users", "User.cs"));
         string userConfiguration = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Infrastructure", "Persistence", "Configurations", "Users", "UserConfiguration.cs");
+            "Modules", "Users", "Infrastructure", "Model", "Persistence", "Configurations", "Users", "UserConfiguration.cs");
         string dbContext = File.ReadAllText(ArchitectureTestPaths.FromRoot(
             "FoodDiary.Infrastructure", "Persistence", "FoodDiaryDbContext.cs"));
 
         Assert.Contains("Meals", user, StringComparison.Ordinal);
-        Assert.True(File.Exists(userConfiguration), "UserConfiguration must remain with the central User owner.");
+        Assert.True(File.Exists(userConfiguration), "UserConfiguration must remain with the Users owner.");
         Assert.Contains("ApplyMealsPersistenceModel()", dbContext, StringComparison.Ordinal);
         Assert.True(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Migrations")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain")));
