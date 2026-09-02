@@ -69,6 +69,10 @@ HTTP authorization, structured audit and MailInbox client bridge remain central.
 Hosts call AddAdminModule; JobManager adds only AddAdminPersistence. See
 docs/ai/admin-ownership-inventory.md for current source evidence and test ownership.
 
+AdminUserRoleAuditRepository is now registered and compiled by Admin
+Infrastructure. Users retains role-audit entities/mappings; central Infrastructure
+retains DbContext and migrations. Do not register the Admin projection centrally.
+
 ## Products physical ownership
 
 Products aggregate, ProductId seam, use cases, ports, persistence adapters and EF

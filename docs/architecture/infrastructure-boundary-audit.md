@@ -23,11 +23,17 @@ SQL, tracking, paging, date filters, deletion batches, cancellation and the
 one-minute template cache/locale fallback remain unchanged. Coordinated host
 rebuilds are required: CLR namespaces are preserved, assembly ownership changes.
 
-## Remaining candidates (not moved in this tranche)
+## Completed follow-up: Admin role-audit projection
+
+The next bounded tranche moves AdminUserRoleAuditRepository to
+`Modules/Admin/Infrastructure/Persistence/Admin`, with its scoped aliases and
+focused tests. Users retains all role-audit entities/mappings; no query, schema or
+HTTP change is introduced. See `docs/ai/admin-role-audit-persistence.md`.
+
+## Remaining candidates (not moved in these tranches)
 
 | Current source | Likely owner / next action | Required boundary proof |
 | --- | --- | --- |
-| `Persistence/Admin/AdminUserRoleAuditRepository.cs` | Admin's read projection | Keep Users role-audit entity ownership; preserve filters, actor join and paging. |
 | `Persistence/Authentication/TelegramAssertionReplayGuard.cs`, consumed-assertion record and mapping | Identity | Preserve fingerprinting, expiry cleanup and atomic conflict handling; rerun security/real PostgreSQL tests. |
 | `Persistence/Images/ImageObjectDeletionOutboxMessage.cs` and mapping | Images PersistenceModel | Follow Notifications' model-only project plus shared outbox contract; never create context-to-adapter cycles. |
 | `Persistence/Achievements/AchievementEvaluationOutboxMessage.cs` and mapping | Gamification PersistenceModel | Preserve pending revisions, claim release and retry semantics; processor/enqueue already belong to Gamification. |
@@ -60,8 +66,8 @@ rebuilds are required: CLR namespaces are preserved, assembly ownership changes.
 ## Recommended sequence
 
 1. Finish and verify the two Identity adapters above.
-2. Extract the bounded Admin read projection and Identity replay persistence in
-   separately verified changes.
+2. The Admin read projection is extracted; review Identity replay persistence as
+   the next separately verified change.
 3. Move Images/Gamification stream records and mappings using the existing
    Notifications precedent, keeping the engine central.
 4. Design Dietologist audit registration, mixed replay and UserRepository seams

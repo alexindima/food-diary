@@ -23,6 +23,10 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Rules
 
+- `AdminModuleExtractionTests` distinguishes Admin's role-audit read projection
+  from Users' role-audit entity ownership; require the module adapter and focused
+  PostgreSQL tests, and prevent the old central helper from returning.
+
 - `IdentityPersistenceOwnershipTests` requires the two extracted Identity adapters
   and their focused tests to remain with the module. Keep the login-event bulk
   deletion exception explicit after relocation; do not weaken its scope.

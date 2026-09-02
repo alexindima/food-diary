@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7641,
+    "consumerEdges": 7644,
     "productionConsumerEdges": 4560,
-    "testConsumerEdges": 3081,
+    "testConsumerEdges": 3084,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -45035,7 +45035,7 @@
         "FoodDiary.Application.Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
+      "consumerPath": "Modules/Admin/Application/Services/AdminAuditReadService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -45048,8 +45048,21 @@
         "FoodDiary.Application.Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Services/AdminAuditReadService.cs",
+      "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminUserRoleAuditReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/AdminPersistenceRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -45100,7 +45113,7 @@
         "FoodDiary.Application.Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
+      "consumerPath": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -45113,9 +45126,22 @@
         "FoodDiary.Application.Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
+      "consumerPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IAdminUserRoleAuditRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/AdminPersistenceRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IAdminUserRoleAuditRepository",
@@ -116274,6 +116300,19 @@
         "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminUserRoleAuditRepositoryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "UserRoleAuditEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserRoleAuditInvariantTests.cs",
       "isTest": true,
       "referenceCount": 10
@@ -116315,7 +116354,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/AdminModuleExtractionTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "UserRoleAuditEvent",
@@ -116367,7 +116406,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 1
     },
     {
       "contract": "VerifyEmailCommand",

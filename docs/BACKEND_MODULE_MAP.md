@@ -211,6 +211,10 @@ Recipes use cases, ports, read contracts, persistence model and adapters live un
 
 ## Admin physical ownership
 
+Role-audit reads and both scoped aliases are owned by Admin Infrastructure;
+Users still owns the underlying role-audit entities and mappings. See
+`docs/ai/admin-role-audit-persistence.md` for the bounded follow-up.
+
 Admin owns application slices, billing-report/impersonation/mail-reader ports,
 AdminImpersonationSession Domain, its explicit EF model and reporting/session
 adapters under Modules/Admin. Legacy application assembly and CLR namespaces

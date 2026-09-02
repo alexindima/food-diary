@@ -377,6 +377,11 @@ Recipes use cases, ports, read contracts, persistence model and adapters live un
 
 ## Admin physical ownership
 
+Admin Infrastructure owns AdminUserRoleAuditRepository and its two scoped DI
+aliases as a read projection. UserRoleAuditEvent and its mappings remain Users
+owned; the shared context, migration history and Admin HTTP authorization are
+unchanged. Focused provider/registration tests live under Modules/Admin/tests.
+
 Admin owns application slices, billing-report/impersonation/mail-reader ports,
 AdminImpersonationSession Domain, its explicit EF model and reporting/session
 adapters under Modules/Admin. Legacy application assembly and CLR namespaces

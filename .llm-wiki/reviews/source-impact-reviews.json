@@ -7,18 +7,14 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "0ca43cddc4e315866049685b83ea802887acdefa393e20cb81064b6cdecc067a"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "1459664bfb2bacef04f1042e1db168c1612717852c8ea36d722d0ae1a161cb76"
+          "sha256": "0738b2194aa8288ceba87c9a8a6b929320d5a240c3fd1d154f89f9edd5646b0b"
         }
       ],
-      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
+      "reason": "Guides and the residual Infrastructure audit distinguish Admin projection ownership from Users domain/model ownership. Shared context and deferred adapters are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
-      "reviewedAtUtc": "2026-09-02T22:04:01.2086888Z"
+      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
+      "reviewedAtUtc": "2026-09-02T23:03:44.2802743Z"
     },
     {
       "pageId": "module.frontend",
@@ -41,18 +37,14 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "0ca43cddc4e315866049685b83ea802887acdefa393e20cb81064b6cdecc067a"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "1459664bfb2bacef04f1042e1db168c1612717852c8ea36d722d0ae1a161cb76"
+          "sha256": "0738b2194aa8288ceba87c9a8a6b929320d5a240c3fd1d154f89f9edd5646b0b"
         }
       ],
-      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
+      "reason": "Guides and the residual Infrastructure audit distinguish Admin projection ownership from Users domain/model ownership. Shared context and deferred adapters are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
-      "reviewedAtUtc": "2026-09-02T22:04:01.3830083Z"
+      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
+      "reviewedAtUtc": "2026-09-02T23:03:44.4358107Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -61,21 +53,21 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "1459664bfb2bacef04f1042e1db168c1612717852c8ea36d722d0ae1a161cb76"
+          "sha256": "0738b2194aa8288ceba87c9a8a6b929320d5a240c3fd1d154f89f9edd5646b0b"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "e690de7ff841c8ee441fbf4c4f122387515093332d651c1567e14e59aeaf329b"
+          "sha256": "716f19ae0047527895d2837e6ac93223c9b2a28e4845b4b12fa0e8bcc5bf98c3"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "ab3cbc3c32f199f9adc1c5346fc7f56675b4181e4ffa7acede892bcc6d4418e1"
+          "sha256": "78ca3badef9f7181030111a7576ae0d17baf11b79f5fbea0cea134e7aba320fe"
         }
       ],
-      "reason": "Final report records 2733 actual passing cases, EF no changes, two byte-equivalent Identity adapter moves, unchanged production references and two new test-only projects. Shared mechanisms and deferred audit candidates are not moved. The preceding 99/100 DomainGuard retrieval limitation remains explicitly separate from this tranche affected verification route.",
+      "reason": "Only an unchanged Admin read projection and its DI aliases moved. Admin authorization, routes, response fields, status codes, Users entities and EF model remain unchanged; full HTTP and provider results are retained in runtime evidence.",
       "baseRef": "HEAD",
-      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
-      "reviewedAtUtc": "2026-09-02T22:17:19.5304449Z"
+      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
+      "reviewedAtUtc": "2026-09-02T23:03:44.6083431Z"
     },
     {
       "pageId": "system.architecture",
@@ -83,22 +75,18 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "0ca43cddc4e315866049685b83ea802887acdefa393e20cb81064b6cdecc067a"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "1459664bfb2bacef04f1042e1db168c1612717852c8ea36d722d0ae1a161cb76"
+          "sha256": "0738b2194aa8288ceba87c9a8a6b929320d5a240c3fd1d154f89f9edd5646b0b"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "9059e9f183f444d89a20f41162ff304e9755901f747553fa252cfeae8fa87518"
+          "sha256": "582d36964b3d010bc1f5b48bbddffeeddee2dcc791cddcd7871755fbff3d257a"
         }
       ],
-      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
+      "reason": "Guides and the residual Infrastructure audit distinguish Admin projection ownership from Users domain/model ownership. Shared context and deferred adapters are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
-      "reviewedAtUtc": "2026-09-02T22:04:01.7560847Z"
+      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
+      "reviewedAtUtc": "2026-09-02T23:03:44.7938013Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -216,13 +204,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "9059e9f183f444d89a20f41162ff304e9755901f747553fa252cfeae8fa87518"
+          "sha256": "582d36964b3d010bc1f5b48bbddffeeddee2dcc791cddcd7871755fbff3d257a"
         }
       ],
-      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
+      "reason": "Two module test leaves, exact owner guard, scoped DI and provider assertions cover the relocation. One source-proven expected path changed in frozen100, not queries, ranking, cohorts or thresholds. Actual Wiki exits are recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
-      "reviewedAtUtc": "2026-09-02T22:04:01.9576512Z"
+      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
+      "reviewedAtUtc": "2026-09-02T23:03:44.9907171Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -231,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "972377370f0986e6cad536c1798abf0e11401e4d5966cde4fffa45ac61a78190"
+          "sha256": "6e3e81ca53c0d73c04395b78a20b0ad386287ddda11c7b1285933fd33b63ffaa"
         }
       ],
-      "reason": "Identity owns the two unchanged persistence adapters, with unchanged SQL, cache/lifetimes, source namespaces and schema. Focused tests move and add DI/lifetime assertions. Initial test namespace/named-argument diagnostics were corrected without relaxing checks. Shared context, external providers and other modules remain unchanged.",
+      "reason": "Only an unchanged Admin read projection and its DI aliases moved. Admin authorization, routes, response fields, status codes, Users entities and EF model remain unchanged; full HTTP and provider results are retained in runtime evidence.",
       "baseRef": "HEAD",
-      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
-      "reviewedAtUtc": "2026-09-02T22:08:16.8134410Z"
+      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
+      "reviewedAtUtc": "2026-09-02T23:03:45.4816394Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -276,21 +264,13 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "967cdc883d11becbdbe3a178e97c43f355e54f8aa0fd13ec168cf94f836b8c07"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-postfix-control-30.json",
-          "sha256": "53cdb532a52fac53f88a27c069aea6a7a3b881c87de5db9b160d0b21afc960fc"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe-7.json",
-          "sha256": "c4c34ddab96399b5cc17545c12b9fba4edcf06a5bd0f8194fae38d4af5381598"
+          "sha256": "52f10ab54b116ea5fc1943868fa1e82f3902f51fe0f3b317c50fe56c45f585db"
         }
       ],
-      "reason": "Focused Shared/Tooling test relocation and solution grouping preserve runtime dependencies and test identities. Evaluation expectedPaths follow seven physically relocated test targets plus the Git-proven DomainGuard and MealAiSession owner moves (71bf4fd47 and d3a1e7c65). Queries, thresholds, ranking and historical results are unchanged.",
+      "reason": "Two module test leaves, exact owner guard, scoped DI and provider assertions cover the relocation. One source-proven expected path changed in frozen100, not queries, ranking, cohorts or thresholds. Actual Wiki exits are recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "0c3b805571fd75a396d4f8bbaedf556aedbdaaf1",
-      "reviewedAtUtc": "2026-09-02T21:42:01.3531241Z"
+      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
+      "reviewedAtUtc": "2026-09-02T23:03:45.6383968Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -502,13 +482,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "ab3cbc3c32f199f9adc1c5346fc7f56675b4181e4ffa7acede892bcc6d4418e1"
+          "sha256": "78ca3badef9f7181030111a7576ae0d17baf11b79f5fbea0cea134e7aba320fe"
         }
       ],
-      "reason": "Final report records 2733 actual passing cases, EF no changes, two byte-equivalent Identity adapter moves, unchanged production references and two new test-only projects. Shared mechanisms and deferred audit candidates are not moved. The preceding 99/100 DomainGuard retrieval limitation remains explicitly separate from this tranche affected verification route.",
+      "reason": "Two module test leaves, exact owner guard, scoped DI and provider assertions cover the relocation. One source-proven expected path changed in frozen100, not queries, ranking, cohorts or thresholds. Actual Wiki exits are recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
-      "reviewedAtUtc": "2026-09-02T22:17:19.7822457Z"
+      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
+      "reviewedAtUtc": "2026-09-02T23:03:45.8097313Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -825,13 +805,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c4014525c978f4450c764d89be94a7bb202ad520cc9f8d02f9b421ebcfa84b42"
+          "sha256": "bbd19bd8bc5eb02b6f9f56ed0513e4577f7cb97173aaa85de2472865e53cf4ed"
         }
       ],
-      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
+      "reason": "Two module test leaves, exact owner guard, scoped DI and provider assertions cover the relocation. One source-proven expected path changed in frozen100, not queries, ranking, cohorts or thresholds. Actual Wiki exits are recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
-      "reviewedAtUtc": "2026-09-02T22:04:03.0203013Z"
+      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
+      "reviewedAtUtc": "2026-09-02T23:03:46.2159545Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -908,13 +888,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "fe948d661dd1040075159fc6b3e2eef9f14383d4ecaec657dc0143a836a60bc2"
+          "sha256": "817dffeaa4612778365f6a57b361184ef96b8fac1e83daa152e3e28f0ae8f663"
         }
       ],
-      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
+      "reason": "Guides and the residual Infrastructure audit distinguish Admin projection ownership from Users domain/model ownership. Shared context and deferred adapters are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
-      "reviewedAtUtc": "2026-09-02T22:04:03.6034016Z"
+      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
+      "reviewedAtUtc": "2026-09-02T23:03:46.8261293Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -923,17 +903,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c4014525c978f4450c764d89be94a7bb202ad520cc9f8d02f9b421ebcfa84b42"
+          "sha256": "bbd19bd8bc5eb02b6f9f56ed0513e4577f7cb97173aaa85de2472865e53cf4ed"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "fe948d661dd1040075159fc6b3e2eef9f14383d4ecaec657dc0143a836a60bc2"
+          "sha256": "817dffeaa4612778365f6a57b361184ef96b8fac1e83daa152e3e28f0ae8f663"
         }
       ],
-      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
+      "reason": "Source body and data filters are Git-identical; no new data collection, logging, sharing, retention, credentials or auth boundary. The actor left join and Admin role requirement remain intact.",
       "baseRef": "HEAD",
-      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
-      "reviewedAtUtc": "2026-09-02T22:04:04.0773192Z"
+      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
+      "reviewedAtUtc": "2026-09-02T23:03:47.2609422Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1170,14 +1150,18 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-holdout-100.json",
+          "sha256": "52f10ab54b116ea5fc1943868fa1e82f3902f51fe0f3b317c50fe56c45f585db"
+        },
+        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "b6c8b04385a87601dc01323b6f2887a2508df21dc671ce4c3591ab8d33fdc062"
+          "sha256": "4c1d1934c44c10adeafdc4b1592f58c9c85ed8057af1b54545661b30751f724e"
         }
       ],
-      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
+      "reason": "Guides and the residual Infrastructure audit distinguish Admin projection ownership from Users domain/model ownership. Shared context and deferred adapters are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
-      "reviewedAtUtc": "2026-09-02T22:04:03.2872382Z"
+      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
+      "reviewedAtUtc": "2026-09-02T23:03:46.5318660Z"
     },
     {
       "pageId": "workflow.review-diff",

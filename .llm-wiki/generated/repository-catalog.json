@@ -13,8 +13,8 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 316,
-    "testProjects": 119,
+    "dotnetProjects": 318,
+    "testProjects": 121,
     "frontendProjects": 4,
     "applicationModules": 1,
     "extractedApplicationModules": 33,
@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 223,
-    "documentationPages": 125
+    "documentationPages": 126
   },
   "dotnet": {
     "projects": [
@@ -1816,6 +1816,88 @@
         "projectReferences": [
           "Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Admin.Infrastructure.IntegrationTests",
+        "assemblyName": "FoodDiary.Modules.Admin.Infrastructure.IntegrationTests",
+        "path": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
+          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.EntityFrameworkCore",
+            "version": null
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          },
+          {
+            "name": "SSH.NET",
+            "version": null
+          },
+          {
+            "name": "Testcontainers.PostgreSql",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Admin.Infrastructure.Tests",
+        "assemblyName": "FoodDiary.Modules.Admin.Infrastructure.Tests",
+        "path": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/FoodDiary.Modules.Admin.Infrastructure.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj"
         ],
         "packageReferences": [
           {
@@ -9917,6 +9999,8 @@
       "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/FoodDiary.MailRelay.Presentation.Tests.csproj",
       "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FoodDiary.Modules.Admin.Application.Tests.csproj",
       "Modules/Admin/tests/FoodDiary.Modules.Admin.Domain.Tests/FoodDiary.Modules.Admin.Domain.Tests.csproj",
+      "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests.csproj",
+      "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/FoodDiary.Modules.Admin.Infrastructure.Tests.csproj",
       "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/FoodDiary.Modules.Ai.Application.Tests.csproj",
       "Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/FoodDiary.Modules.Ai.Domain.Tests.csproj",
       "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/FoodDiary.Modules.Ai.Infrastructure.Tests.csproj",
@@ -12533,6 +12617,7 @@
       "docs/ai/admin-module-extraction-wiki-findings.md",
       "docs/ai/admin-ownership-inventory.md",
       "docs/ai/admin-products-integration.md",
+      "docs/ai/admin-role-audit-persistence.md",
       "docs/ai/ai-module-extraction-wiki-findings.md",
       "docs/ai/ai-module-integration.md",
       "docs/ai/ai-ownership-inventory.md",

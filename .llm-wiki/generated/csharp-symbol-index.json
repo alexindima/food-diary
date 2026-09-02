@@ -11,7 +11,7 @@
     "sourceFiles": 3546,
     "symbols": 3531,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 164,
+    "dependencyInjectionRegistrations": 163,
     "kinds": {
       "class": 1858,
       "enum": 62,
@@ -2194,7 +2194,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 8
+      "line": 6
     },
     {
       "name": "DomainEventNotification",
@@ -2237,13 +2237,6 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxMessage.cs",
       "line": 5
-    },
-    {
-      "name": "AdminUserRoleAuditRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
-      "line": 7
     },
     {
       "name": "AuditEntry",
@@ -10420,6 +10413,13 @@
       "role": "Repository",
       "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
       "line": 8
+    },
+    {
+      "name": "AdminUserRoleAuditRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
+      "line": 7
     },
     {
       "name": "AiUsageBreakdown",
@@ -24896,7 +24896,7 @@
       "interface": "IAdminUserRoleAuditRepository",
       "interfacePath": "FoodDiary.Application.Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs",
       "implementation": "AdminUserRoleAuditRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
+      "implementationPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26517,13 +26517,6 @@
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
       "line": 22
-    },
-    {
-      "service": "IAdminUserRoleAuditRepository",
-      "implementation": "AdminUserRoleAuditRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 20
     },
     {
       "service": "IEmailVerificationNotifier",

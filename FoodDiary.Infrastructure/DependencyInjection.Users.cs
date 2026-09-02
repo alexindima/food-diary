@@ -1,6 +1,4 @@
-using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Infrastructure.Persistence.Admin;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +15,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IUserWriteRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserAccessTokenSecurityReader>(static provider => provider.GetRequiredService<UserRepository>());
 
-        services.AddScoped<IAdminUserRoleAuditRepository, AdminUserRoleAuditRepository>();
-        services.AddScoped<IAdminUserRoleAuditReadRepository>(static provider => provider.GetRequiredService<IAdminUserRoleAuditRepository>());
     }
 }

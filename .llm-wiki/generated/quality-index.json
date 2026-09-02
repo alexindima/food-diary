@@ -4674,11 +4674,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "nonBlankLines": 20,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.32
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
@@ -4735,14 +4735,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 4.7
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Audit/AuditEntry.cs",
@@ -22114,11 +22106,11 @@
     },
     {
       "path": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
-      "nonBlankLines": 19,
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
+      "structuralRiskScore": 0.42
     },
     {
       "path": "Modules/Admin/Infrastructure/Authentication/AdminImpersonationHandoffService.cs",
@@ -22159,6 +22151,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 8.64
+    },
+    {
+      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
+      "nonBlankLines": 31,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.62
     },
     {
       "path": "Modules/Ai/Application/Abstractions/Admin/Models/AiUsageBreakdown.cs",

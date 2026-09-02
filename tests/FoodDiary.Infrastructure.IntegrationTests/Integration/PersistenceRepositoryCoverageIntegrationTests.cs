@@ -34,7 +34,6 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
-using FoodDiary.Infrastructure.Persistence.Admin;
 using FoodDiary.Modules.Billing.Infrastructure.Persistence;
 using FoodDiary.Modules.BodyMetrics.Infrastructure.Persistence;
 using FoodDiary.Modules.Lessons.Infrastructure.Persistence;
@@ -899,19 +898,17 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     [RequiresDockerFact]
-    public async Task ProductMealRecentImageAdminAndBillingRepositories_CoverRemainingPersistenceBranches() {
+    public async Task ProductMealRecentImageAndBillingRepositories_CoverRemainingPersistenceBranches() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"persistence-user-{Guid.NewGuid():N}@example.com", "hash");
-        var actor = User.Create($"persistence-actor-{Guid.NewGuid():N}@example.com", "hash");
         var otherUser = User.Create($"persistence-other-{Guid.NewGuid():N}@example.com", "hash");
-        context.Users.AddRange(user, actor, otherUser);
+        context.Users.AddRange(user, otherUser);
         await context.SaveChangesAsync();
 
         await CoverProductAndCachedProductRepositoriesAsync(context, user.Id, otherUser.Id);
         await CoverMealRepositoryAsync(context, user.Id);
         await CoverRecentItemRepositoryAsync(context, user.Id);
         await CoverImageAssetRepositoryAsync(context, user.Id);
-        await CoverAdminUserRoleAuditRepositoryAsync(context, user.Id, actor.Id);
         await CoverBillingTransactionRunnerAsync(context);
     }
 
@@ -1090,28 +1087,6 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await repository.DeleteAsync(asset);
         await context.SaveChangesAsync();
         Assert.Null(await repository.GetByIdAsync(asset.Id));
-    }
-
-    private static async Task CoverAdminUserRoleAuditRepositoryAsync(
-        FoodDiaryDbContext context,
-        UserId userId,
-        UserId actorUserId) {
-        Role role = await context.Roles.FirstOrDefaultAsync(item => item.Name == RoleNames.Premium) ?? Role.Create(RoleNames.Premium);
-        if (context.Entry(role).State == EntityState.Detached) {
-            context.Roles.Add(role);
-            await context.SaveChangesAsync();
-        }
-
-        context.UserRoleAuditEvents.Add(UserRoleAuditEvent.Create(userId, role, UserRoleAuditAction.Removed, actorUserId, "coverage", DateTime.UtcNow));
-        await context.SaveChangesAsync();
-
-        var repository = new AdminUserRoleAuditRepository(context);
-        IReadOnlyList<Application.Abstractions.Admin.Models.AdminUserRoleAuditEventReadModel> events =
-            await repository.GetRecentForUserAsync(userId.Value, limit: 0);
-
-        Application.Abstractions.Admin.Models.AdminUserRoleAuditEventReadModel auditEvent = Assert.Single(events);
-        Assert.Equal(actorUserId.Value, auditEvent.ActorUserId);
-        Assert.NotNull(auditEvent.ActorEmail);
     }
 
     private static async Task CoverBillingTransactionRunnerAsync(FoodDiaryDbContext context) {

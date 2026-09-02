@@ -16,3 +16,7 @@ Hosts call AddAdminModule; JobManager adds only AddAdminPersistence. See
 docs/ai/admin-ownership-inventory.md for current source evidence and test ownership.
 
 Do not acquire foreign write repositories or move authentication transport/provider logic. Keep SQL, authorization, impersonation expiry/audit, cancellation and HTTP contracts unchanged. No empty Contracts layer is needed.
+
+The role-audit read projection and its DI/focused tests belong to Admin
+Infrastructure. UserRoleAuditEvent, role membership and their mappings still
+belong to Users. See `docs/ai/admin-role-audit-persistence.md`.

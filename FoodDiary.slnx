@@ -453,6 +453,8 @@
     <Project Path="Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj" />
   </Folder>
   <Folder Name="/Modules/Admin/tests/">
+    <Project Path="Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/FoodDiary.Modules.Admin.Infrastructure.Tests.csproj" />
+    <Project Path="Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests.csproj" />
     <Project Path="Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FoodDiary.Modules.Admin.Application.Tests.csproj" />
     <Project Path="Modules/Admin/tests/FoodDiary.Modules.Admin.Domain.Tests/FoodDiary.Modules.Admin.Domain.Tests.csproj" />
   </Folder>

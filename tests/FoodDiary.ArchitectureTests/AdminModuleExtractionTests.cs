@@ -27,13 +27,22 @@ public sealed class AdminModuleExtractionTests {
     }
 
     [Fact]
-    public void ForeignEmailAndUserAudit_StayWithExistingOwners() {
+    public void ForeignEmailAndUserDomain_StayWithExistingOwners() {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Users/Application/Services/UserAdministrationMutationService.cs")));
         Assert.Empty(SourceScanner.FindLinePatternViolations(ArchitectureTestPaths.FromRoot("Modules/Admin/Domain"),
             ["class EmailTemplate", "class UserRoleAuditEvent"]));
+    }
+
+    [Fact]
+    public void RoleAuditReadProjection_LivesWithAdminWithoutMovingUsersDomain() {
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminUserRoleAuditRepositoryIntegrationTests.cs")));
+        string donor = File.ReadAllText(ArchitectureTestPaths.FromRoot("tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs"));
+        Assert.DoesNotContain("CoverAdminUserRoleAuditRepositoryAsync", donor, StringComparison.Ordinal);
     }
 
     [Theory]
