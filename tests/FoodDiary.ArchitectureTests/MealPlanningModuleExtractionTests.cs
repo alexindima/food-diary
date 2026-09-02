@@ -25,13 +25,7 @@ public sealed class MealPlanningModuleExtractionTests {
     public void ExtractedMealPlanningAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj");
-        string[] expectedReferences = [
-            "FoodDiary.Application.Abstractions",
-            "FoodDiary.Domain",
-            "FoodDiary.Mediator",
-            "FoodDiary.Modules.MealPlanning.Application.Abstractions",
-            "FoodDiary.Modules.MealPlanning.Domain",
-        ];
+        string[] expectedReferences = ["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);
     }
@@ -108,7 +102,7 @@ public sealed class MealPlanningModuleExtractionTests {
 
     [Fact]
     public void ShoppingListUserRelationship_IsOneWayAndExplicitlyMapped() {
-        string userSource = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Users", "User.cs"));
+        string userSource = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain", "Entities", "Users", "User.cs"));
         string mappingSource = File.ReadAllText(ArchitectureTestPaths.FromRoot(
             "Modules", "MealPlanning", "Infrastructure", "Model", "Configurations", "ShoppingLists", "ShoppingListConfiguration.cs"));
 

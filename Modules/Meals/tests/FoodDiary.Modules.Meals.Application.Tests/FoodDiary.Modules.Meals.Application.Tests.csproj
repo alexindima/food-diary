@@ -10,6 +10,7 @@
     <ProjectReference Include="../../Application/FoodDiary.Modules.Meals.Application.csproj" />
     <ProjectReference Include="../../../Favorites/Application/FoodDiary.Application.Favorites.csproj" />
     <ProjectReference Include="../../../Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="xunit" />

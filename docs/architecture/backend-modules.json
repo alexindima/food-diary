@@ -686,19 +686,21 @@
     },
     "Users": {
       "role": "aggregate-owner",
-      "physicalIsolation": "module-root-with-central-domain-and-identity-seams",
+      "physicalIsolation": "module-root-with-shared-persistence-and-identity-seams",
       "enforcement": "project-reference-matrix-and-module-boundary-tests",
       "ownedEntities": [
         "User",
         "Role",
         "UserRole",
-        "UserRoleAuditEvent"
+        "UserRoleAuditEvent",
+        "WeightGoal",
+        "WaistGoal"
       ],
       "sourceMappings": {
         "logicalRoot": "Modules/Users",
         "applicationProjects": ["Modules/Users/Application"],
         "applicationAbstractionAreas": ["FoodDiary.Application.Abstractions/Users"],
-        "domainCompatibilityAreas": ["FoodDiary.Domain/Entities/Users"],
+        "domainAreas": ["Modules/Users/Domain", "Modules/Users/Domain.Contracts"],
         "persistenceAreas": ["Modules/Users/Infrastructure", "Modules/Users/Infrastructure/Model"],
         "centralPersistenceSeams": ["FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs"],
         "identitySeams": ["Modules/Identity/Application", "FoodDiary.Infrastructure/Persistence/Authentication"]

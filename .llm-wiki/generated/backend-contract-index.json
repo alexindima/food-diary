@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7634,
+    "consumerEdges": 7636,
     "productionConsumerEdges": 4560,
-    "testConsumerEdges": 3074,
+    "testConsumerEdges": 3076,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -17724,7 +17724,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/UserDeletedDomainEvent.cs"
+        "Modules/Users/Domain/Events/UserDeletedDomainEvent.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -17809,7 +17809,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/UserRestoredDomainEvent.cs"
+        "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -17826,7 +17826,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -59543,32 +59543,6 @@
         "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/Events/UserDeletedDomainEvent.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/Events/UserRestoredDomainEvent.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Events/DomainEventNotification.cs",
       "isTest": false,
       "referenceCount": 1
@@ -59726,6 +59700,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Domain/Events/RecipeManualNutritionSetDomainEvent.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Domain/Events/UserDeletedDomainEvent.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -61037,58 +61037,6 @@
       "definitionPaths": [
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/RoleId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/UserId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/WaistGoalId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/WeightGoalId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageId.cs",
       "isTest": false,
@@ -61831,6 +61779,58 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Domain.Contracts/ValueObjects/Ids/UserId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Domain/ValueObjects/Ids/RoleId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Domain/ValueObjects/Ids/WaistGoalId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Domain/ValueObjects/Ids/WeightGoalId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/Domain/ValueObjects/Ids/WearableConnectionId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61871,6 +61871,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealIdInvariantTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserIdInvariantTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -115621,10 +115634,10 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/UserDeletedDomainEvent.cs"
+        "Modules/Users/Domain/Events/UserDeletedDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/Entities/Users/User.Lifecycle.cs",
+      "consumerPath": "Modules/Users/Domain/Entities/Users/User.Lifecycle.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -115634,7 +115647,33 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/UserDeletedDomainEvent.cs"
+        "Modules/Users/Domain/Events/UserDeletedDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserInvariantTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "UserDeletedDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Events/UserDeletedDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserLifecycleEventTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserDeletedDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Events/UserDeletedDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
@@ -115647,33 +115686,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/UserDeletedDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainEventsTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "UserDeletedDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Domain/Events/UserDeletedDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/UserInvariantTests.cs",
-      "isTest": true,
-      "referenceCount": 3
-    },
-    {
-      "contract": "UserDeletedDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Domain/Events/UserDeletedDomainEvent.cs"
+        "Modules/Users/Domain/Events/UserDeletedDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Events/DomainEventNotificationTests.cs",
@@ -116076,10 +116089,10 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/UserRestoredDomainEvent.cs"
+        "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/Entities/Users/User.Lifecycle.cs",
+      "consumerPath": "Modules/Users/Domain/Entities/Users/User.Lifecycle.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -116089,36 +116102,36 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/UserRestoredDomainEvent.cs"
+        "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserInvariantTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserRestoredDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserLifecycleEventTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "UserRestoredDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainCoverageCompletionTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "UserRestoredDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Domain/Events/UserRestoredDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainEventsTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "UserRestoredDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Domain/Events/UserRestoredDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/UserInvariantTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -116128,7 +116141,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Abstractions/Users/Common/IUserWriteRepository.cs",
@@ -116141,7 +116154,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Users.cs",
@@ -116154,7 +116167,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
@@ -116167,7 +116180,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Services/UserAdministrationMutationService.cs",
@@ -116180,7 +116193,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserRoleAuditEventConfiguration.cs",
@@ -116193,7 +116206,20 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserRoleAuditInvariantTests.cs",
+      "isTest": true,
+      "referenceCount": 10
+    },
+    {
+      "contract": "UserRoleAuditEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
@@ -116206,7 +116232,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs",
@@ -116219,7 +116245,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/AdminModuleExtractionTests.cs",
@@ -116232,7 +116258,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/DatabaseNormalizationGuardrailTests.cs",
@@ -116245,7 +116271,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/UserDataLifecycleGuardrailTests.cs",
@@ -116258,12 +116284,12 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/UserAuditEventInvariantTests.cs",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/UsersModuleExtractionTests.cs",
       "isTest": true,
-      "referenceCount": 10
+      "referenceCount": 1
     },
     {
       "contract": "UserRoleAuditEvent",
@@ -116271,7 +116297,7 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs"
+        "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",

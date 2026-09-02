@@ -31,6 +31,7 @@
     <ProjectReference Include="..\..\Modules\WeeklyGoals\Application\FoodDiary.Modules.WeeklyGoals.Application.csproj" />
     <ProjectReference Include="..\..\Modules\WeeklyGoals\Infrastructure\FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj" />
+    <ProjectReference Include="../../Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,7 +8,7 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3545,
+    "sourceFiles": 3546,
     "symbols": 3531,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 166,
@@ -2120,90 +2120,6 @@
       "line": 5
     },
     {
-      "name": "WaistGoal",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/WaistGoal.cs",
-      "line": 7
-    },
-    {
-      "name": "WeightGoal",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Tracking/WeightGoal.cs",
-      "line": 7
-    },
-    {
-      "name": "Role",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Users/Role.cs",
-      "line": 5
-    },
-    {
-      "name": "User",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Users/User.Admin.cs",
-      "line": 4
-    },
-    {
-      "name": "User",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
-      "line": 6
-    },
-    {
-      "name": "User",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 12
-    },
-    {
-      "name": "User",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Users/User.Goals.cs",
-      "line": 6
-    },
-    {
-      "name": "User",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Users/User.Lifecycle.cs",
-      "line": 5
-    },
-    {
-      "name": "User",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Users/User.Profile.cs",
-      "line": 8
-    },
-    {
-      "name": "User",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Users/User.Tdee.cs",
-      "line": 5
-    },
-    {
-      "name": "UserRole",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Users/UserRole.cs",
-      "line": 4
-    },
-    {
-      "name": "UserRoleAuditEvent",
-      "kind": "class",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs",
-      "line": 7
-    },
-    {
       "name": "ActivityLevel",
       "kind": "enum",
       "role": "Other",
@@ -2281,53 +2197,11 @@
       "line": 2
     },
     {
-      "name": "RoleNames",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/RoleNames.cs",
-      "line": 2
-    },
-    {
-      "name": "UserRoleAuditAction",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/UserRoleAuditAction.cs",
-      "line": 2
-    },
-    {
       "name": "Visibility",
       "kind": "enum",
       "role": "Other",
       "path": "FoodDiary.Domain/Enums/Visibility.cs",
       "line": 2
-    },
-    {
-      "name": "WaistGoalStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/WaistGoalStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "WeightGoalStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/WeightGoalStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "UserDeletedDomainEvent",
-      "kind": "record",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Events/UserDeletedDomainEvent.cs",
-      "line": 5
-    },
-    {
-      "name": "UserRestoredDomainEvent",
-      "kind": "record",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Events/UserRestoredDomainEvent.cs",
-      "line": 5
     },
     {
       "name": "DesiredWaistCm",
@@ -2365,13 +2239,6 @@
       "line": 8
     },
     {
-      "name": "GenderCode",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/GenderCode.cs",
-      "line": 2
-    },
-    {
       "name": "HealthAreaGrade",
       "kind": "enum",
       "role": "ValueObject",
@@ -2400,213 +2267,10 @@
       "line": 4
     },
     {
-      "name": "RoleId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RoleId.cs",
-      "line": 4
-    },
-    {
-      "name": "UserId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/UserId.cs",
-      "line": 4
-    },
-    {
-      "name": "WaistGoalId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WaistGoalId.cs",
-      "line": 4
-    },
-    {
-      "name": "WeightGoalId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WeightGoalId.cs",
-      "line": 4
-    },
-    {
       "name": "LanguageCode",
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/LanguageCode.cs",
-      "line": 2
-    },
-    {
-      "name": "ProfileHeightCm",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/ProfileHeightCm.cs",
-      "line": 4
-    },
-    {
-      "name": "ProfileWeightKg",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/ProfileWeightKg.cs",
-      "line": 4
-    },
-    {
-      "name": "ThemeCode",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/ThemeCode.cs",
-      "line": 2
-    },
-    {
-      "name": "UiStyleCode",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UiStyleCode.cs",
-      "line": 2
-    },
-    {
-      "name": "UserAccountState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserAccountState.cs",
-      "line": 2
-    },
-    {
-      "name": "UserActivityGoals",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserActivityGoals.cs",
-      "line": 6
-    },
-    {
-      "name": "UserActivityUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserActivityUpdate.cs",
-      "line": 7
-    },
-    {
-      "name": "UserAdminAiQuotaUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserAdminAiQuotaUpdate.cs",
-      "line": 6
-    },
-    {
-      "name": "UserAdminPreferenceUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserAdminPreferenceUpdate.cs",
-      "line": 2
-    },
-    {
-      "name": "UserAdminSecurityUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserAdminSecurityUpdate.cs",
-      "line": 2
-    },
-    {
-      "name": "UserAiQuotaState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserAiQuotaState.cs",
-      "line": 6
-    },
-    {
-      "name": "UserAiTokenLimitUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserAiTokenLimitUpdate.cs",
-      "line": 6
-    },
-    {
-      "name": "UserCalorieSchedule",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserCalorieSchedule.cs",
-      "line": 2
-    },
-    {
-      "name": "UserGoalState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserGoalState.cs",
-      "line": 2
-    },
-    {
-      "name": "UserGoalUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserGoalUpdate.cs",
-      "line": 2
-    },
-    {
-      "name": "UserNutritionGoals",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserNutritionGoals.cs",
-      "line": 6
-    },
-    {
-      "name": "UserPersonalInfoUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserPersonalInfoUpdate.cs",
-      "line": 2
-    },
-    {
-      "name": "UserPersonalProfileState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserPersonalProfileState.cs",
-      "line": 4
-    },
-    {
-      "name": "UserPreferenceState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserPreferenceState.cs",
-      "line": 2
-    },
-    {
-      "name": "UserPreferenceUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserPreferenceUpdate.cs",
-      "line": 2
-    },
-    {
-      "name": "UserProfileMediaState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserProfileMediaState.cs",
-      "line": 4
-    },
-    {
-      "name": "UserProfileMediaUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserProfileMediaUpdate.cs",
-      "line": 4
-    },
-    {
-      "name": "UserProfileState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserProfileState.cs",
-      "line": 5
-    },
-    {
-      "name": "UserSecurityState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserSecurityState.cs",
-      "line": 2
-    },
-    {
-      "name": "UserTokenIssue",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/UserTokenIssue.cs",
       "line": 2
     },
     {
@@ -2804,20 +2468,6 @@
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs",
       "line": 6
-    },
-    {
-      "name": "WaistGoalConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics/WaistGoalConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "WeightGoalConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics/WeightGoalConfiguration.cs",
-      "line": 7
     },
     {
       "name": "EmailOutboxMessageConfiguration",
@@ -23846,6 +23496,356 @@
       "role": "Service",
       "path": "Modules/Users/Application/Services/UserNotificationProfileService.cs",
       "line": 10
+    },
+    {
+      "name": "UserId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/Ids/UserId.cs",
+      "line": 4
+    },
+    {
+      "name": "WaistGoal",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/Tracking/WaistGoal.cs",
+      "line": 7
+    },
+    {
+      "name": "WeightGoal",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/Tracking/WeightGoal.cs",
+      "line": 7
+    },
+    {
+      "name": "Role",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/Users/Role.cs",
+      "line": 5
+    },
+    {
+      "name": "User",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/Users/User.Admin.cs",
+      "line": 4
+    },
+    {
+      "name": "User",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
+      "line": 6
+    },
+    {
+      "name": "User",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/Users/User.cs",
+      "line": 12
+    },
+    {
+      "name": "User",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/Users/User.Goals.cs",
+      "line": 6
+    },
+    {
+      "name": "User",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/Users/User.Lifecycle.cs",
+      "line": 5
+    },
+    {
+      "name": "User",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
+      "line": 8
+    },
+    {
+      "name": "User",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/Users/User.Tdee.cs",
+      "line": 5
+    },
+    {
+      "name": "UserRole",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Users/Domain/Entities/Users/UserRole.cs",
+      "line": 4
+    },
+    {
+      "name": "UserRoleAuditEvent",
+      "kind": "class",
+      "role": "Event",
+      "path": "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs",
+      "line": 7
+    },
+    {
+      "name": "RoleNames",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Domain/Enums/RoleNames.cs",
+      "line": 2
+    },
+    {
+      "name": "UserRoleAuditAction",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Users/Domain/Enums/UserRoleAuditAction.cs",
+      "line": 2
+    },
+    {
+      "name": "WaistGoalStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Users/Domain/Enums/WaistGoalStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightGoalStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Users/Domain/Enums/WeightGoalStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "UserDeletedDomainEvent",
+      "kind": "record",
+      "role": "Event",
+      "path": "Modules/Users/Domain/Events/UserDeletedDomainEvent.cs",
+      "line": 5
+    },
+    {
+      "name": "UserRestoredDomainEvent",
+      "kind": "record",
+      "role": "Event",
+      "path": "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs",
+      "line": 5
+    },
+    {
+      "name": "GenderCode",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/GenderCode.cs",
+      "line": 2
+    },
+    {
+      "name": "RoleId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/Ids/RoleId.cs",
+      "line": 4
+    },
+    {
+      "name": "WaistGoalId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/Ids/WaistGoalId.cs",
+      "line": 4
+    },
+    {
+      "name": "WeightGoalId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/Ids/WeightGoalId.cs",
+      "line": 4
+    },
+    {
+      "name": "ProfileHeightCm",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/ProfileHeightCm.cs",
+      "line": 4
+    },
+    {
+      "name": "ProfileWeightKg",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/ProfileWeightKg.cs",
+      "line": 4
+    },
+    {
+      "name": "ThemeCode",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/ThemeCode.cs",
+      "line": 2
+    },
+    {
+      "name": "UiStyleCode",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UiStyleCode.cs",
+      "line": 2
+    },
+    {
+      "name": "UserAccountState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserAccountState.cs",
+      "line": 2
+    },
+    {
+      "name": "UserActivityGoals",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserActivityGoals.cs",
+      "line": 6
+    },
+    {
+      "name": "UserActivityUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserActivityUpdate.cs",
+      "line": 7
+    },
+    {
+      "name": "UserAdminAiQuotaUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserAdminAiQuotaUpdate.cs",
+      "line": 6
+    },
+    {
+      "name": "UserAdminPreferenceUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserAdminPreferenceUpdate.cs",
+      "line": 2
+    },
+    {
+      "name": "UserAdminSecurityUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserAdminSecurityUpdate.cs",
+      "line": 2
+    },
+    {
+      "name": "UserAiQuotaState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserAiQuotaState.cs",
+      "line": 6
+    },
+    {
+      "name": "UserAiTokenLimitUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserAiTokenLimitUpdate.cs",
+      "line": 6
+    },
+    {
+      "name": "UserCalorieSchedule",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
+      "line": 2
+    },
+    {
+      "name": "UserGoalState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserGoalState.cs",
+      "line": 2
+    },
+    {
+      "name": "UserGoalUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserGoalUpdate.cs",
+      "line": 2
+    },
+    {
+      "name": "UserNutritionGoals",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserNutritionGoals.cs",
+      "line": 6
+    },
+    {
+      "name": "UserPersonalInfoUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserPersonalInfoUpdate.cs",
+      "line": 2
+    },
+    {
+      "name": "UserPersonalProfileState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserPersonalProfileState.cs",
+      "line": 4
+    },
+    {
+      "name": "UserPreferenceState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserPreferenceState.cs",
+      "line": 2
+    },
+    {
+      "name": "UserPreferenceUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserPreferenceUpdate.cs",
+      "line": 2
+    },
+    {
+      "name": "UserProfileMediaState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserProfileMediaState.cs",
+      "line": 4
+    },
+    {
+      "name": "UserProfileMediaUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserProfileMediaUpdate.cs",
+      "line": 4
+    },
+    {
+      "name": "UserProfileState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
+      "line": 5
+    },
+    {
+      "name": "UserSecurityState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserSecurityState.cs",
+      "line": 2
+    },
+    {
+      "name": "UserTokenIssue",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/UserTokenIssue.cs",
+      "line": 2
+    },
+    {
+      "name": "WaistGoalConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/BodyMetrics/WaistGoalConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "WeightGoalConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/BodyMetrics/WeightGoalConfiguration.cs",
+      "line": 7
     },
     {
       "name": "RoleConfiguration",

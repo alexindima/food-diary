@@ -29,14 +29,14 @@ public sealed class RecipesModuleExtractionTests {
     [Fact]
     public void RecipeDomainOwnership_IsPhysicalAndOneWay() {
         Assert.True(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Domain")));
-        string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Users/User.cs"));
+        string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Users/Domain/Entities/Users/User.cs"));
         string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Meals/Domain/Entities/Meals/MealItem.cs"));
         string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Products/Domain/Entities/Products/Product.cs"));
         Assert.DoesNotContain("IReadOnlyCollection<Recipe> Recipes", user, StringComparison.Ordinal);
         Assert.DoesNotContain("RecipeIngredient", product, StringComparison.Ordinal);
         Assert.DoesNotContain("Recipe? Recipe", mealItem, StringComparison.Ordinal);
         Assert.DoesNotContain("ApplyRecipeSnapshot(Recipe recipe)", mealItem, StringComparison.Ordinal);
-        Assert.Contains("FoodDiary.Modules.Recipes.Domain.Contracts", File.ReadAllText(
+        Assert.DoesNotContain("FoodDiary.Modules.Recipes.Domain.Contracts", File.ReadAllText(
             ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")), StringComparison.Ordinal);
         Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj"));
@@ -70,16 +70,7 @@ public sealed class RecipesModuleExtractionTests {
     public void ExtractedRecipesAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj");
-        Assert.Equal([
-            "FoodDiary.Application.Abstractions",
-            "FoodDiary.Application.Images",
-            "FoodDiary.Domain",
-            "FoodDiary.Mediator",
-            "FoodDiary.Modules.RecentItems.Application.Abstractions",
-            "FoodDiary.Modules.Recipes.Application.Abstractions",
-            "FoodDiary.Modules.Recipes.Contracts",
-            "FoodDiary.Modules.Recipes.Domain",
-        ], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Application.Images", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.RecentItems.Application.Abstractions", "FoodDiary.Modules.Recipes.Application.Abstractions", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Recipes.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

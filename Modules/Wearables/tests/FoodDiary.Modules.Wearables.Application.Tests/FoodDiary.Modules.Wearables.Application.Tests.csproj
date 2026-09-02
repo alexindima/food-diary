@@ -12,5 +12,8 @@
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
   </ItemGroup>
-  <ItemGroup><ProjectReference Include="..\..\Application\FoodDiary.Application.Wearables.csproj" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\FoodDiary.Application.Wearables.csproj" />
+    <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+  </ItemGroup>
 </Project>

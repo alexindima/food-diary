@@ -5,9 +5,7 @@ login auditing, initial-admin bootstrap, and application email-template use case
 Authentication and Email remain logical areas inside one application assembly.
 
 Preserve the legacy `FoodDiary.Application.Identity` assembly and CLR namespaces.
-Keep shared authentication/email contracts central. Keep the User/Role CLR graph,
-credential state, shared DbContext, migrations/snapshot, and combined UserRepository
-central as compatibility seams. Provider implementations, JWT/SSO/Redis adapters,
+Keep shared authentication/email contracts central. The User/Role CLR graph and credential state belong to Users Domain. Keep shared DbContext, migrations/snapshot, and combined UserRepository central as compatibility seams. Provider implementations, JWT/SSO/Redis adapters,
 MailInbox/MailRelay integration, HTTP transport, and hosts remain with their current
 owners.
 

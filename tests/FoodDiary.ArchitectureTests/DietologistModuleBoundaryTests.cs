@@ -27,13 +27,7 @@ public sealed class DietologistModuleBoundaryTests {
     public void ExtractedDietologistAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj");
-        string[] expectedReferences = [
-            "FoodDiary.Application.Abstractions",
-            "FoodDiary.Domain",
-            "FoodDiary.Mediator",
-            "FoodDiary.Modules.Dietologist.Application.Abstractions",
-            "FoodDiary.Modules.Dietologist.Domain",
-        ];
+        string[] expectedReferences = ["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.Dietologist.Application.Abstractions", "FoodDiary.Modules.Dietologist.Domain", "FoodDiary.Modules.Users.Domain"];
 
         Assert.Equal(expectedReferences, references);
     }

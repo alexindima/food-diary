@@ -94,7 +94,6 @@ public partial class RecipesFeatureTests {
             category: "Lunch",
             visibility: Visibility.Private);
         recipe.AddStep(1, "Prepare ingredients");
-        SetRecipeUsageCollections(recipe, mealItemsCount: 2, nestedRecipeUsageCount: 1);
 
         var handler = new GetRecipeByIdQueryHandler(
             new OverviewRecipeReadService(recipesByIdWithUsage: new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)> {

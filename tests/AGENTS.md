@@ -78,3 +78,14 @@ not duplicate them. See `docs/ai/meals-ownership-inventory.md`.
 ## RecentItems physical ownership
 
 RecentItems-only domain, unit and PostgreSQL repository suites live under `Modules/RecentItems/tests`. Mixed Users cleanup, shared-context/provider and HTTP suites remain central. See `docs/ai/recent-items-ownership-inventory.md`.
+
+## Users Domain ownership
+
+Users owns the complete User aggregate, all credential/security partials, roles,
+role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in
+`Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers
+reference the exact owner; central Domain retains shared guards and values without
+an aggregate re-export. Authentication flows/providers, combined UserRepository,
+DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
+security behavior and EF/HTTP contracts are unchanged. See
+`docs/ai/users-domain-extraction.md` for residual seams and verification evidence.

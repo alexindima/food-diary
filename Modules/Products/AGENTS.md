@@ -5,7 +5,7 @@ persistence adapters and explicit EF mapping. Follow the narrower layer guides.
 Preserve FoodDiary.Application.Products assembly identity and existing CLR namespaces.
 Compatibility requires coordinated host rebuilds, not old binary compatibility.
 
-Product, product-only value objects and invariant tests live in the module Domain with stable CLR namespaces. ProductId lives in dependency-free Domain.Contracts; central Domain references only that ID seam. Product keeps one-way User and USDA navigations. RecipeIngredient may reference Product one-way; central User and MealItem expose no Product CLR navigation.
+Product, product-only value objects and invariant tests live in the module Domain with stable CLR namespaces. ProductId lives in dependency-free Domain.Contracts; central Domain references only that ID seam. Product keeps one-way User and USDA navigations. RecipeIngredient may reference Product one-way; Users-owned User and MealItem expose no Product CLR navigation.
 Shared context, migrations/snapshot and RecipeCompositionTransactionLock stay central.
 See docs/ai/products-ownership-inventory.md for source evidence.
 

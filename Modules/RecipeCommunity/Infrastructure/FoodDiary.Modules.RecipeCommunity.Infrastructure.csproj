@@ -7,6 +7,7 @@
     <ProjectReference Include="../Application/FoodDiary.Application.RecipeCommunity.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="Model/FoodDiary.Modules.RecipeCommunity.PersistenceModel.csproj" />
+    <ProjectReference Include="../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />

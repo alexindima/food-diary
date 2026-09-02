@@ -29,7 +29,7 @@ public sealed class ProductsModuleExtractionTests {
 
     [Fact]
     public void ProductDomainOwnership_IsPhysicalAndAcyclic() {
-        string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Users/User.cs"));
+        string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Users/Domain/Entities/Users/User.cs"));
         string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Products/Domain/Entities/Products/Product.cs"));
         string ingredient = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Recipes/Domain/Entities/Recipes/RecipeIngredient.cs"));
         string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Meals/Domain/Entities/Meals/MealItem.cs"));
@@ -40,7 +40,7 @@ public sealed class ProductsModuleExtractionTests {
         Assert.Contains("Product? Product", ingredient, StringComparison.Ordinal);
         Assert.DoesNotContain("Product? Product", mealItem, StringComparison.Ordinal);
         Assert.DoesNotContain("ApplyProductSnapshot(Product product)", mealItem, StringComparison.Ordinal);
-        Assert.Contains("FoodDiary.Modules.Products.Domain.Contracts", File.ReadAllText(
+        Assert.DoesNotContain("FoodDiary.Modules.Products.Domain.Contracts", File.ReadAllText(
             ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")), StringComparison.Ordinal);
         Assert.DoesNotContain("FoodDiary.Modules.Products.Domain.csproj", File.ReadAllText(
             ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")), StringComparison.Ordinal);
@@ -113,18 +113,7 @@ public sealed class ProductsModuleExtractionTests {
     public void ExtractedProductsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj");
-        Assert.Equal([
-            "FoodDiary.Application.Abstractions",
-            "FoodDiary.Application.Images",
-            "FoodDiary.Application.Usda",
-            "FoodDiary.Domain",
-            "FoodDiary.Mediator",
-            "FoodDiary.Modules.OpenFoodFacts.Contracts",
-            "FoodDiary.Modules.Products.Application.Abstractions",
-            "FoodDiary.Modules.Products.Contracts",
-            "FoodDiary.Modules.RecentItems.Application.Abstractions",
-            "FoodDiary.Modules.Usda.Contracts",
-        ], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Application.Images", "FoodDiary.Application.Usda", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.OpenFoodFacts.Contracts", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.RecentItems.Application.Abstractions", "FoodDiary.Modules.Usda.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

@@ -57,6 +57,7 @@
     <ProjectReference Include="../Modules/Products/Infrastructure/Model/FoodDiary.Modules.Products.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj" />
     <ProjectReference Include="../Modules/Users/Infrastructure/Model/FoodDiary.Modules.Users.PersistenceModel.csproj" />
+    <ProjectReference Include="../Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 
 

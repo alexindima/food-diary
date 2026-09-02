@@ -8,21 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "7a67b134fe38859aa9e9453e0cee1d01abbcc27c20a38bc9b98f8b4d469d0379"
+          "sha256": "6d0589a22e2dfd47f94497137d6e43c287f5e429f8f068961aa88716429fd5b5"
         },
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "293aecee11317a0319f25ddb47d72ff4ecda8161c7236c1fe5fc4c3123d0dfd2"
+          "sha256": "c931454867ee8efbaa7e52ec5ccc92c76eb6094c5f7c56b70e81faf407ee4263"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "39f5897a7ae0c9d93daa7385f61edb1d87861d4ac31b0126460a4df4fa657b5b"
+          "sha256": "0f802f389fb279360d6ac726343ecc70b4d103dbd98954574d1f272b611fb8f3"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:02.8412075Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:11:56.8780541Z"
     },
     {
       "pageId": "module.frontend",
@@ -46,17 +46,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "293aecee11317a0319f25ddb47d72ff4ecda8161c7236c1fe5fc4c3123d0dfd2"
+          "sha256": "c931454867ee8efbaa7e52ec5ccc92c76eb6094c5f7c56b70e81faf407ee4263"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "39f5897a7ae0c9d93daa7385f61edb1d87861d4ac31b0126460a4df4fa657b5b"
+          "sha256": "0f802f389fb279360d6ac726343ecc70b4d103dbd98954574d1f272b611fb8f3"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:04.5131148Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:11:57.1857639Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -65,21 +65,25 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "e54244909a6b25367ca805da7cb4adfe27e24617374d152318a4e0c37bcb630d"
+          "sha256": "6711ca123baa51f1dbb0e64ec56be27a8f08e58afe97d3453d6ac510ff817184"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "39f5897a7ae0c9d93daa7385f61edb1d87861d4ac31b0126460a4df4fa657b5b"
+          "sha256": "0f802f389fb279360d6ac726343ecc70b4d103dbd98954574d1f272b611fb8f3"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "9e45967251e060486ada2b051adb1dfd804b082a320f96b25633e884cc76ee54"
+          "sha256": "12de040981a0ddcc3cee187855d4181fbca182bfc4bdac606e0e38ad1c174ed9"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "1729e5971546c9ff03750752956449458ebf09f56d20f6f557956565a6fb37ce"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Moved complete Users CLR types and goal mappings without body changes; namespaces and HTTP routes, payloads, snapshots remain unchanged. Consumers rebuild against explicit owners.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:06.1535785Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:11:57.4762325Z"
     },
     {
       "pageId": "system.architecture",
@@ -88,25 +92,25 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "293aecee11317a0319f25ddb47d72ff4ecda8161c7236c1fe5fc4c3123d0dfd2"
+          "sha256": "c931454867ee8efbaa7e52ec5ccc92c76eb6094c5f7c56b70e81faf407ee4263"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "e54244909a6b25367ca805da7cb4adfe27e24617374d152318a4e0c37bcb630d"
+          "sha256": "6711ca123baa51f1dbb0e64ec56be27a8f08e58afe97d3453d6ac510ff817184"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "39f5897a7ae0c9d93daa7385f61edb1d87861d4ac31b0126460a4df4fa657b5b"
+          "sha256": "0f802f389fb279360d6ac726343ecc70b4d103dbd98954574d1f272b611fb8f3"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "2afb96948cebdfb4ebeb744c8442ad8537bb4f8b2785a6156891fa9564fa674f"
+          "sha256": "19cd1fb91bde664e3f414aa8cb16c67655fe3489a24b37cadf18e2bb02d0a28c"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:07.4792684Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:11:57.8325717Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -145,13 +149,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "7a67b134fe38859aa9e9453e0cee1d01abbcc27c20a38bc9b98f8b4d469d0379"
+          "sha256": "6d0589a22e2dfd47f94497137d6e43c287f5e429f8f068961aa88716429fd5b5"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:08.8798408Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:11:58.1715033Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -160,13 +164,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "e54244909a6b25367ca805da7cb4adfe27e24617374d152318a4e0c37bcb630d"
+          "sha256": "6711ca123baa51f1dbb0e64ec56be27a8f08e58afe97d3453d6ac510ff817184"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:10.1875701Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:11:58.5018991Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -220,21 +224,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "ab2633ceff9ba95e3157265905bf1ad370107916f0a08b67577a8e85930d22e1"
+          "sha256": "342a84153a35deb02d5f98912c48d33a56ff6aaf724045981f3d2091e02ac738"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "e54244909a6b25367ca805da7cb4adfe27e24617374d152318a4e0c37bcb630d"
+          "sha256": "6711ca123baa51f1dbb0e64ec56be27a8f08e58afe97d3453d6ac510ff817184"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "2afb96948cebdfb4ebeb744c8442ad8537bb4f8b2785a6156891fa9564fa674f"
+          "sha256": "19cd1fb91bde664e3f414aa8cb16c67655fe3489a24b37cadf18e2bb02d0a28c"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Moved focused Users invariant tests and retained mixed donor tests; exact dependency guards now enforce Users Domain and narrow ID contract. No Wiki tooling or test policy changed.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:11.6807305Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:11:58.8540699Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -243,13 +247,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "371aa881c0a10afca079385c4b5ffc9baf61684665e954f443f56c580e5880aa"
+          "sha256": "01b6a7783b38656d5e42c5deb43e0a167a9f1f709070f7902bee6aa5671d1388"
         }
       ],
-      "reason": "Final source review includes the preserved 20 Meals ID reflection cases. Updated contract/module indexes describe the new physical paths; no query, API, privacy or workflow semantics changed. See Meals ownership inventory and latest unfiltered test ledger.",
+      "reason": "Moved complete Users CLR types and goal mappings without body changes; namespaces and HTTP routes, payloads, snapshots remain unchanged. Consumers rebuild against explicit owners.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:20:47.7030687Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:11:59.6856115Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -506,17 +510,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "1994346129e11a6242c676ff271928071aa9e857b99d2d8c53dd58c0ada9446f"
+          "sha256": "bcbb4cada8c93dd7e315e8a24dcf968adc9a0948b2381ae16c2fe5c8c3b54c97"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "9e45967251e060486ada2b051adb1dfd804b082a320f96b25633e884cc76ee54"
+          "sha256": "12de040981a0ddcc3cee187855d4181fbca182bfc4bdac606e0e38ad1c174ed9"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "1729e5971546c9ff03750752956449458ebf09f56d20f6f557956565a6fb37ce"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Moved focused Users invariant tests and retained mixed donor tests; exact dependency guards now enforce Users Domain and narrow ID contract. No Wiki tooling or test policy changed.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:16.9815529Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:12:00.4828877Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -788,13 +796,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "96e17aeff97172a8b0ec93a5e8f81d04b8097163d9e1094ce3335cb8c493bcb5"
+          "sha256": "4d42025c8f7eda11407b79cd291701b18c3abbea0d9bbd1a197e48402b765af4"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Credential state stays in the complete Users aggregate; Identity workflows, providers, authorization, lifecycle and persistence behavior remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:18.7648233Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:12:00.9355282Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -833,13 +841,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8affa96fc1b4f0f45f132366476c28eb867e129f6fb15df46157f318c85176d5"
+          "sha256": "8881b96e67fd0475f3328c6307dac4c9b6e34c7d7945e588967fbed38a92e726"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Moved focused Users invariant tests and retained mixed donor tests; exact dependency guards now enforce Users Domain and narrow ID contract. No Wiki tooling or test policy changed.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:20.8938966Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:12:01.5340747Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -916,13 +924,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ada2f034445496cbda1e06fdf0b6d4193b3e16fcc242c650049c9e6b3f68d2d2"
+          "sha256": "4ced8b0ab8f658bb69c35719b9d42e8ec8ff1e66642c6b9d0f0e3a8c04e14f62"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:25.1387568Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:12:02.7597393Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -931,21 +939,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8affa96fc1b4f0f45f132366476c28eb867e129f6fb15df46157f318c85176d5"
+          "sha256": "8881b96e67fd0475f3328c6307dac4c9b6e34c7d7945e588967fbed38a92e726"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "ada2f034445496cbda1e06fdf0b6d4193b3e16fcc242c650049c9e6b3f68d2d2"
+          "sha256": "4ced8b0ab8f658bb69c35719b9d42e8ec8ff1e66642c6b9d0f0e3a8c04e14f62"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "96e17aeff97172a8b0ec93a5e8f81d04b8097163d9e1094ce3335cb8c493bcb5"
+          "sha256": "4d42025c8f7eda11407b79cd291701b18c3abbea0d9bbd1a197e48402b765af4"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Credential state stays in the complete Users aggregate; Identity workflows, providers, authorization, lifecycle and persistence behavior remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:26.7075349Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:12:03.3871240Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1059,13 +1067,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "49fe1c0529a0742920027bcaa6b829e98b61b10cc10e20462ba18f9154b534e4"
+          "sha256": "f51b8970552d875fc6195951cc75a128f64e762b817f281dd6b5d6baa44c9de8"
         }
       ],
-      "reason": "Reviewed affected pages against the Products domain extraction diff, current project graph, unidirectional EF mappings, focused and full persistence tests, EF model-drift result, and updated ownership documentation; no stale claims remain.",
+      "reason": "Moved focused Users invariant tests and retained mixed donor tests; exact dependency guards now enforce Users Domain and narrow ID contract. No Wiki tooling or test policy changed.",
       "baseRef": "HEAD",
-      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
-      "reviewedAtUtc": "2026-09-01T23:22:09.9743060Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:12:03.7512025Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1123,13 +1131,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "7a67b134fe38859aa9e9453e0cee1d01abbcc27c20a38bc9b98f8b4d469d0379"
+          "sha256": "6d0589a22e2dfd47f94497137d6e43c287f5e429f8f068961aa88716429fd5b5"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:15.3101696Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:12:00.0723720Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1183,17 +1191,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "55b33b446fb03187b58d40659e748035b586c129e0246c5a563605978c02a6e3"
+          "sha256": "bdb0afec88bfd103a9fe6f6054ec26cbfd6570343e2716a5044bd070349b4ce5"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "7a67b134fe38859aa9e9453e0cee1d01abbcc27c20a38bc9b98f8b4d469d0379"
+          "sha256": "6d0589a22e2dfd47f94497137d6e43c287f5e429f8f068961aa88716429fd5b5"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:22.3773351Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:12:01.8897481Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1202,13 +1210,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "7a67b134fe38859aa9e9453e0cee1d01abbcc27c20a38bc9b98f8b4d469d0379"
+          "sha256": "6d0589a22e2dfd47f94497137d6e43c287f5e429f8f068961aa88716429fd5b5"
         }
       ],
-      "reason": "Meals Domain relocation preserves runtime policy and shared database ownership. Aggregate content, snapshot queries and HTTP code are unchanged; only one-way User navigation, physical paths and declared references changed. Canonical ownership is updated. Index record relocation does not change this workflow or mail/service/privacy boundaries.",
+      "reason": "Moved focused Users invariant tests and retained mixed donor tests; exact dependency guards now enforce Users Domain and narrow ID contract. No Wiki tooling or test policy changed.",
       "baseRef": "HEAD",
-      "gitHead": "da09f60fa3fa3c6cf116396a01fc9c9be7e15c45",
-      "reviewedAtUtc": "2026-09-02T00:10:23.7418373Z"
+      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
+      "reviewedAtUtc": "2026-09-02T01:12:02.3186779Z"
     }
   ]
 }

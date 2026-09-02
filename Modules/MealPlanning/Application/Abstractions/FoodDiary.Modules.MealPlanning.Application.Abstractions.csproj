@@ -3,5 +3,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\FoodDiary.Modules.MealPlanning.Domain.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
+    <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 </Project>

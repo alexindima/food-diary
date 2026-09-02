@@ -41,6 +41,7 @@
     <ProjectReference Include="..\..\Modules\Statistics\Application\FoodDiary.Modules.Statistics.Application.csproj" />
     <ProjectReference Include="..\..\Modules\Usda\Application\FoodDiary.Application.Usda.csproj" />
     <ProjectReference Include="..\..\Modules\Export\Application\FoodDiary.Modules.Export.Application.csproj" />
+    <ProjectReference Include="../../Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

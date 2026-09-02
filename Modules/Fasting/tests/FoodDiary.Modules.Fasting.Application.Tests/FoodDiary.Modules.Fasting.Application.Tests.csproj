@@ -15,5 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Application\FoodDiary.Modules.Fasting.Application.csproj" />
     <ProjectReference Include="..\..\..\..\Modules\Notifications\Application\FoodDiary.Application.Notifications.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 </Project>

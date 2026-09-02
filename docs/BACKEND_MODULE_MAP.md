@@ -10,7 +10,7 @@ Use this file when deciding where backend code belongs.
 | Application ports/models | `FoodDiary.Application.Abstractions` | Feature ports, application-facing models, shared result abstractions | ASP.NET, EF Core, provider SDKs, host config |
 | Application runtime | `FoodDiary.Application.Runtime` | Mediator pipeline behaviors, transaction boundary, post-commit queue registration | Feature handlers, validators, business services, module aggregation |
 | Use cases | Owning `FoodDiary.Application.<Feature>` project or `Modules/<Feature>/Application` | Commands, queries, handlers, validators, application services | Cross-feature shared buckets, persistence implementation, HTTP request/response DTOs |
-| BodyMetrics domain | `Modules/BodyMetrics/Domain` | Weight/waist measurement entries, IDs, and invariants with legacy CLR namespaces and a one-way dependency on central `User`/`UserId`; User-owned goal lifecycle stays central | Reverse User measurement navigations, goal lifecycle, application orchestration, EF mappings, transport |
+| BodyMetrics domain | `Modules/BodyMetrics/Domain` | Weight/waist measurement entries, IDs, and invariants with legacy CLR namespaces and a one-way dependency on Users-owned `User`/`UserId`; User-owned goal lifecycle belongs to Users Domain | Reverse User measurement navigations, goal lifecycle, application orchestration, EF mappings, transport |
 | BodyMetrics application ports | `Modules/BodyMetrics/Application/Abstractions` | Weight/waist repository ports, read capabilities, errors, and projection models | EF, HTTP transport, provider adapters |
 | BodyMetrics use cases | `Modules/BodyMetrics/Application` | Weight/waist commands, queries, handlers, validation, read services, and legacy application assembly identity | Persistence implementations and HTTP transport |
 | BodyMetrics persistence model | `Modules/BodyMetrics/Infrastructure/Model` | Entry EF configurations and explicit model-builder registration | Central DbContext, migrations, snapshot, and User-owned goal mappings |
@@ -22,7 +22,7 @@ Use this file when deciding where backend code belongs.
 | Fasting persistence model | `Modules/Fasting/Infrastructure/Model` | Fasting EF configurations and the model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
 | Fasting infrastructure | `Modules/Fasting/Infrastructure` | Fasting repository implementations and full module registration | HTTP transport, jobs, central migrations |
 | Hydration contracts | `Modules/Hydration/Contracts` | Stable hydration read service and projection models used by Dashboard and Weekly Check-In | Repositories, handlers, EF, HTTP transport |
-| Hydration domain | `Modules/Hydration/Domain` | `HydrationEntry`, its identifier and invariants with legacy CLR namespaces and a one-way dependency on central `User`/`UserId` | Reverse User navigation, application orchestration, EF mappings, transport |
+| Hydration domain | `Modules/Hydration/Domain` | `HydrationEntry`, its identifier and invariants with legacy CLR namespaces and a one-way dependency on Users-owned `User`/`UserId` | Reverse User navigation, application orchestration, EF mappings, transport |
 | Hydration application ports | `Modules/Hydration/Application/Abstractions` | Hydration repository ports and persistence projections | Stable cross-module contracts and EF implementations |
 | Hydration use cases | `Modules/Hydration/Application` | Hydration commands, queries, handlers, validators, services, and registration | Persistence implementations and HTTP transport |
 | Hydration persistence model | `Modules/Hydration/Infrastructure/Model` | Hydration EF configuration and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
@@ -83,7 +83,7 @@ Use this file when deciding where backend code belongs.
 | Marketing persistence model | `Modules/Marketing/Infrastructure/Model` | Attribution EF configuration and central model-builder seam | Shared `DbContext`, migrations, repository behavior |
 | Marketing infrastructure | `Modules/Marketing/Infrastructure` | Attribution repository adapter and complete module registration | HTTP transport, central migrations, cleanup scheduling |
 | Notifications | `Modules/Notifications` | Feed/preferences orchestration, notification/subscription aggregates and IDs, application ports/payloads, explicit EF model, repositories/outbox adapter and web-push provider; legacy Application assembly and CLR namespaces preserved | Users-owned preference storage, central DbContext/migrations/snapshot and multi-stream outbox engine/replay, HTTP/SignalR and JobManager composition roots |
-| Users | `Modules/Users` | Users application slices/services, role/current-metric/cleanup adapters, User/Role/UserRole/UserRoleAuditEvent EF mappings, focused application tests; legacy `FoodDiary.Application.Users` assembly and namespaces preserved | Central Users abstractions and User CLR graph, combined UserRepository, DbContext/migrations/snapshot; all credentials/authentication/external-login/token/session/login-event/email-template state remains Identity-owned |
+| Users | `Modules/Users` | Complete User Domain, UserId contracts, application, role/goal mappings and adapters, focused tests | Shared application contracts, combined UserRepository, DbContext/migrations/snapshot and Identity authentication flows/providers |
 | Identity | `Modules/Identity` | Authentication and Email application slices/services plus focused application tests; legacy `FoodDiary.Application.Identity` assembly and namespaces preserved | Central Authentication/Email abstractions, User CLR/security state, combined UserRepository, refresh-token/login-event persistence, DbContext/migrations/snapshot, provider adapters, HTTP transport and hosts |
 | Persistence/technical implementations | `FoodDiary.Infrastructure` | DbContext, EF mappings, repositories, technical service implementations | HTTP controllers, host startup, external provider orchestration |
 | External adapters | `FoodDiary.Integrations` | Provider clients, provider options, MailRelay/MailInbox client bridges | EF migrations, core domain workflows |
@@ -166,7 +166,7 @@ Infrastructure contains both repositories and complete module DI; its Model
 project contains all six EF mappings, explicitly applied by the central context.
 
 The ShoppingList-to-User relationship is one-way: ShoppingList retains scalar
-`UserId` and its `User` navigation, while central User has no inverse ShoppingLists
+`UserId` and its `User` navigation, while Users-owned User has no inverse ShoppingLists
 CLR collection. Its EF mapping uses schema-equivalent `WithMany()` with the same
 foreign key and cascade behavior. The module Domain references central Domain
 one-way for User/Product/Recipe and shared value types; central Domain has no
@@ -186,7 +186,7 @@ Exercises ownership: `Modules/Exercises/Application` owns slices and read-servic
 
 ## Ai physical ownership
 
-Ai owns Application, Application/Abstractions, Domain, Infrastructure/Model and Infrastructure under `Modules/Ai`. Application keeps its legacy assembly/CLR identity. AiUsage/AiPromptTemplate and quota ledger ownership, provider/cache/consent semantics, central User and DbContext seams and consumers are source-audited in `docs/ai/ai-ownership-inventory.md`. Admin invokes semantic administration capabilities; Meals AI entities remain Meals-owned. Provider HTTP/options remain Integrations. Focused tests live under Modules/Ai/tests; central PostgreSQL/HTTP/mixed suites remain with their owners.
+Ai owns Application, Application/Abstractions, Domain, Infrastructure/Model and Infrastructure under `Modules/Ai`. Application keeps its legacy assembly/CLR identity. AiUsage/AiPromptTemplate and quota ledger ownership, provider/cache/consent semantics, Users-owned User and DbContext seams and consumers are source-audited in `docs/ai/ai-ownership-inventory.md`. Admin invokes semantic administration capabilities; Meals AI entities remain Meals-owned. Provider HTTP/options remain Integrations. Focused tests live under Modules/Ai/tests; central PostgreSQL/HTTP/mixed suites remain with their owners.
 
 ## Dashboard logical extraction
 
@@ -203,7 +203,7 @@ tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.
 
 ## Recipes physical ownership
 
-Recipes use cases, ports, read contracts, persistence model and adapters live under `Modules/Recipes`. Recipe/Steps/Ingredients, IDs/value objects/events remain central Domain because public User/MealItem/Product inverse navigations prohibit a one-way extraction. Shared context/migrations/snapshot and cross-module tests stay central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers. See `docs/ai/recipes-ownership-inventory.md`; this is not full Domain/database isolation.
+Recipes use cases, ports, read contracts, persistence model and adapters live under `Modules/Recipes`. Recipe/Steps/Ingredients and value objects/events live in Recipes Domain; recipe IDs live in Recipes Domain.Contracts. Removed inverse CLR navigations remain absent. Shared context/migrations/snapshot and cross-module tests stay central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers. See `docs/ai/recipes-ownership-inventory.md`; this is not full Domain/database isolation.
 
 ## Admin physical ownership
 
@@ -241,3 +241,14 @@ See `docs/ai/meals-ownership-inventory.md` for source evidence and remaining sea
 ## RecentItems physical ownership
 
 RecentItems aggregate/ID/enum, narrow usage abstractions, repository, post-commit recorder and EF model live under `Modules/RecentItems`; focused tests are nested there. Central User/UserId, DbContext, migrations/snapshot, post-commit queue/UoW and Users cleanup orchestration remain compatibility seams. Products, Recipes and Meals consume narrow module abstractions, and hosts compose `AddRecentItemsModule`. See `docs/ai/recent-items-ownership-inventory.md`.
+
+## Users Domain ownership
+
+Users owns the complete User aggregate, all credential/security partials, roles,
+role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in
+`Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers
+reference the exact owner; central Domain retains shared guards and values without
+an aggregate re-export. Authentication flows/providers, combined UserRepository,
+DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
+security behavior and EF/HTTP contracts are unchanged. See
+`docs/ai/users-domain-extraction.md` for residual seams and verification evidence.

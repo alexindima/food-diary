@@ -12,6 +12,8 @@ Rules for `Modules/Fasting/Domain/`.
 
 ## Boundaries
 
-- Reference only the shared/core domain project while shared `User` and `UserId` ownership remains centralized.
+- Reference Users Domain for User, Users Domain.Contracts for UserId and central Domain for shared guards.
 - Do not reference Application, Contracts, Infrastructure, EF Core, or ASP.NET packages.
 - Keep database mapping and repository behavior outside this project.
+
+User ownership: use Users Domain for aggregate navigations, Users Domain.Contracts for ID-only dependencies, and residual central Domain only for shared values/guards. Preserve all existing relationships.

@@ -7,6 +7,7 @@
     <ProjectReference Include="..\..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
     <ProjectReference Include="Abstractions\FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Domain\FoodDiary.Modules.MealPlanning.Domain.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" />

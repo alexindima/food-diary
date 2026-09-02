@@ -21,7 +21,7 @@ public sealed class TdeeModuleExtractionTests {
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Domain")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Infrastructure")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Application", "Abstractions")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Users", "User.Tdee.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain", "Entities", "Users", "User.Tdee.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
             "FoodDiary.Application.Abstractions",
             "Users",
@@ -33,12 +33,7 @@ public sealed class TdeeModuleExtractionTests {
     public void TdeeApplicationAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj");
-        Assert.Equal([
-            "FoodDiary.Application.Abstractions",
-            "FoodDiary.Domain",
-            "FoodDiary.Mediator",
-            "FoodDiary.Modules.Exercises.Contracts",
-        ], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Fact]

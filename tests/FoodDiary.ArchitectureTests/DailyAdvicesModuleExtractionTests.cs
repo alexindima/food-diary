@@ -14,13 +14,7 @@ public sealed class DailyAdvicesModuleExtractionTests {
     public void ExtractedDailyAdvicesAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj");
-        Assert.Equal([
-            "FoodDiary.Application.Abstractions",
-            "FoodDiary.Domain",
-            "FoodDiary.Mediator",
-            "FoodDiary.Modules.DailyAdvices.Application.Abstractions",
-            "FoodDiary.Modules.DailyAdvices.Domain",
-        ], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.DailyAdvices.Application.Abstractions", "FoodDiary.Modules.DailyAdvices.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Fact]

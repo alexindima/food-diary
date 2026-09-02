@@ -25,7 +25,7 @@ Examples:
 - [`FoodDiary.Domain/Entities/Meals/Meal.cs`](./Entities/Meals/Meal.cs)
 - [`FoodDiary.Domain/Entities/Products/Product.cs`](./Entities/Products/Product.cs)
 - [`FoodDiary.Domain/Entities/Recipes/Recipe.cs`](./Entities/Recipes/Recipe.cs)
-- [`FoodDiary.Domain/Entities/Users/User.cs`](./Entities/Users/User.cs)
+- [`Modules/Users/Domain/Entities/Users/User.cs`](../Modules/Users/Domain/Entities/Users/User.cs)
 - [`FoodDiary.Domain/ValueObjects/DesiredWeight.cs`](./ValueObjects/DesiredWeight.cs)
 - [`FoodDiary.Domain/ValueObjects/ProductNutrition.cs`](./ValueObjects/ProductNutrition.cs)
 
@@ -37,7 +37,7 @@ Examples:
 
 File:
 
-- [`FoodDiary.Domain/Entities/Users/User.cs`](./Entities/Users/User.cs)
+- [`Modules/Users/Domain/Entities/Users/User.cs`](../Modules/Users/Domain/Entities/Users/User.cs)
 
 Current behavior:
 

@@ -16,13 +16,7 @@ public class DomainModelGuardrailTests {
         string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
         string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
 
-        Assert.Equal([
-            "FoodDiary.Domain.Primitives",
-            "FoodDiary.Modules.Images.Contracts",
-            "FoodDiary.Modules.Products.Domain.Contracts",
-            "FoodDiary.Modules.Recipes.Domain.Contracts",
-            "FoodDiary.Modules.Usda.Domain",
-        ], projectReferences);
+        Assert.Equal(["FoodDiary.Domain.Primitives"], projectReferences);
         Assert.Empty(packageReferences);
     }
 

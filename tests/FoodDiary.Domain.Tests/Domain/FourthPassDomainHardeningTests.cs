@@ -17,17 +17,6 @@ public sealed class FourthPassDomainHardeningTests {
     private static readonly DateTime Now = new(2026, 8, 19, 8, 0, 0, DateTimeKind.Utc);
 
     [Fact]
-    public void ReplaceRoles_DeduplicatesRolesByIdentifier() {
-        var user = User.Create("roles@example.com", "hash");
-        var admin = Role.Create("Admin");
-
-        user.ReplaceRoles([admin, admin]);
-
-        UserRole assignedRole = Assert.Single(user.UserRoles);
-        Assert.Equal(admin.Id, assignedRole.RoleId);
-    }
-
-    [Fact]
     public void ClientTask_RejectsUnspecifiedDomainTimestamps() {
         Assert.Throws<ArgumentOutOfRangeException>(() => ClientTask.Create(
             UserId.New(),

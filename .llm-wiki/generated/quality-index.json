@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4768,
+    "productionFiles": 4769,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -4586,11 +4586,11 @@
     },
     {
       "path": "FoodDiary.Domain/AssemblyInfo.cs",
-      "nonBlankLines": 19,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
+      "structuralRiskScore": 0.4
     },
     {
       "path": "FoodDiary.Domain/Common/DomainConstants.cs",
@@ -4607,102 +4607,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 17.46
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Tracking/WaistGoal.cs",
-      "nonBlankLines": 53,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.56
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Tracking/WeightGoal.cs",
-      "nonBlankLines": 53,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.56
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Users/Role.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.08
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Users/User.Admin.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.16
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Users/User.Credentials.cs",
-      "nonBlankLines": 95,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.9
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Users/User.Goals.cs",
-      "nonBlankLines": 126,
-      "decisionPoints": 13,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.02
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Users/User.Lifecycle.cs",
-      "nonBlankLines": 55,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.6
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Users/User.Profile.cs",
-      "nonBlankLines": 302,
-      "decisionPoints": 37,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 61.54
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Users/User.Tdee.cs",
-      "nonBlankLines": 60,
-      "decisionPoints": 12,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.2
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "nonBlankLines": 520,
-      "decisionPoints": 38,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.4
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Users/UserRole.cs",
-      "nonBlankLines": 28,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.56
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Users/UserRoleAuditEvent.cs",
-      "nonBlankLines": 59,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.18
     },
     {
       "path": "FoodDiary.Domain/Enums/ActivityLevel.cs",
@@ -4793,60 +4697,12 @@
       "structuralRiskScore": 0.1
     },
     {
-      "path": "FoodDiary.Domain/Enums/RoleNames.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/UserRoleAuditAction.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
       "path": "FoodDiary.Domain/Enums/Visibility.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/WaistGoalStatus.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/WeightGoalStatus.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Domain/Events/UserDeletedDomainEvent.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.76
-    },
-    {
-      "path": "FoodDiary.Domain/Events/UserRestoredDomainEvent.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.72
     },
     {
       "path": "FoodDiary.Domain/ValueObjects/DesiredWaistCm.cs",
@@ -4889,14 +4745,6 @@
       "structuralRiskScore": 16.96
     },
     {
-      "path": "FoodDiary.Domain/ValueObjects/GenderCode.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.48
-    },
-    {
       "path": "FoodDiary.Domain/ValueObjects/HealthAreaGrade.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -4929,244 +4777,12 @@
       "structuralRiskScore": 0.18
     },
     {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/RoleId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/UserId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WaistGoalId.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/WeightGoalId.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
       "path": "FoodDiary.Domain/ValueObjects/LanguageCode.cs",
       "nonBlankLines": 32,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 5.14
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/ProfileHeightCm.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.84
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/ProfileWeightKg.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.84
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/ThemeCode.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.5
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UiStyleCode.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.48
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserAccountState.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.66
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserActivityGoals.cs",
-      "nonBlankLines": 40,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.3
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserActivityUpdate.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserAdminAiQuotaUpdate.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserAdminPreferenceUpdate.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserAdminSecurityUpdate.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserAiQuotaState.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.6
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserAiTokenLimitUpdate.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserCalorieSchedule.cs",
-      "nonBlankLines": 88,
-      "decisionPoints": 25,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 39.26
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserGoalState.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.6
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserGoalUpdate.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserNutritionGoals.cs",
-      "nonBlankLines": 75,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserPersonalInfoUpdate.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserPersonalProfileState.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserPreferenceState.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserPreferenceUpdate.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserProfileMediaState.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserProfileMediaUpdate.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserProfileState.cs",
-      "nonBlankLines": 66,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.32
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserSecurityState.cs",
-      "nonBlankLines": 92,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.84
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/UserTokenIssue.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
     },
     {
       "path": "FoodDiary.Infrastructure/Authentication/AdminSsoService.cs",
@@ -5391,22 +5007,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.26
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics/WaistGoalConfiguration.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/BodyMetrics/WeightGoalConfiguration.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Email/EmailOutboxMessageConfiguration.cs",
@@ -37873,12 +37473,420 @@
       "structuralRiskScore": 2.46
     },
     {
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/Ids/UserId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Users/Domain/AssemblyInfo.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Users/Domain/Entities/Tracking/WaistGoal.cs",
+      "nonBlankLines": 53,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.56
+    },
+    {
+      "path": "Modules/Users/Domain/Entities/Tracking/WeightGoal.cs",
+      "nonBlankLines": 53,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.56
+    },
+    {
+      "path": "Modules/Users/Domain/Entities/Users/Role.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.08
+    },
+    {
+      "path": "Modules/Users/Domain/Entities/Users/User.Admin.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.16
+    },
+    {
+      "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
+      "nonBlankLines": 95,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.9
+    },
+    {
+      "path": "Modules/Users/Domain/Entities/Users/User.Goals.cs",
+      "nonBlankLines": 126,
+      "decisionPoints": 13,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 22.02
+    },
+    {
+      "path": "Modules/Users/Domain/Entities/Users/User.Lifecycle.cs",
+      "nonBlankLines": 55,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.6
+    },
+    {
+      "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
+      "nonBlankLines": 302,
+      "decisionPoints": 37,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 61.54
+    },
+    {
+      "path": "Modules/Users/Domain/Entities/Users/User.Tdee.cs",
+      "nonBlankLines": 60,
+      "decisionPoints": 12,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 19.2
+    },
+    {
+      "path": "Modules/Users/Domain/Entities/Users/User.cs",
+      "nonBlankLines": 520,
+      "decisionPoints": 38,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 67.4
+    },
+    {
+      "path": "Modules/Users/Domain/Entities/Users/UserRole.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.56
+    },
+    {
+      "path": "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs",
+      "nonBlankLines": 59,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.18
+    },
+    {
+      "path": "Modules/Users/Domain/Enums/RoleNames.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Users/Domain/Enums/UserRoleAuditAction.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Users/Domain/Enums/WaistGoalStatus.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Domain/Enums/WeightGoalStatus.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Domain/Events/UserDeletedDomainEvent.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.76
+    },
+    {
+      "path": "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.72
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/GenderCode.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.48
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/Ids/RoleId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/Ids/WaistGoalId.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/Ids/WeightGoalId.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/ProfileHeightCm.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.84
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/ProfileWeightKg.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.84
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/ThemeCode.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.5
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UiStyleCode.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.48
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserAccountState.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.66
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserActivityGoals.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.3
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserActivityUpdate.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserAdminAiQuotaUpdate.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserAdminPreferenceUpdate.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserAdminSecurityUpdate.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserAiQuotaState.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.6
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserAiTokenLimitUpdate.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserCalorieSchedule.cs",
+      "nonBlankLines": 88,
+      "decisionPoints": 25,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 39.26
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserGoalState.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.6
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserGoalUpdate.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserNutritionGoals.cs",
+      "nonBlankLines": 75,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserPersonalInfoUpdate.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserPersonalProfileState.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.46
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserPreferenceState.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.48
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserPreferenceUpdate.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserProfileMediaState.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserProfileMediaUpdate.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserProfileState.cs",
+      "nonBlankLines": 66,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.32
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserSecurityState.cs",
+      "nonBlankLines": 92,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.84
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/UserTokenIssue.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
       "path": "Modules/Users/Infrastructure/AssemblyInfo.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/BodyMetrics/WaistGoalConfiguration.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/BodyMetrics/WeightGoalConfiguration.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/RoleConfiguration.cs",

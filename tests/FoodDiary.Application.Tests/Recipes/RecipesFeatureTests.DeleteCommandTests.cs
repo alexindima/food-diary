@@ -102,8 +102,7 @@ public partial class RecipesFeatureTests {
     public async Task DeleteRecipeCommandHandler_WhenRecipeIsUsed_ReturnsValidationFailure() {
         var userId = UserId.New();
         var recipe = Recipe.Create(userId, "Used soup", servings: 2);
-        SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 0);
-        var repository = new SingleRecipeRepository(recipe);
+        var repository = new SingleRecipeRepository(recipe, usageCount: 1);
         DeleteRecipeCommandHandler handler = DeleteRecipeHandler(repository, new RecordingCleanupService());
 
         Result result = await handler.Handle(

@@ -13,5 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.Wearables.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\..\tests\FoodDiary.Testing\FoodDiary.Testing.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 </Project>

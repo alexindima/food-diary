@@ -2,6 +2,7 @@
   <PropertyGroup><IsPackable>false</IsPackable><RootNamespace>FoodDiary.Infrastructure.Tests</RootNamespace></PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj" />
+    <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />

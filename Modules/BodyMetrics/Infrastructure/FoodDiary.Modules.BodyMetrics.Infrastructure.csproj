@@ -13,6 +13,7 @@
     <ProjectReference Include="..\Application\FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="Model\FoodDiary.Modules.BodyMetrics.PersistenceModel.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

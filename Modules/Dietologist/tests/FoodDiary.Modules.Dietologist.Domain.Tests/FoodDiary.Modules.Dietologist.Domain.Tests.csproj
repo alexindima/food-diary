@@ -2,5 +2,8 @@
   <PropertyGroup><RootNamespace>FoodDiary.Domain.Tests</RootNamespace><IsPackable>false</IsPackable></PropertyGroup>
   <ItemGroup><PackageReference Include="coverlet.collector" /><PackageReference Include="Microsoft.NET.Test.Sdk" /><PackageReference Include="xunit" /><PackageReference Include="xunit.runner.visualstudio" /></ItemGroup>
   <ItemGroup><Using Include="System.Diagnostics.CodeAnalysis" /><Using Include="Xunit" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="..\..\Domain\FoodDiary.Modules.Dietologist.Domain.csproj" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\FoodDiary.Modules.Dietologist.Domain.csproj" />
+    <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+  </ItemGroup>
 </Project>

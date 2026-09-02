@@ -9,5 +9,8 @@
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
   <ItemGroup><Using Include="Xunit" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.Wearables.Infrastructure.csproj" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.Wearables.Infrastructure.csproj" />
+    <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+  </ItemGroup>
 </Project>

@@ -24,7 +24,7 @@ public sealed class AiModuleExtractionTests {
 
     [Fact]
     public void DomainExtraction_PreservesOneWayIdentityAndMealsOwnership() {
-        Assert.Equal(["FoodDiary.Domain"], ProjectReferenceReader.ReadProjectReferences(
+        Assert.Equal(["FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj"));
         Assert.DoesNotContain("FoodDiary.Modules.Ai.Domain", ProjectReferenceReader.ReadProjectReferences(
             "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
@@ -55,13 +55,7 @@ public sealed class AiModuleExtractionTests {
     public void ExtractedAiAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj");
-        Assert.Equal([
-            "FoodDiary.Application.Abstractions",
-            "FoodDiary.Mediator",
-            "FoodDiary.Modules.Ai.Application.Abstractions",
-            "FoodDiary.Modules.Ai.Domain",
-            "FoodDiary.Modules.Images.Domain",
-        ], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Ai.Domain", "FoodDiary.Modules.Images.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

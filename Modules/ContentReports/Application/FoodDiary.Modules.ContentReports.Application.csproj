@@ -7,6 +7,7 @@
     <ProjectReference Include="..\Domain\FoodDiary.Modules.ContentReports.Domain.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup><PackageReference Include="FluentValidation" /><PackageReference Include="FluentValidation.DependencyInjectionExtensions" /><PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" /></ItemGroup>
 </Project>

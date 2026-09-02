@@ -4,6 +4,7 @@
   <ItemGroup>
     <ProjectReference Include="../../Application/FoodDiary.Modules.Ai.Application.csproj" />
     <ProjectReference Include="../../../Images/Application/FoodDiary.Application.Images.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

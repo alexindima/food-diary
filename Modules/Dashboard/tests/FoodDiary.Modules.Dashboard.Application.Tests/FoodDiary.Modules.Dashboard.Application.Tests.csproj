@@ -8,6 +8,7 @@
     <ProjectReference Include="../../../BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="../../../Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj" />
     <ProjectReference Include="../../../Exercises/Application/FoodDiary.Application.Exercises.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />

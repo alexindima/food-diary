@@ -16,20 +16,14 @@ public sealed class ExportModuleExtractionTests {
     public void ExtractedExportAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj");
-        Assert.Equal([
-            "FoodDiary.Application.Cycles",
-            "FoodDiary.Domain",
-            "FoodDiary.Mediator",
-            "FoodDiary.Modules.Export.Application.Abstractions",
-            "FoodDiary.Modules.Meals.Contracts",
-        ], references);
+        Assert.Equal(["FoodDiary.Application.Cycles", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.Export.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Fact]
     public void ExportAbstractions_HaveOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

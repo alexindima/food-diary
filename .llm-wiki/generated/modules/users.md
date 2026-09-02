@@ -25,7 +25,6 @@ sources:
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Users`
-- `FoodDiary.Domain/Entities/Users`
 - `FoodDiary.Presentation.Api/Features/Users`
 - `Modules/Users/Application`
 
@@ -79,9 +78,9 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: module-root-with-central-domain-and-identity-seams
+- Physical isolation: module-root-with-shared-persistence-and-identity-seams
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
-- Declared owned entities: User, Role, UserRole, UserRoleAuditEvent
+- Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
 - Public contract files: 67
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
@@ -157,8 +156,21 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.DesiredGoalIdempotency.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/MiscDomainInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserGoalAtomicityTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserHardeningInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserIdInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserLifecycleEventTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserProfileMeasurementInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserRoleAuditInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserRoleDeduplicationTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserSecurityCoverageTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserSecurityVersionTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserValueObjectsInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/WaistGoalInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/WeightGoalInvariantTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsersModuleExtractionTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/UserSecurityVersionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsersControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsersPasswordControllerTests.cs`
 

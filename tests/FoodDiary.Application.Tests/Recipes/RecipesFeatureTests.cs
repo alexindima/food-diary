@@ -178,7 +178,7 @@ public partial class RecipesFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class SingleRecipeRepository(Recipe recipe) : IRecipeRepository {
+    private sealed class SingleRecipeRepository(Recipe recipe, int usageCount = 0) : IRecipeRepository {
         public bool DeleteCalled { get; private set; }
         public Recipe? LastAddedRecipe { get; private set; }
 
@@ -217,7 +217,7 @@ public partial class RecipesFeatureTests {
             UserId userId,
             bool includePublic = true,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult(recipe.NestedRecipeUsages.Count);
+            Task.FromResult(usageCount);
 
         public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
@@ -601,19 +601,4 @@ public partial class RecipesFeatureTests {
             .SetValue(favorite, recipe);
     }
 
-    private static void SetRecipeUsageCollections(Recipe recipe, int mealItemsCount, int nestedRecipeUsageCount) {
-        var mealItems = Enumerable.Range(0, mealItemsCount)
-            .Select(_ => (FoodDiary.Domain.Entities.Meals.MealItem)null!)
-            .ToList();
-        var nestedRecipeUsages = Enumerable.Range(0, nestedRecipeUsageCount)
-            .Select(_ => (RecipeIngredient)null!)
-            .ToList();
-
-        typeof(Recipe)
-            .GetField("_mealItems", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
-            .SetValue(recipe, mealItems);
-        typeof(Recipe)
-            .GetField("_nestedRecipeUsages", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
-            .SetValue(recipe, nestedRecipeUsages);
-    }
 }

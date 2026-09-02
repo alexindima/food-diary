@@ -28,6 +28,7 @@
     <ProjectReference Include="..\..\Modules\MealPlanning\Domain\FoodDiary.Modules.MealPlanning.Domain.csproj" />
     <ProjectReference Include="../../Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj" />
     <ProjectReference Include="../../Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

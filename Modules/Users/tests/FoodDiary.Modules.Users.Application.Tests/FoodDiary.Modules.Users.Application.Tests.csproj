@@ -34,5 +34,6 @@
     <ProjectReference Include="../../../Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj" />
     <ProjectReference Include="../../../Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj" />
     <ProjectReference Include="../../../Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj" />
+    <ProjectReference Include="../../Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 </Project>

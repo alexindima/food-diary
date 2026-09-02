@@ -157,6 +157,8 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Notifications persistence model: `Modules/Notifications/Infrastructure/Model/AGENTS.md`
 - Shared outbox record contract: `Shared/FoodDiary.Outbox.Abstractions/AGENTS.md`
 - Users logical module: `Modules/Users/AGENTS.md`
+- Users domain: `Modules/Users/Domain/AGENTS.md`
+- Users domain contracts: `Modules/Users/Domain.Contracts/AGENTS.md`
 - Users application: `Modules/Users/Application/AGENTS.md`
 - Users infrastructure: `Modules/Users/Infrastructure/AGENTS.md`
 - Users persistence model: `Modules/Users/Infrastructure/Model/AGENTS.md`

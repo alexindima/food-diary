@@ -3,6 +3,64 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class UsersModuleExtractionTests {
     [Fact]
+    public void CentralDomain_HasNoEntityDefinitionsOrModuleReferences() {
+        string root = ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities");
+        Assert.Empty(Directory.Exists(root) ? SourceScanner.SourceFiles(root) : []);
+        Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
+            "FoodDiary.Domain/FoodDiary.Domain.csproj"));
+    }
+
+    [Fact]
+    public void UserIdContract_HasOnlySharedPrimitiveDependency() {
+        Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
+            "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"));
+        string root = ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain.Contracts");
+        Assert.Single(SourceScanner.SourceFiles(root));
+    }
+
+    [Theory]
+    [InlineData("User.cs")]
+    [InlineData("User.Admin.cs")]
+    [InlineData("User.Credentials.cs")]
+    [InlineData("User.Goals.cs")]
+    [InlineData("User.Lifecycle.cs")]
+    [InlineData("User.Profile.cs")]
+    [InlineData("User.Tdee.cs")]
+    [InlineData("Role.cs")]
+    [InlineData("UserRole.cs")]
+    [InlineData("UserRoleAuditEvent.cs")]
+    public void UsersAggregateFiles_HaveOnePhysicalOwner(string fileName) {
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
+            "Modules", "Users", "Domain", "Entities", "Users", fileName)));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Domain", "Entities", "Users", fileName)));
+    }
+
+    [Theory]
+    [InlineData("WeightGoal")]
+    [InlineData("WaistGoal")]
+    public void GoalsAndMappings_BelongToUsers(string name) {
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
+            "Modules", "Users", "Domain", "Entities", "Tracking", name + ".cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
+            "Modules", "Users", "Infrastructure", "Model", "Persistence", "Configurations", "BodyMetrics", name + "Configuration.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Infrastructure", "Persistence", "Configurations", "BodyMetrics", name + "Configuration.cs")));
+    }
+
+    [Theory]
+    [InlineData("Admin")]
+    [InlineData("Ai")]
+    [InlineData("Identity")]
+    [InlineData("WeeklyGoals")]
+    public void IdentifierOnlyDomains_DoNotDependOnUserAggregate(string module) {
+        string[] references = ProjectReferenceReader.ReadProjectReferences(
+            $"Modules/{module}/Domain/FoodDiary.Modules.{module}.Domain.csproj");
+        Assert.Contains("FoodDiary.Modules.Users.Domain.Contracts", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Modules.Users.Domain", references, StringComparer.Ordinal);
+    }
+
+    [Fact]
     public void UsersApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Users");
         string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Users", "Application");

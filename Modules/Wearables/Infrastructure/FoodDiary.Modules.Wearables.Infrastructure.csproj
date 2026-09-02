@@ -14,6 +14,7 @@
     <ProjectReference Include="..\Application\FoodDiary.Application.Wearables.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="Model\FoodDiary.Modules.Wearables.PersistenceModel.csproj" />
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

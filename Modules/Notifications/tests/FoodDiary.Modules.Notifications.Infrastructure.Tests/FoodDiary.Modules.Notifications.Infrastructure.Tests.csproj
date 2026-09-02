@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.Notifications.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Application\FoodDiary.Application.Notifications.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />

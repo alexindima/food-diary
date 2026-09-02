@@ -38,6 +38,7 @@
     <ProjectReference Include="..\..\Modules\ContentReports\Application\FoodDiary.Modules.ContentReports.Application.csproj" />
     <ProjectReference Include="..\..\Modules\Gamification\Application\FoodDiary.Modules.Gamification.Application.csproj" />
     <ProjectReference Include="..\..\Modules\Export\Application\FoodDiary.Modules.Export.Application.csproj" />
+    <ProjectReference Include="../../Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

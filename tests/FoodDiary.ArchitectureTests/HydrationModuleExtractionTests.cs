@@ -14,13 +14,7 @@ public sealed class HydrationModuleExtractionTests {
     public void ExtractedHydrationAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj");
-        Assert.Equal([
-            "FoodDiary.Application.Abstractions",
-            "FoodDiary.Mediator",
-            "FoodDiary.Modules.Hydration.Application.Abstractions",
-            "FoodDiary.Modules.Hydration.Contracts",
-            "FoodDiary.Modules.Hydration.Domain",
-        ], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Hydration.Application.Abstractions", "FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Hydration.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Fact]
@@ -31,7 +25,7 @@ public sealed class HydrationModuleExtractionTests {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Hydration", "Domain", "Entities", "Tracking", "HydrationEntry.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Hydration", "Domain", "ValueObjects", "Ids", "HydrationEntryId.cs")));
 
-        string userSource = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Users", "User.cs"));
+        string userSource = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain", "Entities", "Users", "User.cs"));
         Assert.DoesNotContain("HydrationEntry", userSource, StringComparison.Ordinal);
 
         string configurationSource = File.ReadAllText(ArchitectureTestPaths.FromRoot(

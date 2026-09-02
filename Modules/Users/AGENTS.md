@@ -1,14 +1,12 @@
 # Users logical module
 
-Users owns profile, preferences, goals, lifecycle, role membership, billing-profile
-and notification-profile use cases; its application-facing ports and models; its
-role/profile/cleanup adapters; and the `User`, `Role`, `UserRole`, and
-`UserRoleAuditEvent` EF mappings.
+Users owns the complete User aggregate, all credential/security partials, roles,
+role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in
+`Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers
+reference the exact owner; central Domain retains shared guards and values without
+an aggregate re-export. Authentication flows/providers, combined UserRepository,
+DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
+security behavior and EF/HTTP contracts are unchanged. See
+`docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
 
-Preserve the legacy `FoodDiary.Application.Users` assembly and CLR namespaces.
-Keep the shared `User` aggregate, role CLR types, `FoodDiaryDbContext`, migrations,
-snapshot, and the combined `UserRepository` central as a compatibility seam.
-Credentials, password/reset/email-confirmation/security state, authentication
-ports/services, external identities, token issuance, refresh-token/login-event
-persistence, and email templates remain Identity/central responsibilities.
-
+Preserve the FoodDiary.Application.Users assembly identity. Keep shared Users application contracts central and compose AddUsersModule from the existing hosts.

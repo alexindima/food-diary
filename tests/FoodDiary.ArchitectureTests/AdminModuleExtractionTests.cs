@@ -14,7 +14,7 @@ public sealed class AdminModuleExtractionTests {
 
     [Fact]
     public void ImpersonationDomainAndModel_PreserveOneWayOwnership() {
-        Assert.Equal(["FoodDiary.Domain"], ProjectReferenceReader.ReadProjectReferences(
+        Assert.Equal(["FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj"));
         Assert.DoesNotContain("FoodDiary.Modules.Admin.Domain", ProjectReferenceReader.ReadProjectReferences(
             "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
@@ -69,16 +69,7 @@ public sealed class AdminModuleExtractionTests {
     public void ExtractedAdminAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj");
-        Assert.Equal([
-            "FoodDiary.Application.Abstractions",
-            "FoodDiary.Domain",
-            "FoodDiary.Mediator",
-            "FoodDiary.Modules.Admin.Application.Abstractions",
-            "FoodDiary.Modules.Ai.Application",
-            "FoodDiary.Modules.ContentReports.Contracts",
-            "FoodDiary.Modules.Gamification.Application",
-            "FoodDiary.Modules.Lessons.Contracts",
-        ], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.Gamification.Application", "FoodDiary.Modules.Lessons.Contracts", "FoodDiary.Modules.Users.Domain"], references);
     }
 
     [Theory]

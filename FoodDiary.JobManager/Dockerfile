@@ -23,6 +23,8 @@ COPY Modules/Marketing/Domain/*.csproj Modules/Marketing/Domain/
 COPY Modules/Marketing/Infrastructure/*.csproj Modules/Marketing/Infrastructure/
 COPY Modules/Marketing/Infrastructure/Model/*.csproj Modules/Marketing/Infrastructure/Model/
 COPY Modules/Users/Application/*.csproj Modules/Users/Application/
+COPY Modules/Users/Domain/*.csproj Modules/Users/Domain/
+COPY Modules/Users/Domain.Contracts/*.csproj Modules/Users/Domain.Contracts/
 COPY Modules/Users/Infrastructure/*.csproj Modules/Users/Infrastructure/
 COPY Modules/Users/Infrastructure/Model/*.csproj Modules/Users/Infrastructure/Model/
 COPY Modules/Dietologist/Application/*.csproj Modules/Dietologist/Application/
@@ -195,6 +197,8 @@ COPY Modules/Marketing/Domain/ Modules/Marketing/Domain/
 COPY Modules/Marketing/Infrastructure/ Modules/Marketing/Infrastructure/
 COPY Modules/Marketing/Infrastructure/Model/ Modules/Marketing/Infrastructure/Model/
 COPY Modules/Users/Application/ Modules/Users/Application/
+COPY Modules/Users/Domain/ Modules/Users/Domain/
+COPY Modules/Users/Domain.Contracts/ Modules/Users/Domain.Contracts/
 COPY Modules/Users/Infrastructure/ Modules/Users/Infrastructure/
 COPY Modules/Users/Infrastructure/Model/ Modules/Users/Infrastructure/Model/
 COPY Modules/Dietologist/Application/ Modules/Dietologist/Application/

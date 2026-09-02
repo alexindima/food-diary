@@ -2,6 +2,7 @@
   <PropertyGroup><RootNamespace>FoodDiary.Infrastructure.Persistence</RootNamespace></PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\FoodDiary.Modules.Images.Domain.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
   <ItemGroup><PackageReference Include="Microsoft.EntityFrameworkCore" /></ItemGroup>
 </Project>

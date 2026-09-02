@@ -12,7 +12,7 @@ public sealed class StronglyTypedIdInvariantTests {
     }
 
     public static IEnumerable<object[]> StronglyTypedGuidIdTypes() {
-        return typeof(UserId).Assembly
+        return typeof(CycleId).Assembly
             .GetTypes()
             .Where(static type =>
                 type is { IsValueType: true, IsAbstract: false } &&

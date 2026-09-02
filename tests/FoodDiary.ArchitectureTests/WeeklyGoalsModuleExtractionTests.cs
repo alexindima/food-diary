@@ -14,15 +14,7 @@ public sealed class WeeklyGoalsModuleExtractionTests {
     public void ExtractedWeeklyGoalsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj");
-        Assert.Equal([
-            "FoodDiary.Application.Abstractions",
-            "FoodDiary.Domain",
-            "FoodDiary.Mediator",
-            "FoodDiary.Modules.Meals.Contracts",
-            "FoodDiary.Modules.WeeklyGoals.Application.Abstractions",
-            "FoodDiary.Modules.WeeklyGoals.Contracts",
-            "FoodDiary.Modules.WeeklyGoals.Domain",
-        ], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Modules.WeeklyGoals.Application.Abstractions", "FoodDiary.Modules.WeeklyGoals.Contracts", "FoodDiary.Modules.WeeklyGoals.Domain"], references);
     }
 
     [Fact]
@@ -39,7 +31,7 @@ public sealed class WeeklyGoalsModuleExtractionTests {
     public void ExtractedWeeklyGoalsDomain_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj");
-        Assert.Equal(["FoodDiary.Domain"], references);
+        Assert.Equal(["FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Fact]

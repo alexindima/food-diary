@@ -16,5 +16,6 @@
     <ProjectReference Include="..\..\Application\FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="..\..\..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 </Project>
