@@ -316,6 +316,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )"
         }
       },
@@ -380,15 +381,21 @@
       "fooddiary.modules.meals.application.abstractions": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )"
+          "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.meals.contracts": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )"
+          "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.meals.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.notifications.application.abstractions": {

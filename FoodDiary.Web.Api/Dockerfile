@@ -96,6 +96,7 @@ COPY Modules/Products/Application/*.csproj Modules/Products/Application/
 COPY Modules/Meals/Application/*.csproj Modules/Meals/Application/
 COPY Modules/Meals/Application/Abstractions/*.csproj Modules/Meals/Application/Abstractions/
 COPY Modules/Meals/Contracts/*.csproj Modules/Meals/Contracts/
+COPY Modules/Meals/Domain/*.csproj Modules/Meals/Domain/
 COPY Modules/Meals/Infrastructure/*.csproj Modules/Meals/Infrastructure/
 COPY Modules/Meals/Infrastructure/Model/*.csproj Modules/Meals/Infrastructure/Model/
 COPY Modules/Recipes/Application/*.csproj Modules/Recipes/Application/
@@ -280,6 +281,7 @@ COPY Modules/Products/Application/ Modules/Products/Application/
 COPY Modules/Meals/Application/ Modules/Meals/Application/
 COPY Modules/Meals/Application/Abstractions/ Modules/Meals/Application/Abstractions/
 COPY Modules/Meals/Contracts/ Modules/Meals/Contracts/
+COPY Modules/Meals/Domain/ Modules/Meals/Domain/
 COPY Modules/Meals/Infrastructure/ Modules/Meals/Infrastructure/
 COPY Modules/Meals/Infrastructure/Model/ Modules/Meals/Infrastructure/Model/
 COPY Modules/Recipes/Application/ Modules/Recipes/Application/

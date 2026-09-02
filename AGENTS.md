@@ -84,6 +84,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Meals application: `Modules/Meals/Application/AGENTS.md`
 - Meals application abstractions: `Modules/Meals/Application/Abstractions/AGENTS.md`
 - Meals contracts: `Modules/Meals/Contracts/AGENTS.md`
+- Meals domain: `Modules/Meals/Domain/AGENTS.md`
 - Meals infrastructure: `Modules/Meals/Infrastructure/AGENTS.md`
 - Meals persistence model: `Modules/Meals/Infrastructure/Model/AGENTS.md`
 - Meals tests: `Modules/Meals/tests/AGENTS.md`

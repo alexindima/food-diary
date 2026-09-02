@@ -32,7 +32,7 @@ public sealed class ProductsModuleExtractionTests {
         string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Users/User.cs"));
         string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Products/Domain/Entities/Products/Product.cs"));
         string ingredient = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Recipes/Domain/Entities/Recipes/RecipeIngredient.cs"));
-        string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Meals/MealItem.cs"));
+        string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Meals/Domain/Entities/Meals/MealItem.cs"));
         Assert.DoesNotContain("IReadOnlyCollection<Product> Products", user, StringComparison.Ordinal);
         Assert.DoesNotContain("IReadOnlyCollection<MealItem> MealItems", product, StringComparison.Ordinal);
         Assert.DoesNotContain("RecipeIngredient", product, StringComparison.Ordinal);

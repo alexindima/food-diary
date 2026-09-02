@@ -35,6 +35,7 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 | Admin orchestration and impersonation | `Modules/Admin`: application, ports, independent impersonation domain, adapters and explicit persistence model; Identity Email, Users role audit and shared SSO remain central |
 
 | Product catalog and mutation ownership | `Modules/Products` application, ports/contracts, persistence model, adapters and focused tests; central Product/User/RecipeIngredient/MealItem/USDA CLR navigation and shared composition-lock seams |
+| Meal diary aggregate ownership | `Modules/Meals/Domain` owns Meal, items, AI sessions/items, IDs and meal-only value types; one-way Meal.User retains central User/UserId, shared context and migration seams |
 | EF Core and technical implementations | `FoodDiary.Infrastructure` |
 | External providers and service clients | `FoodDiary.Integrations` |
 | HTTP and SignalR transport | `FoodDiary.Presentation.Api` |

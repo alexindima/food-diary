@@ -439,6 +439,7 @@
     <Project Path="Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
     <Project Path="Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj" />
     <Project Path="Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
+    <Project Path="Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <Project Path="Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj" />
     <Project Path="Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj" />
   </Folder>

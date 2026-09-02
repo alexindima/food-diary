@@ -42,11 +42,37 @@ public sealed class MealsModuleExtractionTests {
         string dbContext = File.ReadAllText(ArchitectureTestPaths.FromRoot(
             "FoodDiary.Infrastructure", "Persistence", "FoodDiaryDbContext.cs"));
 
-        Assert.Contains("Meals", user, StringComparison.Ordinal);
+        Assert.DoesNotContain("Meals", user, StringComparison.Ordinal);
         Assert.True(File.Exists(userConfiguration), "UserConfiguration must remain with the Users owner.");
         Assert.Contains("ApplyMealsPersistenceModel()", dbContext, StringComparison.Ordinal);
         Assert.True(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Migrations")));
-        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain")));
+        Assert.True(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain")));
+    }
+
+    [Fact]
+    public void MealsDomain_HasSinglePhysicalOwnershipAndOneWayDependencies() {
+        string[] ownedFiles = [
+            "Entities/Meals/Meal.cs", "Entities/Meals/MealItem.cs",
+            "Entities/Meals/MealAiSession.cs", "Entities/Meals/MealAiItem.cs",
+            "Entities/Meals/MealAiItemData.cs", "Events/MealNutritionAppliedDomainEvent.cs",
+            "ValueObjects/Ids/MealId.cs", "ValueObjects/Ids/MealItemId.cs",
+            "ValueObjects/Ids/MealAiSessionId.cs", "ValueObjects/Ids/MealAiItemId.cs",
+            "ValueObjects/MealDetailsState.cs", "ValueObjects/MealNutritionState.cs",
+            "ValueObjects/MealNutritionUpdate.cs", "ValueObjects/MealAiItemState.cs",
+            "Enums/MealItemOrigin.cs", "Enums/MealAiSessionStatus.cs", "Enums/MealAiItemResolution.cs",
+        ];
+        foreach (string path in ownedFiles) {
+            Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/" + path)), path);
+            Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Meals/Domain/" + path)), path);
+        }
+
+        Assert.Equal(["FoodDiary.Domain"], ProjectReferenceReader.ReadProjectReferences(
+            "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj"));
+        Assert.DoesNotContain("FoodDiary.Modules.Meals.Domain", ProjectReferenceReader.ReadProjectReferences(
+            "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
+        Assert.Equal(["FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Products.Domain"],
+            ProjectReferenceReader.ReadProjectReferences(
+                "Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/FoodDiary.Modules.Meals.Domain.Tests.csproj"));
     }
 
     [Fact]

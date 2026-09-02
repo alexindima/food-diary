@@ -28,8 +28,8 @@ public sealed class AiModuleExtractionTests {
             "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj"));
         Assert.DoesNotContain("FoodDiary.Modules.Ai.Domain", ProjectReferenceReader.ReadProjectReferences(
             "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Meals", "MealAiSession.cs")));
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Meals", "MealAiItem.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain", "Entities", "Meals", "MealAiSession.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain", "Entities", "Meals", "MealAiItem.cs")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Ai")));
     }
 

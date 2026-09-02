@@ -8,7 +8,7 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3544,
+    "sourceFiles": 3545,
     "symbols": 3531,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 166,
@@ -2120,41 +2120,6 @@
       "line": 5
     },
     {
-      "name": "Meal",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 11
-    },
-    {
-      "name": "MealAiItem",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Meals/MealAiItem.cs",
-      "line": 8
-    },
-    {
-      "name": "MealAiItemData",
-      "kind": "record",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Meals/MealAiItemData.cs",
-      "line": 5
-    },
-    {
-      "name": "MealAiSession",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 9
-    },
-    {
-      "name": "MealItem",
-      "kind": "class",
-      "role": "Entity",
-      "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-      "line": 8
-    },
-    {
       "name": "WaistGoal",
       "kind": "class",
       "role": "Entity",
@@ -2194,7 +2159,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "User",
@@ -2274,27 +2239,6 @@
       "line": 2
     },
     {
-      "name": "MealAiItemResolution",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/MealAiItemResolution.cs",
-      "line": 2
-    },
-    {
-      "name": "MealAiSessionStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/MealAiSessionStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "MealItemOrigin",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/MealItemOrigin.cs",
-      "line": 2
-    },
-    {
       "name": "MealType",
       "kind": "enum",
       "role": "Other",
@@ -2370,13 +2314,6 @@
       "role": "Other",
       "path": "FoodDiary.Domain/Enums/WeightGoalStatus.cs",
       "line": 2
-    },
-    {
-      "name": "MealNutritionAppliedDomainEvent",
-      "kind": "record",
-      "role": "Event",
-      "path": "FoodDiary.Domain/Events/MealNutritionAppliedDomainEvent.cs",
-      "line": 5
     },
     {
       "name": "UserDeletedDomainEvent",
@@ -2463,34 +2400,6 @@
       "line": 4
     },
     {
-      "name": "MealAiItemId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MealAiItemId.cs",
-      "line": 4
-    },
-    {
-      "name": "MealAiSessionId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MealAiSessionId.cs",
-      "line": 4
-    },
-    {
-      "name": "MealId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MealId.cs",
-      "line": 4
-    },
-    {
-      "name": "MealItemId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/MealItemId.cs",
-      "line": 4
-    },
-    {
       "name": "RoleId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -2523,34 +2432,6 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/LanguageCode.cs",
-      "line": 2
-    },
-    {
-      "name": "MealAiItemState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/MealAiItemState.cs",
-      "line": 5
-    },
-    {
-      "name": "MealDetailsState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/MealDetailsState.cs",
-      "line": 5
-    },
-    {
-      "name": "MealNutritionState",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/MealNutritionState.cs",
-      "line": 2
-    },
-    {
-      "name": "MealNutritionUpdate",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/MealNutritionUpdate.cs",
       "line": 2
     },
     {
@@ -20304,6 +20185,125 @@
       "role": "Other",
       "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
       "line": 4
+    },
+    {
+      "name": "Meal",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 11
+    },
+    {
+      "name": "MealAiItem",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealAiItem.cs",
+      "line": 8
+    },
+    {
+      "name": "MealAiItemData",
+      "kind": "record",
+      "role": "Entity",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealAiItemData.cs",
+      "line": 5
+    },
+    {
+      "name": "MealAiSession",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
+      "line": 9
+    },
+    {
+      "name": "MealItem",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
+      "line": 8
+    },
+    {
+      "name": "MealAiItemResolution",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Meals/Domain/Enums/MealAiItemResolution.cs",
+      "line": 2
+    },
+    {
+      "name": "MealAiSessionStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Meals/Domain/Enums/MealAiSessionStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "MealItemOrigin",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Meals/Domain/Enums/MealItemOrigin.cs",
+      "line": 2
+    },
+    {
+      "name": "MealNutritionAppliedDomainEvent",
+      "kind": "record",
+      "role": "Event",
+      "path": "Modules/Meals/Domain/Events/MealNutritionAppliedDomainEvent.cs",
+      "line": 5
+    },
+    {
+      "name": "MealAiItemId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Meals/Domain/ValueObjects/Ids/MealAiItemId.cs",
+      "line": 4
+    },
+    {
+      "name": "MealAiSessionId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Meals/Domain/ValueObjects/Ids/MealAiSessionId.cs",
+      "line": 4
+    },
+    {
+      "name": "MealId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Meals/Domain/ValueObjects/Ids/MealId.cs",
+      "line": 4
+    },
+    {
+      "name": "MealItemId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Meals/Domain/ValueObjects/Ids/MealItemId.cs",
+      "line": 4
+    },
+    {
+      "name": "MealAiItemState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Meals/Domain/ValueObjects/MealAiItemState.cs",
+      "line": 5
+    },
+    {
+      "name": "MealDetailsState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Meals/Domain/ValueObjects/MealDetailsState.cs",
+      "line": 5
+    },
+    {
+      "name": "MealNutritionState",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Meals/Domain/ValueObjects/MealNutritionState.cs",
+      "line": 2
+    },
+    {
+      "name": "MealNutritionUpdate",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Meals/Domain/ValueObjects/MealNutritionUpdate.cs",
+      "line": 2
     },
     {
       "name": "MealsModuleRegistration",

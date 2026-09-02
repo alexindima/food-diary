@@ -243,7 +243,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Favorites.Domain",
                 "FoodDiary.Modules.Meals.Contracts",
             ],
-            ["FoodDiary.Modules.Favorites.Domain"] = ["FoodDiary.Domain", "FoodDiary.Modules.Recipes.Domain"],
+            ["FoodDiary.Modules.Favorites.Domain"] = ["FoodDiary.Domain", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Recipes.Domain"],
             ["FoodDiary.Modules.Favorites.Infrastructure"] = [
                 "FoodDiary.Application.Favorites",
                 "FoodDiary.Infrastructure",
@@ -333,11 +333,11 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.RecentItems.Application.Abstractions",
             ],
             ["FoodDiary.Modules.Meals.Application.Abstractions"] = [
-                "FoodDiary.Domain",
+                "FoodDiary.Modules.Meals.Domain",
                 "FoodDiary.Modules.Meals.Contracts",
             ],
             ["FoodDiary.Modules.Meals.Contracts"] = [
-                "FoodDiary.Domain",
+                "FoodDiary.Modules.Meals.Domain",
                 "FoodDiary.Modules.Favorites.Domain",
             ],
             ["FoodDiary.Modules.Meals.Infrastructure"] = [
@@ -345,7 +345,8 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Meals.Application",
                 "FoodDiary.Modules.Meals.PersistenceModel",
             ],
-            ["FoodDiary.Modules.Meals.PersistenceModel"] = ["FoodDiary.Domain", "FoodDiary.Modules.Images.Domain", "FoodDiary.Modules.Recipes.Domain"],
+            ["FoodDiary.Modules.Meals.Domain"] = ["FoodDiary.Domain"],
+            ["FoodDiary.Modules.Meals.PersistenceModel"] = ["FoodDiary.Modules.Images.Domain", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Recipes.Domain"],
             ["FoodDiary.Modules.WeeklyGoals.Application"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Domain",
@@ -982,7 +983,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Modules.Meals.Application",
                 "FoodDiary.Modules.Recipes.Application",
             ],
-            ["FoodDiary.Modules.Meals.Domain.Tests"] = ["FoodDiary.Domain", "FoodDiary.Modules.Products.Domain"],
+            ["FoodDiary.Modules.Meals.Domain.Tests"] = ["FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Products.Domain"],
             ["FoodDiary.Modules.Meals.Infrastructure.IntegrationTests"] = [
                 "FoodDiary.Modules.Meals.Infrastructure",
                 "FoodDiary.Testing",

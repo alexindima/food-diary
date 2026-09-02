@@ -127,6 +127,12 @@
           "FoodDiary.Modules.Images.Contracts": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.meals.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.products.domain": {
         "type": "Project",
         "dependencies": {

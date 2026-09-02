@@ -632,6 +632,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )"
         }
       },
@@ -779,15 +780,21 @@
       "fooddiary.modules.meals.contracts": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )"
+          "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.meals.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.meals.persistencemodel": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Images.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",

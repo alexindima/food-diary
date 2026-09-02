@@ -127,70 +127,70 @@
       "name": "Password",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 20
+      "line": 19
     },
     {
       "category": "credential",
       "name": "HasPassword",
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 21
+      "line": 20
     },
     {
       "category": "credential",
       "name": "MustChangePassword",
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 22
+      "line": 21
     },
     {
       "category": "credential",
       "name": "EmailConfirmationTokenHash",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 26
+      "line": 25
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenHash",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 29
+      "line": 28
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenExpiresAtUtc",
       "type": "DateTime?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 30
+      "line": 29
     },
     {
       "category": "credential",
       "name": "PasswordResetSentAtUtc",
       "type": "DateTime?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 31
+      "line": 30
     },
     {
       "category": "credential",
       "name": "HasPassword",
       "type": "Password,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 362
+      "line": 359
     },
     {
       "category": "credential",
       "name": "PasswordResetTokenHash",
       "type": "EmailConfirmationSentAtUtc,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 368
+      "line": 365
     },
     {
       "category": "credential",
       "name": "PasswordResetSentAtUtc",
       "type": "PasswordResetTokenExpiresAtUtc,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 370
+      "line": 367
     },
     {
       "category": "credential",
@@ -2392,83 +2392,6 @@
     },
     {
       "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 23
-    },
-    {
-      "category": "health",
-      "name": "IsNutritionAutoCalculated",
-      "type": "bool",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 29
-    },
-    {
-      "category": "health",
-      "name": "ManualCalories",
-      "type": "double?",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 30
-    },
-    {
-      "category": "health",
-      "name": "PreMealSatietyLevel",
-      "type": "int",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 36
-    },
-    {
-      "category": "health",
-      "name": "PostMealSatietyLevel",
-      "type": "int",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 37
-    },
-    {
-      "category": "health",
-      "name": "IsNutritionAutoCalculated",
-      "type": "Id,",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 227
-    },
-    {
-      "category": "health",
-      "name": "PreMealSatietyLevel",
-      "type": "ImageAssetId,",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 285
-    },
-    {
-      "category": "health",
-      "name": "ManualCalories",
-      "type": "IsNutritionAutoCalculated,",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 308
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Meals/MealAiItem.cs",
-      "line": 15
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "FoodDiary.Domain/Entities/Meals/MealAiItemData.cs",
-      "line": 11
-    },
-    {
-      "category": "health",
-      "name": "SnapshotCaloriesPerBase",
-      "type": "double?",
-      "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-      "line": 28
-    },
-    {
-      "category": "health",
       "name": "TargetWaistCm",
       "type": "double",
       "path": "FoodDiary.Domain/Entities/Tracking/WaistGoal.cs",
@@ -2514,280 +2437,224 @@
       "name": "BirthDate",
       "type": "DateTime?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 36
+      "line": 35
     },
     {
       "category": "health",
       "name": "Gender",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 37
+      "line": 36
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 38
+      "line": 37
     },
     {
       "category": "health",
       "name": "DesiredWeightKg",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 39
+      "line": 38
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 40
+      "line": 39
     },
     {
       "category": "health",
       "name": "HeightCm",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 41
+      "line": 40
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "ActivityLevel",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 42
+      "line": 41
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 50
+      "line": 49
     },
     {
       "category": "health",
       "name": "MondayCalories",
+      "type": "double?",
+      "path": "FoodDiary.Domain/Entities/Users/User.cs",
+      "line": 51
+    },
+    {
+      "category": "health",
+      "name": "TuesdayCalories",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
       "line": 52
     },
     {
       "category": "health",
-      "name": "TuesdayCalories",
+      "name": "WednesdayCalories",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
       "line": 53
     },
     {
       "category": "health",
-      "name": "WednesdayCalories",
+      "name": "ThursdayCalories",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
       "line": 54
     },
     {
       "category": "health",
-      "name": "ThursdayCalories",
+      "name": "FridayCalories",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
       "line": 55
     },
     {
       "category": "health",
-      "name": "FridayCalories",
+      "name": "SaturdayCalories",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
       "line": 56
     },
     {
       "category": "health",
-      "name": "SaturdayCalories",
+      "name": "SundayCalories",
       "type": "double?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
       "line": 57
     },
     {
       "category": "health",
-      "name": "SundayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 58
-    },
-    {
-      "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 66
+      "line": 65
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "int",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 68
+      "line": 67
     },
     {
       "category": "health",
       "name": "FastingCheckInFollowUpReminderHours",
       "type": "int",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 69
+      "line": 68
     },
     {
       "category": "health",
       "name": "TuesdayCalories",
       "type": "MondayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 229
+      "line": 226
     },
     {
       "category": "health",
       "name": "ThursdayCalories",
       "type": "WednesdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 231
+      "line": 228
     },
     {
       "category": "health",
       "name": "SaturdayCalories",
       "type": "FridayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 233
+      "line": 230
     },
     {
       "category": "health",
       "name": "DesiredWaistCm",
       "type": "DesiredWeightKg,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 246
+      "line": 243
     },
     {
       "category": "health",
       "name": "MondayCalories",
       "type": "CalorieCyclingEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 248
+      "line": 245
     },
     {
       "category": "health",
       "name": "WednesdayCalories",
       "type": "TuesdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 250
+      "line": 247
     },
     {
       "category": "health",
       "name": "FridayCalories",
       "type": "ThursdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 252
+      "line": 249
     },
     {
       "category": "health",
       "name": "SundayCalories",
       "type": "SaturdayCalories,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 254
+      "line": 251
     },
     {
       "category": "health",
       "name": "HydrationGoal",
       "type": "StepGoal,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 289
+      "line": 286
     },
     {
       "category": "health",
       "name": "BirthDate",
       "type": "LastName,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 301
+      "line": 298
     },
     {
       "category": "health",
       "name": "WeightKg",
       "type": "Gender,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 303
+      "line": 300
     },
     {
       "category": "health",
       "name": "ActivityLevel",
       "type": "HeightCm,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 305
+      "line": 302
     },
     {
       "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "PushNotificationsEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 313
+      "line": 310
     },
     {
       "category": "health",
       "name": "FastingCheckInReminderHours",
       "type": "SocialPushNotificationsEnabled,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 315
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "FoodDiary.Domain/Events/MealNutritionAppliedDomainEvent.cs",
-      "line": 30
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "FoodDiary.Domain/ValueObjects/MealAiItemState.cs",
-      "line": 14
-    },
-    {
-      "category": "health",
-      "name": "PreMealSatietyLevel",
-      "type": "int",
-      "path": "FoodDiary.Domain/ValueObjects/MealDetailsState.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "PostMealSatietyLevel",
-      "type": "int",
-      "path": "FoodDiary.Domain/ValueObjects/MealDetailsState.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "FoodDiary.Domain/ValueObjects/MealNutritionState.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
-      "name": "IsNutritionAutoCalculated",
-      "type": "bool",
-      "path": "FoodDiary.Domain/ValueObjects/MealNutritionState.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "ManualCalories",
-      "type": "double?",
-      "path": "FoodDiary.Domain/ValueObjects/MealNutritionState.cs",
-      "line": 11
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "FoodDiary.Domain/ValueObjects/MealNutritionUpdate.cs",
-      "line": 4
+      "line": 312
     },
     {
       "category": "health",
@@ -5843,6 +5710,139 @@
     },
     {
       "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 23
+    },
+    {
+      "category": "health",
+      "name": "IsNutritionAutoCalculated",
+      "type": "bool",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 29
+    },
+    {
+      "category": "health",
+      "name": "ManualCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 30
+    },
+    {
+      "category": "health",
+      "name": "PreMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 36
+    },
+    {
+      "category": "health",
+      "name": "PostMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 37
+    },
+    {
+      "category": "health",
+      "name": "IsNutritionAutoCalculated",
+      "type": "Id,",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 227
+    },
+    {
+      "category": "health",
+      "name": "PreMealSatietyLevel",
+      "type": "ImageAssetId,",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 285
+    },
+    {
+      "category": "health",
+      "name": "ManualCalories",
+      "type": "IsNutritionAutoCalculated,",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 308
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealAiItem.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealAiItemData.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "SnapshotCaloriesPerBase",
+      "type": "double?",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
+      "line": 28
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Meals/Domain/Events/MealNutritionAppliedDomainEvent.cs",
+      "line": 30
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Meals/Domain/ValueObjects/MealAiItemState.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "PreMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Domain/ValueObjects/MealDetailsState.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "PostMealSatietyLevel",
+      "type": "int",
+      "path": "Modules/Meals/Domain/ValueObjects/MealDetailsState.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Meals/Domain/ValueObjects/MealNutritionState.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "IsNutritionAutoCalculated",
+      "type": "bool",
+      "path": "Modules/Meals/Domain/ValueObjects/MealNutritionState.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "ManualCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Domain/ValueObjects/MealNutritionState.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Meals/Domain/ValueObjects/MealNutritionUpdate.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
       "name": "FastingPushNotificationsEnabled",
       "type": "bool?",
       "path": "Modules/Notifications/Application/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
@@ -6728,56 +6728,56 @@
       "name": "Email",
       "type": "string",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 19
+      "line": 18
     },
     {
       "category": "identity",
       "name": "GoogleSubject",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 24
+      "line": 23
     },
     {
       "category": "identity",
       "name": "IsEmailConfirmed",
       "type": "bool",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 25
+      "line": 24
     },
     {
       "category": "identity",
       "name": "EmailConfirmationTokenExpiresAtUtc",
       "type": "DateTime?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 27
+      "line": 26
     },
     {
       "category": "identity",
       "name": "EmailConfirmationSentAtUtc",
       "type": "DateTime?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 28
+      "line": 27
     },
     {
       "category": "identity",
       "name": "TelegramUserId",
       "type": "long?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 70
+      "line": 69
     },
     {
       "category": "identity",
       "name": "IsEmailConfirmed",
       "type": "MustChangePassword,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 364
+      "line": 361
     },
     {
       "category": "identity",
       "name": "EmailConfirmationTokenExpiresAtUtc",
       "type": "EmailConfirmationTokenHash,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 366
+      "line": 363
     },
     {
       "category": "identity",
@@ -7628,129 +7628,17 @@
     },
     {
       "category": "privateContent",
-      "name": "Comment",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 20
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 21
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "ImageAssetId?",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 22
-    },
-    {
-      "category": "privateContent",
-      "name": "CommentMaxLength",
-      "type": "comment,",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 69
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrlMaxLength",
-      "type": "imageUrl,",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 70
-    },
-    {
-      "category": "privateContent",
-      "name": "CommentMaxLength",
-      "type": "comment,",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 80
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrlMaxLength",
-      "type": "imageUrl,",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 97
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "Comment,",
-      "path": "FoodDiary.Domain/Entities/Meals/Meal.cs",
-      "line": 283
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "ImageAssetId?",
-      "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 14
-    },
-    {
-      "category": "privateContent",
-      "name": "Notes",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 18
-    },
-    {
-      "category": "privateContent",
-      "name": "NotesMaxLength",
-      "type": "notes,",
-      "path": "FoodDiary.Domain/Entities/Meals/MealAiSession.cs",
-      "line": 44
-    },
-    {
-      "category": "privateContent",
-      "name": "SnapshotImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-      "line": 25
-    },
-    {
-      "category": "privateContent",
-      "name": "SnapshotImageUrlMaxLength",
-      "type": "imageUrl,",
-      "path": "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-      "line": 189
-    },
-    {
-      "category": "privateContent",
       "name": "ProfileImageAssetId",
       "type": "ImageAssetId?",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 60
+      "line": 59
     },
     {
       "category": "privateContent",
       "name": "ProfileImageAssetId",
       "type": "ProfileImage,",
       "path": "FoodDiary.Domain/Entities/Users/User.cs",
-      "line": 307
-    },
-    {
-      "category": "privateContent",
-      "name": "Comment",
-      "type": "string?",
-      "path": "FoodDiary.Domain/ValueObjects/MealDetailsState.cs",
-      "line": 9
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Domain/ValueObjects/MealDetailsState.cs",
-      "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageAssetId",
-      "type": "ImageAssetId?",
-      "path": "FoodDiary.Domain/ValueObjects/MealDetailsState.cs",
-      "line": 11
+      "line": 304
     },
     {
       "category": "privateContent",
@@ -9010,6 +8898,118 @@
       "name": "ImageAssetId",
       "type": "Guid?",
       "path": "Modules/Meals/Contracts/Meals/Models/MealProjectionReadModel.cs",
+      "line": 11
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 20
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 21
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "ImageAssetId?",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 22
+    },
+    {
+      "category": "privateContent",
+      "name": "CommentMaxLength",
+      "type": "comment,",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 69
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrlMaxLength",
+      "type": "imageUrl,",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 70
+    },
+    {
+      "category": "privateContent",
+      "name": "CommentMaxLength",
+      "type": "comment,",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 80
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrlMaxLength",
+      "type": "imageUrl,",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 97
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "Comment,",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 283
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "ImageAssetId?",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
+      "line": 14
+    },
+    {
+      "category": "privateContent",
+      "name": "Notes",
+      "type": "string?",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
+      "line": 18
+    },
+    {
+      "category": "privateContent",
+      "name": "NotesMaxLength",
+      "type": "notes,",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
+      "line": 44
+    },
+    {
+      "category": "privateContent",
+      "name": "SnapshotImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
+      "line": 25
+    },
+    {
+      "category": "privateContent",
+      "name": "SnapshotImageUrlMaxLength",
+      "type": "imageUrl,",
+      "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
+      "line": 189
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Meals/Domain/ValueObjects/MealDetailsState.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Domain/ValueObjects/MealDetailsState.cs",
+      "line": 10
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageAssetId",
+      "type": "ImageAssetId?",
+      "path": "Modules/Meals/Domain/ValueObjects/MealDetailsState.cs",
       "line": 11
     },
     {

@@ -37,9 +37,9 @@ public sealed class ImagesModuleExtractionTests {
     }
 
     [Fact]
-    public void CentralMealAiSession_HasNoImagesDomainNavigation() {
+    public void MealAiSession_HasNoImagesDomainNavigation() {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Domain", "Entities", "Meals", "MealAiSession.cs"));
+            "Modules", "Meals", "Domain", "Entities", "Meals", "MealAiSession.cs"));
 
         Assert.DoesNotContain("ImageAsset? ImageAsset", source, StringComparison.Ordinal);
         Assert.Contains("ImageAssetId? ImageAssetId", source, StringComparison.Ordinal);

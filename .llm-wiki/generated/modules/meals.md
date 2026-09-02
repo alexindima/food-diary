@@ -102,6 +102,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/TestProductOverview.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/TestRecipeOverview.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealAiInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealExtractedInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealIdInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealInvariantTests.cs`
 - [integration] `Modules/Meals/tests/FoodDiary.Modules.Meals.Infrastructure.IntegrationTests/Integration/MealRepositoryIntegrationTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/MealsModuleExtractionTests.cs`

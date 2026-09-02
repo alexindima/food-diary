@@ -5,7 +5,6 @@ using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -40,53 +39,6 @@ public sealed class ThirdPassDomainHardeningTests {
             () => Assert.Null(waistGoal.EndedAtUtc),
             () => Assert.Single(user.WaistGoals),
             () => Assert.Equal(80, user.DesiredWaistCm));
-    }
-
-    [Fact]
-    public void MealItemSnapshot_WhenLateValidationFails_IsAtomicAndRejectsInvalidServings() {
-        var meal = Meal.Create(UserId.New(), Now);
-        MealItem item = meal.AddProduct(ProductId.New(), 100);
-        item.ApplyProductSnapshot(
-            "Original",
-            imageUrl: null,
-            MeasurementUnit.G,
-            baseAmount: 100,
-            caloriesPerBase: 120,
-            proteinsPerBase: 10,
-            fatsPerBase: 5,
-            carbsPerBase: 20,
-            fiberPerBase: 2,
-            alcoholPerBase: 0);
-
-        Assert.Throws<ArgumentOutOfRangeException>(() => item.ApplyProductSnapshot(
-            "Changed",
-            "https://example.com/changed.png",
-            MeasurementUnit.Pcs,
-            baseAmount: 1,
-            caloriesPerBase: 200,
-            proteinsPerBase: 20,
-            fatsPerBase: 10,
-            carbsPerBase: 30,
-            fiberPerBase: 3,
-            alcoholPerBase: -1));
-        Assert.Throws<ArgumentOutOfRangeException>(() => item.ApplyRecipeSnapshot(
-            "Recipe",
-            imageUrl: null,
-            servings: 0,
-            totalCalories: 100,
-            totalProteins: 10,
-            totalFats: 5,
-            totalCarbs: 20,
-            totalFiber: 2,
-            totalAlcohol: 0));
-
-        Assert.Multiple(
-            () => Assert.Equal("Original", item.SnapshotName),
-            () => Assert.Null(item.SnapshotImageUrl),
-            () => Assert.Equal(MeasurementUnit.G.ToString(), item.SnapshotUnit),
-            () => Assert.Equal(100, item.SnapshotBaseAmount),
-            () => Assert.Equal(120, item.SnapshotCaloriesPerBase),
-            () => Assert.Equal(0, item.SnapshotAlcoholPerBase));
     }
 
     [Fact]

@@ -30,7 +30,7 @@ public sealed class RecipesModuleExtractionTests {
     public void RecipeDomainOwnership_IsPhysicalAndOneWay() {
         Assert.True(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Domain")));
         string user = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Users/User.cs"));
-        string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Meals/MealItem.cs"));
+        string mealItem = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Meals/Domain/Entities/Meals/MealItem.cs"));
         string product = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Products/Domain/Entities/Products/Product.cs"));
         Assert.DoesNotContain("IReadOnlyCollection<Recipe> Recipes", user, StringComparison.Ordinal);
         Assert.DoesNotContain("RecipeIngredient", product, StringComparison.Ordinal);

@@ -229,15 +229,14 @@ coordinated-rebuild compatibility promise.
 
 ## Meals physical ownership
 
-Meals use cases, owner ports, consumed contracts, persistence adapter and EF model
-live under `Modules/Meals`; focused application, invariant and repository PostgreSQL
-tests live under its nested tests folder. Meal/MealItem/MealAiSession/MealAiItem stay
-in central Domain because `User.Meals`, Product/Recipe MealItems and their inverse
-navigations are a public bidirectional graph. UserConfiguration, user cleanup, the
-shared DbContext, migrations and snapshot remain central. API and Initializer compose
-`AddMealsModule`; JobManager adds `AddMealsPersistence` only. Legacy application
-assembly/CLR identity and HTTP/Swagger behavior are preserved. See
-`docs/ai/meals-ownership-inventory.md` for the evidence and compatibility boundary.
+Meals owns Meal, MealItem, MealAiSession, MealAiItem, their IDs, meal-only states,
+nutrition event and AI item/session enums under `Modules/Meals/Domain`, with stable
+CLR namespaces. User has no inverse Meals collection; Meal.User remains a one-way
+relationship with the same required FK and cascade. Shared User/UserId, enums,
+DbContext, migrations and snapshot remain with their existing owners. Product,
+Recipe and Image links remain ID-based with unchanged batch snapshot fallbacks.
+No extra Domain.Contracts project is needed by the current acyclic graph.
+See `docs/ai/meals-ownership-inventory.md` for source evidence and remaining seams.
 
 ## RecentItems physical ownership
 

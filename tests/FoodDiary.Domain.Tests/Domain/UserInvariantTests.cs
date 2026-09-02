@@ -115,7 +115,6 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Multiple(
-            () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.Meal>>(user.Meals).IsReadOnly),
             () => Assert.True(Assert.IsAssignableFrom<ICollection<UserRole>>(user.UserRoles).IsReadOnly));
     }
 

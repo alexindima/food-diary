@@ -13,7 +13,7 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 309,
+    "dotnetProjects": 310,
     "testProjects": 115,
     "frontendProjects": 4,
     "applicationModules": 1,
@@ -21,7 +21,7 @@
     "backendBusinessModules": 34,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 217,
+    "agentGuides": 218,
     "documentationPages": 116
   },
   "dotnet": {
@@ -4171,6 +4171,7 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
           "Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj"
         ],
         "packageReferences": []
@@ -5869,8 +5870,8 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj",
-          "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj"
+          "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
+          "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj"
         ],
         "packageReferences": []
       },
@@ -5924,8 +5925,23 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj",
-          "Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj"
+          "Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj",
+          "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.Modules.Meals.Domain",
+        "assemblyName": "FoodDiary.Modules.Meals.Domain",
+        "path": "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Domain/FoodDiary.Domain.csproj"
         ],
         "packageReferences": []
       },
@@ -5966,8 +5982,8 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
+          "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
           "Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj"
         ],
         "packageReferences": [
@@ -6030,7 +6046,7 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Domain/FoodDiary.Domain.csproj",
+          "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
           "Modules/Products/Domain/FoodDiary.Modules.Products.Domain.csproj"
         ],
         "packageReferences": [
@@ -11897,6 +11913,7 @@
       "Modules/Meals/Application/AGENTS.md",
       "Modules/Meals/Application/Abstractions/AGENTS.md",
       "Modules/Meals/Contracts/AGENTS.md",
+      "Modules/Meals/Domain/AGENTS.md",
       "Modules/Meals/Infrastructure/AGENTS.md",
       "Modules/Meals/Infrastructure/Model/AGENTS.md",
       "Modules/Meals/tests/AGENTS.md",

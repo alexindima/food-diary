@@ -42,34 +42,6 @@ public sealed class DomainEventInvariantTests {
     }
 
     [Fact]
-    public void MealNutritionAppliedDomainEvent_WithOverride_ExposesNutritionValues() {
-        var occurredOnUtc = new DateTime(2026, 3, 27, 12, 0, 0, DateTimeKind.Utc);
-        var mealId = MealId.New();
-
-        var domainEvent = new MealNutritionAppliedDomainEvent(
-            mealId,
-            isAutoCalculated: true,
-            totalCalories: 500,
-            totalProteins: 30,
-            totalFats: 20,
-            totalCarbs: 50,
-            totalFiber: 5,
-            totalAlcohol: 0,
-            occurredOnUtc);
-
-        Assert.Multiple(
-            () => Assert.Equal(mealId, domainEvent.MealId),
-            () => Assert.True(domainEvent.IsAutoCalculated),
-            () => Assert.Equal(500, domainEvent.TotalCalories),
-            () => Assert.Equal(30, domainEvent.TotalProteins),
-            () => Assert.Equal(20, domainEvent.TotalFats),
-            () => Assert.Equal(50, domainEvent.TotalCarbs),
-            () => Assert.Equal(5, domainEvent.TotalFiber),
-            () => Assert.Equal(0, domainEvent.TotalAlcohol),
-            () => Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc));
-    }
-
-    [Fact]
     public void DietologistInvitationAcceptedDomainEvent_WithOverride_ExposesPayload() {
         var occurredOnUtc = new DateTime(2026, 3, 27, 12, 0, 0, DateTimeKind.Utc);
         var invitationId = DietologistInvitationId.New();

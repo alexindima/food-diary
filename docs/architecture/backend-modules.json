@@ -183,7 +183,7 @@
           "Modules/Meals/Contracts"
         ],
         "domainAreas": [
-          "FoodDiary.Domain/Entities/Meals"
+          "Modules/Meals/Domain"
         ],
         "infrastructureAreas": [
           "Modules/Meals/Infrastructure"

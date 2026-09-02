@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7633,
+    "consumerEdges": 7634,
     "productionConsumerEdges": 4560,
-    "testConsumerEdges": 3073,
+    "testConsumerEdges": 3074,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -14817,7 +14817,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/MealNutritionAppliedDomainEvent.cs"
+        "Modules/Meals/Domain/Events/MealNutritionAppliedDomainEvent.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -59543,19 +59543,6 @@
         "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/Events/MealNutritionAppliedDomainEvent.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/Events/UserDeletedDomainEvent.cs",
       "isTest": false,
       "referenceCount": 1
@@ -59700,6 +59687,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/MealPlanning/Domain/Events/ShoppingListNameUpdatedDomainEvent.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Domain/Events/MealNutritionAppliedDomainEvent.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -61038,58 +61038,6 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/MealAiItemId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/MealAiSessionId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/MealId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/MealItemId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/RoleId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61714,6 +61662,58 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Domain/ValueObjects/Ids/MealAiItemId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Domain/ValueObjects/Ids/MealAiSessionId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Domain/ValueObjects/Ids/MealId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Domain/ValueObjects/Ids/MealItemId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Domain/ValueObjects/Ids/NotificationId.cs",
       "isTest": false,
       "referenceCount": 1
@@ -61860,6 +61860,19 @@
       "consumerPath": "Modules/WeeklyGoals/Domain/ValueObjects/Ids/WeeklyGoalId.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealIdInvariantTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IEntityId",
@@ -102387,10 +102400,10 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/MealNutritionAppliedDomainEvent.cs"
+        "Modules/Meals/Domain/Events/MealNutritionAppliedDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/Entities/Meals/Meal.cs",
+      "consumerPath": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -102400,7 +102413,20 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/MealNutritionAppliedDomainEvent.cs"
+        "Modules/Meals/Domain/Events/MealNutritionAppliedDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealExtractedInvariantTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "MealNutritionAppliedDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Meals/Domain/Events/MealNutritionAppliedDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealInvariantTests.cs",
@@ -102413,25 +102439,12 @@
         "Event"
       ],
       "definitionPaths": [
-        "FoodDiary.Domain/Events/MealNutritionAppliedDomainEvent.cs"
+        "Modules/Meals/Domain/Events/MealNutritionAppliedDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainEventInvariantTests.cs",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/MealsModuleExtractionTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "MealNutritionAppliedDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Domain/Events/MealNutritionAppliedDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainEventsTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "MealOverviewHttpResponse",

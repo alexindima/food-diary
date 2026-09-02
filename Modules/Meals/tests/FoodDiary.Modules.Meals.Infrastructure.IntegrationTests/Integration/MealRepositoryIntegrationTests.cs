@@ -9,12 +9,60 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Meals;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task MealUser_OneWayRelationship_RetainsSoftDeletedMealsAndCascadesOnPurge() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"meal-owner-{Guid.NewGuid():N}@example.com", "hash");
+        var otherUser = User.Create($"meal-survivor-{Guid.NewGuid():N}@example.com", "hash");
+        var product = Product.Create(otherUser.Id, "Shared apple", MeasurementUnit.G, 100, 100,
+            52, 0.3, 0.2, 14, 2.4, 0);
+        var meal = Meal.Create(user.Id, DateTime.UtcNow);
+        MealItem item = meal.AddProduct(product.Id, 100);
+        MealAiSession session = meal.AddAiSession(imageAssetId: null, AiRecognitionSource.Text, DateTime.UtcNow,
+            notes: null, [MealAiItemData.Create("Apple", nameLocal: null, 100, "g", 52, 0.3, 0.2, 14, 2.4, 0)]);
+        MealAiItem aiItem = Assert.Single(session.Items);
+        var otherMeal = Meal.Create(otherUser.Id, DateTime.UtcNow);
+        context.Users.AddRange(user, otherUser);
+        context.Products.Add(product);
+        context.Meals.AddRange(meal, otherMeal);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        Meal loaded = await context.Meals.Include(entry => entry.User).SingleAsync(entry => entry.Id == meal.Id);
+        IForeignKey relationship = context.Model.FindEntityType(typeof(Meal))!.FindNavigation(nameof(Meal.User))!.ForeignKey;
+        Assert.Multiple(
+            () => Assert.Equal(user.Id, loaded.User.Id),
+            () => Assert.Null(relationship.PrincipalToDependent),
+            () => Assert.True(relationship.IsRequired),
+            () => Assert.Equal(DeleteBehavior.Cascade, relationship.DeleteBehavior),
+            () => Assert.Equal("FK_Meals_Users_UserId", relationship.GetConstraintName()),
+            () => Assert.Null(context.Model.FindEntityType(typeof(User))!.FindNavigation("Meals")));
+
+        loaded.User.MarkDeleted(DateTime.UtcNow);
+        await context.SaveChangesAsync();
+        Assert.True(await context.Meals.AnyAsync(entry => entry.Id == meal.Id));
+        loaded.User.Restore();
+        await context.SaveChangesAsync();
+        Assert.True(await context.Meals.AnyAsync(entry => entry.Id == meal.Id));
+
+        context.ChangeTracker.Clear();
+        Assert.Equal(1, await context.Users.Where(entry => entry.Id == user.Id).ExecuteDeleteAsync());
+        Assert.False(await context.Meals.AnyAsync(entry => entry.Id == meal.Id));
+        Assert.False(await context.Set<MealItem>().AnyAsync(entry => entry.Id == item.Id));
+        Assert.False(await context.Set<MealAiSession>().AnyAsync(entry => entry.Id == session.Id));
+        Assert.False(await context.Set<MealAiItem>().AnyAsync(entry => entry.Id == aiItem.Id));
+        Assert.True(await context.Meals.AnyAsync(entry => entry.Id == otherMeal.Id));
+        Assert.True(await context.Products.AnyAsync(entry => entry.Id == product.Id));
+    }
+
     [RequiresDockerFact]
     public async Task GetByIdMealProjectionAsync_WithSnapshot_PreservesNutritionAndProductType() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();

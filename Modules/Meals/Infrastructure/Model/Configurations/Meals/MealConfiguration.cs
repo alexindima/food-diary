@@ -25,7 +25,7 @@ internal sealed class MealConfiguration : IEntityTypeConfiguration<Meal> {
             value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
         builder.HasOne(e => e.User)
-            .WithMany(u => u.Meals)
+            .WithMany()
             .HasForeignKey(e => e.UserId);
         builder.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(value: true);
 

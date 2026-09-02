@@ -173,6 +173,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )"
         }
       },
@@ -218,6 +219,12 @@
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.meals.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.modules.notifications.application.abstractions": {

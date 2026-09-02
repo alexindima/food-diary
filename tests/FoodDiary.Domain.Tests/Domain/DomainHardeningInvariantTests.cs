@@ -1,6 +1,4 @@
-using System.Reflection;
 using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.OpenFoodFacts;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
@@ -72,32 +70,6 @@ public sealed class DomainHardeningInvariantTests {
             () => Assert.Equal("Milk", product.Name),
             () => Assert.Equal(64, product.CaloriesPer100G),
             () => Assert.Equal(1, product.SearchHitCount));
-    }
-
-    [Fact]
-    public void MealAiData_PublicConstructorValidatesAndFailedSessionAdditionIsAtomic() {
-        ConstructorInfo[] constructors = typeof(MealAiItemData).GetConstructors(BindingFlags.Instance | BindingFlags.Public);
-        var meal = Meal.Create(UserId.New(), Now);
-
-        Assert.Single(constructors);
-        Assert.Throws<ArgumentOutOfRangeException>(() => new MealAiItemData(
-            "Apple",
-            nameLocal: null,
-            amount: double.NaN,
-            "g",
-            calories: 52,
-            proteins: 0.3,
-            fats: 0.2,
-            carbs: 14,
-            fiber: 2.4,
-            alcohol: 0));
-        Assert.Throws<ArgumentException>(() => meal.AddAiSession(
-            imageAssetId: null,
-            AiRecognitionSource.Text,
-            Now,
-            notes: null,
-            [null!]));
-        Assert.Empty(meal.AiSessions);
     }
 
     [Fact]
