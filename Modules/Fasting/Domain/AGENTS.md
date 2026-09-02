@@ -12,7 +12,7 @@ Rules for `Modules/Fasting/Domain/`.
 
 ## Boundaries
 
-- Reference Users Domain for User, Users Domain.Contracts for UserId and central Domain for shared guards.
+- Reference Users Domain for User, Users Domain.Contracts for UserId and use shared Primitives for base types; validation helpers remain Fasting-owned.
 - Do not reference Application, Contracts, Infrastructure, EF Core, or ASP.NET packages.
 - Keep database mapping and repository behavior outside this project.
 

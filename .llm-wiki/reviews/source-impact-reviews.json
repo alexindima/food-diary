@@ -7,22 +7,18 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "78111c859855a04265489830009b3cd6e7a624682195aa4991bbf39d12257d41"
-        },
-        {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "af9f388e05d226b4fe210569262a0c8b917883923f0f212ee4d17bad483b89d5"
+          "sha256": "fbe81697037051c5f14f779925bdc39ba0f75231b5a2f9c920a412db75a235ec"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "8aa8a6f6abdd7cc714fca8c67a5c2708a76690d069af76038053abd432cb62e5"
+          "sha256": "ca0bfaffbda6b26b2b1c65e98583da847b49218258ec856cf0d2587778942b21"
         }
       ],
-      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
+      "reason": "Compared active ownership claims against module csproj, UserConfiguration/UserCleanupService, central DbContext explicit model registration, Identity and Lessons entity sources, empty AddFoodPersistence and current host module registration. Retired central Domain references corrected; valid legacy CLR/assembly names and historical reports retained.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:42.9029308Z"
+      "gitHead": "64a7aa7ee7816964ddc6ee8e4ca0587eb5443d41",
+      "reviewedAtUtc": "2026-09-02T18:04:24.8211578Z"
     },
     {
       "pageId": "module.frontend",
@@ -46,17 +42,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "af9f388e05d226b4fe210569262a0c8b917883923f0f212ee4d17bad483b89d5"
+          "sha256": "fbe81697037051c5f14f779925bdc39ba0f75231b5a2f9c920a412db75a235ec"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "8aa8a6f6abdd7cc714fca8c67a5c2708a76690d069af76038053abd432cb62e5"
+          "sha256": "ca0bfaffbda6b26b2b1c65e98583da847b49218258ec856cf0d2587778942b21"
         }
       ],
-      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
+      "reason": "Compared active ownership claims against module csproj, UserConfiguration/UserCleanupService, central DbContext explicit model registration, Identity and Lessons entity sources, empty AddFoodPersistence and current host module registration. Retired central Domain references corrected; valid legacy CLR/assembly names and historical reports retained.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:43.7528793Z"
+      "gitHead": "64a7aa7ee7816964ddc6ee8e4ca0587eb5443d41",
+      "reviewedAtUtc": "2026-09-02T18:04:24.9531529Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -92,25 +88,21 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "af9f388e05d226b4fe210569262a0c8b917883923f0f212ee4d17bad483b89d5"
+          "sha256": "fbe81697037051c5f14f779925bdc39ba0f75231b5a2f9c920a412db75a235ec"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "c6414829b3d5337de8a76f99473ede63b69b602ee13fa7defe6aec0c75782c72"
+          "sha256": "d2f966485cf7d6d76817a9e9d28032110745d4365f55731344774310bc027b4a"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "8aa8a6f6abdd7cc714fca8c67a5c2708a76690d069af76038053abd432cb62e5"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "4bf1e26ad0114d7d889903af8772adbe6a26f75c57e30d342f84404cf229f3cc"
+          "sha256": "ca0bfaffbda6b26b2b1c65e98583da847b49218258ec856cf0d2587778942b21"
         }
       ],
-      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
+      "reason": "Source-verified existing Identity/Lessons entities and physical module paths; central auth/email ports and Auth transport remain central and are mapped as navigation seams. Corrected existing Dietologist module persistence port ownership. Generated Identity HTTP section retains a known name-matching limitation; no manual generated patch or generic tool change.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:45.1717680Z"
+      "gitHead": "64a7aa7ee7816964ddc6ee8e4ca0587eb5443d41",
+      "reviewedAtUtc": "2026-09-02T18:09:54.2823755Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -168,13 +160,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "c6414829b3d5337de8a76f99473ede63b69b602ee13fa7defe6aec0c75782c72"
+          "sha256": "d2f966485cf7d6d76817a9e9d28032110745d4365f55731344774310bc027b4a"
         }
       ],
-      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
+      "reason": "Source-verified existing Identity/Lessons entities and physical module paths; central auth/email ports and Auth transport remain central and are mapped as navigation seams. Corrected existing Dietologist module persistence port ownership. Generated Identity HTTP section retains a known name-matching limitation; no manual generated patch or generic tool change.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:46.6245840Z"
+      "gitHead": "64a7aa7ee7816964ddc6ee8e4ca0587eb5443d41",
+      "reviewedAtUtc": "2026-09-02T18:09:54.5005787Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -231,22 +223,14 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "8e83c1ec3871b9c17551c999c078af519136bc1844d448ec9f534fedce743e2b"
-        },
-        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "c6414829b3d5337de8a76f99473ede63b69b602ee13fa7defe6aec0c75782c72"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "4bf1e26ad0114d7d889903af8772adbe6a26f75c57e30d342f84404cf229f3cc"
+          "sha256": "d2f966485cf7d6d76817a9e9d28032110745d4365f55731344774310bc027b4a"
         }
       ],
-      "reason": "All 43 Nutrition cases and 38 central cases plus five CycleId reflection cases move without loss. Full unfiltered regression results and failed intermediate attempts are kept separately. Synthetic compile-probe regression exercises real native compilation, conditional aliased references, invalid source diagnostics and enabled-cache behavior. No policy or ranking changes.",
+      "reason": "Scoped source audit validates supported mapping keys, existing source areas and entity owners. The optional BackendModuleModel regression fails before these targets on the unchanged Users isolation value; known-limitations.json records that baseline failure. Native generators alone produce the four tracked derived module pages.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:48.0676427Z"
+      "gitHead": "64a7aa7ee7816964ddc6ee8e4ca0587eb5443d41",
+      "reviewedAtUtc": "2026-09-02T18:09:54.7036123Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -518,21 +502,17 @@
     {
       "pageId": "workflow-domain-data-review",
       "pagePath": ".llm-wiki/workflows/domain-data-review.md",
-      "pageSha256": "740dd5bba75b488c88d30cb9fda34ae14a0f7441a6d375ba03994ceaf41bc86f",
+      "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "fc108bc0a7652a364274c2f7e76e1804ccf4c070441273a42ab3c42a74d5deac"
-        },
-        {
-          "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "<missing>"
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "b05ad8122958b4c20fb7f75b97829296d47c27483ad36f53ddc9f860d0943d0c"
         }
       ],
-      "reason": "All 43 Nutrition cases and 38 central cases plus five CycleId reflection cases move without loss. Full unfiltered regression results and failed intermediate attempts are kept separately. Synthetic compile-probe regression exercises real native compilation, conditional aliased references, invalid source diagnostics and enabled-cache behavior. No policy or ranking changes.",
+      "reason": "This package changes documentation and supported manifest metadata only. Native generators refresh derived navigation, and required Wiki verification checks its consistency. Prior package1 full Architecture944 and three affected Domain suites1079 total passed; no runtime change in this package.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:51.2452438Z"
+      "gitHead": "64a7aa7ee7816964ddc6ee8e4ca0587eb5443d41",
+      "reviewedAtUtc": "2026-09-02T18:04:25.5185196Z"
     },
     {
       "pageId": "workflow-durable-memory",

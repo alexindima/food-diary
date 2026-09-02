@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: none observed
+- Abstraction-contract dependencies: Achievements, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -25,6 +25,12 @@ sources:
 ## Source Areas
 
 - `FoodDiary.Presentation.Api/Features/Lessons`
+- `Modules/Lessons/Application`
+- `Modules/Lessons/Application/Abstractions`
+- `Modules/Lessons/Contracts`
+- `Modules/Lessons/Domain`
+- `Modules/Lessons/Infrastructure`
+- `Modules/Lessons/Infrastructure/Model`
 
 ## HTTP Surface
 
@@ -39,22 +45,25 @@ Source: `FoodDiary.Presentation.Api/Features/Lessons/LessonsController.cs`
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: project
-- Architecture guardrails: project-reference-matrix
-- Declared owned entities: not yet enumerated
-- Public contract files: 0
+- Physical isolation: module-root
+- Architecture guardrails: project-reference-matrix-and-module-boundary-tests
+- Declared owned entities: NutritionLesson, UserLessonProgress
+- Public contract files: 4
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 4
+- Interfaces: 2
+- DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- Contracts referencing domain entities: 1
+- `interface ILessonAdministrationReadService`
+- `interface ILessonAdministrationService`
+- `record LessonAdministrationItem`
+- `record LessonAdminReadModel`
 
 ## Focused Tests
 

@@ -25,7 +25,7 @@ The rules are intentionally evolutionary:
 
 ## Governed ownership map
 
-The canonical ownership inventory and cross-layer mappings live in `docs/architecture/backend-modules.json`. It currently unifies 3 folder modules with 31 extracted application modules (34 primary backend modules total). The executable module API graph remains in `docs/architecture/module-dependencies.json`; architecture tests derive direct `FoodDiary.Application.<Module>` dependencies with Roslyn syntax traversal and require an exact manifest match. Every new in-process Module API dependency is therefore an explicit architecture decision; unknown modules, self-edges and unacknowledged strongly connected components fail the build.
+The canonical ownership inventory and cross-layer mappings live in `docs/architecture/backend-modules.json`. Use that manifest's inventory fields for the current module totals and physical isolation status. The executable module API graph remains in `docs/architecture/module-dependencies.json`; architecture tests derive direct `FoodDiary.Application.<Module>` dependencies with Roslyn syntax traversal and require an exact manifest match. Every new in-process Module API dependency is therefore an explicit architecture decision; unknown modules, self-edges and unacknowledged strongly connected components fail the build.
 
 Generated Wiki pages must keep business-module dependencies, abstraction-contract dependencies, project/host consumers and runtime composition evidence separate. An empty observed edge set is not proof of isolation; enforceability is declared per module in the ownership manifest.
 
@@ -211,7 +211,7 @@ Other modules use `IRecipeLookupService` or `IRecipeAccessService` for existence
 
 ### Infrastructure composition
 
-The historical `AddFoodPersistence` registration remains only as a composition aggregator. It delegates to Products, RecentItems and Meals registration modules and may not contain registrations itself. Recipes persistence is composed explicitly by the hosts through Modules/Recipes/Infrastructure. Product configurations remain central; Recipe aggregate EF configurations live in Modules/Recipes/Infrastructure/Model.
+The historical `AddFoodPersistence` method is an empty compatibility hook. Hosts explicitly compose Products, RecentItems, Meals and Recipes through their current module registration facades. Product and Recipe EF configurations live in their respective `Modules/<Module>/Infrastructure/Model` projects and are applied explicitly by the shared context.
 
 ## Meal Diary and RecentItems boundaries
 
@@ -265,7 +265,7 @@ User/role EF configurations live in `Configurations/Users`. Refresh-token sessio
 
 ## Images and Favorites boundaries
 
-Images owns `ImageAsset`, `ImageAssetId`, upload validation, cleanup policy and the durable object-deletion outbox. `ImageAssetId` lives in a dependency-free module contract project consumed by central Domain; `ImageAsset` lives in Images Domain and depends one-way on central `User`/`UserId`. `MealAiSession` retains only the ID seam, while Meals and Dashboard resolve URLs in persistence projections and preserve the existing optional foreign key. The Application assembly keeps the legacy `FoodDiary.Application.Images` identity. The outbox persistence type/configuration remains central because it participates in the shared outbox engine and migration model. Other modules use `IImageAssetAccessService` and `IImageAssetCleanupService`; they must not acquire image repositories. AI image analysis resolves and validates ownership through the Images capability rather than loading `ImageAsset` persistence directly. See `docs/ai/images-domain-extraction.md`.
+Images owns `ImageAsset`, `ImageAssetId`, upload validation, cleanup policy and the durable object-deletion outbox. `ImageAssetId` lives in the Images contract project for ID-only consumers; `ImageAsset` lives in Images Domain and depends one-way on Users-owned `User`/`UserId`. `MealAiSession` retains only the ID seam, while Meals and Dashboard resolve URLs in persistence projections and preserve the existing optional foreign key. The Application assembly keeps the legacy `FoodDiary.Application.Images` identity. The outbox persistence type/configuration remains central because it participates in the shared outbox engine and migration model. Other modules use `IImageAssetAccessService` and `IImageAssetCleanupService`; they must not acquire image repositories. AI image analysis resolves and validates ownership through the Images capability rather than loading `ImageAsset` persistence directly. See `docs/ai/images-domain-extraction.md`.
 
 FavoriteProducts, FavoriteRecipes and FavoriteMeals are three cohesive feature slices inside the single physical `FoodDiary.Application.Favorites` module. Each slice owns its favorite entity and exposes commands plus a semantic read service, while sharing one composition boundary because they have the same lifecycle, dependency profile and relationship-focused responsibility. Products, Recipes and Meal Diary consume those read services rather than favorite repositories.
 
@@ -302,7 +302,7 @@ Body Metrics and Exercises configurations live in their module-owned `Infrastruc
 
 ## Planning, Wearables and Marketing boundaries
 
-MealPlanning is the shared physical logical-module boundary under `Modules/MealPlanning` for the separate MealPlans and ShoppingLists logical owners. Meal Plans reads its own aggregate and submits a `ShoppingListCreationRequest` through `IShoppingListCreationService`; Shopping Lists alone constructs and persists the `ShoppingList` aggregate. Grouping the related planning workflow in one assembly does not transfer write ownership between its aggregates. Both aggregate graphs, their IDs, ShoppingLists events and source enum live in the module Domain with stable CLR namespaces; their EF configurations remain separated under `Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists` and `MealPlans`. ShoppingList keeps a one-way relationship to central User through scalar `UserId` and `ShoppingList.User`; the schema-equivalent mapping has no central inverse CLR navigation. See `Modules/MealPlanning/AGENTS.md`.
+MealPlanning is the shared physical logical-module boundary under `Modules/MealPlanning` for the separate MealPlans and ShoppingLists logical owners. Meal Plans reads its own aggregate and submits a `ShoppingListCreationRequest` through `IShoppingListCreationService`; Shopping Lists alone constructs and persists the `ShoppingList` aggregate. Grouping the related planning workflow in one assembly does not transfer write ownership between its aggregates. Both aggregate graphs, their IDs, ShoppingLists events and source enum live in the module Domain with stable CLR namespaces; their EF configurations remain separated under `Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists` and `MealPlans`. ShoppingList keeps a one-way relationship to Users-owned User through scalar `UserId` and `ShoppingList.User`; the schema-equivalent mapping has no inverse CLR navigation on User. See `Modules/MealPlanning/AGENTS.md`.
 
 Wearables owns provider connections and synchronization history under `Modules/Wearables`. Application abstractions, use cases, domain, persistence model, and infrastructure are separate projects; the application project preserves the `FoodDiary.Application.Wearables` assembly identity. Complete registration flows through infrastructure `AddWearablesModule`, while `FoodDiary.Application.Runtime` does not aggregate it. Fitbit/provider HTTP clients and typed options remain in `FoodDiary.Integrations`; OAuth-state and token protection remain inside module infrastructure. The shared `FoodDiaryDbContext`, historical migrations, and snapshot remain central, and the context applies the module persistence model through `ApplyWearablesPersistenceModel`. No recurring background wearable sync is registered today; synchronization remains an explicit application command.
 
@@ -322,7 +322,7 @@ Direct acquisition of `FoodDiaryDbContext` is confined to `FoodDiary.Infrastruct
 
 Every EF entity configuration is grouped under an owning module folder. The `Persistence/Configurations` root must contain no loose configuration classes; an architecture test enforces this invariant. Shared use of `FoodDiaryDbContext` therefore remains a physical deployment choice rather than an implicit shared-ownership signal.
 
-Remaining central technical adapters use explicit folders such as `Admin`, `Ai`, `Email`, `Notifications` and `Nutrition`. Extracted USDA domain and persistence live under `Modules/Usda`; central Domain references USDA Domain one-way to preserve Product's EF navigation compatibility seam. Provider HTTP and in-memory detail caching remain in Integrations.
+Remaining central technical adapters use explicit folders such as `Admin`, `Ai`, `Email`, `Notifications` and `Nutrition`. Extracted USDA domain and persistence live under `Modules/Usda`; Products Domain references USDA Domain one-way for the accepted scoring and EF navigation seam described in ADR 0027. Provider HTTP and in-memory detail caching remain in Integrations.
 
 Executable hosts, Presentation, Initializer, JobManager and Integrations may not inject repository contracts. They invoke application capabilities or implement external ports. This is enforced across all primary backend adapter projects by a single architecture guardrail.
 
@@ -342,15 +342,15 @@ USDA and OpenFoodFacts are separate catalog adapters with separate cache/import 
 
 ## Exercises physical ownership
 
-Exercises owns Application, repository Abstractions, stable read Contracts, Domain, Infrastructure and PersistenceModel under `Modules/Exercises`. Dashboard and TDEE reference Contracts only. The application assembly and existing CLR namespaces remain stable. `ExerciseEntry.User` uses a unidirectional relationship (`WithMany()`); no central Domain type references Exercises. Module Domain references central Domain for User/UserId and the existing internal DomainGuard through an explicit IVT. Central `Errors.Exercise` remains a compatibility facade over module-owned ExerciseErrors, with central Abstractions referencing module Abstractions one-way. Shared DbContext, historical migrations and snapshot remain central; ApplyExercisesPersistenceModel registers the mapping explicitly. Full registration is AddExercisesModule from module Infrastructure; Application exposes AddExercisesApplication. No Exercises provider or job is owned.
+Exercises owns Application, repository Abstractions, stable read Contracts, Domain, Infrastructure and PersistenceModel under `Modules/Exercises`. Dashboard and TDEE reference Contracts only. The application assembly and existing CLR namespaces remain stable. `ExerciseEntry.User` uses a unidirectional relationship (`WithMany()`) to Users-owned User, with UserId supplied by Users Domain.Contracts. Generic DomainGuard is public in shared Primitives; no central Domain friend access is involved. Central `Errors.Exercise` remains a compatibility facade over module-owned ExerciseErrors, with central Abstractions referencing module Abstractions one-way. Shared DbContext, historical migrations and snapshot remain central; ApplyExercisesPersistenceModel registers the mapping explicitly. Full registration is AddExercisesModule from module Infrastructure; Application exposes AddExercisesApplication. No Exercises provider or job is owned.
 
 ## RecipeCommunity logical module
 
-`Modules/RecipeCommunity` owns Application (RecipeComments/RecipeLikes), Application/Abstractions, Domain, Infrastructure and Infrastructure/Model. Legacy application assembly and CLR namespaces remain stable. One-way User/Recipe navigations permit owned entities/IDs to leave central Domain without extracting Recipes. Shared context/migrations, HTTP and ContentReports reportability projection remain with their owners; no extra Contracts or provider layer. See `docs/ai/recipecommunity-ownership-inventory.md` for sources and compatibility seams.
+`Modules/RecipeCommunity` owns Application (RecipeComments/RecipeLikes), Application/Abstractions, Domain, Infrastructure and Infrastructure/Model. Legacy application assembly and CLR namespaces remain stable. RecipeCommunity entities and IDs remain separate from Users and Recipes Domain owners through one-way User/Recipe navigations. Shared context/migrations, HTTP and ContentReports reportability projection remain with their owners; no extra Contracts or provider layer. See `docs/ai/recipecommunity-ownership-inventory.md` for sources and compatibility seams.
 
 ## Ai physical ownership
 
-Ai owns Application, Application/Abstractions, Domain, Infrastructure/Model and Infrastructure under `Modules/Ai`. Application keeps its legacy assembly/CLR identity. AiUsage/AiPromptTemplate and quota ledger ownership, provider/cache/consent semantics, central User and DbContext seams and consumers are source-audited in `docs/ai/ai-ownership-inventory.md`. Admin invokes semantic administration capabilities; Meals AI entities remain Meals-owned. Provider HTTP/options remain Integrations. Focused tests live under Modules/Ai/tests; central PostgreSQL/HTTP/mixed suites remain with their owners.
+Ai owns Application, Application/Abstractions, Domain, Infrastructure/Model and Infrastructure under `Modules/Ai`. Application keeps its legacy assembly/CLR identity. AiUsage/AiPromptTemplate and quota ledger ownership, provider/cache/consent semantics, Users identity/profile and shared DbContext seams and consumers are source-audited in `docs/ai/ai-ownership-inventory.md`. Admin invokes semantic administration capabilities; Meals AI entities remain Meals-owned. Provider HTTP/options remain Integrations. Focused tests live under Modules/Ai/tests; central PostgreSQL/HTTP/mixed suites remain with their owners.
 
 ## Dashboard logical extraction
 
@@ -367,7 +367,7 @@ tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.
 
 ## Recipes physical ownership
 
-Recipes use cases, ports, read contracts, persistence model and adapters live under `Modules/Recipes`. Recipe/Steps/Ingredients, IDs/value objects/events remain central Domain because public User/MealItem/Product inverse navigations prohibit a one-way extraction. Shared context/migrations/snapshot and cross-module tests stay central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers. See `docs/ai/recipes-ownership-inventory.md`; this is not full Domain/database isolation.
+Recipes use cases, ports, read contracts, persistence model and adapters live under `Modules/Recipes`. Recipe, steps, ingredients, recipe-only value objects and events live in Recipes Domain; recipe IDs live in Recipes Domain.Contracts. Removed inverse CLR navigations remain absent, while explicit unidirectional mappings preserve the existing database relationships. Shared context/migrations/snapshot and cross-module tests stay central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers. See `docs/ai/recipes-ownership-inventory.md`; this is not full Domain/database isolation.
 
 ## Admin physical ownership
 
@@ -376,7 +376,7 @@ AdminImpersonationSession Domain, its explicit EF model and reporting/session
 adapters under Modules/Admin. Legacy application assembly and CLR namespaces
 remain stable; compatibility requires coordinated host rebuilds. Email templates
 remain Identity-owned and role audit/User capabilities remain Users-owned despite
-legacy Admin namespaces. Shared context/migrations/cleanup, SSO store/JWT providers,
+legacy Admin namespaces. Shared context/migrations, SSO store/JWT providers,
 HTTP authorization, structured audit and MailInbox client bridge remain central.
 Hosts call AddAdminModule; JobManager adds only AddAdminPersistence. See
 docs/ai/admin-ownership-inventory.md for current source evidence and test ownership.

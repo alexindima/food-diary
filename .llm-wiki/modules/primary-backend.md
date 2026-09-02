@@ -28,15 +28,15 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 | Domain behavior and invariants | Owning module Domain project; generic values and guards in `FoodDiary.Domain.Primitives`. The former central and Nutrition assemblies are retired under ADR 0027. |
 | Application-facing ports and models | Owning module abstractions plus shared `FoodDiary.Application.Abstractions` |
 | Cross-cutting application execution pipeline | `FoodDiary.Application.Runtime` |
-| Business use cases | Owning module Application project, under `Modules/<Module>/Application` or a legacy `FoodDiary.Application.<Feature>` project |
-| Extracted billing use cases | `FoodDiary.Application.Billing` |
-| Extracted marketing use cases | `FoodDiary.Application.Marketing` |
-| Body measurements | `Modules/BodyMetrics` application, ports, repositories and mappings; central Domain identity seam |
-| AI use cases, usage and prompt ownership | `Modules/Ai` application, ports, Domain, persistence model and adapters; central User profile/context and external Integrations provider seams |
-| Admin orchestration and impersonation | `Modules/Admin`: application, ports, independent impersonation domain, adapters and explicit persistence model; Identity Email, Users role audit and shared SSO remain central |
+| Business use cases | Owning module Application project under `Modules/<Module>/Application`; legacy assembly names may remain |
+| Billing use cases | `Modules/Billing/Application` |
+| Marketing use cases | `Modules/Marketing/Application` |
+| Body measurements | `Modules/BodyMetrics` application, Domain, ports, repositories and mappings; Users-owned identity seam |
+| AI use cases, usage and prompt ownership | `Modules/Ai` application, ports, Domain, persistence model and adapters; Users profile contracts, shared context and external Integrations provider seams |
+| Admin orchestration and impersonation | `Modules/Admin`: application, ports, independent impersonation domain, adapters and explicit persistence model; Identity-owned email templates, Users-owned roles/audit and shared SSO seams retain their owners |
 
-| Product catalog and mutation ownership | `Modules/Products` application, ports/contracts, persistence model, adapters and focused tests; central Product/User/RecipeIngredient/MealItem/USDA CLR navigation and shared composition-lock seams |
-| Meal diary aggregate ownership | `Modules/Meals/Domain` owns Meal, items, AI sessions/items, IDs and meal-only value types; one-way Meal.User retains central User/UserId, shared context and migration seams |
+| Product catalog and mutation ownership | `Modules/Products` Domain, application, ports/contracts, persistence model, adapters and focused tests; accepted Users/USDA dependencies and the shared Recipe composition lock remain explicit |
+| Meal diary aggregate ownership | `Modules/Meals/Domain` owns Meal, items, AI sessions/items, IDs and meal-only value types; one-way Meal.User references Users-owned User/UserId; shared context and migrations remain central |
 | EF Core and technical implementations | `FoodDiary.Infrastructure` |
 | External providers and service clients | `FoodDiary.Integrations` |
 | HTTP and SignalR transport | `FoodDiary.Presentation.Api` |

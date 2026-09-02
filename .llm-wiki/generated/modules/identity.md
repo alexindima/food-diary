@@ -24,7 +24,13 @@ sources:
 
 ## Source Areas
 
+- `FoodDiary.Application.Abstractions/Authentication`
+- `FoodDiary.Application.Abstractions/Email`
+- `FoodDiary.Presentation.Api/Features/Auth`
 - `Modules/Identity/Application`
+- `Modules/Identity/Domain`
+- `Modules/Identity/Infrastructure`
+- `Modules/Identity/Infrastructure/Model`
 
 ## HTTP Surface
 
@@ -32,22 +38,52 @@ No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: project
-- Architecture guardrails: assembly-isolated
-- Declared owned entities: not yet enumerated
-- Public contract files: 0
+- Physical isolation: module-root
+- Architecture guardrails: project-reference-matrix-and-module-boundary-tests
+- Declared owned entities: EmailTemplate, UserRefreshTokenSession, UserLoginEvent
+- Public contract files: 45
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 45
+- Interfaces: 23
+- DTO/read-model/projection types: 2
 - Enums: 0
-- Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- Exported repository-shaped contracts: 7
+- Contracts referencing domain entities: 3
+- `class ApplicationEmailTelemetry`
+- `class AuthenticationInputLimits`
+- `class EmailOptions`
+- `class JwtImpersonationClaimNames`
+- `class JwtSecurityClaimNames`
+- `class JwtTokenUseClaimNames`
+- `class SecurityTokenGenerator`
+- `interface IAdminSsoCodeStore`
+- `interface IAdminSsoService`
+- `interface IAuthenticationLoginEventCleanupService`
+- `interface IAuthenticationLoginEventReadService`
+- `interface IAuthenticationTokenService`
+- `interface IEmailOutbox`
+- `interface IEmailOutboxProcessor`
+- `interface IEmailSender`
+- `interface IEmailTemplateProvider`
+- `interface IEmailTransport`
+- `interface IEmailVerificationNotifier`
+- `interface IGoogleTokenValidator`
+- `interface IJwtTokenGenerator`
+- `interface IPasswordHasher`
+- `interface IRefreshTokenSessionReadRepository`
+- `interface IRefreshTokenSessionRepository`
+- `interface IRefreshTokenSessionWriteRepository`
+- `interface ITelegramAssertionReplayGuard`
+- `interface ITelegramAuthValidator`
+- `interface ITelegramLoginWidgetValidator`
+- `interface IUserLoginEventReadRepository`
+- `interface IUserLoginEventRepository`
+- `interface IUserLoginEventWriteRepository`
+- ... 15 more type(s)
 
 ## Focused Tests
 
@@ -73,6 +109,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/Services/InitialAdminBootstrapServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/UserAgentParserTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/EmailTemplateInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/UserAuditEventInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/UserRefreshTokenSessionInvariantTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/IdentityModuleExtractionTests.cs`
 
 ## Working Rule

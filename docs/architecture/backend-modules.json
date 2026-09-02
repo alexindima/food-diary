@@ -98,9 +98,13 @@
     },
     "Identity": {
       "role": "aggregate-owner",
-      "physicalIsolation": "project",
-      "enforcement": "assembly-isolated",
-      "ownedEntities": [],
+      "physicalIsolation": "module-root",
+      "enforcement": "project-reference-matrix-and-module-boundary-tests",
+      "ownedEntities": [
+        "EmailTemplate",
+        "UserRefreshTokenSession",
+        "UserLoginEvent"
+      ],
       "sourceMappings": {
         "logicalRoot": "Modules/Identity",
         "applicationProjects": [
@@ -109,6 +113,22 @@
         "applicationAreas": [
           "Authentication",
           "Email"
+        ],
+        "abstractionAreas": [
+          "FoodDiary.Application.Abstractions/Authentication",
+          "FoodDiary.Application.Abstractions/Email"
+        ],
+        "adapterAreas": [
+          "FoodDiary.Presentation.Api/Features/Auth"
+        ],
+        "domainProjects": [
+          "Modules/Identity/Domain"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Identity/Infrastructure/Model"
+        ],
+        "infrastructureProjects": [
+          "Modules/Identity/Infrastructure"
         ]
       }
     },
@@ -414,21 +434,31 @@
     },
     "Lessons": {
       "role": "aggregate-owner",
-      "physicalIsolation": "project",
-      "enforcement": "project-reference-matrix",
-      "ownedEntities": [],
+      "physicalIsolation": "module-root",
+      "enforcement": "project-reference-matrix-and-module-boundary-tests",
+      "ownedEntities": [
+        "NutritionLesson",
+        "UserLessonProgress"
+      ],
       "sourceMappings": {
+        "logicalRoot": "Modules/Lessons",
         "applicationProjects": [
-          "FoodDiary.Application.Lessons"
+          "Modules/Lessons/Application"
         ],
-        "abstractionAreas": [
-          "Lessons"
+        "applicationAbstractionProjects": [
+          "Modules/Lessons/Application/Abstractions"
         ],
-        "domainAreas": [
-          "Content"
+        "contractProjects": [
+          "Modules/Lessons/Contracts"
         ],
-        "persistenceAreas": [
-          "Lessons"
+        "domainProjects": [
+          "Modules/Lessons/Domain"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Lessons/Infrastructure/Model"
+        ],
+        "infrastructureProjects": [
+          "Modules/Lessons/Infrastructure"
         ]
       }
     },

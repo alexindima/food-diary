@@ -8,14 +8,14 @@ Rules for `FoodDiary.Infrastructure/`.
 - Implement abstractions declared in upper layers.
 
 ## Data Access
-- Keep `DbContext` and entity configurations here.
+- Keep the shared `DbContext`, migrations and model snapshot here. Module-owned entity configurations live in their PersistenceModel projects and are applied explicitly by the shared context; only shared technical mappings remain here.
 - Use Fluent API for mapping and constraints.
 - Keep migrations in this project.
 
 ## Rules
 - Do not move domain rules from aggregates into persistence code.
 - Keep dependency direction inward (Infrastructure depends on Application/Domain, not vice versa).
-- `FoodDiary.Infrastructure` may reference `FoodDiary.Application.Abstractions`, `FoodDiary.Domain`, and `Shared/FoodDiary.Mediator`; do not reference `FoodDiary.Application`, presentation projects, host projects, or resources.
+- Keep project references aligned with the enforced dependency matrix: approved shared/module contracts, Domain owners, PersistenceModel assemblies and shared primitives. Do not reference module adapter implementations, presentation projects, host projects, or resources.
 - Keep shared external provider adapters that are not persistence concerns in `FoodDiary.Integrations`; Notifications-owned web-push adapters live in `Modules/Notifications/Infrastructure`.
 - Notifications configurations are registered explicitly from its PersistenceModel assembly; generic outbox processing/claiming/replay remain central and use the shared Outbox.Abstractions contract.
 - Keep repository-owned `SaveChangesAsync` and manual transactions inside the architecture-test allowlist. `AiQuotaRepository` is an explicit exception: its short PostgreSQL transactions atomically reserve or reconcile quota independently of the request transaction, and must never contain an external provider call.
@@ -46,7 +46,7 @@ MealPlanning repositories and DI live in Modules/MealPlanning/Infrastructure;
 all six EF mappings live in its Model project and are applied explicitly by the
 shared context. Hosts and repository-resolution fixtures call AddMealPlanningModule
 in addition to AddInfrastructure. Central Infrastructure must not reference the
-module adapter project. User cleanup, DbContext and migrations remain here.
+module adapter project. User cleanup belongs to `Modules/Users/Infrastructure`; DbContext and migrations remain here.
 
 - Exercises mapping is registered through ApplyExercisesPersistenceModel; its repository and complete DI belong to Modules/Exercises/Infrastructure. Keep the central context, migrations and snapshot here.
 
@@ -63,7 +63,7 @@ AdminImpersonationSession Domain, its explicit EF model and reporting/session
 adapters under Modules/Admin. Legacy application assembly and CLR namespaces
 remain stable; compatibility requires coordinated host rebuilds. Email templates
 remain Identity-owned and role audit/User capabilities remain Users-owned despite
-legacy Admin namespaces. Shared context/migrations/cleanup, SSO store/JWT providers,
+legacy Admin namespaces. Shared context/migrations, SSO store/JWT providers,
 HTTP authorization, structured audit and MailInbox client bridge remain central.
 Hosts call AddAdminModule; JobManager adds only AddAdminPersistence. See
 docs/ai/admin-ownership-inventory.md for current source evidence and test ownership.
@@ -80,8 +80,9 @@ coordinated-rebuild compatibility promise.
 ## Meals physical ownership
 
 MealRepository and the four Meals EF mappings live under `Modules/Meals`; the shared
-context explicitly applies `ApplyMealsPersistenceModel`. Keep UserConfiguration,
-user cleanup, Meals DbSets, migrations and snapshot central. Hosts use AddMealsModule;
+context explicitly applies `ApplyMealsPersistenceModel`. UserConfiguration belongs
+to Users Infrastructure/Model; user cleanup belongs to Users Infrastructure.
+Keep Meals DbSets, migrations and snapshot central. Hosts use AddMealsModule;
 JobManager uses AddMealsPersistence only. See `docs/ai/meals-ownership-inventory.md`.
 
 ## RecentItems physical ownership
@@ -93,8 +94,8 @@ RecentItems repository, post-commit recorder, DI and EF mapping live under `Modu
 Users owns the complete User aggregate, all credential/security partials, roles,
 role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in
 `Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers
-reference the exact owner; central Domain retains shared guards and values without
-an aggregate re-export. Authentication flows/providers, combined UserRepository,
+reference the exact owner; shared guards and generic values belong to
+`FoodDiary.Domain.Primitives`; module-specific values stay with their owner. Authentication flows/providers, combined UserRepository,
 DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.

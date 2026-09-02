@@ -87,8 +87,8 @@ Use this file when deciding where backend code belongs.
 | Marketing infrastructure | `Modules/Marketing/Infrastructure` | Attribution repository adapter and complete module registration | HTTP transport, central migrations, cleanup scheduling |
 | Notifications | `Modules/Notifications` | Feed/preferences orchestration, notification/subscription aggregates and IDs, application ports/payloads, explicit EF model, repositories/outbox adapter and web-push provider; legacy Application assembly and CLR namespaces preserved | Users-owned preference storage, central DbContext/migrations/snapshot and multi-stream outbox engine/replay, HTTP/SignalR and JobManager composition roots |
 | Users | `Modules/Users` | Complete User Domain, UserId contracts, application, role/goal mappings and adapters, focused tests | Shared application contracts, combined UserRepository, DbContext/migrations/snapshot and Identity authentication flows/providers |
-| Identity | `Modules/Identity` | Authentication and Email application slices/services plus focused application tests; legacy `FoodDiary.Application.Identity` assembly and namespaces preserved | Central Authentication/Email abstractions, User CLR/security state, combined UserRepository, refresh-token/login-event persistence, DbContext/migrations/snapshot, provider adapters, HTTP transport and hosts |
-| Persistence/technical implementations | `FoodDiary.Infrastructure` | DbContext, EF mappings, repositories, technical service implementations | HTTP controllers, host startup, external provider orchestration |
+| Identity | `Modules/Identity` | Authentication and Email application slices/services; EmailTemplate, UserRefreshTokenSession and UserLoginEvent Domain types, their EF model, template/session adapters and focused tests; legacy application assembly and CLR namespaces preserved | Shared Authentication/Email abstractions, Users-owned User/security state, combined UserRepository and mixed UserLoginEventRepository, central DbContext/migrations/snapshot, provider adapters, HTTP transport and hosts |
+| Persistence/technical implementations | `FoodDiary.Infrastructure` | Shared DbContext/migrations/snapshot, shared technical mappings, mixed repositories and technical service implementations; module mappings are registered explicitly | HTTP controllers, host startup, external provider orchestration |
 | External adapters | `FoodDiary.Integrations` | Provider clients, provider options, MailRelay/MailInbox client bridges | EF migrations, core domain workflows |
 | HTTP/SignalR transport | `FoodDiary.Presentation.Api` | Controllers, hubs, HTTP requests/responses, presentation mappings | Business logic, infrastructure, host middleware |
 | Host/composition | `FoodDiary.Web.Api` | Program, DI wiring, auth, middleware, Swagger, rate limiting, telemetry exporters | Feature controllers, request DTOs, domain rules |
@@ -171,11 +171,11 @@ project contains all six EF mappings, explicitly applied by the central context.
 The ShoppingList-to-User relationship is one-way: ShoppingList retains scalar
 `UserId` and its `User` navigation, while Users-owned User has no inverse ShoppingLists
 CLR collection. Its EF mapping uses schema-equivalent `WithMany()` with the same
-foreign key and cascade behavior. The module Domain references central Domain
-one-way for User/Product/Recipe and shared value types; central Domain has no
-reverse module reference. Source provenance IDs are not foreign keys. Shared
-DbContext, historical migrations/snapshot, User cleanup orchestration and
-Presentation controllers remain central. No empty Contracts layer is created:
+foreign key and cascade behavior. The module Domain references the existing Users,
+Products, Recipes and Meals owners plus shared Primitives through its declared
+project references. Source provenance IDs are not foreign keys. Shared DbContext,
+historical migrations/snapshot and Presentation controllers remain central;
+User cleanup orchestration belongs to Modules/Users/Infrastructure. No empty Contracts layer is created:
 IShoppingListCreationService is the existing internal aggregate boundary.
 
 Module tests live under `Modules/MealPlanning/tests`; central projects retain mixed
@@ -185,7 +185,7 @@ Exercises ownership: `Modules/Exercises/Application` owns slices and read-servic
 
 ## RecipeCommunity logical module
 
-`Modules/RecipeCommunity` owns Application (RecipeComments/RecipeLikes), Application/Abstractions, Domain, Infrastructure and Infrastructure/Model. Legacy application assembly and CLR namespaces remain stable. One-way User/Recipe navigations permit owned entities/IDs to leave central Domain without extracting Recipes. Shared context/migrations, HTTP and ContentReports reportability projection remain with their owners; no extra Contracts or provider layer. See `docs/ai/recipecommunity-ownership-inventory.md` for sources and compatibility seams.
+`Modules/RecipeCommunity` owns Application (RecipeComments/RecipeLikes), Application/Abstractions, Domain, Infrastructure and Infrastructure/Model. Legacy application assembly and CLR namespaces remain stable. RecipeCommunity entities and IDs remain separate from Users and Recipes Domain owners through one-way User/Recipe navigations. Shared context/migrations, HTTP and ContentReports reportability projection remain with their owners; no extra Contracts or provider layer. See `docs/ai/recipecommunity-ownership-inventory.md` for sources and compatibility seams.
 
 ## Ai physical ownership
 
@@ -215,7 +215,7 @@ AdminImpersonationSession Domain, its explicit EF model and reporting/session
 adapters under Modules/Admin. Legacy application assembly and CLR namespaces
 remain stable; compatibility requires coordinated host rebuilds. Email templates
 remain Identity-owned and role audit/User capabilities remain Users-owned despite
-legacy Admin namespaces. Shared context/migrations/cleanup, SSO store/JWT providers,
+legacy Admin namespaces. Shared context/migrations, SSO store/JWT providers,
 HTTP authorization, structured audit and MailInbox client bridge remain central.
 Hosts call AddAdminModule; JobManager adds only AddAdminPersistence. See
 docs/ai/admin-ownership-inventory.md for current source evidence and test ownership.
@@ -250,8 +250,8 @@ RecentItems aggregate/ID/enum, narrow usage abstractions, repository, post-commi
 Users owns the complete User aggregate, all credential/security partials, roles,
 role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in
 `Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers
-reference the exact owner; central Domain retains shared guards and values without
-an aggregate re-export. Authentication flows/providers, combined UserRepository,
+reference the exact owner; shared guards and generic values belong to
+`FoodDiary.Domain.Primitives`; module-specific values stay with their owner. Authentication flows/providers, combined UserRepository,
 DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
