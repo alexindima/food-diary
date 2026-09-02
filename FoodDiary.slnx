@@ -1,16 +1,9 @@
 <Solution>
-  <Folder Name="/Application/Core/">
+  <Folder Name="/Application/">
     <Project Path="FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj" />
     <Project Path="FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj" />
   </Folder>
-  <Folder Name="/Application/Food and Diary/">
-  </Folder>
-  <Folder Name="/Application/Users and Access/" />
-  <Folder Name="/Application/" />
-  <Folder Name="/Application/Content and Engagement/">
-  </Folder>
   <Folder Name="/Modules/" />
-  <Folder Name="/Modules/Usda/Domain/" />
   <Folder Name="/Modules/Users/">
     <Project Path="Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <Project Path="Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
@@ -214,7 +207,6 @@
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/FoodDiary.Modules.Hydration.Domain.Tests.csproj" />
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/FoodDiary.Modules.Hydration.Infrastructure.Tests.csproj" />
   </Folder>
-  <Folder Name="/Modules/Images/Contracts/" />
   <Folder Name="/Modules/Lessons/">
     <Project Path="Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj" />
     <Project Path="Modules/Lessons/Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
@@ -313,8 +305,7 @@
     <Project Path="FoodDiary.Analyzers/FoodDiary.Analyzers.csproj" />
     <Project Path="FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj" />
   </Folder>
-  <Folder Name="/Tests/" />
-  <Folder Name="/Tests/Core/">
+  <Folder Name="/Tests/">
     <Project Path="tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj" />
     <Project Path="tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj" />
     <Project Path="tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj" />
@@ -333,7 +324,7 @@
     <Project Path="tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj" />
     <Project Path="tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj" />
   </Folder>
-  <Folder Name="/Tests/MailInbox/">
+  <Folder Name="/Services/MailInbox/Tests/">
     <Project Path="MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj" />
     <Project Path="MailInbox/tests/FoodDiary.MailInbox.Client.Tests/FoodDiary.MailInbox.Client.Tests.csproj" />
     <Project Path="MailInbox/tests/FoodDiary.MailInbox.Domain.Tests/FoodDiary.MailInbox.Domain.Tests.csproj" />
@@ -342,7 +333,7 @@
     <Project Path="MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/FoodDiary.MailInbox.IntegrationTests.csproj" />
     <Project Path="MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/FoodDiary.MailInbox.Presentation.Tests.csproj" />
   </Folder>
-  <Folder Name="/Tests/MailRelay/">
+  <Folder Name="/Services/MailRelay/Tests/">
     <Project Path="MailRelay/tests/FoodDiary.MailRelay.Application.Tests/FoodDiary.MailRelay.Application.Tests.csproj" />
     <Project Path="MailRelay/tests/FoodDiary.MailRelay.Client.Tests/FoodDiary.MailRelay.Client.Tests.csproj" />
     <Project Path="MailRelay/tests/FoodDiary.MailRelay.Domain.Tests/FoodDiary.MailRelay.Domain.Tests.csproj" />

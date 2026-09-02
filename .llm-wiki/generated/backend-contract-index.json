@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7636,
+    "consumerEdges": 7637,
     "productionConsumerEdges": 4560,
-    "testConsumerEdges": 3076,
+    "testConsumerEdges": 3077,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -67746,6 +67746,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Events/IIntegrationEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/ArchitectureSourceDiscoveryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IIntegrationEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Events/IIntegrationEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/EventGovernanceTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -116027,9 +116040,9 @@
         "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/UserDataLifecycleGuardrailTests.cs",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/UserAuditEventInvariantTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 6
     },
     {
       "contract": "UserLoginEvent",
@@ -116040,9 +116053,9 @@
         "Modules/Identity/Domain/Entities/Users/UserLoginEvent.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/UserAuditEventInvariantTests.cs",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/UserDataLifecycleGuardrailTests.cs",
       "isTest": true,
-      "referenceCount": 6
+      "referenceCount": 1
     },
     {
       "contract": "UserLoginEvent",

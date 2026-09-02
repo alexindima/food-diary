@@ -19,6 +19,7 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 - `HostCompositionBoundaryTests` protects host-only concerns from leaking into application/presentation/resource projects.
 - `ContainerSupplyChainGuardrailTests` requires production images to carry provenance and SBOM metadata, resolve to image indexes, and be signed and verified before deployment.
 - `ProjectFileConventionTests` keeps unconditional `ProjectReference` items in one `ItemGroup` and rejects empty `ItemGroup` elements.
+- `SolutionModuleFolderTests` rejects empty solution-folder subtrees, duplicate folders/projects and missing project files; keeps modules and service tests under their owners; and prevents redundant `Application/Core` and `Tests/Core` wrappers. Folders with content in descendants (including solution files) and meaningful single-child groups remain valid.
 
 ## Rules
 - Prefer Roslyn-based checks for C# syntax over regex when inspecting declarations.
