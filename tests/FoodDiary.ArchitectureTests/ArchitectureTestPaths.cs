@@ -7,12 +7,15 @@ internal static class ArchitectureTestPaths {
     public static string FromRoot(params string[] pathParts) =>
         Path.Combine([RepositoryRoot, .. pathParts]);
 
-    public static bool IsGeneratedOrBuildPath(string path) =>
-        path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) ||
-        path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) ||
-        path.EndsWith(".Designer.cs", StringComparison.OrdinalIgnoreCase) ||
-        path.EndsWith(".g.cs", StringComparison.OrdinalIgnoreCase) ||
-        path.EndsWith(".AssemblyInfo.cs", StringComparison.OrdinalIgnoreCase);
+    public static bool IsGeneratedOrBuildPath(string path) {
+        string normalized = "/" + path.Replace('\\', '/');
+        return normalized.Contains("/.artifacts/", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("/bin/", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("/obj/", StringComparison.OrdinalIgnoreCase) ||
+               normalized.EndsWith(".Designer.cs", StringComparison.OrdinalIgnoreCase) ||
+               normalized.EndsWith(".g.cs", StringComparison.OrdinalIgnoreCase) ||
+               normalized.EndsWith(".AssemblyInfo.cs", StringComparison.OrdinalIgnoreCase);
+    }
 
     private static string FindRepositoryRoot() {
         var current = new DirectoryInfo(AppContext.BaseDirectory);

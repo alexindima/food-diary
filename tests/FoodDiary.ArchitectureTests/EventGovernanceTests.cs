@@ -64,8 +64,11 @@ public sealed class EventGovernanceTests {
 
     [Fact]
     public void IntegrationEventImplementations_UseExplicitNameAndEventsFolder() {
-        string root = ArchitectureTestPaths.RepositoryRoot;
-        string[] violations = [.. SourceScanner.SourceFiles(root)
+        Assert.Empty(FindIntegrationEventViolations(ArchitectureTestPaths.RepositoryRoot));
+    }
+
+    internal static string[] FindIntegrationEventViolations(string root) =>
+        [.. SourceScanner.SourceFiles(root)
             .Where(path => !path.StartsWith(Path.Combine(root, "tests"), StringComparison.OrdinalIgnoreCase))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
@@ -75,7 +78,4 @@ public sealed class EventGovernanceTests {
                             !Path.GetFileNameWithoutExtension(entry.path).EndsWith("IntegrationEvent", StringComparison.Ordinal))
             .Select(entry => $"{Path.GetRelativePath(root, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)}")
             .Order(StringComparer.Ordinal)];
-
-        Assert.Empty(violations);
-    }
 }

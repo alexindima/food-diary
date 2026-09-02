@@ -19,7 +19,10 @@ internal static class ProjectReferenceReader {
                 StringComparer.Ordinal);
 
     public static IReadOnlyList<string> ReadProductionProjectNames() =>
-        ReadProductionProjectPaths()
+        ReadProductionProjectNames(ArchitectureTestPaths.RepositoryRoot);
+
+    public static IReadOnlyList<string> ReadProductionProjectNames(string repositoryRoot) =>
+        ReadProductionProjectPaths(repositoryRoot)
             .Select(GetProjectNameFromPath)
             .Order(StringComparer.Ordinal)
             .ToArray();
@@ -54,8 +57,8 @@ internal static class ProjectReferenceReader {
             .Order(StringComparer.Ordinal)];
     }
 
-    private static IEnumerable<string> ReadProductionProjectPaths() =>
-        Directory.GetFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)
+    private static IEnumerable<string> ReadProductionProjectPaths(string? repositoryRoot = null) =>
+        Directory.GetFiles(repositoryRoot ?? ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)
             .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}tests{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}.llm-wiki{Path.DirectorySeparatorChar}tools{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))

@@ -1,5 +1,7 @@
 using System.Globalization;
 using System.Reflection;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 
@@ -131,8 +133,8 @@ public class DomainModelGuardrailTests {
 
     [Fact]
     public void DomainAggregates_DoNotIntroduceNewWidePublicMutators() {
-        string[] violations = [.. typeof(User).Assembly
-            .GetTypes()
+        string[] violations = [.. ModuleDomainAssemblyCatalog.LoadAssemblies()
+            .SelectMany(assembly => assembly.GetTypes())
             .Where(IsConcreteAggregateRoot)
             .SelectMany(type => type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
                 .Where(IsMutator)
@@ -148,9 +150,48 @@ public class DomainModelGuardrailTests {
             string.Join(Environment.NewLine, violations));
     }
 
+    [Fact]
+    public void ModuleDomainAssemblies_CoverEveryProductionDomainProject() {
+        string[] expected = [.. ProjectReferenceReader.ReadProductionProjectNames()
+            .Where(name => name.StartsWith("FoodDiary.Modules.", StringComparison.Ordinal) &&
+                           name.EndsWith(".Domain", StringComparison.Ordinal))
+            .Order(StringComparer.Ordinal)];
+        string[] actual = [.. ModuleDomainAssemblyCatalog.ReadProjectPaths()
+            .Select(path => Path.GetFileNameWithoutExtension(path)!)
+            .Order(StringComparer.Ordinal)];
+
+        Assert.NotEmpty(expected);
+        Assert.Equal(expected, actual);
+        Assert.Equal(expected.Length, ModuleDomainAssemblyCatalog.LoadAssemblies().Distinct().Count());
+    }
+
+    [Fact]
+    public void DomainAggregates_IncludeProductsRecipesAndUsersAcrossOwners() {
+        Type[] aggregates = [.. ModuleDomainAssemblyCatalog.LoadAssemblies()
+            .SelectMany(assembly => assembly.GetTypes())
+            .Where(IsConcreteAggregateRoot)];
+
+        Assert.Multiple(
+            () => Assert.Contains(typeof(Product), aggregates),
+            () => Assert.Contains(typeof(Recipe), aggregates),
+            () => Assert.Contains(typeof(User), aggregates));
+    }
+
+    [Fact]
+    public void ModuleDomainAssemblies_DoNotSkipUnavailableOwners() {
+        var failure = new FileNotFoundException("Required module Domain assembly is unavailable.");
+
+        FileNotFoundException actual = Assert.Throws<FileNotFoundException>(() =>
+            ModuleDomainAssemblyCatalog.LoadAssemblies(name =>
+                string.Equals(name.Name, typeof(Product).Assembly.GetName().Name, StringComparison.Ordinal)
+                    ? throw failure
+                    : Assembly.Load(name)));
+
+        Assert.Same(failure, actual);
+    }
+
     private static bool IsConcreteAggregateRoot(Type type) {
         return type is { IsClass: true, IsAbstract: false } &&
-               type.Namespace?.StartsWith("FoodDiary.Domain.Entities", StringComparison.Ordinal) == true &&
                InheritsFromGeneric(type, typeof(AggregateRoot<>));
     }
 
