@@ -14,6 +14,7 @@ Rules for `FoodDiary.Domain/`.
 - Only shared domain primitives belong as a project reference.
 - No entity definitions remain here. User belongs to Users Domain; UserId belongs to Users Domain.Contracts. This residual shared-domain project references only shared primitives.
 - BleedingType, CycleSymptomCategory, and OvulationTestResult belong to Cycles Domain. Do not re-export them or add a reverse dependency on Cycles Domain.
+- ReportStatus and ReportTargetType belong to ContentReports Domain. Do not re-export them or add a reverse dependency on ContentReports Domain.
 
 ## Design Rules
 - Prefer factory/static creation methods when invariants are non-trivial.

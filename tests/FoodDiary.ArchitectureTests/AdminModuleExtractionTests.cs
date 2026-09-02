@@ -69,7 +69,7 @@ public sealed class AdminModuleExtractionTests {
     public void ExtractedAdminAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.Gamification.Application", "FoodDiary.Modules.Lessons.Contracts", "FoodDiary.Modules.Users.Domain"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.Gamification.Application", "FoodDiary.Modules.Lessons.Contracts", "FoodDiary.Modules.Users.Domain"], references);
     }
 
     [Theory]

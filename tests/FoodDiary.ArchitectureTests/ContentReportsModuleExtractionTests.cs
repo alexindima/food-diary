@@ -2,6 +2,18 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ContentReportsModuleExtractionTests {
+    [Theory]
+    [InlineData(typeof(FoodDiary.Domain.Enums.ReportStatus))]
+    [InlineData(typeof(FoodDiary.Domain.Enums.ReportTargetType))]
+    public void ReportEnums_AreOwnedOnlyByContentReportsDomain(Type enumType) {
+        Assert.Equal("FoodDiary.Modules.ContentReports.Domain", enumType.Assembly.GetName().Name);
+        Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "ContentReports", "Domain", "Enums", $"{enumType.Name}.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", $"{enumType.Name}.cs")));
+        Assert.DoesNotContain("FoodDiary.Modules.ContentReports.Domain", ProjectReferenceReader.ReadProjectReferences(
+            "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
+    }
+
     [Fact]
     public void ContentReportsApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "ContentReports");

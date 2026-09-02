@@ -2162,20 +2162,6 @@
       "line": 2
     },
     {
-      "name": "ReportStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/ReportStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "ReportTargetType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/ReportTargetType.cs",
-      "line": 2
-    },
-    {
       "name": "Visibility",
       "kind": "enum",
       "role": "Other",
@@ -12393,6 +12379,20 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/ContentReports/Domain/Entities/Social/ContentReportsDomainGuard.cs",
+      "line": 2
+    },
+    {
+      "name": "ReportStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/ContentReports/Domain/Enums/ReportStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "ReportTargetType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/ContentReports/Domain/Enums/ReportTargetType.cs",
       "line": 2
     },
     {

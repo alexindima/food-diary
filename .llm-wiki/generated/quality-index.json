@@ -4657,22 +4657,6 @@
       "structuralRiskScore": 0.28
     },
     {
-      "path": "FoodDiary.Domain/Enums/ReportStatus.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/ReportTargetType.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
       "path": "FoodDiary.Domain/Enums/Visibility.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
@@ -24463,6 +24447,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.34
+    },
+    {
+      "path": "Modules/ContentReports/Domain/Enums/ReportStatus.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/ContentReports/Domain/Enums/ReportTargetType.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/ContentReports/Domain/ValueObjects/Ids/ContentReportId.cs",

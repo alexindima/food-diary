@@ -7,6 +7,18 @@ namespace FoodDiary.Modules.ContentReports.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class ContentReportContractTests {
     [Fact]
+    public void ReportStatus_PreservesNamesAndNumericValues() {
+        Assert.Equal(["Pending", "Reviewed", "Dismissed"], Enum.GetNames<ReportStatus>());
+        Assert.Equal([0, 1, 2], Enum.GetValues<ReportStatus>().Select(value => (int)value));
+    }
+
+    [Fact]
+    public void ReportTargetType_PreservesNamesAndNumericValues() {
+        Assert.Equal(["Recipe", "Comment"], Enum.GetNames<ReportTargetType>());
+        Assert.Equal([0, 1], Enum.GetValues<ReportTargetType>().Select(value => (int)value));
+    }
+
+    [Fact]
     public void ContentReportId_PreservesGuidAcrossConversionFormattingAndEmptySentinel() {
         var value = Guid.Parse("b451a20c-20c5-4d5c-9a2d-827bf7576c25");
         ContentReportId id = new(value);

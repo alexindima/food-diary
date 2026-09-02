@@ -882,14 +882,14 @@
       "area": "FoodDiary",
       "name": "ReportStatus",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/ReportStatus.cs",
+      "path": "Modules/ContentReports/Domain/Enums/ReportStatus.cs",
       "line": 2
     },
     {
       "area": "FoodDiary",
       "name": "ReportTargetType",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/ReportTargetType.cs",
+      "path": "Modules/ContentReports/Domain/Enums/ReportTargetType.cs",
       "line": 2
     },
     {
