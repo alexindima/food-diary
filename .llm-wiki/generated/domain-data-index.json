@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 256,
+    "domainTypes": 255,
     "entities": 78,
     "valueObjects": 109,
     "invariants": 506,
@@ -656,16 +656,9 @@
     },
     {
       "area": "FoodDiary",
-      "name": "ActivityLevel",
-      "role": "enum",
-      "path": "FoodDiary.Domain/Enums/ActivityLevel.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
       "name": "AiRecognitionSource",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/AiRecognitionSource.cs",
+      "path": "Modules/Meals/Domain/Enums/AiRecognitionSource.cs",
       "line": 2
     },
     {
@@ -749,7 +742,7 @@
       "area": "FoodDiary",
       "name": "DietType",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/DietType.cs",
+      "path": "Modules/MealPlanning/Domain/Enums/DietType.cs",
       "line": 2
     },
     {
@@ -840,7 +833,7 @@
       "area": "FoodDiary",
       "name": "MealType",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/MealType.cs",
+      "path": "Modules/Meals/Domain/Enums/MealType.cs",
       "line": 2
     },
     {

@@ -2,6 +2,16 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MealsModuleExtractionTests {
+    [Theory]
+    [InlineData(typeof(FoodDiary.Domain.Enums.MealType))]
+    [InlineData(typeof(FoodDiary.Domain.Enums.AiRecognitionSource))]
+    public void MealEnums_AreOwnedOnlyByMealsDomain(Type enumType) {
+        Assert.Equal("FoodDiary.Modules.Meals.Domain", enumType.Assembly.GetName().Name);
+        Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain", "Enums", $"{enumType.Name}.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", $"{enumType.Name}.cs")));
+    }
+
     [Fact]
     public void MealsApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Meals");
@@ -14,7 +24,7 @@ public sealed class MealsModuleExtractionTests {
     public void ExtractedMealsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Application.Images", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.Gamification.Application.Abstractions", "FoodDiary.Modules.Meals.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.RecentItems.Application.Abstractions", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Application.Images", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.Gamification.Application.Abstractions", "FoodDiary.Modules.Meals.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.RecentItems.Application.Abstractions", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Fact]

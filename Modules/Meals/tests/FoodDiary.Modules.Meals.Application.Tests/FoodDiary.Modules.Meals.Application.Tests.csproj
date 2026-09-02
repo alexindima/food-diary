@@ -7,6 +7,7 @@
     <Using Include="System.Diagnostics.CodeAnalysis" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.Meals.Application.csproj" />
     <ProjectReference Include="../../../Favorites/Application/FoodDiary.Application.Favorites.csproj" />
     <ProjectReference Include="../../../Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj" />

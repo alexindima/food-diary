@@ -11,11 +11,21 @@ public sealed class UsersModuleExtractionTests {
     }
 
     [Fact]
-    public void UserIdContract_HasOnlySharedPrimitiveDependency() {
+    public void UsersContracts_HaveOnlyApprovedTypesAndSharedPrimitiveDependency() {
         Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"));
         string root = ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain.Contracts");
-        Assert.Single(SourceScanner.SourceFiles(root));
+        Assert.Equal(["Enums/ActivityLevel.cs", "ValueObjects/Ids/UserId.cs"],
+            SourceScanner.SourceFiles(root).Select(path => Path.GetRelativePath(root, path).Replace('\\', '/')), StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public void ActivityLevel_IsOwnedOnlyByUsersDomainContracts() {
+        Type enumType = typeof(FoodDiary.Domain.Enums.ActivityLevel);
+        Assert.Equal("FoodDiary.Modules.Users.Domain.Contracts", enumType.Assembly.GetName().Name);
+        Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain.Contracts", "Enums", "ActivityLevel.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", "ActivityLevel.cs")));
     }
 
     [Theory]

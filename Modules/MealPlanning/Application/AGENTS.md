@@ -15,4 +15,5 @@ Rules for `Modules/MealPlanning/Application/`.
 - Do not reference the core `FoodDiary.Application` project.
 - Register handlers, validators, and services through `AddMealPlanningApplication` (invoked by the complete Infrastructure module facade).
 - Depend on other business areas only through `FoodDiary.Application.Abstractions` contracts.
+- Reference Meals Domain directly for the existing MealType planning contract. Preserve generation, ordering, servings and shopping-list semantics; this enum dependency adds no Meals write capability.
 - Keep persistence implementations, HTTP transport, and host configuration outside this project.

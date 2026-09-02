@@ -8,6 +8,7 @@ Rules for `FoodDiary.Application.Dietologist/`.
 
 - This project owns Dietologist application use cases, policies, mappings, models, and services.
 - Depend only on `FoodDiary.Application.Abstractions`, `FoodDiary.Domain`, and `FoodDiary.Mediator`.
+- Reference Users Domain.Contracts directly for ActivityLevel already exposed by profile projections; this enum dependency does not broaden relationship permissions or access to user data.
 - Interact with Users, Dashboard, Notifications, Audit, and persistence only through contracts in `FoodDiary.Application.Abstractions`.
 - Do not reference `FoodDiary.Application`, infrastructure, presentation, hosts, or provider SDKs.
 - Register module-owned handlers, validators, and services through `AddDietologistModule()`.

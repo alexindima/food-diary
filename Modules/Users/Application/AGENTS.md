@@ -8,6 +8,7 @@ Rules for `FoodDiary.Application.Users/`.
 
 - Own Users commands, queries, mappings, policies, and application services.
 - Depend only on `FoodDiary.Application.Abstractions`, `FoodDiary.Domain`, and `FoodDiary.Mediator`.
+- Reference Users Domain.Contracts directly for the existing ActivityLevel profile enum and UserId; preserve parsing, defaults and profile/TDEE behavior.
 - Other application modules consume Users capabilities through abstractions; they must not reference this implementation project.
 - Register module handlers and services through `AddUsersModule()` from executable composition roots.
 

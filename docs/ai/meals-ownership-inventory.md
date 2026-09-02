@@ -33,11 +33,15 @@ journeys and normal error/latency signals. Deployment itself is outside this tas
 
 ## Remaining shared seams and query compatibility
 
-MealType is also used by MealPlanning, Dashboard, Export and Favorites.
+MealType and AiRecognitionSource belong to Meals Domain with unchanged
+FoodDiary.Domain.Enums namespaces, names and numeric values. MealType is also
+used by MealPlanning, Dashboard, Export and Favorites; actual enum consumers
+reference Meals Domain directly. String-only DTO consumers retain their existing
+contract references. These enum moves require coordinated consumer rebuilds.
 MeasurementUnit and Visibility are reused across product/recipe workflows.
-AiRecognitionSource remains central as an existing shared enum contract; no owner
-change is inferred from its name. User/UserId, DomainGuard and common constants
-remain central; explicit IVT permits the extracted domain to use DomainGuard.
+User belongs to Users Domain; UserId and ActivityLevel belong to Users
+Domain.Contracts. DomainGuard and common constants remain central; explicit IVT
+permits the extracted domain to use DomainGuard.
 ProductId, RecipeId and ImageAssetId retain their existing owner contract projects.
 No Product, Recipe or Image CLR navigation is reintroduced.
 

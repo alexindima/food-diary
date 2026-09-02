@@ -65,13 +65,13 @@
       "sources": [
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "26c4109953be251983d59313c97b2b51197b62b589dd11bcdf8d620b4387c205"
+          "sha256": "5f7a2a61d9e43de8020f52511497744ec6dfaf20f5cf1efbcd35349359446766"
         }
       ],
-      "reason": "Report enum names and values unchanged; 825 Presentation and 19 HTTP contract tests passed, including full/auth-admin/focused OpenAPI snapshots.",
+      "reason": "All four enum names and numbers preserved. Full HTTP integration 182 and Presentation 825 passed; no HTTP source or snapshot changes. Coordinated rebuild is documented.",
       "baseRef": "HEAD",
-      "gitHead": "e35d5af72e0f5d55e6563604f60017e38f14db60",
-      "reviewedAtUtc": "2026-09-02T07:45:40.3605544Z"
+      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
+      "reviewedAtUtc": "2026-09-02T08:36:46.3642434Z"
     },
     {
       "pageId": "system.architecture",
@@ -80,13 +80,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "e45c40690d6e608443a39b018754dfdd77046c2883ca3ac03f09917dee1542bb"
+          "sha256": "6c9a0d2c26d2b1d10938928c84c5ec7e06b4db3524906b348351ba8da7fbda43"
         }
       ],
-      "reason": "Scoped guides document physical owner and coordinated rebuild. Read all seven affected Wiki pages; application graph misses Admin contract consumption and broad central ownership wording is pre-existing; limitations retained in own evidence, no unrelated cleanup.",
+      "reason": "Four owners and the Users Domain.Contracts two-type boundary are explicit in scoped guides and the two cited inventories. Generated owner paths and module test references reviewed; broad pre-existing central ownership wording and domain-index scope limits are recorded without unrelated tool or policy repairs.",
       "baseRef": "HEAD",
-      "gitHead": "e35d5af72e0f5d55e6563604f60017e38f14db60",
-      "reviewedAtUtc": "2026-09-02T07:45:40.5449923Z"
+      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
+      "reviewedAtUtc": "2026-09-02T08:36:46.6509607Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -200,17 +200,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "6b345c939b0504c865da171dd3eee71bbc4f07c986425b65e96dd283b6537465"
+          "sha256": "189e183c209e996e6dcea4be4cff1849b13954b197776bc42e6892e9a1592d0b"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "e45c40690d6e608443a39b018754dfdd77046c2883ca3ac03f09917dee1542bb"
+          "sha256": "6c9a0d2c26d2b1d10938928c84c5ec7e06b4db3524906b348351ba8da7fbda43"
         }
       ],
-      "reason": "Seven explicit owner references are matrix-protected; all 878 architecture tests passed. Generated test references are navigation, not coverage; actual TRX ledger is retained.",
+      "reason": "37 exact owner edges are guarded by 882 passing architecture tests. All 4388 selected tests passed without skips. ActivityLevel leaves domain-data-index but remains in CSharp symbol index; module test lists are navigation, not measured coverage.",
       "baseRef": "HEAD",
-      "gitHead": "e35d5af72e0f5d55e6563604f60017e38f14db60",
-      "reviewedAtUtc": "2026-09-02T07:45:40.7626719Z"
+      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
+      "reviewedAtUtc": "2026-09-02T08:36:46.9812018Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -482,17 +482,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "f590176ba8bd1c6edf676d9176adeff8ea8aa267317258cf578f269566a36349"
+          "sha256": "8fbd829d245825f30ac6c2cd5c14e6e91329b83dabcd69f14710a7b1499f28bd"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "26c4109953be251983d59313c97b2b51197b62b589dd11bcdf8d620b4387c205"
+          "sha256": "5f7a2a61d9e43de8020f52511497744ec6dfaf20f5cf1efbcd35349359446766"
         }
       ],
-      "reason": "Seven explicit owner references are matrix-protected; all 878 architecture tests passed. Generated test references are navigation, not coverage; actual TRX ledger is retained.",
+      "reason": "37 exact owner edges are guarded by 882 passing architecture tests. All 4388 selected tests passed without skips. ActivityLevel leaves domain-data-index but remains in CSharp symbol index; module test lists are navigation, not measured coverage.",
       "baseRef": "HEAD",
-      "gitHead": "e35d5af72e0f5d55e6563604f60017e38f14db60",
-      "reviewedAtUtc": "2026-09-02T07:45:41.0137377Z"
+      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
+      "reviewedAtUtc": "2026-09-02T08:36:47.3101436Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -809,13 +809,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "33e7df3db0cb65c1e4787479e6a31f134fb924d15dd24671dade7ec224dabaf5"
+          "sha256": "bcdcf6dd129e6ea9204ada3a1ac7cd48b68253ca42d12345e7f4f555dbe06276"
         }
       ],
-      "reason": "Seven explicit owner references are matrix-protected; all 878 architecture tests passed. Generated test references are navigation, not coverage; actual TRX ledger is retained.",
+      "reason": "37 exact owner edges are guarded by 882 passing architecture tests. All 4388 selected tests passed without skips. ActivityLevel leaves domain-data-index but remains in CSharp symbol index; module test lists are navigation, not measured coverage.",
       "baseRef": "HEAD",
-      "gitHead": "e35d5af72e0f5d55e6563604f60017e38f14db60",
-      "reviewedAtUtc": "2026-09-02T07:45:41.3954448Z"
+      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
+      "reviewedAtUtc": "2026-09-02T08:36:47.8631041Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -892,13 +892,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a3a2c41b8cdcce8447d7648a9911a9e6fa289ee046254f711452705b51a3cb61"
+          "sha256": "bd2616e1add29719c2af2635bf97c5029b717c1c31786acd853553b34cd61b5f"
         }
       ],
-      "reason": "Scoped guides document physical owner and coordinated rebuild. Read all seven affected Wiki pages; application graph misses Admin contract consumption and broad central ownership wording is pre-existing; limitations retained in own evidence, no unrelated cleanup.",
+      "reason": "Four owners and the Users Domain.Contracts two-type boundary are explicit in scoped guides and the two cited inventories. Generated owner paths and module test references reviewed; broad pre-existing central ownership wording and domain-index scope limits are recorded without unrelated tool or policy repairs.",
       "baseRef": "HEAD",
-      "gitHead": "e35d5af72e0f5d55e6563604f60017e38f14db60",
-      "reviewedAtUtc": "2026-09-02T07:45:42.0236864Z"
+      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
+      "reviewedAtUtc": "2026-09-02T08:36:48.6403698Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -907,17 +907,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "33e7df3db0cb65c1e4787479e6a31f134fb924d15dd24671dade7ec224dabaf5"
+          "sha256": "bcdcf6dd129e6ea9204ada3a1ac7cd48b68253ca42d12345e7f4f555dbe06276"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a3a2c41b8cdcce8447d7648a9911a9e6fa289ee046254f711452705b51a3cb61"
+          "sha256": "bd2616e1add29719c2af2635bf97c5029b717c1c31786acd853553b34cd61b5f"
         }
       ],
-      "reason": "Enum physical ownership changes no target authorization or report content lifecycle; unchanged source and actual PostgreSQL reportability scenario reviewed.",
+      "reason": "Reviewed unchanged profile sharing and enum consumers, four declarations and preserved EF/algorithm source. Full PostgreSQL and HTTP tests passed. No new authorization, logging, processing or provider behavior; scoped review is not a full security scan.",
       "baseRef": "HEAD",
-      "gitHead": "e35d5af72e0f5d55e6563604f60017e38f14db60",
-      "reviewedAtUtc": "2026-09-02T07:45:42.4197839Z"
+      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
+      "reviewedAtUtc": "2026-09-02T08:36:49.2543243Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1155,13 +1155,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "130590bb470d2bc0eefcd318c985e559970ba8ce2e13860dcdd93c1570896c48"
+          "sha256": "dbfd156fd164d9e0f820ece13aeb1c3b9055161da255b6a416d3c4de3737c73f"
         }
       ],
-      "reason": "Scoped guides document physical owner and coordinated rebuild. Read all seven affected Wiki pages; application graph misses Admin contract consumption and broad central ownership wording is pre-existing; limitations retained in own evidence, no unrelated cleanup.",
+      "reason": "Four owners and the Users Domain.Contracts two-type boundary are explicit in scoped guides and the two cited inventories. Generated owner paths and module test references reviewed; broad pre-existing central ownership wording and domain-index scope limits are recorded without unrelated tool or policy repairs.",
       "baseRef": "HEAD",
-      "gitHead": "e35d5af72e0f5d55e6563604f60017e38f14db60",
-      "reviewedAtUtc": "2026-09-02T07:45:41.7178187Z"
+      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
+      "reviewedAtUtc": "2026-09-02T08:36:48.2459770Z"
     },
     {
       "pageId": "workflow.review-diff",

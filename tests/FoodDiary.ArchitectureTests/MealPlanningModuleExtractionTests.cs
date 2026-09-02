@@ -2,6 +2,17 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MealPlanningModuleExtractionTests {
+    [Fact]
+    public void DietType_IsOwnedOnlyByMealPlanningDomain() {
+        Type enumType = typeof(FoodDiary.Domain.Enums.DietType);
+        Assert.Equal("FoodDiary.Modules.MealPlanning.Domain", enumType.Assembly.GetName().Name);
+        Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "MealPlanning", "Domain", "Enums", "DietType.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", "DietType.cs")));
+        Assert.DoesNotContain("FoodDiary.Modules.MealPlanning.Domain", ProjectReferenceReader.ReadProjectReferences(
+            "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
+    }
+
     [Theory]
     [InlineData("MealPlans")]
     [InlineData("ShoppingLists")]
@@ -25,7 +36,7 @@ public sealed class MealPlanningModuleExtractionTests {
     public void ExtractedMealPlanningAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj");
-        string[] expectedReferences = ["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.Users.Domain.Contracts"];
+        string[] expectedReferences = ["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);
     }

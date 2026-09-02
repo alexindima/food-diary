@@ -7,7 +7,7 @@ Source baseline: `d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf`.
 | User and all seven partial files, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal | Modules/Users/Domain |
 | User-prefixed states/updates, lifecycle events, RoleId/WeightGoalId/WaistGoalId, goal statuses and role audit enum/role names | Modules/Users/Domain |
 | GenderCode, ProfileWeightKg, ProfileHeightCm, ThemeCode, UiStyleCode | Modules/Users/Domain; these encode User profile rules |
-| UserId | Modules/Users/Domain.Contracts; only shared IEntityId primitives dependency |
+| UserId and ActivityLevel | Modules/Users/Domain.Contracts; only shared IEntityId primitives dependency |
 | User/role/audit and both goal EF mappings | Modules/Users/Infrastructure/Model, selected by the existing ApplyUsersPersistenceModel registration |
 | DomainGuard, constants, EmailAddress, LanguageCode, DesiredWeightKg/DesiredWaistCm, shared enums and food-health value objects | Residual FoodDiary.Domain |
 | Combined Users/Identity UserRepository, DbContext/DbSets, historical migrations and snapshot | Central Infrastructure, unchanged |
@@ -17,9 +17,11 @@ Source baseline: `d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf`.
 EmailAddress validates Dietologist invitations as well as Users and Identity input.
 LanguageCode also belongs to content localization in EmailTemplate and DailyAdvice.
 DesiredWeightKg and DesiredWaistCm validate BodyMetrics entries, so their shared
-validation semantics remain central. ActivityLevel is consumed through existing
-profile/read contracts; measurement, visibility, food, cycle and report enums stay
-shared. No entity definition remains in central Domain. Its obsolete Product,
+validation semantics remain central. ActivityLevel belongs to Users Domain.Contracts
+and is consumed through existing profile/read contracts. Its FoodDiary.Domain.Enums
+namespace, names and numeric values remain unchanged, as do EF string conversion
+and TDEE multipliers. Refer to the current scoped Domain guides for other enum
+owners. No entity definition remains in central Domain. Its obsolete Product,
 Recipe, Image and USDA project edges are removed after their final consumers move.
 
 User-specific methods and persisted properties move without body changes. This

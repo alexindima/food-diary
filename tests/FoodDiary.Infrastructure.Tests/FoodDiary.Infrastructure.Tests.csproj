@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../Modules/RecentItems/Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Users/Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj" />
     <PackageReference Include="coverlet.collector" />

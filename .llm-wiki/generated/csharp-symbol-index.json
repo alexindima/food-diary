@@ -2120,34 +2120,6 @@
       "line": 5
     },
     {
-      "name": "ActivityLevel",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/ActivityLevel.cs",
-      "line": 2
-    },
-    {
-      "name": "AiRecognitionSource",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/AiRecognitionSource.cs",
-      "line": 2
-    },
-    {
-      "name": "DietType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/DietType.cs",
-      "line": 2
-    },
-    {
-      "name": "MealType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/MealType.cs",
-      "line": 2
-    },
-    {
       "name": "MeasurementUnit",
       "kind": "enum",
       "role": "Other",
@@ -19165,6 +19137,13 @@
       "line": 7
     },
     {
+      "name": "DietType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Domain/Enums/DietType.cs",
+      "line": 2
+    },
+    {
       "name": "ShoppingListItemSourceType",
       "kind": "enum",
       "role": "Other",
@@ -19872,6 +19851,13 @@
       "line": 8
     },
     {
+      "name": "AiRecognitionSource",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Meals/Domain/Enums/AiRecognitionSource.cs",
+      "line": 2
+    },
+    {
       "name": "MealAiItemResolution",
       "kind": "enum",
       "role": "Other",
@@ -19890,6 +19876,13 @@
       "kind": "enum",
       "role": "Other",
       "path": "Modules/Meals/Domain/Enums/MealItemOrigin.cs",
+      "line": 2
+    },
+    {
+      "name": "MealType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Meals/Domain/Enums/MealType.cs",
       "line": 2
     },
     {
@@ -23496,6 +23489,13 @@
       "role": "Service",
       "path": "Modules/Users/Application/Services/UserNotificationProfileService.cs",
       "line": 10
+    },
+    {
+      "name": "ActivityLevel",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Users/Domain.Contracts/Enums/ActivityLevel.cs",
+      "line": 2
     },
     {
       "name": "UserId",

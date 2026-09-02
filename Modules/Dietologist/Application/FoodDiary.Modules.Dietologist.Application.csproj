@@ -8,6 +8,7 @@
   <ItemGroup><Compile Remove="Abstractions/**/*.cs" /></ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="Abstractions\FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Domain\FoodDiary.Modules.Dietologist.Domain.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />

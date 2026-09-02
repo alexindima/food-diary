@@ -4609,38 +4609,6 @@
       "structuralRiskScore": 17.46
     },
     {
-      "path": "FoodDiary.Domain/Enums/ActivityLevel.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/AiRecognitionSource.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/DietType.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/MealType.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
       "path": "FoodDiary.Domain/Enums/MeasurementUnit.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -32369,6 +32337,14 @@
       "structuralRiskScore": 15.54
     },
     {
+      "path": "Modules/MealPlanning/Domain/Enums/DietType.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
       "path": "Modules/MealPlanning/Domain/Enums/ShoppingListItemSourceType.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -33201,6 +33177,14 @@
       "structuralRiskScore": 45.3
     },
     {
+      "path": "Modules/Meals/Domain/Enums/AiRecognitionSource.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
       "path": "Modules/Meals/Domain/Enums/MealAiItemResolution.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
@@ -33223,6 +33207,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Meals/Domain/Enums/MealType.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Meals/Domain/Events/MealNutritionAppliedDomainEvent.cs",
@@ -37471,6 +37463,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.46
+    },
+    {
+      "path": "Modules/Users/Domain.Contracts/Enums/ActivityLevel.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Users/Domain.Contracts/ValueObjects/Ids/UserId.cs",

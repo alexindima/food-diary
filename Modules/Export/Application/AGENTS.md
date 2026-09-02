@@ -10,6 +10,7 @@ Rules for `Modules/Export/Application/`.
 - Preserve the legacy `FoodDiary.Application.Export` assembly name and CLR namespaces.
 - Consume Cycles and Meals only through their application-level read capabilities.
 - Reference Cycles Domain directly only for cycle enums already exposed by those read models; do not acquire Cycles aggregates or repositories.
+- Reference Meals Domain directly for MealType already exposed by diary read models; preserve CSV formatting and continue to use existing read capabilities.
 - Keep PDF rendering implementations and HTTP transport outside this module.
 - Do not reference the core `FoodDiary.Application` project.
 

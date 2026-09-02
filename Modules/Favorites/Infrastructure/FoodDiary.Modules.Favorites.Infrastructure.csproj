@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="..\Application\FoodDiary.Application.Favorites.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="Model\FoodDiary.Modules.Favorites.PersistenceModel.csproj" />

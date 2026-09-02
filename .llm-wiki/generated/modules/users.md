@@ -156,6 +156,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.DesiredGoalIdempotency.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/UsersValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/ActivityLevelContractTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/MiscDomainInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserGoalAtomicityTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserHardeningInvariantTests.cs`
@@ -172,7 +173,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/WeightGoalInvariantTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsersModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsersControllerTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsersPasswordControllerTests.cs`
 
 ## Working Rule
 

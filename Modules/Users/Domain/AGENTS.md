@@ -6,6 +6,6 @@ value objects. Preserve legacy CLR namespaces and all invariants. Keep authentic
 flows and providers in Identity and their established adapters.
 
 Reference residual central Domain one-way for shared guards, constants and values,
-Users Domain.Contracts for UserId, and Images Contracts for ImageAssetId.
+Users Domain.Contracts for UserId and ActivityLevel, and Images Contracts for ImageAssetId.
 Do not restore foreign inverse navigations or reference application/persistence.
 Keep User goal collections and UserRole/Role relationships unchanged.

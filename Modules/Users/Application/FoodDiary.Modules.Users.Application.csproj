@@ -4,6 +4,7 @@
     <RootNamespace>FoodDiary.Application.Users</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
     <ProjectReference Include="../../../FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />

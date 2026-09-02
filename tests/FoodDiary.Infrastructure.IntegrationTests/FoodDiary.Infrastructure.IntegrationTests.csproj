@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
+    <ProjectReference Include="../../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
     <ProjectReference Include="../../Modules/RecentItems/Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Users/Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj" />

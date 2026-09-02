@@ -16,6 +16,8 @@
     <Using Include="FoodDiary.Application.Tests.Support" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
+    <ProjectReference Include="../../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Application.MealPlanning.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>

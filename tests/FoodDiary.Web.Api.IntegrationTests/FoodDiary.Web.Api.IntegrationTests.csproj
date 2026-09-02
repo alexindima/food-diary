@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Presentation.Api\FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Web.Api\FoodDiary.Web.Api.csproj" />
