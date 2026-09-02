@@ -19,7 +19,6 @@ public class FeatureStructureTests {
     [Theory]
     [InlineData("FoodDiary.Application.Abstractions", "FoodDiary.Application.Abstractions")]
     [InlineData("FoodDiary.Application.Runtime", "FoodDiary.Application.Runtime")]
-    [InlineData("FoodDiary.Domain", "FoodDiary.Domain")]
     [InlineData("FoodDiary.Infrastructure", "FoodDiary.Infrastructure")]
     [InlineData("FoodDiary.Integrations", "FoodDiary.Integrations")]
     [InlineData("FoodDiary.JobManager", "FoodDiary.JobManager")]

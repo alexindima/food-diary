@@ -1,10 +1,10 @@
 using System.Globalization;
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 
 namespace FoodDiary.Domain.Entities.Billing;
 
 public sealed class BillingWebhookEvent : Entity<Guid> {
+    private const int JsonMaxLength = 65536;
     public const string ReceivedStatus = "received";
     public const string ProcessedStatus = "processed";
     public const string FailedStatus = "failed";
@@ -46,8 +46,8 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
             ExternalObjectId = NormalizeOptional(externalObjectId, ExternalObjectIdMaxLength, nameof(externalObjectId)),
             Status = ReceivedStatus,
             ReceivedAtUtc = normalizedReceivedAtUtc,
-            PayloadJson = DomainGuard.OptionalJson(payloadJson, DomainConstants.JsonMaxLength, nameof(payloadJson)),
-            ParsedEventJson = DomainGuard.OptionalJson(parsedEventJson, DomainConstants.JsonMaxLength, nameof(parsedEventJson)),
+            PayloadJson = DomainGuard.OptionalJson(payloadJson, JsonMaxLength, nameof(payloadJson)),
+            ParsedEventJson = DomainGuard.OptionalJson(parsedEventJson, JsonMaxLength, nameof(parsedEventJson)),
         };
         webhookEvent.SetCreated(normalizedReceivedAtUtc);
         return webhookEvent;
@@ -69,7 +69,7 @@ public sealed class BillingWebhookEvent : Entity<Guid> {
             Status = ProcessedStatus,
             ReceivedAtUtc = NormalizeRequiredUtc(processedAtUtc, nameof(processedAtUtc)),
             ProcessedAtUtc = NormalizeRequiredUtc(processedAtUtc, nameof(processedAtUtc)),
-            PayloadJson = DomainGuard.OptionalJson(payloadJson, DomainConstants.JsonMaxLength, nameof(payloadJson)),
+            PayloadJson = DomainGuard.OptionalJson(payloadJson, JsonMaxLength, nameof(payloadJson)),
         };
         webhookEvent.SetCreated(webhookEvent.ReceivedAtUtc);
         return webhookEvent;

@@ -9,20 +9,29 @@ namespace FoodDiary.ArchitectureTests;
 public class DomainModelGuardrailTests {
     private static readonly HashSet<string> AllowedWideMutators = new(StringComparer.Ordinal);
 
-    [Fact]
-    public void DomainProject_ReferencesOnlyApprovedDomainDependencies() {
-        const string relativeProjectPath = "FoodDiary.Domain/FoodDiary.Domain.csproj";
+    [Theory]
+    [InlineData("Products")]
+    [InlineData("Users")]
+    [InlineData("Usda")]
+    [InlineData("Cycles")]
+    public void DomainProject_ReferencesOnlyApprovedDomainDependencies(string module) {
+        string relativeProjectPath = $"Modules/{module}/Domain/FoodDiary.Modules.{module}.Domain.csproj";
 
         string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
         string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
 
-        Assert.Equal(["FoodDiary.Domain.Primitives"], projectReferences);
+        Assert.All(projectReferences, reference => Assert.DoesNotContain("Application", reference, StringComparison.Ordinal));
+        Assert.All(projectReferences, reference => Assert.DoesNotContain("Infrastructure", reference, StringComparison.Ordinal));
         Assert.Empty(packageReferences);
     }
 
-    [Fact]
-    public void DomainRootFolders_StayLimitedToDomainModelStructure() {
-        string domainRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain");
+    [Theory]
+    [InlineData("Products")]
+    [InlineData("Users")]
+    [InlineData("Usda")]
+    [InlineData("Cycles")]
+    public void DomainRootFolders_StayLimitedToDomainModelStructure(string module) {
+        string domainRoot = ArchitectureTestPaths.FromRoot("Modules", module, "Domain");
         string[] allowedDirectories = [
             "Common",
             "Entities",
@@ -43,9 +52,13 @@ public class DomainModelGuardrailTests {
         Assert.Empty(unexpectedDirectories);
     }
 
-    [Fact]
-    public void DomainSourceFiles_DoNotReferenceInfrastructurePersistenceOrTransportConcerns() {
-        string domainRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain");
+    [Theory]
+    [InlineData("Products")]
+    [InlineData("Users")]
+    [InlineData("Usda")]
+    [InlineData("Cycles")]
+    public void DomainSourceFiles_DoNotReferenceInfrastructurePersistenceOrTransportConcerns(string module) {
+        string domainRoot = ArchitectureTestPaths.FromRoot("Modules", module, "Domain");
         string[] forbiddenPatterns = [
             "Microsoft.EntityFrameworkCore",
             "Microsoft.AspNetCore",
@@ -65,9 +78,13 @@ public class DomainModelGuardrailTests {
         Assert.Empty(violations);
     }
 
-    [Fact]
-    public void DomainSourceFiles_DoNotReferenceApplicationOrAdapterNamespaces() {
-        string domainRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain");
+    [Theory]
+    [InlineData("Products")]
+    [InlineData("Users")]
+    [InlineData("Usda")]
+    [InlineData("Cycles")]
+    public void DomainSourceFiles_DoNotReferenceApplicationOrAdapterNamespaces(string module) {
+        string domainRoot = ArchitectureTestPaths.FromRoot("Modules", module, "Domain");
         string[] forbiddenPatterns = [
             "FoodDiary.Application",
             "FoodDiary.Infrastructure",
@@ -84,10 +101,14 @@ public class DomainModelGuardrailTests {
         Assert.Empty(violations);
     }
 
-    [Fact]
-    public void DomainStronglyTypedIds_LiveUnderValueObjectsIdsOnePerFile() {
+    [Theory]
+    [InlineData("Products")]
+    [InlineData("Users")]
+    [InlineData("Usda")]
+    [InlineData("Cycles")]
+    public void DomainStronglyTypedIds_LiveUnderValueObjectsIdsOnePerFile(string module) {
         string root = ArchitectureTestPaths.RepositoryRoot;
-        string domainRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain");
+        string domainRoot = ArchitectureTestPaths.FromRoot("Modules", module, "Domain");
         string idsRoot = Path.Combine(domainRoot, "ValueObjects", "Ids");
 
         string[] violations = [.. SourceScanner.SourceFiles(domainRoot)

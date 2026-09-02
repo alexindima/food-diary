@@ -1,4 +1,4 @@
-namespace FoodDiary.Domain.Enums;
+namespace FoodDiary.Domain.Primitives;
 
 public enum Visibility {
     Public = 0,

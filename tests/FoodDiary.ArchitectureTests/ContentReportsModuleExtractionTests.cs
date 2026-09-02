@@ -10,8 +10,7 @@ public sealed class ContentReportsModuleExtractionTests {
         Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "ContentReports", "Domain", "Enums", $"{enumType.Name}.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", $"{enumType.Name}.cs")));
-        Assert.DoesNotContain("FoodDiary.Modules.ContentReports.Domain", ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
     }
 
     [Fact]

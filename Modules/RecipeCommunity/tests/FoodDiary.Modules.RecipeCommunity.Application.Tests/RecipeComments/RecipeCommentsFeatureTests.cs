@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.CreateRecipeComment;
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.DeleteRecipeComment;
@@ -11,7 +12,6 @@ using FoodDiary.Application.RecipeCommunity.RecipeComments.Queries.GetRecipeComm
 using FoodDiary.Application.RecipeCommunity.RecipeComments.Services;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Enums;
 
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;

@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Dietologist;
@@ -18,12 +17,6 @@ namespace FoodDiary.Domain.Tests.Domain;
 
 [ExcludeFromCodeCoverage]
 public sealed class SecondPassDomainHardeningTests {
-    [Theory]
-    [InlineData(-1)]
-    [InlineData(101)]
-    public void HealthAreaScore_RejectsScoreOutsidePercentageRange(int score) {
-        Assert.Throws<ArgumentOutOfRangeException>(() => new HealthAreaScore(score, HealthAreaGrade.Unknown));
-    }
 
     [Fact]
     public void CompositeUpdates_WhenLateValidationFails_AreAtomic() {
@@ -150,7 +143,7 @@ public sealed class SecondPassDomainHardeningTests {
 
     [Fact]
     public void JsonBackedValues_RejectValidJsonAboveDomainLimit() {
-        string oversizedJson = $"\"{new string('x', DomainConstants.JsonMaxLength)}\"";
+        string oversizedJson = $"\"{new string('x', 65536)}\"";
         var user = User.Create("json-size@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -168,7 +161,7 @@ public sealed class SecondPassDomainHardeningTests {
 
     [Fact]
     public void JsonBackedValues_CountLeadingWhitespaceTowardDomainLimit() {
-        string oversizedJson = new string(' ', DomainConstants.JsonMaxLength) + "{}";
+        string oversizedJson = new string(' ', 65536) + "{}";
         var user = User.Create("json-whitespace@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>

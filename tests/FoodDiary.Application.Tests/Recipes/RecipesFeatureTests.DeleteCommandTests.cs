@@ -1,8 +1,8 @@
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Results;
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
 

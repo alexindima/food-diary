@@ -25,4 +25,4 @@ Rules for `FoodDiary.Application.Abstractions/`.
 - Build: `dotnet build FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj`
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
-The existing FavoriteProductReadModel uses ProductType from Products Domain.Contracts and MeasurementUnit from Shared/FoodDiary.Nutrition.Domain. Reference these exact owners; do not add aggregate behavior or change the projection contract.
+The existing FavoriteProductReadModel uses ProductType and MeasurementUnit from Products Domain.Contracts. Reference this exact owner; do not add aggregate behavior or change the projection contract.

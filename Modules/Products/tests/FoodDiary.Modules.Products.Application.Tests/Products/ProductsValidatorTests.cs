@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Commands.DeleteProduct;

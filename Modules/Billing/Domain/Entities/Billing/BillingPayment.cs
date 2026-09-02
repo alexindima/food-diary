@@ -1,11 +1,11 @@
 using System.Globalization;
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Billing;
 
 public sealed class BillingPayment : Entity<Guid> {
+    private const int JsonMaxLength = 65536;
     private const int ProviderMaxLength = 32;
     private const int ExternalIdMaxLength = 255;
     private const int PlanMaxLength = 32;
@@ -99,7 +99,7 @@ public sealed class BillingPayment : Entity<Guid> {
             CurrentPeriodStartUtc = normalizedPeriodStart,
             CurrentPeriodEndUtc = normalizedPeriodEnd,
             WebhookEventId = NormalizeOptional(webhookEventId, ExternalIdMaxLength, nameof(webhookEventId)),
-            ProviderMetadataJson = DomainGuard.OptionalJson(providerMetadataJson, DomainConstants.JsonMaxLength, nameof(providerMetadataJson)),
+            ProviderMetadataJson = DomainGuard.OptionalJson(providerMetadataJson, JsonMaxLength, nameof(providerMetadataJson)),
         };
         payment.SetCreated();
         return payment;
@@ -146,7 +146,7 @@ public sealed class BillingPayment : Entity<Guid> {
         DateTime? normalizedPeriodEnd = NormalizeOptionalUtc(currentPeriodEndUtc, nameof(currentPeriodEndUtc)) ?? CurrentPeriodEndUtc;
         EnsureChronologicalRange(normalizedPeriodStart, normalizedPeriodEnd, nameof(currentPeriodStartUtc));
         string? normalizedWebhookEventId = NormalizeOptional(webhookEventId, ExternalIdMaxLength, nameof(webhookEventId)) ?? WebhookEventId;
-        string? normalizedMetadata = DomainGuard.OptionalJson(providerMetadataJson, DomainConstants.JsonMaxLength, nameof(providerMetadataJson)) ?? ProviderMetadataJson;
+        string? normalizedMetadata = DomainGuard.OptionalJson(providerMetadataJson, JsonMaxLength, nameof(providerMetadataJson)) ?? ProviderMetadataJson;
 
         BillingSubscriptionId = normalizedBillingSubscriptionId;
         ExternalCustomerId = normalizedCustomerId;

@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net;

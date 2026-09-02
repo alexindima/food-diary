@@ -16,8 +16,7 @@ public sealed class AdminModuleExtractionTests {
     public void ImpersonationDomainAndModel_PreserveOneWayOwnership() {
         Assert.Equal(["FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj"));
-        Assert.DoesNotContain("FoodDiary.Modules.Admin.Domain", ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/Entities/Admin/AdminImpersonationSession.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs")));
         string[] references = ProjectReferenceReader.ReadProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
@@ -69,7 +68,7 @@ public sealed class AdminModuleExtractionTests {
     public void ExtractedAdminAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.Gamification.Application", "FoodDiary.Modules.Lessons.Contracts", "FoodDiary.Modules.Users.Domain"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.Gamification.Application", "FoodDiary.Modules.Lessons.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

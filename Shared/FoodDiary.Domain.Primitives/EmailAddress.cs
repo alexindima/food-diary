@@ -1,6 +1,6 @@
 using System.Net.Mail;
 
-namespace FoodDiary.Domain.ValueObjects;
+namespace FoodDiary.Domain.Primitives;
 
 public readonly record struct EmailAddress {
     public string Value { get; }

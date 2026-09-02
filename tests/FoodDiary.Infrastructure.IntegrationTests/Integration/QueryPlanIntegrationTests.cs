@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using System.Globalization;
 using System.Text.Json;
 using FoodDiary.Domain.Entities.Ai;

@@ -621,7 +621,7 @@
           "Modules/Recipes/Contracts"
         ],
         "domainAreas": [
-          "FoodDiary.Domain/Entities/Recipes"
+          "Modules/Recipes/Domain/Entities/Recipes"
         ],
         "infrastructureAreas": [
           "Modules/Recipes/Infrastructure"

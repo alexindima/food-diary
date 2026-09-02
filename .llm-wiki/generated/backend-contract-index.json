@@ -61024,19 +61024,6 @@
       "definitionPaths": [
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Domain/ValueObjects/Ids/CycleId.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageId.cs",
       "isTest": false,
@@ -61156,6 +61143,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Domain/ValueObjects/Ids/CycleFactorId.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/Domain/ValueObjects/Ids/CycleId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -61870,6 +61870,19 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/Domain/CycleIdInvariantTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IEntityId",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealIdInvariantTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -61912,19 +61925,6 @@
       "consumerPath": "tests/FoodDiary.ArchitectureTests/CSharpSyntaxReader.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "IEntityId",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/StronglyTypedIdInvariantTests.cs",
-      "isTest": true,
-      "referenceCount": 2
     },
     {
       "contract": "IExerciseEntryReadModelRepository",

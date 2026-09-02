@@ -38,6 +38,8 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 | [0025](0025-bodymetrics-measurement-domain-extraction.md) | Extract the BodyMetrics measurement domain | Accepted | 2026-09-01 |
 | [0026](0026-recent-items-bounded-context-extraction.md) | Extract the RecentItems bounded context | Accepted | 2026-09-01 |
 
+| [0027](0027-retire-shared-domain-assemblies.md) | Retire residual central and Nutrition domain assemblies | Accepted | 2026-09-02 |
+
 ## Creating A Record
 
 1. Copy [`template.md`](template.md) to the next zero-padded sequence number.

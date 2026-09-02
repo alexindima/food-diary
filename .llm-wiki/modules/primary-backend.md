@@ -5,7 +5,8 @@ status: current
 sources:
   - FoodDiary.Application.Runtime/AGENTS.md
   - FoodDiary.Application.Abstractions/AGENTS.md
-  - FoodDiary.Domain/AGENTS.md
+  - Shared/FoodDiary.Domain.Primitives/AGENTS.md
+  - docs/adr/0027-retire-shared-domain-assemblies.md
   - FoodDiary.Infrastructure/AGENTS.md
   - FoodDiary.Integrations/AGENTS.md
   - FoodDiary.Presentation.Api/AGENTS.md
@@ -24,7 +25,7 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 
 | Concern | Project |
 | --- | --- |
-| Domain behavior and invariants | Owning module Domain project, with documented central `FoodDiary.Domain` compatibility seams |
+| Domain behavior and invariants | Owning module Domain project; generic values and guards in `FoodDiary.Domain.Primitives`. The former central and Nutrition assemblies are retired under ADR 0027. |
 | Application-facing ports and models | Owning module abstractions plus shared `FoodDiary.Application.Abstractions` |
 | Cross-cutting application execution pipeline | `FoodDiary.Application.Runtime` |
 | Business use cases | Owning module Application project, under `Modules/<Module>/Application` or a legacy `FoodDiary.Application.<Feature>` project |

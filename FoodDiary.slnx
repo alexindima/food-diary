@@ -273,7 +273,6 @@
     <Project Path="Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests.csproj" />
   </Folder>
   <Folder Name="/Platform/">
-    <Project Path="FoodDiary.Domain/FoodDiary.Domain.csproj" />
     <Project Path="FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <Project Path="FoodDiary.Integrations/FoodDiary.Integrations.csproj" />
     <Project Path="FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
@@ -305,7 +304,6 @@
     <Project Path="MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj" />
   </Folder>
   <Folder Name="/Shared/">
-    <Project Path="Shared/FoodDiary.Nutrition.Domain/FoodDiary.Nutrition.Domain.csproj" />
     <Project Path="Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
     <Project Path="Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <Project Path="Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
@@ -317,7 +315,6 @@
   </Folder>
   <Folder Name="/Tests/" />
   <Folder Name="/Tests/Core/">
-    <Project Path="tests/FoodDiary.Nutrition.Domain.Tests/FoodDiary.Nutrition.Domain.Tests.csproj" />
     <Project Path="tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj" />
     <Project Path="tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj" />
     <Project Path="tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj" />

@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
@@ -7,6 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.Users;
 
 public sealed partial class User {
+    private const int DashboardLayoutJsonMaxLength = 65536;
     public void AcceptAiConsent() {
         EnsureNotDeleted();
         if (AiConsentAcceptedAt is not null) {
@@ -297,7 +297,7 @@ public sealed partial class User {
         state = ApplyStringPreference(
             state,
             dashboardLayoutJson,
-            value => DomainGuard.OptionalJson(value, DomainConstants.JsonMaxLength, nameof(dashboardLayoutJson)),
+            value => DomainGuard.OptionalJson(value, DashboardLayoutJsonMaxLength, nameof(dashboardLayoutJson)),
             static (current, value) => current with { DashboardLayoutJson = value });
         state = ApplyStringPreference(state, language, value => NormalizeOptionalLanguage(value!, nameof(language)), static (current, value) => current with { Language = value });
         state = ApplyStringPreference(state, theme, value => NormalizeOptionalTheme(value!, nameof(theme)), static (current, value) => current with { Theme = value });

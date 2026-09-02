@@ -19,7 +19,7 @@ public sealed class DashboardModuleExtractionTests {
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules/Dashboard/Infrastructure/Model")));
         Assert.DoesNotContain("FoodDiary.Modules.Dashboard.Infrastructure",
             ProjectReferenceReader.ReadProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"), StringComparer.Ordinal);
-        Assert.Equal(["FoodDiary.Domain", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Results"], ProjectReferenceReader.ReadProjectReferences(
+        Assert.Equal(["FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Results"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj"));
     }
 
@@ -27,7 +27,7 @@ public sealed class DashboardModuleExtractionTests {
     public void ExtractedDashboardAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Application.Cycles", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.DailyAdvices.Application", "FoodDiary.Modules.Dashboard.Application.Abstractions", "FoodDiary.Modules.Dietologist.Application.Abstractions", "FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Meals.Application", "FoodDiary.Modules.Statistics.Application", "FoodDiary.Modules.Tdee.Application", "FoodDiary.Modules.Users.Domain", "FoodDiary.Nutrition.Domain"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Application.Cycles", "FoodDiary.Mediator", "FoodDiary.Modules.DailyAdvices.Application", "FoodDiary.Modules.Dashboard.Application.Abstractions", "FoodDiary.Modules.Dietologist.Application.Abstractions", "FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Meals.Application", "FoodDiary.Modules.Products.Domain", "FoodDiary.Modules.Statistics.Application", "FoodDiary.Modules.Tdee.Application", "FoodDiary.Modules.Users.Domain"], references);
     }
 
     [Theory]

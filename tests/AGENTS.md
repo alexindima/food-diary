@@ -90,4 +90,4 @@ DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
 
-Shared nutrition calculation, grade and measurement-unit tests belong to tests/FoodDiary.Nutrition.Domain.Tests. Mixed Product/Meal/Recipe consumer compatibility remains in the central application suite. See docs/ai/nutrition-domain-extraction.md.
+Food-quality calculation, grade and measurement-unit contract tests belong to Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests. Mixed Product/Meal/Recipe consumer compatibility remains in the central application suite. See docs/adr/0027-retire-shared-domain-assemblies.md.

@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -56,7 +55,7 @@ public class FavoriteInvariantTests {
     [Fact]
     public void FavoriteProduct_Create_WithTooLongName_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            FavoriteProduct.Create(UserId.New(), ProductId.New(), new string('n', DomainConstants.CommentMaxLength + 1)));
+            FavoriteProduct.Create(UserId.New(), ProductId.New(), new string('n', 2048 + 1)));
     }
 
     [Fact]
@@ -113,7 +112,7 @@ public class FavoriteInvariantTests {
     [Fact]
     public void FavoriteRecipe_Create_WithTooLongName_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            FavoriteRecipe.Create(UserId.New(), RecipeId.New(), new string('n', DomainConstants.CommentMaxLength + 1)));
+            FavoriteRecipe.Create(UserId.New(), RecipeId.New(), new string('n', 2048 + 1)));
     }
 
     [Fact]

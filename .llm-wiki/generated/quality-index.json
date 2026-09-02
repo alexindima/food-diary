@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4769,
+    "productionFiles": 4768,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -165,6 +165,14 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 144.12
+    },
+    {
+      "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
+      "nonBlankLines": 357,
+      "decisionPoints": 88,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 141.14
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
@@ -376,19 +384,11 @@
     },
     {
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "nonBlankLines": 512,
+      "nonBlankLines": 510,
       "decisionPoints": 67,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 110.74
-    },
-    {
-      "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
-      "nonBlankLines": 309,
-      "decisionPoints": 68,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 110.18
+      "structuralRiskScore": 110.7
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
@@ -568,11 +568,11 @@
     },
     {
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "nonBlankLines": 511,
+      "nonBlankLines": 510,
       "decisionPoints": 53,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 89.72
+      "structuralRiskScore": 89.7
     },
     {
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
@@ -696,11 +696,11 @@
     },
     {
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "nonBlankLines": 365,
+      "nonBlankLines": 364,
       "decisionPoints": 48,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 79.3
+      "structuralRiskScore": 79.28
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
@@ -1170,11 +1170,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiContractConsumers.ps1",
-      "nonBlankLines": 118,
-      "decisionPoints": 24,
+      "nonBlankLines": 120,
+      "decisionPoints": 25,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.36
+      "structuralRiskScore": 41.9
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiCoveragePlan.ps1",
@@ -1234,11 +1234,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
-      "nonBlankLines": 309,
-      "decisionPoints": 68,
+      "nonBlankLines": 357,
+      "decisionPoints": 88,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 110.18
+      "structuralRiskScore": 141.14
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiFrontendRuntimeOwner.ps1",
@@ -4583,86 +4583,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 12.28
-    },
-    {
-      "path": "FoodDiary.Domain/Common/DomainConstants.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/Visibility.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/DesiredWaistCm.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.34
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/DesiredWeightKg.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.34
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/EmailAddress.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.98
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/HealthAreaGrade.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/HealthAreaScore.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.98
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/HealthAreaScores.cs",
-      "nonBlankLines": 89,
-      "decisionPoints": 17,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.28
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/Ids/CycleId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/LanguageCode.cs",
-      "nonBlankLines": 32,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.14
     },
     {
       "path": "FoodDiary.Infrastructure/Authentication/AdminSsoService.cs",
@@ -24434,11 +24354,11 @@
     },
     {
       "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs",
-      "nonBlankLines": 81,
+      "nonBlankLines": 82,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.62
+      "structuralRiskScore": 13.64
     },
     {
       "path": "Modules/Cycles/Application/Abstractions/Common/CycleDayErrors.cs",
@@ -25194,6 +25114,14 @@
     },
     {
       "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleFactorId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleId.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -33098,11 +33026,11 @@
     },
     {
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "nonBlankLines": 365,
+      "nonBlankLines": 364,
       "decisionPoints": 48,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 79.3
+      "structuralRiskScore": 79.28
     },
     {
       "path": "Modules/Meals/Domain/Entities/Meals/MealAiItem.cs",
@@ -33130,11 +33058,11 @@
     },
     {
       "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
-      "nonBlankLines": 240,
+      "nonBlankLines": 239,
       "decisionPoints": 27,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 45.3
+      "structuralRiskScore": 45.28
     },
     {
       "path": "Modules/Meals/Domain/Enums/AiRecognitionSource.cs",
@@ -34498,19 +34426,19 @@
     },
     {
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValuePreparer.cs",
-      "nonBlankLines": 69,
+      "nonBlankLines": 70,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.38
+      "structuralRiskScore": 10.4
     },
     {
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
-      "nonBlankLines": 10,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Products/Application/Commands/DeleteProduct/DeleteProductCommand.cs",
@@ -34578,19 +34506,19 @@
     },
     {
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
-      "nonBlankLines": 84,
+      "nonBlankLines": 85,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.18
+      "structuralRiskScore": 15.2
     },
     {
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "nonBlankLines": 12,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Products/Application/Commands/UpdateProduct/UpdateProductCommand.cs",
@@ -34634,19 +34562,19 @@
     },
     {
       "path": "Modules/Products/Application/Common/ProductCommandParsers.cs",
-      "nonBlankLines": 61,
+      "nonBlankLines": 62,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.72
+      "structuralRiskScore": 5.74
     },
     {
       "path": "Modules/Products/Application/Common/ProductCommandValidation.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 25,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.98
+      "structuralRiskScore": 11
     },
     {
       "path": "Modules/Products/Application/Common/ProductEnumFilterParser.cs",
@@ -34914,11 +34842,11 @@
     },
     {
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 32,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
+      "structuralRiskScore": 0.64
     },
     {
       "path": "Modules/Products/Contracts/Products/Models/ProductQueryFilters.cs",
@@ -34927,6 +34855,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Products/Domain.Contracts/Enums/MeasurementUnit.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
     },
     {
       "path": "Modules/Products/Domain.Contracts/Enums/ProductType.cs",
@@ -34954,11 +34890,27 @@
     },
     {
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "nonBlankLines": 511,
+      "nonBlankLines": 510,
       "decisionPoints": 53,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 89.72
+      "structuralRiskScore": 89.7
+    },
+    {
+      "path": "Modules/Products/Domain/ValueObjects/FoodQualityGrade.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Products/Domain/ValueObjects/FoodQualityScore.cs",
+      "nonBlankLines": 98,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 16.96
     },
     {
       "path": "Modules/Products/Domain/ValueObjects/ProductIdentityState.cs",
@@ -35010,11 +34962,11 @@
     },
     {
       "path": "Modules/Products/Infrastructure/Model/Configurations/Products/ProductConfiguration.cs",
-      "nonBlankLines": 50,
+      "nonBlankLines": 51,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1
+      "structuralRiskScore": 1.02
     },
     {
       "path": "Modules/Products/Infrastructure/Model/ProductsPersistenceModelRegistration.cs",
@@ -35042,11 +34994,11 @@
     },
     {
       "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "nonBlankLines": 171,
+      "nonBlankLines": 172,
       "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.92
+      "structuralRiskScore": 25.94
     },
     {
       "path": "Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs",
@@ -36122,11 +36074,11 @@
     },
     {
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "nonBlankLines": 512,
+      "nonBlankLines": 510,
       "decisionPoints": 67,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 110.74
+      "structuralRiskScore": 110.7
     },
     {
       "path": "Modules/Recipes/Domain/Entities/Recipes/RecipeIngredient.cs",
@@ -36186,11 +36138,11 @@
     },
     {
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeStepContentState.cs",
-      "nonBlankLines": 52,
+      "nonBlankLines": 51,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.04
+      "structuralRiskScore": 4.02
     },
     {
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeUpdate.cs",
@@ -36815,6 +36767,30 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Usda/Domain/ValueObjects/HealthAreaGrade.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Usda/Domain/ValueObjects/HealthAreaScore.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.98
+    },
+    {
+      "path": "Modules/Usda/Domain/ValueObjects/HealthAreaScores.cs",
+      "nonBlankLines": 89,
+      "decisionPoints": 17,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 27.28
     },
     {
       "path": "Modules/Usda/Infrastructure/AssemblyInfo.cs",
@@ -37449,6 +37425,14 @@
       "structuralRiskScore": 0.18
     },
     {
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/LanguageCode.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.14
+    },
+    {
       "path": "Modules/Users/Domain/AssemblyInfo.cs",
       "nonBlankLines": 3,
       "decisionPoints": 0,
@@ -37599,6 +37583,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.72
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/DesiredWaistCm.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.34
+    },
+    {
+      "path": "Modules/Users/Domain/ValueObjects/DesiredWeightKg.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.34
     },
     {
       "path": "Modules/Users/Domain/ValueObjects/GenderCode.cs",
@@ -38745,6 +38745,14 @@
       "structuralRiskScore": 6.78
     },
     {
+      "path": "Shared/FoodDiary.Domain.Primitives/EmailAddress.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.98
+    },
+    {
       "path": "Shared/FoodDiary.Domain.Primitives/Entity.cs",
       "nonBlankLines": 83,
       "decisionPoints": 10,
@@ -38783,6 +38791,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Shared/FoodDiary.Domain.Primitives/Visibility.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Shared/FoodDiary.Mediator/DefaultMediator.cs",
@@ -38911,30 +38927,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.2
-    },
-    {
-      "path": "Shared/FoodDiary.Nutrition.Domain/Enums/MeasurementUnit.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Shared/FoodDiary.Nutrition.Domain/ValueObjects/FoodQualityGrade.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "Shared/FoodDiary.Nutrition.Domain/ValueObjects/FoodQualityScore.cs",
-      "nonBlankLines": 98,
-      "decisionPoints": 10,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.96
     },
     {
       "path": "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs",
@@ -46935,10 +46927,11 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Get-LlmWikiContractConsumers.ps1",
       "line": 1,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-        ".llm-wiki/tools/Test-LlmWikiContractConsumers.ps1"
+        ".llm-wiki/tools/Test-LlmWikiContractConsumers.ps1",
+        ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -47743,10 +47736,12 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/LlmWikiGitPaths.ps1",
       "line": 1,
-      "testReferenceCount": 5,
+      "testReferenceCount": 7,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1",
         ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+        ".llm-wiki/tools/Test-LlmWikiContractConsumers.ps1",
+        ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
         ".llm-wiki/tools/Test-LlmWikiGitPaths.ps1",
         ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
         ".llm-wiki/tools/Test-LlmWikiReadOnlyOverlayPaths.ps1"
@@ -48037,7 +48032,7 @@
       "role": "WikiTool",
       "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
       "line": 1,
-      "testReferenceCount": 15,
+      "testReferenceCount": 16,
       "testReferences": [
         ".llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1",
         ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
@@ -48045,6 +48040,7 @@
         ".llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1",
         ".llm-wiki/tools/Test-LlmWikiContextEvaluationSnapshot.ps1",
         ".llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1",
+        ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
         ".llm-wiki/tools/Test-LlmWikiFrontendContractSqlParity.ps1",
         ".llm-wiki/tools/Test-LlmWikiFrontendRuntimeOwnerSqlParity.ps1",
         ".llm-wiki/tools/Test-LlmWikiFrontendTraceSqlParity.ps1",

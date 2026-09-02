@@ -27,7 +27,6 @@
     <ProjectReference Include="..\Modules\Gamification\Application\Abstractions\FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Modules\Gamification\Domain\FoodDiary.Modules.Gamification.Domain.csproj" />
     <ProjectReference Include="..\Modules\Gamification\Infrastructure\Model\FoodDiary.Modules.Gamification.PersistenceModel.csproj" />
-    <ProjectReference Include="..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
     <ProjectReference Include="..\Modules\Fasting\Domain\FoodDiary.Modules.Fasting.Domain.csproj" />
     <ProjectReference Include="..\Modules\Fasting\Infrastructure\Model\FoodDiary.Modules.Fasting.PersistenceModel.csproj" />
     <ProjectReference Include="..\Modules\Hydration\Infrastructure\Model\FoodDiary.Modules.Hydration.PersistenceModel.csproj" />

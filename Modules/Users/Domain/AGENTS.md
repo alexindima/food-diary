@@ -5,8 +5,10 @@ roles, role audit, weight/waist goals, lifecycle events and User-specific state 
 value objects. Preserve legacy CLR namespaces and all invariants. Keep authentication
 flows and providers in Identity and their established adapters.
 
-Reference residual central Domain one-way for constants and values,
-Users Domain.Contracts for UserId and ActivityLevel, and Images Contracts for ImageAssetId.
+Own DesiredWeightKg and DesiredWaistCm with their unchanged limits and validation.
+Reference Users Domain.Contracts for UserId, ActivityLevel and LanguageCode,
+Primitives for generic guards and EmailAddress, and Images Contracts for ImageAssetId.
+Keep the dashboard-layout JSON limit owner-local at 65536.
 Do not restore foreign inverse navigations or reference application/persistence.
 Keep User goal collections and UserRole/Role relationships unchanged.
 

@@ -6,8 +6,10 @@ Use this file when deciding where backend code belongs.
 
 | Concern | Project | Put Here | Do Not Put Here |
 | --- | --- | --- | --- |
-| Shared food scoring and units | `Shared/FoodDiary.Nutrition.Domain` | FoodQualityScore, FoodQualityGrade, MeasurementUnit; ProductType is owned by Products Domain.Contracts | Unrelated domain remnants, aggregates, EF, application or transport code |
-| Domain model | `FoodDiary.Domain` | Entities, value objects, aggregate behavior, domain events | EF Core, HTTP, external SDKs, options |
+| Food quality scoring | `Modules/Products/Domain` | FoodQualityScore and FoodQualityGrade; common formula consumed across modules | Contract-only projects, replacement shared scoring assemblies |
+| Product identity and units | `Modules/Products/Domain.Contracts` | ProductId, ProductType, MeasurementUnit | Aggregate dependencies and calculations |
+| Nutrient health scoring | `Modules/Usda/Domain` | HealthAreaScore, HealthAreaGrade, HealthAreaScores | Reverse Products dependencies |
+| Domain model | Owning `Modules/<Feature>/Domain` | Entities, value objects, aggregate behavior, domain events | EF Core, HTTP, external SDKs, central shared domain buckets |
 | Application ports/models | `FoodDiary.Application.Abstractions` | Feature ports, application-facing models, shared result abstractions | ASP.NET, EF Core, provider SDKs, host config |
 | Application runtime | `FoodDiary.Application.Runtime` | Mediator pipeline behaviors, transaction boundary, post-commit queue registration | Feature handlers, validators, business services, module aggregation |
 | Use cases | Owning `FoodDiary.Application.<Feature>` project or `Modules/<Feature>/Application` | Commands, queries, handlers, validators, application services | Cross-feature shared buckets, persistence implementation, HTTP request/response DTOs |

@@ -4,7 +4,7 @@
 FoodDiary is a modular monolith with separately deployed supporting services.
 
 The primary product backend is a modular monolith:
-- `FoodDiary.Domain`
+- module-owned Domain and Domain.Contracts projects with generic shared Primitives
 - `FoodDiary.Application.Abstractions`
 - `FoodDiary.Application.Runtime`
 - independently compiled `FoodDiary.Application.<Feature>` modules
@@ -50,7 +50,7 @@ flowchart LR
     Presentation --> Modules
     Runtime --> Abstractions["FoodDiary.Application.Abstractions\nports + models"]
     Modules --> Abstractions
-    Modules --> Domain["FoodDiary.Domain\ndomain model"]
+    Modules --> Domain["Module-owned Domain\ndomain model"]
     Infrastructure --> Abstractions
     Infrastructure --> Domain
     Integrations --> Abstractions

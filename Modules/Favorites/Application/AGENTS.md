@@ -17,4 +17,4 @@ Rules for `Modules/Favorites/Application/`.
 - Register handlers, validators, and read services through `AddFavoritesApplication`; the Infrastructure facade exposes `AddFavoritesModule` to composition roots.
 - Keep persistence implementations, HTTP transport, and host configuration outside this project.
 
-Reference Shared/FoodDiary.Nutrition.Domain for existing quality calculation and Products Domain.Contracts for the stable ProductType classification already used by projections; preserve all mapping behavior.
+Reference Products Domain for the existing quality calculation and Products Domain.Contracts for ProductType and MeasurementUnit. This approved scoring dependency does not authorize foreign Product aggregate mutation; preserve all mapping behavior.

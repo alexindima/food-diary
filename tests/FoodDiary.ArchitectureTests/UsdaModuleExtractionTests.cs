@@ -14,7 +14,7 @@ public sealed class UsdaModuleExtractionTests {
     public void ExtractedUsdaAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Usda/Application/FoodDiary.Application.Usda.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Usda.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Usda.Contracts", "FoodDiary.Modules.Usda.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public sealed class UsdaModuleExtractionTests {
 
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj");
-        Assert.Empty(references);
+        Assert.Equal(["FoodDiary.Domain.Primitives"], references);
     }
 
     [Fact]

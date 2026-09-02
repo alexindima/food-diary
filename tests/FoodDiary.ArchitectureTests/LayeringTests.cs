@@ -21,9 +21,13 @@ public class LayeringTests {
         }
     }
 
-    [Fact]
-    public void DomainProject_DoesNotReference_OtherApplicationLayers() {
-        HashSet<string> references = GetProjectReferences("FoodDiary.Domain/FoodDiary.Domain.csproj");
+    [Theory]
+    [InlineData("Products")]
+    [InlineData("Users")]
+    [InlineData("Usda")]
+    [InlineData("Cycles")]
+    public void DomainProject_DoesNotReference_OtherApplicationLayers(string module) {
+        HashSet<string> references = GetProjectReferences($"Modules/{module}/Domain/FoodDiary.Modules.{module}.Domain.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application.Abstractions", references);
         Assert.DoesNotContain("FoodDiary.Application", references);
@@ -36,7 +40,7 @@ public class LayeringTests {
     public void ApplicationAbstractionsProject_ReferencesOnly_DomainAmongCoreProjects() {
         HashSet<string> references = GetProjectReferences("FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj");
 
-        Assert.Contains("FoodDiary.Domain", references);
+        Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Application", references);
         Assert.DoesNotContain("FoodDiary.Infrastructure", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
@@ -61,7 +65,7 @@ public class LayeringTests {
         HashSet<string> references = GetProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
 
         Assert.Contains("FoodDiary.Application.Abstractions", references);
-        Assert.Contains("FoodDiary.Domain", references);
+        Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Application", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
         Assert.DoesNotContain("FoodDiary.Presentation.Api", references);
@@ -73,7 +77,7 @@ public class LayeringTests {
         HashSet<string> references = GetProjectReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
 
         Assert.Contains("FoodDiary.Application.Abstractions", references);
-        Assert.Contains("FoodDiary.Domain", references);
+        Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.Contains("FoodDiary.MailInbox.Client", references);
         Assert.Contains("FoodDiary.MailRelay.Client", references);
         Assert.DoesNotContain("FoodDiary.Application", references);

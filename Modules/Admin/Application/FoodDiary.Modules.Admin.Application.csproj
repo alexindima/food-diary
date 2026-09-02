@@ -2,6 +2,7 @@
   <PropertyGroup><AssemblyName>FoodDiary.Application.Admin</AssemblyName><RootNamespace>FoodDiary.Application.Admin</RootNamespace></PropertyGroup>
   <ItemGroup><Compile Remove="Abstractions/**/*.cs" /></ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Users\Domain.Contracts\FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
     <ProjectReference Include="Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj" />
@@ -9,7 +10,6 @@
     <ProjectReference Include="../../ContentReports/Contracts/FoodDiary.Modules.ContentReports.Contracts.csproj" />
     <ProjectReference Include="../../Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj" />
     <ProjectReference Include="../../Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>

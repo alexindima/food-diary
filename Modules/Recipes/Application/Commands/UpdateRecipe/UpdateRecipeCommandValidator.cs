@@ -1,9 +1,9 @@
+using FoodDiary.Domain.Primitives;
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
 using FoodDiary.Application.Recipes.Common.Validators;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;

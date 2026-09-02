@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;

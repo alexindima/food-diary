@@ -1,5 +1,7 @@
 # Users Domain extraction
 
+Current ownership update: [ADR 0027](../adr/0027-retire-shared-domain-assemblies.md) supersedes the residual central/Nutrition assembly boundaries described below. The earlier extraction evidence remains historical.
+
 Source baseline: `d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf`.
 
 | Responsibility | Physical owner |

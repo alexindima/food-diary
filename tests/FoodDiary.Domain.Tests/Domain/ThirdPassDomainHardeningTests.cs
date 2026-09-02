@@ -1,5 +1,4 @@
 using System.Reflection;
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.FavoriteMeals;
@@ -55,7 +54,7 @@ public sealed class ThirdPassDomainHardeningTests {
         Assert.Throws<ArgumentException>(() => DietologistInvitation.Create(
             UserId.New(), "not-an-email", "hash", Now.AddDays(1), DietologistPermissions.AllEnabled));
 
-        string longName = new('n', DomainConstants.CommentMaxLength + 1);
+        string longName = new('n', 2048 + 1);
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             FavoriteProduct.Create(UserId.New(), ProductId.New(), longName));
         Assert.Throws<ArgumentOutOfRangeException>(() =>

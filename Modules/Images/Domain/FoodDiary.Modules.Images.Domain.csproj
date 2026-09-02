@@ -3,7 +3,6 @@
   <PropertyGroup><NoWarn>$(NoWarn);RCS1170</NoWarn></PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Images.Contracts.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />
     <ProjectReference Include="../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>
 </Project>

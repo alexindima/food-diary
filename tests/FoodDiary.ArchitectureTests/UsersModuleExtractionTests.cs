@@ -6,8 +6,7 @@ public sealed class UsersModuleExtractionTests {
     public void CentralDomain_HasNoEntityDefinitionsOrModuleReferences() {
         string root = ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities");
         Assert.Empty(Directory.Exists(root) ? SourceScanner.SourceFiles(root) : []);
-        Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Domain/FoodDiary.Domain.csproj"));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
     }
 
     [Fact]
@@ -15,7 +14,7 @@ public sealed class UsersModuleExtractionTests {
         Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"));
         string root = ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain.Contracts");
-        Assert.Equal(["Enums/ActivityLevel.cs", "ValueObjects/Ids/UserId.cs"],
+        Assert.Equal(["Enums/ActivityLevel.cs", "ValueObjects/Ids/UserId.cs", "ValueObjects/LanguageCode.cs"],
             SourceScanner.SourceFiles(root).Select(path => Path.GetRelativePath(root, path).Replace('\\', '/')), StringComparer.Ordinal);
     }
 

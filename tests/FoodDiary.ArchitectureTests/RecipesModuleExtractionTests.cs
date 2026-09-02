@@ -36,8 +36,7 @@ public sealed class RecipesModuleExtractionTests {
         Assert.DoesNotContain("RecipeIngredient", product, StringComparison.Ordinal);
         Assert.DoesNotContain("Recipe? Recipe", mealItem, StringComparison.Ordinal);
         Assert.DoesNotContain("ApplyRecipeSnapshot(Recipe recipe)", mealItem, StringComparison.Ordinal);
-        Assert.DoesNotContain("FoodDiary.Modules.Recipes.Domain.Contracts", File.ReadAllText(
-            ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")), StringComparison.Ordinal);
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
         Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj"));
     }
@@ -70,7 +69,7 @@ public sealed class RecipesModuleExtractionTests {
     public void ExtractedRecipesAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Application.Images", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.RecentItems.Application.Abstractions", "FoodDiary.Modules.Recipes.Application.Abstractions", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Recipes.Domain", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Nutrition.Domain"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Application.Images", "FoodDiary.Domain.Primitives", "FoodDiary.Mediator", "FoodDiary.Modules.Products.Domain", "FoodDiary.Modules.RecentItems.Application.Abstractions", "FoodDiary.Modules.Recipes.Application.Abstractions", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Recipes.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

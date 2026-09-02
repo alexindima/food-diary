@@ -213,17 +213,70 @@ if ($CompileProbe) {
     $probeProject = Join-Path $probeRoot "FoodDiary.Application.$Module.Probe.csproj"
     $null = New-Item -ItemType Directory -Path $probeRoot -Force
     try {
-        $compileItems = @($moduleSourcePaths | ForEach-Object {
-            $absolute = (Join-Path $repositoryRoot $_).Replace('&', '&amp;').Replace('"', '&quot;')
-            "    <Compile Include=`"$absolute`" Link=`"$($_.Replace('&', '&amp;').Replace('"', '&quot;'))`" />"
-        }) -join [Environment]::NewLine
-        $projectReferences = @(
-            'FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj'
-            'FoodDiary.Domain/FoodDiary.Domain.csproj'
-            'Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj'
-            $projectDependencies | ForEach-Object { $dependencyProjects[$_] }
-        ) | ForEach-Object { "    <ProjectReference Include=`"$((Join-Path $repositoryRoot $_).Replace('&', '&amp;').Replace('"', '&quot;'))`" />" }
-        $projectText = @"
+        if ($moduleLayout.projects.Count -gt 1) { throw "Ambiguous application projects for ${Module}: $($moduleLayout.projects -join ', ')" }
+        if ($moduleLayout.projects.Count -eq 1) {
+            # Compile the actual extracted project: preserve its references, excludes and assembly identity/IVT.
+            $probeProject = Join-Path $repositoryRoot $moduleLayout.projects[0]
+        } else {
+            if ($moduleSourcePaths.Count -eq 0) { throw "No compile inputs found for synthetic extraction probe: $Module" }
+            $compileItems = @($moduleSourcePaths | ForEach-Object {
+                $absolute = (Join-Path $repositoryRoot $_).Replace('&', '&amp;').Replace('"', '&quot;')
+                "    <Compile Include=`"$absolute`" Link=`"$($_.Replace('&', '&amp;').Replace('"', '&quot;'))`" />"
+            }) -join [Environment]::NewLine
+            $donorProjects = @(
+                foreach ($sourceRoot in $moduleLayout.sourceRoots) {
+                    $directory = [IO.DirectoryInfo](Join-Path $repositoryRoot $sourceRoot)
+                    while ($null -ne $directory -and $directory.FullName.StartsWith($repositoryRoot, [StringComparison]::OrdinalIgnoreCase)) {
+                        $candidates = @(Get-ChildItem -LiteralPath $directory.FullName -File -Filter '*.csproj')
+                        if ($candidates.Count -gt 1) { throw "Ambiguous compile-probe donor projects for ${sourceRoot}: $($candidates.FullName -join ', ')" }
+                        if ($candidates.Count -eq 1) { $candidates[0].FullName; break }
+                        if ($directory.FullName -eq $repositoryRoot) { break }
+                        $directory = $directory.Parent
+                    }
+                }
+            ) | Sort-Object -Unique
+            $donorProjects = @($donorProjects | Where-Object { $_ })
+            if ($donorProjects.Count -gt 1) { throw "Multiple compile-probe donor contexts for ${Module}: $($donorProjects -join ', ')" }
+            $referenceItems = [Collections.Generic.List[string]]::new()
+            $referencePaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+            $referenceDefinitions = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::OrdinalIgnoreCase)
+            foreach ($donorProject in $donorProjects) {
+                # Evaluate in the synthetic project's target context; preserve conditional references and aliases.
+                $evaluation = @(& dotnet msbuild $donorProject -nologo -property:TargetFramework=net10.0 -getItem:ProjectReference 2>&1 | ForEach-Object { [string]$_ })
+                if ($LASTEXITCODE -ne 0) { throw "Compile-probe donor evaluation failed for ${donorProject}: $($evaluation -join [Environment]::NewLine)" }
+                $evaluated = ($evaluation -join [Environment]::NewLine) | ConvertFrom-Json
+                foreach ($item in @($evaluated.Items.ProjectReference)) {
+                    $referencePath = [IO.Path]::GetFullPath([string]$item.FullPath)
+                    $metadata = @(
+                        foreach ($name in @('Aliases', 'ReferenceOutputAssembly', 'BuildReference', 'Private', 'SetTargetFramework', 'SetConfiguration', 'SetPlatform', 'GlobalPropertiesToRemove', 'AdditionalProperties', 'Targets', 'OutputItemType', 'SkipGetTargetFrameworkProperties', 'EmbedInteropTypes', 'UndefineProperties')) {
+                            $property = $item.PSObject.Properties[$name]
+                            if ($null -ne $property -and -not [string]::IsNullOrWhiteSpace([string]$property.Value)) {
+                                "      <$name>$([Security.SecurityElement]::Escape([string]$property.Value))</$name>"
+                            }
+                        }
+                    )
+                    $definition = "    <ProjectReference Include=`"$([Security.SecurityElement]::Escape($referencePath))`">`n$($metadata -join "`n")`n    </ProjectReference>"
+                    if ($referenceDefinitions.ContainsKey($referencePath)) {
+                        if ($referenceDefinitions[$referencePath] -ne $definition) { throw "Conflicting evaluated compile-probe reference metadata: $referencePath" }
+                        continue
+                    }
+                    $referenceDefinitions.Add($referencePath, $definition)
+                    $null = $referencePaths.Add($referencePath)
+                    $referenceItems.Add($definition)
+                }
+            }
+            foreach ($reference in @(
+                'FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj'
+                'Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj'
+                $projectDependencies | ForEach-Object { $dependencyProjects[$_] }
+            )) {
+                $referencePath = [IO.Path]::GetFullPath((Join-Path $repositoryRoot $reference))
+                if ($referencePaths.Add($referencePath)) {
+                    $referenceItems.Add("    <ProjectReference Include=`"$([Security.SecurityElement]::Escape($referencePath))`" />")
+                }
+            }
+            $projectReferences = $referenceItems.ToArray()
+            $projectText = @"
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -247,11 +300,6 @@ $($projectReferences -join [Environment]::NewLine)
   </ItemGroup>
 </Project>
 "@
-        if ($moduleLayout.projects.Count -gt 1) { throw "Ambiguous application projects for ${Module}: $($moduleLayout.projects -join ', ')" }
-        if ($moduleLayout.projects.Count -eq 1) {
-            # Compile the actual extracted project: preserve its references, excludes and assembly identity/IVT.
-            $probeProject = Join-Path $repositoryRoot $moduleLayout.projects[0]
-        } else {
             [IO.File]::WriteAllText($probeProject, $projectText, [Text.UTF8Encoding]::new($false))
         }
         $probeOutput = @(& dotnet build $probeProject --nologo --artifacts-path (Join-Path $probeRoot 'artifacts') -m:1 2>&1 | ForEach-Object { [string]$_ })

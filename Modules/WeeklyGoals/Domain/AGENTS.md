@@ -16,4 +16,4 @@ Rules for `Modules/WeeklyGoals/Domain/`.
 - Do not reference Application, Contracts, Infrastructure, EF Core, or ASP.NET packages.
 - Keep database mapping, repositories, the shared `FoodDiaryDbContext`, migrations, and the model snapshot outside this project.
 
-User ownership: use Users Domain for aggregate navigations, Users Domain.Contracts for ID-only dependencies, and residual central Domain only for shared values/guards. Preserve all existing relationships.
+User ownership: use Users Domain for aggregate navigations, Users Domain.Contracts for ID-only dependencies, and the exact module or Primitives owner for shared values/guards. Preserve all existing relationships.

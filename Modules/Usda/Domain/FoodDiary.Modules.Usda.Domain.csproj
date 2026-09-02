@@ -2,4 +2,7 @@
   <PropertyGroup>
     <RootNamespace>FoodDiary.Domain</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Domain.Primitives\FoodDiary.Domain.Primitives.csproj" />
+  </ItemGroup>
 </Project>

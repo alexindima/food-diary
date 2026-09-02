@@ -52,8 +52,7 @@ public sealed class RecipeCommunityModuleExtractionTests {
 
     [Fact]
     public void CentralDomain_DoesNotReferenceRecipeCommunityDomain() {
-        string[] references = ProjectReferenceReader.ReadProjectReferences("FoodDiary.Domain/FoodDiary.Domain.csproj");
-        Assert.DoesNotContain("FoodDiary.Modules.RecipeCommunity.Domain", references, StringComparer.Ordinal);
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
     }
 
     [Fact]

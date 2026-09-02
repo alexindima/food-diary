@@ -1,5 +1,7 @@
 # Generic domain validation ownership
 
+Current ownership update: [ADR 0027](../adr/0027-retire-shared-domain-assemblies.md) supersedes the residual central/Nutrition assembly boundaries described below. The earlier extraction evidence remains historical.
+
 `FoodDiary.Domain.Primitives.DomainGuard` is a public API in the existing shared
 Primitives library. It owns enum membership, finite/range checks, required/optional
 text, JSON syntax validation and UTC normalization. It has no module, application,

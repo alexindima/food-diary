@@ -1,5 +1,4 @@
 using System.Globalization;
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Events;
@@ -11,8 +10,8 @@ namespace FoodDiary.Domain.Entities.Meals;
 
 public sealed class Meal : AggregateRoot<MealId> {
     private const double ComparisonEpsilon = 0.000001d;
-    private const int CommentMaxLength = DomainConstants.CommentMaxLength;
-    private const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
+    private const int CommentMaxLength = 2048;
+    private const int ImageUrlMaxLength = 2048;
 
     public UserId UserId { get; private set; }
     public DateTime Date { get; private set; }

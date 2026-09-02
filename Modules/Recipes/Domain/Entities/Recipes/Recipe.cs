@@ -1,7 +1,5 @@
 using System.Globalization;
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
@@ -13,8 +11,8 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public const int NameMaxLength = 256;
     public const int CategoryMaxLength = 128;
     public const int DescriptionMaxLength = 2048;
-    public const int CommentMaxLength = DomainConstants.CommentMaxLength;
-    public const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
+    public const int CommentMaxLength = 2048;
+    public const int ImageUrlMaxLength = 2048;
 
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }

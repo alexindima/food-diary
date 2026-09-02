@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
@@ -7,6 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.FavoriteMeals;
 
 public sealed class FavoriteMeal : Entity<FavoriteMealId> {
+    private const int NameMaxLength = 2048;
     public UserId UserId { get; private set; }
     public MealId MealId { get; private set; }
     public string? Name { get; private set; }
@@ -55,7 +55,7 @@ public sealed class FavoriteMeal : Entity<FavoriteMealId> {
         }
 
         string trimmed = value.Trim();
-        return trimmed.Length > DomainConstants.CommentMaxLength
+        return trimmed.Length > NameMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), "Name exceeds the maximum length.")
             : trimmed;
     }

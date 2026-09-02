@@ -1,5 +1,4 @@
 using System.Globalization;
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,7 +10,7 @@ public sealed class MealItem : Entity<MealItemId> {
     private const double ComparisonEpsilon = 0.000001d;
     private const int SnapshotNameMaxLength = 256;
     private const int SnapshotUnitMaxLength = 32;
-    private const int SnapshotImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
+    private const int SnapshotImageUrlMaxLength = 2048;
 
     public MealId MealId { get; private set; }
 

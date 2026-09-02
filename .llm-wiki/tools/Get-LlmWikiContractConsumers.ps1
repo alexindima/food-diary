@@ -43,6 +43,8 @@ $methodDefinitions = @([regex]::Matches($declarationText, '(?m)^\s*(?<return>[^\
 })
 
 function Get-ModuleName([string]$Path) {
+    $Path = ConvertTo-LlmWikiRepositoryPath $Path
+    if ($Path -match '^Modules/([^/]+)/') { return $Matches[1] }
     if ($Path -match '^FoodDiary\.Application/([^/]+)/') { return $Matches[1] }
     if ($Path -match '^FoodDiary\.Application\.([^/]+)/') { return $Matches[1] }
     if ($Path -match '^([^/]+)/') { return $Matches[1] }

@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3546,
-    "symbols": 3532,
+    "sourceFiles": 3545,
+    "symbols": 3531,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 166,
     "kinds": {
-      "class": 1859,
+      "class": 1858,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -42,7 +42,7 @@
       "Response": 181,
       "Service": 279,
       "Validator": 206,
-      "ValueObject": 129,
+      "ValueObject": 128,
       "WriteRepository": 46
     }
   },
@@ -2104,76 +2104,6 @@
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeTelemetry.cs",
       "line": 6
-    },
-    {
-      "name": "DomainConstants",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Common/DomainConstants.cs",
-      "line": 2
-    },
-    {
-      "name": "Visibility",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/Visibility.cs",
-      "line": 2
-    },
-    {
-      "name": "DesiredWaistCm",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/DesiredWaistCm.cs",
-      "line": 4
-    },
-    {
-      "name": "DesiredWeightKg",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/DesiredWeightKg.cs",
-      "line": 4
-    },
-    {
-      "name": "EmailAddress",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/EmailAddress.cs",
-      "line": 4
-    },
-    {
-      "name": "HealthAreaGrade",
-      "kind": "enum",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/HealthAreaGrade.cs",
-      "line": 2
-    },
-    {
-      "name": "HealthAreaScore",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/HealthAreaScore.cs",
-      "line": 6
-    },
-    {
-      "name": "HealthAreaScores",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/HealthAreaScores.cs",
-      "line": 7
-    },
-    {
-      "name": "CycleId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/Ids/CycleId.cs",
-      "line": 4
-    },
-    {
-      "name": "LanguageCode",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/LanguageCode.cs",
-      "line": 2
     },
     {
       "name": "AdminSsoService",
@@ -11567,7 +11497,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "BillingPaymentKinds",
@@ -11588,14 +11518,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "BillingWebhookEvent",
       "kind": "class",
       "role": "Event",
       "path": "Modules/Billing/Domain/Entities/Billing/BillingWebhookEvent.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "BillingPaymentConfiguration",
@@ -12372,7 +12302,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "CycleDayErrors",
@@ -13030,6 +12960,13 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleFactorId.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Cycles/Domain/ValueObjects/Ids/CycleId.cs",
       "line": 4
     },
     {
@@ -16600,21 +16537,21 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Favorites/Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "FavoriteProduct",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Favorites/Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "FavoriteRecipe",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Favorites/Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "FavoriteMealId",
@@ -19792,7 +19729,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "MealAiItem",
@@ -19820,7 +19757,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "AiRecognitionSource",
@@ -20989,14 +20926,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValuePreparer.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "CreateProductValues",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "DeleteProductCommand",
@@ -21059,14 +20996,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "ProductUpdateValues",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "UpdateProductCommand",
@@ -21108,14 +21045,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/Common/ProductCommandParsers.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ProductCommandValidation",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/Common/ProductCommandValidation.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ProductEnumFilterParser",
@@ -21353,7 +21290,7 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "ProductQueryFilters",
@@ -21361,6 +21298,13 @@
       "role": "Other",
       "path": "Modules/Products/Contracts/Products/Models/ProductQueryFilters.cs",
       "line": 4
+    },
+    {
+      "name": "MeasurementUnit",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Products/Domain.Contracts/Enums/MeasurementUnit.cs",
+      "line": 2
     },
     {
       "name": "ProductType",
@@ -21381,7 +21325,21 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 11
+      "line": 10
+    },
+    {
+      "name": "FoodQualityGrade",
+      "kind": "enum",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/FoodQualityGrade.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodQualityScore",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Products/Domain/ValueObjects/FoodQualityScore.cs",
+      "line": 8
     },
     {
       "name": "ProductIdentityState",
@@ -21430,7 +21388,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Products/Infrastructure/Model/Configurations/Products/ProductConfiguration.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "ProductsPersistenceModelRegistration",
@@ -21458,7 +21416,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "ProductRepository",
@@ -22368,7 +22326,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 11
+      "line": 9
     },
     {
       "name": "RecipeIngredient",
@@ -22424,7 +22382,7 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeStepContentState.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "RecipeUpdate",
@@ -22943,6 +22901,27 @@
       "role": "Entity",
       "path": "Modules/Usda/Domain/Entities/Usda/UsdaNutrient.cs",
       "line": 6
+    },
+    {
+      "name": "HealthAreaGrade",
+      "kind": "enum",
+      "role": "ValueObject",
+      "path": "Modules/Usda/Domain/ValueObjects/HealthAreaGrade.cs",
+      "line": 2
+    },
+    {
+      "name": "HealthAreaScore",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Usda/Domain/ValueObjects/HealthAreaScore.cs",
+      "line": 6
+    },
+    {
+      "name": "HealthAreaScores",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Usda/Domain/ValueObjects/HealthAreaScores.cs",
+      "line": 7
     },
     {
       "name": "DailyReferenceValueConfiguration",
@@ -23484,6 +23463,13 @@
       "line": 4
     },
     {
+      "name": "LanguageCode",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/LanguageCode.cs",
+      "line": 2
+    },
+    {
       "name": "WaistGoal",
       "kind": "class",
       "role": "Entity",
@@ -23544,7 +23530,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Users/Domain/Entities/Users/User.Profile.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "User",
@@ -23608,6 +23594,20 @@
       "role": "Event",
       "path": "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs",
       "line": 5
+    },
+    {
+      "name": "DesiredWaistCm",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/DesiredWaistCm.cs",
+      "line": 4
+    },
+    {
+      "name": "DesiredWeightKg",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain/ValueObjects/DesiredWeightKg.cs",
+      "line": 4
     },
     {
       "name": "GenderCode",
@@ -24569,6 +24569,13 @@
       "line": 2
     },
     {
+      "name": "EmailAddress",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Domain.Primitives/EmailAddress.cs",
+      "line": 4
+    },
+    {
       "name": "Entity",
       "kind": "class",
       "role": "Entity",
@@ -24601,6 +24608,13 @@
       "kind": "interface",
       "role": "Other",
       "path": "Shared/FoodDiary.Domain.Primitives/IEntityId.cs",
+      "line": 2
+    },
+    {
+      "name": "Visibility",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Domain.Primitives/Visibility.cs",
       "line": 2
     },
     {
@@ -24714,27 +24728,6 @@
       "role": "Other",
       "path": "Shared/FoodDiary.Mediator/Unit.cs",
       "line": 6
-    },
-    {
-      "name": "MeasurementUnit",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Shared/FoodDiary.Nutrition.Domain/Enums/MeasurementUnit.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodQualityGrade",
-      "kind": "enum",
-      "role": "ValueObject",
-      "path": "Shared/FoodDiary.Nutrition.Domain/ValueObjects/FoodQualityGrade.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodQualityScore",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Shared/FoodDiary.Nutrition.Domain/ValueObjects/FoodQualityScore.cs",
-      "line": 8
     },
     {
       "name": "IOutboxMessage",

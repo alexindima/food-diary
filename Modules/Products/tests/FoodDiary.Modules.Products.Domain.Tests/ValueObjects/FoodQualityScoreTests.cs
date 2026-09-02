@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Nutrition.Domain.Tests.ValueObjects;
+namespace FoodDiary.Domain.Tests.ValueObjects;
 
 [ExcludeFromCodeCoverage]
 public class FoodQualityScoreTests {

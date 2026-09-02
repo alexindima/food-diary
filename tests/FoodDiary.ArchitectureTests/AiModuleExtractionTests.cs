@@ -26,8 +26,7 @@ public sealed class AiModuleExtractionTests {
     public void DomainExtraction_PreservesOneWayIdentityAndMealsOwnership() {
         Assert.Equal(["FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj"));
-        Assert.DoesNotContain("FoodDiary.Modules.Ai.Domain", ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain", "Entities", "Meals", "MealAiSession.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain", "Entities", "Meals", "MealAiItem.cs")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Ai")));

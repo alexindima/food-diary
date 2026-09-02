@@ -18,4 +18,4 @@ Rules for `Modules/MealPlanning/Application/`.
 - Reference Meals Domain directly for the existing MealType planning contract. Preserve generation, ordering, servings and shopping-list semantics; this enum dependency adds no Meals write capability.
 - Keep persistence implementations, HTTP transport, and host configuration outside this project.
 
-Reference Shared/FoodDiary.Nutrition.Domain for MeasurementUnit in existing shopping quantities. Preserve unit parsing and generation behavior.
+Reference Products Domain.Contracts for MeasurementUnit in existing shopping quantities. Preserve unit parsing and generation behavior.

@@ -1,7 +1,7 @@
+using FoodDiary.Domain.Primitives;
 using Microsoft.Extensions.Caching.Memory;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Products;

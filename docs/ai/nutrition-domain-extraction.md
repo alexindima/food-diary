@@ -1,5 +1,7 @@
 # Nutrition domain ownership
 
+Current ownership update: [ADR 0027](../adr/0027-retire-shared-domain-assemblies.md) supersedes the residual central/Nutrition assembly boundaries described below. The earlier extraction evidence remains historical.
+
 Food quality scoring and food quantity units now have a narrow shared domain owner.
 They are consumed by several food workflows and do not belong to one aggregate.
 

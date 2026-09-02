@@ -11,8 +11,7 @@ public sealed class ExercisesModuleExtractionTests {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Exercises", "Domain", relativePath)));
         Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Modules.Users.Domain"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Exercises/Domain/FoodDiary.Modules.Exercises.Domain.csproj"));
-        Assert.DoesNotContain("FoodDiary.Modules.Exercises.Domain", ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
     }
 
     [Fact]
@@ -46,7 +45,7 @@ public sealed class ExercisesModuleExtractionTests {
     public void ExtractedExercisesAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.Exercises.Application.Abstractions", "FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Exercises.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Exercises.Application.Abstractions", "FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Exercises.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

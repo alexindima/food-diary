@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Entities.Assets;

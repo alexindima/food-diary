@@ -1,5 +1,4 @@
 using System.Globalization;
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.ValueObjects;
@@ -7,7 +6,7 @@ namespace FoodDiary.Domain.ValueObjects;
 public readonly record struct RecipeStepContentState {
     public const int TitleMaxLength = 256;
     public const int InstructionMaxLength = 4000;
-    public const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
+    public const int ImageUrlMaxLength = 2048;
 
     public string? Title { get; }
     public string Instruction { get; }

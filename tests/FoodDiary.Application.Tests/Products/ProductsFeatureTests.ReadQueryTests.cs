@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Results;
 using FoodDiary.Application.Products.Queries.GetProductsOverview;
 using FoodDiary.Application.Abstractions.RecentItems.Common;

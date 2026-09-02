@@ -2,9 +2,15 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class EventGovernanceTests {
-    [Fact]
-    public void DomainEvents_AreRaisedByDomainModel() {
-        string domainRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain");
+    public static IEnumerable<object[]> DomainModules() =>
+        Directory.GetDirectories(ArchitectureTestPaths.FromRoot("Modules"))
+            .Where(path => Directory.Exists(Path.Combine(path, "Domain", "Events")))
+            .Select(path => new object[] { Path.GetFileName(path) });
+
+    [Theory]
+    [MemberData(nameof(DomainModules))]
+    public void DomainEvents_AreRaisedByDomainModel(string module) {
+        string domainRoot = ArchitectureTestPaths.FromRoot("Modules", module, "Domain");
         string eventsRoot = Path.Combine(domainRoot, "Events");
         string[] domainSource = [.. SourceScanner.SourceFiles(domainRoot)
             .Where(path => !path.StartsWith(eventsRoot, StringComparison.OrdinalIgnoreCase))
@@ -19,9 +25,10 @@ public sealed class EventGovernanceTests {
         Assert.Empty(orphanEvents);
     }
 
-    [Fact]
-    public void DomainEvents_StayTransportAndProviderAgnostic() {
-        string eventsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Events");
+    [Theory]
+    [MemberData(nameof(DomainModules))]
+    public void DomainEvents_StayTransportAndProviderAgnostic(string module) {
+        string eventsRoot = ArchitectureTestPaths.FromRoot("Modules", module, "Domain", "Events");
         string[] forbiddenNamespaces = [
             "FoodDiary.Application",
             "FoodDiary.Infrastructure",
@@ -40,9 +47,10 @@ public sealed class EventGovernanceTests {
         Assert.Empty(violations);
     }
 
-    [Fact]
-    public void DomainEventDeclarations_FollowImmutableNamingContract() {
-        string eventsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Events");
+    [Theory]
+    [MemberData(nameof(DomainModules))]
+    public void DomainEventDeclarations_FollowImmutableNamingContract(string module) {
+        string eventsRoot = ArchitectureTestPaths.FromRoot("Modules", module, "Domain", "Events");
         string[] violations = [.. SourceScanner.SourceFiles(eventsRoot)
             .Select(path => new { path, source = File.ReadAllText(path), name = Path.GetFileNameWithoutExtension(path) })
             .Where(entry => !entry.name.EndsWith("DomainEvent", StringComparison.Ordinal) ||

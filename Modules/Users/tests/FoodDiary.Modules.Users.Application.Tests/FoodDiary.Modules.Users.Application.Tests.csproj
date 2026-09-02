@@ -22,7 +22,6 @@
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj" />
     <ProjectReference Include="../../../Identity/Application/FoodDiary.Modules.Identity.Application.csproj" />
     <ProjectReference Include="../../../../FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj" />
-    <ProjectReference Include="../../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />
     <ProjectReference Include="../../../BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="../../../Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../../../Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj" />

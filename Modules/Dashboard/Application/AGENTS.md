@@ -17,4 +17,4 @@ Rules for `Modules/Dashboard/Application/`.
 - Tests: `dotnet test Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/FoodDiary.Modules.Dashboard.Application.Tests.csproj`
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
-Reference Shared/FoodDiary.Nutrition.Domain directly for existing shared food-quality calculation. This pure scoring dependency grants no foreign aggregate or write capability.
+Reference Products Domain directly for the existing shared food-quality calculation. The approved dependency on this aggregate-bearing assembly grants no foreign aggregate mutation capability.

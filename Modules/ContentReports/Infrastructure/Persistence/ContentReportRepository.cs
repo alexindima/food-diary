@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;

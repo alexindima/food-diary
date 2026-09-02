@@ -4,21 +4,6 @@ namespace FoodDiary.Domain.Tests.Domain.ValueObjects;
 
 [ExcludeFromCodeCoverage]
 public class ValueObjectsInvariantTests {
-    [Theory]
-    [InlineData(double.NaN)]
-    [InlineData(double.PositiveInfinity)]
-    [InlineData(double.NegativeInfinity)]
-    public void DesiredWeight_Create_WithNonFiniteValue_Throws(double value) {
-        Assert.Throws<ArgumentOutOfRangeException>(() => DesiredWeightKg.Create(value));
-    }
-
-    [Theory]
-    [InlineData(double.NaN)]
-    [InlineData(double.PositiveInfinity)]
-    [InlineData(double.NegativeInfinity)]
-    public void DesiredWaist_Create_WithNonFiniteValue_Throws(double value) {
-        Assert.Throws<ArgumentOutOfRangeException>(() => DesiredWaistCm.Create(value));
-    }
 
     [Theory]
     [InlineData(double.NaN)]
@@ -105,35 +90,6 @@ public class ValueObjectsInvariantTests {
             () => Assert.True(ok),
             () => Assert.Equal("F", gender.Value),
             () => Assert.False(invalid));
-    }
-
-    [Fact]
-    public void LanguageCode_TryParse_AndFromPreferred_WorkAsExpected() {
-        bool parsed = LanguageCode.TryParse("  EN  ", out LanguageCode en);
-        var preferredRu = LanguageCode.FromPreferred("ru-RU");
-        var preferredDefault = LanguageCode.FromPreferred("de-DE");
-
-        Assert.Multiple(
-            () => Assert.True(parsed),
-            () => Assert.Equal("en", en.Value),
-            () => Assert.Equal("ru", preferredRu.Value),
-            () => Assert.Equal("en", preferredDefault.Value));
-    }
-
-    [Fact]
-    public void EmailAddress_Create_NormalizesValue() {
-        var email = EmailAddress.Create("  USER@Example.COM ");
-
-        Assert.Equal("user@example.com", email.Value);
-    }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData("invalid")]
-    [InlineData("user@")]
-    public void EmailAddress_Create_WithInvalidValue_Throws(string value) {
-        Assert.Throws<ArgumentException>(() => EmailAddress.Create(value));
     }
 
     private static UserCalorieSchedule CreateCalorieSchedule(

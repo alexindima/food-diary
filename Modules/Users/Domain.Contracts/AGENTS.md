@@ -1,9 +1,3 @@
-# Users Domain Contracts
+# Users domain contracts
 
-Own UserId and the public profile enum ActivityLevel with their existing CLR
-namespaces and conversion semantics. Keep ActivityLevel in Enums with unchanged
-names and numeric values; consumers reference this seam without acquiring User.
-The only project dependency is shared Domain.Primitives for IEntityId.
-Do not add aggregate, application or persistence dependencies. Moving ActivityLevel
-from central Domain changes its assembly owner and requires coordinated rebuilds;
-HTTP strings, EF string conversion and TDEE multipliers remain unchanged.
+Own UserId, ActivityLevel and LanguageCode with their existing CLR namespaces. Reference only shared Domain.Primitives. LanguageCode owns the user's en/ru preference contract: TryParse accepts only exact normalized codes; FromPreferred maps the ru prefix to ru and otherwise defaults to en. Preserve this behavior and all existing ID/enum semantics. Do not add aggregate, application or persistence dependencies.

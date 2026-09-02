@@ -1,5 +1,4 @@
 using System.Globalization;
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -22,8 +21,8 @@ public sealed class Product : AggregateRoot<ProductId> {
     public const int BrandMaxLength = 128;
     public const int CategoryMaxLength = 128;
     public const int DescriptionMaxLength = 2048;
-    public const int CommentMaxLength = DomainConstants.CommentMaxLength;
-    public const int ImageUrlMaxLength = DomainConstants.ImageUrlMaxLength;
+    public const int CommentMaxLength = 2048;
+    public const int ImageUrlMaxLength = 2048;
 
     public string? Barcode { get; private set; }
     public string Name { get; private set; } = string.Empty;

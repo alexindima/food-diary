@@ -1,8 +1,8 @@
+using FoodDiary.Domain.Primitives;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects;
 

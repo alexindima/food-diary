@@ -5181,56 +5181,56 @@
       "name": "TotalCalories",
       "type": "double",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 23
+      "line": 22
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 29
+      "line": 28
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 30
+      "line": 29
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "int",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 36
+      "line": 35
     },
     {
       "category": "health",
       "name": "PostMealSatietyLevel",
       "type": "int",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 37
+      "line": 36
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "Id,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 227
+      "line": 226
     },
     {
       "category": "health",
       "name": "PreMealSatietyLevel",
       "type": "ImageAssetId,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 285
+      "line": 284
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "IsNutritionAutoCalculated,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 308
+      "line": 307
     },
     {
       "category": "health",
@@ -5251,7 +5251,7 @@
       "name": "SnapshotCaloriesPerBase",
       "type": "double?",
       "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
-      "line": 28
+      "line": 27
     },
     {
       "category": "health",
@@ -5419,14 +5419,14 @@
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
-      "line": 21
+      "line": 22
     },
     {
       "category": "health",
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 40
+      "line": 39
     },
     {
       "category": "health",
@@ -5440,7 +5440,7 @@
       "name": "CaloriesPerBase",
       "type": "double",
       "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 182
+      "line": 183
     },
     {
       "category": "health",
@@ -5566,28 +5566,28 @@
       "name": "TotalCalories",
       "type": "double?",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 28
+      "line": 26
     },
     {
       "category": "health",
       "name": "IsNutritionAutoCalculated",
       "type": "bool",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 34
+      "line": 32
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "double?",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 35
+      "line": 33
     },
     {
       "category": "health",
       "name": "ManualCalories",
       "type": "IsNutritionAutoCalculated,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 501
+      "line": 499
     },
     {
       "category": "health",
@@ -8870,56 +8870,56 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 20
+      "line": 19
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 21
+      "line": 20
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 22
+      "line": 21
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
+      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
+      "line": 68
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrlMaxLength",
+      "type": "imageUrl,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
       "line": 69
     },
     {
       "category": "privateContent",
-      "name": "ImageUrlMaxLength",
-      "type": "imageUrl,",
-      "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 70
-    },
-    {
-      "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 80
+      "line": 79
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 97
+      "line": 96
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "Comment,",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 283
+      "line": 282
     },
     {
       "category": "privateContent",
@@ -8947,14 +8947,14 @@
       "name": "SnapshotImageUrl",
       "type": "string?",
       "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
-      "line": 25
+      "line": 24
     },
     {
       "category": "privateContent",
       "name": "SnapshotImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
-      "line": 189
+      "line": 188
     },
     {
       "category": "privateContent",
@@ -9024,35 +9024,35 @@
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
-      "line": 11
+      "line": 12
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductValues.cs",
-      "line": 12
+      "line": 13
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 12
+      "line": 13
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 13
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "HasResolvedImageAsset",
       "type": "bool",
       "path": "Modules/Products/Application/Commands/UpdateProduct/ProductUpdateValues.cs",
-      "line": 14
+      "line": 15
     },
     {
       "category": "privateContent",
@@ -9150,84 +9150,84 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
-      "line": 15
+      "line": 16
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
-      "line": 16
+      "line": 17
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Contracts/Products/Models/ProductOverviewReadItem.cs",
-      "line": 17
+      "line": 18
     },
     {
       "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 33
+      "line": 32
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 34
+      "line": 33
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 35
+      "line": 34
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 96
+      "line": 95
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 97
+      "line": 96
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 171
+      "line": 170
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "update.Comment,",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 223
+      "line": 222
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 329
+      "line": 328
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 525
+      "line": 524
     },
     {
       "category": "privateContent",
@@ -9255,21 +9255,21 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 176
+      "line": 177
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 177
+      "line": 178
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
-      "line": 178
+      "line": 179
     },
     {
       "category": "privateContent",
@@ -9465,70 +9465,70 @@
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 21
+      "line": 19
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 23
+      "line": 21
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 24
+      "line": 22
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 75
+      "line": 73
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 77
+      "line": 75
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "update.Comment,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 123
+      "line": 121
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "update.ImageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 125
+      "line": 123
     },
     {
       "category": "privateContent",
       "name": "CommentMaxLength",
       "type": "comment,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 288
+      "line": 286
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 353
+      "line": 351
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageUrl,",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 472
+      "line": 470
     },
     {
       "category": "privateContent",
@@ -9577,28 +9577,28 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeStepContentState.cs",
-      "line": 14
+      "line": 13
     },
     {
       "category": "privateContent",
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeStepContentState.cs",
-      "line": 15
+      "line": 14
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeStepContentState.cs",
-      "line": 24
+      "line": 23
     },
     {
       "category": "privateContent",
       "name": "ImageUrlMaxLength",
       "type": "imageUrl,",
       "path": "Modules/Recipes/Domain/ValueObjects/RecipeStepContentState.cs",
-      "line": 36
+      "line": 35
     },
     {
       "category": "privateContent",

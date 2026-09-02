@@ -22,3 +22,7 @@ Rules for `Shared/FoodDiary.Domain.Primitives/`.
 ## Generic input validation
 
 Public DomainGuard uses this owner's FoodDiary.Domain.Primitives namespace. Keep its generic numeric, enum, text, JSON syntax and UTC-normalization contracts stable. RequiredUtc deliberately accepts Local and converts with ToUniversalTime; this input normalization differs from strict UTC audit invariants above. JSON parsing validates syntax only. Billing storage precision and currency policies belong to BillingDomainGuard, never this library.
+
+## Generic value contracts
+
+EmailAddress and Visibility use this project's FoodDiary.Domain.Primitives namespace. Preserve EmailAddress normalization, MailAddress validation and exception behavior. Visibility remains Public=0 and Private=1. Feature calculations, language preference rules and aggregate length limits belong to their module owners.

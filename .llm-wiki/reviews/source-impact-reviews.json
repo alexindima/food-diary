@@ -8,17 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "689353f7aaa79ccef64f856f36b44ba88a25ca56336af35623f08309951adb35"
+          "sha256": "78111c859855a04265489830009b3cd6e7a624682195aa4991bbf39d12257d41"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "af9f388e05d226b4fe210569262a0c8b917883923f0f212ee4d17bad483b89d5"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "5c6b6ffd2630bb5ff14dfaa2f36692b6d9160bcea7e8d11f9bb45986d6cc1343"
+          "sha256": "8aa8a6f6abdd7cc714fca8c67a5c2708a76690d069af76038053abd432cb62e5"
         }
       ],
-      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
+      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:32.1931235Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:42.9029308Z"
     },
     {
       "pageId": "module.frontend",
@@ -41,14 +45,18 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "af9f388e05d226b4fe210569262a0c8b917883923f0f212ee4d17bad483b89d5"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "5c6b6ffd2630bb5ff14dfaa2f36692b6d9160bcea7e8d11f9bb45986d6cc1343"
+          "sha256": "8aa8a6f6abdd7cc714fca8c67a5c2708a76690d069af76038053abd432cb62e5"
         }
       ],
-      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
+      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:32.3323486Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:43.7528793Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -56,14 +64,26 @@
       "pageSha256": "1097247b366e5b7f6286cfe0e569cf919efd3b052e3fbfb9c9ba6b6381ce07dc",
       "sources": [
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "c6414829b3d5337de8a76f99473ede63b69b602ee13fa7defe6aec0c75782c72"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "8aa8a6f6abdd7cc714fca8c67a5c2708a76690d069af76038053abd432cb62e5"
+        },
+        {
+          "path": "FoodDiary.Application.Abstractions/AGENTS.md",
+          "sha256": "effaa8b4850a6ec34b3dd3eff0ba2bdd0f7204b8af042d456cee8cd9e1723f5a"
+        },
+        {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "c765c6318a8fa0fb6230f81aae83ca4d2562e5e61d073223ff4ec2893ed29c2d"
+          "sha256": "<missing>"
         }
       ],
-      "reason": "Public generic API changes assembly and namespace deliberately; method signatures and bodies are preserved. Consumer bodies differ only by imports and Billing guard qualifier. No HTTP or EF contract changes; coordinated rebuild required.",
+      "reason": "Twelve types change assembly owners deliberately; EmailAddress and Visibility also use the required Primitives namespace. Method bodies, exceptions, enum names/numbers and language policy remain identical. EF reports no model delta; all HTTP snapshots remain unchanged. Coordinated rebuild is required.",
       "baseRef": "HEAD",
-      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
-      "reviewedAtUtc": "2026-09-02T10:45:42.8911224Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:44.4914714Z"
     },
     {
       "pageId": "system.architecture",
@@ -71,14 +91,26 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "af9f388e05d226b4fe210569262a0c8b917883923f0f212ee4d17bad483b89d5"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "c6414829b3d5337de8a76f99473ede63b69b602ee13fa7defe6aec0c75782c72"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "8aa8a6f6abdd7cc714fca8c67a5c2708a76690d069af76038053abd432cb62e5"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "9c006f1e98fa48fc3b519c51886e5dce323f09cb5223732b9b29dcb34afb2504"
+          "sha256": "4bf1e26ad0114d7d889903af8772adbe6a26f75c57e30d342f84404cf229f3cc"
         }
       ],
-      "reason": "Owner guides describe public Primitives API and internal Billing checks. Nutrition temporary central dependency and IVT guidance are removed. No Wiki policy or ranking changes.",
+      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
       "baseRef": "HEAD",
-      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
-      "reviewedAtUtc": "2026-09-02T10:45:43.0233957Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:45.1717680Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -117,13 +149,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "689353f7aaa79ccef64f856f36b44ba88a25ca56336af35623f08309951adb35"
+          "sha256": "78111c859855a04265489830009b3cd6e7a624682195aa4991bbf39d12257d41"
+        },
+        {
+          "path": "docs/adr/README.md",
+          "sha256": "d79a67f0044707f488920e51058b74600bb5f08d1ec6143756e556272e1a1396"
         }
       ],
-      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
+      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:32.7350376Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:45.8973397Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -132,13 +168,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "6711ca123baa51f1dbb0e64ec56be27a8f08e58afe97d3453d6ac510ff817184"
+          "sha256": "c6414829b3d5337de8a76f99473ede63b69b602ee13fa7defe6aec0c75782c72"
         }
       ],
-      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
+      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:11:58.5018991Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:46.6245840Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -161,14 +197,18 @@
       "pageSha256": "c2e5e0aaf44c829b7d0ec32bd7ae6dc24cf2d5b5f5aa0edd3e102c65783488df",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
+          "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
+          "sha256": "08e3258c70c5e8fd38cc3057436d33c7e23a82b336d5501d378fe8a07f5958ab"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
+          "sha256": "8e0803dfd0e1d1bce08bfd2cc8aefc39628adecc92e651b93a564a676b434ec9"
         }
       ],
-      "reason": "Reviewed verification, model-routing, query parity, and Identity-session regression changes; all gates and selection invariants remain intact.",
+      "reason": "All 43 Nutrition cases and 38 central cases plus five CycleId reflection cases move without loss. Full unfiltered regression results and failed intermediate attempts are kept separately. Synthetic compile-probe regression exercises real native compilation, conditional aliased references, invalid source diagnostics and enabled-cache behavior. No policy or ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:56:15.7400191Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:47.3854690Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -192,17 +232,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "25659dfb0db5ec981c5d3654565c36b1cbd9597983435d50c523d74be85a836a"
+          "sha256": "8e83c1ec3871b9c17551c999c078af519136bc1844d448ec9f534fedce743e2b"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "c6414829b3d5337de8a76f99473ede63b69b602ee13fa7defe6aec0c75782c72"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "9c006f1e98fa48fc3b519c51886e5dce323f09cb5223732b9b29dcb34afb2504"
+          "sha256": "4bf1e26ad0114d7d889903af8772adbe6a26f75c57e30d342f84404cf229f3cc"
         }
       ],
-      "reason": "Focused Primitives and Billing payment regressions cover generic and feature-owned boundaries. Distinct final TRX runs provide executed evidence; initial failed build is retained separately. No coverage collectors or frontend work.",
+      "reason": "All 43 Nutrition cases and 38 central cases plus five CycleId reflection cases move without loss. Full unfiltered regression results and failed intermediate attempts are kept separately. Synthetic compile-probe regression exercises real native compilation, conditional aliased references, invalid source diagnostics and enabled-cache behavior. No policy or ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
-      "reviewedAtUtc": "2026-09-02T10:45:43.2240973Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:48.0676427Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -210,14 +254,18 @@
       "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "14913f1d036def53ed07a2544a1466841be7a8264857c2b6f1dc54efd70e61f0"
+        },
+        {
           "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "cd84adbdd174265b8008fd108d87968e4b109a23d5c9a81195234da2cc161866"
+          "sha256": "effaa8b4850a6ec34b3dd3eff0ba2bdd0f7204b8af042d456cee8cd9e1723f5a"
         }
       ],
-      "reason": "Four type bodies and 56 consumer/guard source files retain hashes; HTTP DTOs, mappings, enum numbers and EF conversions/defaults are unchanged. New owners and Docker copies require coordinated rebuild, not a schema or endpoint migration.",
+      "reason": "Twelve types change assembly owners deliberately; EmailAddress and Visibility also use the required Primitives namespace. Method bodies, exceptions, enum names/numbers and language policy remain identical. EF reports no model delta; all HTTP snapshots remain unchanged. Coordinated rebuild is required.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:33.0249320Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:49.1001631Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -425,13 +473,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "30f6f57a967cce930ff1abe264be15fdb44cea4268f797d6a0c499ceff5acc8f"
+          "sha256": "d79a67f0044707f488920e51058b74600bb5f08d1ec6143756e556272e1a1396"
         }
       ],
-      "reason": "Reviewed RecentItems extraction against current source, module map, ADR 0026, dependency matrix, unchanged HTTP contracts, and explicit central EF/User seams",
+      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
       "baseRef": "HEAD",
-      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
-      "reviewedAtUtc": "2026-09-01T16:46:50.2056894Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:50.5296052Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -474,17 +522,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "1da642192b69b3e45c4a428f06208f0a374b0c102504df521cadd59fe79fe041"
+          "sha256": "fc108bc0a7652a364274c2f7e76e1804ccf4c070441273a42ab3c42a74d5deac"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "c765c6318a8fa0fb6230f81aae83ca4d2562e5e61d073223ff4ec2893ed29c2d"
+          "sha256": "<missing>"
         }
       ],
-      "reason": "Focused Primitives and Billing payment regressions cover generic and feature-owned boundaries. Distinct final TRX runs provide executed evidence; initial failed build is retained separately. No coverage collectors or frontend work.",
+      "reason": "All 43 Nutrition cases and 38 central cases plus five CycleId reflection cases move without loss. Full unfiltered regression results and failed intermediate attempts are kept separately. Synthetic compile-probe regression exercises real native compilation, conditional aliased references, invalid source diagnostics and enabled-cache behavior. No policy or ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
-      "reviewedAtUtc": "2026-09-02T10:45:43.4296598Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:51.2452438Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -756,13 +804,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "55a3055c26848b5ff5a35809b1e4309f676c710879d1fab7cbb8333a34432d9a"
+          "sha256": "2901d8cc612462992937a6d47bb4317198bf1dd49c3eb8fbbd63ce976c952d72"
         }
       ],
-      "reason": "Scoped source review of guards, consumers, references and tests preserves validation order, exception details, numeric limits and UTC conversion. No new data access, logging, provider or retention behavior. This is not a full security scan.",
+      "reason": "Scoped source comparison verifies twelve type implementations and thirty-nine production consumer bodies, permitting only imports, approved namespace changes and exact owner-local limits. No data access, credential, logging, retention or provider-sharing behavior changes. This is not a full security scan.",
       "baseRef": "HEAD",
-      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
-      "reviewedAtUtc": "2026-09-02T10:45:43.6488551Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:52.0540253Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -801,13 +849,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eac7b48910468b31f3436bc36cba465397639b8a8426422282e030479e98558c"
+          "sha256": "994b63d7d979ecd2b135335471c6aa251cd6e294b7892ba80af25d22b2edbde4"
         }
       ],
-      "reason": "Focused Primitives and Billing payment regressions cover generic and feature-owned boundaries. Distinct final TRX runs provide executed evidence; initial failed build is retained separately. No coverage collectors or frontend work.",
+      "reason": "All 43 Nutrition cases and 38 central cases plus five CycleId reflection cases move without loss. Full unfiltered regression results and failed intermediate attempts are kept separately. Synthetic compile-probe regression exercises real native compilation, conditional aliased references, invalid source diagnostics and enabled-cache behavior. No policy or ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
-      "reviewedAtUtc": "2026-09-02T10:45:44.0162207Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:52.9001484Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -884,13 +932,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "239d50b4f15250e9649f846e5c4bc80b99848f2d1e6a39d1c586f75e1abc6c44"
+          "sha256": "5d2b85dc4d3f03dc828b20a1d05d2b4581b3c42ca7c2dc110ccd64b342c863bd"
         }
       ],
-      "reason": "Owner guides describe public Primitives API and internal Billing checks. Nutrition temporary central dependency and IVT guidance are removed. No Wiki policy or ranking changes.",
+      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
       "baseRef": "HEAD",
-      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
-      "reviewedAtUtc": "2026-09-02T10:45:44.4199319Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:55.2291114Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -899,21 +947,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "eac7b48910468b31f3436bc36cba465397639b8a8426422282e030479e98558c"
+          "sha256": "994b63d7d979ecd2b135335471c6aa251cd6e294b7892ba80af25d22b2edbde4"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "239d50b4f15250e9649f846e5c4bc80b99848f2d1e6a39d1c586f75e1abc6c44"
+          "sha256": "5d2b85dc4d3f03dc828b20a1d05d2b4581b3c42ca7c2dc110ccd64b342c863bd"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "55a3055c26848b5ff5a35809b1e4309f676c710879d1fab7cbb8333a34432d9a"
+          "sha256": "2901d8cc612462992937a6d47bb4317198bf1dd49c3eb8fbbd63ce976c952d72"
         }
       ],
-      "reason": "Scoped source review of guards, consumers, references and tests preserves validation order, exception details, numeric limits and UTC conversion. No new data access, logging, provider or retention behavior. This is not a full security scan.",
+      "reason": "Scoped source comparison verifies twelve type implementations and thirty-nine production consumer bodies, permitting only imports, approved namespace changes and exact owner-local limits. No data access, credential, logging, retention or provider-sharing behavior changes. This is not a full security scan.",
       "baseRef": "HEAD",
-      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
-      "reviewedAtUtc": "2026-09-02T10:45:44.7680089Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:56.0884411Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1027,13 +1075,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "875dd8ad9eda8a801bec0c6fa2bacf063f09f0fac5e7062f3c1c295ef2706003"
+          "sha256": "802943c6803b44acd7934e60c65eb3442a9d39afa00034be5891fe79755d5dcb"
         }
       ],
-      "reason": "New focused Nutrition suite and retained mixed consumer tests protect scoring and units. Canonical final TRX runs are recorded separately from failed initial architecture run. Wiki generated sources are synchronized, not retrieval benchmark evidence.",
+      "reason": "All 43 Nutrition cases and 38 central cases plus five CycleId reflection cases move without loss. Full unfiltered regression results and failed intermediate attempts are kept separately. Synthetic compile-probe regression exercises real native compilation, conditional aliased references, invalid source diagnostics and enabled-cache behavior. No policy or ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:34.7213915Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:56.8960262Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1091,13 +1139,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "689353f7aaa79ccef64f856f36b44ba88a25ca56336af35623f08309951adb35"
+          "sha256": "78111c859855a04265489830009b3cd6e7a624682195aa4991bbf39d12257d41"
         }
       ],
-      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
+      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:33.1684748Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:49.7769526Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1151,13 +1199,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "d6167b8d63f13517ee2241560044d4c1102aec45a91ea8ca704e1d3324a36cc1"
+          "sha256": "0b6f76724270b7ebd0be634e70795c168d363eeedcfec05f7e32977c259a17bc"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "78111c859855a04265489830009b3cd6e7a624682195aa4991bbf39d12257d41"
         }
       ],
-      "reason": "Owner guides describe public Primitives API and internal Billing checks. Nutrition temporary central dependency and IVT guidance are removed. No Wiki policy or ranking changes.",
+      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
       "baseRef": "HEAD",
-      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
-      "reviewedAtUtc": "2026-09-02T10:45:44.2290942Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:53.6897407Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1166,13 +1218,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "689353f7aaa79ccef64f856f36b44ba88a25ca56336af35623f08309951adb35"
+          "sha256": "78111c859855a04265489830009b3cd6e7a624682195aa4991bbf39d12257d41"
         }
       ],
-      "reason": "New focused Nutrition suite and retained mixed consumer tests protect scoring and units. Canonical final TRX runs are recorded separately from failed initial architecture run. Wiki generated sources are synchronized, not retrieval benchmark evidence.",
+      "reason": "All 43 Nutrition cases and 38 central cases plus five CycleId reflection cases move without loss. Full unfiltered regression results and failed intermediate attempts are kept separately. Synthetic compile-probe regression exercises real native compilation, conditional aliased references, invalid source diagnostics and enabled-cache behavior. No policy or ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:34.0135331Z"
+      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
+      "reviewedAtUtc": "2026-09-02T12:58:54.4320727Z"
     }
   ]
 }

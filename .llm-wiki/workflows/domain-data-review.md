@@ -17,7 +17,8 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiDomainDataSqlParity.ps1
   - .llm-wiki/tools/Measure-LlmWikiStandaloneIndexRoutes.ps1
   - .llm-wiki/tools/Get-LlmWikiCompiledIndexMigration.ps1
-  - FoodDiary.Domain/AGENTS.md
+  - Shared/FoodDiary.Domain.Primitives/AGENTS.md
+  - docs/adr/0027-retire-shared-domain-assemblies.md
   - FoodDiary.Infrastructure/AGENTS.md
 ---
 
