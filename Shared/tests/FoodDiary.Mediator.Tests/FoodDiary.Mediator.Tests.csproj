@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
+    <ProjectReference Include="../../FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
   </ItemGroup>
 
 </Project>

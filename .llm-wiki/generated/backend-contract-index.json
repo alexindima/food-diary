@@ -48883,7 +48883,7 @@
         "FoodDiary.Development.Mcp/ChangeSets/IChangeSetSnapshotService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/DiagnosticFileCoverageTests.cs",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/DiagnosticFileCoverageTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -48896,7 +48896,7 @@
         "FoodDiary.Development.Mcp/ChangeSets/IChangeSetSnapshotService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -48909,7 +48909,7 @@
         "FoodDiary.Development.Mcp/ChangeSets/IChangeSetSnapshotService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -59763,6 +59763,19 @@
       "definitionPaths": [
         "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
       ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Domain.Primitives.Tests/EntityAndAggregateRootTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/EventGovernanceTests.cs",
       "isTest": true,
@@ -59780,19 +59793,6 @@
       "consumerPath": "tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 2
-    },
-    {
-      "contract": "IDomainEvent",
-      "roles": [
-        "Event"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Domain.Primitives.Tests/EntityAndAggregateRootTests.cs",
-      "isTest": true,
-      "referenceCount": 6
     },
     {
       "contract": "IDomainEvent",
@@ -71008,6 +71008,32 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IMediator.cs"
       ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Configuration.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMediator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IMediator.cs"
+      ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Requests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IMediator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IMediator.cs"
+      ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/HostCompositionBoundaryTests.cs",
       "isTest": true,
@@ -71035,33 +71061,7 @@
         "Shared/FoodDiary.Mediator/IMediator.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/ChangeSetSnapshotServiceTests.cs",
-      "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IMediator",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/IMediator.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Configuration.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IMediator",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/IMediator.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Requests.cs",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/ChangeSetSnapshotServiceTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -72047,6 +72047,32 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/INotification.cs"
       ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "INotification",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/INotification.cs"
+      ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Notifications.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotification",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/INotification.cs"
+      ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
@@ -72062,32 +72088,6 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Events/DomainEventNotificationTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "INotification",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/INotification.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
-      "isTest": true,
-      "referenceCount": 6
-    },
-    {
-      "contract": "INotification",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/INotification.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Notifications.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -72567,10 +72567,10 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/INotificationHandler.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 15
     },
     {
       "contract": "INotificationHandler",
@@ -72581,9 +72581,9 @@
         "Shared/FoodDiary.Mediator/INotificationHandler.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
-      "referenceCount": 15
+      "referenceCount": 1
     },
     {
       "contract": "INotificationLookupRepository",
@@ -75973,8 +75973,8 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IPipelineBehavior.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Configuration.cs",
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Configuration.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -75986,8 +75986,8 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IPipelineBehavior.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -77507,6 +77507,32 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IPublisher.cs"
       ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Configuration.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IPublisher.cs"
+      ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Notifications.cs",
+      "isTest": true,
+      "referenceCount": 22
+    },
+    {
+      "contract": "IPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IPublisher.cs"
+      ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
@@ -77524,32 +77550,6 @@
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Events/MediatorDomainEventPublisherTests.cs",
       "isTest": true,
       "referenceCount": 3
-    },
-    {
-      "contract": "IPublisher",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/IPublisher.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Configuration.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IPublisher",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/IPublisher.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Notifications.cs",
-      "isTest": true,
-      "referenceCount": 22
     },
     {
       "contract": "IQuery",
@@ -85125,8 +85125,21 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Application.Tests/Common/CommonAbstractionsTests.cs",
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
+      "isTest": true,
+      "referenceCount": 12
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Requests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -85139,20 +85152,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
-      "isTest": true,
-      "referenceCount": 12
-    },
-    {
-      "contract": "IRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/IRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Requests.cs",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Common/CommonAbstractionsTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -86035,8 +86035,8 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Configuration.cs",
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Configuration.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -86048,8 +86048,8 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IRequestHandler.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
       "isTest": true,
       "referenceCount": 11
     },
@@ -87530,6 +87530,45 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Configuration.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Requests.cs",
+      "isTest": true,
+      "referenceCount": 36
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Streams.cs",
+      "isTest": true,
+      "referenceCount": 13
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/HostCompositionBoundaryTests.cs",
       "isTest": true,
@@ -87560,45 +87599,6 @@
       "consumerPath": "tests/FoodDiary.ArchitectureTests/PresentationConventionsTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "ISender",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/ISender.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Configuration.cs",
-      "isTest": true,
-      "referenceCount": 3
-    },
-    {
-      "contract": "ISender",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/ISender.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Requests.cs",
-      "isTest": true,
-      "referenceCount": 36
-    },
-    {
-      "contract": "ISender",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Mediator/ISender.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Streams.cs",
-      "isTest": true,
-      "referenceCount": 13
     },
     {
       "contract": "ISender",
@@ -88999,8 +88999,8 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IStreamRequest.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
       "isTest": true,
       "referenceCount": 5
     },
@@ -89012,8 +89012,8 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IStreamRequest.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Streams.cs",
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Streams.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -89077,8 +89077,8 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IStreamRequestHandler.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Configuration.cs",
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Configuration.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -89090,8 +89090,8 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IStreamRequestHandler.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.cs",
       "isTest": true,
       "referenceCount": 4
     },
@@ -89103,8 +89103,8 @@
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/IStreamRequestHandler.cs"
       ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Mediator.Tests/MediatorTests.Streams.cs",
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Streams.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -99608,7 +99608,7 @@
         "FoodDiary.Development.Mcp/Wiki/IWikiCommandExecutor.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
       "isTest": true,
       "referenceCount": 8
     },
@@ -99621,7 +99621,7 @@
         "FoodDiary.Development.Mcp/Wiki/IWikiCommandExecutor.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -99686,7 +99686,7 @@
         "FoodDiary.Development.Mcp/Wiki/IWikiContextSearch.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/EvaluationRunnerTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -99699,7 +99699,7 @@
         "FoodDiary.Development.Mcp/Wiki/IWikiContextSearch.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
+      "consumerPath": "Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
       "isTest": true,
       "referenceCount": 26
     },

@@ -28,12 +28,12 @@ Rules for `FoodDiary.Analyzers/`.
 
 ## Tests
 
-- Add focused positive and negative cases under `tests/FoodDiary.Analyzers.Tests` for every diagnostic.
+- Add focused positive and negative cases under `Tooling/tests/FoodDiary.Analyzers.Tests` for every diagnostic.
 - Cover documented exceptions explicitly, including framework entrypoints, partial types, generated paths, or scoped activation where applicable.
 - Verify both the analyzer test project and a real consuming project or solution build when analyzer wiring changes.
 
 ## Commands
 
 - Build: `dotnet build FoodDiary.Analyzers/FoodDiary.Analyzers.csproj`
-- Focused tests: `dotnet test tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj`
+- Focused tests: `dotnet test Tooling/tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj`
 - Consumer verification: `dotnet build FoodDiary.slnx`

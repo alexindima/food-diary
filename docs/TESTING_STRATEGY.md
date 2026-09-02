@@ -36,7 +36,17 @@ They also guard the allowed reference graph between test projects, so shared tes
 | `MailRelay/tests/FoodDiary.MailRelay.IntegrationTests` | MailRelay host, PostgreSQL, RabbitMQ, and queue behavior. |
 | `MailInbox/tests/FoodDiary.MailInbox.*.Tests` | MailInbox unit tests split by domain, application, client, infrastructure, initializer, and presentation. |
 | `MailInbox/tests/FoodDiary.MailInbox.IntegrationTests` | MailInbox PostgreSQL persistence behavior. |
-| `tests/FoodDiary.Mediator.Tests` | Shared mediator behavior. |
+| `Shared/tests/FoodDiary.Mediator.Tests` | Shared mediator behavior. |
+| `Shared/tests/FoodDiary.Domain.Primitives.Tests` | Generic domain primitives, guards and value contracts. |
+| `Shared/tests/FoodDiary.Results.Tests` | Shared result and error contracts. |
+| `Tooling/tests/FoodDiary.Analyzers.Tests` | Build-time analyzer diagnostics and exceptions. |
+| `Tooling/tests/FoodDiary.Development.Mcp.Tests` | Development MCP protocol, context retrieval and process behavior. |
+
+Shared and Tooling test projects reuse `tests/Directory.Build.props` and its
+runsettings/runner files. Their solution folders match their physical owner:
+`/Shared/tests/` and `/Tooling/tests/`. This is test organization, not a new runtime
+boundary; production projects and assembly identities are unchanged. General
+architecture, host, cross-module and test-support projects remain under `tests/`.
 
 ## Frontend Checks
 

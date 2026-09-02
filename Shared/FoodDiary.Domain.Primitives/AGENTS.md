@@ -18,6 +18,7 @@ Rules for `Shared/FoodDiary.Domain.Primitives/`.
 
 ## Commands
 - Build: `dotnet build Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj`
+- Tests: `dotnet test Shared/tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj`
 
 ## Generic input validation
 

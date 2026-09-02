@@ -21,7 +21,7 @@
     "backendBusinessModules": 34,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 221,
+    "agentGuides": 223,
     "documentationPages": 123
   },
   "dotnet": {
@@ -8939,9 +8939,9 @@
         "packageReferences": []
       },
       {
-        "name": "FoodDiary.Analyzers.Tests",
-        "assemblyName": "FoodDiary.Analyzers.Tests",
-        "path": "tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj",
+        "name": "FoodDiary.Domain.Primitives.Tests",
+        "assemblyName": "FoodDiary.Domain.Primitives.Tests",
+        "path": "Shared/tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj",
         "sdk": "Microsoft.NET.Sdk",
         "outputType": "Library",
         "targetFrameworks": [
@@ -8949,11 +8949,79 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "FoodDiary.Analyzers/FoodDiary.Analyzers.csproj"
+          "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
         ],
         "packageReferences": [
           {
-            "name": "Microsoft.CodeAnalysis.CSharp",
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Mediator.Tests",
+        "assemblyName": "FoodDiary.Mediator.Tests",
+        "path": "Shared/tests/FoodDiary.Mediator.Tests/FoodDiary.Mediator.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.DependencyInjection",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Results.Tests",
+        "assemblyName": "FoodDiary.Results.Tests",
+        "path": "Shared/tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
             "version": null
           },
           {
@@ -9075,74 +9143,6 @@
           },
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.Development.Mcp.Tests",
-        "assemblyName": "FoodDiary.Development.Mcp.Tests",
-        "path": "tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "NSubstitute",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.Domain.Primitives.Tests",
-        "assemblyName": "FoodDiary.Domain.Primitives.Tests",
-        "path": "tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
             "version": null
           },
           {
@@ -9464,42 +9464,6 @@
         ]
       },
       {
-        "name": "FoodDiary.Mediator.Tests",
-        "assemblyName": "FoodDiary.Mediator.Tests",
-        "path": "tests/FoodDiary.Mediator.Tests/FoodDiary.Mediator.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
         "name": "FoodDiary.Presentation.Api.Tests",
         "assemblyName": "FoodDiary.Presentation.Api.Tests",
         "path": "tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj",
@@ -9585,38 +9549,6 @@
         "projectReferences": [
           "FoodDiary.Resources/FoodDiary.Resources.csproj",
           "Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.Results.Tests",
-        "assemblyName": "FoodDiary.Results.Tests",
-        "path": "tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": [
           {
@@ -9812,6 +9744,74 @@
             "version": null
           }
         ]
+      },
+      {
+        "name": "FoodDiary.Analyzers.Tests",
+        "assemblyName": "FoodDiary.Analyzers.Tests",
+        "path": "Tooling/tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "FoodDiary.Analyzers/FoodDiary.Analyzers.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.CodeAnalysis.CSharp",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Development.Mcp.Tests",
+        "assemblyName": "FoodDiary.Development.Mcp.Tests",
+        "path": "Tooling/tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "NSubstitute",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
       }
     ],
     "testProjects": [
@@ -9916,22 +9916,22 @@
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj",
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests.csproj",
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.csproj",
-      "tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj",
+      "Shared/tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj",
+      "Shared/tests/FoodDiary.Mediator.Tests/FoodDiary.Mediator.Tests.csproj",
+      "Shared/tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj",
       "tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj",
       "tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj",
-      "tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj",
-      "tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj",
       "tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj",
       "tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj",
       "tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj",
       "tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj",
-      "tests/FoodDiary.Mediator.Tests/FoodDiary.Mediator.Tests.csproj",
       "tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj",
       "tests/FoodDiary.Resources.Tests/FoodDiary.Resources.Tests.csproj",
-      "tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj",
       "tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj",
       "tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj",
-      "tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj"
+      "tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj",
+      "Tooling/tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj",
+      "Tooling/tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj"
     ]
   },
   "frontend": {
@@ -12398,6 +12398,8 @@
       "Shared/FoodDiary.Mediator/AGENTS.md",
       "Shared/FoodDiary.Outbox.Abstractions/AGENTS.md",
       "Shared/FoodDiary.Results/AGENTS.md",
+      "Shared/tests/AGENTS.md",
+      "Tooling/tests/AGENTS.md",
       "tests/AGENTS.md",
       "tests/FoodDiary.ArchitectureTests/AGENTS.md"
     ],

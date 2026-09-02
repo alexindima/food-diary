@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FoodDiary.Analyzers\FoodDiary.Analyzers.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Analyzers/FoodDiary.Analyzers.csproj" />
   </ItemGroup>
 
   <ItemGroup>

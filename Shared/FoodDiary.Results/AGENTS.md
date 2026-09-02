@@ -18,3 +18,4 @@ Rules for `Shared/FoodDiary.Results/`.
 
 ## Commands
 - Build: `dotnet build Shared/FoodDiary.Results/FoodDiary.Results.csproj`
+- Tests: `dotnet test Shared/tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj`

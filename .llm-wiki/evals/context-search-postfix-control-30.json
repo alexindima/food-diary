@@ -61,7 +61,7 @@
     { "id": "postfix-test-002", "cohort": "behavior-to-test", "query": "тест structured audit logger", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Infrastructure.Tests/Services/StructuredAuditLoggerTests.cs"] },
     { "id": "postfix-test-003", "cohort": "behavior-to-test", "query": "тест границ temporal repository", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Infrastructure.Tests/Persistence/TemporalRepositoryBoundaryTests.cs"] },
     { "id": "postfix-test-004", "cohort": "behavior-to-test", "query": "тест валидатора даты wearable", "changeType": "Tests", "expectedPaths": ["Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearableDateValidatorTests.cs"] },
-    { "id": "postfix-test-005", "cohort": "behavior-to-test", "query": "тест SQL primary и JSON fallback в Wiki query service", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs"] },
+    { "id": "postfix-test-005", "cohort": "behavior-to-test", "query": "тест SQL primary и JSON fallback в Wiki query service", "changeType": "Tests", "expectedPaths": ["Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs"] },
 
     { "id": "postfix-job-001", "cohort": "jobs-options", "query": "options еженедельного reminder цели", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/WeeklyGoalReminderOptions.cs"] },
     { "id": "postfix-job-002", "cohort": "jobs-options", "query": "настройки фоновой очистки пользователя", "changeType": "Backend", "expectedPaths": ["FoodDiary.JobManager/Services/UserCleanupOptions.cs"] },

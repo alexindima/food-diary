@@ -208,6 +208,8 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Shared mediator: `Shared/FoodDiary.Mediator/AGENTS.md`
 - Shared domain primitives: `Shared/FoodDiary.Domain.Primitives/AGENTS.md`
 - Tests: `tests/AGENTS.md`
+- Shared-library tests: `Shared/tests/AGENTS.md`
+- Development-tool tests: `Tooling/tests/AGENTS.md`
 - Architecture tests: `tests/FoodDiary.ArchitectureTests/AGENTS.md`
 - Mail inbox application layer: `MailInbox/FoodDiary.MailInbox.Application/AGENTS.md`
 - Mail inbox client package: `MailInbox/FoodDiary.MailInbox.Client/AGENTS.md`

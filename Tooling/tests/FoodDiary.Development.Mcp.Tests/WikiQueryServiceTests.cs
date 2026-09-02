@@ -110,13 +110,13 @@ public sealed class WikiQueryServiceTests {
             intent: null,
             plannedPaths: null,
             changedPaths: ["FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs"],
-            executedChecks: ["dotnet test tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj"],
+            executedChecks: ["dotnet test Tooling/tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj"],
             cancellationToken: CancellationToken.None);
 
         await _executor.Received(1).ExecuteAsync(
             "test-plan",
             Arg.Is<IReadOnlyList<string>>(arguments => arguments.Contains("-ExecutedCheck", StringComparer.Ordinal) &&
-                arguments.Contains("dotnet test tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj", StringComparer.Ordinal)),
+                arguments.Contains("dotnet test Tooling/tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj", StringComparer.Ordinal)),
             CancellationToken.None);
     }
 

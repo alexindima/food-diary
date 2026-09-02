@@ -26,6 +26,7 @@ Rules for `tests/`.
 - Mail relay/inbox tests: split by domain, application, client, infrastructure, initializer, presentation, and integration behavior.
 
 ## Rules
+- Shared-library test projects live under `Shared/tests/`; analyzer and development MCP tests live under `Tooling/tests/`. Both reuse this folder's `Directory.Build.props` and test configuration. General architecture, host, cross-module and test-support projects stay here.
 - Prefer focused tests near the layer being changed.
 - Use NSubstitute for simple interface substitutes in unit tests when it avoids noisy hand-written `Fake`/`Stub`/`Recording` types.
 - Keep hand-written `InMemory`/`Recording` helpers when they make stateful behavior, call history, or side effects clearer than a mock setup.
@@ -41,11 +42,11 @@ Rules for `tests/`.
 - Mark every test type and test-only helper type with `[ExcludeFromCodeCoverage]` so test implementation details stay out of dotCover reports.
 
 ## Commands
-- Analyzer tests: `dotnet test tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj`
+- Analyzer tests: `dotnet test Tooling/tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj`
 - Architecture tests: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
-- Shared domain primitive tests: `dotnet test tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj`
+- Shared domain primitive tests: `dotnet test Shared/tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj`
 - Core domain tests: `dotnet test tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj`
-- Shared result tests: `dotnet test tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj`
+- Shared result tests: `dotnet test Shared/tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj`
 - Web API unit tests: `dotnet test tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj`
 - API integration tests: `dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj`
 - Infrastructure unit tests: `dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj`

@@ -24,5 +24,5 @@ Rules for `FoodDiary.Development.Mcp/`.
 ## Commands
 
 - Build: `dotnet build FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj --artifacts-path .artifacts/development-mcp`
-- Tests: `dotnet test tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj --artifacts-path .artifacts/development-mcp-tests`
+- Tests: `dotnet test Tooling/tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj --artifacts-path .artifacts/development-mcp-tests`
 - Start: `./scripts/Start-FoodDiaryDevelopmentMcp.cmd --build-if-stale`

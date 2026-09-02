@@ -57,6 +57,8 @@
     <Project Path="Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj" />
     <Project Path="Modules/BodyMetrics/Infrastructure/FoodDiary.Modules.BodyMetrics.Infrastructure.csproj" />
     <Project Path="Modules/BodyMetrics/Infrastructure/Model/FoodDiary.Modules.BodyMetrics.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/BodyMetrics/tests/">
     <Project Path="Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/FoodDiary.Modules.BodyMetrics.Application.Tests.csproj" />
     <Project Path="Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Domain.Tests/FoodDiary.Modules.BodyMetrics.Domain.Tests.csproj" />
   </Folder>
@@ -71,6 +73,8 @@
   </Folder>
   <Folder Name="/Modules/Statistics/">
     <Project Path="Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Statistics/tests/">
     <Project Path="Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/FoodDiary.Modules.Statistics.Application.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Billing/">
@@ -79,6 +83,8 @@
     <Project Path="Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj" />
     <Project Path="Modules/Billing/Infrastructure/FoodDiary.Modules.Billing.Infrastructure.csproj" />
     <Project Path="Modules/Billing/Infrastructure/Model/FoodDiary.Modules.Billing.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Billing/tests/">
     <Project Path="Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/FoodDiary.Modules.Billing.Application.Tests.csproj" />
     <Project Path="Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/FoodDiary.Modules.Billing.Domain.Tests.csproj" />
     <Project Path="Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/FoodDiary.Modules.Billing.Infrastructure.Tests.csproj" />
@@ -102,6 +108,8 @@
     <Project Path="Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj" />
     <Project Path="Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj" />
     <Project Path="Modules/OpenFoodFacts/Infrastructure/Model/FoodDiary.Modules.OpenFoodFacts.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/OpenFoodFacts/tests/">
     <Project Path="Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests.csproj" />
     <Project Path="Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Domain.Tests/FoodDiary.Modules.OpenFoodFacts.Domain.Tests.csproj" />
     <Project Path="Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests.csproj" />
@@ -112,6 +120,8 @@
     <Project Path="Modules/Marketing/Domain/FoodDiary.Modules.Marketing.Domain.csproj" />
     <Project Path="Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj" />
     <Project Path="Modules/Marketing/Infrastructure/Model/FoodDiary.Modules.Marketing.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Marketing/tests/">
     <Project Path="Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/FoodDiary.Modules.Marketing.Application.Tests.csproj" />
     <Project Path="Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/FoodDiary.Modules.Marketing.Domain.Tests.csproj" />
     <Project Path="Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests.csproj" />
@@ -122,6 +132,8 @@
     <Project Path="Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
     <Project Path="Modules/Cycles/Infrastructure/FoodDiary.Modules.Cycles.Infrastructure.csproj" />
     <Project Path="Modules/Cycles/Infrastructure/Model/FoodDiary.Modules.Cycles.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Cycles/tests/">
     <Project Path="Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/FoodDiary.Modules.Cycles.Application.Tests.csproj" />
     <Project Path="Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/FoodDiary.Modules.Cycles.Domain.Tests.csproj" />
     <Project Path="Modules/Cycles/tests/FoodDiary.Modules.Cycles.Infrastructure.Tests/FoodDiary.Modules.Cycles.Infrastructure.Tests.csproj" />
@@ -134,6 +146,8 @@
     <Project Path="Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
     <Project Path="Modules/ContentReports/Infrastructure/FoodDiary.Modules.ContentReports.Infrastructure.csproj" />
     <Project Path="Modules/ContentReports/Infrastructure/Model/FoodDiary.Modules.ContentReports.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/ContentReports/tests/">
     <Project Path="Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Application.Tests/FoodDiary.Modules.ContentReports.Application.Tests.csproj" />
     <Project Path="Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Domain.Tests/FoodDiary.Modules.ContentReports.Domain.Tests.csproj" />
     <Project Path="Modules/ContentReports/tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests/FoodDiary.Modules.ContentReports.Infrastructure.Tests.csproj" />
@@ -145,6 +159,8 @@
     <Project Path="Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
     <Project Path="Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj" />
     <Project Path="Modules/Images/Infrastructure/Model/FoodDiary.Modules.Images.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Images/tests/">
     <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FoodDiary.Modules.Images.Application.Tests.csproj" />
     <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/FoodDiary.Modules.Images.Domain.Tests.csproj" />
     <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests.csproj" />
@@ -155,6 +171,8 @@
     <Project Path="Modules/DailyAdvices/Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj" />
     <Project Path="Modules/DailyAdvices/Infrastructure/FoodDiary.Modules.DailyAdvices.Infrastructure.csproj" />
     <Project Path="Modules/DailyAdvices/Infrastructure/Model/FoodDiary.Modules.DailyAdvices.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/DailyAdvices/tests/">
     <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/FoodDiary.Modules.DailyAdvices.Application.Tests.csproj" />
     <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Domain.Tests/FoodDiary.Modules.DailyAdvices.Domain.Tests.csproj" />
     <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests.csproj" />
@@ -164,6 +182,8 @@
     <Project Path="Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj" />
     <Project Path="Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj" />
     <Project Path="Modules/Favorites/Infrastructure/Model/FoodDiary.Modules.Favorites.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Favorites/tests/">
     <Project Path="Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FoodDiary.Modules.Favorites.Application.Tests.csproj" />
     <Project Path="Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FoodDiary.Modules.Favorites.Domain.Tests.csproj" />
   </Folder>
@@ -173,6 +193,8 @@
     <Project Path="Modules/Dietologist/Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
     <Project Path="Modules/Dietologist/Infrastructure/FoodDiary.Modules.Dietologist.Infrastructure.csproj" />
     <Project Path="Modules/Dietologist/Infrastructure/Model/FoodDiary.Modules.Dietologist.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Dietologist/tests/">
     <Project Path="Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/FoodDiary.Modules.Dietologist.Application.Tests.csproj" />
     <Project Path="Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Domain.Tests/FoodDiary.Modules.Dietologist.Domain.Tests.csproj" />
     <Project Path="Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests.csproj" />
@@ -184,6 +206,8 @@
     <Project Path="Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj" />
     <Project Path="Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj" />
     <Project Path="Modules/Fasting/Infrastructure/Model/FoodDiary.Modules.Fasting.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Fasting/tests/">
     <Project Path="Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FoodDiary.Modules.Fasting.Application.Tests.csproj" />
     <Project Path="Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FoodDiary.Modules.Fasting.Domain.Tests.csproj" />
     <Project Path="Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/FoodDiary.Modules.Fasting.Infrastructure.Tests.csproj" />
@@ -207,6 +231,8 @@
     <Project Path="Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj" />
     <Project Path="Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj" />
     <Project Path="Modules/Hydration/Infrastructure/Model/FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Hydration/tests/">
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/FoodDiary.Modules.Hydration.Application.Tests.csproj" />
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/FoodDiary.Modules.Hydration.Domain.Tests.csproj" />
     <Project Path="Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/FoodDiary.Modules.Hydration.Infrastructure.Tests.csproj" />
@@ -218,12 +244,16 @@
     <Project Path="Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj" />
     <Project Path="Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj" />
     <Project Path="Modules/Lessons/Infrastructure/Model/FoodDiary.Modules.Lessons.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Lessons/tests/">
     <Project Path="Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/FoodDiary.Modules.Lessons.Application.Tests.csproj" />
     <Project Path="Modules/Lessons/tests/FoodDiary.Modules.Lessons.Domain.Tests/FoodDiary.Modules.Lessons.Domain.Tests.csproj" />
     <Project Path="Modules/Lessons/tests/FoodDiary.Modules.Lessons.Infrastructure.Tests/FoodDiary.Modules.Lessons.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Tdee/">
     <Project Path="Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Tdee/tests/">
     <Project Path="Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/FoodDiary.Modules.Tdee.Application.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/WeeklyGoals/">
@@ -233,6 +263,8 @@
     <Project Path="Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj" />
     <Project Path="Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj" />
     <Project Path="Modules/WeeklyGoals/Infrastructure/Model/FoodDiary.Modules.WeeklyGoals.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/WeeklyGoals/tests/">
     <Project Path="Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj" />
     <Project Path="Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests.csproj" />
     <Project Path="Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.csproj" />
@@ -244,6 +276,8 @@
     <Project Path="Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj" />
     <Project Path="Modules/Usda/Infrastructure/FoodDiary.Modules.Usda.Infrastructure.csproj" />
     <Project Path="Modules/Usda/Infrastructure/Model/FoodDiary.Modules.Usda.PersistenceModel.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Usda/tests/">
     <Project Path="Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/FoodDiary.Modules.Usda.Application.Tests.csproj" />
     <Project Path="Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/FoodDiary.Modules.Usda.Domain.Tests.csproj" />
   </Folder>
@@ -266,6 +300,8 @@
   </Folder>
   <Folder Name="/Modules/WeeklyCheckIn/">
     <Project Path="Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj" />
+  </Folder>
+  <Folder Name="/Modules/WeeklyCheckIn/tests/">
     <Project Path="Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests.csproj" />
   </Folder>
   <Folder Name="/Platform/">
@@ -309,20 +345,24 @@
     <Project Path="FoodDiary.Analyzers/FoodDiary.Analyzers.csproj" />
     <Project Path="FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj" />
   </Folder>
+  <Folder Name="/Shared/tests/">
+    <Project Path="Shared/tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj" />
+    <Project Path="Shared/tests/FoodDiary.Mediator.Tests/FoodDiary.Mediator.Tests.csproj" />
+    <Project Path="Shared/tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Tooling/tests/">
+    <Project Path="Tooling/tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj" />
+    <Project Path="Tooling/tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj" />
+  </Folder>
   <Folder Name="/Tests/">
-    <Project Path="tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj" />
     <Project Path="tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj" />
     <Project Path="tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj" />
-    <Project Path="tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj" />
     <Project Path="tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj" />
-    <Project Path="tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj" />
     <Project Path="tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj" />
     <Project Path="tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj" />
     <Project Path="tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj" />
-    <Project Path="tests/FoodDiary.Mediator.Tests/FoodDiary.Mediator.Tests.csproj" />
     <Project Path="tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj" />
     <Project Path="tests/FoodDiary.Resources.Tests/FoodDiary.Resources.Tests.csproj" />
-    <Project Path="tests/FoodDiary.Results.Tests/FoodDiary.Results.Tests.csproj" />
     <Project Path="tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj" />
     <Project Path="tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />
     <Project Path="tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj" />

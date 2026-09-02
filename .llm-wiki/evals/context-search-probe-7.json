@@ -240,7 +240,7 @@
       "query": "какой тест анализатора доказывает что параметр метода с заглавной буквы дает diagnostic, а record positional parameter допустим",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Analyzers.Tests/ParameterNamingAnalyzerTests.cs"
+        "Tooling/tests/FoodDiary.Analyzers.Tests/ParameterNamingAnalyzerTests.cs"
       ]
     },
     {
@@ -249,7 +249,7 @@
       "query": "найти тест правила: readonly field нельзя просто инициализировать параметром primary constructor, но transform или mutable field разрешены",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Analyzers.Tests/PrimaryConstructorBackingFieldAnalyzerTests.cs"
+        "Tooling/tests/FoodDiary.Analyzers.Tests/PrimaryConstructorBackingFieldAnalyzerTests.cs"
       ]
     },
     {

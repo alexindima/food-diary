@@ -41650,8 +41650,8 @@
       "line": 22,
       "testReferenceCount": 7,
       "testReferences": [
+        "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs",
         "tests/FoodDiary.ArchitectureTests/PresentationConventionsTests.cs",
-        "tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
@@ -42047,7 +42047,7 @@
       "line": 15,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
+        "Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/UsersControllerTests.cs"
       ],
@@ -43787,7 +43787,7 @@
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
-        "tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs"
+        "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44014,7 +44014,7 @@
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs",
-        "tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs"
+        "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44050,8 +44050,8 @@
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs",
-        "tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs"
+        "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs",
+        "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45194,7 +45194,7 @@
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ExternalLogin.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
-        "tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs",
+        "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs",
         "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
         "tests/FoodDiary.Infrastructure.Tests/Integrations/GoogleTokenValidatorTests.cs"
       ],
@@ -45242,7 +45242,7 @@
       "line": 2,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs"
+        "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

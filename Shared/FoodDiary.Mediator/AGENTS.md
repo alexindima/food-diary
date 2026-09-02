@@ -21,4 +21,4 @@ Rules for `Shared/FoodDiary.Mediator/`.
 
 ## Commands
 - Build: `dotnet build Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj`
-- Tests: `dotnet test tests/FoodDiary.Mediator.Tests/FoodDiary.Mediator.Tests.csproj`
+- Tests: `dotnet test Shared/tests/FoodDiary.Mediator.Tests/FoodDiary.Mediator.Tests.csproj`

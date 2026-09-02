@@ -41,8 +41,35 @@ public sealed class SolutionModuleFolderTests {
     }
 
     [Fact]
-    public void ServiceProjects_AndTheirTests_AreNestedUnderTheirOwningService() {
-        AssertNoViolations(FindMisplacedProjects(LoadSolution(), modules: false), "Misplaced service projects");
+    public void ServiceSharedAndToolingProjects_AreNestedUnderTheirOwner() {
+        AssertNoViolations(FindMisplacedProjects(LoadSolution(), modules: false), "Misplaced service, Shared or Tooling projects");
+    }
+
+    [Theory]
+    [InlineData("Shared", "FoodDiary.Domain.Primitives.Tests")]
+    [InlineData("Shared", "FoodDiary.Mediator.Tests")]
+    [InlineData("Shared", "FoodDiary.Results.Tests")]
+    [InlineData("Tooling", "FoodDiary.Analyzers.Tests")]
+    [InlineData("Tooling", "FoodDiary.Development.Mcp.Tests")]
+    public void SharedAndToolingTests_ArePhysicallyLocatedWithTheirOwner(string owner, string projectName) {
+        string expectedPath = $"{owner}/tests/{projectName}/{projectName}.csproj";
+        string[] paths = [.. LoadSolution().Descendants("Project").Select(ProjectPath)];
+
+        Assert.Multiple(
+            () => Assert.Contains(expectedPath, paths, StringComparer.Ordinal),
+            () => Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(expectedPath))),
+            () => Assert.False(File.Exists(ArchitectureTestPaths.FromRoot($"tests/{projectName}/{projectName}.csproj"))));
+    }
+
+    [Theory]
+    [InlineData("Shared")]
+    [InlineData("Tooling")]
+    public void SharedAndToolingTests_ReuseCentralTestBuildSettings(string owner) {
+        var settings = XDocument.Load(ArchitectureTestPaths.FromRoot($"{owner}/tests/Directory.Build.props"));
+        string[] imports = [.. settings.Descendants("Import")
+            .Select(import => ((string?)import.Attribute("Project") ?? string.Empty).Replace('\\', '/'))];
+
+        Assert.Contains("../../tests/Directory.Build.props", imports, StringComparer.Ordinal);
     }
 
     [Theory]
@@ -118,6 +145,13 @@ public sealed class SolutionModuleFolderTests {
     [Theory]
     [InlineData("Modules/Example/Application/P.csproj", "/Modules/Example/", true, true)]
     [InlineData("Modules/Example/tests/P.csproj", "/Modules/Example/tests/", true, true)]
+    [InlineData("Modules/Example/tests/P.csproj", "/Modules/Example/tests/Integration/", true, true)]
+    [InlineData("Modules\\Example\\tests\\P.csproj", "/modules/example/Tests/", true, true)]
+    [InlineData("./Modules/Example/tests/P.csproj", "/Modules/Example/tests/", true, true)]
+    [InlineData("Modules/Example/tests/P.csproj", "/Modules/Example/", true, false)]
+    [InlineData("Modules/Example/tests/P.csproj", "/Modules/Other/tests/", true, false)]
+    [InlineData("Modules/Example/tests/P.csproj", "/Tests/Example/", true, false)]
+    [InlineData("Modules/Example/tests/P.csproj", "/Modules/Example/testsExtra/", true, false)]
     [InlineData("Modules/Example/Domain/P.csproj", "/Modules/Other/", true, false)]
     [InlineData("Modules/Example/Domain/P.csproj", "/Modules/ExampleExtra/", true, false)]
     [InlineData("MailInbox/Application/P.csproj", "/Services/MailInbox/", false, true)]
@@ -128,9 +162,21 @@ public sealed class SolutionModuleFolderTests {
     [InlineData("MailRelay/tests/P.csproj", "/Services/MailRelay/", false, false)]
     [InlineData("MailInbox/tests/P.csproj", "/Services/MailInbox/TestsExtra/", false, false)]
     [InlineData("MailInbox/Application/P.csproj", "/Services/MailRelay/", false, false)]
+    [InlineData("Shared/tests/P.csproj", "/Shared/tests/", false, true)]
+    [InlineData("Tooling/tests/P.csproj", "/Tooling/tests/", false, true)]
+    [InlineData("Tooling\\tests\\P.csproj", "/tooling/Tests/Integration/", false, true)]
+    [InlineData("./Shared/tests/P.csproj", "/Shared/tests/", false, true)]
+    [InlineData("Shared/tests/P.csproj", "/Tests/", false, false)]
+    [InlineData("Tooling/tests/P.csproj", "/Tests/", false, false)]
+    [InlineData("Shared/tests/P.csproj", "/Shared/", false, false)]
+    [InlineData("Tooling/tests/P.csproj", "/Tooling/", false, false)]
+    [InlineData("Shared/tests/P.csproj", "/Tooling/tests/", false, false)]
+    [InlineData("Tooling/tests/P.csproj", "/Shared/tests/", false, false)]
+    [InlineData("Shared/tests/P.csproj", "/Shared/testsExtra/", false, false)]
+    [InlineData("Tooling/tests/P.csproj", "/Tooling/testsExtra/", false, false)]
     [InlineData("tests/Example.Tests/P.csproj", "/Tests/", true, true)]
     [InlineData("tests/Example.Tests/P.csproj", "/Tests/", false, true)]
-    public void OwnershipDetection_UsesOwnerAndServiceTestBoundaries(string project, string folder, bool modules, bool valid) {
+    public void OwnershipDetection_UsesOwnerAndTestBoundaries(string project, string folder, bool modules, bool valid) {
         XDocument solution = ParseSolution($"<Folder Name='{folder}'><Project Path='{project}' /></Folder>");
 
         Assert.Equal(valid ? 0 : 1, FindMisplacedProjects(solution, modules).Length);
@@ -198,12 +244,20 @@ public sealed class SolutionModuleFolderTests {
             string expectedPrefix;
             if (modules && string.Equals(segments[0], "Modules", StringComparison.OrdinalIgnoreCase)) {
                 expectedPrefix = $"/Modules/{segments[1]}/";
+                if (segments.Length > 2 && string.Equals(segments[2], "tests", StringComparison.OrdinalIgnoreCase)) {
+                    expectedPrefix += "tests/";
+                }
             } else if (!modules && (string.Equals(segments[0], "MailInbox", StringComparison.OrdinalIgnoreCase) ||
                                     string.Equals(segments[0], "MailRelay", StringComparison.OrdinalIgnoreCase))) {
                 expectedPrefix = $"/Services/{segments[0]}/";
                 if (string.Equals(segments[1], "tests", StringComparison.OrdinalIgnoreCase)) {
                     expectedPrefix += "Tests/";
                 }
+            } else if (!modules &&
+                       (string.Equals(segments[0], "Shared", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(segments[0], "Tooling", StringComparison.OrdinalIgnoreCase)) &&
+                       string.Equals(segments[1], "tests", StringComparison.OrdinalIgnoreCase)) {
+                expectedPrefix = $"/{segments[0]}/tests/";
             } else {
                 continue;
             }
