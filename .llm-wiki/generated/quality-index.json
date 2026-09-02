@@ -4586,11 +4586,11 @@
     },
     {
       "path": "FoodDiary.Domain/AssemblyInfo.cs",
-      "nonBlankLines": 20,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.44
     },
     {
       "path": "FoodDiary.Domain/Common/DomainConstants.cs",
@@ -4607,22 +4607,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 17.46
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/MeasurementUnit.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Domain/Enums/ProductType.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Domain/Enums/Visibility.cs",
@@ -4655,22 +4639,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 4.98
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/FoodQualityGrade.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Domain/ValueObjects/FoodQualityScore.cs",
-      "nonBlankLines": 98,
-      "decisionPoints": 10,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.96
     },
     {
       "path": "FoodDiary.Domain/ValueObjects/HealthAreaGrade.cs",
@@ -34969,6 +34937,14 @@
       "structuralRiskScore": 0.16
     },
     {
+      "path": "Modules/Products/Domain.Contracts/Enums/ProductType.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
       "path": "Modules/Products/Domain.Contracts/ValueObjects/Ids/ProductId.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
@@ -38935,6 +38911,30 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Shared/FoodDiary.Nutrition.Domain/Enums/MeasurementUnit.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Shared/FoodDiary.Nutrition.Domain/ValueObjects/FoodQualityGrade.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Shared/FoodDiary.Nutrition.Domain/ValueObjects/FoodQualityScore.cs",
+      "nonBlankLines": 98,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 16.96
     },
     {
       "path": "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs",

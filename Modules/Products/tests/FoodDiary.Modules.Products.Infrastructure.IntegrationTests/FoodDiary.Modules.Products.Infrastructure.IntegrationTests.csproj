@@ -4,6 +4,8 @@
     <RootNamespace>FoodDiary.Infrastructure.IntegrationTests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Nutrition.Domain/FoodDiary.Nutrition.Domain.csproj" />
     <ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.Products.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\..\tests\FoodDiary.Testing\FoodDiary.Testing.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />

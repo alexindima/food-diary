@@ -8,21 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "6d0589a22e2dfd47f94497137d6e43c287f5e429f8f068961aa88716429fd5b5"
-        },
-        {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "c931454867ee8efbaa7e52ec5ccc92c76eb6094c5f7c56b70e81faf407ee4263"
+          "sha256": "689353f7aaa79ccef64f856f36b44ba88a25ca56336af35623f08309951adb35"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "0f802f389fb279360d6ac726343ecc70b4d103dbd98954574d1f272b611fb8f3"
+          "sha256": "5c6b6ffd2630bb5ff14dfaa2f36692b6d9160bcea7e8d11f9bb45986d6cc1343"
         }
       ],
-      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
+      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:11:56.8780541Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:32.1931235Z"
     },
     {
       "pageId": "module.frontend",
@@ -45,18 +41,14 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "c931454867ee8efbaa7e52ec5ccc92c76eb6094c5f7c56b70e81faf407ee4263"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "0f802f389fb279360d6ac726343ecc70b4d103dbd98954574d1f272b611fb8f3"
+          "sha256": "5c6b6ffd2630bb5ff14dfaa2f36692b6d9160bcea7e8d11f9bb45986d6cc1343"
         }
       ],
-      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
+      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:11:57.1857639Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:32.3323486Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -64,14 +56,22 @@
       "pageSha256": "1097247b366e5b7f6286cfe0e569cf919efd3b052e3fbfb9c9ba6b6381ce07dc",
       "sources": [
         {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "5c6b6ffd2630bb5ff14dfaa2f36692b6d9160bcea7e8d11f9bb45986d6cc1343"
+        },
+        {
+          "path": "FoodDiary.Application.Abstractions/AGENTS.md",
+          "sha256": "cd84adbdd174265b8008fd108d87968e4b109a23d5c9a81195234da2cc161866"
+        },
+        {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "5f7a2a61d9e43de8020f52511497744ec6dfaf20f5cf1efbcd35349359446766"
+          "sha256": "ebab1b1414f216690b2397cd597a1ca90cb4041a8c58b948716f183cf29fbf0d"
         }
       ],
-      "reason": "All four enum names and numbers preserved. Full HTTP integration 182 and Presentation 825 passed; no HTTP source or snapshot changes. Coordinated rebuild is documented.",
+      "reason": "Four type bodies and 56 consumer/guard source files retain hashes; HTTP DTOs, mappings, enum numbers and EF conversions/defaults are unchanged. New owners and Docker copies require coordinated rebuild, not a schema or endpoint migration.",
       "baseRef": "HEAD",
-      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
-      "reviewedAtUtc": "2026-09-02T08:36:46.3642434Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:32.4768875Z"
     },
     {
       "pageId": "system.architecture",
@@ -79,14 +79,18 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "5c6b6ffd2630bb5ff14dfaa2f36692b6d9160bcea7e8d11f9bb45986d6cc1343"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "6c9a0d2c26d2b1d10938928c84c5ec7e06b4db3524906b348351ba8da7fbda43"
+          "sha256": "0d18b57f52bcb085eb71134cd5dfad98943ca93535c799e6f53a05f0b022afba"
         }
       ],
-      "reason": "Four owners and the Users Domain.Contracts two-type boundary are explicit in scoped guides and the two cited inventories. Generated owner paths and module test references reviewed; broad pre-existing central ownership wording and domain-index scope limits are recorded without unrelated tool or policy repairs.",
+      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
       "baseRef": "HEAD",
-      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
-      "reviewedAtUtc": "2026-09-02T08:36:46.6509607Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:32.6034865Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -125,13 +129,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "6d0589a22e2dfd47f94497137d6e43c287f5e429f8f068961aa88716429fd5b5"
+          "sha256": "689353f7aaa79ccef64f856f36b44ba88a25ca56336af35623f08309951adb35"
         }
       ],
-      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
+      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:11:58.1715033Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:32.7350376Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -200,17 +204,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "189e183c209e996e6dcea4be4cff1849b13954b197776bc42e6892e9a1592d0b"
+          "sha256": "67e5365ad5892aa8fb70882b64c762b725034471cd4d9a5a4f583a742e60f8f5"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "6c9a0d2c26d2b1d10938928c84c5ec7e06b4db3524906b348351ba8da7fbda43"
+          "sha256": "0d18b57f52bcb085eb71134cd5dfad98943ca93535c799e6f53a05f0b022afba"
         }
       ],
-      "reason": "37 exact owner edges are guarded by 882 passing architecture tests. All 4388 selected tests passed without skips. ActivityLevel leaves domain-data-index but remains in CSharp symbol index; module test lists are navigation, not measured coverage.",
+      "reason": "New focused Nutrition suite and retained mixed consumer tests protect scoring and units. Canonical final TRX runs are recorded separately from failed initial architecture run. Wiki generated sources are synchronized, not retrieval benchmark evidence.",
       "baseRef": "HEAD",
-      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
-      "reviewedAtUtc": "2026-09-02T08:36:46.9812018Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:32.8815221Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -218,14 +222,14 @@
       "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "01b6a7783b38656d5e42c5deb43e0a167a9f1f709070f7902bee6aa5671d1388"
+          "path": "FoodDiary.Application.Abstractions/AGENTS.md",
+          "sha256": "cd84adbdd174265b8008fd108d87968e4b109a23d5c9a81195234da2cc161866"
         }
       ],
-      "reason": "Moved complete Users CLR types and goal mappings without body changes; namespaces and HTTP routes, payloads, snapshots remain unchanged. Consumers rebuild against explicit owners.",
+      "reason": "Four type bodies and 56 consumer/guard source files retain hashes; HTTP DTOs, mappings, enum numbers and EF conversions/defaults are unchanged. New owners and Docker copies require coordinated rebuild, not a schema or endpoint migration.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:11:59.6856115Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:33.0249320Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -482,17 +486,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "8fbd829d245825f30ac6c2cd5c14e6e91329b83dabcd69f14710a7b1499f28bd"
+          "sha256": "a977220b262ebb88fe42e33d5f78f35158f35d9b0b544b9514c060186fae2444"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "5f7a2a61d9e43de8020f52511497744ec6dfaf20f5cf1efbcd35349359446766"
+          "sha256": "ebab1b1414f216690b2397cd597a1ca90cb4041a8c58b948716f183cf29fbf0d"
         }
       ],
-      "reason": "37 exact owner edges are guarded by 882 passing architecture tests. All 4388 selected tests passed without skips. ActivityLevel leaves domain-data-index but remains in CSharp symbol index; module test lists are navigation, not measured coverage.",
+      "reason": "New focused Nutrition suite and retained mixed consumer tests protect scoring and units. Canonical final TRX runs are recorded separately from failed initial architecture run. Wiki generated sources are synchronized, not retrieval benchmark evidence.",
       "baseRef": "HEAD",
-      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
-      "reviewedAtUtc": "2026-09-02T08:36:47.3101436Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:33.3355840Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -809,13 +813,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bcdcf6dd129e6ea9204ada3a1ac7cd48b68253ca42d12345e7f4f555dbe06276"
+          "sha256": "397c60e5b2ef01c762f01101d9d8e47d263d8901b8921ea8a06636d2e13a89c6"
         }
       ],
-      "reason": "37 exact owner edges are guarded by 882 passing architecture tests. All 4388 selected tests passed without skips. ActivityLevel leaves domain-data-index but remains in CSharp symbol index; module test lists are navigation, not measured coverage.",
+      "reason": "New focused Nutrition suite and retained mixed consumer tests protect scoring and units. Canonical final TRX runs are recorded separately from failed initial architecture run. Wiki generated sources are synchronized, not retrieval benchmark evidence.",
       "baseRef": "HEAD",
-      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
-      "reviewedAtUtc": "2026-09-02T08:36:47.8631041Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:33.6130005Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -892,13 +896,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "bd2616e1add29719c2af2635bf97c5029b717c1c31786acd853553b34cd61b5f"
+          "sha256": "31a657d435d209bea27e3304a42c0f5ee4c1b0971335308d71617b27d23079f4"
         }
       ],
-      "reason": "Four owners and the Users Domain.Contracts two-type boundary are explicit in scoped guides and the two cited inventories. Generated owner paths and module test references reviewed; broad pre-existing central ownership wording and domain-index scope limits are recorded without unrelated tool or policy repairs.",
+      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
       "baseRef": "HEAD",
-      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
-      "reviewedAtUtc": "2026-09-02T08:36:48.6403698Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:34.2023795Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -907,17 +911,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bcdcf6dd129e6ea9204ada3a1ac7cd48b68253ca42d12345e7f4f555dbe06276"
+          "sha256": "397c60e5b2ef01c762f01101d9d8e47d263d8901b8921ea8a06636d2e13a89c6"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "bd2616e1add29719c2af2635bf97c5029b717c1c31786acd853553b34cd61b5f"
+          "sha256": "31a657d435d209bea27e3304a42c0f5ee4c1b0971335308d71617b27d23079f4"
         }
       ],
-      "reason": "Reviewed unchanged profile sharing and enum consumers, four declarations and preserved EF/algorithm source. Full PostgreSQL and HTTP tests passed. No new authorization, logging, processing or provider behavior; scoped review is not a full security scan.",
+      "reason": "Scoped source review confirms only packaging, references, guards, tests and ownership documentation changed. No user data flow, logging, provider, authorization or retention code changes; guard exceptions are preserved. This is not a full security scan.",
       "baseRef": "HEAD",
-      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
-      "reviewedAtUtc": "2026-09-02T08:36:49.2543243Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:34.5035610Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1031,13 +1035,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "f51b8970552d875fc6195951cc75a128f64e762b817f281dd6b5d6baa44c9de8"
+          "sha256": "875dd8ad9eda8a801bec0c6fa2bacf063f09f0fac5e7062f3c1c295ef2706003"
         }
       ],
-      "reason": "Moved focused Users invariant tests and retained mixed donor tests; exact dependency guards now enforce Users Domain and narrow ID contract. No Wiki tooling or test policy changed.",
+      "reason": "New focused Nutrition suite and retained mixed consumer tests protect scoring and units. Canonical final TRX runs are recorded separately from failed initial architecture run. Wiki generated sources are synchronized, not retrieval benchmark evidence.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:12:03.7512025Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:34.7213915Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1095,13 +1099,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "6d0589a22e2dfd47f94497137d6e43c287f5e429f8f068961aa88716429fd5b5"
+          "sha256": "689353f7aaa79ccef64f856f36b44ba88a25ca56336af35623f08309951adb35"
         }
       ],
-      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
+      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:12:00.0723720Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:33.1684748Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1155,13 +1159,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "dbfd156fd164d9e0f820ece13aeb1c3b9055161da255b6a416d3c4de3737c73f"
+          "sha256": "8ba93bf1753e5957fceb5838cf633df4809c37041107482e97f94507665c26e4"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "689353f7aaa79ccef64f856f36b44ba88a25ca56336af35623f08309951adb35"
         }
       ],
-      "reason": "Four owners and the Users Domain.Contracts two-type boundary are explicit in scoped guides and the two cited inventories. Generated owner paths and module test references reviewed; broad pre-existing central ownership wording and domain-index scope limits are recorded without unrelated tool or policy repairs.",
+      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
       "baseRef": "HEAD",
-      "gitHead": "6803aeefaf0073bbf3d9667c3577b43cc8cfd73c",
-      "reviewedAtUtc": "2026-09-02T08:36:48.2459770Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:33.8126308Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1170,13 +1178,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "6d0589a22e2dfd47f94497137d6e43c287f5e429f8f068961aa88716429fd5b5"
+          "sha256": "689353f7aaa79ccef64f856f36b44ba88a25ca56336af35623f08309951adb35"
         }
       ],
-      "reason": "Moved focused Users invariant tests and retained mixed donor tests; exact dependency guards now enforce Users Domain and narrow ID contract. No Wiki tooling or test policy changed.",
+      "reason": "New focused Nutrition suite and retained mixed consumer tests protect scoring and units. Canonical final TRX runs are recorded separately from failed initial architecture run. Wiki generated sources are synchronized, not retrieval benchmark evidence.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:12:02.3186779Z"
+      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
+      "reviewedAtUtc": "2026-09-02T09:42:34.0135331Z"
     }
   ]
 }

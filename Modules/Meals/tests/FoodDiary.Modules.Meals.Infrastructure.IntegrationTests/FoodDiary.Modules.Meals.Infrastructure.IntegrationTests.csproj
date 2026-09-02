@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><RootNamespace>FoodDiary.Infrastructure.IntegrationTests</RootNamespace><IsPackable>false</IsPackable></PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Nutrition.Domain/FoodDiary.Nutrition.Domain.csproj" />
     <ProjectReference Include="../../Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj" />
     <ProjectReference Include="../../../../tests/FoodDiary.Testing/FoodDiary.Testing.csproj" />

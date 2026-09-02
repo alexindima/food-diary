@@ -19,6 +19,7 @@ They also guard the allowed reference graph between test projects, so shared tes
 | `tests/FoodDiary.ArchitectureTests` | Project references, source conventions, layer boundaries, async/cancellation guardrails. |
 | `tests/FoodDiary.Application.Tests` | Application use cases, handlers, validation, application services. |
 | `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests` | Weight/waist entry commands, queries, validators, mappings, read services, and date/user-scoping semantics. |
+| `tests/FoodDiary.Nutrition.Domain.Tests` | Shared food scoring, grade and measurement-unit invariants and numeric contracts. |
 | `tests/FoodDiary.Domain.Tests` | Core domain invariants, value objects, entities, and domain events. |
 | `tests/FoodDiary.Infrastructure.Tests` | Infrastructure unit behavior without external services. |
 | `tests/FoodDiary.Infrastructure.IntegrationTests` | PostgreSQL/Testcontainers persistence and migration behavior. |

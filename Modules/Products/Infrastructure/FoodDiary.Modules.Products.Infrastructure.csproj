@@ -6,6 +6,8 @@
     <Compile Remove="Model/**/*.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Nutrition.Domain/FoodDiary.Nutrition.Domain.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Products.Application.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="Model/FoodDiary.Modules.Products.PersistenceModel.csproj" />

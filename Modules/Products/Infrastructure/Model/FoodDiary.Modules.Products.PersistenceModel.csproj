@@ -3,6 +3,7 @@
     <RootNamespace>FoodDiary.Infrastructure.Persistence</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />
     <ProjectReference Include="../../Domain/FoodDiary.Modules.Products.Domain.csproj" />
     <ProjectReference Include="../../../Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />

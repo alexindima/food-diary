@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 255,
+    "domainTypes": 251,
     "entities": 78,
-    "valueObjects": 109,
-    "invariants": 506,
+    "valueObjects": 107,
+    "invariants": 504,
     "persistenceMappings": 86,
     "indexes": 155,
     "relationships": 96
@@ -838,13 +838,6 @@
     },
     {
       "area": "FoodDiary",
-      "name": "MeasurementUnit",
-      "role": "enum",
-      "path": "FoodDiary.Domain/Enums/MeasurementUnit.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
       "name": "MenstrualEpisodeStatus",
       "role": "enum",
       "path": "Modules/Cycles/Domain/Enums/MenstrualEpisodeStatus.cs",
@@ -855,13 +848,6 @@
       "name": "OvulationTestResult",
       "role": "enum",
       "path": "Modules/Cycles/Domain/Enums/OvulationTestResult.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "ProductType",
-      "role": "enum",
-      "path": "FoodDiary.Domain/Enums/ProductType.cs",
       "line": 2
     },
     {
@@ -1136,20 +1122,6 @@
       "role": "value-object",
       "path": "Modules/Cycles/Domain/ValueObjects/Ids/FertilitySignalId.cs",
       "line": 4
-    },
-    {
-      "area": "FoodDiary",
-      "name": "FoodQualityGrade",
-      "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/FoodQualityGrade.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "FoodQualityScore",
-      "role": "value-object",
-      "path": "FoodDiary.Domain/ValueObjects/FoodQualityScore.cs",
-      "line": 8
     },
     {
       "area": "FoodDiary",
@@ -1943,20 +1915,6 @@
       "message": "throw new ArgumentException(\"Email format is invalid.\", nameof(value))",
       "path": "FoodDiary.Domain/ValueObjects/EmailAddress.cs",
       "line": 24
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentOutOfRangeException",
-      "message": "throw new ArgumentOutOfRangeException(nameof(score), \"Score must be between 0 and 100.\")",
-      "path": "FoodDiary.Domain/ValueObjects/FoodQualityScore.cs",
-      "line": 14
-    },
-    {
-      "area": "FoodDiary",
-      "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Grade must match the score range.\", nameof(grade))",
-      "path": "FoodDiary.Domain/ValueObjects/FoodQualityScore.cs",
-      "line": 19
     },
     {
       "area": "FoodDiary",

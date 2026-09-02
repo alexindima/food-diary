@@ -20,3 +20,6 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Hydration.Domain")]
 
 [assembly: InternalsVisibleTo("FoodDiary.Modules.Users.Domain")]
+
+// Temporary Nutrition scoring access; remove with the generic DomainGuard extraction.
+[assembly: InternalsVisibleTo("FoodDiary.Nutrition.Domain")]

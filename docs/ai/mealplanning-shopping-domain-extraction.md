@@ -14,8 +14,9 @@ the same `UserId` foreign key and cascade delete behavior, preserving table, ind
 and relational schema identity. Historical migrations, the model snapshot,
 `FoodDiaryDbContext` DbSets and Users cleanup orchestration remain central.
 
-MealPlanning Domain depends one-way on central Domain for User, Product, Recipe,
-their IDs, `MeasurementUnit` and shared primitives. Central Domain does not
+MealPlanning Domain references the Users, Products and Recipes owners one-way.
+MeasurementUnit belongs to Shared/FoodDiary.Nutrition.Domain; shared guards remain
+in central Domain. Central Domain does not
 reference MealPlanning Domain. Focused ShoppingLists invariants remain in the
 module Domain test project; mixed lifecycle, shared-context and HTTP coverage stays
 with the central suites.

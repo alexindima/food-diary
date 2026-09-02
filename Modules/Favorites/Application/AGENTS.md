@@ -16,3 +16,5 @@ Rules for `Modules/Favorites/Application/`.
 - Do not reference the core `FoodDiary.Application` project.
 - Register handlers, validators, and read services through `AddFavoritesApplication`; the Infrastructure facade exposes `AddFavoritesModule` to composition roots.
 - Keep persistence implementations, HTTP transport, and host configuration outside this project.
+
+Reference Shared/FoodDiary.Nutrition.Domain for existing quality calculation and Products Domain.Contracts for the stable ProductType classification already used by projections; preserve all mapping behavior.

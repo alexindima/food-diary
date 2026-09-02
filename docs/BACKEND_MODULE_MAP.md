@@ -6,6 +6,7 @@ Use this file when deciding where backend code belongs.
 
 | Concern | Project | Put Here | Do Not Put Here |
 | --- | --- | --- | --- |
+| Shared food scoring and units | `Shared/FoodDiary.Nutrition.Domain` | FoodQualityScore, FoodQualityGrade, MeasurementUnit; ProductType is owned by Products Domain.Contracts | Unrelated domain remnants, aggregates, EF, application or transport code |
 | Domain model | `FoodDiary.Domain` | Entities, value objects, aggregate behavior, domain events | EF Core, HTTP, external SDKs, options |
 | Application ports/models | `FoodDiary.Application.Abstractions` | Feature ports, application-facing models, shared result abstractions | ASP.NET, EF Core, provider SDKs, host config |
 | Application runtime | `FoodDiary.Application.Runtime` | Mediator pipeline behaviors, transaction boundary, post-commit queue registration | Feature handlers, validators, business services, module aggregation |

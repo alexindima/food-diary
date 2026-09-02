@@ -1,5 +1,3 @@
 # Products domain contracts
 
-Own only dependency-free Product identity contracts with stable `FoodDiary.Domain.*`
-namespaces. Central Domain may reference this project; never add a reference from
-this seam to central Domain or Products.Domain.
+Own ProductId identity and ProductType classification with stable FoodDiary.Domain.* namespaces. Reference only shared domain primitives. Keep scoring algorithms in Shared/FoodDiary.Nutrition.Domain and Product aggregates in Products Domain. Never reference central Domain, Nutrition Domain or Products Domain from this seam; central Domain must not reference this project.

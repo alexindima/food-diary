@@ -36,7 +36,7 @@ public sealed class MealPlanningModuleExtractionTests {
     public void ExtractedMealPlanningAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj");
-        string[] expectedReferences = ["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Users.Domain.Contracts"];
+        string[] expectedReferences = ["FoodDiary.Application.Abstractions", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Nutrition.Domain"];
 
         Assert.Equal(expectedReferences, references);
     }

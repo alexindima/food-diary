@@ -94,3 +94,5 @@ an aggregate re-export. Authentication flows/providers, combined UserRepository,
 DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
+
+FoodQualityScore, FoodQualityGrade and MeasurementUnit belong to Shared/FoodDiary.Nutrition.Domain; ProductType belongs to Products Domain.Contracts. The targeted Nutrition IVT temporarily permits existing DomainGuard calls without copied validation. Remove it with future generic guard extraction; never add central reverse references. See docs/ai/nutrition-domain-extraction.md.

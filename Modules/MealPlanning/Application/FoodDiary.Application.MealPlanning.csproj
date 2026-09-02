@@ -2,6 +2,7 @@
   <PropertyGroup><AssemblyName>FoodDiary.Application.MealPlanning</AssemblyName><RootNamespace>FoodDiary.Application.MealPlanning</RootNamespace></PropertyGroup>
   <ItemGroup><Compile Remove="Abstractions/**/*.cs" /></ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../../Shared/FoodDiary.Nutrition.Domain/FoodDiary.Nutrition.Domain.csproj" />
     <ProjectReference Include="../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />

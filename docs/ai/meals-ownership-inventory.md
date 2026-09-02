@@ -38,7 +38,7 @@ FoodDiary.Domain.Enums namespaces, names and numeric values. MealType is also
 used by MealPlanning, Dashboard, Export and Favorites; actual enum consumers
 reference Meals Domain directly. String-only DTO consumers retain their existing
 contract references. These enum moves require coordinated consumer rebuilds.
-MeasurementUnit and Visibility are reused across product/recipe workflows.
+MeasurementUnit is owned by Shared/FoodDiary.Nutrition.Domain; Visibility remains central. Both are reused across product/recipe workflows.
 User belongs to Users Domain; UserId and ActivityLevel belong to Users
 Domain.Contracts. DomainGuard and common constants remain central; explicit IVT
 permits the extracted domain to use DomainGuard.

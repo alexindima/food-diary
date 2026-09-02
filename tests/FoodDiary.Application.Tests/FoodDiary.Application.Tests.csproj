@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Nutrition.Domain/FoodDiary.Nutrition.Domain.csproj" />
     <ProjectReference Include="../../Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Dietologist\Application\FoodDiary.Modules.Dietologist.Application.csproj" />
     <ProjectReference Include="..\..\Modules\Lessons\Application\FoodDiary.Modules.Lessons.Application.csproj" />

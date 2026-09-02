@@ -22,6 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Nutrition.Domain/FoodDiary.Nutrition.Domain.csproj" />
     <ProjectReference Include="../../Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
     <ProjectReference Include="../../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />

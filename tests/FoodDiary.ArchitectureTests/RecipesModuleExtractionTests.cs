@@ -70,7 +70,7 @@ public sealed class RecipesModuleExtractionTests {
     public void ExtractedRecipesAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Application.Images", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.RecentItems.Application.Abstractions", "FoodDiary.Modules.Recipes.Application.Abstractions", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Recipes.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Application.Images", "FoodDiary.Domain", "FoodDiary.Mediator", "FoodDiary.Modules.RecentItems.Application.Abstractions", "FoodDiary.Modules.Recipes.Application.Abstractions", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Recipes.Domain", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Nutrition.Domain"], references);
     }
 
     [Theory]

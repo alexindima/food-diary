@@ -6,6 +6,7 @@ COPY .editorconfig Directory.Build.props Directory.Packages.props FoodDiary.slnx
 COPY .nuget/lockfiles/ .nuget/lockfiles/
 COPY FoodDiary.Analyzers/*.csproj FoodDiary.Analyzers/
 COPY Shared/FoodDiary.Domain.Primitives/*.csproj Shared/FoodDiary.Domain.Primitives/
+COPY Shared/FoodDiary.Nutrition.Domain/*.csproj Shared/FoodDiary.Nutrition.Domain/
 COPY Shared/FoodDiary.Mediator/*.csproj Shared/FoodDiary.Mediator/
 COPY Shared/FoodDiary.Results/*.csproj Shared/FoodDiary.Results/
 COPY FoodDiary.Domain/*.csproj FoodDiary.Domain/
@@ -186,6 +187,7 @@ COPY FoodDiary.Initializer/*.csproj FoodDiary.Initializer/
 RUN dotnet restore FoodDiary.Initializer/FoodDiary.Initializer.csproj --locked-mode
 
 COPY Shared/FoodDiary.Domain.Primitives/ Shared/FoodDiary.Domain.Primitives/
+COPY Shared/FoodDiary.Nutrition.Domain/ Shared/FoodDiary.Nutrition.Domain/
 COPY FoodDiary.Analyzers/ FoodDiary.Analyzers/
 COPY Shared/FoodDiary.Mediator/ Shared/FoodDiary.Mediator/
 COPY Shared/FoodDiary.Results/ Shared/FoodDiary.Results/

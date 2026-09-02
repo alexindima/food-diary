@@ -17,3 +17,5 @@ Rules for `Modules/MealPlanning/Application/`.
 - Depend on other business areas only through `FoodDiary.Application.Abstractions` contracts.
 - Reference Meals Domain directly for the existing MealType planning contract. Preserve generation, ordering, servings and shopping-list semantics; this enum dependency adds no Meals write capability.
 - Keep persistence implementations, HTTP transport, and host configuration outside this project.
+
+Reference Shared/FoodDiary.Nutrition.Domain for MeasurementUnit in existing shopping quantities. Preserve unit parsing and generation behavior.

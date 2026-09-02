@@ -2120,20 +2120,6 @@
       "line": 5
     },
     {
-      "name": "MeasurementUnit",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/MeasurementUnit.cs",
-      "line": 2
-    },
-    {
-      "name": "ProductType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/ProductType.cs",
-      "line": 2
-    },
-    {
       "name": "Visibility",
       "kind": "enum",
       "role": "Other",
@@ -2160,20 +2146,6 @@
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/EmailAddress.cs",
       "line": 4
-    },
-    {
-      "name": "FoodQualityGrade",
-      "kind": "enum",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/FoodQualityGrade.cs",
-      "line": 2
-    },
-    {
-      "name": "FoodQualityScore",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/FoodQualityScore.cs",
-      "line": 8
     },
     {
       "name": "HealthAreaGrade",
@@ -21391,6 +21363,13 @@
       "line": 4
     },
     {
+      "name": "ProductType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Products/Domain.Contracts/Enums/ProductType.cs",
+      "line": 2
+    },
+    {
       "name": "ProductId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -24728,6 +24707,27 @@
       "role": "Other",
       "path": "Shared/FoodDiary.Mediator/Unit.cs",
       "line": 6
+    },
+    {
+      "name": "MeasurementUnit",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Nutrition.Domain/Enums/MeasurementUnit.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodQualityGrade",
+      "kind": "enum",
+      "role": "ValueObject",
+      "path": "Shared/FoodDiary.Nutrition.Domain/ValueObjects/FoodQualityGrade.cs",
+      "line": 2
+    },
+    {
+      "name": "FoodQualityScore",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Shared/FoodDiary.Nutrition.Domain/ValueObjects/FoodQualityScore.cs",
+      "line": 8
     },
     {
       "name": "IOutboxMessage",

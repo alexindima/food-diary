@@ -14,6 +14,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Nutrition.Domain/FoodDiary.Nutrition.Domain.csproj" />
     <ProjectReference Include="../../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="..\..\Application\FoodDiary.Application.Favorites.csproj" />
     <ProjectReference Include="../../../Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
