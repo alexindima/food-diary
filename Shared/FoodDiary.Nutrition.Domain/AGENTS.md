@@ -9,10 +9,7 @@ Reference Products Domain.Contracts for stable ProductType classification, never
 the Product aggregate. Products Domain may reference this library one-way.
 Do not add application, persistence, transport, provider or host dependencies.
 
-The reference to central FoodDiary.Domain and its targeted InternalsVisibleTo
-grant are temporary access to the existing internal DomainGuard. Do not copy its
-validation or make it public. Remove both when generic guards move to their own
-owner. Central Domain must never reference Nutrition or Products contracts.
+Reference shared Primitives for the public FoodDiary.Domain.Primitives.DomainGuard. Nutrition has no central Domain reference or friend grant. Central Domain must never reference Nutrition or Products contracts.
 
 Keep formula, classification modifiers, clamp, grade thresholds, ToEven rounding,
 validation exception types/parameter names and zero-calorie fallback unchanged.

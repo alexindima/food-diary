@@ -56,22 +56,14 @@
       "pageSha256": "1097247b366e5b7f6286cfe0e569cf919efd3b052e3fbfb9c9ba6b6381ce07dc",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "5c6b6ffd2630bb5ff14dfaa2f36692b6d9160bcea7e8d11f9bb45986d6cc1343"
-        },
-        {
-          "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "cd84adbdd174265b8008fd108d87968e4b109a23d5c9a81195234da2cc161866"
-        },
-        {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "ebab1b1414f216690b2397cd597a1ca90cb4041a8c58b948716f183cf29fbf0d"
+          "sha256": "c765c6318a8fa0fb6230f81aae83ca4d2562e5e61d073223ff4ec2893ed29c2d"
         }
       ],
-      "reason": "Four type bodies and 56 consumer/guard source files retain hashes; HTTP DTOs, mappings, enum numbers and EF conversions/defaults are unchanged. New owners and Docker copies require coordinated rebuild, not a schema or endpoint migration.",
+      "reason": "Public generic API changes assembly and namespace deliberately; method signatures and bodies are preserved. Consumer bodies differ only by imports and Billing guard qualifier. No HTTP or EF contract changes; coordinated rebuild required.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:32.4768875Z"
+      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
+      "reviewedAtUtc": "2026-09-02T10:45:42.8911224Z"
     },
     {
       "pageId": "system.architecture",
@@ -79,18 +71,14 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "5c6b6ffd2630bb5ff14dfaa2f36692b6d9160bcea7e8d11f9bb45986d6cc1343"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "0d18b57f52bcb085eb71134cd5dfad98943ca93535c799e6f53a05f0b022afba"
+          "sha256": "9c006f1e98fa48fc3b519c51886e5dce323f09cb5223732b9b29dcb34afb2504"
         }
       ],
-      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
+      "reason": "Owner guides describe public Primitives API and internal Billing checks. Nutrition temporary central dependency and IVT guidance are removed. No Wiki policy or ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:32.6034865Z"
+      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
+      "reviewedAtUtc": "2026-09-02T10:45:43.0233957Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -204,17 +192,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "67e5365ad5892aa8fb70882b64c762b725034471cd4d9a5a4f583a742e60f8f5"
+          "sha256": "25659dfb0db5ec981c5d3654565c36b1cbd9597983435d50c523d74be85a836a"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "0d18b57f52bcb085eb71134cd5dfad98943ca93535c799e6f53a05f0b022afba"
+          "sha256": "9c006f1e98fa48fc3b519c51886e5dce323f09cb5223732b9b29dcb34afb2504"
         }
       ],
-      "reason": "New focused Nutrition suite and retained mixed consumer tests protect scoring and units. Canonical final TRX runs are recorded separately from failed initial architecture run. Wiki generated sources are synchronized, not retrieval benchmark evidence.",
+      "reason": "Focused Primitives and Billing payment regressions cover generic and feature-owned boundaries. Distinct final TRX runs provide executed evidence; initial failed build is retained separately. No coverage collectors or frontend work.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:32.8815221Z"
+      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
+      "reviewedAtUtc": "2026-09-02T10:45:43.2240973Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -486,17 +474,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "a977220b262ebb88fe42e33d5f78f35158f35d9b0b544b9514c060186fae2444"
+          "sha256": "1da642192b69b3e45c4a428f06208f0a374b0c102504df521cadd59fe79fe041"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "ebab1b1414f216690b2397cd597a1ca90cb4041a8c58b948716f183cf29fbf0d"
+          "sha256": "c765c6318a8fa0fb6230f81aae83ca4d2562e5e61d073223ff4ec2893ed29c2d"
         }
       ],
-      "reason": "New focused Nutrition suite and retained mixed consumer tests protect scoring and units. Canonical final TRX runs are recorded separately from failed initial architecture run. Wiki generated sources are synchronized, not retrieval benchmark evidence.",
+      "reason": "Focused Primitives and Billing payment regressions cover generic and feature-owned boundaries. Distinct final TRX runs provide executed evidence; initial failed build is retained separately. No coverage collectors or frontend work.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:33.3355840Z"
+      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
+      "reviewedAtUtc": "2026-09-02T10:45:43.4296598Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -768,13 +756,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4d42025c8f7eda11407b79cd291701b18c3abbea0d9bbd1a197e48402b765af4"
+          "sha256": "55a3055c26848b5ff5a35809b1e4309f676c710879d1fab7cbb8333a34432d9a"
         }
       ],
-      "reason": "Credential state stays in the complete Users aggregate; Identity workflows, providers, authorization, lifecycle and persistence behavior remain unchanged.",
+      "reason": "Scoped source review of guards, consumers, references and tests preserves validation order, exception details, numeric limits and UTC conversion. No new data access, logging, provider or retention behavior. This is not a full security scan.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:12:00.9355282Z"
+      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
+      "reviewedAtUtc": "2026-09-02T10:45:43.6488551Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -813,13 +801,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "397c60e5b2ef01c762f01101d9d8e47d263d8901b8921ea8a06636d2e13a89c6"
+          "sha256": "eac7b48910468b31f3436bc36cba465397639b8a8426422282e030479e98558c"
         }
       ],
-      "reason": "New focused Nutrition suite and retained mixed consumer tests protect scoring and units. Canonical final TRX runs are recorded separately from failed initial architecture run. Wiki generated sources are synchronized, not retrieval benchmark evidence.",
+      "reason": "Focused Primitives and Billing payment regressions cover generic and feature-owned boundaries. Distinct final TRX runs provide executed evidence; initial failed build is retained separately. No coverage collectors or frontend work.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:33.6130005Z"
+      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
+      "reviewedAtUtc": "2026-09-02T10:45:44.0162207Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -896,13 +884,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "31a657d435d209bea27e3304a42c0f5ee4c1b0971335308d71617b27d23079f4"
+          "sha256": "239d50b4f15250e9649f846e5c4bc80b99848f2d1e6a39d1c586f75e1abc6c44"
         }
       ],
-      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
+      "reason": "Owner guides describe public Primitives API and internal Billing checks. Nutrition temporary central dependency and IVT guidance are removed. No Wiki policy or ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:34.2023795Z"
+      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
+      "reviewedAtUtc": "2026-09-02T10:45:44.4199319Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -911,17 +899,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "397c60e5b2ef01c762f01101d9d8e47d263d8901b8921ea8a06636d2e13a89c6"
+          "sha256": "eac7b48910468b31f3436bc36cba465397639b8a8426422282e030479e98558c"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "31a657d435d209bea27e3304a42c0f5ee4c1b0971335308d71617b27d23079f4"
+          "sha256": "239d50b4f15250e9649f846e5c4bc80b99848f2d1e6a39d1c586f75e1abc6c44"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "55a3055c26848b5ff5a35809b1e4309f676c710879d1fab7cbb8333a34432d9a"
         }
       ],
-      "reason": "Scoped source review confirms only packaging, references, guards, tests and ownership documentation changed. No user data flow, logging, provider, authorization or retention code changes; guard exceptions are preserved. This is not a full security scan.",
+      "reason": "Scoped source review of guards, consumers, references and tests preserves validation order, exception details, numeric limits and UTC conversion. No new data access, logging, provider or retention behavior. This is not a full security scan.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:34.5035610Z"
+      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
+      "reviewedAtUtc": "2026-09-02T10:45:44.7680089Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1159,17 +1151,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "8ba93bf1753e5957fceb5838cf633df4809c37041107482e97f94507665c26e4"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "689353f7aaa79ccef64f856f36b44ba88a25ca56336af35623f08309951adb35"
+          "sha256": "d6167b8d63f13517ee2241560044d4c1102aec45a91ea8ca704e1d3324a36cc1"
         }
       ],
-      "reason": "Current ownership guides document ProductType classification, shared scoring and units, exact dependency direction and temporary DomainGuard IVT removal condition. Unrelated central remnants remain out of scope.",
+      "reason": "Owner guides describe public Primitives API and internal Billing checks. Nutrition temporary central dependency and IVT guidance are removed. No Wiki policy or ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "f7272f41d68858ffafc1244a4b88d4d688fc6d8d",
-      "reviewedAtUtc": "2026-09-02T09:42:33.8126308Z"
+      "gitHead": "902a4397817ca7058257c8c87bc1d395fba9bd0c",
+      "reviewedAtUtc": "2026-09-02T10:45:44.2290942Z"
     },
     {
       "pageId": "workflow.review-diff",

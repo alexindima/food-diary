@@ -11,4 +11,6 @@ existing planning enum contract. This is a one-way dependency and does not grant
 Meals aggregate mutation capabilities. Preserve existing string conversions;
 the changed enum assembly owner requires coordinated consumer rebuilds.
 
-User ownership: use Users Domain for aggregate navigations, Users Domain.Contracts for ID-only dependencies, and residual central Domain only for shared values/guards. Preserve all existing relationships.
+User ownership: use Users Domain for aggregate navigations, Users Domain.Contracts for ID-only dependencies, and residual central Domain only for shared values. Preserve all existing relationships.
+
+Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly. Central Domain grants no friend access. This domain has no central Domain dependency.

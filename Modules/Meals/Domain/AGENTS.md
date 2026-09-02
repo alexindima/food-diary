@@ -10,4 +10,6 @@ owner explicitly; moving the assembly requires coordinated consumer rebuilds.
 MeasurementUnit belongs to Shared/FoodDiary.Nutrition.Domain, referenced directly; Visibility remains in residual central Domain.
 Keep scalar product/recipe/image IDs and nutrition snapshots unchanged.
 
-User ownership: use Users Domain for aggregate navigations, Users Domain.Contracts for ID-only dependencies, and residual central Domain only for shared values/guards. Preserve all existing relationships.
+User ownership: use Users Domain for aggregate navigations, Users Domain.Contracts for ID-only dependencies, and residual central Domain only for shared values. Preserve all existing relationships.
+
+Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly. Central Domain grants no friend access.

@@ -9,11 +9,11 @@
   },
   "summary": {
     "sourceFiles": 3546,
-    "symbols": 3531,
+    "symbols": 3532,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 166,
     "kinds": {
-      "class": 1858,
+      "class": 1859,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -24,7 +24,7 @@
       "CommandHandler": 159,
       "Configuration": 90,
       "Controller": 92,
-      "Entity": 88,
+      "Entity": 89,
       "Event": 19,
       "Factory": 11,
       "Handler": 9,
@@ -2111,13 +2111,6 @@
       "role": "Other",
       "path": "FoodDiary.Domain/Common/DomainConstants.cs",
       "line": 2
-    },
-    {
-      "name": "DomainGuard",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Common/DomainGuard.cs",
-      "line": 5
     },
     {
       "name": "Visibility",
@@ -11563,6 +11556,13 @@
       "line": 12
     },
     {
+      "name": "BillingDomainGuard",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingDomainGuard.cs",
+      "line": 4
+    },
+    {
       "name": "BillingPayment",
       "kind": "class",
       "role": "Entity",
@@ -12883,7 +12883,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "CycleFactor",
@@ -12897,7 +12897,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "CycleProfile",
@@ -14780,7 +14780,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "Recommendation",
@@ -15179,7 +15179,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "ExerciseType",
@@ -17195,7 +17195,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationEntry.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "HydrationEntryId",
@@ -19071,7 +19071,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlan.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "MealPlanDay",
@@ -19085,7 +19085,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanMeal.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ShoppingList",
@@ -19099,7 +19099,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "ShoppingListItemSource",
@@ -19813,7 +19813,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "MealItem",
@@ -20646,7 +20646,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Notifications/Domain/Entities/Notifications/Notification.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "WebPushSubscription",
@@ -21535,7 +21535,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/RecentItems/Domain/Entities/Recents/RecentItem.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "RecentItemType",
@@ -23516,7 +23516,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "User",
@@ -23565,7 +23565,7 @@
       "kind": "class",
       "role": "Event",
       "path": "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "RoleNames",
@@ -24188,14 +24188,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "WearableSyncEntry",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "WearableDataType",
@@ -24553,6 +24553,13 @@
       "role": "Other",
       "path": "Shared/FoodDiary.Domain.Primitives/AggregateRoot.cs",
       "line": 2
+    },
+    {
+      "name": "DomainGuard",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Domain.Primitives/DomainGuard.cs",
+      "line": 5
     },
     {
       "name": "DomainTime",

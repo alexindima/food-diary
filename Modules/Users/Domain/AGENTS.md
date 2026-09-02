@@ -5,7 +5,9 @@ roles, role audit, weight/waist goals, lifecycle events and User-specific state 
 value objects. Preserve legacy CLR namespaces and all invariants. Keep authentication
 flows and providers in Identity and their established adapters.
 
-Reference residual central Domain one-way for shared guards, constants and values,
+Reference residual central Domain one-way for constants and values,
 Users Domain.Contracts for UserId and ActivityLevel, and Images Contracts for ImageAssetId.
 Do not restore foreign inverse navigations or reference application/persistence.
 Keep User goal collections and UserRole/Role relationships unchanged.
+
+Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly. Central Domain grants no friend access.

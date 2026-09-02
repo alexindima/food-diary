@@ -4585,28 +4585,12 @@
       "structuralRiskScore": 12.28
     },
     {
-      "path": "FoodDiary.Domain/AssemblyInfo.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
-    },
-    {
       "path": "FoodDiary.Domain/Common/DomainConstants.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.12
-    },
-    {
-      "path": "FoodDiary.Domain/Common/DomainGuard.cs",
-      "nonBlankLines": 123,
-      "decisionPoints": 10,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.46
     },
     {
       "path": "FoodDiary.Domain/Enums/Visibility.cs",
@@ -23505,6 +23489,14 @@
       "structuralRiskScore": 16.42
     },
     {
+      "path": "Modules/Billing/Domain/Entities/Billing/BillingDomainGuard.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.04
+    },
+    {
       "path": "Modules/Billing/Domain/Entities/Billing/BillingPayment.cs",
       "nonBlankLines": 222,
       "decisionPoints": 27,
@@ -25034,11 +25026,11 @@
     },
     {
       "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
-      "nonBlankLines": 65,
+      "nonBlankLines": 64,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.8
+      "structuralRiskScore": 11.78
     },
     {
       "path": "Modules/Cycles/Domain/Entities/Tracking/CycleFactor.cs",
@@ -25050,11 +25042,11 @@
     },
     {
       "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "nonBlankLines": 86,
+      "nonBlankLines": 85,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.72
+      "structuralRiskScore": 13.7
     },
     {
       "path": "Modules/Cycles/Domain/Entities/Tracking/CycleProfile.cs",
@@ -27226,11 +27218,11 @@
     },
     {
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "nonBlankLines": 111,
+      "nonBlankLines": 110,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.72
+      "structuralRiskScore": 9.7
     },
     {
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/Recommendation.cs",
@@ -27698,11 +27690,11 @@
     },
     {
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "nonBlankLines": 151,
+      "nonBlankLines": 150,
       "decisionPoints": 26,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 42.02
+      "structuralRiskScore": 42
     },
     {
       "path": "Modules/Exercises/Domain/Enums/ExerciseType.cs",
@@ -30066,11 +30058,11 @@
     },
     {
       "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationEntry.cs",
-      "nonBlankLines": 63,
+      "nonBlankLines": 62,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.26
+      "structuralRiskScore": 10.24
     },
     {
       "path": "Modules/Hydration/Domain/ValueObjects/Ids/HydrationEntryId.cs",
@@ -32258,11 +32250,11 @@
     },
     {
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlan.cs",
-      "nonBlankLines": 132,
+      "nonBlankLines": 131,
       "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.64
+      "structuralRiskScore": 17.62
     },
     {
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanDay.cs",
@@ -32274,11 +32266,11 @@
     },
     {
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanMeal.cs",
-      "nonBlankLines": 41,
+      "nonBlankLines": 40,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.32
+      "structuralRiskScore": 5.3
     },
     {
       "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingList.cs",
@@ -32290,11 +32282,11 @@
     },
     {
       "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
-      "nonBlankLines": 188,
+      "nonBlankLines": 187,
       "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.26
+      "structuralRiskScore": 26.24
     },
     {
       "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItemSource.cs",
@@ -33130,11 +33122,11 @@
     },
     {
       "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
-      "nonBlankLines": 75,
+      "nonBlankLines": 74,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.5
+      "structuralRiskScore": 10.48
     },
     {
       "path": "Modules/Meals/Domain/Entities/Meals/MealItem.cs",
@@ -34090,11 +34082,11 @@
     },
     {
       "path": "Modules/Notifications/Domain/Entities/Notifications/Notification.cs",
-      "nonBlankLines": 66,
+      "nonBlankLines": 65,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.32
+      "structuralRiskScore": 7.3
     },
     {
       "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
@@ -35146,11 +35138,11 @@
     },
     {
       "path": "Modules/RecentItems/Domain/Entities/Recents/RecentItem.cs",
-      "nonBlankLines": 49,
+      "nonBlankLines": 48,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.98
+      "structuralRiskScore": 9.96
     },
     {
       "path": "Modules/RecentItems/Domain/Enums/RecentItemType.cs",
@@ -37498,11 +37490,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
-      "nonBlankLines": 95,
+      "nonBlankLines": 94,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.9
+      "structuralRiskScore": 7.88
     },
     {
       "path": "Modules/Users/Domain/Entities/Users/User.Goals.cs",
@@ -37554,11 +37546,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/Users/UserRoleAuditEvent.cs",
-      "nonBlankLines": 59,
+      "nonBlankLines": 58,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.18
+      "structuralRiskScore": 7.16
     },
     {
       "path": "Modules/Users/Domain/Enums/RoleNames.cs",
@@ -38290,19 +38282,19 @@
     },
     {
       "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
-      "nonBlankLines": 118,
+      "nonBlankLines": 117,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.36
+      "structuralRiskScore": 14.34
     },
     {
       "path": "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs",
-      "nonBlankLines": 55,
+      "nonBlankLines": 54,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.1
+      "structuralRiskScore": 4.08
     },
     {
       "path": "Modules/Wearables/Domain/Enums/WearableDataType.cs",
@@ -38735,6 +38727,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.34
+    },
+    {
+      "path": "Shared/FoodDiary.Domain.Primitives/DomainGuard.cs",
+      "nonBlankLines": 100,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.5
     },
     {
       "path": "Shared/FoodDiary.Domain.Primitives/DomainTime.cs",

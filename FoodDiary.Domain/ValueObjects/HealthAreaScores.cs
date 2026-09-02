@@ -1,5 +1,5 @@
 using System.Runtime.InteropServices;
-using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Primitives;
 
 namespace FoodDiary.Domain.ValueObjects;
 

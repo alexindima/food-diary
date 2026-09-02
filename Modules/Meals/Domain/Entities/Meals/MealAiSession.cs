@@ -1,9 +1,8 @@
-using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Common;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Meals;
 

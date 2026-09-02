@@ -18,3 +18,7 @@ Rules for `Shared/FoodDiary.Domain.Primitives/`.
 
 ## Commands
 - Build: `dotnet build Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj`
+
+## Generic input validation
+
+Public DomainGuard uses this owner's FoodDiary.Domain.Primitives namespace. Keep its generic numeric, enum, text, JSON syntax and UTC-normalization contracts stable. RequiredUtc deliberately accepts Local and converts with ToUniversalTime; this input normalization differs from strict UTC audit invariants above. JSON parsing validates syntax only. Billing storage precision and currency policies belong to BillingDomainGuard, never this library.

@@ -1,11 +1,9 @@
 using System.Globalization;
 using System.Text.Json;
 
-namespace FoodDiary.Domain.Common;
+namespace FoodDiary.Domain.Primitives;
 
-internal static class DomainGuard {
-    private const decimal MaxNumeric18Scale2 = 9_999_999_999_999_999.99m;
-
+public static class DomainGuard {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     static DomainGuard() {
     }
@@ -109,34 +107,6 @@ internal static class DomainGuard {
         } catch (JsonException exception) {
             throw new ArgumentException("Value must contain valid JSON.", paramName, exception);
         }
-    }
-
-    public static decimal? OptionalNumeric18Scale2(decimal? value, string paramName) {
-        if (!value.HasValue) {
-            return null;
-        }
-
-        decimal normalized = value.Value;
-        if (normalized is < -MaxNumeric18Scale2 or > MaxNumeric18Scale2) {
-            throw new ArgumentOutOfRangeException(paramName, "Value exceeds numeric(18,2) storage limits.");
-        }
-
-        return decimal.Round(normalized, 2, MidpointRounding.ToEven) != normalized
-            ? throw new ArgumentOutOfRangeException(paramName, "Value must have at most two fractional digits.")
-            : normalized;
-    }
-
-    public static string? OptionalCurrencyCode(string? value, string paramName) {
-        string? normalized = OptionalText(value, 3, paramName);
-        if (normalized is null) {
-            return null;
-        }
-
-        if (normalized.Length != 3 || !normalized.All(char.IsAsciiLetter)) {
-            throw new ArgumentException("Currency code must contain exactly three ASCII letters.", paramName);
-        }
-
-        return normalized.ToUpperInvariant();
     }
 
     public static DateTime RequiredUtc(DateTime value, string paramName) {

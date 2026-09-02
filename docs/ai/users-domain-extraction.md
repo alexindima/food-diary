@@ -9,7 +9,7 @@ Source baseline: `d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf`.
 | GenderCode, ProfileWeightKg, ProfileHeightCm, ThemeCode, UiStyleCode | Modules/Users/Domain; these encode User profile rules |
 | UserId and ActivityLevel | Modules/Users/Domain.Contracts; only shared IEntityId primitives dependency |
 | User/role/audit and both goal EF mappings | Modules/Users/Infrastructure/Model, selected by the existing ApplyUsersPersistenceModel registration |
-| DomainGuard, constants, EmailAddress, LanguageCode, DesiredWeightKg/DesiredWaistCm, shared enums and food-health value objects | Residual FoodDiary.Domain |
+| Constants, EmailAddress, LanguageCode, DesiredWeightKg/DesiredWaistCm, shared enums and food-health value objects | Residual FoodDiary.Domain |
 | Combined Users/Identity UserRepository, DbContext/DbSets, historical migrations and snapshot | Central Infrastructure, unchanged |
 | Authentication use cases, sessions/login events, tokens and providers | Existing Identity and integration owners, unchanged |
 | Focused aggregate, state, role, goal, event and identifier tests | Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests |
@@ -42,3 +42,5 @@ Verification and source hash evidence are retained separately under
 from the latest test ledger, not inferred from this inventory or prior extractions.
 The adaptive start inferred stale Application/background-job acceptance; native
 acceptance-init and delivery-replan replace that inference with Domain criteria.
+
+Generic DomainGuard now belongs to shared Primitives through a direct public API reference; central Domain has no friend grants. See domain-guard-extraction.md.

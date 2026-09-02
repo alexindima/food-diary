@@ -729,14 +729,14 @@
       "name": "TokenHash",
       "type": "string",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 18
+      "line": 17
     },
     {
       "category": "credential",
       "name": "TokenHashMaxLength",
       "type": "tokenHash,",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 49
+      "line": 48
     },
     {
       "category": "credential",
@@ -883,7 +883,7 @@
       "name": "PasswordResetSentAtUtc",
       "type": "normalizedIssuedAtUtc,",
       "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
-      "line": 92
+      "line": 91
     },
     {
       "category": "credential",
@@ -1030,14 +1030,14 @@
       "name": "AccessToken",
       "type": "ProtectedWearableToken",
       "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 17
+      "line": 16
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "ProtectedWearableToken?",
       "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 18
+      "line": 17
     },
     {
       "category": "financial",
@@ -4096,14 +4096,14 @@
       "name": "CycleProfileId",
       "type": "CycleProfileId",
       "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
-      "line": 9
+      "line": 8
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
       "path": "Modules/Cycles/Domain/Entities/Tracking/CycleConsent.cs",
-      "line": 14
+      "line": 13
     },
     {
       "category": "health",
@@ -4124,21 +4124,21 @@
       "name": "CycleProfileId",
       "type": "CycleProfileId",
       "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 13
+      "line": 12
     },
     {
       "category": "health",
       "name": "CompletedCycleCount",
       "type": "int",
       "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 20
+      "line": 19
     },
     {
       "category": "health",
       "name": "CycleProfile",
       "type": "CycleProfile",
       "path": "Modules/Cycles/Domain/Entities/Tracking/CyclePredictionRevision.cs",
-      "line": 27
+      "line": 26
     },
     {
       "category": "health",
@@ -4698,18 +4698,25 @@
       "name": "ShareWeight",
       "type": "bool",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 24
+      "line": 23
     },
     {
       "category": "health",
       "name": "ShareWaist",
       "type": "bool",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 25
+      "line": 24
     },
     {
       "category": "health",
       "name": "ShareHydration",
+      "type": "bool",
+      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
+      "line": 26
+    },
+    {
+      "category": "health",
+      "name": "ShareFasting",
       "type": "bool",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
       "line": 27
@@ -4717,30 +4724,23 @@
     {
       "category": "health",
       "name": "ShareFasting",
-      "type": "bool",
-      "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 28
-    },
-    {
-      "category": "health",
-      "name": "ShareFasting",
       "type": "ShareProfile,",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 104
+      "line": 103
     },
     {
       "category": "health",
       "name": "ShareHydration",
       "type": "ShareGoals,",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 104
+      "line": 103
     },
     {
       "category": "health",
       "name": "ShareWaist",
       "type": "ShareWeight,",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 104
+      "line": 103
     },
     {
       "category": "health",
@@ -4817,14 +4817,14 @@
       "name": "ExerciseType",
       "type": "ExerciseType",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 18
+      "line": 17
     },
     {
       "category": "health",
       "name": "CaloriesBurned",
       "type": "double",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 21
+      "line": 20
     },
     {
       "category": "health",
@@ -4964,7 +4964,7 @@
       "name": "TargetCaloriesPerDay",
       "type": "double?",
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlan.cs",
-      "line": 20
+      "line": 19
     },
     {
       "category": "health",
@@ -7337,14 +7337,14 @@
       "name": "DietologistEmail",
       "type": "string",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 17
+      "line": 16
     },
     {
       "category": "identity",
       "name": "EmailMaxLength",
       "type": "dietologistEmail,",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 47
+      "line": 46
     },
     {
       "category": "identity",
@@ -7484,7 +7484,7 @@
       "name": "EmailConfirmationSentAtUtc",
       "type": "normalizedIssuedAtUtc,",
       "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
-      "line": 64
+      "line": 63
     },
     {
       "category": "identity",
@@ -8520,28 +8520,28 @@
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 22
+      "line": 21
     },
     {
       "category": "privateContent",
       "name": "NotesMaxLength",
       "type": "notes,",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 50
+      "line": 49
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 115
+      "line": 114
     },
     {
       "category": "privateContent",
       "name": "NotesMaxLength",
       "type": "notes,",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 134
+      "line": 133
     },
     {
       "category": "privateContent",
@@ -8926,21 +8926,21 @@
       "name": "ImageAssetId",
       "type": "ImageAssetId?",
       "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
-      "line": 14
+      "line": 13
     },
     {
       "category": "privateContent",
       "name": "Notes",
       "type": "string?",
       "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
-      "line": 18
+      "line": 17
     },
     {
       "category": "privateContent",
       "name": "NotesMaxLength",
       "type": "notes,",
       "path": "Modules/Meals/Domain/Entities/Meals/MealAiSession.cs",
-      "line": 44
+      "line": 43
     },
     {
       "category": "privateContent",

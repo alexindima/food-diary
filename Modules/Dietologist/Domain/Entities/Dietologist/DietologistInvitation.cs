@@ -1,8 +1,7 @@
-using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Events;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 

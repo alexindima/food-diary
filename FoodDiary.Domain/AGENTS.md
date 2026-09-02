@@ -41,7 +41,7 @@ enum live in `Modules/MealPlanning/Domain` with stable CLR namespaces. Their
 relationships to module-owned User/Product/Recipe types are one-way; do not add a central
 `User.ShoppingLists` inverse navigation. Preserve private EF setters.
 
-- Exercises owns ExerciseEntry, ExerciseEntryId and ExerciseType under Modules/Exercises/Domain. Its one-way User navigation requires no central back-reference; internal DomainGuard is accessed through explicit module IVT.
+- Exercises owns ExerciseEntry, ExerciseEntryId and ExerciseType under Modules/Exercises/Domain. Its one-way User navigation requires no central back-reference; public DomainGuard belongs to shared Primitives.
 
 ## Recipes physical ownership
 
@@ -89,10 +89,12 @@ RecentItem, RecentItemType and RecentItemId live under `Modules/RecentItems/Doma
 Users owns the complete User aggregate, all credential/security partials, roles,
 role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in
 `Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers
-reference the exact owner; central Domain retains shared guards and values without
+reference the exact owner; central Domain retains shared constants and values without
 an aggregate re-export. Authentication flows/providers, combined UserRepository,
 DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
 
-FoodQualityScore, FoodQualityGrade and MeasurementUnit belong to Shared/FoodDiary.Nutrition.Domain; ProductType belongs to Products Domain.Contracts. The targeted Nutrition IVT temporarily permits existing DomainGuard calls without copied validation. Remove it with future generic guard extraction; never add central reverse references. See docs/ai/nutrition-domain-extraction.md.
+FoodQualityScore, FoodQualityGrade and MeasurementUnit belong to Shared/FoodDiary.Nutrition.Domain; ProductType belongs to Products Domain.Contracts. Nutrition references public DomainGuard in shared Primitives without a central Domain reference or IVT; never add central reverse references. See docs/ai/nutrition-domain-extraction.md.
+
+Generic DomainGuard is owned by shared Primitives. Central Domain has no internal declarations or friend grants. Billing-only decimal storage and currency checks belong to internal BillingDomainGuard. See docs/ai/domain-guard-extraction.md.

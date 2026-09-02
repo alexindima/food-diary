@@ -3,7 +3,7 @@
 Users owns the complete User aggregate, all credential/security partials, roles,
 role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in
 `Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers
-reference the exact owner; central Domain retains shared guards and values without
+reference the exact owner; central Domain retains shared constants and values without
 an aggregate re-export. Authentication flows/providers, combined UserRepository,
 DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See

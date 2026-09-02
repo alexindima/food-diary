@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.Primitives;
 
 namespace FoodDiary.Domain.ValueObjects;
 

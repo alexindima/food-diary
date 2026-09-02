@@ -14,15 +14,14 @@ shared primitives, and contains no scoring algorithm or Product aggregate. Nutri
 Domain references that contract. Products Domain references Nutrition Domain for
 food scoring and units. This direction does not create a cycle.
 
-Nutrition Domain temporarily references central FoodDiary.Domain only to call its
-existing internal DomainGuard.NonNegativeFinite and DomainGuard.Defined. The exact
-InternalsVisibleTo grant follows the existing extracted-domain precedent in
-FoodDiary.Domain/AssemblyInfo.cs. It preserves exception types, messages and parameter
-names without duplicate validation or a public guard API. Remove this reference and
-friend grant when generic guards receive their own owner. Central Domain continues
-to reference only shared domain primitives; there is no reverse dependency.
+Nutrition Domain references shared Primitives for the public
+FoodDiary.Domain.Primitives.DomainGuard.NonNegativeFinite and Defined methods.
+The temporary central Domain reference and friend grant have been removed.
+Validation bodies and exception contracts remain unchanged. Central Domain
+continues to reference only shared primitives; there is no reverse dependency.
+See `docs/ai/domain-guard-extraction.md`.
 
-All four production type files retain their original bytes, namespaces, member
+All four production types retain their original behavior, namespaces, member
 signatures and numeric values. Scoring formula, ProductType modifiers, clamp, grade
 thresholds, MidpointRounding.ToEven and validation-before-zero-calorie fallback are
 unchanged. Product/meal/recipe mappings and persistence configurations are unchanged.

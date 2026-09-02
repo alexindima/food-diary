@@ -26,7 +26,7 @@
       "fooddiary.modules.exercises.domain": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
         }
       },
@@ -40,6 +40,7 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }

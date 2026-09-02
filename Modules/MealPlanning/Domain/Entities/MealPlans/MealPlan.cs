@@ -1,8 +1,7 @@
 using System.Globalization;
-using FoodDiary.Domain.Common;
-using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 using UserIdType = FoodDiary.Domain.ValueObjects.Ids.UserId;
 

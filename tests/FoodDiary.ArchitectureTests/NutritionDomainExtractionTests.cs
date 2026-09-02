@@ -14,16 +14,15 @@ public sealed class NutritionDomainExtractionTests {
     }
 
     [Fact]
-    public void NutritionOwner_IsLimitedToFoodScoringAndUnitsWithTemporaryGuardAccess() {
+    public void NutritionOwner_IsLimitedToFoodScoringAndUnitsWithGenericPrimitives() {
         string root = ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Nutrition.Domain");
         string[] files = [.. SourceScanner.SourceFiles(root).Select(path => Path.GetRelativePath(root, path).Replace('\\', '/')).Order(StringComparer.Ordinal)];
         Assert.Equal(["Enums/MeasurementUnit.cs", "ValueObjects/FoodQualityGrade.cs", "ValueObjects/FoodQualityScore.cs"], files, StringComparer.Ordinal);
-        Assert.Equal(["FoodDiary.Domain", "FoodDiary.Modules.Products.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
+        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Modules.Products.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
             "Shared/FoodDiary.Nutrition.Domain/FoodDiary.Nutrition.Domain.csproj"), StringComparer.Ordinal);
         Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
             "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
-        Assert.Contains("InternalsVisibleTo(\"FoodDiary.Nutrition.Domain\")", File.ReadAllText(
-            ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "AssemblyInfo.cs")), StringComparison.Ordinal);
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "AssemblyInfo.cs")));
     }
 
     [Fact]

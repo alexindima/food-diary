@@ -88,13 +88,13 @@ public sealed class BillingPayment : Entity<Guid> {
             Plan = NormalizeOptional(plan, PlanMaxLength, nameof(plan)),
             Status = NormalizeRequired(status, StatusMaxLength, nameof(status)),
             Kind = NormalizeRequired(kind, KindMaxLength, nameof(kind)),
-            Amount = DomainGuard.OptionalNumeric18Scale2(amount, nameof(amount)),
-            Currency = DomainGuard.OptionalCurrencyCode(currency, nameof(currency)),
-            Tax = DomainGuard.OptionalNumeric18Scale2(tax, nameof(tax)),
-            Fee = DomainGuard.OptionalNumeric18Scale2(fee, nameof(fee)),
-            Earnings = DomainGuard.OptionalNumeric18Scale2(earnings, nameof(earnings)),
-            PayoutCurrency = DomainGuard.OptionalCurrencyCode(payoutCurrency, nameof(payoutCurrency)),
-            PayoutEarnings = DomainGuard.OptionalNumeric18Scale2(payoutEarnings, nameof(payoutEarnings)),
+            Amount = BillingDomainGuard.OptionalNumeric18Scale2(amount, nameof(amount)),
+            Currency = BillingDomainGuard.OptionalCurrencyCode(currency, nameof(currency)),
+            Tax = BillingDomainGuard.OptionalNumeric18Scale2(tax, nameof(tax)),
+            Fee = BillingDomainGuard.OptionalNumeric18Scale2(fee, nameof(fee)),
+            Earnings = BillingDomainGuard.OptionalNumeric18Scale2(earnings, nameof(earnings)),
+            PayoutCurrency = BillingDomainGuard.OptionalCurrencyCode(payoutCurrency, nameof(payoutCurrency)),
+            PayoutEarnings = BillingDomainGuard.OptionalNumeric18Scale2(payoutEarnings, nameof(payoutEarnings)),
             OccurredAtUtc = NormalizeOptionalUtc(occurredAtUtc, nameof(occurredAtUtc)),
             CurrentPeriodStartUtc = normalizedPeriodStart,
             CurrentPeriodEndUtc = normalizedPeriodEnd,
@@ -139,8 +139,8 @@ public sealed class BillingPayment : Entity<Guid> {
         string normalizedStatus = NormalizeRequired(status, StatusMaxLength, nameof(status));
         string normalizedKind = NormalizeRequired(kind, KindMaxLength, nameof(kind));
         BillingPaymentAmounts normalizedAmounts = NormalizeAmounts(amount, tax, fee, earnings, payoutEarnings);
-        string? normalizedCurrency = DomainGuard.OptionalCurrencyCode(currency, nameof(currency)) ?? Currency;
-        string? normalizedPayoutCurrency = DomainGuard.OptionalCurrencyCode(payoutCurrency, nameof(payoutCurrency)) ?? PayoutCurrency;
+        string? normalizedCurrency = BillingDomainGuard.OptionalCurrencyCode(currency, nameof(currency)) ?? Currency;
+        string? normalizedPayoutCurrency = BillingDomainGuard.OptionalCurrencyCode(payoutCurrency, nameof(payoutCurrency)) ?? PayoutCurrency;
         DateTime? normalizedOccurredAt = NormalizeOptionalUtc(occurredAtUtc, nameof(occurredAtUtc)) ?? OccurredAtUtc;
         DateTime? normalizedPeriodStart = NormalizeOptionalUtc(currentPeriodStartUtc, nameof(currentPeriodStartUtc)) ?? CurrentPeriodStartUtc;
         DateTime? normalizedPeriodEnd = NormalizeOptionalUtc(currentPeriodEndUtc, nameof(currentPeriodEndUtc)) ?? CurrentPeriodEndUtc;
@@ -177,11 +177,11 @@ public sealed class BillingPayment : Entity<Guid> {
         decimal? fee,
         decimal? earnings,
         decimal? payoutEarnings) => new(
-            DomainGuard.OptionalNumeric18Scale2(amount, nameof(amount)) ?? Amount,
-            DomainGuard.OptionalNumeric18Scale2(tax, nameof(tax)) ?? Tax,
-            DomainGuard.OptionalNumeric18Scale2(fee, nameof(fee)) ?? Fee,
-            DomainGuard.OptionalNumeric18Scale2(earnings, nameof(earnings)) ?? Earnings,
-            DomainGuard.OptionalNumeric18Scale2(payoutEarnings, nameof(payoutEarnings)) ?? PayoutEarnings);
+            BillingDomainGuard.OptionalNumeric18Scale2(amount, nameof(amount)) ?? Amount,
+            BillingDomainGuard.OptionalNumeric18Scale2(tax, nameof(tax)) ?? Tax,
+            BillingDomainGuard.OptionalNumeric18Scale2(fee, nameof(fee)) ?? Fee,
+            BillingDomainGuard.OptionalNumeric18Scale2(earnings, nameof(earnings)) ?? Earnings,
+            BillingDomainGuard.OptionalNumeric18Scale2(payoutEarnings, nameof(payoutEarnings)) ?? PayoutEarnings);
 
     private readonly record struct BillingPaymentAmounts(
         decimal? Amount,

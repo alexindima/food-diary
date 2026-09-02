@@ -1,7 +1,6 @@
-using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.MealPlans;

@@ -40,8 +40,7 @@ reference Meals Domain directly. String-only DTO consumers retain their existing
 contract references. These enum moves require coordinated consumer rebuilds.
 MeasurementUnit is owned by Shared/FoodDiary.Nutrition.Domain; Visibility remains central. Both are reused across product/recipe workflows.
 User belongs to Users Domain; UserId and ActivityLevel belong to Users
-Domain.Contracts. DomainGuard and common constants remain central; explicit IVT
-permits the extracted domain to use DomainGuard.
+Domain.Contracts. Common constants remain central. Public DomainGuard belongs to shared Primitives through a direct reference; central Domain grants no friend access.
 ProductId, RecipeId and ImageAssetId retain their existing owner contract projects.
 No Product, Recipe or Image CLR navigation is reintroduced.
 

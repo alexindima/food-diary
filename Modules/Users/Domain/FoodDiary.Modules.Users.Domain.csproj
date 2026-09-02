@@ -4,6 +4,7 @@
     <NoWarn>$(NoWarn);RCS1170</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../../Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
     <ProjectReference Include="../../../FoodDiary.Domain/FoodDiary.Domain.csproj" />
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj" />

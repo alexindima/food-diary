@@ -67,7 +67,7 @@ public sealed class MealsModuleExtractionTests {
             Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Meals/Domain/" + path)), path);
         }
 
-        Assert.Equal(["FoodDiary.Domain", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Recipes.Domain.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Nutrition.Domain"], ProjectReferenceReader.ReadProjectReferences(
+        Assert.Equal(["FoodDiary.Domain", "FoodDiary.Domain.Primitives", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Recipes.Domain.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Nutrition.Domain"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj"));
         Assert.DoesNotContain("FoodDiary.Modules.Meals.Domain", ProjectReferenceReader.ReadProjectReferences(
             "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
