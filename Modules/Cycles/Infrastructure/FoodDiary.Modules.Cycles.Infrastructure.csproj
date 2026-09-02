@@ -7,6 +7,7 @@
     <Compile Remove="Model/**/*.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
     <ProjectReference Include="..\Application\FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="Model\FoodDiary.Modules.Cycles.PersistenceModel.csproj" />

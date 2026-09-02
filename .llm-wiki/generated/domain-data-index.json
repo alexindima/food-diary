@@ -672,7 +672,7 @@
       "area": "FoodDiary",
       "name": "BleedingType",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/BleedingType.cs",
+      "path": "Modules/Cycles/Domain/Enums/BleedingType.cs",
       "line": 2
     },
     {
@@ -721,7 +721,7 @@
       "area": "FoodDiary",
       "name": "CycleSymptomCategory",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/CycleSymptomCategory.cs",
+      "path": "Modules/Cycles/Domain/Enums/CycleSymptomCategory.cs",
       "line": 2
     },
     {
@@ -861,7 +861,7 @@
       "area": "FoodDiary",
       "name": "OvulationTestResult",
       "role": "enum",
-      "path": "FoodDiary.Domain/Enums/OvulationTestResult.cs",
+      "path": "Modules/Cycles/Domain/Enums/OvulationTestResult.cs",
       "line": 2
     },
     {

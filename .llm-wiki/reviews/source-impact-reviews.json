@@ -64,26 +64,18 @@
       "pageSha256": "1097247b366e5b7f6286cfe0e569cf919efd3b052e3fbfb9c9ba6b6381ce07dc",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "6711ca123baa51f1dbb0e64ec56be27a8f08e58afe97d3453d6ac510ff817184"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "0f802f389fb279360d6ac726343ecc70b4d103dbd98954574d1f272b611fb8f3"
-        },
-        {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "12de040981a0ddcc3cee187855d4181fbca182bfc4bdac606e0e38ad1c174ed9"
+          "sha256": "bad3c90481c567df09e1fbab389ed9f4d5f9f2204f1e0af83e8e556194391835"
         },
         {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "1729e5971546c9ff03750752956449458ebf09f56d20f6f557956565a6fb37ce"
+          "path": "FoodDiary.Presentation.Api/AGENTS.md",
+          "sha256": "48f21588a23b52dec595aaa478e14e8780207c6403f4cd2150fbf87c4618c030"
         }
       ],
-      "reason": "Moved complete Users CLR types and goal mappings without body changes; namespaces and HTTP routes, payloads, snapshots remain unchanged. Consumers rebuild against explicit owners.",
+      "reason": "Three cycle enum declarations moved byte-for-byte into the existing owner. HTTP models and application read capabilities are unchanged; 825 Presentation and 21 HTTP/contract tests pass. Scoped guides document direct enum dependencies and coordinated rebuild. Pre-existing central aggregate wording in primary-backend is outside this bounded package and is recorded as a navigation limitation.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:11:57.4762325Z"
+      "gitHead": "7a9a3fad8bb937583f406fd55e7fe5c5d85b8cb5",
+      "reviewedAtUtc": "2026-09-02T02:17:32.1900261Z"
     },
     {
       "pageId": "system.architecture",
@@ -91,26 +83,14 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "c931454867ee8efbaa7e52ec5ccc92c76eb6094c5f7c56b70e81faf407ee4263"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "6711ca123baa51f1dbb0e64ec56be27a8f08e58afe97d3453d6ac510ff817184"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "0f802f389fb279360d6ac726343ecc70b4d103dbd98954574d1f272b611fb8f3"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "19cd1fb91bde664e3f414aa8cb16c67655fe3489a24b37cadf18e2bb02d0a28c"
+          "sha256": "f455993276ec3e33de59ba25c457f4c663ead8f0d35a34032f135675fc08ba1f"
         }
       ],
-      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
+      "reason": "Nine explicit owner edges match the architecture matrix. Existing hosts, jobs, Docker source lists and EF mappings are unchanged; full build and EF no-delta pass. No new domain project or reverse central Domain dependency.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:11:57.8325717Z"
+      "gitHead": "7a9a3fad8bb937583f406fd55e7fe5c5d85b8cb5",
+      "reviewedAtUtc": "2026-09-02T02:17:32.3920734Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -224,21 +204,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "342a84153a35deb02d5f98912c48d33a56ff6aaf724045981f3d2091e02ac738"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "6711ca123baa51f1dbb0e64ec56be27a8f08e58afe97d3453d6ac510ff817184"
+          "sha256": "e588aa3f80889494263e1f9d85835480021602db1e5b7e6da251371d7710a327"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "19cd1fb91bde664e3f414aa8cb16c67655fe3489a24b37cadf18e2bb02d0a28c"
+          "sha256": "f455993276ec3e33de59ba25c457f4c663ead8f0d35a34032f135675fc08ba1f"
         }
       ],
-      "reason": "Moved focused Users invariant tests and retained mixed donor tests; exact dependency guards now enforce Users Domain and narrow ID contract. No Wiki tooling or test policy changed.",
+      "reason": "Existing workflows remain applicable. 2187 tests passed with no skip; actual TRX evidence is separate from generated indexes. All enum file hashes match baseline. Graph was rebuilt after affected index update; receipts do not establish search precision.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:11:58.8540699Z"
+      "gitHead": "7a9a3fad8bb937583f406fd55e7fe5c5d85b8cb5",
+      "reviewedAtUtc": "2026-09-02T02:17:32.6392354Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -510,21 +486,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "bcbb4cada8c93dd7e315e8a24dcf968adc9a0948b2381ae16c2fe5c8c3b54c97"
+          "sha256": "630ef4dceb4c4dff3fab5e8728a70a19bdc9dcb12a5a393d87d8a52dc14cf920"
         },
         {
           "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "12de040981a0ddcc3cee187855d4181fbca182bfc4bdac606e0e38ad1c174ed9"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "1729e5971546c9ff03750752956449458ebf09f56d20f6f557956565a6fb37ce"
+          "sha256": "bad3c90481c567df09e1fbab389ed9f4d5f9f2204f1e0af83e8e556194391835"
         }
       ],
-      "reason": "Moved focused Users invariant tests and retained mixed donor tests; exact dependency guards now enforce Users Domain and narrow ID contract. No Wiki tooling or test policy changed.",
+      "reason": "Existing workflows remain applicable. 2187 tests passed with no skip; actual TRX evidence is separate from generated indexes. All enum file hashes match baseline. Graph was rebuilt after affected index update; receipts do not establish search precision.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:12:00.4828877Z"
+      "gitHead": "7a9a3fad8bb937583f406fd55e7fe5c5d85b8cb5",
+      "reviewedAtUtc": "2026-09-02T02:17:32.9232998Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -841,13 +813,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8881b96e67fd0475f3328c6307dac4c9b6e34c7d7945e588967fbed38a92e726"
+          "sha256": "09704324962efb6cdf8affc108d829c391cb7729b230b8c0595481f5b95f1d3b"
         }
       ],
-      "reason": "Moved focused Users invariant tests and retained mixed donor tests; exact dependency guards now enforce Users Domain and narrow ID contract. No Wiki tooling or test policy changed.",
+      "reason": "Existing workflows remain applicable. 2187 tests passed with no skip; actual TRX evidence is separate from generated indexes. All enum file hashes match baseline. Graph was rebuilt after affected index update; receipts do not establish search precision.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:12:01.5340747Z"
+      "gitHead": "7a9a3fad8bb937583f406fd55e7fe5c5d85b8cb5",
+      "reviewedAtUtc": "2026-09-02T02:17:33.3860851Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -924,13 +896,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4ced8b0ab8f658bb69c35719b9d42e8ec8ff1e66642c6b9d0f0e3a8c04e14f62"
+          "sha256": "9c41e95efe37cdddea3fc79079f27994a22ddaecc46dbe560edc8c2cc317c4ea"
         }
       ],
-      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
+      "reason": "Nine explicit owner edges match the architecture matrix. Existing hosts, jobs, Docker source lists and EF mappings are unchanged; full build and EF no-delta pass. No new domain project or reverse central Domain dependency.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:12:02.7597393Z"
+      "gitHead": "7a9a3fad8bb937583f406fd55e7fe5c5d85b8cb5",
+      "reviewedAtUtc": "2026-09-02T02:17:34.1628410Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -939,21 +911,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "8881b96e67fd0475f3328c6307dac4c9b6e34c7d7945e588967fbed38a92e726"
+          "sha256": "09704324962efb6cdf8affc108d829c391cb7729b230b8c0595481f5b95f1d3b"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "4ced8b0ab8f658bb69c35719b9d42e8ec8ff1e66642c6b9d0f0e3a8c04e14f62"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4d42025c8f7eda11407b79cd291701b18c3abbea0d9bbd1a197e48402b765af4"
+          "sha256": "9c41e95efe37cdddea3fc79079f27994a22ddaecc46dbe560edc8c2cc317c4ea"
         }
       ],
-      "reason": "Credential state stays in the complete Users aggregate; Identity workflows, providers, authorization, lifecycle and persistence behavior remain unchanged.",
+      "reason": "Only physical enum ownership changes; cycle consent, authorization, storage, sharing, export and deletion code is untouched. Three real PostgreSQL tests and five CycleDaySymptom HTTP cases pass. No production data or credentials accessed.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:12:03.3871240Z"
+      "gitHead": "7a9a3fad8bb937583f406fd55e7fe5c5d85b8cb5",
+      "reviewedAtUtc": "2026-09-02T02:17:34.6636315Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1191,17 +1159,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "bdb0afec88bfd103a9fe6f6054ec26cbfd6570343e2716a5044bd070349b4ce5"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "6d0589a22e2dfd47f94497137d6e43c287f5e429f8f068961aa88716429fd5b5"
+          "sha256": "4fb6f42dc5e56aed70f09dda73cab40ad8fbba284fd64357fcf5dd15f126dcd9"
         }
       ],
-      "reason": "Updated current physical owners and residual central seams using project references and moved source files; regenerated compiled navigation is not treated as authority.",
+      "reason": "Nine explicit owner edges match the architecture matrix. Existing hosts, jobs, Docker source lists and EF mappings are unchanged; full build and EF no-delta pass. No new domain project or reverse central Domain dependency.",
       "baseRef": "HEAD",
-      "gitHead": "d3a1e7c65d1bad7ebff58dd97167434bbcd7f7cf",
-      "reviewedAtUtc": "2026-09-02T01:12:01.8897481Z"
+      "gitHead": "7a9a3fad8bb937583f406fd55e7fe5c5d85b8cb5",
+      "reviewedAtUtc": "2026-09-02T02:17:33.7979039Z"
     },
     {
       "pageId": "workflow.review-diff",

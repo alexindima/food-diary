@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 220,
-    "documentationPages": 117
+    "documentationPages": 118
   },
   "dotnet": {
     "projects": [
@@ -563,6 +563,7 @@
           "Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj",
           "Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj",
           "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj",
+          "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
           "Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj",
           "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj",
           "Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj",
@@ -2828,6 +2829,7 @@
         "projectReferences": [
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj",
+          "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
           "Modules/Cycles/Infrastructure/Model/FoodDiary.Modules.Cycles.PersistenceModel.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
@@ -2875,6 +2877,7 @@
         "isTestProject": true,
         "projectReferences": [
           "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj",
+          "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
         ],
         "packageReferences": [
@@ -2945,6 +2948,7 @@
         "isTestProject": true,
         "projectReferences": [
           "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
+          "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
           "Modules/Cycles/Infrastructure/FoodDiary.Modules.Cycles.Infrastructure.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
@@ -3890,6 +3894,7 @@
         "projectReferences": [
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj",
+          "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
           "Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj",
           "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
@@ -3922,6 +3927,7 @@
         "isTestProject": true,
         "projectReferences": [
           "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj",
+          "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
           "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj",
           "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
@@ -8962,6 +8968,7 @@
         "projectReferences": [
           "FoodDiary.Domain/FoodDiary.Domain.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
+          "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
         ],
         "packageReferences": [
@@ -9410,6 +9417,7 @@
           "Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj",
           "Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj",
           "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj",
+          "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
           "Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj",
           "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj",
           "Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj",
@@ -9592,6 +9600,7 @@
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
           "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
+          "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -12333,6 +12342,7 @@
       "docs/ai/billing-module-extraction-wiki-findings.md",
       "docs/ai/bodymetrics-module-extraction-wiki-findings.md",
       "docs/ai/bodymetrics-module-extraction.md",
+      "docs/ai/cycles-domain-enums-extraction.md",
       "docs/ai/dashboard-fixture-path-audit.md",
       "docs/ai/dashboard-module-extraction-wiki-findings.md",
       "docs/ai/dashboard-module-integration.md",

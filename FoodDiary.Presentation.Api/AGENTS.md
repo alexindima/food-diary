@@ -15,6 +15,7 @@ Rules for `FoodDiary.Presentation.Api/`.
 - Keep HTTP request/response mapping in `FoodDiary.Presentation.Api`, not in `FoodDiary.Application`.
 - Do not reference `FoodDiary.Infrastructure` or `FoodDiary.Web.Api` from this project.
 - Do not reference `FoodDiary.Domain` directly; map through application requests/models.
+- Cycles Domain is a direct reference for cycle enums already exposed by application and HTTP models. Preserve their existing HTTP representation; do not acquire aggregate behavior.
 - Do not introduce or revive `FoodDiary.Contracts` namespaces/projects.
 
 ## Structure

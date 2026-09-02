@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><RootNamespace>FoodDiary.Application.Tests</RootNamespace></PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
     <ProjectReference Include="..\..\Application\FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
   </ItemGroup>

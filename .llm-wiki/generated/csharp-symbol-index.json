@@ -2134,20 +2134,6 @@
       "line": 2
     },
     {
-      "name": "BleedingType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/BleedingType.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleSymptomCategory",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/CycleSymptomCategory.cs",
-      "line": 2
-    },
-    {
       "name": "DietType",
       "kind": "enum",
       "role": "Other",
@@ -2166,13 +2152,6 @@
       "kind": "enum",
       "role": "Other",
       "path": "FoodDiary.Domain/Enums/MeasurementUnit.cs",
-      "line": 2
-    },
-    {
-      "name": "OvulationTestResult",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Domain/Enums/OvulationTestResult.cs",
       "line": 2
     },
     {
@@ -13012,6 +12991,13 @@
       "line": 6
     },
     {
+      "name": "BleedingType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain/Enums/BleedingType.cs",
+      "line": 2
+    },
+    {
       "name": "CycleConfidence",
       "kind": "enum",
       "role": "Other",
@@ -13047,6 +13033,13 @@
       "line": 2
     },
     {
+      "name": "CycleSymptomCategory",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain/Enums/CycleSymptomCategory.cs",
+      "line": 2
+    },
+    {
       "name": "CycleTrackingGoal",
       "kind": "enum",
       "role": "Other",
@@ -13065,6 +13058,13 @@
       "kind": "enum",
       "role": "Other",
       "path": "Modules/Cycles/Domain/Enums/MenstrualEpisodeStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "OvulationTestResult",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Cycles/Domain/Enums/OvulationTestResult.cs",
       "line": 2
     },
     {

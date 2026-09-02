@@ -4,6 +4,7 @@
     <RootNamespace>FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
     <ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.Cycles.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\..\FoodDiary.Initializer\FoodDiary.Initializer.csproj" />
     <ProjectReference Include="..\..\..\..\tests\FoodDiary.Testing\FoodDiary.Testing.csproj" />

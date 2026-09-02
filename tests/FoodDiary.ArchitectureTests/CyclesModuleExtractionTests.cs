@@ -2,6 +2,19 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class CyclesModuleExtractionTests {
+    [Theory]
+    [InlineData(typeof(FoodDiary.Domain.Enums.BleedingType))]
+    [InlineData(typeof(FoodDiary.Domain.Enums.CycleSymptomCategory))]
+    [InlineData(typeof(FoodDiary.Domain.Enums.OvulationTestResult))]
+    public void CycleEnums_AreOwnedOnlyByCyclesDomain(Type enumType) {
+        Assert.Equal("FoodDiary.Modules.Cycles.Domain", enumType.Assembly.GetName().Name);
+        Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Cycles", "Domain", "Enums", $"{enumType.Name}.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", $"{enumType.Name}.cs")));
+        Assert.DoesNotContain("FoodDiary.Modules.Cycles.Domain", ProjectReferenceReader.ReadProjectReferences(
+            "FoodDiary.Domain/FoodDiary.Domain.csproj"), StringComparer.Ordinal);
+    }
+
     [Fact]
     public void CyclesApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Cycles");
