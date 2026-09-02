@@ -167,6 +167,7 @@ COPY Modules/Gamification/Domain/*.csproj Modules/Gamification/Domain/
 COPY Modules/Gamification/Infrastructure/*.csproj Modules/Gamification/Infrastructure/
 COPY Modules/Gamification/Infrastructure/Model/*.csproj Modules/Gamification/Infrastructure/Model/
 COPY Modules/Export/Application/*.csproj Modules/Export/Application/
+COPY Modules/Export/Infrastructure/*.csproj Modules/Export/Infrastructure/
 COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/*.csproj MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
@@ -345,6 +346,7 @@ COPY Modules/Gamification/Domain/ Modules/Gamification/Domain/
 COPY Modules/Gamification/Infrastructure/ Modules/Gamification/Infrastructure/
 COPY Modules/Gamification/Infrastructure/Model/ Modules/Gamification/Infrastructure/Model/
 COPY Modules/Export/Application/ Modules/Export/Application/
+COPY Modules/Export/Infrastructure/ Modules/Export/Infrastructure/
 COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/ MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/

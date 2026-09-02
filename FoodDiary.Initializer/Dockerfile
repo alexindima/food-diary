@@ -170,6 +170,7 @@ COPY Modules/Gamification/Domain/*.csproj Modules/Gamification/Domain/
 COPY Modules/Gamification/Infrastructure/*.csproj Modules/Gamification/Infrastructure/
 COPY Modules/Gamification/Infrastructure/Model/*.csproj Modules/Gamification/Infrastructure/Model/
 COPY Modules/Export/Application/*.csproj Modules/Export/Application/
+COPY Modules/Export/Infrastructure/*.csproj Modules/Export/Infrastructure/
 COPY Modules/Hydration/Application/*.csproj Modules/Hydration/Application/
 COPY Modules/Hydration/Application/Abstractions/*.csproj Modules/Hydration/Application/Abstractions/
 COPY Modules/Hydration/Contracts/*.csproj Modules/Hydration/Contracts/
@@ -357,6 +358,7 @@ COPY Modules/Gamification/Domain/ Modules/Gamification/Domain/
 COPY Modules/Gamification/Infrastructure/ Modules/Gamification/Infrastructure/
 COPY Modules/Gamification/Infrastructure/Model/ Modules/Gamification/Infrastructure/Model/
 COPY Modules/Export/Application/ Modules/Export/Application/
+COPY Modules/Export/Infrastructure/ Modules/Export/Infrastructure/
 COPY Modules/Hydration/ Modules/Hydration/
 COPY Modules/Hydration/Application/ Modules/Hydration/Application/
 COPY Modules/Hydration/Application/Abstractions/ Modules/Hydration/Application/Abstractions/

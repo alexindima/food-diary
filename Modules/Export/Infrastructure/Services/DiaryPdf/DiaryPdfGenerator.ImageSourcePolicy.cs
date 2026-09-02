@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace FoodDiary.Infrastructure.Services.DiaryPdf;
+namespace FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private const int MaxDataUrlBase64Length = ((MaxMealImageBytes + 2) / 3) * 4;

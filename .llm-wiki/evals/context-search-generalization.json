@@ -120,7 +120,7 @@
       "id": "pdf-remote-image-policy",
       "query": "prevent unsafe remote image addresses in diary PDF generation",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs"]
+      "expectedPaths": ["Modules/Export/Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs"]
     },
     {
       "id": "database-command-telemetry",

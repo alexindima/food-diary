@@ -168,6 +168,8 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Export logical module: `Modules/Export/AGENTS.md`
 - Export application: `Modules/Export/Application/AGENTS.md`
 - Export application abstractions: `Modules/Export/Application/Abstractions/AGENTS.md`
+- Export infrastructure: `Modules/Export/Infrastructure/AGENTS.md`
+- Export tests: `Modules/Export/tests/AGENTS.md`
 - Weekly goals logical module: `Modules/WeeklyGoals/AGENTS.md`
 - Weekly goals application abstractions: `Modules/WeeklyGoals/Application/Abstractions/AGENTS.md`
 - Weekly goals contracts: `Modules/WeeklyGoals/Contracts/AGENTS.md`

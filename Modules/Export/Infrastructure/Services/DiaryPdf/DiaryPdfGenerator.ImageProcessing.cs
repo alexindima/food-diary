@@ -1,7 +1,7 @@
 using SkiaSharp;
 using System.Runtime.InteropServices;
 
-namespace FoodDiary.Infrastructure.Services.DiaryPdf;
+namespace FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private static readonly SKSamplingOptions MealImageSamplingOptions = new(SKFilterMode.Linear, SKMipmapMode.Linear);

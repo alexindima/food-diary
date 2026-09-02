@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace FoodDiary.Infrastructure.Services.DiaryPdf;
+namespace FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 
 internal static class RemoteImageAddressPolicy {
     internal static bool IsPublicAddress(IPAddress address) {

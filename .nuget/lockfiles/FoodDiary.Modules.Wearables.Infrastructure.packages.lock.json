@@ -261,16 +261,6 @@
         "resolved": "1.0.52",
         "contentHash": "oNv2JtYXhpdJrX63nibx1JT3uCESOBQ1LAk7Dtz/sr0+laW0KRM6eKp4CZ3MHDR2siIkKsY8MmUkeP5DKkQQ5w=="
       },
-      "SkiaSharp.NativeAssets.macOS": {
-        "type": "Transitive",
-        "resolved": "4.151.1",
-        "contentHash": "nLXwdhi0oB7pqqNLbSOLX+FIZQOMAU/yFPspzcDTJjTmPbMWyp0JWyeVj8sFJ/cweurEfT0J/lvfgdXX2EFHXA=="
-      },
-      "SkiaSharp.NativeAssets.Win32": {
-        "type": "Transitive",
-        "resolved": "4.151.1",
-        "contentHash": "G+nln30ZX2ZuhH+ungf6x/QMXCje38KTS0VTfQeMyeY8uyMBmsZwFz2D30ZxUjZqsVbEIcaC2bsYF65876s4Yg=="
-      },
       "System.Composition": {
         "type": "Transitive",
         "resolved": "10.0.1",
@@ -400,7 +390,6 @@
           "FoodDiary.Modules.Dietologist.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.PersistenceModel": "[1.0.0, )",
-          "FoodDiary.Modules.Export.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
@@ -420,7 +409,6 @@
           "FoodDiary.Modules.Marketing.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Domain": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.PersistenceModel": "[1.0.0, )",
-          "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Meals.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Domain": "[1.0.0, )",
@@ -452,9 +440,6 @@
           "Microsoft.Extensions.Http": "[10.0.11, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )",
-          "QuestPDF": "[2026.7.3, )",
-          "SkiaSharp": "[4.151.1, )",
-          "SkiaSharp.NativeAssets.Linux.NoDependencies": "[4.151.1, )",
           "System.IdentityModel.Tokens.Jwt": "[8.22.0, )"
         }
       },
@@ -658,14 +643,6 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
-      "fooddiary.modules.export.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
-        }
-      },
       "fooddiary.modules.fasting.domain": {
         "type": "Project",
         "dependencies": {
@@ -842,15 +819,6 @@
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
-        }
-      },
-      "fooddiary.modules.meals.contracts": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.meals.domain": {
@@ -1333,28 +1301,6 @@
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0"
         }
-      },
-      "QuestPDF": {
-        "type": "CentralTransitive",
-        "requested": "[2026.7.3, )",
-        "resolved": "2026.7.3",
-        "contentHash": "MYpJrSLwUkgaX/POQj+9GY8QreFoLXjHCiUPCNl0XrHF+nLDT9KeUFZbeaUNu1P5spt5QeYzCbf2tDF0z5idHg=="
-      },
-      "SkiaSharp": {
-        "type": "CentralTransitive",
-        "requested": "[4.151.1, )",
-        "resolved": "4.151.1",
-        "contentHash": "FNlVsGZ9to3o9pObVqhIZanHjUGOoPb/Zxk5svCSLMJnKwxPKV7sIJrjs9BpB/jF3j9OdsaMOb4cfwSJbjueSw==",
-        "dependencies": {
-          "SkiaSharp.NativeAssets.Win32": "4.151.1",
-          "SkiaSharp.NativeAssets.macOS": "4.151.1"
-        }
-      },
-      "SkiaSharp.NativeAssets.Linux.NoDependencies": {
-        "type": "CentralTransitive",
-        "requested": "[4.151.1, )",
-        "resolved": "4.151.1",
-        "contentHash": "lqPwXxYhKlmRfCuq1vGRLYEtRo3tn3ij1IGi0tI2qzkKHU6HOznHqZW+NqHV8aSKasPmRawbwlKLLPI132+SEA=="
       }
     }
   }

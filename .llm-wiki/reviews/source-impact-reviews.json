@@ -7,18 +7,18 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "fbe81697037051c5f14f779925bdc39ba0f75231b5a2f9c920a412db75a235ec"
+          "path": "AGENTS.md",
+          "sha256": "2ab632214b5357986fe8580e1667ce3225b244d239cb0937d57d7546e64a7f32"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "ca0bfaffbda6b26b2b1c65e98583da847b49218258ec856cf0d2587778942b21"
+          "sha256": "4313d8f9f187b6c64f49e611a84b9ad3e4e4a92cd01b7ea1947959838e4c23fa"
         }
       ],
-      "reason": "Compared active ownership claims against module csproj, UserConfiguration/UserCleanupService, central DbContext explicit model registration, Identity and Lessons entity sources, empty AddFoodPersistence and current host module registration. Retired central Domain references corrected; valid legacy CLR/assembly names and historical reports retained.",
+      "reason": "Export Infrastructure ownership, acyclic references, Resources and host boundaries verified against current source; module manifest and guides updated. No shared DbContext/schema, other owner or deployment topology change.",
       "baseRef": "HEAD",
-      "gitHead": "64a7aa7ee7816964ddc6ee8e4ca0587eb5443d41",
-      "reviewedAtUtc": "2026-09-02T18:04:24.8211578Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:32.3127283Z"
     },
     {
       "pageId": "module.frontend",
@@ -41,45 +41,41 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "fbe81697037051c5f14f779925bdc39ba0f75231b5a2f9c920a412db75a235ec"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "ca0bfaffbda6b26b2b1c65e98583da847b49218258ec856cf0d2587778942b21"
+          "sha256": "4313d8f9f187b6c64f49e611a84b9ad3e4e4a92cd01b7ea1947959838e4c23fa"
         }
       ],
-      "reason": "Compared active ownership claims against module csproj, UserConfiguration/UserCleanupService, central DbContext explicit model registration, Identity and Lessons entity sources, empty AddFoodPersistence and current host module registration. Retired central Domain references corrected; valid legacy CLR/assembly names and historical reports retained.",
+      "reason": "Export Infrastructure ownership, acyclic references, Resources and host boundaries verified against current source; module manifest and guides updated. No shared DbContext/schema, other owner or deployment topology change.",
       "baseRef": "HEAD",
-      "gitHead": "64a7aa7ee7816964ddc6ee8e4ca0587eb5443d41",
-      "reviewedAtUtc": "2026-09-02T18:04:24.9531529Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:32.5158812Z"
     },
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "1097247b366e5b7f6286cfe0e569cf919efd3b052e3fbfb9c9ba6b6381ce07dc",
+      "pageSha256": "a12fef9a11365dd6a6c58228abc9447b6f005042e43ab58532b8250805df1709",
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "c6414829b3d5337de8a76f99473ede63b69b602ee13fa7defe6aec0c75782c72"
+          "sha256": "49eb4626152b7c2c85384cec54ed0d28a081cdf05738100c4bbb235c4cff8ce0"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "8aa8a6f6abdd7cc714fca8c67a5c2708a76690d069af76038053abd432cb62e5"
+          "sha256": "4313d8f9f187b6c64f49e611a84b9ad3e4e4a92cd01b7ea1947959838e4c23fa"
         },
         {
-          "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "effaa8b4850a6ec34b3dd3eff0ba2bdd0f7204b8af042d456cee8cd9e1723f5a"
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "4f9b69ceb37ad390692d82a44f4cc1f35a3fe833a537c4237681295b6393a630"
         },
         {
-          "path": "FoodDiary.Domain/AGENTS.md",
-          "sha256": "<missing>"
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "cdcd690ee90f274cf97fce9251edb45509da12eb8681c1ec1126acefd975e671"
         }
       ],
-      "reason": "Twelve types change assembly owners deliberately; EmailAddress and Visibility also use the required Primitives namespace. Method bodies, exceptions, enum names/numbers and language policy remain identical. EF reports no model delta; all HTTP snapshots remain unchanged. Coordinated rebuild is required.",
+      "reason": "Export implementation move only; HTTP/application contracts and snapshots unchanged, full HTTP182 and presentation825 passed; actual API compatibility audit0. Explicit hosts retain the typed-client registration.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:44.4914714Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:32.7167837Z"
     },
     {
       "pageId": "system.architecture",
@@ -87,22 +83,22 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "fbe81697037051c5f14f779925bdc39ba0f75231b5a2f9c920a412db75a235ec"
-        },
-        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "d2f966485cf7d6d76817a9e9d28032110745d4365f55731344774310bc027b4a"
+          "sha256": "49eb4626152b7c2c85384cec54ed0d28a081cdf05738100c4bbb235c4cff8ce0"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "ca0bfaffbda6b26b2b1c65e98583da847b49218258ec856cf0d2587778942b21"
+          "sha256": "4313d8f9f187b6c64f49e611a84b9ad3e4e4a92cd01b7ea1947959838e4c23fa"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "838f8e14b2fe2c87865b90752f65154af6cf916a85b6873020c3f8983d071880"
         }
       ],
-      "reason": "Source-verified existing Identity/Lessons entities and physical module paths; central auth/email ports and Auth transport remain central and are mapped as navigation seams. Corrected existing Dietologist module persistence port ownership. Generated Identity HTTP section retains a known name-matching limitation; no manual generated patch or generic tool change.",
+      "reason": "Export Infrastructure ownership, acyclic references, Resources and host boundaries verified against current source; module manifest and guides updated. No shared DbContext/schema, other owner or deployment topology change.",
       "baseRef": "HEAD",
-      "gitHead": "64a7aa7ee7816964ddc6ee8e4ca0587eb5443d41",
-      "reviewedAtUtc": "2026-09-02T18:09:54.2823755Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:32.9459319Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -141,17 +137,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "78111c859855a04265489830009b3cd6e7a624682195aa4991bbf39d12257d41"
-        },
-        {
-          "path": "docs/adr/README.md",
-          "sha256": "d79a67f0044707f488920e51058b74600bb5f08d1ec6143756e556272e1a1396"
+          "sha256": "2ab632214b5357986fe8580e1667ce3225b244d239cb0937d57d7546e64a7f32"
         }
       ],
-      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
+      "reason": "Export Infrastructure ownership, acyclic references, Resources and host boundaries verified against current source; module manifest and guides updated. No shared DbContext/schema, other owner or deployment topology change.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:45.8973397Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:33.1694824Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -160,13 +152,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "d2f966485cf7d6d76817a9e9d28032110745d4365f55731344774310bc027b4a"
+          "sha256": "49eb4626152b7c2c85384cec54ed0d28a081cdf05738100c4bbb235c4cff8ce0"
         }
       ],
-      "reason": "Source-verified existing Identity/Lessons entities and physical module paths; central auth/email ports and Auth transport remain central and are mapped as navigation seams. Corrected existing Dietologist module persistence port ownership. Generated Identity HTTP section retains a known name-matching limitation; no manual generated patch or generic tool change.",
+      "reason": "Export Infrastructure ownership, acyclic references, Resources and host boundaries verified against current source; module manifest and guides updated. No shared DbContext/schema, other owner or deployment topology change.",
       "baseRef": "HEAD",
-      "gitHead": "64a7aa7ee7816964ddc6ee8e4ca0587eb5443d41",
-      "reviewedAtUtc": "2026-09-02T18:09:54.5005787Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:33.3520109Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -223,14 +215,22 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "6b345c939b0504c865da171dd3eee71bbc4f07c986425b65e96dd283b6537465"
+        },
+        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "d2f966485cf7d6d76817a9e9d28032110745d4365f55731344774310bc027b4a"
+          "sha256": "49eb4626152b7c2c85384cec54ed0d28a081cdf05738100c4bbb235c4cff8ce0"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "838f8e14b2fe2c87865b90752f65154af6cf916a85b6873020c3f8983d071880"
         }
       ],
-      "reason": "Scoped source audit validates supported mapping keys, existing source areas and entity owners. The optional BackendModuleModel regression fails before these targets on the unchanged Users isolation value; known-limitations.json records that baseline failure. Native generators alone produce the four tracked derived module pages.",
+      "reason": "New module/test projects and exact dependency/host guard updates verified by full build and984 Architecture tests. Fixture changes are14 proven path substitutions only; reverse equals baseline and fullMCP245 pass. No query/weight/threshold changes.",
       "baseRef": "HEAD",
-      "gitHead": "64a7aa7ee7816964ddc6ee8e4ca0587eb5443d41",
-      "reviewedAtUtc": "2026-09-02T18:09:54.7036123Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:33.5814090Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -239,17 +239,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "14913f1d036def53ed07a2544a1466841be7a8264857c2b6f1dc54efd70e61f0"
-        },
-        {
-          "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "effaa8b4850a6ec34b3dd3eff0ba2bdd0f7204b8af042d456cee8cd9e1723f5a"
+          "sha256": "f3199170668ff633d5cf028a3aa9ea596eb8bffba19f596a5ec7c034d84b5a79"
         }
       ],
-      "reason": "Twelve types change assembly owners deliberately; EmailAddress and Visibility also use the required Primitives namespace. Method bodies, exceptions, enum names/numbers and language policy remain identical. EF reports no model delta; all HTTP snapshots remain unchanged. Coordinated rebuild is required.",
+      "reason": "Export implementation move only; HTTP/application contracts and snapshots unchanged, full HTTP182 and presentation825 passed; actual API compatibility audit0. Explicit hosts retain the typed-client registration.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:49.1001631Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:34.2183902Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -287,14 +283,26 @@
       "pageSha256": "8c9843eeb4fbb377b79e506bb7a2969dd0393e10cc6fc0a1ec924ccbd6ee22f9",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-generalization.json",
+          "sha256": "ed6c69d90f99341b507e14590efd0666d4faa218214c7cc1f4db09a0b566c283"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-holdout.json",
+          "sha256": "dadacd603ddc182d63086c16a51ae5ddc1ec65b1f05bb84975cab3175a0da7e5"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "b7655befa1e72a9b0855ab104c869c45b36d66de44eacd0ffc3fc64c1a168488"
+        },
+        {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "3373b00375e420471388bb33fa8a34eed7e0098c959c1eb4619357e33f63f38e"
+          "sha256": "44fce1fe676d732a81b0c7bc6888952c748ce87652665e2b66d75de68f766ac3"
         }
       ],
-      "reason": "Reviewed generic context-ranking changes across all promoted, holdout, unseen, control, and Node/.NET parity corpora; no path-specific rule or threshold change was introduced.",
+      "reason": "New module/test projects and exact dependency/host guard updates verified by full build and984 Architecture tests. Fixture changes are14 proven path substitutions only; reverse equals baseline and fullMCP245 pass. No query/weight/threshold changes.",
       "baseRef": "HEAD",
-      "gitHead": "7b104c4996e63fddd2c1ec964f43ddbb2bf4b72b",
-      "reviewedAtUtc": "2026-09-01T16:13:21.9386448Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:34.7078850Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -506,13 +514,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "b05ad8122958b4c20fb7f75b97829296d47c27483ad36f53ddc9f860d0943d0c"
+          "sha256": "cdcd690ee90f274cf97fce9251edb45509da12eb8681c1ec1126acefd975e671"
         }
       ],
-      "reason": "This package changes documentation and supported manifest metadata only. Native generators refresh derived navigation, and required Wiki verification checks its consistency. Prior package1 full Architecture944 and three affected Domain suites1079 total passed; no runtime change in this package.",
+      "reason": "New module/test projects and exact dependency/host guard updates verified by full build and984 Architecture tests. Fixture changes are14 proven path substitutions only; reverse equals baseline and fullMCP245 pass. No query/weight/threshold changes.",
       "baseRef": "HEAD",
-      "gitHead": "64a7aa7ee7816964ddc6ee8e4ca0587eb5443d41",
-      "reviewedAtUtc": "2026-09-02T18:04:25.5185196Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:34.9191413Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -784,13 +792,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "2901d8cc612462992937a6d47bb4317198bf1dd49c3eb8fbbd63ce976c952d72"
+          "sha256": "82fe207d66903bb7f8b9e71d5e7dede54e1efa2e680471a5bd59c5963d41fad9"
         }
       ],
-      "reason": "Scoped source comparison verifies twelve type implementations and thirty-nine production consumer bodies, permitting only imports, approved namespace changes and exact owner-local limits. No data access, credential, logging, retention or provider-sharing behavior changes. This is not a full security scan.",
+      "reason": "Source audit15 namespace-only renderer/policy moves; DNS/IP pinning, timeout/cancellation, disabled redirects/proxy, bounded images and request lifetime unchanged. Adapter78 tests pass. No new storage, telemetry or destinations.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:52.0540253Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:35.2402772Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -829,13 +837,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "994b63d7d979ecd2b135335471c6aa251cd6e294b7892ba80af25d22b2edbde4"
+          "sha256": "209259fa9ff9e232889879985c42b5e100e050f82ecbf0bb127da3807f1aa0ef"
         }
       ],
-      "reason": "All 43 Nutrition cases and 38 central cases plus five CycleId reflection cases move without loss. Full unfiltered regression results and failed intermediate attempts are kept separately. Synthetic compile-probe regression exercises real native compilation, conditional aliased references, invalid source diagnostics and enabled-cache behavior. No policy or ranking changes.",
+      "reason": "New module/test projects and exact dependency/host guard updates verified by full build and984 Architecture tests. Fixture changes are14 proven path substitutions only; reverse equals baseline and fullMCP245 pass. No query/weight/threshold changes.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:52.9001484Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:35.6549211Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -912,13 +920,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5d2b85dc4d3f03dc828b20a1d05d2b4581b3c42ca7c2dc110ccd64b342c863bd"
+          "sha256": "7bc0d85d52325980633494bdb73c426b2845ab8bbfdbdcdb8b96bc5e3450267e"
         }
       ],
-      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
+      "reason": "Export Infrastructure ownership, acyclic references, Resources and host boundaries verified against current source; module manifest and guides updated. No shared DbContext/schema, other owner or deployment topology change.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:55.2291114Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:36.5381203Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -927,21 +935,25 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "994b63d7d979ecd2b135335471c6aa251cd6e294b7892ba80af25d22b2edbde4"
+          "sha256": "209259fa9ff9e232889879985c42b5e100e050f82ecbf0bb127da3807f1aa0ef"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "5d2b85dc4d3f03dc828b20a1d05d2b4581b3c42ca7c2dc110ccd64b342c863bd"
+          "sha256": "7bc0d85d52325980633494bdb73c426b2845ab8bbfdbdcdb8b96bc5e3450267e"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "2901d8cc612462992937a6d47bb4317198bf1dd49c3eb8fbbd63ce976c952d72"
+          "sha256": "82fe207d66903bb7f8b9e71d5e7dede54e1efa2e680471a5bd59c5963d41fad9"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "44fce1fe676d732a81b0c7bc6888952c748ce87652665e2b66d75de68f766ac3"
         }
       ],
-      "reason": "Scoped source comparison verifies twelve type implementations and thirty-nine production consumer bodies, permitting only imports, approved namespace changes and exact owner-local limits. No data access, credential, logging, retention or provider-sharing behavior changes. This is not a full security scan.",
+      "reason": "Source audit15 namespace-only renderer/policy moves; DNS/IP pinning, timeout/cancellation, disabled redirects/proxy, bounded images and request lifetime unchanged. Adapter78 tests pass. No new storage, telemetry or destinations.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:56.0884411Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:37.0031306Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1119,13 +1131,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "78111c859855a04265489830009b3cd6e7a624682195aa4991bbf39d12257d41"
+          "sha256": "2ab632214b5357986fe8580e1667ce3225b244d239cb0937d57d7546e64a7f32"
         }
       ],
-      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
+      "reason": "Export Infrastructure ownership, acyclic references, Resources and host boundaries verified against current source; module manifest and guides updated. No shared DbContext/schema, other owner or deployment topology change.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:49.7769526Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:34.4660389Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1178,18 +1190,22 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "b7655befa1e72a9b0855ab104c869c45b36d66de44eacd0ffc3fc64c1a168488"
+        },
+        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "0b6f76724270b7ebd0be634e70795c168d363eeedcfec05f7e32977c259a17bc"
+          "sha256": "6ed4c1c391937de3f010c252c7d5ecfe5538202436f8f30e396818fc440318fa"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "78111c859855a04265489830009b3cd6e7a624682195aa4991bbf39d12257d41"
+          "sha256": "2ab632214b5357986fe8580e1667ce3225b244d239cb0937d57d7546e64a7f32"
         }
       ],
-      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
+      "reason": "Export Infrastructure ownership, acyclic references, Resources and host boundaries verified against current source; module manifest and guides updated. No shared DbContext/schema, other owner or deployment topology change.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:53.6897407Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:35.9510334Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1198,13 +1214,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "78111c859855a04265489830009b3cd6e7a624682195aa4991bbf39d12257d41"
+          "sha256": "2ab632214b5357986fe8580e1667ce3225b244d239cb0937d57d7546e64a7f32"
         }
       ],
-      "reason": "All 43 Nutrition cases and 38 central cases plus five CycleId reflection cases move without loss. Full unfiltered regression results and failed intermediate attempts are kept separately. Synthetic compile-probe regression exercises real native compilation, conditional aliased references, invalid source diagnostics and enabled-cache behavior. No policy or ranking changes.",
+      "reason": "New module/test projects and exact dependency/host guard updates verified by full build and984 Architecture tests. Fixture changes are14 proven path substitutions only; reverse equals baseline and fullMCP245 pass. No query/weight/threshold changes.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:54.4320727Z"
+      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
+      "reviewedAtUtc": "2026-09-02T20:37:36.2391433Z"
     }
   ]
 }

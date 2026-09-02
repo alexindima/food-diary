@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Export.Common;
 
-namespace FoodDiary.Infrastructure.Services.DiaryPdf;
+namespace FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private sealed class DefaultDiaryPdfReportTextProvider : IDiaryPdfReportTextProvider {

@@ -247,9 +247,6 @@ public class LayeringTests {
             "Microsoft.Extensions.Http",
             "Microsoft.Extensions.Options.ConfigurationExtensions",
             "Npgsql.EntityFrameworkCore.PostgreSQL",
-            "QuestPDF",
-            "SkiaSharp",
-            "SkiaSharp.NativeAssets.Linux.NoDependencies",
             "System.IdentityModel.Tokens.Jwt",
         ];
 
@@ -317,7 +314,6 @@ public class LayeringTests {
             "services.AddPersistence(configuration);",
             "services.AddFeatureRepositories();",
             "services.AddAuthenticationInfrastructure();",
-            "services.AddExportInfrastructure();",
         ];
 
         string[] actualRegistrations = [.. File.ReadLines(dependencyInjectionPath)

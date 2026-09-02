@@ -145,7 +145,7 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
 
         Assert.True(result.Ready, result.UnavailableReason);
         Assert.Equal(
-            "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
+            "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
             result.Candidates[0].Path);
     }
 
@@ -898,8 +898,8 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
                 ('code', 'paddle-api-client', 'FoodDiary.Integrations/Billing/PaddleApiClient.cs', 'paddle-api-client', 'csharp', 'PaddleApiClient', 'HTTP client sends food recognition requests to OpenAI'),
                 ('code', 'integration-uri-validator', 'FoodDiary.Integrations/Options/IntegrationUriValidator.cs', 'integration-uri-validator', 'csharp', 'IntegrationUriValidator', 'validate configured integration URLs before startup'),
                 ('code', 'google-token-validator', 'FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs', 'google-token-validator', 'csharp', 'GoogleTokenValidator', 'validate configured integration URLs before startup'),
-                ('code', 'pdf-primary', 'FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs', 'pdf-primary', 'csharp', 'DiaryPdfGenerator', 'render diary PDF document generator'),
-                ('code', 'pdf-helper', 'FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs', 'pdf-helper', 'csharp', 'DiaryPdfGenerator ChartSvgRenderer', 'render diary PDF document generator'),
+                ('code', 'pdf-primary', 'Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs', 'pdf-primary', 'csharp', 'DiaryPdfGenerator', 'render diary PDF document generator'),
+                ('code', 'pdf-helper', 'Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs', 'pdf-helper', 'csharp', 'DiaryPdfGenerator ChartSvgRenderer', 'render diary PDF document generator'),
                 ('code', 'cycle-consent-tests', 'tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.ConsentAndConfirmation.cs', 'cycle-consent-tests', 'csharp', 'CyclesFeatureTests ConsentAndConfirmation', 'tests confirm period start update cycle consent owner missing profile invalid user validator failures'),
                 ('code', 'cycle-command-validator', 'FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandValidator.cs', 'cycle-command-validator', 'csharp', 'ConfirmPeriodStartCommandValidator', 'confirm period start update cycle consent missing profile invalid user validator failures'),
                 ('code', 'authentication-validators', 'tests/FoodDiary.Application.Tests/Authentication/AuthenticationValidatorsTests.cs', 'authentication-validators', 'csharp', 'AuthenticationValidatorsTests', 'tests confirm start missing invalid user validator failures'),

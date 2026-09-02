@@ -971,7 +971,6 @@
           "FoodDiary.Modules.Dietologist.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.PersistenceModel": "[1.0.0, )",
-          "FoodDiary.Modules.Export.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
@@ -991,7 +990,6 @@
           "FoodDiary.Modules.Marketing.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Domain": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.PersistenceModel": "[1.0.0, )",
-          "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Meals.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Domain": "[1.0.0, )",
@@ -1023,9 +1021,6 @@
           "Microsoft.Extensions.Http": "[10.0.11, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )",
-          "QuestPDF": "[2026.7.3, )",
-          "SkiaSharp": "[4.151.1, )",
-          "SkiaSharp.NativeAssets.Linux.NoDependencies": "[4.151.1, )",
           "System.IdentityModel.Tokens.Jwt": "[8.22.0, )"
         }
       },
@@ -1394,6 +1389,18 @@
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.export.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Export.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
+          "Microsoft.Extensions.Http": "[10.0.11, )",
+          "QuestPDF": "[2026.7.3, )",
+          "SkiaSharp": "[4.151.1, )",
+          "SkiaSharp.NativeAssets.Linux.NoDependencies": "[4.151.1, )"
         }
       },
       "fooddiary.modules.fasting.application.abstractions": {

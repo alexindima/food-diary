@@ -225,7 +225,7 @@
       "id": "diary-pdf-generation",
       "query": "render a personal food diary export as a PDF document",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs"]
+      "expectedPaths": ["Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs"]
     },
     {
       "id": "ai-prompt-provider",

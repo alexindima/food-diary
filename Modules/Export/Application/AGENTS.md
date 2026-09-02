@@ -11,7 +11,7 @@ Rules for `Modules/Export/Application/`.
 - Consume Cycles and Meals only through their application-level read capabilities.
 - Reference Cycles Domain directly only for cycle enums already exposed by those read models; do not acquire Cycles aggregates or repositories.
 - Reference Meals Domain directly for MealType already exposed by diary read models; preserve CSV formatting and continue to use existing read capabilities.
-- Keep PDF rendering implementations and HTTP transport outside this module.
+- Keep PDF rendering implementations in the sibling Export Infrastructure project and HTTP controllers in Presentation; neither belongs in Application.
 - Do not reference the core `FoodDiary.Application` project.
 
 ## Commands

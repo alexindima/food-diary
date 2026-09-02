@@ -57944,33 +57944,33 @@
         "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDiaryPdfGenerator",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDiaryPdfGenerator",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Export/Application/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDiaryPdfGenerator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDiaryPdfGenerator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -57996,9 +57996,9 @@
         "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+      "consumerPath": "Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/ModuleRegistrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 4
     },
     {
       "contract": "IDiaryPdfGenerator",
@@ -58009,34 +58009,8 @@
         "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
       "isTest": true,
-      "referenceCount": 2
-    },
-    {
-      "contract": "IDiaryPdfReportTextProvider",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Export/Application/Abstractions/Common/IDiaryPdfReportTextProvider.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IDiaryPdfReportTextProvider",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Export/Application/Abstractions/Common/IDiaryPdfReportTextProvider.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.DefaultReportTextProvider.cs",
-      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -58074,7 +58048,33 @@
         "Modules/Export/Application/Abstractions/Common/IDiaryPdfReportTextProvider.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "consumerPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDiaryPdfReportTextProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Export/Application/Abstractions/Common/IDiaryPdfReportTextProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.DefaultReportTextProvider.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDiaryPdfReportTextProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Export/Application/Abstractions/Common/IDiaryPdfReportTextProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/ModuleRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 2
     },

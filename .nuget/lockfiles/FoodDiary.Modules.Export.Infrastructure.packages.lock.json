@@ -1,0 +1,533 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net10.0": {
+      "Meziantou.Analyzer": {
+        "type": "Direct",
+        "requested": "[3.0.172, )",
+        "resolved": "3.0.172",
+        "contentHash": "6Kkqgaakp07Trl2Zz6YvqmeuTj4Q0qQe8o2AvrYvX28XH7n3wr8VBP/gvzbnXxgOirnd5n48craYnSLcMLe2tw=="
+      },
+      "Microsoft.Extensions.Http": {
+        "type": "Direct",
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "ujx8RvcKzkxPFBguwgiygbwWVHVK0P7HFlNJ6I0JBRb28tzwe42jixBoA+dGmqG9IHepPVcm04vv2IDnU93ekA==",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
+          "Microsoft.Extensions.Diagnostics": "10.0.11",
+          "Microsoft.Extensions.Logging": "10.0.11",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
+          "Microsoft.Extensions.Options": "10.0.11"
+        }
+      },
+      "QuestPDF": {
+        "type": "Direct",
+        "requested": "[2026.7.3, )",
+        "resolved": "2026.7.3",
+        "contentHash": "MYpJrSLwUkgaX/POQj+9GY8QreFoLXjHCiUPCNl0XrHF+nLDT9KeUFZbeaUNu1P5spt5QeYzCbf2tDF0z5idHg=="
+      },
+      "Roslynator.Analyzers": {
+        "type": "Direct",
+        "requested": "[4.16.1, )",
+        "resolved": "4.16.1",
+        "contentHash": "AGzq3UZvIwTGSh9xyIna+Q9F666S8UaLlX/Pk3Iz21qIAWjL8iYporVCcX1k/oi5chrRZ8VJRahup4me4HZptw=="
+      },
+      "SkiaSharp": {
+        "type": "Direct",
+        "requested": "[4.151.1, )",
+        "resolved": "4.151.1",
+        "contentHash": "FNlVsGZ9to3o9pObVqhIZanHjUGOoPb/Zxk5svCSLMJnKwxPKV7sIJrjs9BpB/jF3j9OdsaMOb4cfwSJbjueSw==",
+        "dependencies": {
+          "SkiaSharp.NativeAssets.Win32": "4.151.1",
+          "SkiaSharp.NativeAssets.macOS": "4.151.1"
+        }
+      },
+      "SkiaSharp.NativeAssets.Linux.NoDependencies": {
+        "type": "Direct",
+        "requested": "[4.151.1, )",
+        "resolved": "4.151.1",
+        "contentHash": "lqPwXxYhKlmRfCuq1vGRLYEtRo3tn3ij1IGi0tI2qzkKHU6HOznHqZW+NqHV8aSKasPmRawbwlKLLPI132+SEA=="
+      },
+      "Microsoft.Extensions.Configuration.Abstractions": {
+        "type": "Transitive",
+        "resolved": "10.0.11",
+        "contentHash": "fVi053xdpda9Em7vSkmgVxO/PtgC2m78ekReKWsgcyskqY0U82Bz/MONwxpGzI0hElYKJfw+fupqMVeKW3fSaA==",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "10.0.11"
+        }
+      },
+      "Microsoft.Extensions.Configuration.Binder": {
+        "type": "Transitive",
+        "resolved": "10.0.11",
+        "contentHash": "rFn8RuszZn3qquPVkDytMUlPc2+rXl9MCoygwc1XmAgC5vg5/oXJ8hkOosOrLoBLsqdTy4lFwP6iQdPS9uSYOA==",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "10.0.11",
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11"
+        }
+      },
+      "Microsoft.Extensions.Diagnostics": {
+        "type": "Transitive",
+        "resolved": "10.0.11",
+        "contentHash": "HT70uGPxMLqqnOzKMcnQtDmeV4r0KHr4qVCLhP7SXil9jMEm8sQXwcybxVVFGXZJ1V44xV0mLqQ54aZbcR2OiQ==",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration": "10.0.11",
+          "Microsoft.Extensions.Diagnostics.Abstractions": "10.0.11",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.11"
+        }
+      },
+      "Microsoft.Extensions.Diagnostics.Abstractions": {
+        "type": "Transitive",
+        "resolved": "10.0.11",
+        "contentHash": "se7Kx8QpJEt+nf26L4qIVAofGTDr1wbexxsh/Fm3Xc04xUkqUXK06KUS7FLwSQYSjqb7q9n+T7MEcXYBhI1Y5g==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
+          "Microsoft.Extensions.Options": "10.0.11"
+        }
+      },
+      "Microsoft.Extensions.Options": {
+        "type": "Transitive",
+        "resolved": "10.0.11",
+        "contentHash": "eY1GAKcTfD2maP27J84X9IovT3yjHJ2dVDzPmDg6/XqYvt3jMzJhtfQCLjG9pVsZGAd+8DQ2QrjaDcs2+VQLGw==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
+          "Microsoft.Extensions.Primitives": "10.0.11"
+        }
+      },
+      "Microsoft.Extensions.Primitives": {
+        "type": "Transitive",
+        "resolved": "10.0.11",
+        "contentHash": "SXcz+kF+4Oo9b1+55zntpJFYfwb1jw66ioxptyNOOTDc8g2FHnBFWjZpsWfCvZIhzr0x+4e2trVTs4OKwQfBtw=="
+      },
+      "SkiaSharp.NativeAssets.macOS": {
+        "type": "Transitive",
+        "resolved": "4.151.1",
+        "contentHash": "nLXwdhi0oB7pqqNLbSOLX+FIZQOMAU/yFPspzcDTJjTmPbMWyp0JWyeVj8sFJ/cweurEfT0J/lvfgdXX2EFHXA=="
+      },
+      "SkiaSharp.NativeAssets.Win32": {
+        "type": "Transitive",
+        "resolved": "4.151.1",
+        "contentHash": "G+nln30ZX2ZuhH+ungf6x/QMXCje38KTS0VTfQeMyeY8uyMBmsZwFz2D30ZxUjZqsVbEIcaC2bsYF65876s4Yg=="
+      },
+      "fooddiary.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Exercises.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Identity.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Marketing.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.MealPlanning.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.RecipeCommunity.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Usda.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.domain.primitives": {
+        "type": "Project"
+      },
+      "fooddiary.mediator": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.admin.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Admin.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.admin.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.ai.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Ai.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.ai.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.billing.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Billing.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.billing.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.bodymetrics.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.BodyMetrics.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.bodymetrics.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.cycles.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.cycles.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.dashboard.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.exercises.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Exercises.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.exercises.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.export.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.favorites.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.identity.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.images.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Images.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.images.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.images.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.marketing.application.abstractions": {
+        "type": "Project"
+      },
+      "fooddiary.modules.mealplanning.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.MealPlanning.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.mealplanning.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.meals.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.meals.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.notifications.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Notifications.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.notifications.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.products.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Products.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.products.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.products.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Usda.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.products.domain.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recipecommunity.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.RecipeCommunity.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recipecommunity.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recipes.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recipes.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recipes.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.recipes.domain.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.usda.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Usda.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Usda.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.usda.contracts": {
+        "type": "Project"
+      },
+      "fooddiary.modules.usda.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.users.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.users.domain.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.wearables.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.wearables.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
+        }
+      },
+      "fooddiary.results": {
+        "type": "Project"
+      },
+      "Microsoft.Extensions.Configuration": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "wlhRqZW8LcJPa+vk2oLAc/REXDItHtkFQdf/QcXYGZbZOO13izcsKY1pCvuFQYwUiZD+hwSZwsKASjqT+BNaVg==",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
+          "Microsoft.Extensions.Primitives": "10.0.11"
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "PSmotV19c7E3lKed++uYo1kSiXFI+uTl37CBSrhq+CfLC3FCHjG7R91+xPnNehQfHS1b0Tzo/CCLPWH3qaEheg==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11"
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "/a1aJz4m7ylhEDf25ugQChLQoN5XwoGjWw/BoR/ZWWKsO1v4DdJElS1uyngahz4B/eOzjFk1KNTkarRLE5wsIg=="
+      },
+      "Microsoft.Extensions.Logging": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "nUOJwgFkSiLHiVGFpU22pIJtuWYewuSYQ3JVuP/gdK8ASMT807Px+TYQiRWs6uSsOmoyFTaVCwKXTasczV6BpA==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection": "10.0.11",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
+          "Microsoft.Extensions.Options": "10.0.11"
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "Ljd0Uxoq5XpScD2Bg0nM/r3mwx7Ao5Uq24eo2ARxbGvqJ7Zht6rt2cJtwVRH4Cv+1ZVMdXz6TB43KbpmsxRrvQ==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11"
+        }
+      },
+      "Microsoft.Extensions.Options.ConfigurationExtensions": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "syEhXQ/sEaSBFaqzlp9gDGHX/nk6gkQkh1sIUpBO1mlBj3Phu1rmb4ML1uCiyPW9N6Kxfxv3y5FGObC+bV01Qw==",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.11",
+          "Microsoft.Extensions.Configuration.Binder": "10.0.11",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11",
+          "Microsoft.Extensions.Options": "10.0.11",
+          "Microsoft.Extensions.Primitives": "10.0.11"
+        }
+      }
+    }
+  }
+}

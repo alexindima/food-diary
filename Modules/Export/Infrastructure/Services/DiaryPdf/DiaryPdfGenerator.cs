@@ -4,7 +4,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-namespace FoodDiary.Infrastructure.Services.DiaryPdf;
+namespace FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator(
     HttpClient httpClient,

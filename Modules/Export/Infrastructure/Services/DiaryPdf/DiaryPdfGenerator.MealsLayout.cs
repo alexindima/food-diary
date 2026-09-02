@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Meals.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
-namespace FoodDiary.Infrastructure.Services.DiaryPdf;
+namespace FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private static void ComposeMealsCards(IContainer container, DiaryReportData report) {

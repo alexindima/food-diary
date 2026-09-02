@@ -312,8 +312,10 @@
       "enforcement": "project-reference-matrix",
       "ownedEntities": [],
       "sourceMappings": {
+        "logicalRoot": "Modules/Export",
         "applicationProjects": ["FoodDiary.Modules.Export.Application"],
-        "applicationAbstractionProjects": ["Modules/Export/Application/Abstractions"]
+        "applicationAbstractionProjects": ["Modules/Export/Application/Abstractions"],
+        "infrastructureProjects": ["Modules/Export/Infrastructure"]
       }
     },
     "Fasting": {

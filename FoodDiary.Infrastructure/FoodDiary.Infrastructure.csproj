@@ -22,8 +22,6 @@
     <ProjectReference Include="..\Modules\Favorites\Domain\FoodDiary.Modules.Favorites.Domain.csproj" />
     <ProjectReference Include="..\Modules\Favorites\Infrastructure\Model\FoodDiary.Modules.Favorites.PersistenceModel.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Modules\Meals\Contracts\FoodDiary.Modules.Meals.Contracts.csproj" />
-    <ProjectReference Include="..\Modules\Export\Application\Abstractions\FoodDiary.Modules.Export.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Modules\Gamification\Application\Abstractions\FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Modules\Gamification\Domain\FoodDiary.Modules.Gamification.Domain.csproj" />
     <ProjectReference Include="..\Modules\Gamification\Infrastructure\Model\FoodDiary.Modules.Gamification.PersistenceModel.csproj" />
@@ -79,9 +77,6 @@
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
-    <PackageReference Include="QuestPDF" />
-    <PackageReference Include="SkiaSharp" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>
 

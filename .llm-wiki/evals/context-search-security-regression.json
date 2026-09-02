@@ -52,10 +52,10 @@
       "query": "Diary PDF remote image SSRF DNS rebinding connect callback",
       "changeType": "Backend",
       "expectedPaths": [
-        "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
-        "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
-        "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
-        "FoodDiary.Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs"
+        "Modules/Export/Infrastructure/ModuleRegistration.cs",
+        "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
+        "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
+        "Modules/Export/Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs"
       ]
     },
     {

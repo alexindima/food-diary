@@ -10,11 +10,11 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Services.DiaryPdf;
+using FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 using QuestPDF.Fluent;
 using SkiaSharp;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Export.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class DiaryPdfGeneratorTests {

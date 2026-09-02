@@ -53,6 +53,7 @@
     <ProjectReference Include="..\Modules\DailyAdvices\Application\FoodDiary.Modules.DailyAdvices.Application.csproj" />
     <ProjectReference Include="..\Modules\Gamification\Infrastructure\FoodDiary.Modules.Gamification.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Export\Application\FoodDiary.Modules.Export.Application.csproj" />
+    <ProjectReference Include="../Modules/Export/Infrastructure/FoodDiary.Modules.Export.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules\Notifications\Infrastructure\FoodDiary.Modules.Notifications.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />

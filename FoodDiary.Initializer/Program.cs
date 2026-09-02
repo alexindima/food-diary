@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Export.Infrastructure;
 using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using System.Diagnostics.CodeAnalysis;
@@ -119,7 +120,7 @@ builder.Services.AddRecentItemsModule();
 builder.Services.AddUsersModule();
 builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
-builder.Services.AddInfrastructure(builder.Configuration).AddIdentityPersistence().AddDashboardReadServices();
+builder.Services.AddInfrastructure(builder.Configuration).AddExportInfrastructure().AddIdentityPersistence().AddDashboardReadServices();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddScoped<IEmailVerificationNotifier, NoOpEmailVerificationNotifier>();
 builder.Services.AddScoped<INotificationPusher, NoOpNotificationPusher>();

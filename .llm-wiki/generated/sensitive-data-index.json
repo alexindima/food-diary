@@ -12,7 +12,7 @@
     "health": 660,
     "financial": 120,
     "privateContent": 300,
-    "boundaryFiles": 171,
+    "boundaryFiles": 174,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -155,7 +155,7 @@
       "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
       "type": "set",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 82
+      "line": 83
     },
     {
       "category": "credential",
@@ -2389,34 +2389,6 @@
       "type": "double?",
       "path": "FoodDiary.Application.Abstractions/Users/Models/WeightHistoryProfileModel.cs",
       "line": 4
-    },
-    {
-      "category": "health",
-      "name": "Height",
-      "type": "int",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
-      "line": 128
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
-      "line": 159
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
-      "line": 167
-    },
-    {
-      "category": "health",
-      "name": "Calories",
-      "type": "double",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ReportData.cs",
-      "line": 159
     },
     {
       "category": "health",
@@ -4846,6 +4818,34 @@
       "type": "string",
       "path": "Modules/Export/Application/Abstractions/Common/DiaryPdfReportTexts.cs",
       "line": 35
+    },
+    {
+      "category": "health",
+      "name": "Height",
+      "type": "int",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
+      "line": 128
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
+      "line": 159
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
+      "line": 167
+    },
+    {
+      "category": "health",
+      "name": "Calories",
+      "type": "double",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ReportData.cs",
+      "line": 159
     },
     {
       "category": "health",
@@ -10902,6 +10902,27 @@
         "privateContent"
       ],
       "fieldCount": 4
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ReportData.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "Modules/Identity/Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",

@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Export.Infrastructure;
 using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Application.Runtime;
@@ -35,7 +36,7 @@ builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
 builder.Services.AddMealsPersistence();
 builder.Services.AddRecentItemsModule();
-builder.Services.AddInfrastructure(builder.Configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddProductsPersistence().AddDashboardReadServices();
+builder.Services.AddInfrastructure(builder.Configuration).AddExportInfrastructure().AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddProductsPersistence().AddDashboardReadServices();
 builder.Services.AddImagesInfrastructure();
 builder.Services.AddIntegrations(builder.Configuration);
 builder.Services.AddDataProtection();

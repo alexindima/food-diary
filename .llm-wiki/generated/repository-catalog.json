@@ -13,16 +13,16 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 312,
-    "testProjects": 116,
+    "dotnetProjects": 314,
+    "testProjects": 117,
     "frontendProjects": 4,
     "applicationModules": 1,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 34,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 219,
-    "documentationPages": 122
+    "agentGuides": 221,
+    "documentationPages": 123
   },
   "dotnet": {
     "projects": [
@@ -166,7 +166,6 @@
           "Modules/Dietologist/Infrastructure/Model/FoodDiary.Modules.Dietologist.PersistenceModel.csproj",
           "Modules/Exercises/Domain/FoodDiary.Modules.Exercises.Domain.csproj",
           "Modules/Exercises/Infrastructure/Model/FoodDiary.Modules.Exercises.PersistenceModel.csproj",
-          "Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj",
           "Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj",
           "Modules/Fasting/Infrastructure/Model/FoodDiary.Modules.Fasting.PersistenceModel.csproj",
           "Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj",
@@ -186,7 +185,6 @@
           "Modules/Marketing/Infrastructure/Model/FoodDiary.Modules.Marketing.PersistenceModel.csproj",
           "Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj",
           "Modules/MealPlanning/Infrastructure/Model/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj",
-          "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
           "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
           "Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj",
           "Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj",
@@ -263,18 +261,6 @@
             "version": null
           },
           {
-            "name": "QuestPDF",
-            "version": null
-          },
-          {
-            "name": "SkiaSharp",
-            "version": null
-          },
-          {
-            "name": "SkiaSharp.NativeAssets.Linux.NoDependencies",
-            "version": null
-          },
-          {
             "name": "System.IdentityModel.Tokens.Jwt",
             "version": null
           }
@@ -309,6 +295,7 @@
           "Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj",
           "Modules/Exercises/Infrastructure/FoodDiary.Modules.Exercises.Infrastructure.csproj",
           "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj",
+          "Modules/Export/Infrastructure/FoodDiary.Modules.Export.Infrastructure.csproj",
           "Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj",
           "Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj",
           "Modules/Gamification/Infrastructure/FoodDiary.Modules.Gamification.Infrastructure.csproj",
@@ -452,6 +439,7 @@
           "Modules/Dietologist/Infrastructure/FoodDiary.Modules.Dietologist.Infrastructure.csproj",
           "Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj",
           "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj",
+          "Modules/Export/Infrastructure/FoodDiary.Modules.Export.Infrastructure.csproj",
           "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
           "Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj",
           "Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj",
@@ -664,6 +652,7 @@
           "Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj",
           "Modules/Exercises/Infrastructure/FoodDiary.Modules.Exercises.Infrastructure.csproj",
           "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj",
+          "Modules/Export/Infrastructure/FoodDiary.Modules.Export.Infrastructure.csproj",
           "Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj",
           "Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj",
           "Modules/Gamification/Infrastructure/FoodDiary.Modules.Gamification.Infrastructure.csproj",
@@ -3907,6 +3896,40 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Export.Infrastructure",
+        "assemblyName": "FoodDiary.Modules.Export.Infrastructure",
+        "path": "Modules/Export/Infrastructure/FoodDiary.Modules.Export.Infrastructure.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj",
+          "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
+          "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.Extensions.Http",
+            "version": null
+          },
+          {
+            "name": "QuestPDF",
+            "version": null
+          },
+          {
+            "name": "SkiaSharp",
+            "version": null
+          },
+          {
+            "name": "SkiaSharp.NativeAssets.Linux.NoDependencies",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Export.Application.Tests",
         "assemblyName": "FoodDiary.Modules.Export.Application.Tests",
         "path": "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/FoodDiary.Modules.Export.Application.Tests.csproj",
@@ -3935,6 +3958,43 @@
           },
           {
             "name": "NSubstitute",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Export.Infrastructure.Tests",
+        "assemblyName": "FoodDiary.Modules.Export.Infrastructure.Tests",
+        "path": "Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/FoodDiary.Modules.Export.Infrastructure.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Export/Infrastructure/FoodDiary.Modules.Export.Infrastructure.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
+          "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
+          "Modules/Products/Domain/FoodDiary.Modules.Products.Domain.csproj",
+          "Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj",
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
             "version": null
           },
           {
@@ -9797,6 +9857,7 @@
       "Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/FoodDiary.Modules.Exercises.Application.Tests.csproj",
       "Modules/Exercises/tests/FoodDiary.Modules.Exercises.Domain.Tests/FoodDiary.Modules.Exercises.Domain.Tests.csproj",
       "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/FoodDiary.Modules.Export.Application.Tests.csproj",
+      "Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/FoodDiary.Modules.Export.Infrastructure.Tests.csproj",
       "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FoodDiary.Modules.Fasting.Application.Tests.csproj",
       "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Domain.Tests/FoodDiary.Modules.Fasting.Domain.Tests.csproj",
       "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Infrastructure.Tests/FoodDiary.Modules.Fasting.Infrastructure.Tests.csproj",
@@ -12213,6 +12274,8 @@
       "Modules/Export/AGENTS.md",
       "Modules/Export/Application/AGENTS.md",
       "Modules/Export/Application/Abstractions/AGENTS.md",
+      "Modules/Export/Infrastructure/AGENTS.md",
+      "Modules/Export/tests/AGENTS.md",
       "Modules/Fasting/AGENTS.md",
       "Modules/Fasting/Application/Abstractions/AGENTS.md",
       "Modules/Fasting/Contracts/AGENTS.md",
@@ -12395,6 +12458,7 @@
       "docs/ai/domain-guard-extraction.md",
       "docs/ai/exercises-module-extraction-wiki-findings.md",
       "docs/ai/exercises-ownership-inventory.md",
+      "docs/ai/export-pdf-infrastructure-extraction.md",
       "docs/ai/identity-domain-extraction.md",
       "docs/ai/identity-module-extraction-wiki-findings.md",
       "docs/ai/identity-ownership-inventory.md",

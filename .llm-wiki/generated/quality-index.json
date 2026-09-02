@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4768,
+    "productionFiles": 4769,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -4633,14 +4633,6 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
-      "nonBlankLines": 55,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.1
-    },
-    {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Food.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -4690,11 +4682,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.32
     },
     {
       "path": "FoodDiary.Infrastructure/Events/DomainEventNotification.cs",
@@ -5121,126 +5113,6 @@
       "structuralRiskScore": 3.76
     },
     {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgGeometry.cs",
-      "nonBlankLines": 74,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.48
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs",
-      "nonBlankLines": 128,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.56
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.DefaultReportTextProvider.cs",
-      "nonBlankLines": 55,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.6
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Formatting.cs",
-      "nonBlankLines": 57,
-      "decisionPoints": 12,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.14
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageLoader.cs",
-      "nonBlankLines": 147,
-      "decisionPoints": 15,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.44
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
-      "nonBlankLines": 112,
-      "decisionPoints": 15,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.74
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
-      "nonBlankLines": 45,
-      "decisionPoints": 10,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.9
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.LayoutComposer.cs",
-      "nonBlankLines": 45,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.4
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
-      "nonBlankLines": 145,
-      "decisionPoints": 23,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 37.4
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealsLayout.cs",
-      "nonBlankLines": 216,
-      "decisionPoints": 12,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.32
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ReportData.cs",
-      "nonBlankLines": 152,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.54
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Styles.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.SummaryLayout.cs",
-      "nonBlankLines": 94,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.88
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
-      "nonBlankLines": 92,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.84
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs",
-      "nonBlankLines": 50,
-      "decisionPoints": 28,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 43
-    },
-    {
       "path": "FoodDiary.Infrastructure/Services/InfrastructureTelemetry.cs",
       "nonBlankLines": 73,
       "decisionPoints": 2,
@@ -5306,11 +5178,11 @@
     },
     {
       "path": "FoodDiary.Initializer/Program.cs",
-      "nonBlankLines": 360,
+      "nonBlankLines": 361,
       "decisionPoints": 41,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 68.7
+      "structuralRiskScore": 68.72
     },
     {
       "path": "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -5770,11 +5642,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Program.cs",
-      "nonBlankLines": 59,
+      "nonBlankLines": 60,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.68
+      "structuralRiskScore": 2.7
     },
     {
       "path": "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -10522,11 +10394,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 137,
+      "nonBlankLines": 139,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.74
+      "structuralRiskScore": 5.78
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -27863,6 +27735,142 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.02
+    },
+    {
+      "path": "Modules/Export/Infrastructure/AssemblyInfo.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Export/Infrastructure/ModuleRegistration.cs",
+      "nonBlankLines": 58,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.16
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgGeometry.cs",
+      "nonBlankLines": 74,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.48
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs",
+      "nonBlankLines": 128,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.56
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.DefaultReportTextProvider.cs",
+      "nonBlankLines": 55,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.6
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Formatting.cs",
+      "nonBlankLines": 57,
+      "decisionPoints": 12,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 19.14
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageLoader.cs",
+      "nonBlankLines": 147,
+      "decisionPoints": 15,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 25.44
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
+      "nonBlankLines": 112,
+      "decisionPoints": 15,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 24.74
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
+      "nonBlankLines": 45,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.9
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.LayoutComposer.cs",
+      "nonBlankLines": 45,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.4
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
+      "nonBlankLines": 145,
+      "decisionPoints": 23,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 37.4
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealsLayout.cs",
+      "nonBlankLines": 216,
+      "decisionPoints": 12,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 22.32
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ReportData.cs",
+      "nonBlankLines": 152,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.54
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Styles.cs",
+      "nonBlankLines": 31,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.62
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.SummaryLayout.cs",
+      "nonBlankLines": 94,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.88
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
+      "nonBlankLines": 92,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.84
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs",
+      "nonBlankLines": 50,
+      "decisionPoints": 28,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 43
     },
     {
       "path": "Modules/Fasting/Application/Abstractions/Common/FastingTelemetryEventRecord.cs",

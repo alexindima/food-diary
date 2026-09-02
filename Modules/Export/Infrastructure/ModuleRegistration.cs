@@ -1,19 +1,21 @@
 using System.Net;
 using System.Net.Sockets;
 using FoodDiary.Application.Abstractions.Export.Common;
-using FoodDiary.Infrastructure.Services.DiaryPdf;
+using FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace FoodDiary.Infrastructure;
+namespace FoodDiary.Modules.Export.Infrastructure;
 
-public static partial class DependencyInjection {
+public static class ModuleRegistration {
     internal static Func<string, CancellationToken, ValueTask<IPAddress[]>> ResolveRemoteImageHostAddressesAsync { get; set; } =
         static async (host, cancellationToken) => await Dns.GetHostAddressesAsync(host, cancellationToken).ConfigureAwait(false);
 
     internal static Func<IPAddress, int, CancellationToken, ValueTask<Stream>> ConnectRemoteImageSocketAsync { get; set; } =
         ConnectRemoteImageSocketCoreAsync;
 
-    private static void AddExportInfrastructure(this IServiceCollection services) {
+    public static IServiceCollection AddExportInfrastructure(this IServiceCollection services) {
+        services.TryAddSingleton(TimeProvider.System);
         services.AddHttpClient<IDiaryPdfGenerator, DiaryPdfGenerator>(client => client.Timeout = TimeSpan.FromSeconds(5))
             .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler {
                 AllowAutoRedirect = false,
@@ -21,6 +23,7 @@ public static partial class DependencyInjection {
                 UseProxy = false,
             });
 
+        return services;
     }
 
     private static async ValueTask<Stream> ConnectToAllowedRemoteImageEndpointAsync(

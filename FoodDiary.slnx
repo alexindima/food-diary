@@ -63,7 +63,11 @@
   <Folder Name="/Modules/Export/">
     <Project Path="Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj" />
     <Project Path="Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj" />
+    <Project Path="Modules/Export/Infrastructure/FoodDiary.Modules.Export.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Modules/Export/tests/">
     <Project Path="Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/FoodDiary.Modules.Export.Application.Tests.csproj" />
+    <Project Path="Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/FoodDiary.Modules.Export.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Statistics/">
     <Project Path="Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj" />

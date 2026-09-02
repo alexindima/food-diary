@@ -492,7 +492,7 @@
       "id": "pdf-remote-image-security",
       "queryTerms": ["pdf", "image", "remote", "ssrf", "dns", "rebinding", "connectcallback"],
       "minimumMatches": 2,
-      "pathPrefixes": ["FoodDiary.Infrastructure/DependencyInjection.Export.cs", "FoodDiary.Infrastructure/Services/DiaryPdf/"],
+      "pathPrefixes": ["Modules/Export/Infrastructure/ModuleRegistration.cs", "Modules/Export/Infrastructure/Services/DiaryPdf/"],
       "score": 520
     },
     {
@@ -604,7 +604,7 @@
       "id": "diary-pdf-rendering",
       "queryTerms": ["diary", "pdf", "render", "export"],
       "minimumMatches": 3,
-      "pathPrefixes": ["FoodDiary.Infrastructure/Services/DiaryPdf/"],
+      "pathPrefixes": ["Modules/Export/Infrastructure/Services/DiaryPdf/"],
       "score": 240
     },
     {

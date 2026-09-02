@@ -631,7 +631,7 @@
       "query": "storage or provider implementation for dependency injection export",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Infrastructure/DependencyInjection.Export.cs"
+        "Modules/Export/Infrastructure/ModuleRegistration.cs"
       ]
     },
     {
@@ -901,7 +901,7 @@
       "query": "storage or provider implementation for pdf document export generator meal composition formatting",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs"
+        "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs"
       ]
     },
     {

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "a4f81fa5b1f2882b14d3240781beb43f7bb64f3dfd41d1c73cc93e188b746716",
-    "sourceFileCount": 3546
+    "sourceFingerprint": "c929abcc31818cb922fa153be07e0c7b4fa0e32f039576c82d133bf5bce2326e",
+    "sourceFileCount": 3547
   },
   "summary": {
     "composeServices": 17,
@@ -573,7 +573,7 @@
     {
       "contract": "IDiaryPdfGenerator",
       "implementation": "DiaryPdfGenerator",
-      "registrationPath": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
+      "registrationPath": "Modules/Export/Infrastructure/ModuleRegistration.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "timeout-or-delay"
@@ -1045,30 +1045,8 @@
       ]
     },
     {
-      "name": "DependencyInjection.Export",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
-      "securitySignals": [
-        "connect-time-address-control",
-        "dns-resolution",
-        "ip-address-policy",
-        "proxy-disabled",
-        "redirects-disabled",
-        "timeout-policy"
-      ],
-      "behaviorSignals": [
-        "cancellation-propagation-candidate",
-        "timeout-or-delay"
-      ],
-      "behaviorSignalScope": "policy-file",
-      "evidenceStatus": "inferred-from-code",
-      "runtimeEvidenceRequired": [
-        "effective DNS result at connection time",
-        "effective proxy and redirect behavior"
-      ]
-    },
-    {
       "name": "DiaryPdfGenerator",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
       "securitySignals": [
         "ip-address-policy",
         "timeout-policy"
@@ -1087,7 +1065,7 @@
     },
     {
       "name": "DiaryPdfGenerator.ImageLoader",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageLoader.cs",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageLoader.cs",
       "securitySignals": [
         "ip-address-policy",
         "timeout-policy",
@@ -1225,6 +1203,28 @@
       ],
       "behaviorSignals": [
         "cancellation-propagation-candidate"
+      ],
+      "behaviorSignalScope": "policy-file",
+      "evidenceStatus": "inferred-from-code",
+      "runtimeEvidenceRequired": [
+        "effective DNS result at connection time",
+        "effective proxy and redirect behavior"
+      ]
+    },
+    {
+      "name": "ModuleRegistration",
+      "path": "Modules/Export/Infrastructure/ModuleRegistration.cs",
+      "securitySignals": [
+        "connect-time-address-control",
+        "dns-resolution",
+        "ip-address-policy",
+        "proxy-disabled",
+        "redirects-disabled",
+        "timeout-policy"
+      ],
+      "behaviorSignals": [
+        "cancellation-propagation-candidate",
+        "timeout-or-delay"
       ],
       "behaviorSignalScope": "policy-file",
       "evidenceStatus": "inferred-from-code",

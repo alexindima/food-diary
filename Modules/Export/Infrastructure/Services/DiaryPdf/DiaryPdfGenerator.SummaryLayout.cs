@@ -1,7 +1,7 @@
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
-namespace FoodDiary.Infrastructure.Services.DiaryPdf;
+namespace FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private static void ComposeSummarySection(IContainer container, DiaryReportData report) {

@@ -8,7 +8,7 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3545,
+    "sourceFiles": 3546,
     "symbols": 3531,
     "interfaceImplementationLinks": 234,
     "dependencyInjectionRegistrations": 166,
@@ -2158,13 +2158,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Export.cs",
-      "line": 8
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Food.cs",
       "line": 4
     },
@@ -2659,111 +2652,6 @@
       "line": 5
     },
     {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgGeometry.cs",
-      "line": 7
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs",
-      "line": 5
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
-      "line": 8
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.DefaultReportTextProvider.cs",
-      "line": 4
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Formatting.cs",
-      "line": 5
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageLoader.cs",
-      "line": 6
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
-      "line": 5
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
-      "line": 5
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.LayoutComposer.cs",
-      "line": 6
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
-      "line": 6
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealsLayout.cs",
-      "line": 7
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ReportData.cs",
-      "line": 7
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Styles.cs",
-      "line": 2
-    },
-    {
-      "name": "DiaryPdfGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.SummaryLayout.cs",
-      "line": 5
-    },
-    {
-      "name": "RemoteImageAddressPolicy",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs",
-      "line": 5
-    },
-    {
       "name": "InfrastructureTelemetry",
       "kind": "class",
       "role": "Other",
@@ -2824,7 +2712,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 395
+      "line": 396
     },
     {
       "name": "UsdaCsvReader",
@@ -3223,7 +3111,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 66
+      "line": 67
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -7367,7 +7255,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 47
+      "line": 48
     },
     {
       "name": "ApiTelemetry",
@@ -15313,6 +15201,118 @@
       "role": "Service",
       "path": "Modules/Export/Application/Services/ExportDiaryReadService.cs",
       "line": 8
+    },
+    {
+      "name": "ModuleRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/ModuleRegistration.cs",
+      "line": 9
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgGeometry.cs",
+      "line": 7
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs",
+      "line": 5
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
+      "line": 8
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.DefaultReportTextProvider.cs",
+      "line": 4
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Formatting.cs",
+      "line": 5
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageLoader.cs",
+      "line": 6
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
+      "line": 5
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
+      "line": 5
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.LayoutComposer.cs",
+      "line": 6
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
+      "line": 6
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealsLayout.cs",
+      "line": 7
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ReportData.cs",
+      "line": 7
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Styles.cs",
+      "line": 2
+    },
+    {
+      "name": "DiaryPdfGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.SummaryLayout.cs",
+      "line": 5
+    },
+    {
+      "name": "RemoteImageAddressPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs",
+      "line": 5
     },
     {
       "name": "FastingTelemetryEventRecord",
@@ -25134,98 +25134,98 @@
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgGeometry.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgGeometry.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgRenderer.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.DefaultReportTextProvider.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.DefaultReportTextProvider.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Formatting.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Formatting.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageLoader.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageLoader.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageProcessing.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ImageSourcePolicy.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.LayoutComposer.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.LayoutComposer.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealCompositionFormatting.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealsLayout.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.MealsLayout.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ReportData.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ReportData.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Styles.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.Styles.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDiaryPdfGenerator",
       "interfacePath": "Modules/Export/Application/Abstractions/Common/IDiaryPdfGenerator.cs",
       "implementation": "DiaryPdfGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.SummaryLayout.cs",
+      "implementationPath": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.SummaryLayout.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26544,14 +26544,14 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 124
+      "line": 125
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 125
+      "line": 126
     },
     {
       "service": "IGoogleTokenValidator",
@@ -26614,7 +26614,7 @@
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 58
+      "line": 59
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -26691,21 +26691,21 @@
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 103
+      "line": 105
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 104
+      "line": 106
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 136
+      "line": 138
     },
     {
       "service": "IMailInboxReadinessChecker",

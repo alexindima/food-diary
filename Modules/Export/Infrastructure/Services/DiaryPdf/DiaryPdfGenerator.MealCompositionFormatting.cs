@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using FoodDiary.Application.Abstractions.Meals.Models;
 
-namespace FoodDiary.Infrastructure.Services.DiaryPdf;
+namespace FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private static string FormatMealItems(MealProjectionReadModel meal, DiaryReportData report) {

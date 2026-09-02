@@ -1,3 +1,4 @@
+using FoodDiary.Modules.Export.Infrastructure;
 using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Application.Runtime;
@@ -96,6 +97,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddBillingModule()
                 .AddMarketingModule()
                 .AddInfrastructure(configuration)
+                .AddExportInfrastructure()
                 .AddIdentityPersistence()
                 .AddDashboardReadServices()
                 .AddImagesInfrastructure()
