@@ -7,14 +7,18 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "4dfca8f3a498d22b9084a854a5b057f43d59482e0cbc97bc082dc2f5592824a1"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "0ca43cddc4e315866049685b83ea802887acdefa393e20cb81064b6cdecc067a"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "1459664bfb2bacef04f1042e1db168c1612717852c8ea36d722d0ae1a161cb76"
         }
       ],
-      "reason": "Only five focused test projects moved into Shared/tests and Tooling/tests. Project identities, dependency targets, test bodies and runtime source are preserved; central test props and editor rules are retained. Solution ownership guards and current test commands were updated. Seven evaluation target literals follow these exact moved test sources; queries, thresholds, weights and historical results are unchanged. This is test placement, not a new runtime boundary or ADR.",
+      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
       "baseRef": "HEAD",
-      "gitHead": "0c3b805571fd75a396d4f8bbaedf556aedbdaaf1",
-      "reviewedAtUtc": "2026-09-02T21:26:02.0277803Z"
+      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
+      "reviewedAtUtc": "2026-09-02T22:04:01.2086888Z"
     },
     {
       "pageId": "module.frontend",
@@ -37,14 +41,18 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "0ca43cddc4e315866049685b83ea802887acdefa393e20cb81064b6cdecc067a"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "4313d8f9f187b6c64f49e611a84b9ad3e4e4a92cd01b7ea1947959838e4c23fa"
+          "sha256": "1459664bfb2bacef04f1042e1db168c1612717852c8ea36d722d0ae1a161cb76"
         }
       ],
-      "reason": "Export Infrastructure ownership, acyclic references, Resources and host boundaries verified against current source; module manifest and guides updated. No shared DbContext/schema, other owner or deployment topology change.",
+      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
       "baseRef": "HEAD",
-      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
-      "reviewedAtUtc": "2026-09-02T20:37:32.5158812Z"
+      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
+      "reviewedAtUtc": "2026-09-02T22:04:01.3830083Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -52,14 +60,22 @@
       "pageSha256": "a12fef9a11365dd6a6c58228abc9447b6f005042e43ab58532b8250805df1709",
       "sources": [
         {
-          "path": "Shared/FoodDiary.Domain.Primitives/AGENTS.md",
-          "sha256": "8f1c4e649af63392e2e9e1413818258471f99a4e323e83154ed194452c2e1123"
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "1459664bfb2bacef04f1042e1db168c1612717852c8ea36d722d0ae1a161cb76"
+        },
+        {
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "e690de7ff841c8ee441fbf4c4f122387515093332d651c1567e14e59aeaf329b"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "ab3cbc3c32f199f9adc1c5346fc7f56675b4181e4ffa7acede892bcc6d4418e1"
         }
       ],
-      "reason": "Only five focused test projects moved into Shared/tests and Tooling/tests. Project identities, dependency targets, test bodies and runtime source are preserved; central test props and editor rules are retained. Solution ownership guards and current test commands were updated. Seven evaluation target literals follow these exact moved test sources; queries, thresholds, weights and historical results are unchanged. This is test placement, not a new runtime boundary or ADR.",
+      "reason": "Final report records 2733 actual passing cases, EF no changes, two byte-equivalent Identity adapter moves, unchanged production references and two new test-only projects. Shared mechanisms and deferred audit candidates are not moved. The preceding 99/100 DomainGuard retrieval limitation remains explicitly separate from this tranche affected verification route.",
       "baseRef": "HEAD",
-      "gitHead": "0c3b805571fd75a396d4f8bbaedf556aedbdaaf1",
-      "reviewedAtUtc": "2026-09-02T21:26:02.5434219Z"
+      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
+      "reviewedAtUtc": "2026-09-02T22:17:19.5304449Z"
     },
     {
       "pageId": "system.architecture",
@@ -67,22 +83,22 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "49eb4626152b7c2c85384cec54ed0d28a081cdf05738100c4bbb235c4cff8ce0"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "0ca43cddc4e315866049685b83ea802887acdefa393e20cb81064b6cdecc067a"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "4313d8f9f187b6c64f49e611a84b9ad3e4e4a92cd01b7ea1947959838e4c23fa"
+          "sha256": "1459664bfb2bacef04f1042e1db168c1612717852c8ea36d722d0ae1a161cb76"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "838f8e14b2fe2c87865b90752f65154af6cf916a85b6873020c3f8983d071880"
+          "sha256": "9059e9f183f444d89a20f41162ff304e9755901f747553fa252cfeae8fa87518"
         }
       ],
-      "reason": "Export Infrastructure ownership, acyclic references, Resources and host boundaries verified against current source; module manifest and guides updated. No shared DbContext/schema, other owner or deployment topology change.",
+      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
       "baseRef": "HEAD",
-      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
-      "reviewedAtUtc": "2026-09-02T20:37:32.9459319Z"
+      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
+      "reviewedAtUtc": "2026-09-02T22:04:01.7560847Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -199,22 +215,14 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "6b345c939b0504c865da171dd3eee71bbc4f07c986425b65e96dd283b6537465"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "49eb4626152b7c2c85384cec54ed0d28a081cdf05738100c4bbb235c4cff8ce0"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "838f8e14b2fe2c87865b90752f65154af6cf916a85b6873020c3f8983d071880"
+          "sha256": "9059e9f183f444d89a20f41162ff304e9755901f747553fa252cfeae8fa87518"
         }
       ],
-      "reason": "New module/test projects and exact dependency/host guard updates verified by full build and984 Architecture tests. Fixture changes are14 proven path substitutions only; reverse equals baseline and fullMCP245 pass. No query/weight/threshold changes.",
+      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
       "baseRef": "HEAD",
-      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
-      "reviewedAtUtc": "2026-09-02T20:37:33.5814090Z"
+      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
+      "reviewedAtUtc": "2026-09-02T22:04:01.9576512Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -223,13 +231,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "1c2880148e755d1c2a8884351840b62f7eb078f5dec60ab17dcea92b60f733e6"
+          "sha256": "972377370f0986e6cad536c1798abf0e11401e4d5966cde4fffa45ac61a78190"
         }
       ],
-      "reason": "Only five focused test projects moved into Shared/tests and Tooling/tests. Project identities, dependency targets, test bodies and runtime source are preserved; central test props and editor rules are retained. Solution ownership guards and current test commands were updated. Seven evaluation target literals follow these exact moved test sources; queries, thresholds, weights and historical results are unchanged. This is test placement, not a new runtime boundary or ADR.",
+      "reason": "Identity owns the two unchanged persistence adapters, with unchanged SQL, cache/lifetimes, source namespaces and schema. Focused tests move and add DI/lifetime assertions. Initial test namespace/named-argument diagnostics were corrected without relaxing checks. Shared context, external providers and other modules remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0c3b805571fd75a396d4f8bbaedf556aedbdaaf1",
-      "reviewedAtUtc": "2026-09-02T21:26:03.7854826Z"
+      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
+      "reviewedAtUtc": "2026-09-02T22:08:16.8134410Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -493,14 +501,14 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": "Shared/FoodDiary.Domain.Primitives/AGENTS.md",
-          "sha256": "8f1c4e649af63392e2e9e1413818258471f99a4e323e83154ed194452c2e1123"
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "ab3cbc3c32f199f9adc1c5346fc7f56675b4181e4ffa7acede892bcc6d4418e1"
         }
       ],
-      "reason": "Only five focused test projects moved into Shared/tests and Tooling/tests. Project identities, dependency targets, test bodies and runtime source are preserved; central test props and editor rules are retained. Solution ownership guards and current test commands were updated. Seven evaluation target literals follow these exact moved test sources; queries, thresholds, weights and historical results are unchanged. This is test placement, not a new runtime boundary or ADR.",
+      "reason": "Final report records 2733 actual passing cases, EF no changes, two byte-equivalent Identity adapter moves, unchanged production references and two new test-only projects. Shared mechanisms and deferred audit candidates are not moved. The preceding 99/100 DomainGuard retrieval limitation remains explicitly separate from this tranche affected verification route.",
       "baseRef": "HEAD",
-      "gitHead": "0c3b805571fd75a396d4f8bbaedf556aedbdaaf1",
-      "reviewedAtUtc": "2026-09-02T21:26:05.3868209Z"
+      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
+      "reviewedAtUtc": "2026-09-02T22:17:19.7822457Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -817,13 +825,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "782566339183d83c7b0d804d1361ac1721760970c15125bc1388fdbfd29baa17"
+          "sha256": "c4014525c978f4450c764d89be94a7bb202ad520cc9f8d02f9b421ebcfa84b42"
         }
       ],
-      "reason": "Only five focused test projects moved into Shared/tests and Tooling/tests. Project identities, dependency targets, test bodies and runtime source are preserved; central test props and editor rules are retained. Solution ownership guards and current test commands were updated. Seven evaluation target literals follow these exact moved test sources; queries, thresholds, weights and historical results are unchanged. This is test placement, not a new runtime boundary or ADR.",
+      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
       "baseRef": "HEAD",
-      "gitHead": "0c3b805571fd75a396d4f8bbaedf556aedbdaaf1",
-      "reviewedAtUtc": "2026-09-02T21:26:06.1000708Z"
+      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
+      "reviewedAtUtc": "2026-09-02T22:04:03.0203013Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -900,13 +908,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7bc0d85d52325980633494bdb73c426b2845ab8bbfdbdcdb8b96bc5e3450267e"
+          "sha256": "fe948d661dd1040075159fc6b3e2eef9f14383d4ecaec657dc0143a836a60bc2"
         }
       ],
-      "reason": "Export Infrastructure ownership, acyclic references, Resources and host boundaries verified against current source; module manifest and guides updated. No shared DbContext/schema, other owner or deployment topology change.",
+      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
       "baseRef": "HEAD",
-      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
-      "reviewedAtUtc": "2026-09-02T20:37:36.5381203Z"
+      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
+      "reviewedAtUtc": "2026-09-02T22:04:03.6034016Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -915,13 +923,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "782566339183d83c7b0d804d1361ac1721760970c15125bc1388fdbfd29baa17"
+          "sha256": "c4014525c978f4450c764d89be94a7bb202ad520cc9f8d02f9b421ebcfa84b42"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "fe948d661dd1040075159fc6b3e2eef9f14383d4ecaec657dc0143a836a60bc2"
         }
       ],
-      "reason": "Only five focused test projects moved into Shared/tests and Tooling/tests. Project identities, dependency targets, test bodies and runtime source are preserved; central test props and editor rules are retained. Solution ownership guards and current test commands were updated. Seven evaluation target literals follow these exact moved test sources; queries, thresholds, weights and historical results are unchanged. This is test placement, not a new runtime boundary or ADR.",
+      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
       "baseRef": "HEAD",
-      "gitHead": "0c3b805571fd75a396d4f8bbaedf556aedbdaaf1",
-      "reviewedAtUtc": "2026-09-02T21:26:07.9033601Z"
+      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
+      "reviewedAtUtc": "2026-09-02T22:04:04.0773192Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1158,22 +1170,14 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "967cdc883d11becbdbe3a178e97c43f355e54f8aa0fd13ec168cf94f836b8c07"
-        },
-        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "e2e31dac51e3bf94ac958953a0035d4eedd0d5e0ae55bbda1e52c57b2b1c727f"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "4dfca8f3a498d22b9084a854a5b057f43d59482e0cbc97bc082dc2f5592824a1"
+          "sha256": "b6c8b04385a87601dc01323b6f2887a2508df21dc671ce4c3591ab8d33fdc062"
         }
       ],
-      "reason": "Focused Shared/Tooling test relocation and solution grouping preserve runtime dependencies and test identities. Evaluation expectedPaths follow seven physically relocated test targets plus the Git-proven DomainGuard and MealAiSession owner moves (71bf4fd47 and d3a1e7c65). Queries, thresholds, ranking and historical results are unchanged.",
+      "reason": "Only two existing Identity persistence adapters and their focused tests relocate. Production source bodies, SQL, caching, identities and lifetime semantics are unchanged; hosts already register AddIdentityPersistence. Two test-only projects, exact architecture guards and current ownership documentation were added. No schema, migration, provider, HTTP or user-data lifecycle change.",
       "baseRef": "HEAD",
-      "gitHead": "0c3b805571fd75a396d4f8bbaedf556aedbdaaf1",
-      "reviewedAtUtc": "2026-09-02T21:42:01.9376753Z"
+      "gitHead": "7ee80615e2bdf8b74558373597141a494e1e4ba3",
+      "reviewedAtUtc": "2026-09-02T22:04:03.2872382Z"
     },
     {
       "pageId": "workflow.review-diff",

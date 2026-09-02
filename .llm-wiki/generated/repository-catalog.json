@@ -13,8 +13,8 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 314,
-    "testProjects": 117,
+    "dotnetProjects": 316,
+    "testProjects": 119,
     "frontendProjects": 4,
     "applicationModules": 1,
     "extractedApplicationModules": 33,
@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 223,
-    "documentationPages": 123
+    "documentationPages": 125
   },
   "dotnet": {
     "projects": [
@@ -5094,6 +5094,92 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Identity.Infrastructure.IntegrationTests",
+        "assemblyName": "FoodDiary.Modules.Identity.Infrastructure.IntegrationTests",
+        "path": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj",
+          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.EntityFrameworkCore",
+            "version": null
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          },
+          {
+            "name": "SSH.NET",
+            "version": null
+          },
+          {
+            "name": "Testcontainers.PostgreSql",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Identity.Infrastructure.Tests",
+        "assemblyName": "FoodDiary.Modules.Identity.Infrastructure.Tests",
+        "path": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/FoodDiary.Modules.Identity.Infrastructure.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.EntityFrameworkCore.InMemory",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Images.Application.Abstractions",
         "assemblyName": "FoodDiary.Modules.Images.Application.Abstractions",
         "path": "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
@@ -9871,6 +9957,8 @@
       "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/FoodDiary.Modules.Hydration.Infrastructure.Tests.csproj",
       "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/FoodDiary.Modules.Identity.Application.Tests.csproj",
       "Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/FoodDiary.Modules.Identity.Domain.Tests.csproj",
+      "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests.csproj",
+      "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/FoodDiary.Modules.Identity.Infrastructure.Tests.csproj",
       "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FoodDiary.Modules.Images.Application.Tests.csproj",
       "Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/FoodDiary.Modules.Images.Domain.Tests.csproj",
       "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests.csproj",
@@ -12464,6 +12552,7 @@
       "docs/ai/identity-domain-extraction.md",
       "docs/ai/identity-module-extraction-wiki-findings.md",
       "docs/ai/identity-ownership-inventory.md",
+      "docs/ai/identity-persistence-adapters.md",
       "docs/ai/images-domain-extraction.md",
       "docs/ai/mealplanning-module-extraction-wiki-findings.md",
       "docs/ai/mealplanning-shopping-domain-extraction.md",
@@ -12487,6 +12576,7 @@
       "docs/ai/users-module-extraction-wiki-findings.md",
       "docs/ai/users-ownership-inventory.md",
       "docs/architecture/Exception-vs-Result.md",
+      "docs/architecture/infrastructure-boundary-audit.md",
       "docs/backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md",
       "docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md",
       "docs/backend/BACKEND_CRITICAL_FLOW_MATRIX.md",

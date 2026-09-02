@@ -240,6 +240,12 @@ Meal persistence registrations live in `DependencyInjection.Meals.cs`, RecentIte
 
 Users and Identity are separate collaborating modules around one identity lifecycle. Users owns the `User`, `Role`, `UserRole` and `UserRoleAuditEvent` aggregates/state, including credential verification and account lifecycle mutation. Identity is physically isolated in `FoodDiary.Application.Identity` and owns login/register/restore orchestration, refresh-token sessions, login-event history and application email-template administration. Authentication and Email remain logical feature areas inside that assembly.
 
+Identity Infrastructure owns login-event persistence/reporting/retention and the
+cached email-template provider, registered through `AddIdentityPersistence`.
+Its reporting join to Users does not transfer User ownership. Shared DbContext,
+migrations/snapshot, combined UserRepository, replay guard and mail transport stay
+with their existing owners. See `docs/architecture/infrastructure-boundary-audit.md`.
+
 ### Users public capabilities
 
 Other modules must not acquire `IUserRepository`, `IUserLookupRepository` or `IUserWriteRepository`. Instead they use intent-specific APIs:

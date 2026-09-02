@@ -24,6 +24,8 @@
   <Folder Name="/Modules/Identity/tests/">
     <Project Path="Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/FoodDiary.Modules.Identity.Application.Tests.csproj" />
     <Project Path="Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/FoodDiary.Modules.Identity.Domain.Tests.csproj" />
+    <Project Path="Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/FoodDiary.Modules.Identity.Infrastructure.Tests.csproj" />
+    <Project Path="Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests.csproj" />
   </Folder>
   <Folder Name="/Modules/Ai/">
     <Project Path="Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />

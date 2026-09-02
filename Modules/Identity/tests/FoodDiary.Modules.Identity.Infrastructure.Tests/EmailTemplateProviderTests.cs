@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Identity.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class EmailTemplateProviderTests {

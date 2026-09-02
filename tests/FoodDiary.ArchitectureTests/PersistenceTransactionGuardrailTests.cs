@@ -90,11 +90,12 @@ public sealed class PersistenceTransactionGuardrailTests {
     [Fact]
     public void InfrastructureBulkMutationUsage_StaysInsideCurrentExplicitAllowlist() {
         string infrastructureRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure");
+        string identityLoginEvents = ArchitectureTestPaths.FromRoot("Modules", "Identity", "Infrastructure", "Persistence", "Users", "UserLoginEventRepository.cs");
         string[] allowedFiles = [
             ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Infrastructure", "Persistence", "NotificationRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Tracking", "FastingTelemetryEventRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Marketing", "Infrastructure", "Persistence", "MarketingAttributionEventRepository.cs"),
-            Path.Combine(infrastructureRoot, "Persistence", "Users", "UserLoginEventRepository.cs"),
+            identityLoginEvents,
             Path.Combine(infrastructureRoot, "Persistence", "Users", "RefreshTokenSessionRepository.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserRoleMembershipService.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Users", "UserCleanupService.cs"),
@@ -106,7 +107,7 @@ public sealed class PersistenceTransactionGuardrailTests {
 
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        string[] violations = [.. SourceScanner.SourceFiles(infrastructureRoot)
+        string[] violations = [.. SourceScanner.SourceFiles(infrastructureRoot).Append(identityLoginEvents)
             .Where(path => !allowed.Contains(path))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line })

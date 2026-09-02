@@ -4618,11 +4618,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "nonBlankLines": 20,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.36
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Email.cs",
@@ -4674,11 +4674,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 20,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
+      "structuralRiskScore": 0.4
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
@@ -4863,14 +4863,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.52
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Email/EmailTemplateProvider.cs",
-      "nonBlankLines": 46,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.92
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Achievements.cs",
@@ -5079,14 +5071,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
-      "nonBlankLines": 123,
-      "decisionPoints": 17,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.96
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
@@ -30666,11 +30650,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 23,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
+      "structuralRiskScore": 0.46
     },
     {
       "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserLoginEventConfiguration.cs",
@@ -30713,12 +30697,28 @@
       "structuralRiskScore": 5.6
     },
     {
+      "path": "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs",
+      "nonBlankLines": 46,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.92
+    },
+    {
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
       "nonBlankLines": 178,
       "decisionPoints": 39,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 62.06
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
+      "nonBlankLines": 123,
+      "decisionPoints": 17,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 27.96
     },
     {
       "path": "Modules/Images/Application/Abstractions/Common/DeleteImageAssetResult.cs",

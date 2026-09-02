@@ -90,6 +90,14 @@ JobManager uses AddMealsPersistence only. See `docs/ai/meals-ownership-inventory
 
 RecentItems repository, post-commit recorder, DI and EF mapping live under `Modules/RecentItems`. The shared context applies its model; migrations/snapshot and post-commit queue/UoW stay central. See `docs/ai/recent-items-ownership-inventory.md`.
 
+## Identity persistence adapters
+
+Identity owns login-event persistence/reporting and cached email-template lookup
+under `Modules/Identity/Infrastructure`. Do not register these adapters in central
+DI; hosts already compose `AddIdentityPersistence`. The combined UserRepository,
+generic persistence engine and central model/migrations remain here. See
+`docs/architecture/infrastructure-boundary-audit.md` for the residual ownership plan.
+
 ## Users Domain ownership
 
 Users owns the complete User aggregate, all credential/security partials, roles,

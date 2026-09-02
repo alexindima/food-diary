@@ -11,7 +11,7 @@
     "sourceFiles": 3546,
     "symbols": 3531,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 166,
+    "dependencyInjectionRegistrations": 164,
     "kinds": {
       "class": 1858,
       "enum": 62,
@@ -2138,7 +2138,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "DependencyInjection",
@@ -2194,7 +2194,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "DomainEventNotification",
@@ -2442,13 +2442,6 @@
       "line": 8
     },
     {
-      "name": "EmailTemplateProvider",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Email/EmailTemplateProvider.cs",
-      "line": 7
-    },
-    {
       "name": "FoodDiaryDbContext",
       "kind": "class",
       "role": "Other",
@@ -2629,13 +2622,6 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Shared/RecipeCompositionTransactionLock.cs",
       "line": 4
-    },
-    {
-      "name": "UserLoginEventRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
-      "line": 9
     },
     {
       "name": "UserRepository",
@@ -17713,7 +17699,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "UserLoginEventConfiguration",
@@ -17751,11 +17737,25 @@
       "line": 7
     },
     {
+      "name": "EmailTemplateProvider",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs",
+      "line": 7
+    },
+    {
       "name": "RefreshTokenSessionRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
       "line": 7
+    },
+    {
+      "name": "UserLoginEventRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
+      "line": 9
     },
     {
       "name": "DeleteImageAssetResult",
@@ -25337,7 +25337,7 @@
       "interface": "IEmailTemplateProvider",
       "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IEmailTemplateProvider.cs",
       "implementation": "EmailTemplateProvider",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Email/EmailTemplateProvider.cs",
+      "implementationPath": "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26247,7 +26247,7 @@
       "interface": "IUserLoginEventRepository",
       "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
       "implementation": "UserLoginEventRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
+      "implementationPath": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26446,49 +26446,42 @@
       "implementation": "JwtTokenGenerator",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 14
+      "line": 13
     },
     {
       "service": "IPasswordHasher",
       "implementation": "PasswordHasher",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 15
+      "line": 14
     },
     {
       "service": "IAdminSsoCodeStore",
       "implementation": "InMemoryAdminSsoCodeStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 16
+      "line": 15
     },
     {
       "service": "IAdminSsoService",
       "implementation": "AdminSsoService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 17
+      "line": 16
     },
     {
       "service": "ITelegramAssertionReplayGuard",
       "implementation": "TelegramAssertionReplayGuard",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 18
-    },
-    {
-      "service": "IEmailTemplateProvider",
-      "implementation": "EmailTemplateProvider",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 19
+      "line": 17
     },
     {
       "service": "IAuditLogger",
       "implementation": "StructuredAuditLogger",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 20
+      "line": 18
     },
     {
       "service": "IEmailOutbox",
@@ -26526,18 +26519,11 @@
       "line": 22
     },
     {
-      "service": "IUserLoginEventRepository",
-      "implementation": "UserLoginEventRepository",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 20
-    },
-    {
       "service": "IAdminUserRoleAuditRepository",
       "implementation": "AdminUserRoleAuditRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 24
+      "line": 20
     },
     {
       "service": "IEmailVerificationNotifier",

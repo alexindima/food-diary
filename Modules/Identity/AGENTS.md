@@ -12,5 +12,8 @@ owners.
 Identity physically owns EmailTemplate, UserRefreshTokenSession, and UserLoginEvent
 through its Domain project, plus their EF model and independent template/session
 adapters. Central FoodDiaryDbContext applies the Identity persistence model; central
-migrations/snapshot and the mixed UserLoginEventRepository remain central. See
+migrations/snapshot remain central. Identity Infrastructure also owns the login-event
+reporting/cleanup repository and cached email-template provider. Their projections
+may read Users data through the shared context; that read does not transfer User
+ownership. Register all adapters with `AddIdentityPersistence`. See
 `docs/ai/identity-domain-extraction.md`.

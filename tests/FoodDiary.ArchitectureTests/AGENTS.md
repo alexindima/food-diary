@@ -22,6 +22,10 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 - `SolutionModuleFolderTests` rejects empty solution-folder subtrees, duplicate folders/projects and missing project files; keeps module tests under `/Modules/<Owner>/tests/` and service tests under `/Services/<Owner>/Tests/`; and prevents redundant `Application/Core` and `Tests/Core` wrappers. Physical test directories alone do not provide solution grouping: each test project must be listed inside the corresponding solution folder. Folders with content in descendants (including solution files) and meaningful single-child groups remain valid.
 
 ## Rules
+
+- `IdentityPersistenceOwnershipTests` requires the two extracted Identity adapters
+  and their focused tests to remain with the module. Keep the login-event bulk
+  deletion exception explicit after relocation; do not weaken its scope.
 - Shared-library and development-tool test projects belong physically under `Shared/tests/` and `Tooling/tests/`, respectively, and in matching solution folders. `SolutionModuleFolderTests` also verifies their central test-settings imports; do not duplicate runner or build defaults.
 - Prefer Roslyn-based checks for C# syntax over regex when inspecting declarations.
 - Prefer `SourceScanner`, `ProjectReferenceReader`, `ArchitectureTestPaths`, and `CSharpSyntaxReader` over ad-hoc filesystem parsing.

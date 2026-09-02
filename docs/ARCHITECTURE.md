@@ -199,3 +199,11 @@ DbContext, migrations and snapshot remain with their existing owners. Product,
 Recipe and Image links remain ID-based with unchanged batch snapshot fallbacks.
 No extra Domain.Contracts project is needed by the current acyclic graph.
 See `docs/ai/meals-ownership-inventory.md` for source evidence and remaining seams.
+
+## Residual infrastructure boundaries
+
+See [the central Infrastructure ownership audit](architecture/infrastructure-boundary-audit.md)
+for remaining module adapters, intentionally shared database mechanisms and mixed
+components that require separate design. Identity owns the login-event repository
+and cached email-template provider; this does not change the shared EF context or
+the direction of module-to-central-Infrastructure dependencies.

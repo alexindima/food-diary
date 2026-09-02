@@ -617,6 +617,8 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Modules.Identity.Application.Tests"] = ["FoodDiary.Application.Notifications", "FoodDiary.Application.Runtime", "FoodDiary.Modules.Dietologist.Application", "FoodDiary.Modules.Identity.Application", "FoodDiary.Modules.Users.Application", "FoodDiary.Modules.Users.Domain"],
             ["FoodDiary.Modules.Identity.Domain.Tests"] = ["FoodDiary.Modules.Identity.Domain"],
+            ["FoodDiary.Modules.Identity.Infrastructure.Tests"] = ["FoodDiary.Modules.Identity.Infrastructure"],
+            ["FoodDiary.Modules.Identity.Infrastructure.IntegrationTests"] = ["FoodDiary.Modules.Identity.Infrastructure", "FoodDiary.Testing", "FoodDiary.Modules.Users.Domain"],
             ["FoodDiary.Modules.Images.Application.Tests"] = ["FoodDiary.Application.Images", "FoodDiary.Modules.Users.Application", "FoodDiary.Modules.Users.Domain.Contracts"],
             ["FoodDiary.Modules.Images.Domain.Tests"] = ["FoodDiary.Modules.Images.Domain", "FoodDiary.Modules.Users.Domain.Contracts"],
             ["FoodDiary.Modules.Images.Infrastructure.IntegrationTests"] = ["FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Images.Infrastructure", "FoodDiary.Testing", "FoodDiary.Modules.Users.Domain"],
