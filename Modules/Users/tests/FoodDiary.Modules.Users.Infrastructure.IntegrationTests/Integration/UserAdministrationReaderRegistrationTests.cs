@@ -46,19 +46,28 @@ public sealed class UserAdministrationReaderRegistrationTests {
             () => Assert.False(repository is IUserAdminReadRepository),
             () => Assert.False(repository is IUserAdminReadModelRepository),
             () => Assert.Same(repository, first.ServiceProvider.GetRequiredService<UserRepository>()),
+            () => Assert.Same(typeof(UsersModuleRegistration).Assembly, repository.GetType().Assembly),
+            () => Assert.NotSame(repository, second.ServiceProvider.GetRequiredService<IUserRepository>()),
             () => Assert.Same(repository, first.ServiceProvider.GetRequiredService<IUserLookupRepository>()),
             () => Assert.Same(repository, first.ServiceProvider.GetRequiredService<IUserWriteRepository>()),
             () => Assert.Same(repository, first.ServiceProvider.GetRequiredService<IUserGoogleIdentityRepository>()),
             () => Assert.Single(services, descriptor => descriptor.ServiceType == typeof(IUserAdminReadRepository)),
             () => Assert.Single(services, descriptor => descriptor.ServiceType == typeof(IUserAdminReadModelRepository)));
+        foreach (Type port in new[] { typeof(UserRepository), typeof(IUserRepository), typeof(IUserLookupRepository), typeof(IUserGoogleIdentityRepository), typeof(IUserWriteRepository) }) {
+            ServiceDescriptor registration = Assert.Single(services, descriptor => descriptor.ServiceType == port);
+            Assert.Equal(ServiceLifetime.Scoped, registration.Lifetime);
+        }
     }
 
     [Fact]
-    public void AddInfrastructure_DoesNotOwnAdministrativeReadAliases() {
+    public void AddInfrastructure_DoesNotOwnUsersRepositoryOrReadAliases() {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().Build());
 
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IUserAdminReadRepository));
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IUserAdminReadModelRepository));
+        foreach (Type port in new[] { typeof(UserRepository), typeof(IUserRepository), typeof(IUserLookupRepository), typeof(IUserGoogleIdentityRepository), typeof(IUserWriteRepository), typeof(IUserAccessTokenSecurityReader) }) {
+            Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == port);
+        }
     }
 }

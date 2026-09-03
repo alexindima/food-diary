@@ -57,10 +57,10 @@ tests leave the mixed Dietologist class; see
   moving its file or weakening transactional replay guarantees.
 - `RecipeCompositionTransactionLock` coordinates Products and Recipes; retain one
   shared lock identity until a deliberate composition boundary replaces it.
-- `UserRepository` implements user lookup/write and Google identity. Administrative
-  projections and access-token security-state reading now belong to Users Infrastructure.
-  Split remaining responsibilities only after proving shared tracking,
-  deleted-user filters and scoped aliases. A blind move is not the next step.
+- `UserRepository` now belongs to Users Infrastructure together with its four
+  scoped aliases. Its tracked aggregate access stays separate from administrative
+  projections and access-token security-state reading. Identity consumes Users
+  capabilities; no central repository compatibility seam remains.
 - Audit storage/writer may remain a generic capability even when Dietologist's
   rule selection moves. Do not conflate storage with the rules that emit entries.
 - `StronglyTypedIdConverters` retains public compatibility helpers. Audit current
@@ -102,6 +102,14 @@ tests leave the mixed Dietologist class; see
    that remaining aggregate repository as one boundary before another move; do
    not split shared tracking by provider names alone. See
    `docs/ai/users-administration-reader-ownership.md`.
+10. The complete remaining UserRepository and seven focused provider tests now
+    belong to Users. Query/write bodies and scoped alias identity are preserved;
+    new SQL regressions protect caller-controlled saving/transactions, role-audit
+    rollback, account predicates and tracked state. See `docs/ai/users-repository-ownership.md`.
+
+Next review the explicit four-stream dependencies in OutboxDeadLetterReplayService.
+That is a shared-engine versus module-stream adapter design, not an automatic
+physical move or permission to change replay/transaction semantics.
 
 Every persistence tranche must keep the dependency graph acyclic, preserve model
 identity, retain real provider tests and check composition roots. Avoid adding new

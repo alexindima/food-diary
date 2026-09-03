@@ -733,7 +733,7 @@
         "applicationAbstractionAreas": ["FoodDiary.Application.Abstractions/Users"],
         "domainAreas": ["Modules/Users/Domain", "Modules/Users/Domain.Contracts"],
         "persistenceAreas": ["Modules/Users/Infrastructure", "Modules/Users/Infrastructure/Model"],
-        "centralPersistenceSeams": ["FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs"],
+        "centralPersistenceSeams": [],
         "identitySeams": ["Modules/Identity/Application", "Modules/Identity/Infrastructure/Persistence/Authentication"]
       }
     },

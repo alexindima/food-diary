@@ -257,8 +257,9 @@ Admin's distinct impersonation protocol and shared one-time code store/API Redis
 adapter retain their owners. See `docs/ai/identity-sso-ownership.md`.
 Email outbox remains shared technical delivery for fully prepared messages.
 Its reporting join to Users does not transfer User ownership. Shared DbContext,
-migrations/snapshot, combined UserRepository, replay guard and mail transport stay
-with their existing owners. See `docs/architecture/infrastructure-boundary-audit.md`.
+migrations/snapshot and mail transport stay with their existing owners; Identity
+owns the Telegram replay guard and Users owns the tracked UserRepository. See
+`docs/architecture/infrastructure-boundary-audit.md`.
 
 ### Users public capabilities
 

@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4772,
+    "productionFiles": 4771,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -4650,19 +4650,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Repositories.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.2
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
@@ -4983,14 +4975,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
-      "nonBlankLines": 57,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.64
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
@@ -37850,11 +37834,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/AssemblyInfo.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/Users/Infrastructure/Model/Persistence/Configurations/BodyMetrics/WaistGoalConfiguration.cs",
@@ -37953,6 +37937,14 @@
       "structuralRiskScore": 0.32
     },
     {
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs",
+      "nonBlankLines": 57,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.64
+    },
+    {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs",
       "nonBlankLines": 22,
       "decisionPoints": 1,
@@ -37970,11 +37962,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
-      "nonBlankLines": 21,
+      "nonBlankLines": 26,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
+      "structuralRiskScore": 0.52
     },
     {
       "path": "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs",

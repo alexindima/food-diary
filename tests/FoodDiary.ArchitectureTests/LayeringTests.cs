@@ -348,7 +348,6 @@ public class LayeringTests {
     public void InfrastructureFeatureRepositoryComposition_StaysLimitedToApprovedFeatureModules() {
         string dependencyInjectionPath = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "DependencyInjection.Repositories.cs");
         string[] expectedRegistrations = [
-            "services.AddUserPersistence();",
             "services.AddAuditPersistence();",
             "services.AddFoodPersistence();",
             "services.AddEmailPersistence();",

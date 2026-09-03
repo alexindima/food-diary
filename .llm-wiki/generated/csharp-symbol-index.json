@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3549,
-    "symbols": 3534,
+    "sourceFiles": 3548,
+    "symbols": 3533,
     "interfaceImplementationLinks": 235,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 1861,
+      "class": 1860,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1383,
+      "Other": 1382,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -2176,13 +2176,6 @@
       "line": 4
     },
     {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "line": 6
-    },
-    {
       "name": "DomainEventNotification",
       "kind": "record",
       "role": "Other",
@@ -2545,13 +2538,6 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Shared/RecipeCompositionTransactionLock.cs",
       "line": 4
-    },
-    {
-      "name": "UserRepository",
-      "kind": "class",
-      "role": "Repository",
-      "path": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
-      "line": 7
     },
     {
       "name": "DatabaseCommandTelemetryInterceptor",
@@ -23904,6 +23890,13 @@
       "line": 6
     },
     {
+      "name": "UserRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs",
+      "line": 7
+    },
+    {
       "name": "UserRoleCatalogService",
       "kind": "class",
       "role": "Service",
@@ -26289,7 +26282,7 @@
       "interface": "IUserRepository",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserRepository.cs",
       "implementation": "UserRepository",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs",
       "confidence": "naming-convention"
     },
     {

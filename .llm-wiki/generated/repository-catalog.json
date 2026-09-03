@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 223,
-    "documentationPages": 133
+    "documentationPages": 134
   },
   "dotnet": {
     "projects": [
@@ -12727,6 +12727,7 @@
       "docs/ai/users-domain-extraction.md",
       "docs/ai/users-module-extraction-wiki-findings.md",
       "docs/ai/users-ownership-inventory.md",
+      "docs/ai/users-repository-ownership.md",
       "docs/ai/users-security-reader-ownership.md",
       "docs/architecture/Exception-vs-Result.md",
       "docs/architecture/infrastructure-boundary-audit.md",

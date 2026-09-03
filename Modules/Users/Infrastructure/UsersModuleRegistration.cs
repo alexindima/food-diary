@@ -10,6 +10,11 @@ public static class UsersModuleRegistration {
         services.AddUsersApplication().AddUsersPersistence();
 
     public static IServiceCollection AddUsersPersistence(this IServiceCollection services) {
+        services.AddScoped<UserRepository>();
+        services.AddScoped<IUserRepository>(static provider => provider.GetRequiredService<UserRepository>());
+        services.AddScoped<IUserLookupRepository>(static provider => provider.GetRequiredService<UserRepository>());
+        services.AddScoped<IUserGoogleIdentityRepository>(static provider => provider.GetRequiredService<UserRepository>());
+        services.AddScoped<IUserWriteRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<UserAdministrationReadRepository>();
         services.AddScoped<IUserAdminReadRepository>(static provider => provider.GetRequiredService<UserAdministrationReadRepository>());
         services.AddScoped<IUserAdminReadModelRepository>(static provider => provider.GetRequiredService<UserAdministrationReadRepository>());

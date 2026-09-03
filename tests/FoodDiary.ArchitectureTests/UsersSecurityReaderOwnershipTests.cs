@@ -10,17 +10,17 @@ public sealed class UsersSecurityReaderOwnershipTests {
         Assert.Multiple(
             () => Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs"))),
             () => Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserAccessTokenSecurityReaderIntegrationTests.cs"))));
-        string[] centralIdentifiers = ReadIdentifiers("FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs");
-        string[] registrations = ReadIdentifiers("FoodDiary.Infrastructure/DependencyInjection.Users.cs");
+        string[] repositoryIdentifiers = ReadIdentifiers("Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs");
+        string[] registrations = ReadIdentifiers("FoodDiary.Infrastructure/DependencyInjection.Repositories.cs");
         string[] moduleRegistrations = ReadIdentifiers("Modules/Users/Infrastructure/UsersModuleRegistration.cs");
 
         Assert.Multiple(
-            () => Assert.DoesNotContain("IUserAccessTokenSecurityReader", centralIdentifiers, StringComparer.Ordinal),
-            () => Assert.DoesNotContain("IsCurrentAsync", centralIdentifiers, StringComparer.Ordinal),
+            () => Assert.DoesNotContain("IUserAccessTokenSecurityReader", repositoryIdentifiers, StringComparer.Ordinal),
+            () => Assert.DoesNotContain("IsCurrentAsync", repositoryIdentifiers, StringComparer.Ordinal),
             () => Assert.DoesNotContain("IUserAccessTokenSecurityReader", registrations, StringComparer.Ordinal),
-            () => Assert.Contains("IUserRepository", registrations, StringComparer.Ordinal),
-            () => Assert.Contains("IUserGoogleIdentityRepository", registrations, StringComparer.Ordinal),
-            () => Assert.Contains("IUserWriteRepository", registrations, StringComparer.Ordinal),
+            () => Assert.Contains("IUserRepository", moduleRegistrations, StringComparer.Ordinal),
+            () => Assert.Contains("IUserGoogleIdentityRepository", moduleRegistrations, StringComparer.Ordinal),
+            () => Assert.Contains("IUserWriteRepository", moduleRegistrations, StringComparer.Ordinal),
             () => Assert.Contains("UserAccessTokenSecurityReader", moduleRegistrations, StringComparer.Ordinal));
     }
 

@@ -113,8 +113,8 @@ See `docs/ai/identity-sso-ownership.md` for protocol/store ownership and isolati
 
 Identity owns login-event persistence/reporting and cached email-template lookup
 under `Modules/Identity/Infrastructure`. Do not register these adapters in central
-DI; hosts already compose `AddIdentityPersistence`. The combined UserRepository,
-generic persistence engine and central model/migrations remain here. See
+DI; hosts already compose `AddIdentityPersistence`. UserRepository now belongs to
+Users Infrastructure; generic persistence engine and central model/migrations remain here. See
 `docs/architecture/infrastructure-boundary-audit.md` for the residual ownership plan.
 
 Telegram replay guard/registration and consumed-assertion EF state now belong to
@@ -126,19 +126,23 @@ are not part of that move.
 ## Users Domain ownership
 
 `IUserAccessTokenSecurityReader` is now independently registered by Users
-Infrastructure, not an alias of the central UserRepository. Keep the four remaining
-repository/lookup/Google/write aliases on the same scoped repository. The reader uses
+Infrastructure, not an alias of UserRepository. All four repository/lookup/Google/write
+aliases now belong to Users Infrastructure on one scoped repository. The reader uses
 the shared context but must query persisted state with no tracking. See
-`docs/ai/users-security-reader-ownership.md`; do not move or redesign the remaining
-repository as part of this separation. Administrative read/model aliases now share
+`docs/ai/users-security-reader-ownership.md`. Administrative read/model aliases share
 Users' UserAdministrationReadRepository, preserving the original queries and DTO
 mapping; do not register them centrally. See `docs/ai/users-administration-reader-ownership.md`.
+
+The remaining UserRepository has moved as a whole to Users with exact query/write
+bodies; central AddUserPersistence and its registration helper are removed. Keep
+caller-owned SaveChanges and the shared context; see `docs/ai/users-repository-ownership.md`.
 
 Users owns the complete User aggregate, all credential/security partials, roles,
 role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in
 `Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers
 reference the exact owner; shared guards and generic values belong to
-`FoodDiary.Domain.Primitives`; module-specific values stay with their owner. Authentication flows/providers, combined UserRepository,
-DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
+`FoodDiary.Domain.Primitives`; module-specific values stay with their owner. Users
+Infrastructure owns UserRepository; authentication flows/providers, shared DbContext,
+migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.

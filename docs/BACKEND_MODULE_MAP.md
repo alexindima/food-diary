@@ -94,8 +94,8 @@ Use this file when deciding where backend code belongs.
 | Marketing persistence model | `Modules/Marketing/Infrastructure/Model` | Attribution EF configuration and central model-builder seam | Shared `DbContext`, migrations, repository behavior |
 | Marketing infrastructure | `Modules/Marketing/Infrastructure` | Attribution repository adapter and complete module registration | HTTP transport, central migrations, cleanup scheduling |
 | Notifications | `Modules/Notifications` | Feed/preferences orchestration, notification/subscription aggregates and IDs, application ports/payloads, explicit EF model, repositories/outbox adapter and web-push provider; legacy Application assembly and CLR namespaces preserved | Users-owned preference storage, central DbContext/migrations/snapshot and multi-stream outbox engine/replay, HTTP/SignalR and JobManager composition roots |
-| Users | `Modules/Users` | Complete User Domain, UserId contracts, application, role/goal mappings and adapters, focused tests | Shared application contracts, combined UserRepository, DbContext/migrations/snapshot and Identity authentication flows/providers |
-| Identity | `Modules/Identity` | Authentication and Email application slices/services; EmailTemplate, UserRefreshTokenSession and UserLoginEvent Domain types, their EF model, template/session/login-event adapters, cached template provider and focused tests; legacy application assembly and CLR namespaces preserved | Shared Authentication/Email abstractions, Users-owned User/security state, combined UserRepository, central DbContext/migrations/snapshot, external provider adapters, HTTP transport and hosts |
+| Users | `Modules/Users` | Complete User Domain, UserId contracts, application, role/goal mappings, tracked UserRepository and separate read adapters, focused tests | Shared application contracts, DbContext/migrations/snapshot and Identity authentication flows/providers |
+| Identity | `Modules/Identity` | Authentication and Email application slices/services; EmailTemplate, UserRefreshTokenSession and UserLoginEvent Domain types, their EF model, template/session/login-event adapters, cached template provider and focused tests; legacy application assembly and CLR namespaces preserved | Shared Authentication/Email abstractions, Users-owned User/security state and repository, central DbContext/migrations/snapshot, external provider adapters, HTTP transport and hosts |
 | Persistence/technical implementations | `FoodDiary.Infrastructure` | Shared DbContext/migrations/snapshot, shared technical mappings, mixed repositories and technical service implementations; module mappings are registered explicitly | HTTP controllers, host startup, external provider orchestration |
 | External adapters | `FoodDiary.Integrations` | Provider clients, provider options, MailRelay/MailInbox client bridges | EF migrations, core domain workflows |
 | HTTP/SignalR transport | `FoodDiary.Presentation.Api` | Controllers, hubs, HTTP requests/responses, presentation mappings | Business logic, infrastructure, host middleware |
@@ -281,7 +281,8 @@ Users owns the complete User aggregate, all credential/security partials, roles,
 role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in
 `Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers
 reference the exact owner; shared guards and generic values belong to
-`FoodDiary.Domain.Primitives`; module-specific values stay with their owner. Authentication flows/providers, combined UserRepository,
-DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
+`FoodDiary.Domain.Primitives`; module-specific values stay with their owner. Users
+Infrastructure owns UserRepository; authentication flows/providers, shared DbContext,
+migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.

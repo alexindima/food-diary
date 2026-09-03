@@ -590,7 +590,7 @@ public sealed class DependencyInjectionTests {
             .AddFavoritesModule()
             .AddLessonsModule()
             .AddMealPlanningModule()
-            .AddMealsPersistence()
+            .AddMealsPersistence().AddUsersPersistence()
             .AddRecipeCommunityModule()
             .AddRecentItemsModule();
         using ServiceProvider provider = services.BuildServiceProvider();

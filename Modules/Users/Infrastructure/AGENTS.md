@@ -7,7 +7,7 @@ Do not absorb Identity repositories or provider services.
 Own `UserAccessTokenSecurityReader`, scoped through `AddUsersPersistence`. Its
 unchanged no-tracking query reads persisted active/deleted/security-version state;
 API/Identity still owns token validation/issuance. Do not substitute an already
-tracked User or cache state. The remaining central UserRepository lookup, Google,
+tracked User or cache state. The Users-owned UserRepository lookup, Google,
 and write aliases still share one instance and scoped DbContext.
 
 Own `UserAdministrationReadRepository` with both administrative read aliases on
@@ -15,3 +15,8 @@ one scoped adapter. Preserve original paging/status/search/role loading and mode
 mapping, including legacy entity-returning reads. All reads stay no-tracking;
 shared UsersWithRoles query shape is preserved independently from tracked lookup.
 Do not merge these aliases back into UserRepository or duplicate the paging engine.
+
+Own the complete tracked UserRepository; its four scoped aliases are registered
+here, not by AddInfrastructure. Google issuer/subject lookup reads stored Users
+state, not an external provider. Do not add SaveChanges/transactions inside the
+adapter: writes and role-audit additions remain part of the caller's unit of work.
