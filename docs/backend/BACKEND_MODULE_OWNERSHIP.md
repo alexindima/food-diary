@@ -375,6 +375,13 @@ tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.
 
 Recipes use cases, ports, read contracts, persistence model and adapters live under `Modules/Recipes`. Recipe, steps, ingredients, recipe-only value objects and events live in Recipes Domain; recipe IDs live in Recipes Domain.Contracts. Removed inverse CLR navigations remain absent, while explicit unidirectional mappings preserve the existing database relationships. Shared context/migrations/snapshot and cross-module tests stay central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers. See `docs/ai/recipes-ownership-inventory.md`; this is not full Domain/database isolation.
 
+## Identity Telegram replay persistence
+
+Telegram replay guard/DI belongs to Identity Infrastructure, while its technical
+consumed-assertion record and mapping belong to Identity PersistenceModel. This
+does not move User state, provider validation, JWT/SSO or shared DbContext/migrations.
+See `docs/ai/identity-telegram-replay-persistence.md` for the bounded follow-up.
+
 ## Admin physical ownership
 
 Admin Infrastructure owns AdminUserRoleAuditRepository and its two scoped DI

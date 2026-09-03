@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Infrastructure;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Persistence.Authentication;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ public sealed class IdentityPersistenceRegistrationTests {
     [Fact]
     public void AddIdentityPersistence_LoginEventAliasesShareOneInstancePerScope() {
         var services = new ServiceCollection();
+        services.AddSingleton(TimeProvider.System);
         services.AddMemoryCache();
         services.AddDbContext<FoodDiaryDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString("N")));
         Assert.Same(services, services.AddIdentityPersistence());
@@ -31,6 +33,26 @@ public sealed class IdentityPersistenceRegistrationTests {
             () => Assert.Same(repository, first.ServiceProvider.GetRequiredService<IUserLoginEventWriteRepository>()),
             () => Assert.NotSame(repository, second.ServiceProvider.GetRequiredService<IUserLoginEventRepository>()),
             () => Assert.Same(typeof(IdentityModuleRegistration).Assembly, repository.GetType().Assembly));
+    }
+
+    [Fact]
+    public void AddIdentityPersistence_TelegramReplayGuardIsScopedAndUsesModuleOwnedModel() {
+        var services = new ServiceCollection();
+        services.AddMemoryCache();
+        services.AddSingleton(TimeProvider.System);
+        services.AddDbContext<FoodDiaryDbContext>();
+        Assert.Same(services, services.AddIdentityPersistence());
+        using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
+        using IServiceScope first = provider.CreateScope();
+        using IServiceScope second = provider.CreateScope();
+        ITelegramAssertionReplayGuard guard = first.ServiceProvider.GetRequiredService<ITelegramAssertionReplayGuard>();
+
+        Assert.Multiple(
+            () => Assert.IsType<TelegramAssertionReplayGuard>(guard),
+            () => Assert.Same(guard, first.ServiceProvider.GetRequiredService<ITelegramAssertionReplayGuard>()),
+            () => Assert.NotSame(guard, second.ServiceProvider.GetRequiredService<ITelegramAssertionReplayGuard>()),
+            () => Assert.Same(typeof(IdentityModuleRegistration).Assembly, guard.GetType().Assembly),
+            () => Assert.Same(typeof(IdentityPersistenceModelRegistration).Assembly, typeof(ConsumedTelegramAssertion).Assembly));
     }
 
     [Fact]

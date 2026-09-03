@@ -6,7 +6,6 @@ using FoodDiary.Application.Abstractions.Audit.Models;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Audit;
-using FoodDiary.Infrastructure.Persistence.Authentication;
 using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Infrastructure.Persistence.Recommendations;
 
@@ -114,23 +113,6 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
             () => Assert.Equal("id", filtered.TargetId),
             () => Assert.Equal("""{"value":1}""", filtered.Metadata),
             () => Assert.Equal(UtcNow, filtered.CreatedAtUtc));
-    }
-
-    [RequiresDockerFact]
-    public async Task TelegramAssertionReplayGuard_ConsumesAssertionOnlyOnceAndDeletesExpiredRows() {
-        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var guard = new TelegramAssertionReplayGuard(context, FixedTime);
-
-        bool first = await guard.TryConsumeAsync("signed-assertion", UtcNow.AddMinutes(5));
-        bool duplicate = await guard.TryConsumeAsync("signed-assertion", UtcNow.AddMinutes(5));
-        bool expired = await guard.TryConsumeAsync("expired-assertion", UtcNow);
-        bool afterCleanup = await guard.TryConsumeAsync("another-assertion", UtcNow.AddMinutes(5));
-
-        Assert.Multiple(
-            () => Assert.True(first),
-            () => Assert.False(duplicate),
-            () => Assert.True(expired),
-            () => Assert.True(afterCleanup));
     }
 
     [ExcludeFromCodeCoverage]

@@ -11,7 +11,7 @@
     "sourceFiles": 3546,
     "symbols": 3531,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 163,
+    "dependencyInjectionRegistrations": 162,
     "kinds": {
       "class": 1858,
       "enum": 62,
@@ -2138,7 +2138,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "DependencyInjection",
@@ -2253,20 +2253,6 @@
       "line": 7
     },
     {
-      "name": "ConsumedTelegramAssertion",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Authentication/ConsumedTelegramAssertion.cs",
-      "line": 6
-    },
-    {
-      "name": "TelegramAssertionReplayGuard",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
-      "line": 7
-    },
-    {
       "name": "AchievementEvaluationOutboxMessageConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -2278,13 +2264,6 @@
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Audit/AuditEntryConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "ConsumedTelegramAssertionConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs",
       "line": 6
     },
     {
@@ -17699,7 +17678,21 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "line": 9
+      "line": 10
+    },
+    {
+      "name": "ConsumedTelegramAssertion",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Model/Authentication/ConsumedTelegramAssertion.cs",
+      "line": 6
+    },
+    {
+      "name": "ConsumedTelegramAssertionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs",
+      "line": 6
     },
     {
       "name": "UserLoginEventConfiguration",
@@ -17734,6 +17727,13 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
+      "line": 7
+    },
+    {
+      "name": "TelegramAssertionReplayGuard",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
       "line": 7
     },
     {
@@ -26093,7 +26093,7 @@
       "interface": "ITelegramAssertionReplayGuard",
       "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
       "implementation": "TelegramAssertionReplayGuard",
-      "implementationPath": "FoodDiary.Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
+      "implementationPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26446,42 +26446,35 @@
       "implementation": "JwtTokenGenerator",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 13
+      "line": 12
     },
     {
       "service": "IPasswordHasher",
       "implementation": "PasswordHasher",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 14
+      "line": 13
     },
     {
       "service": "IAdminSsoCodeStore",
       "implementation": "InMemoryAdminSsoCodeStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 15
+      "line": 14
     },
     {
       "service": "IAdminSsoService",
       "implementation": "AdminSsoService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 16
-    },
-    {
-      "service": "ITelegramAssertionReplayGuard",
-      "implementation": "TelegramAssertionReplayGuard",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 17
+      "line": 15
     },
     {
       "service": "IAuditLogger",
       "implementation": "StructuredAuditLogger",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 18
+      "line": 16
     },
     {
       "service": "IEmailOutbox",

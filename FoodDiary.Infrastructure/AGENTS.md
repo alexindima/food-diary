@@ -102,6 +102,12 @@ DI; hosts already compose `AddIdentityPersistence`. The combined UserRepository,
 generic persistence engine and central model/migrations remain here. See
 `docs/architecture/infrastructure-boundary-audit.md` for the residual ownership plan.
 
+Telegram replay guard/registration and consumed-assertion EF state now belong to
+Identity Infrastructure/PersistenceModel. The context already installs the model
+through `ApplyIdentityPersistenceModel`; do not add a second central mapping or
+guard registration. JWT, SSO, provider validation and the combined UserRepository
+are not part of that move.
+
 ## Users Domain ownership
 
 Users owns the complete User aggregate, all credential/security partials, roles,

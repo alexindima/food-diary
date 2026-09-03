@@ -225,6 +225,13 @@ HTTP authorization, structured audit and MailInbox client bridge remain central.
 Hosts call AddAdminModule; JobManager adds only AddAdminPersistence. See
 docs/ai/admin-ownership-inventory.md for current source evidence and test ownership.
 
+## Identity Telegram replay persistence
+
+Identity additionally owns Telegram replay persistence: the scoped guard lives
+in its Infrastructure and the technical consumed-assertion record/configuration
+in its PersistenceModel. Shared DbContext/migrations and unchanged auth callers
+remain with existing owners; see `docs/ai/identity-telegram-replay-persistence.md`.
+
 ## Products physical ownership
 
 Products owns Product, ProductId contracts, product-only value objects, use cases,

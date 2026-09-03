@@ -735,7 +735,7 @@
         "domainAreas": ["Modules/Users/Domain", "Modules/Users/Domain.Contracts"],
         "persistenceAreas": ["Modules/Users/Infrastructure", "Modules/Users/Infrastructure/Model"],
         "centralPersistenceSeams": ["FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs"],
-        "identitySeams": ["Modules/Identity/Application", "FoodDiary.Infrastructure/Persistence/Authentication"]
+        "identitySeams": ["Modules/Identity/Application", "Modules/Identity/Infrastructure/Persistence/Authentication"]
       }
     },
     "Wearables": {

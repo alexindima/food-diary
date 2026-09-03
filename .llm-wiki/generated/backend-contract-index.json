@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7644,
+    "consumerEdges": 7645,
     "productionConsumerEdges": 4560,
-    "testConsumerEdges": 3084,
+    "testConsumerEdges": 3085,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -89208,32 +89208,6 @@
         "FoodDiary.Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ITelegramAssertionReplayGuard",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ITelegramAssertionReplayGuard",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -89273,9 +89247,48 @@
         "FoodDiary.Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramAssertionReplayGuard",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramAssertionReplayGuard",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramAssertionReplayGuard",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/IdentityPersistenceRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "ITelegramAuthValidator",

@@ -10,3 +10,8 @@ PostgreSQL reporting and retention cases, linking only the shared database fixtu
 Central suites retain mixed persistence coverage, Admin consumers and host tests.
 Run both module infrastructure projects plus central Infrastructure integration
 tests for changes to these adapters; do not substitute InMemory tests for SQL proof.
+
+Telegram replay provider tests live here, not in the mixed Dietologist suite.
+Keep the extracted sequential assertions and real PostgreSQL tests for concurrent
+single consumption, fingerprint storage, expiry boundaries and cancellation.
+Registration tests verify scoped lifetime and model/adapter assembly ownership.

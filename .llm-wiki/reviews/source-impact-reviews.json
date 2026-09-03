@@ -8,13 +8,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "0738b2194aa8288ceba87c9a8a6b929320d5a240c3fd1d154f89f9edd5646b0b"
+          "sha256": "d0d9182d395a4286b017228a3e5656665a8a0381b14443e61af39b03cd927c9d"
         }
       ],
-      "reason": "Guides and the residual Infrastructure audit distinguish Admin projection ownership from Users domain/model ownership. Shared context and deferred adapters are unchanged.",
+      "reason": "Identity owns the guard plus technical model state, Users and shared context/migrations retain their existing responsibilities. Guides, manifest and the residual audit match current paths; no new shared assembly or production dependency.",
       "baseRef": "HEAD",
-      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
-      "reviewedAtUtc": "2026-09-02T23:03:44.2802743Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:20.1627672Z"
     },
     {
       "pageId": "module.frontend",
@@ -38,13 +38,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "0738b2194aa8288ceba87c9a8a6b929320d5a240c3fd1d154f89f9edd5646b0b"
+          "sha256": "d0d9182d395a4286b017228a3e5656665a8a0381b14443e61af39b03cd927c9d"
         }
       ],
-      "reason": "Guides and the residual Infrastructure audit distinguish Admin projection ownership from Users domain/model ownership. Shared context and deferred adapters are unchanged.",
+      "reason": "Identity owns the guard plus technical model state, Users and shared context/migrations retain their existing responsibilities. Guides, manifest and the residual audit match current paths; no new shared assembly or production dependency.",
       "baseRef": "HEAD",
-      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
-      "reviewedAtUtc": "2026-09-02T23:03:44.4358107Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:20.3230649Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -52,22 +52,26 @@
       "pageSha256": "a12fef9a11365dd6a6c58228abc9447b6f005042e43ab58532b8250805df1709",
       "sources": [
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "826b8a0fa2d43c3adf397832d4fd7c63d2f4c98d2d9d359b16b4b5f3f7dca464"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "0738b2194aa8288ceba87c9a8a6b929320d5a240c3fd1d154f89f9edd5646b0b"
+          "sha256": "d0d9182d395a4286b017228a3e5656665a8a0381b14443e61af39b03cd927c9d"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "716f19ae0047527895d2837e6ac93223c9b2a28e4845b4b12fa0e8bcc5bf98c3"
+          "sha256": "0b273368ac8109a0196e59c9e95ffb7adfc8866bd2bbd53aca692f0572a2c7c8"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "78ca3badef9f7181030111a7576ae0d17baf11b79f5fbea0cea134e7aba320fe"
+          "sha256": "70c0ba5fdad0ed06361e0cc45e4f0fb6dcf0fa0dd86587e8520120798c75863e"
         }
       ],
-      "reason": "Only an unchanged Admin read projection and its DI aliases moved. Admin authorization, routes, response fields, status codes, Users entities and EF model remain unchanged; full HTTP and provider results are retained in runtime evidence.",
+      "reason": "Only Identity replay persistence ownership changes. Signature and age validation, widget prefix, auth errors, controllers and response contracts remain unchanged. HTTP tests are separate verification; this source-impact review is not their execution evidence.",
       "baseRef": "HEAD",
-      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
-      "reviewedAtUtc": "2026-09-02T23:03:44.6083431Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:20.4811195Z"
     },
     {
       "pageId": "system.architecture",
@@ -75,18 +79,18 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "0738b2194aa8288ceba87c9a8a6b929320d5a240c3fd1d154f89f9edd5646b0b"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "826b8a0fa2d43c3adf397832d4fd7c63d2f4c98d2d9d359b16b4b5f3f7dca464"
         },
         {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "582d36964b3d010bc1f5b48bbddffeeddee2dcc791cddcd7871755fbff3d257a"
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "d0d9182d395a4286b017228a3e5656665a8a0381b14443e61af39b03cd927c9d"
         }
       ],
-      "reason": "Guides and the residual Infrastructure audit distinguish Admin projection ownership from Users domain/model ownership. Shared context and deferred adapters are unchanged.",
+      "reason": "Identity owns the guard plus technical model state, Users and shared context/migrations retain their existing responsibilities. Guides, manifest and the residual audit match current paths; no new shared assembly or production dependency.",
       "baseRef": "HEAD",
-      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
-      "reviewedAtUtc": "2026-09-02T23:03:44.7938013Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:20.6341230Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -140,13 +144,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "49eb4626152b7c2c85384cec54ed0d28a081cdf05738100c4bbb235c4cff8ce0"
+          "sha256": "826b8a0fa2d43c3adf397832d4fd7c63d2f4c98d2d9d359b16b4b5f3f7dca464"
         }
       ],
-      "reason": "Export Infrastructure ownership, acyclic references, Resources and host boundaries verified against current source; module manifest and guides updated. No shared DbContext/schema, other owner or deployment topology change.",
+      "reason": "Identity owns the guard plus technical model state, Users and shared context/migrations retain their existing responsibilities. Guides, manifest and the residual audit match current paths; no new shared assembly or production dependency.",
       "baseRef": "HEAD",
-      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
-      "reviewedAtUtc": "2026-09-02T20:37:33.3520109Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:20.7946981Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -203,14 +207,14 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "582d36964b3d010bc1f5b48bbddffeeddee2dcc791cddcd7871755fbff3d257a"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "826b8a0fa2d43c3adf397832d4fd7c63d2f4c98d2d9d359b16b4b5f3f7dca464"
         }
       ],
-      "reason": "Two module test leaves, exact owner guard, scoped DI and provider assertions cover the relocation. One source-proven expected path changed in frozen100, not queries, ranking, cohorts or thresholds. Actual Wiki exits are recorded separately.",
+      "reason": "Existing Identity test projects own the moved provider test and new deterministic regression. Exactly two expected path literals follow source-identical moves, not ranking/query/threshold changes. Initial compiler failures and actual Wiki exits remain in the evidence.",
       "baseRef": "HEAD",
-      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
-      "reviewedAtUtc": "2026-09-02T23:03:44.9907171Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:20.9544661Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -219,13 +223,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "6e3e81ca53c0d73c04395b78a20b0ad386287ddda11c7b1285933fd33b63ffaa"
+          "sha256": "70c896a2f8a93ffc09bbf158b8161b259a2dac39981efd8f0ab9b24c93d55f4f"
         }
       ],
-      "reason": "Only an unchanged Admin read projection and its DI aliases moved. Admin authorization, routes, response fields, status codes, Users entities and EF model remain unchanged; full HTTP and provider results are retained in runtime evidence.",
+      "reason": "Only Identity replay persistence ownership changes. Signature and age validation, widget prefix, auth errors, controllers and response contracts remain unchanged. HTTP tests are separate verification; this source-impact review is not their execution evidence.",
       "baseRef": "HEAD",
-      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
-      "reviewedAtUtc": "2026-09-02T23:03:45.4816394Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:21.3940481Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -264,13 +268,13 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "52f10ab54b116ea5fc1943868fa1e82f3902f51fe0f3b317c50fe56c45f585db"
+          "sha256": "4fcee00f8b431139c6e2b35a0094868008684048b98dd0f0d2072e9cd5484f52"
         }
       ],
-      "reason": "Two module test leaves, exact owner guard, scoped DI and provider assertions cover the relocation. One source-proven expected path changed in frozen100, not queries, ranking, cohorts or thresholds. Actual Wiki exits are recorded separately.",
+      "reason": "Existing Identity test projects own the moved provider test and new deterministic regression. Exactly two expected path literals follow source-identical moves, not ranking/query/threshold changes. Initial compiler failures and actual Wiki exits remain in the evidence.",
       "baseRef": "HEAD",
-      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
-      "reviewedAtUtc": "2026-09-02T23:03:45.6383968Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:21.5803085Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -481,14 +485,18 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
+          "path": ".llm-wiki/generated/domain-data-index.json",
+          "sha256": "7bdf205d333c2a2eb6784f75eabd8927a4232c9e98f52362eba83740812f7b9d"
+        },
+        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "78ca3badef9f7181030111a7576ae0d17baf11b79f5fbea0cea134e7aba320fe"
+          "sha256": "70c0ba5fdad0ed06361e0cc45e4f0fb6dcf0fa0dd86587e8520120798c75863e"
         }
       ],
-      "reason": "Two module test leaves, exact owner guard, scoped DI and provider assertions cover the relocation. One source-proven expected path changed in frozen100, not queries, ranking, cohorts or thresholds. Actual Wiki exits are recorded separately.",
+      "reason": "Existing Identity test projects own the moved provider test and new deterministic regression. Exactly two expected path literals follow source-identical moves, not ranking/query/threshold changes. Initial compiler failures and actual Wiki exits remain in the evidence.",
       "baseRef": "HEAD",
-      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
-      "reviewedAtUtc": "2026-09-02T23:03:45.8097313Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:21.7558095Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -805,13 +813,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bbd19bd8bc5eb02b6f9f56ed0513e4577f7cb97173aaa85de2472865e53cf4ed"
+          "sha256": "5ce0e77bbd8edce150bcd068d1aaa3a1e7a08d59cabeecad8960bc52972bfa8a"
         }
       ],
-      "reason": "Two module test leaves, exact owner guard, scoped DI and provider assertions cover the relocation. One source-proven expected path changed in frozen100, not queries, ranking, cohorts or thresholds. Actual Wiki exits are recorded separately.",
+      "reason": "Existing Identity test projects own the moved provider test and new deterministic regression. Exactly two expected path literals follow source-identical moves, not ranking/query/threshold changes. Initial compiler failures and actual Wiki exits remain in the evidence.",
       "baseRef": "HEAD",
-      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
-      "reviewedAtUtc": "2026-09-02T23:03:46.2159545Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:22.1550032Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -888,13 +896,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "817dffeaa4612778365f6a57b361184ef96b8fac1e83daa152e3e28f0ae8f663"
+          "sha256": "dcc3dcefaa30f95c0af9b8ff2ebd0815d1d023e350c03dca656497952be82e6b"
         }
       ],
-      "reason": "Guides and the residual Infrastructure audit distinguish Admin projection ownership from Users domain/model ownership. Shared context and deferred adapters are unchanged.",
+      "reason": "Identity owns the guard plus technical model state, Users and shared context/migrations retain their existing responsibilities. Guides, manifest and the residual audit match current paths; no new shared assembly or production dependency.",
       "baseRef": "HEAD",
-      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
-      "reviewedAtUtc": "2026-09-02T23:03:46.8261293Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:22.7789170Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -903,17 +911,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bbd19bd8bc5eb02b6f9f56ed0513e4577f7cb97173aaa85de2472865e53cf4ed"
+          "sha256": "5ce0e77bbd8edce150bcd068d1aaa3a1e7a08d59cabeecad8960bc52972bfa8a"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "817dffeaa4612778365f6a57b361184ef96b8fac1e83daa152e3e28f0ae8f663"
+          "sha256": "dcc3dcefaa30f95c0af9b8ff2ebd0815d1d023e350c03dca656497952be82e6b"
         }
       ],
-      "reason": "Source body and data filters are Git-identical; no new data collection, logging, sharing, retention, credentials or auth boundary. The actor left join and Admin role requirement remain intact.",
+      "reason": "The three moved production Git blobs are identical. Store only the same SHA256 fingerprint and expiry, retain DELETE and atomic ON CONFLICT INSERT, with no new logging, credential storage, sharing or retention policy. Real PostgreSQL replay, concurrency, expiry and cancellation tests protect the boundary; no broad security-scan claim.",
       "baseRef": "HEAD",
-      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
-      "reviewedAtUtc": "2026-09-02T23:03:47.2609422Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:23.3449049Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1151,17 +1159,17 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "52f10ab54b116ea5fc1943868fa1e82f3902f51fe0f3b317c50fe56c45f585db"
+          "sha256": "4fcee00f8b431139c6e2b35a0094868008684048b98dd0f0d2072e9cd5484f52"
         },
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "4c1d1934c44c10adeafdc4b1592f58c9c85ed8057af1b54545661b30751f724e"
+          "sha256": "974c73a5b555f913f7ac33616b0425b3d685f1917280d493d63e2f3292ecf56e"
         }
       ],
-      "reason": "Guides and the residual Infrastructure audit distinguish Admin projection ownership from Users domain/model ownership. Shared context and deferred adapters are unchanged.",
+      "reason": "Identity owns the guard plus technical model state, Users and shared context/migrations retain their existing responsibilities. Guides, manifest and the residual audit match current paths; no new shared assembly or production dependency.",
       "baseRef": "HEAD",
-      "gitHead": "f886dce18cb4fcdf81cb56fd8f3be163992cfccf",
-      "reviewedAtUtc": "2026-09-02T23:03:46.5318660Z"
+      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
+      "reviewedAtUtc": "2026-09-02T23:47:22.5067691Z"
     },
     {
       "pageId": "workflow.review-diff",

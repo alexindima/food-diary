@@ -17,3 +17,8 @@ reporting/cleanup repository and cached email-template provider. Their projectio
 may read Users data through the shared context; that read does not transfer User
 ownership. Register all adapters with `AddIdentityPersistence`. See
 `docs/ai/identity-domain-extraction.md`.
+
+Telegram assertion replay persistence belongs to Identity Infrastructure. Its
+technical consumed-assertion record and EF mapping belong to PersistenceModel,
+not Domain. Preserve fingerprinting, expiry cleanup and atomic conflict behavior;
+signature/age validation remains with the existing application/provider callers.

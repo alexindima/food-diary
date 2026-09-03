@@ -5532,7 +5532,7 @@
         "e => e.ExpiresAtUtc)"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs"
+      "path": "Modules/Identity/Infrastructure/Model/Configurations/Authentication/ConsumedTelegramAssertionConfiguration.cs"
     },
     {
       "area": "FoodDiary",

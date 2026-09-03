@@ -32,9 +32,15 @@ HTTP change is introduced. See `docs/ai/admin-role-audit-persistence.md`.
 
 ## Remaining candidates (not moved in these tranches)
 
+Telegram replay persistence is extracted to Identity Infrastructure and its
+existing PersistenceModel project. The technical consumed-assertion record is
+not a Domain aggregate. The shared model entrypoint, SQL bodies, fingerprinting,
+expiry semantics and authentication callers remain unchanged. Focused provider
+tests leave the mixed Dietologist class; see
+`docs/ai/identity-telegram-replay-persistence.md`.
+
 | Current source | Likely owner / next action | Required boundary proof |
 | --- | --- | --- |
-| `Persistence/Authentication/TelegramAssertionReplayGuard.cs`, consumed-assertion record and mapping | Identity | Preserve fingerprinting, expiry cleanup and atomic conflict handling; rerun security/real PostgreSQL tests. |
 | `Persistence/Images/ImageObjectDeletionOutboxMessage.cs` and mapping | Images PersistenceModel | Follow Notifications' model-only project plus shared outbox contract; never create context-to-adapter cycles. |
 | `Persistence/Achievements/AchievementEvaluationOutboxMessage.cs` and mapping | Gamification PersistenceModel | Preserve pending revisions, claim release and retry semantics; processor/enqueue already belong to Gamification. |
 | `Persistence/Interceptors/CollaborationAuditInterceptor.cs` | Dietologist-specific audit rules | It switches explicitly on invitation, recommendation, client task and bulk dispatch. Move rule ownership without making central DI reference module adapters; preserve SaveChanges timing. |
@@ -66,8 +72,8 @@ HTTP change is introduced. See `docs/ai/admin-role-audit-persistence.md`.
 ## Recommended sequence
 
 1. Finish and verify the two Identity adapters above.
-2. The Admin read projection is extracted; review Identity replay persistence as
-   the next separately verified change.
+2. Admin role-audit projection and Identity replay persistence are extracted;
+   preserve their module tests and shared model/host composition boundaries.
 3. Move Images/Gamification stream records and mappings using the existing
    Notifications precedent, keeping the engine central.
 4. Design Dietologist audit registration, mixed replay and UserRepository seams

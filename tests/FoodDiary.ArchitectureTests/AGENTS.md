@@ -30,6 +30,8 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 - `IdentityPersistenceOwnershipTests` requires the two extracted Identity adapters
   and their focused tests to remain with the module. Keep the login-event bulk
   deletion exception explicit after relocation; do not weaken its scope.
+  Its Telegram cases also protect module-owned replay guard/model/configuration
+  and the focused provider tests extracted from the mixed Dietologist class.
 - Shared-library and development-tool test projects belong physically under `Shared/tests/` and `Tooling/tests/`, respectively, and in matching solution folders. `SolutionModuleFolderTests` also verifies their central test-settings imports; do not duplicate runner or build defaults.
 - Prefer Roslyn-based checks for C# syntax over regex when inspecting declarations.
 - Prefer `SourceScanner`, `ProjectReferenceReader`, `ArchitectureTestPaths`, and `CSharpSyntaxReader` over ad-hoc filesystem parsing.
