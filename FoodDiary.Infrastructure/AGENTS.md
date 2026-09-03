@@ -126,11 +126,13 @@ are not part of that move.
 ## Users Domain ownership
 
 `IUserAccessTokenSecurityReader` is now independently registered by Users
-Infrastructure, not an alias of the central UserRepository. Keep all six remaining
-lookup/Google/Admin/write aliases on the same scoped repository. The reader uses
+Infrastructure, not an alias of the central UserRepository. Keep the four remaining
+repository/lookup/Google/write aliases on the same scoped repository. The reader uses
 the shared context but must query persisted state with no tracking. See
 `docs/ai/users-security-reader-ownership.md`; do not move or redesign the remaining
-repository as part of this separation.
+repository as part of this separation. Administrative read/model aliases now share
+Users' UserAdministrationReadRepository, preserving the original queries and DTO
+mapping; do not register them centrally. See `docs/ai/users-administration-reader-ownership.md`.
 
 Users owns the complete User aggregate, all credential/security partials, roles,
 role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in

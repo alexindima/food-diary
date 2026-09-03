@@ -57,8 +57,8 @@ tests leave the mixed Dietologist class; see
   moving its file or weakening transactional replay guarantees.
 - `RecipeCompositionTransactionLock` coordinates Products and Recipes; retain one
   shared lock identity until a deliberate composition boundary replaces it.
-- `UserRepository` implements user lookup/write, Google identity and administrative
-  projections. Access-token security-state reading now belongs to Users Infrastructure.
+- `UserRepository` implements user lookup/write and Google identity. Administrative
+  projections and access-token security-state reading now belong to Users Infrastructure.
   Split remaining responsibilities only after proving shared tracking,
   deleted-user filters and scoped aliases. A blind move is not the next step.
 - Audit storage/writer may remain a generic capability even when Dietologist's
@@ -94,10 +94,14 @@ tests leave the mixed Dietologist class; see
    uncompleted Identity protocol move.
 8. The independent access-token security reader is separated from UserRepository
    into Users Infrastructure, preserving its persisted no-tracking predicate.
-   All other repository source/aliases remain shared. The next review should
-   distinguish Users-owned administrative projections from Admin callers and
-   prove tracking/deletion contracts before splitting more ports. See
+   Other repository source/aliases remained shared in that tranche. See
    `docs/ai/users-security-reader-ownership.md`.
+9. Both administrative read ports now share Users' UserAdministrationReadRepository,
+   preserving original query bodies, no-tracking role loading, paging/search and
+   model mapping. Central tracked lookup/write/Google remains unchanged. Review
+   that remaining aggregate repository as one boundary before another move; do
+   not split shared tracking by provider names alone. See
+   `docs/ai/users-administration-reader-ownership.md`.
 
 Every persistence tranche must keep the dependency graph acyclic, preserve model
 identity, retain real provider tests and check composition roots. Avoid adding new

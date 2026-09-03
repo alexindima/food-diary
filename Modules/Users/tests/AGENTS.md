@@ -10,3 +10,9 @@ FoodDiary.Testing. Preserve the relocated version/inactive test; verify missing,
 deleted and stale users, cancellation, no tracking and persisted-versus-unsaved
 state. The remaining mixed UserRepository tests stay central. Run both complete
 provider suites and API authentication/HTTP consumers; mocks are not SQL evidence.
+
+The same provider project owns administrative read-repository tests. Preserve the
+three relocated paging/role/summary cases and cover persisted model mapping,
+status semantics, literal LIKE escaping, ordered pages, empty/cancelled reads,
+premium counts across account states, and distinct scoped read versus write
+adapters. Mixed lookup/write/Identity integration remains central with both adapters.

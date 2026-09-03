@@ -10,6 +10,9 @@ public static class UsersModuleRegistration {
         services.AddUsersApplication().AddUsersPersistence();
 
     public static IServiceCollection AddUsersPersistence(this IServiceCollection services) {
+        services.AddScoped<UserAdministrationReadRepository>();
+        services.AddScoped<IUserAdminReadRepository>(static provider => provider.GetRequiredService<UserAdministrationReadRepository>());
+        services.AddScoped<IUserAdminReadModelRepository>(static provider => provider.GetRequiredService<UserAdministrationReadRepository>());
         services.AddScoped<IUserAccessTokenSecurityReader, UserAccessTokenSecurityReader>();
         services.AddScoped<IUserRoleCatalogService, UserRoleCatalogService>();
         services.AddScoped<IUserRoleMembershipService, UserRoleMembershipService>();

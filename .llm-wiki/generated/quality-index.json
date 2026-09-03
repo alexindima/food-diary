@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4771,
+    "productionFiles": 4772,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -4658,11 +4658,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "nonBlankLines": 15,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
+      "structuralRiskScore": 0.26
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.cs",
@@ -4986,11 +4986,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
-      "nonBlankLines": 226,
-      "decisionPoints": 24,
+      "nonBlankLines": 57,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.52
+      "structuralRiskScore": 14.64
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
@@ -37921,6 +37921,14 @@
       "structuralRiskScore": 4.82
     },
     {
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserAdministrationReadRepository.cs",
+      "nonBlankLines": 181,
+      "decisionPoints": 15,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 26.12
+    },
+    {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
       "nonBlankLines": 189,
       "decisionPoints": 20,
@@ -37962,11 +37970,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
+      "structuralRiskScore": 0.42
     },
     {
       "path": "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs",

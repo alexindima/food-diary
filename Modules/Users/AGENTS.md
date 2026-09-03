@@ -15,3 +15,9 @@ Users Infrastructure owns the independent access-token security-state reader.
 The central port is unchanged; API bearer validation consumes it without receiving
 the User aggregate. The mixed UserRepository retains its other responsibilities.
 See `docs/ai/users-security-reader-ownership.md` for the port inventory and next steps.
+
+Administrative user read projections and both legacy/model repository ports now
+belong to the same Users Infrastructure adapter. The central repository retains
+tracked lookup, Google identity and writes. API/Admin policies and the existing
+UserAdministrationReadService contract are unchanged; see
+`docs/ai/users-administration-reader-ownership.md`.

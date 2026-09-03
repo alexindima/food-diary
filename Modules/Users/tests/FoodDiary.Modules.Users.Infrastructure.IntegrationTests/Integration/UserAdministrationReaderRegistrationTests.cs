@@ -9,19 +9,19 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 [ExcludeFromCodeCoverage]
-public sealed class UserSecurityReaderRegistrationTests {
+public sealed class UserAdministrationReaderRegistrationTests {
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
-    public void AddUsersPersistence_KeepsScopedReaderSeparateFromSharedRepositoryAliases(bool moduleFirst) {
+    public void AddUsersPersistence_SeparatesReadAliasesFromTrackedRepositoryInEitherOrder(bool moduleFirst) {
         var services = new ServiceCollection();
         if (moduleFirst) {
-            Assert.Same(services, services.AddUsersPersistence());
+            services.AddUsersPersistence();
         }
 
         services.AddInfrastructure(new ConfigurationBuilder().Build());
         if (!moduleFirst) {
-            Assert.Same(services, services.AddUsersPersistence());
+            services.AddUsersPersistence();
         }
 
         services.Replace(ServiceDescriptor.Scoped(_ => new FoodDiaryDbContext(
@@ -31,28 +31,34 @@ public sealed class UserSecurityReaderRegistrationTests {
         using ServiceProvider provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
         using IServiceScope first = provider.CreateScope();
         using IServiceScope second = provider.CreateScope();
-        IUserAccessTokenSecurityReader reader = first.ServiceProvider.GetRequiredService<IUserAccessTokenSecurityReader>();
         IUserRepository repository = first.ServiceProvider.GetRequiredService<IUserRepository>();
+        IUserAdminReadRepository reader = first.ServiceProvider.GetRequiredService<IUserAdminReadRepository>();
+        IUserAdminReadModelRepository models = first.ServiceProvider.GetRequiredService<IUserAdminReadModelRepository>();
 
         Assert.Multiple(
-            () => Assert.IsType<UserAccessTokenSecurityReader>(reader),
+            () => Assert.IsType<UserAdministrationReadRepository>(reader),
             () => Assert.Same(typeof(UsersModuleRegistration).Assembly, reader.GetType().Assembly),
-            () => Assert.Same(reader, first.ServiceProvider.GetRequiredService<IUserAccessTokenSecurityReader>()),
-            () => Assert.NotSame(reader, second.ServiceProvider.GetRequiredService<IUserAccessTokenSecurityReader>()),
+            () => Assert.Same(reader, models),
+            () => Assert.Same(reader, first.ServiceProvider.GetRequiredService<UserAdministrationReadRepository>()),
+            () => Assert.NotSame(reader, second.ServiceProvider.GetRequiredService<IUserAdminReadRepository>()),
             () => Assert.NotSame(reader, repository),
-            () => Assert.False(repository is IUserAccessTokenSecurityReader),
+            () => Assert.NotSame(reader, first.ServiceProvider.GetRequiredService<IUserAccessTokenSecurityReader>()),
+            () => Assert.False(repository is IUserAdminReadRepository),
+            () => Assert.False(repository is IUserAdminReadModelRepository),
             () => Assert.Same(repository, first.ServiceProvider.GetRequiredService<UserRepository>()),
             () => Assert.Same(repository, first.ServiceProvider.GetRequiredService<IUserLookupRepository>()),
             () => Assert.Same(repository, first.ServiceProvider.GetRequiredService<IUserWriteRepository>()),
             () => Assert.Same(repository, first.ServiceProvider.GetRequiredService<IUserGoogleIdentityRepository>()),
-            () => Assert.Single(services, descriptor => descriptor.ServiceType == typeof(IUserAccessTokenSecurityReader)));
+            () => Assert.Single(services, descriptor => descriptor.ServiceType == typeof(IUserAdminReadRepository)),
+            () => Assert.Single(services, descriptor => descriptor.ServiceType == typeof(IUserAdminReadModelRepository)));
     }
 
     [Fact]
-    public void AddInfrastructure_DoesNotOwnSecurityReader() {
+    public void AddInfrastructure_DoesNotOwnAdministrativeReadAliases() {
         var services = new ServiceCollection();
         services.AddInfrastructure(new ConfigurationBuilder().Build());
 
-        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IUserAccessTokenSecurityReader));
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IUserAdminReadRepository));
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IUserAdminReadModelRepository));
     }
 }

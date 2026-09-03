@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7671,
+    "consumerEdges": 7679,
     "productionConsumerEdges": 4560,
-    "testConsumerEdges": 3111,
+    "testConsumerEdges": 3119,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -90820,9 +90820,35 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserAdministrationReaderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAccessTokenSecurityReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserSecurityReaderRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 7
+    },
+    {
+      "contract": "IUserAccessTokenSecurityReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/UsersAdministrationReaderOwnershipTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IUserAccessTokenSecurityReader",
@@ -91028,33 +91054,33 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserAdminReadModelRepository",
-      "roles": [
-        "ReadModelRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadModelRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserAdminReadModelRepository",
-      "roles": [
-        "ReadModelRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadModelRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/Application/Services/UserAdministrationReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAdminReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Infrastructure/Persistence/Users/UserAdministrationReadRepository.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserAdminReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -91080,9 +91106,9 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserSecurityReaderRegistrationTests.cs",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserAdministrationReaderRegistrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 5
     },
     {
       "contract": "IUserAdminReadModelRepository",
@@ -91132,20 +91158,7 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.ArchitectureTests/UsersSecurityReaderOwnershipTests.cs",
-      "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserAdminReadModelRepository",
-      "roles": [
-        "ReadModelRepository"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadModelRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/UsersAdministrationReaderOwnershipTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -91158,7 +91171,7 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
+      "consumerPath": "Modules/Users/Infrastructure/Persistence/Users/UserAdministrationReadRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -91171,7 +91184,7 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
+      "consumerPath": "Modules/Users/Infrastructure/UsersModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -91184,9 +91197,9 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserSecurityReaderRegistrationTests.cs",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserAdministrationReaderRegistrationTests.cs",
       "isTest": true,
-      "referenceCount": 1
+      "referenceCount": 6
     },
     {
       "contract": "IUserAdminReadRepository",
@@ -91223,7 +91236,7 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/UsersAdministrationReaderOwnershipTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -92588,6 +92601,19 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserGoogleIdentityRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserAdministrationReaderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserGoogleIdentityRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserGoogleIdentityRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserSecurityReaderRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -92602,6 +92628,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserGoogleIdentityRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserGoogleIdentityRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/UsersAdministrationReaderOwnershipTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -93186,6 +93225,19 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserLookupRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserAdministrationReaderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserLookupRepository",
+      "roles": [
+        "LookupRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserLookupRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserSecurityReaderRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -93758,6 +93810,19 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserAdministrationReaderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IUserRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserSecurityReaderRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 2
@@ -93811,6 +93876,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRepository",
+      "roles": [
+        "Repository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/UsersAdministrationReaderOwnershipTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -96800,6 +96878,19 @@
         "FoodDiary.Application.Abstractions/Users/Common/IUserWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserAdministrationReaderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserSecurityReaderRegistrationTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -96855,6 +96946,19 @@
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IUserWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/IUserWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/UsersSecurityReaderOwnershipTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "IUserWriteRepository",

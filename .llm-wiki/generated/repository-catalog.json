@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 223,
-    "documentationPages": 132
+    "documentationPages": 133
   },
   "dotnet": {
     "projects": [
@@ -12723,6 +12723,7 @@
       "docs/ai/recipes-module-extraction-wiki-findings.md",
       "docs/ai/recipes-module-integration.md",
       "docs/ai/recipes-ownership-inventory.md",
+      "docs/ai/users-administration-reader-ownership.md",
       "docs/ai/users-domain-extraction.md",
       "docs/ai/users-module-extraction-wiki-findings.md",
       "docs/ai/users-ownership-inventory.md",

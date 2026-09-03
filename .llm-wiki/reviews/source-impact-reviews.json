@@ -60,18 +60,14 @@
       "pageSha256": "a12fef9a11365dd6a6c58228abc9447b6f005042e43ab58532b8250805df1709",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "cd076e1a07d63b7d9a22d4515cccd16684788aa3646805cb45c6e9c1999ad806"
-        },
-        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "a78a0388ebe6be8bcc9153e7116f5b58b45178e0bb984b560d20fd694fceda8f"
+          "sha256": "2d6abc8ab2fee0fc05527e44d63725c8fa3a9ef45c0b73b56cbd100480ec2786"
         }
       ],
-      "reason": "Exact security-state predicate and unchanged central port/API bearer validation. Existing AddUsersModule already used by all hosts. Full HTTP and host suites are actual evidence; coordinated rebuild, not concrete UserRepository binary forwarding.",
+      "reason": "Both administrative ports move together with exact query/model bodies and unchanged UserAdministrationReadService and HTTP/authorization callers. Coordinated host rebuild; no concrete binary forwarder. Complete HTTP/host suites retained.",
       "baseRef": "HEAD",
-      "gitHead": "6cffe03f9feb6f78a0e2c8070092c4e3f394f590",
-      "reviewedAtUtc": "2026-09-03T09:32:27.7680256Z"
+      "gitHead": "875dc39362a1c066a06ddf1ad5892bd897ef6345",
+      "reviewedAtUtc": "2026-09-03T10:14:52.2309083Z"
     },
     {
       "pageId": "system.architecture",
@@ -227,13 +223,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "312a7fa63191e1b704a7013b1ae1aa3e654a2400f17b1c047b257f6ed4b8d6bc"
+          "sha256": "d4f8fbac521529b0bf1c385512c048ee8024752aa8a36b9800fb15a94aedc6d1"
         }
       ],
-      "reason": "Exact security-state predicate and unchanged central port/API bearer validation. Existing AddUsersModule already used by all hosts. Full HTTP and host suites are actual evidence; coordinated rebuild, not concrete UserRepository binary forwarding.",
+      "reason": "Both administrative ports move together with exact query/model bodies and unchanged UserAdministrationReadService and HTTP/authorization callers. Coordinated host rebuild; no concrete binary forwarder. Complete HTTP/host suites retained.",
       "baseRef": "HEAD",
-      "gitHead": "6cffe03f9feb6f78a0e2c8070092c4e3f394f590",
-      "reviewedAtUtc": "2026-09-03T09:32:28.7032104Z"
+      "gitHead": "875dc39362a1c066a06ddf1ad5892bd897ef6345",
+      "reviewedAtUtc": "2026-09-03T10:14:52.6728013Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -490,13 +486,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "a78a0388ebe6be8bcc9153e7116f5b58b45178e0bb984b560d20fd694fceda8f"
+          "sha256": "2d6abc8ab2fee0fc05527e44d63725c8fa3a9ef45c0b73b56cbd100480ec2786"
         }
       ],
-      "reason": "Original PostgreSQL test moved with constructor-type-only change. Added real SQL missing/inactive/deleted/version/no-tracking/cancellation/persisted-state tests and DI shared-alias/scoped order checks. Complete shared and module provider suites plus architecture and HTTP pass. No eval or ranking changes.",
+      "reason": "Three focused PostgreSQL methods move with constructor-type-only changes. Mixed cross-owner flow retains all assertions with separate admin adapter. Added SQL status/paging/order/literal search/summary/model/cancellation and scoped alias tests; complete runtime and source audit retained. No test collector or eval/ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "6cffe03f9feb6f78a0e2c8070092c4e3f394f590",
-      "reviewedAtUtc": "2026-09-03T09:32:28.9073557Z"
+      "gitHead": "875dc39362a1c066a06ddf1ad5892bd897ef6345",
+      "reviewedAtUtc": "2026-09-03T10:14:52.8745487Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -813,13 +809,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7b2f03982513fee3739a149deb85326859bc743aca0d41d6c689105ba21c52e7"
+          "sha256": "2051dffb450b44d0c0d9db6e18427441ac8b6e9946f68ec664c6a964f0b291fc"
         }
       ],
-      "reason": "Original PostgreSQL test moved with constructor-type-only change. Added real SQL missing/inactive/deleted/version/no-tracking/cancellation/persisted-state tests and DI shared-alias/scoped order checks. Complete shared and module provider suites plus architecture and HTTP pass. No eval or ranking changes.",
+      "reason": "Three focused PostgreSQL methods move with constructor-type-only changes. Mixed cross-owner flow retains all assertions with separate admin adapter. Added SQL status/paging/order/literal search/summary/model/cancellation and scoped alias tests; complete runtime and source audit retained. No test collector or eval/ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "6cffe03f9feb6f78a0e2c8070092c4e3f394f590",
-      "reviewedAtUtc": "2026-09-03T09:32:29.2831361Z"
+      "gitHead": "875dc39362a1c066a06ddf1ad5892bd897ef6345",
+      "reviewedAtUtc": "2026-09-03T10:14:53.2093358Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -896,13 +892,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "c3fad410de39c0c59e37c17db8f78fba4a41c2fa35cf77d4cbfbb424e21adfcc"
+          "sha256": "9f8db18fc859d41317c9a1be560671867d801e719c61457e45c2b524718b74b7"
         }
       ],
-      "reason": "Port inventory grounds Users ownership and rejects whole repository move by name. Same six central aliases and exact remaining source; new test-only project shares two fixtures and central versions. Production graph/model/host source unchanged.",
+      "reason": "Users owns account projections through its existing service; Admin remains a semantic consumer. Two scoped read aliases share one adapter, four remaining central repository aliases still share the tracked repository. No new projects/dependency edges/packages/model or host edits. Current ownership guides and boundary report reflect the split.",
       "baseRef": "HEAD",
-      "gitHead": "6cffe03f9feb6f78a0e2c8070092c4e3f394f590",
-      "reviewedAtUtc": "2026-09-03T09:32:29.9004229Z"
+      "gitHead": "875dc39362a1c066a06ddf1ad5892bd897ef6345",
+      "reviewedAtUtc": "2026-09-03T10:14:53.7359044Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -911,17 +907,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7b2f03982513fee3739a149deb85326859bc743aca0d41d6c689105ba21c52e7"
+          "sha256": "2051dffb450b44d0c0d9db6e18427441ac8b6e9946f68ec664c6a964f0b291fc"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "c3fad410de39c0c59e37c17db8f78fba4a41c2fa35cf77d4cbfbb424e21adfcc"
+          "sha256": "9f8db18fc859d41317c9a1be560671867d801e719c61457e45c2b524718b74b7"
         }
       ],
-      "reason": "Same persisted active/deleted/security-version predicate with no tracking/cache. Reader does not use unsaved tracked User state; explicit provider tests protect this boundary. User credential state, token validation/issuance, logging and providers unchanged; no security-scan claim.",
+      "reason": "Same detached persisted Users profile/roles projections; no new credential fields, health transfer, logging, caching, authorization or token behavior. Exact DTO mapper and provider tests preserve persisted versus unsaved state. Source boundary review, not external security scan.",
       "baseRef": "HEAD",
-      "gitHead": "6cffe03f9feb6f78a0e2c8070092c4e3f394f590",
-      "reviewedAtUtc": "2026-09-03T09:32:30.2690477Z"
+      "gitHead": "875dc39362a1c066a06ddf1ad5892bd897ef6345",
+      "reviewedAtUtc": "2026-09-03T10:14:54.0747494Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1159,13 +1155,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "92f8134e8e4b4b6e3ed7f1fd5aa0345af3a73062eea7f89f5dc00c50a4eaeac8"
+          "sha256": "acb64fa492f6b77e2d1c3991082639a4e06cb529f9484ef54a0864d2d37bfe55"
         }
       ],
-      "reason": "Port inventory grounds Users ownership and rejects whole repository move by name. Same six central aliases and exact remaining source; new test-only project shares two fixtures and central versions. Production graph/model/host source unchanged.",
+      "reason": "Users owns account projections through its existing service; Admin remains a semantic consumer. Two scoped read aliases share one adapter, four remaining central repository aliases still share the tracked repository. No new projects/dependency edges/packages/model or host edits. Current ownership guides and boundary report reflect the split.",
       "baseRef": "HEAD",
-      "gitHead": "6cffe03f9feb6f78a0e2c8070092c4e3f394f590",
-      "reviewedAtUtc": "2026-09-03T09:32:29.5586818Z"
+      "gitHead": "875dc39362a1c066a06ddf1ad5892bd897ef6345",
+      "reviewedAtUtc": "2026-09-03T10:14:53.4569410Z"
     },
     {
       "pageId": "workflow.review-diff",

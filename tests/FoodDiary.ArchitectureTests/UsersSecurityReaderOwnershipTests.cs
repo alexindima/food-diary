@@ -20,7 +20,7 @@ public sealed class UsersSecurityReaderOwnershipTests {
             () => Assert.DoesNotContain("IUserAccessTokenSecurityReader", registrations, StringComparer.Ordinal),
             () => Assert.Contains("IUserRepository", registrations, StringComparer.Ordinal),
             () => Assert.Contains("IUserGoogleIdentityRepository", registrations, StringComparer.Ordinal),
-            () => Assert.Contains("IUserAdminReadModelRepository", registrations, StringComparer.Ordinal),
+            () => Assert.Contains("IUserWriteRepository", registrations, StringComparer.Ordinal),
             () => Assert.Contains("UserAccessTokenSecurityReader", moduleRegistrations, StringComparer.Ordinal));
     }
 

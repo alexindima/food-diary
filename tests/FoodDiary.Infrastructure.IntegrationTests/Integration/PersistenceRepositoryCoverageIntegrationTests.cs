@@ -853,6 +853,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         var repository = new UserRepository(context);
+        var administrationReader = new UserAdministrationReadRepository(context);
         var roleCatalogService = new UserRoleCatalogService(context);
         var added = User.Create($"added-{Guid.NewGuid():N}@example.com", "hash");
         await repository.AddAsync(added);
@@ -862,14 +863,14 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         await AssertUserLookupRepositoryAsync(repository, active, deleted);
-        Assert.Empty((await repository.GetPagedAsync("missing", page: 1, limit: 10, UserAccountStatusFilter.Active)).Items);
-        Assert.Empty((await repository.GetPagedAsync("%", page: 0, limit: 0, includeDeleted: false)).Items);
-        Assert.Single((await repository.GetPagedAsync("inactive", page: 1, limit: 10, UserAccountStatusFilter.Inactive)).Items);
-        Assert.Single((await repository.GetPagedAsync("deleted", page: 1, limit: 10, includeDeleted: true)).Items);
-        Assert.Single((await repository.GetPagedAsync("deleted", page: 1, limit: 10, UserAccountStatusFilter.Deleted)).Items);
-        Assert.Equal(4, (await repository.GetPagedAsync(search: null, page: 1, limit: 10, UserAccountStatusFilter.All)).TotalItems);
-        Assert.Equal(4, (await repository.GetAdminDashboardSummaryAsync(recentLimit: 2)).TotalUsers);
-        await AssertUserAdminReadModelsAsync(repository, active);
+        Assert.Empty((await administrationReader.GetPagedAsync("missing", page: 1, limit: 10, UserAccountStatusFilter.Active)).Items);
+        Assert.Empty((await administrationReader.GetPagedAsync("%", page: 0, limit: 0, includeDeleted: false)).Items);
+        Assert.Single((await administrationReader.GetPagedAsync("inactive", page: 1, limit: 10, UserAccountStatusFilter.Inactive)).Items);
+        Assert.Single((await administrationReader.GetPagedAsync("deleted", page: 1, limit: 10, includeDeleted: true)).Items);
+        Assert.Single((await administrationReader.GetPagedAsync("deleted", page: 1, limit: 10, UserAccountStatusFilter.Deleted)).Items);
+        Assert.Equal(4, (await administrationReader.GetPagedAsync(search: null, page: 1, limit: 10, UserAccountStatusFilter.All)).TotalItems);
+        Assert.Equal(4, (await administrationReader.GetAdminDashboardSummaryAsync(recentLimit: 2)).TotalUsers);
+        await AssertUserAdminReadModelsAsync(administrationReader, active);
         Assert.Contains(await roleCatalogService.GetRolesByNamesAsync([RoleNames.Premium]), role => string.Equals(role.Name, RoleNames.Premium, StringComparison.Ordinal));
 
         var auditEvent = UserRoleAuditEvent.Create(active.Id, premiumRole, UserRoleAuditAction.Added, actorUserId: null, "tests", DateTime.UtcNow);
@@ -891,7 +892,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(await repository.GetByTelegramUserIdIncludingDeletedAsync(123456));
     }
 
-    private static async Task AssertUserAdminReadModelsAsync(UserRepository repository, User active) {
+    private static async Task AssertUserAdminReadModelsAsync(UserAdministrationReadRepository repository, User active) {
         Assert.Equal(active.Email, (await repository.GetByIdIncludingDeletedReadModelAsync(active.Id))?.Email);
         Assert.Single((await repository.GetPagedReadModelsAsync("inactive", page: 1, limit: 10, UserAccountStatusFilter.Inactive)).Items);
         Assert.Equal(4, (await repository.GetAdminDashboardSummaryReadModelsAsync(recentLimit: 2)).TotalUsers);

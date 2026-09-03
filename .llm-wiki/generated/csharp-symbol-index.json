@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3548,
-    "symbols": 3533,
+    "sourceFiles": 3549,
+    "symbols": 3534,
     "interfaceImplementationLinks": 235,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 1860,
+      "class": 1861,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -36,7 +36,7 @@
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
-      "ReadRepository": 46,
+      "ReadRepository": 47,
       "Repository": 103,
       "Request": 135,
       "Response": 181,
@@ -2551,7 +2551,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
-      "line": 10
+      "line": 7
     },
     {
       "name": "DatabaseCommandTelemetryInterceptor",
@@ -23874,6 +23874,13 @@
       "role": "Other",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs",
       "line": 6
+    },
+    {
+      "name": "UserAdministrationReadRepository",
+      "kind": "class",
+      "role": "ReadRepository",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserAdministrationReadRepository.cs",
+      "line": 10
     },
     {
       "name": "UserCleanupService",

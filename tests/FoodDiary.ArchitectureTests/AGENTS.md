@@ -23,6 +23,10 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Rules
 
+- `UsersAdministrationReaderOwnershipTests` keeps both administrative read aliases
+  and focused SQL tests in Users, while central tracked lookup/Google/write ports
+  and Users security-state reader retain their separate responsibilities.
+
 - `UsersSecurityReaderOwnershipTests` protects the Users-owned security-state
   reader and focused provider tests, existing host composition, and separation
   from the remaining central repository aliases. No production graph edge changes.
