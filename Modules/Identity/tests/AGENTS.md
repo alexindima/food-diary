@@ -15,3 +15,7 @@ Telegram replay provider tests live here, not in the mixed Dietologist suite.
 Keep the extracted sequential assertions and real PostgreSQL tests for concurrent
 single consumption, fingerprint storage, expiry boundaries and cancellation.
 Registration tests verify scoped lifetime and model/adapter assembly ownership.
+
+Infrastructure.Tests/Authentication owns JWT behavior and password-hash tests plus
+singleton/assembly/composition contracts. Shared JwtOptions validation tests stay
+in central Infrastructure.Tests; HTTP authentication tests remain host-owned.

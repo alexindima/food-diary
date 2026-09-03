@@ -217,3 +217,9 @@ for remaining module adapters, intentionally shared database mechanisms and mixe
 components that require separate design. Identity owns the login-event repository
 and cached email-template provider; this does not change the shared EF context or
 the direction of module-to-central-Infrastructure dependencies.
+
+Identity also owns JWT generation and password algorithms, wired as singletons by
+`AddIdentityAuthenticationInfrastructure` in API, Initializer and JobManager. Users
+retains credential operations/state; JwtOptions and API validation keep their
+owners. Email outbox remains a technical queue for prepared messages from Identity
+and Dietologist. See `docs/ai/identity-authentication-adapters.md`.

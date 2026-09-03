@@ -888,7 +888,6 @@
       "fooddiary.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "BCrypt.Net-Next": "[4.2.0, )",
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Admin.PersistenceModel": "[1.0.0, )",
@@ -950,8 +949,7 @@
           "Microsoft.CodeAnalysis.Common": "[5.9.0, )",
           "Microsoft.CodeAnalysis.Workspaces.MSBuild": "[5.9.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )",
-          "System.IdentityModel.Tokens.Jwt": "[8.22.0, )"
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
       "fooddiary.integrations": {
@@ -1502,11 +1500,13 @@
       "fooddiary.modules.identity.infrastructure": {
         "type": "Project",
         "dependencies": {
+          "BCrypt.Net-Next": "[4.2.0, )",
           "FoodDiary.Application.Identity": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Identity.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "Microsoft.EntityFrameworkCore": "[10.0.11, )"
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "System.IdentityModel.Tokens.Jwt": "[8.22.0, )"
         }
       },
       "fooddiary.modules.identity.persistencemodel": {

@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7650,
+    "consumerEdges": 7652,
     "productionConsumerEdges": 4560,
-    "testConsumerEdges": 3090,
+    "testConsumerEdges": 3092,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -67915,32 +67915,6 @@
         "FoodDiary.Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Authentication/JwtTokenGenerator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IJwtTokenGenerator",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IJwtTokenGenerator",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -67993,6 +67967,32 @@
         "FoodDiary.Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IJwtTokenGenerator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IJwtTokenGenerator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/ActiveSessionManagementTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -68022,6 +68022,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IJwtTokenGenerator",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/IdentityAuthenticationRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 7
     },
     {
       "contract": "IJwtTokenGenerator",
@@ -75597,32 +75610,6 @@
         "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IPasswordHasher",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Services/PasswordHasher.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IPasswordHasher",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dietologist/Application/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -75676,6 +75663,32 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPasswordHasher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPasswordHasher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Services/PasswordHasher.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -75808,6 +75821,19 @@
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IPasswordHasher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/IdentityAuthenticationRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 7
     },
     {
       "contract": "IPasswordHasher",

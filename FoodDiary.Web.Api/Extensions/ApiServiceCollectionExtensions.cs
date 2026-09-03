@@ -99,6 +99,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddInfrastructure(configuration)
                 .AddExportInfrastructure()
                 .AddIdentityPersistence()
+                .AddIdentityAuthenticationInfrastructure()
                 .AddDashboardReadServices()
                 .AddImagesInfrastructure()
                 .AddIntegrations(configuration)

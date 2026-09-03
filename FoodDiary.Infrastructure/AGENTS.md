@@ -101,6 +101,12 @@ RecentItems repository, post-commit recorder, DI and EF mapping live under `Modu
 
 ## Identity persistence adapters
 
+JWT issuance/refresh validation and password hashing are registered by Identity's
+`AddIdentityAuthenticationInfrastructure`, not central authentication DI. Central
+JwtOptions/binding and SSO/Redis seams stay here. The generic Email outbox remains
+central: independent producers supply fully rendered envelopes; Identity does not
+own every email delivery policy. See `docs/ai/identity-authentication-adapters.md`.
+
 Identity owns login-event persistence/reporting and cached email-template lookup
 under `Modules/Identity/Infrastructure`. Do not register these adapters in central
 DI; hosts already compose `AddIdentityPersistence`. The combined UserRepository,

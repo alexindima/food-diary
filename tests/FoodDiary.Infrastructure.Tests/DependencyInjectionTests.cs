@@ -81,7 +81,7 @@ public sealed class DependencyInjectionTests {
             ["Email:FrontendBaseUrl"] = "not-a-url",
         });
 
-        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddProductsPersistence();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
@@ -502,7 +502,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddProductsPersistence().AddDashboardReadServices();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
         Assert.Multiple(
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardStatisticsReadService))),
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardBodyReadService))),
@@ -577,7 +577,7 @@ public sealed class DependencyInjectionTests {
         });
 
         services
-            .AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddProductsPersistence()
+            .AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence()
             .AddBillingModule()
             .AddBodyMetricsModule().AddExercisesModule()
             .AddNotificationsPersistence()

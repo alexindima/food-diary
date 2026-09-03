@@ -120,7 +120,7 @@ builder.Services.AddRecentItemsModule();
 builder.Services.AddUsersModule();
 builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();
-builder.Services.AddInfrastructure(builder.Configuration).AddExportInfrastructure().AddIdentityPersistence().AddDashboardReadServices();
+builder.Services.AddInfrastructure(builder.Configuration).AddExportInfrastructure().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddDashboardReadServices();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddScoped<IEmailVerificationNotifier, NoOpEmailVerificationNotifier>();
 builder.Services.AddScoped<INotificationPusher, NoOpNotificationPusher>();

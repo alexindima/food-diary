@@ -1,6 +1,6 @@
 using FoodDiary.Infrastructure.Services;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public class PasswordHasherTests {

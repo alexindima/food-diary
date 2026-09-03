@@ -260,6 +260,13 @@ Recipe and Image links remain ID-based with unchanged batch snapshot fallbacks.
 No extra Domain.Contracts project is needed by the current acyclic graph.
 See `docs/ai/meals-ownership-inventory.md` for source evidence and remaining seams.
 
+## Identity authentication adapters
+
+JWT generation and password-hash implementations belong to Identity Infrastructure;
+all three hosts explicitly call `AddIdentityAuthenticationInfrastructure`. Users
+retains credential operations/state, and JwtOptions/API validation keep their owners.
+See `docs/ai/identity-authentication-adapters.md` for the retained shared Email queue.
+
 ## RecentItems physical ownership
 
 RecentItems aggregate/ID/enum, narrow usage abstractions, repository, post-commit recorder and EF model live under `Modules/RecentItems`; focused tests are nested there. Central User/UserId, DbContext, migrations/snapshot, post-commit queue/UoW and Users cleanup orchestration remain compatibility seams. Products, Recipes and Meals consume narrow module abstractions, and hosts compose `AddRecentItemsModule`. See `docs/ai/recent-items-ownership-inventory.md`.

@@ -8,17 +8,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "11ba50b671c89651c7c6fad192019549ffa33b87b1dc8a7a0de92078e7ad477a"
+          "sha256": "695b56a99d9d6a41fd6699cf93124fcdb6c163afdf6f8ba791c654f65b0afe4e"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "5aec6029bc943cc12a5ae18fb7917c7308eef14a548a0accd924c01f11702c32"
+          "sha256": "7a81d6c72c769f6928a9bb7b6c85a19b8398aa8c7da5ee893dde1884f2dff918"
         }
       ],
-      "reason": "Dietologist owns rule selection; central Infrastructure resolves EF port and retains audit storage, shared context/model/migrations. One exact IVT uses existing friend-assembly precedent without new public API or project edge.",
+      "reason": "No new project or dependency edge. Crypto direct references transfer to existing adapter project at unchanged centrally managed versions. Shared JwtOptions, SSO/provider/Redis/UserRepository/context/migrations and generic Email/replay are not relocated.",
       "baseRef": "HEAD",
-      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
-      "reviewedAtUtc": "2026-09-03T01:28:47.0699621Z"
+      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
+      "reviewedAtUtc": "2026-09-03T02:31:34.2114451Z"
     },
     {
       "pageId": "module.frontend",
@@ -42,17 +42,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "11ba50b671c89651c7c6fad192019549ffa33b87b1dc8a7a0de92078e7ad477a"
+          "sha256": "695b56a99d9d6a41fd6699cf93124fcdb6c163afdf6f8ba791c654f65b0afe4e"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "5aec6029bc943cc12a5ae18fb7917c7308eef14a548a0accd924c01f11702c32"
+          "sha256": "7a81d6c72c769f6928a9bb7b6c85a19b8398aa8c7da5ee893dde1884f2dff918"
         }
       ],
-      "reason": "Dietologist owns rule selection; central Infrastructure resolves EF port and retains audit storage, shared context/model/migrations. One exact IVT uses existing friend-assembly precedent without new public API or project edge.",
+      "reason": "No new project or dependency edge. Crypto direct references transfer to existing adapter project at unchanged centrally managed versions. Shared JwtOptions, SSO/provider/Redis/UserRepository/context/migrations and generic Email/replay are not relocated.",
       "baseRef": "HEAD",
-      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
-      "reviewedAtUtc": "2026-09-03T01:28:47.2120809Z"
+      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
+      "reviewedAtUtc": "2026-09-03T02:31:34.3888593Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -61,21 +61,21 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "5aec6029bc943cc12a5ae18fb7917c7308eef14a548a0accd924c01f11702c32"
+          "sha256": "7a81d6c72c769f6928a9bb7b6c85a19b8398aa8c7da5ee893dde1884f2dff918"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "f78deacccf3c5c3d84d53121dce1566b93c2dc58cc64fefa5d7b0c17de7c5871"
+          "sha256": "cad24c1310dd6cec7a0a1385e3d47b6154d7fae44a4f271e75a81a775aaead1c"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "9c1ab1242ee8ece6c65485eec8e3da1c4179acf7b00a4ae295a4549b6511384a"
+          "sha256": "95633f547329b46db0f6d4e4ebde1f851f3d6ae99ccdfe90b2142b82bb148c6b"
         }
       ],
-      "reason": "All three hosts already compose Dietologist; handlers, routes, payloads and HTTP surface have no diff. Coordinated rebuild required for moved interceptor assembly, not binary forwarding.",
+      "reason": "All three hosts explicitly compose moved singleton authentication adapters. Exact JWT/password implementation blobs and unchanged handlers/options/API validation preserve claims, hashes, routes, payloads and statuses; full HTTP182 and host suites are actual evidence. Coordinated rebuild, not old-binary forwarding.",
       "baseRef": "HEAD",
-      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
-      "reviewedAtUtc": "2026-09-03T01:28:47.3693144Z"
+      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
+      "reviewedAtUtc": "2026-09-03T02:31:34.5591961Z"
     },
     {
       "pageId": "system.architecture",
@@ -84,17 +84,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "11ba50b671c89651c7c6fad192019549ffa33b87b1dc8a7a0de92078e7ad477a"
+          "sha256": "695b56a99d9d6a41fd6699cf93124fcdb6c163afdf6f8ba791c654f65b0afe4e"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "5aec6029bc943cc12a5ae18fb7917c7308eef14a548a0accd924c01f11702c32"
+          "sha256": "7a81d6c72c769f6928a9bb7b6c85a19b8398aa8c7da5ee893dde1884f2dff918"
         }
       ],
-      "reason": "Dietologist owns rule selection; central Infrastructure resolves EF port and retains audit storage, shared context/model/migrations. One exact IVT uses existing friend-assembly precedent without new public API or project edge.",
+      "reason": "No new project or dependency edge. Crypto direct references transfer to existing adapter project at unchanged centrally managed versions. Shared JwtOptions, SSO/provider/Redis/UserRepository/context/migrations and generic Email/replay are not relocated.",
       "baseRef": "HEAD",
-      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
-      "reviewedAtUtc": "2026-09-03T01:28:47.5503650Z"
+      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
+      "reviewedAtUtc": "2026-09-03T02:31:34.7423500Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -231,13 +231,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "a36a99c3c6b40c3ccad40a9b0d54d1b4287546aea904c85926c6c8111f8229d3"
+          "sha256": "fd3ad1b711af70491cd0cc893bf35b30316492ee8dae197049cce471cc67c9a6"
         }
       ],
-      "reason": "All three hosts already compose Dietologist; handlers, routes, payloads and HTTP surface have no diff. Coordinated rebuild required for moved interceptor assembly, not binary forwarding.",
+      "reason": "All three hosts explicitly compose moved singleton authentication adapters. Exact JWT/password implementation blobs and unchanged handlers/options/API validation preserve claims, hashes, routes, payloads and statuses; full HTTP182 and host suites are actual evidence. Coordinated rebuild, not old-binary forwarding.",
       "baseRef": "HEAD",
-      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
-      "reviewedAtUtc": "2026-09-03T01:28:48.0061896Z"
+      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
+      "reviewedAtUtc": "2026-09-03T02:31:35.2687038Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -275,14 +275,14 @@
       "pageSha256": "8c9843eeb4fbb377b79e506bb7a2969dd0393e10cc6fc0a1ec924ccbd6ee22f9",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-generalization.json",
-          "sha256": "181520c64115a7f1b20c17750ca1879a88f1b24237ff742f4f16b62c558bd4d8"
+          "path": ".llm-wiki/evals/context-search-validation.json",
+          "sha256": "ef1a7ecf2ec83487289a38fec14ccb9c98887d407815fca44973be5c11036016"
         }
       ],
-      "reason": "Four existing Facts move source-identically. New module composition tests protect scope/order/repeat registration; actual PostgreSQL exercises domain-event-generated recommendation and atomic audit rollback/commit. One proven generalization-corpus path move; frozen100 and retrieval policy unchanged.",
+      "reason": "Password and JWT test bodies/helper preserved with namespace alignment; seven options theories remain central. Typed real DI singleton/order/assembly and refresh roundtrip tests plus exact owner/host/package guards pass. Two source-proven expected-path substitutions only, frozen100/ranking unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
-      "reviewedAtUtc": "2026-09-03T01:28:48.1933778Z"
+      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
+      "reviewedAtUtc": "2026-09-03T02:31:35.5018221Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -494,13 +494,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "9c1ab1242ee8ece6c65485eec8e3da1c4179acf7b00a4ae295a4549b6511384a"
+          "sha256": "95633f547329b46db0f6d4e4ebde1f851f3d6ae99ccdfe90b2142b82bb148c6b"
         }
       ],
-      "reason": "Four existing Facts move source-identically. New module composition tests protect scope/order/repeat registration; actual PostgreSQL exercises domain-event-generated recommendation and atomic audit rollback/commit. One proven generalization-corpus path move; frozen100 and retrieval policy unchanged.",
+      "reason": "Password and JWT test bodies/helper preserved with namespace alignment; seven options theories remain central. Typed real DI singleton/order/assembly and refresh roundtrip tests plus exact owner/host/package guards pass. Two source-proven expected-path substitutions only, frozen100/ranking unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
-      "reviewedAtUtc": "2026-09-03T01:28:48.3909229Z"
+      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
+      "reviewedAtUtc": "2026-09-03T02:31:35.7599809Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -817,13 +817,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cabab6d9f2291b76fbc6ac88caea71e82ff0d3d9923356392f467453502cee1c"
+          "sha256": "28dc33205140307c1331ac7e70f242946cf37ab2d7f20855d10ccff729369eb2"
         }
       ],
-      "reason": "Four existing Facts move source-identically. New module composition tests protect scope/order/repeat registration; actual PostgreSQL exercises domain-event-generated recommendation and atomic audit rollback/commit. One proven generalization-corpus path move; frozen100 and retrieval policy unchanged.",
+      "reason": "Password and JWT test bodies/helper preserved with namespace alignment; seven options theories remain central. Typed real DI singleton/order/assembly and refresh roundtrip tests plus exact owner/host/package guards pass. Two source-proven expected-path substitutions only, frozen100/ranking unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
-      "reviewedAtUtc": "2026-09-03T01:28:48.7032868Z"
+      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
+      "reviewedAtUtc": "2026-09-03T02:31:36.2351683Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -900,13 +900,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a8bdd90acdb88e687137877ec93c2218ea95504209a5da90ad21f58d789235ea"
+          "sha256": "77d9f5fe8f1483c7bdbe9432f60ab1992eb9a54665fb0cfe88c04dce6062c483"
         }
       ],
-      "reason": "Dietologist owns rule selection; central Infrastructure resolves EF port and retains audit storage, shared context/model/migrations. One exact IVT uses existing friend-assembly precedent without new public API or project edge.",
+      "reason": "No new project or dependency edge. Crypto direct references transfer to existing adapter project at unchanged centrally managed versions. Shared JwtOptions, SSO/provider/Redis/UserRepository/context/migrations and generic Email/replay are not relocated.",
       "baseRef": "HEAD",
-      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
-      "reviewedAtUtc": "2026-09-03T01:28:49.1271041Z"
+      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
+      "reviewedAtUtc": "2026-09-03T02:31:36.8160986Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -915,17 +915,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cabab6d9f2291b76fbc6ac88caea71e82ff0d3d9923356392f467453502cee1c"
+          "sha256": "28dc33205140307c1331ac7e70f242946cf37ab2d7f20855d10ccff729369eb2"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a8bdd90acdb88e687137877ec93c2218ea95504209a5da90ad21f58d789235ea"
+          "sha256": "77d9f5fe8f1483c7bdbe9432f60ab1992eb9a54665fb0cfe88c04dce6062c483"
         }
       ],
-      "reason": "Rule body and actor/client/action/metadata/timestamp construction unchanged. Shared audit storage, authorization, retention and logs unchanged. No new provider or security-scan claim.",
+      "reason": "No algorithm, token, credential storage, logging, consent, retention or provider change. Users retains credential operations; Identity owns technical implementations. Email outbox is deliberately unchanged after source ownership review. No security-scan claim.",
       "baseRef": "HEAD",
-      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
-      "reviewedAtUtc": "2026-09-03T01:28:49.4159600Z"
+      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
+      "reviewedAtUtc": "2026-09-03T02:31:37.3594380Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1163,13 +1163,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "9b29ab23f485737ab1444498c5f55797985fff992fa21678fc30ad9a0d196089"
+          "sha256": "9c5d5ba16a198b9edeba842068e72b31287d0486395cc7dc2364f263aa111225"
         }
       ],
-      "reason": "Dietologist owns rule selection; central Infrastructure resolves EF port and retains audit storage, shared context/model/migrations. One exact IVT uses existing friend-assembly precedent without new public API or project edge.",
+      "reason": "No new project or dependency edge. Crypto direct references transfer to existing adapter project at unchanged centrally managed versions. Shared JwtOptions, SSO/provider/Redis/UserRepository/context/migrations and generic Email/replay are not relocated.",
       "baseRef": "HEAD",
-      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
-      "reviewedAtUtc": "2026-09-03T01:28:48.9049241Z"
+      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
+      "reviewedAtUtc": "2026-09-03T02:31:36.5062192Z"
     },
     {
       "pageId": "workflow.review-diff",

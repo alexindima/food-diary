@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3546,
-    "symbols": 3531,
+    "sourceFiles": 3547,
+    "symbols": 3532,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 162,
+    "dependencyInjectionRegistrations": 160,
     "kinds": {
-      "class": 1858,
+      "class": 1859,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1381,
+      "Other": 1382,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -2120,13 +2120,6 @@
       "line": 5
     },
     {
-      "name": "JwtTokenGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Authentication/JwtTokenGenerator.cs",
-      "line": 12
-    },
-    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
@@ -2138,7 +2131,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "DependencyInjection",
@@ -2580,13 +2573,6 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Services/InfrastructureTelemetry.cs",
       "line": 5
-    },
-    {
-      "name": "PasswordHasher",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Services/PasswordHasher.cs",
-      "line": 4
     },
     {
       "name": "StructuredAuditLogger",
@@ -17660,6 +17646,20 @@
       "line": 6
     },
     {
+      "name": "JwtTokenGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
+      "line": 12
+    },
+    {
+      "name": "IdentityAuthenticationRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
+      "line": 8
+    },
+    {
       "name": "IdentityModuleRegistration",
       "kind": "class",
       "role": "Other",
@@ -17742,6 +17742,13 @@
       "role": "Repository",
       "path": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
       "line": 9
+    },
+    {
+      "name": "PasswordHasher",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Services/PasswordHasher.cs",
+      "line": 4
     },
     {
       "name": "DeleteImageAssetResult",
@@ -25575,7 +25582,7 @@
       "interface": "IJwtTokenGenerator",
       "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
       "implementation": "JwtTokenGenerator",
-      "implementationPath": "FoodDiary.Infrastructure/Authentication/JwtTokenGenerator.cs",
+      "implementationPath": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25883,7 +25890,7 @@
       "interface": "IPasswordHasher",
       "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs",
       "implementation": "PasswordHasher",
-      "implementationPath": "FoodDiary.Infrastructure/Services/PasswordHasher.cs",
+      "implementationPath": "Modules/Identity/Infrastructure/Services/PasswordHasher.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26442,39 +26449,25 @@
       "line": 115
     },
     {
-      "service": "IJwtTokenGenerator",
-      "implementation": "JwtTokenGenerator",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 12
-    },
-    {
-      "service": "IPasswordHasher",
-      "implementation": "PasswordHasher",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 13
-    },
-    {
       "service": "IAdminSsoCodeStore",
       "implementation": "InMemoryAdminSsoCodeStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 14
+      "line": 11
     },
     {
       "service": "IAdminSsoService",
       "implementation": "AdminSsoService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 15
+      "line": 12
     },
     {
       "service": "IAuditLogger",
       "implementation": "StructuredAuditLogger",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 16
+      "line": 13
     },
     {
       "service": "IEmailOutbox",
@@ -26663,21 +26656,21 @@
       "implementation": "NotificationResourceRenderer",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 105
+      "line": 106
     },
     {
       "service": "IDiaryPdfReportTextProvider",
       "implementation": "DiaryPdfReportResourceTextProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 106
+      "line": 107
     },
     {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 138
+      "line": 139
     },
     {
       "service": "IMailInboxReadinessChecker",

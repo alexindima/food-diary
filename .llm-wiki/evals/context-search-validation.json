@@ -54,7 +54,7 @@
       "id": "password-hasher",
       "query": "hash and verify application user passwords",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Services/PasswordHasher.cs"]
+      "expectedPaths": ["Modules/Identity/Infrastructure/Services/PasswordHasher.cs"]
     },
     {
       "id": "wearable-oauth-state",
@@ -66,7 +66,7 @@
       "id": "jwt-token-generator-validation",
       "query": "generate signed JWT access tokens for authenticated users",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Infrastructure/Authentication/JwtTokenGenerator.cs"]
+      "expectedPaths": ["Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs"]
     },
     {
       "id": "redis-idempotency-store",

@@ -23,6 +23,10 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Rules
 
+- `IdentityAuthenticationOwnershipTests` protects module-owned JWT/password-hash
+  implementations/tests, direct crypto package ownership and explicit registration
+  in all three hosts; shared JwtOptions remain central.
+
 - `DietologistAuditOwnershipTests` protects module-owned collaboration audit rules
   and focused tests. Central persistence resolves EF's interceptor port, never the
   Dietologist implementation; behavior/order/lifetime and PostgreSQL rollback are

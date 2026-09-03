@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 223,
-    "documentationPages": 129
+    "documentationPages": 130
   },
   "dotnet": {
     "projects": [
@@ -209,10 +209,6 @@
         ],
         "packageReferences": [
           {
-            "name": "BCrypt.Net-Next",
-            "version": null
-          },
-          {
             "name": "Microsoft.AspNetCore.DataProtection",
             "version": null
           },
@@ -258,10 +254,6 @@
           },
           {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
-            "version": null
-          },
-          {
-            "name": "System.IdentityModel.Tokens.Jwt",
             "version": null
           }
         ]
@@ -5077,11 +5069,19 @@
         ],
         "packageReferences": [
           {
+            "name": "BCrypt.Net-Next",
+            "version": null
+          },
+          {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
           },
           {
             "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": null
+          },
+          {
+            "name": "System.IdentityModel.Tokens.Jwt",
             "version": null
           }
         ]
@@ -12641,6 +12641,7 @@
       "docs/ai/exercises-module-extraction-wiki-findings.md",
       "docs/ai/exercises-ownership-inventory.md",
       "docs/ai/export-pdf-infrastructure-extraction.md",
+      "docs/ai/identity-authentication-adapters.md",
       "docs/ai/identity-domain-extraction.md",
       "docs/ai/identity-module-extraction-wiki-findings.md",
       "docs/ai/identity-ownership-inventory.md",

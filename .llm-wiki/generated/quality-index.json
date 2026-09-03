@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4769,
+    "productionFiles": 4770,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -4601,14 +4601,6 @@
       "structuralRiskScore": 3.46
     },
     {
-      "path": "FoodDiary.Infrastructure/Authentication/JwtTokenGenerator.cs",
-      "nonBlankLines": 206,
-      "decisionPoints": 11,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.62
-    },
-    {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Audit.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
@@ -4618,11 +4610,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.26
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Email.cs",
@@ -5031,14 +5023,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 4.46
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Services/PasswordHasher.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.54
     },
     {
       "path": "FoodDiary.Infrastructure/Services/StructuredAuditLogger.cs",
@@ -10306,11 +10290,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 139,
+      "nonBlankLines": 140,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.78
+      "structuralRiskScore": 5.8
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -30609,6 +30593,22 @@
       "structuralRiskScore": 12.54
     },
     {
+      "path": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
+      "nonBlankLines": 206,
+      "decisionPoints": 11,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 20.62
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "nonBlankLines": 25,
       "decisionPoints": 0,
@@ -30703,6 +30703,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 27.96
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Services/PasswordHasher.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.54
     },
     {
       "path": "Modules/Images/Application/Abstractions/Common/DeleteImageAssetResult.cs",

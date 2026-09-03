@@ -41,8 +41,8 @@ tests leave the mixed Dietologist class; see
 
 | Current source | Likely owner / next action | Required boundary proof |
 | --- | --- | --- |
-| `Persistence/Email/*` outbox stream | Decide Identity/email capability boundary | Used by multiple modules; separate stream-specific records/dispatch from the generic processing engine. Shared consumption alone is not ownership. |
-| `Authentication/*`, JWT options and password hashing | Separate Identity/Users boundary review | Authentication orchestration, credential hashing and shared caches have different consumers; do not move solely by directory name. |
+| `Persistence/Email/*` outbox stream | Retain shared technical delivery for now | Identity and Dietologist supply fully rendered messages; the queue owns no authentication/template policy. A communications module needs a separate design, not forced assignment to Identity. |
+| SSO service/store and JWT options | Separate SSO/host-configuration review | JWT generation and password algorithms now belong to Identity; one-time SSO, provider validation and shared configuration have different consumers. |
 
 ## Intentionally shared or mixed
 
@@ -80,8 +80,13 @@ tests leave the mixed Dietologist class; see
    after domain-event dispatch, and the module registers it once per scope.
    Shared AuditEntry/table/writer remain central. See
    `docs/ai/dietologist-audit-persistence.md`.
-5. Review the Email stream, mixed replay and UserRepository seams independently.
-   Do not redesign them while performing physical relocation.
+5. JWT generation and password algorithms are extracted to Identity with explicit
+   singleton authentication registration in all three hosts. Users still owns
+   credential operations; JwtOptions/API validation stay with their owners. Email
+   outbox remains shared technical persistence/dispatch. See
+   `docs/ai/identity-authentication-adapters.md`.
+6. Review SSO, mixed replay and UserRepository seams independently; do not redesign
+   them while performing physical relocation.
 
 Every persistence tranche must keep the dependency graph acyclic, preserve model
 identity, retain real provider tests and check composition roots. Avoid adding new

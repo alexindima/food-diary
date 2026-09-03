@@ -5,7 +5,7 @@ login auditing, initial-admin bootstrap, and application email-template use case
 Authentication and Email remain logical areas inside one application assembly.
 
 Preserve the legacy `FoodDiary.Application.Identity` assembly and CLR namespaces.
-Keep shared authentication/email contracts central. The User/Role CLR graph and credential state belong to Users Domain. Keep shared DbContext, migrations/snapshot, and combined UserRepository central as compatibility seams. Provider implementations, JWT/SSO/Redis adapters,
+Keep shared authentication/email contracts central. The User/Role CLR graph and credential state belong to Users Domain. Keep shared DbContext, migrations/snapshot, and combined UserRepository central as compatibility seams. External provider implementations and SSO/Redis adapters,
 MailInbox/MailRelay integration, HTTP transport, and hosts remain with their current
 owners.
 
@@ -22,3 +22,9 @@ Telegram assertion replay persistence belongs to Identity Infrastructure. Its
 technical consumed-assertion record and EF mapping belong to PersistenceModel,
 not Domain. Preserve fingerprinting, expiry cleanup and atomic conflict behavior;
 signature/age validation remains with the existing application/provider callers.
+
+JWT generation/refresh validation and password-hash algorithms belong to Identity
+Infrastructure. Hosts compose `AddIdentityAuthenticationInfrastructure` beside
+`AddIdentityPersistence`. Users still owns credential operations and stored hashes;
+it consumes the existing password-hasher port. JwtOptions/configuration and API
+bearer validation retain their current owners.

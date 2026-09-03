@@ -249,6 +249,10 @@ Users and Identity are separate collaborating modules around one identity lifecy
 
 Identity Infrastructure owns login-event persistence/reporting/retention and the
 cached email-template provider, registered through `AddIdentityPersistence`.
+JWT/password algorithm adapters are registered separately through
+`AddIdentityAuthenticationInfrastructure`. Users owns credential operations/state
+while consuming the hasher port; JwtOptions/API validation keep their owners.
+Email outbox remains shared technical delivery for fully prepared messages.
 Its reporting join to Users does not transfer User ownership. Shared DbContext,
 migrations/snapshot, combined UserRepository, replay guard and mail transport stay
 with their existing owners. See `docs/architecture/infrastructure-boundary-audit.md`.

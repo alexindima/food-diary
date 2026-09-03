@@ -234,7 +234,6 @@ public class LayeringTests {
     [Fact]
     public void InfrastructureProject_PackageReferencesStayLimitedToPersistenceAndTechnicalImplementations() {
         string[] allowedPackages = [
-            "BCrypt.Net-Next",
             "Microsoft.AspNetCore.DataProtection",
             "Microsoft.CodeAnalysis.CSharp.Workspaces",
             "Microsoft.CodeAnalysis.Common",
@@ -247,7 +246,6 @@ public class LayeringTests {
             "Microsoft.Extensions.Http",
             "Microsoft.Extensions.Options.ConfigurationExtensions",
             "Npgsql.EntityFrameworkCore.PostgreSQL",
-            "System.IdentityModel.Tokens.Jwt",
         ];
 
         string[] packages = ProjectReferenceReader.ReadPackageReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
