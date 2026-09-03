@@ -540,6 +540,7 @@ public sealed class ProjectDependencyMatrixTests {
     private static readonly IReadOnlyDictionary<string, string[]> AllowedTestProjectReferences =
         new Dictionary<string, string[]>(StringComparer.Ordinal) {
             ["FoodDiary.Modules.Users.Domain.Tests"] = ["FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Modules.Users.Domain"],
+            ["FoodDiary.Modules.Users.Infrastructure.IntegrationTests"] = ["FoodDiary.Modules.Users.Infrastructure", "FoodDiary.Modules.Users.Domain", "FoodDiary.Testing"],
             ["FoodDiary.Modules.Dashboard.Application.Tests"] = ["FoodDiary.Application.BodyMetrics", "FoodDiary.Application.Exercises", "FoodDiary.Modules.Dashboard.Application", "FoodDiary.Modules.Hydration.Application", "FoodDiary.Modules.Users.Domain"],
             ["FoodDiary.Modules.Dashboard.Infrastructure.Tests"] = ["FoodDiary.Modules.Dashboard.Infrastructure", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Users.Domain"],
             ["FoodDiary.Analyzers.Tests"] = ["FoodDiary.Analyzers"],

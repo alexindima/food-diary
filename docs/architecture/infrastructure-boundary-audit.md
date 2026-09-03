@@ -57,8 +57,9 @@ tests leave the mixed Dietologist class; see
   moving its file or weakening transactional replay guarantees.
 - `RecipeCompositionTransactionLock` coordinates Products and Recipes; retain one
   shared lock identity until a deliberate composition boundary replaces it.
-- `UserRepository` implements user, Google identity, admin read-model and access
-  token security ports. Split responsibilities only after proving shared tracking,
+- `UserRepository` implements user lookup/write, Google identity and administrative
+  projections. Access-token security-state reading now belongs to Users Infrastructure.
+  Split remaining responsibilities only after proving shared tracking,
   deleted-user filters and scoped aliases. A blind move is not the next step.
 - Audit storage/writer may remain a generic capability even when Dietologist's
   rule selection moves. Do not conflate storage with the rules that emit entries.
@@ -91,6 +92,12 @@ tests leave the mixed Dietologist class; see
 7. Review mixed replay and UserRepository seams independently; do not redesign
    them while performing physical relocation. Shared SSO storage is not an
    uncompleted Identity protocol move.
+8. The independent access-token security reader is separated from UserRepository
+   into Users Infrastructure, preserving its persisted no-tracking predicate.
+   All other repository source/aliases remain shared. The next review should
+   distinguish Users-owned administrative projections from Admin callers and
+   prove tracking/deletion contracts before splitting more ports. See
+   `docs/ai/users-security-reader-ownership.md`.
 
 Every persistence tranche must keep the dependency graph acyclic, preserve model
 identity, retain real provider tests and check composition roots. Avoid adding new

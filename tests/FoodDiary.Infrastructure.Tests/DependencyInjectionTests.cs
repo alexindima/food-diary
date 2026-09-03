@@ -1032,6 +1032,7 @@ public sealed class DependencyInjectionTests {
             "FoodDiary.Application.Abstractions.Users.Common.IUserRepository",
             [
                 "FoodDiary.Application.Abstractions.Users.Common.IUserLookupRepository",
+                "FoodDiary.Application.Abstractions.Users.Common.IUserGoogleIdentityRepository",
                 "FoodDiary.Application.Abstractions.Users.Common.IUserAdminReadRepository",
                 "FoodDiary.Application.Abstractions.Users.Common.IUserAdminReadModelRepository",
                 "FoodDiary.Application.Abstractions.Users.Common.IUserWriteRepository",

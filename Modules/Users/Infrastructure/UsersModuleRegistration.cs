@@ -10,6 +10,7 @@ public static class UsersModuleRegistration {
         services.AddUsersApplication().AddUsersPersistence();
 
     public static IServiceCollection AddUsersPersistence(this IServiceCollection services) {
+        services.AddScoped<IUserAccessTokenSecurityReader, UserAccessTokenSecurityReader>();
         services.AddScoped<IUserRoleCatalogService, UserRoleCatalogService>();
         services.AddScoped<IUserRoleMembershipService, UserRoleMembershipService>();
         services.AddScoped<IUserCurrentWeightProvider, UserCurrentWeightProvider>();

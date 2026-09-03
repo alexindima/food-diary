@@ -23,6 +23,10 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Rules
 
+- `UsersSecurityReaderOwnershipTests` protects the Users-owned security-state
+  reader and focused provider tests, existing host composition, and separation
+  from the remaining central repository aliases. No production graph edge changes.
+
 - `IdentityAuthenticationOwnershipTests` protects module-owned JWT/password-hash
   implementations/tests, direct crypto package ownership and explicit registration
   in all three hosts; shared JwtOptions remain central. It also protects ordinary

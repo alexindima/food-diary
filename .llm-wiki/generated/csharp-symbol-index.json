@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3547,
-    "symbols": 3532,
-    "interfaceImplementationLinks": 234,
+    "sourceFiles": 3548,
+    "symbols": 3533,
+    "interfaceImplementationLinks": 235,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 1859,
+      "class": 1860,
       "enum": 62,
       "interface": 423,
       "record": 1068,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1382,
+      "Other": 1383,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -23869,6 +23869,13 @@
       "line": 4
     },
     {
+      "name": "UserAccessTokenSecurityReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs",
+      "line": 6
+    },
+    {
       "name": "UserCleanupService",
       "kind": "class",
       "role": "Service",
@@ -26157,6 +26164,13 @@
       "interfacePath": "Modules/Usda/Application/Common/IUsdaProductSuggestionReadService.cs",
       "implementation": "UsdaProductSuggestionReadService",
       "implementationPath": "Modules/Usda/Application/Services/UsdaProductSuggestionReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IUserAccessTokenSecurityReader",
+      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs",
+      "implementation": "UserAccessTokenSecurityReader",
+      "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs",
       "confidence": "naming-convention"
     },
     {

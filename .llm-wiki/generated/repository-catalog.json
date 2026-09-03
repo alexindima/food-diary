@@ -13,8 +13,8 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 318,
-    "testProjects": 121,
+    "dotnetProjects": 319,
+    "testProjects": 122,
     "frontendProjects": 4,
     "applicationModules": 1,
     "extractedApplicationModules": 33,
@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 223,
-    "documentationPages": 131
+    "documentationPages": 132
   },
   "dotnet": {
     "projects": [
@@ -8444,6 +8444,60 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Users.Infrastructure.IntegrationTests",
+        "assemblyName": "FoodDiary.Modules.Users.Infrastructure.IntegrationTests",
+        "path": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "Modules/Users/Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj",
+          "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.EntityFrameworkCore",
+            "version": null
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          },
+          {
+            "name": "SSH.NET",
+            "version": null
+          },
+          {
+            "name": "Testcontainers.PostgreSql",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Wearables.Application.Abstractions",
         "assemblyName": "FoodDiary.Modules.Wearables.Application.Abstractions",
         "path": "Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj",
@@ -10086,6 +10140,7 @@
       "Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/FoodDiary.Modules.Usda.Domain.Tests.csproj",
       "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/FoodDiary.Modules.Users.Application.Tests.csproj",
       "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/FoodDiary.Modules.Users.Domain.Tests.csproj",
+      "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests.csproj",
       "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/FoodDiary.Modules.Wearables.Application.Tests.csproj",
       "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/FoodDiary.Modules.Wearables.Domain.Tests.csproj",
       "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests.csproj",
@@ -12671,6 +12726,7 @@
       "docs/ai/users-domain-extraction.md",
       "docs/ai/users-module-extraction-wiki-findings.md",
       "docs/ai/users-ownership-inventory.md",
+      "docs/ai/users-security-reader-ownership.md",
       "docs/architecture/Exception-vs-Result.md",
       "docs/architecture/infrastructure-boundary-audit.md",
       "docs/backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md",

@@ -10,3 +10,8 @@ security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
 
 Preserve the FoodDiary.Application.Users assembly identity. Keep shared Users application contracts central and compose AddUsersModule from the existing hosts.
+
+Users Infrastructure owns the independent access-token security-state reader.
+The central port is unchanged; API bearer validation consumes it without receiving
+the User aggregate. The mixed UserRepository retains its other responsibilities.
+See `docs/ai/users-security-reader-ownership.md` for the port inventory and next steps.

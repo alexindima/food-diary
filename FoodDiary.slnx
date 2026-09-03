@@ -12,6 +12,7 @@
     <Project Path="Modules/Users/Infrastructure/Model/FoodDiary.Modules.Users.PersistenceModel.csproj" />
   </Folder>
   <Folder Name="/Modules/Users/tests/">
+    <Project Path="Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests.csproj" />
     <Project Path="Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/FoodDiary.Modules.Users.Domain.Tests.csproj" />
     <Project Path="Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/FoodDiary.Modules.Users.Application.Tests.csproj" />
   </Folder>
