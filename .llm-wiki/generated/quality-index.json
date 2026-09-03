@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4777,
+    "productionFiles": 4776,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -4743,14 +4743,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.3
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "nonBlankLines": 70,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.4
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/EfUnitOfWork.cs",

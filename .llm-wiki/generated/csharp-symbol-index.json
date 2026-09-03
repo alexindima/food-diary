@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3554,
-    "symbols": 3539,
+    "sourceFiles": 3553,
+    "symbols": 3525,
     "interfaceImplementationLinks": 235,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 1864,
+      "class": 1850,
       "enum": 62,
       "interface": 424,
       "record": 1069,
@@ -42,7 +42,7 @@
       "Response": 181,
       "Service": 279,
       "Validator": 206,
-      "ValueObject": 128,
+      "ValueObject": 114,
       "WriteRepository": 46
     }
   },
@@ -2244,104 +2244,6 @@
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Outbox/OutboxReplayAuditConfiguration.cs",
       "line": 6
-    },
-    {
-      "name": "StronglyTypedIdConverters",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 5
-    },
-    {
-      "name": "UserIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 7
-    },
-    {
-      "name": "FastingPlanIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 12
-    },
-    {
-      "name": "FastingOccurrenceIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 18
-    },
-    {
-      "name": "FastingCheckInIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 24
-    },
-    {
-      "name": "WebPushSubscriptionIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 30
-    },
-    {
-      "name": "ProductIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 36
-    },
-    {
-      "name": "MealIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 42
-    },
-    {
-      "name": "RecipeIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 48
-    },
-    {
-      "name": "MealItemIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 54
-    },
-    {
-      "name": "MealAiSessionIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 60
-    },
-    {
-      "name": "MealAiItemIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 66
-    },
-    {
-      "name": "RecipeIngredientIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 72
-    },
-    {
-      "name": "RecipeStepIdConverter",
-      "kind": "class",
-      "role": "ValueObject",
-      "path": "FoodDiary.Infrastructure/Persistence/Converters/StronglyTypedIdConverters.cs",
-      "line": 78
     },
     {
       "name": "EfUnitOfWork",

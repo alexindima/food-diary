@@ -158,7 +158,7 @@ Evidence: `FoodDiary.Domain/ValueObjects/`, `FoodDiary.Domain/ValueObjects/Ids/`
 
 `UserId`, `MealId`, `RecipeId` and many other IDs wrap `Guid`. EF converters bridge them to database columns. The trade-off is extra mapping/serialization code in exchange for compile-time type safety.
 
-Evidence: `FoodDiary.Domain/ValueObjects/Ids/`, `StronglyTypedIdConverters` and their tests.
+Evidence: `Modules/Users/Domain.Contracts/ValueObjects/Ids/UserId.cs`, module PersistenceModel `HasConversion` mappings, and `tests/FoodDiary.Infrastructure.Tests/Persistence/StronglyTypedIdModelTests.cs`. The unused central converter container was retired; these tests inspect the actual composed Npgsql model.
 
 ### 26. Domain Events
 

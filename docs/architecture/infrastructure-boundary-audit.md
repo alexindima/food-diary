@@ -64,9 +64,10 @@ tests leave the mixed Dietologist class; see
   capabilities; no central repository compatibility seam remains.
 - Audit storage/writer may remain a generic capability even when Dietologist's
   rule selection moves. Do not conflate storage with the rules that emit entries.
-- `StronglyTypedIdConverters` retains public compatibility helpers. Audit current
-  consumers separately before removing or relocating them; names alone are not
-  evidence that a helper is unused.
+- The unused `StronglyTypedIdConverters` compatibility container is retired after
+  checking all thirteen nested converters and confirming no external consumers.
+  Actual ID conversions already belong to module EF mappings; composed-model
+  tests protect their UUID round trips without a new shared converter assembly.
 
 ## Recommended sequence
 
@@ -118,7 +119,12 @@ tests leave the mixed Dietologist class; see
     relational FOR UPDATE SQL and shared transaction/audit behavior are unchanged.
     See the corrective follow-up in `docs/ai/outbox-replay-stream-boundary.md`.
 
-Next review StronglyTypedIdConverters compatibility consumers before any removal.
+13. The converter audit found no production consumers and one isolated helper
+    test. Remove the dead container/test and verify the actual composed Npgsql
+    mappings instead; see `docs/ai/strongly-typed-id-converter-retirement.md`.
+
+Remaining shared mechanisms above require a demonstrated ownership boundary,
+not another folder-only relocation.
 
 Every persistence tranche must keep the dependency graph acyclic, preserve model
 identity, retain real provider tests and check composition roots. Avoid adding new

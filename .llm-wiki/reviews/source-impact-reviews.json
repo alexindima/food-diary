@@ -801,13 +801,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d5f10673350d937a4182d48b634dea67aca52215da8882145f4a9b80f26d6a1e"
+          "sha256": "58328e2ae38feaf750bdcc58d08d6a2d7c39b0a49f170595b2ada8b220e62135"
         }
       ],
-      "reason": "Owner DI and adapter tests plus shared PostgreSQL rollback/concurrency/cancellation/audit tests protect the boundary. Existing engine/claim/retry and provider behavior unchanged. Actual full suites/EF/NuGet with durable logs, no collectors. No evaluation corpus/ranking/threshold edits.",
+      "reason": "Thirteen composed Npgsql model conversion cases passed before removal. After deletion full central infrastructure, architecture and PostgreSQL suites pass; actual EF pending-model check confirms unchanged schema. Only obsolete helper test replaced, no collector, policy or retrieval-quality claim.",
       "baseRef": "HEAD",
-      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
-      "reviewedAtUtc": "2026-09-03T12:08:05.4971441Z"
+      "gitHead": "b5cc09818082c84d8e5e03ecc9c9439d0fba2dc0",
+      "reviewedAtUtc": "2026-09-03T14:18:54.9325378Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -884,13 +884,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "28858e4a26ef27957bb5ba380e183d8793ad0b55eac8a08110301832f6271433"
+          "sha256": "f50bc61e85f70dc5daaccd02ab177d80e4a1b1a901e38801f73319c86bddf95d"
         }
       ],
-      "reason": "Separate corrective follow-up on base67f46de preserves prior ownership extraction evidence. Four-branch source equality audit protects locking/transaction/lifecycle/model/DI and old list queries. Initial test analyzer failures retained separately. Remaining StronglyTypedIdConverters review is not included.",
+      "reason": "Update obsolete converter ownership and interview references with current module mapping ownership and explicit user-approved removal decision. Source audit protects all module mappings, context, migrations, project references and DI. Evidence includes initial analyzer failure and corrected executions.",
       "baseRef": "HEAD",
-      "gitHead": "67f46de86490a5edc39f87f02f3be755638843dd",
-      "reviewedAtUtc": "2026-09-03T12:59:57.7514959Z"
+      "gitHead": "b5cc09818082c84d8e5e03ecc9c9439d0fba2dc0",
+      "reviewedAtUtc": "2026-09-03T14:18:55.7395339Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -898,14 +898,18 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "58328e2ae38feaf750bdcc58d08d6a2d7c39b0a49f170595b2ada8b220e62135"
+        },
+        {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "28858e4a26ef27957bb5ba380e183d8793ad0b55eac8a08110301832f6271433"
+          "sha256": "f50bc61e85f70dc5daaccd02ab177d80e4a1b1a901e38801f73319c86bddf95d"
         }
       ],
-      "reason": "Missing IDs no longer expose another stored record through preview or reset it through non-relational replay. Same metadata, error payload, email purge/rejection and audit schema; no new collection/logging/provider sharing. Synthetic local tests, no external security scan.",
+      "reason": "No credential/data collection/sharing/logging/retention or provider behavior change. Tests use a synthetic connection string and inspect Npgsql metadata without opening a connection; full PostgreSQL verification uses local test containers.",
       "baseRef": "HEAD",
-      "gitHead": "67f46de86490a5edc39f87f02f3be755638843dd",
-      "reviewedAtUtc": "2026-09-03T12:59:58.0846201Z"
+      "gitHead": "b5cc09818082c84d8e5e03ecc9c9439d0fba2dc0",
+      "reviewedAtUtc": "2026-09-03T14:18:56.2684905Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1143,13 +1147,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "70ea601c11c6b451fb0e7b7240fe94512a3b1d7f4977bb70faa21444cc6029c4"
+          "sha256": "a22c1be3441fcafa601cf8296e3cdd4eca5fe81fce767758600aa86875b7a891"
         }
       ],
-      "reason": "Maps/guides/report distinguish module stream SQL/metadata from central transactional replay coordinator and generic email. No project/package/lock/schema changes or new job. Ownership empty results and overbroad inferred obligations are navigation limitations, not code authority.",
+      "reason": "Update obsolete converter ownership and interview references with current module mapping ownership and explicit user-approved removal decision. Source audit protects all module mappings, context, migrations, project references and DI. Evidence includes initial analyzer failure and corrected executions.",
       "baseRef": "HEAD",
-      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
-      "reviewedAtUtc": "2026-09-03T12:08:05.8439869Z"
+      "gitHead": "b5cc09818082c84d8e5e03ecc9c9439d0fba2dc0",
+      "reviewedAtUtc": "2026-09-03T14:18:55.3097323Z"
     },
     {
       "pageId": "workflow.review-diff",
