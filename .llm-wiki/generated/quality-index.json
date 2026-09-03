@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4771,
+    "productionFiles": 4777,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -4642,11 +4642,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 45,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.34
+      "structuralRiskScore": 2.4
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Repositories.cs",
@@ -4785,6 +4785,14 @@
       "structuralRiskScore": 0.52
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxReplayStream.cs",
+      "nonBlankLines": 34,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Achievements.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
@@ -4921,6 +4929,14 @@
       "structuralRiskScore": 7.54
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.7
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxClaimBatch.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
@@ -4930,11 +4946,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-      "nonBlankLines": 325,
-      "decisionPoints": 23,
+      "nonBlankLines": 169,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 41
+      "structuralRiskScore": 25.88
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
@@ -4967,6 +4983,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.62
+    },
+    {
+      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxReplayEntry.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/RecipeCompositionTransactionLock.cs",
@@ -29610,11 +29634,11 @@
     },
     {
       "path": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.38
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs",
@@ -29639,6 +29663,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 5.82
+    },
+    {
+      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxReplayStream.cs",
+      "nonBlankLines": 34,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementMetricReader.cs",
@@ -30938,11 +30970,11 @@
     },
     {
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "nonBlankLines": 14,
+      "nonBlankLines": 17,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
+      "structuralRiskScore": 0.34
     },
     {
       "path": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs",
@@ -30983,6 +31015,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 20.68
+    },
+    {
+      "path": "Modules/Images/Infrastructure/Persistence/Images/ImageDeletionOutboxReplayStream.cs",
+      "nonBlankLines": 34,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
     },
     {
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs",
@@ -34090,11 +34130,11 @@
     },
     {
       "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 41,
+      "nonBlankLines": 44,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.82
+      "structuralRiskScore": 0.88
     },
     {
       "path": "Modules/Notifications/Infrastructure/Options/WebPushOptions.cs",
@@ -34135,6 +34175,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.56
+    },
+    {
+      "path": "Modules/Notifications/Infrastructure/Persistence/WebPushOutboxReplayStream.cs",
+      "nonBlankLines": 34,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
     },
     {
       "path": "Modules/Notifications/Infrastructure/Persistence/WebPushSubscriptionRepository.cs",

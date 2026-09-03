@@ -14,6 +14,10 @@ using shared Outbox.Abstractions. Its enqueue/dispatch adapters remain in Images
 Infrastructure; generic claiming/retry/replay stay central. Preserve IsConfirmed,
 object-key normalization, lifecycle and model identity during ownership changes.
 
+ImageDeletionOutboxReplayStream owns dead-letter list/find SQL and object-key
+preview metadata. AddImagesInfrastructure registers its scoped shared-engine
+extension once; it uses the shared scoped context without saving or committing.
+
 Users owns the complete User aggregate, all credential/security partials, roles,
 role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in
 `Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers

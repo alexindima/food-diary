@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Modules.Exercises.Infrastructure.Persistence;
 using FoodDiary.Application.Abstractions.Billing.Common;
@@ -221,7 +222,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.ImageObjectDeletionOutbox.Add(image);
         context.NotificationWebPushOutbox.Add(webPush);
         await context.SaveChangesAsync();
-        var service = new OutboxDeadLetterReplayService(context, FixedTime);
+        using var replayScope = new OutboxReplayTestScope(context, FixedTime);
+        IOutboxDeadLetterReplayService service = replayScope.Service;
 
         await service.ReplayAsync(
             "image_object_deletion",

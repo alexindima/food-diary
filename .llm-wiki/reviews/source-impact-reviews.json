@@ -8,13 +8,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "aa4992f3b334ccbd27b4dbbfc108be93277998ecfbe61cf08372e1e6197b4290"
+          "sha256": "2b2c030ad76fe98e4e71dc661e4cbf3b3399482240b4a24c7f0277fa8179de65"
         }
       ],
-      "reason": "Current module manifest/maps/guides place repository and four aliases in Users and preserve central context/migrations/unit of work. No project/package/model/host changes. Existing separate admin and security readers remain separate. Original planning path error and Wiki limitations documented.",
+      "reason": "Maps/guides/report distinguish module stream SQL/metadata from central transactional replay coordinator and generic email. No project/package/lock/schema changes or new job. Ownership empty results and overbroad inferred obligations are navigation limitations, not code authority.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:14.8159517Z"
+      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
+      "reviewedAtUtc": "2026-09-03T12:08:03.6351541Z"
     },
     {
       "pageId": "module.frontend",
@@ -38,13 +38,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "aa4992f3b334ccbd27b4dbbfc108be93277998ecfbe61cf08372e1e6197b4290"
+          "sha256": "2b2c030ad76fe98e4e71dc661e4cbf3b3399482240b4a24c7f0277fa8179de65"
         }
       ],
-      "reason": "Current module manifest/maps/guides place repository and four aliases in Users and preserve central context/migrations/unit of work. No project/package/model/host changes. Existing separate admin and security readers remain separate. Original planning path error and Wiki limitations documented.",
+      "reason": "Maps/guides/report distinguish module stream SQL/metadata from central transactional replay coordinator and generic email. No project/package/lock/schema changes or new job. Ownership empty results and overbroad inferred obligations are navigation limitations, not code authority.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:15.0848650Z"
+      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
+      "reviewedAtUtc": "2026-09-03T12:08:03.8412913Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -52,26 +52,22 @@
       "pageSha256": "a12fef9a11365dd6a6c58228abc9447b6f005042e43ab58532b8250805df1709",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "684e343459808a939611b1b7d8ed2e326959b543f72d54ea631fad9fa1025598"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "aa4992f3b334ccbd27b4dbbfc108be93277998ecfbe61cf08372e1e6197b4290"
+          "sha256": "2b2c030ad76fe98e4e71dc661e4cbf3b3399482240b4a24c7f0277fa8179de65"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "c2e0beeb629e2d87582c2e636e6904ebd46601231b7dafe605c71af23f5a2750"
+          "sha256": "13744de68e30c49a170cd2046d63c1ea55f41e7d3f6066c7767ffa253c45790b"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "d9db45ba46f07632f05222f1a454240548c3362de995a958107fcc3abede9ab8"
+          "sha256": "98170e65e804c34ebc5a6700395aad3415a1d7cfedb00d4b4cc3a2e8dbec8218"
         }
       ],
-      "reason": "Whole tracked Users repository moves with exact source and unchanged ports/capabilities/HTTP/authentication. Four scoped aliases now composed by existing AddUsersPersistence in all hosts. Coordinated rebuild, no old assembly forwarder.",
+      "reason": "No HTTP/application contracts or host files changed. Stream names/normalization/limits/order, email rejection, stale-attempt checks and audit remain compatible. All hosts already compose the three owners; coordinated rebuild required.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:15.3109886Z"
+      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
+      "reviewedAtUtc": "2026-09-03T12:08:04.0409649Z"
     },
     {
       "pageId": "system.architecture",
@@ -79,18 +75,14 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "684e343459808a939611b1b7d8ed2e326959b543f72d54ea631fad9fa1025598"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "aa4992f3b334ccbd27b4dbbfc108be93277998ecfbe61cf08372e1e6197b4290"
+          "sha256": "2b2c030ad76fe98e4e71dc661e4cbf3b3399482240b4a24c7f0277fa8179de65"
         }
       ],
-      "reason": "Current module manifest/maps/guides place repository and four aliases in Users and preserve central context/migrations/unit of work. No project/package/model/host changes. Existing separate admin and security readers remain separate. Original planning path error and Wiki limitations documented.",
+      "reason": "Maps/guides/report distinguish module stream SQL/metadata from central transactional replay coordinator and generic email. No project/package/lock/schema changes or new job. Ownership empty results and overbroad inferred obligations are navigation limitations, not code authority.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:15.5301439Z"
+      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
+      "reviewedAtUtc": "2026-09-03T12:08:04.2301641Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -223,13 +215,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "90c6445cc89e5124b428fa9d75bf8441a966674fa2329edf3391a5d9e2c6fd5d"
+          "sha256": "8c3aa9801e87d697aa4204a9eefd18a46f296e8ce44a70fc07b9bfaee88a1cdd"
         }
       ],
-      "reason": "Whole tracked Users repository moves with exact source and unchanged ports/capabilities/HTTP/authentication. Four scoped aliases now composed by existing AddUsersPersistence in all hosts. Coordinated rebuild, no old assembly forwarder.",
+      "reason": "No HTTP/application contracts or host files changed. Stream names/normalization/limits/order, email rejection, stale-attempt checks and audit remain compatible. All hosts already compose the three owners; coordinated rebuild required.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:16.6304624Z"
+      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
+      "reviewedAtUtc": "2026-09-03T12:08:04.7753555Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -486,13 +478,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "d9db45ba46f07632f05222f1a454240548c3362de995a958107fcc3abede9ab8"
+          "sha256": "98170e65e804c34ebc5a6700395aad3415a1d7cfedb00d4b4cc3a2e8dbec8218"
         }
       ],
-      "reason": "Seven Users-only SQL tests moved as a whole file unchanged; mixed Users/Identity test remains byte-equivalent. Five new provider tests and expanded DI/ownership guards protect tracking/filter/transaction/save behavior. No collectors. Single source-proven postfix control30 expectedPath relocation with reverse equality, no query/ranking/threshold edits.",
+      "reason": "Owner DI and adapter tests plus shared PostgreSQL rollback/concurrency/cancellation/audit tests protect the boundary. Existing engine/claim/retry and provider behavior unchanged. Actual full suites/EF/NuGet with durable logs, no collectors. No evaluation corpus/ranking/threshold edits.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:17.1164263Z"
+      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
+      "reviewedAtUtc": "2026-09-03T12:08:05.0335170Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -809,13 +801,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9b99494f144a67d14850b013692ee2e2fbe4cd41f71216a5175b5bb1cf9149e9"
+          "sha256": "d5f10673350d937a4182d48b634dea67aca52215da8882145f4a9b80f26d6a1e"
         }
       ],
-      "reason": "Seven Users-only SQL tests moved as a whole file unchanged; mixed Users/Identity test remains byte-equivalent. Five new provider tests and expanded DI/ownership guards protect tracking/filter/transaction/save behavior. No collectors. Single source-proven postfix control30 expectedPath relocation with reverse equality, no query/ranking/threshold edits.",
+      "reason": "Owner DI and adapter tests plus shared PostgreSQL rollback/concurrency/cancellation/audit tests protect the boundary. Existing engine/claim/retry and provider behavior unchanged. Actual full suites/EF/NuGet with durable logs, no collectors. No evaluation corpus/ranking/threshold edits.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:17.5075097Z"
+      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
+      "reviewedAtUtc": "2026-09-03T12:08:05.4971441Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -892,13 +884,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e943f8e8e944d4c77a06e5afd974e147f9c1ae55f62e261a0097da1bfcfccc61"
+          "sha256": "be6c3f18e61cc16c1d664527228433d10fefb25cc9ab4562bd00f260cbd59213"
         }
       ],
-      "reason": "Current module manifest/maps/guides place repository and four aliases in Users and preserve central context/migrations/unit of work. No project/package/model/host changes. Existing separate admin and security readers remain separate. Original planning path error and Wiki limitations documented.",
+      "reason": "Maps/guides/report distinguish module stream SQL/metadata from central transactional replay coordinator and generic email. No project/package/lock/schema changes or new job. Ownership empty results and overbroad inferred obligations are navigation limitations, not code authority.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:18.0440656Z"
+      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
+      "reviewedAtUtc": "2026-09-03T12:08:06.1590861Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -907,17 +899,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9b99494f144a67d14850b013692ee2e2fbe4cd41f71216a5175b5bb1cf9149e9"
+          "sha256": "d5f10673350d937a4182d48b634dea67aca52215da8882145f4a9b80f26d6a1e"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e943f8e8e944d4c77a06e5afd974e147f9c1ae55f62e261a0097da1bfcfccc61"
+          "sha256": "be6c3f18e61cc16c1d664527228433d10fefb25cc9ab4562bd00f260cbd59213"
         }
       ],
-      "reason": "Same stored Users credential/account fields and query/write predicates; Identity uses Users semantic capabilities. No provider, token, authentication, logging, sharing or retention change. Local provider/caller transaction tests and exact source comparison, not a security scan.",
+      "reason": "Same object keys/notification and user ids, email payload purge, operator/reason/error audit and lifecycle. No new logging/sharing/provider call/authentication policy. Exact SQL/projection audit and local transactional tests; existing unfiltered non-locking lookup defect explicitly retained for separate repair, not a security scan.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:18.4651707Z"
+      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
+      "reviewedAtUtc": "2026-09-03T12:08:06.5894236Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1155,13 +1147,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "338f2f11be56b6a76668b428970a6e9b578930565c5587101c97c3e1fc803e09"
+          "sha256": "70ea601c11c6b451fb0e7b7240fe94512a3b1d7f4977bb70faa21444cc6029c4"
         }
       ],
-      "reason": "Current module manifest/maps/guides place repository and four aliases in Users and preserve central context/migrations/unit of work. No project/package/model/host changes. Existing separate admin and security readers remain separate. Original planning path error and Wiki limitations documented.",
+      "reason": "Maps/guides/report distinguish module stream SQL/metadata from central transactional replay coordinator and generic email. No project/package/lock/schema changes or new job. Ownership empty results and overbroad inferred obligations are navigation limitations, not code authority.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:17.7934168Z"
+      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
+      "reviewedAtUtc": "2026-09-03T12:08:05.8439869Z"
     },
     {
       "pageId": "workflow.review-diff",

@@ -8,3 +8,6 @@ The existing Infrastructure.IntegrationTests project also owns plain, non-Docker
 outbox record contract Facts and provider round-trip tests. Shared-engine
 enqueue/dispatch and mixed replay coverage remain in the central infrastructure
 suites. Do not duplicate the six relocated record lifecycle cases there.
+
+OutboxReplayStreamTests exercises Images-owned list/metadata/tracking on PostgreSQL.
+The common four-stream replay transaction/concurrency tests remain central.

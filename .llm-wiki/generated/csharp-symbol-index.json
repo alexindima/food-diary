@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3548,
-    "symbols": 3533,
+    "sourceFiles": 3554,
+    "symbols": 3539,
     "interfaceImplementationLinks": 235,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 1860,
+      "class": 1864,
       "enum": 62,
-      "interface": 423,
-      "record": 1068,
+      "interface": 424,
+      "record": 1069,
       "record struct": 120
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1382,
+      "Other": 1388,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -2166,7 +2166,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 17
+      "line": 19
     },
     {
       "name": "DependencyInjection",
@@ -2372,6 +2372,13 @@
       "line": 8
     },
     {
+      "name": "EmailOutboxReplayStream",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxReplayStream.cs",
+      "line": 6
+    },
+    {
       "name": "FoodDiaryDbContext",
       "kind": "class",
       "role": "Other",
@@ -2491,6 +2498,13 @@
       "line": 4
     },
     {
+      "name": "IOutboxReplayStream",
+      "kind": "interface",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs",
+      "line": 6
+    },
+    {
       "name": "OutboxClaimBatch",
       "kind": "record",
       "role": "Other",
@@ -2502,7 +2516,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-      "line": 11
+      "line": 7
     },
     {
       "name": "OutboxMessageClaimer",
@@ -2531,6 +2545,13 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxReplayAudit.cs",
       "line": 2
+    },
+    {
+      "name": "OutboxReplayEntry",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxReplayEntry.cs",
+      "line": 4
     },
     {
       "name": "RecipeCompositionTransactionLock",
@@ -16803,7 +16824,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "AchievementDefinitionStore",
@@ -16825,6 +16846,13 @@
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
       "line": 9
+    },
+    {
+      "name": "AchievementEvaluationOutboxReplayStream",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxReplayStream.cs",
+      "line": 6
     },
     {
       "name": "AchievementMetricReader",
@@ -17937,7 +17965,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "ImageAssetConfiguration",
@@ -17973,6 +18001,13 @@
       "role": "Repository",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs",
       "line": 7
+    },
+    {
+      "name": "ImageDeletionOutboxReplayStream",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/Persistence/Images/ImageDeletionOutboxReplayStream.cs",
+      "line": 6
     },
     {
       "name": "ImageObjectDeletionOutbox",
@@ -20639,7 +20674,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
-      "line": 9
+      "line": 11
     },
     {
       "name": "WebPushOptions",
@@ -20675,6 +20710,13 @@
       "role": "Other",
       "path": "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutboxProcessor.cs",
       "line": 9
+    },
+    {
+      "name": "WebPushOutboxReplayStream",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Infrastructure/Persistence/WebPushOutboxReplayStream.cs",
+      "line": 6
     },
     {
       "name": "WebPushSubscriptionRepository",
@@ -26495,21 +26537,21 @@
       "implementation": "EfUnitOfWork",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 21
+      "line": 23
     },
     {
       "service": "IOutboxDeadLetterReplayService",
       "implementation": "OutboxDeadLetterReplayService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 22
+      "line": 24
     },
     {
       "service": "IDomainEventPublisher",
       "implementation": "MediatorDomainEventPublisher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 23
+      "line": 26
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -27188,21 +27230,21 @@
       "implementation": "ImageAssetRepository",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 9
+      "line": 12
     },
     {
       "service": "IImageObjectDeletionOutbox",
       "implementation": "ImageObjectDeletionOutbox",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 12
+      "line": 15
     },
     {
       "service": "IImageObjectDeletionOutboxProcessor",
       "implementation": "ImageObjectDeletionOutboxProcessor",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 13
+      "line": 16
     },
     {
       "service": "ILessonReadService",

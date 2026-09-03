@@ -91,6 +91,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Domain.Tests/Domain/NotificationInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Persistence/NotificationRepositoryTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Persistence/NotificationWebPushOutboxTests.cs`
+- [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Persistence/OutboxReplayStreamTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushClientAdapterTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs`
 - [behavioral-or-text-match] `Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs`

@@ -270,7 +270,8 @@ public sealed class EmailOutboxTests {
         message.MarkDeadLettered("provider rejected request", Now.AddSeconds(-1));
         context.EmailOutbox.Add(message);
         await context.SaveChangesAsync();
-        var replayService = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+        using var replayScope = new OutboxReplayTestScope(context, new FixedDateTimeProvider(Now));
+        IOutboxDeadLetterReplayService replayService = replayScope.Service;
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             replayService.ReplayAsync(
@@ -298,7 +299,8 @@ public sealed class EmailOutboxTests {
         message.MarkDeadLettered("provider unavailable", Now.AddMinutes(-1));
         context.EmailOutbox.Add(message);
         await context.SaveChangesAsync();
-        var replayService = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+        using var replayScope = new OutboxReplayTestScope(context, new FixedDateTimeProvider(Now));
+        IOutboxDeadLetterReplayService replayService = replayScope.Service;
 
         IReadOnlyList<OutboxDeadLetterMessageModel> listed = await replayService.ListDeadLettersAsync(
             "email",
@@ -329,7 +331,8 @@ public sealed class EmailOutboxTests {
         message.MarkDeadLettered("provider unavailable", Now);
         context.ImageObjectDeletionOutbox.Add(message);
         await context.SaveChangesAsync();
-        var replayService = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+        using var replayScope = new OutboxReplayTestScope(context, new FixedDateTimeProvider(Now));
+        IOutboxDeadLetterReplayService replayService = replayScope.Service;
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             replayService.ReplayAsync(
@@ -355,7 +358,8 @@ public sealed class EmailOutboxTests {
         context.ImageObjectDeletionOutbox.Add(image);
         context.NotificationWebPushOutbox.Add(webPush);
         await context.SaveChangesAsync();
-        var service = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+        using var replayScope = new OutboxReplayTestScope(context, new FixedDateTimeProvider(Now));
+        IOutboxDeadLetterReplayService service = replayScope.Service;
 
         IReadOnlyList<OutboxDeadLetterMessageModel> all = await service.ListDeadLettersAsync(
             outboxName: null,
@@ -379,7 +383,8 @@ public sealed class EmailOutboxTests {
         message.MarkDeadLettered("achievement failure", Now.AddMinutes(-1));
         context.AchievementEvaluationOutbox.Add(message);
         await context.SaveChangesAsync();
-        var service = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+        using var replayScope = new OutboxReplayTestScope(context, new FixedDateTimeProvider(Now));
+        IOutboxDeadLetterReplayService service = replayScope.Service;
 
         OutboxDeadLetterMessageModel? preview = await service.GetDeadLetterAsync(
             "achievement_evaluation",
@@ -407,7 +412,8 @@ public sealed class EmailOutboxTests {
         var active = EmailOutboxMessage.Create(CreateEmailMessage(), Now);
         context.EmailOutbox.Add(active);
         await context.SaveChangesAsync();
-        var service = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+        using var replayScope = new OutboxReplayTestScope(context, new FixedDateTimeProvider(Now));
+        IOutboxDeadLetterReplayService service = replayScope.Service;
 
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.ReplayAsync(
             "email", active.Id, "operator", "reason", expectedAttemptCount: 0, CancellationToken.None));
@@ -420,7 +426,8 @@ public sealed class EmailOutboxTests {
     [InlineData(201)]
     public async Task ListDeadLettersAsync_WithInvalidLimit_Throws(int limit) {
         await using FoodDiaryDbContext context = CreateContext();
-        var service = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+        using var replayScope = new OutboxReplayTestScope(context, new FixedDateTimeProvider(Now));
+        IOutboxDeadLetterReplayService service = replayScope.Service;
 
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             service.ListDeadLettersAsync(outboxName: null, limit, CancellationToken.None));
@@ -429,40 +436,23 @@ public sealed class EmailOutboxTests {
     [Fact]
     public async Task GetDeadLetterAsync_WithEmptyMessageId_Throws() {
         await using FoodDiaryDbContext context = CreateContext();
-        var service = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+        using var replayScope = new OutboxReplayTestScope(context, new FixedDateTimeProvider(Now));
+        IOutboxDeadLetterReplayService service = replayScope.Service;
 
         await Assert.ThrowsAsync<ArgumentException>(() =>
             service.GetDeadLetterAsync("email", Guid.Empty, CancellationToken.None));
     }
 
     [Fact]
-    public async Task DefensiveOutboxSwitchFallbacks_RejectUnsupportedMessageTypes() {
+    public async Task ReplayTooling_RejectsUnsupportedNamesThroughPublicContract() {
         await using FoodDiaryDbContext context = CreateContext();
-        var service = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
-        MethodInfo findAsync = typeof(OutboxDeadLetterReplayService).GetMethod(
-            "FindAsync",
-            BindingFlags.Instance | BindingFlags.NonPublic)!;
-        var findTask = (Task<IOutboxMessage?>)findAsync.Invoke(
-            service,
-            ["unsupported", Guid.NewGuid(), false, CancellationToken.None])!;
-
-        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => findTask);
-
-        var unsupported = new UnsupportedOutboxMessage();
-        MethodInfo toModel = typeof(OutboxDeadLetterReplayService).GetMethod(
-            "ToModel",
-            BindingFlags.Static | BindingFlags.NonPublic,
-            binder: null,
-            [typeof(string), typeof(IOutboxMessage)],
-            modifiers: null)!;
-        MethodInfo getLastError = typeof(OutboxDeadLetterReplayService).GetMethod(
-            "GetLastError",
-            BindingFlags.Static | BindingFlags.NonPublic)!;
-
-        TargetInvocationException modelException = Assert.Throws<TargetInvocationException>(() =>
-            toModel.Invoke(obj: null, ["unsupported", unsupported]));
-        Assert.IsType<ArgumentOutOfRangeException>(modelException.InnerException);
-        Assert.Null(getLastError.Invoke(obj: null, [unsupported]));
+        using var replayScope = new OutboxReplayTestScope(context, new FixedDateTimeProvider(Now));
+        IOutboxDeadLetterReplayService service = replayScope.Service;
+        var id = Guid.NewGuid();
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.ListDeadLettersAsync("unsupported", 10));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.GetDeadLetterAsync("unsupported", id));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.ListReplayHistoryAsync("unsupported", id, 10));
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.ReplayAsync("unsupported", id, "operator", "reason", 1));
     }
 
     [Fact]
@@ -642,22 +632,5 @@ public sealed class EmailOutboxTests {
 
             return ValueTask.FromResult(result);
         }
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class UnsupportedOutboxMessage : IOutboxMessage {
-        public Guid Id => Guid.Empty;
-        public DateTime CreatedOnUtc => Now;
-        public int AttemptCount => 1;
-        public DateTime? ProcessedOnUtc => null;
-        public DateTime? DeadLetteredOnUtc => Now;
-        public DateTime? LockedUntilUtc => null;
-        public string? LockedBy => null;
-
-        public void MarkClaimed(DateTime lockedUntilUtc, string lockedBy) { }
-        public void MarkProcessed(DateTime processedOnUtc) { }
-        public void MarkDeadLettered(string error, DateTime deadLetteredOnUtc) { }
-        public void MarkFailed(string error, DateTime nextAttemptOnUtc) { }
-        public void MarkReplayed(DateTime nextAttemptOnUtc) { }
     }
 }

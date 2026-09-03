@@ -52,9 +52,10 @@ tests leave the mixed Dietologist class; see
 - `EfUnitOfWork`, domain-event dispatch, database telemetry and generic PostgreSQL
   lock machinery are shared mechanisms, not feature policy.
 - `OutboxProcessingEngine`, claiming and retry policy remain common mechanisms.
-  `OutboxDeadLetterReplayService` is mixed: it explicitly knows four streams.
-  A future stream-adapter seam needs a separate design; this is not solved by
-  moving its file or weakening transactional replay guarantees.
+  `OutboxDeadLetterReplayService` coordinates scoped IOutboxReplayStream extensions.
+  Images, Notifications and Gamification own query/preview adapters; email remains
+  shared and non-replayable. Audit/reset/save/transaction remain central, with no
+  concrete stream-type dependency in the coordinator.
 - `RecipeCompositionTransactionLock` coordinates Products and Recipes; retain one
   shared lock identity until a deliberate composition boundary replaces it.
 - `UserRepository` now belongs to Users Infrastructure together with its four
@@ -107,9 +108,13 @@ tests leave the mixed Dietologist class; see
     new SQL regressions protect caller-controlled saving/transactions, role-audit
     rollback, account predicates and tracked state. See `docs/ai/users-repository-ownership.md`.
 
-Next review the explicit four-stream dependencies in OutboxDeadLetterReplayService.
-That is a shared-engine versus module-stream adapter design, not an automatic
-physical move or permission to change replay/transaction semantics.
+11. Four-stream dead-letter query/preview adapters now follow their owners through
+    an extension port in existing Infrastructure. No new assembly, schema or
+    processing-engine redesign; see `docs/ai/outbox-replay-stream-boundary.md`.
+
+Next review StronglyTypedIdConverters compatibility consumers before any removal.
+Separately fix the pre-existing non-locking replay preview lookup lacking an ID
+predicate; its unchanged SQL is explicitly documented in the replay report.
 
 Every persistence tranche must keep the dependency graph acyclic, preserve model
 identity, retain real provider tests and check composition roots. Avoid adding new

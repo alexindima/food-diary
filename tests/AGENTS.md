@@ -38,6 +38,7 @@ Rules for `tests/`.
 - For HTTP contract changes, update snapshots under `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`.
 - Do not weaken architecture tests to make a feature pass; update the architecture intentionally and document why.
 - Keep test helpers local to the test project unless reuse is clear; shared helpers belong in `FoodDiary.Testing`.
+- Outbox stream adapter tests belong with Images/Notifications/Gamification; shared four-stream replay, rollback/locking/cancellation, DI and email tests remain central. Do not duplicate or relocate the shared processing engine tests into one module.
 - Keep test project references aligned with the architecture-test dependency matrix.
 - Mark every test type and test-only helper type with `[ExcludeFromCodeCoverage]` so test implementation details stay out of dotCover reports.
 

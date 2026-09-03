@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 223,
-    "documentationPages": 134
+    "documentationPages": 135
   },
   "dotnet": {
     "projects": [
@@ -12715,6 +12715,7 @@
       "docs/ai/notifications-module-extraction-wiki-findings.md",
       "docs/ai/notifications-ownership-inventory.md",
       "docs/ai/nutrition-domain-extraction.md",
+      "docs/ai/outbox-replay-stream-boundary.md",
       "docs/ai/products-module-extraction-wiki-findings.md",
       "docs/ai/products-ownership-inventory.md",
       "docs/ai/recent-items-ownership-inventory.md",

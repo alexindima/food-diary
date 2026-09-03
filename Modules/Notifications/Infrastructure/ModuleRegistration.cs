@@ -1,9 +1,11 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Infrastructure.Persistence.Notifications;
+using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FoodDiary.Modules.Notifications.Infrastructure;
 
@@ -14,6 +16,7 @@ public static class ModuleRegistration {
     }
 
     public static IServiceCollection AddNotificationsPersistence(this IServiceCollection services) {
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, WebPushOutboxReplayStream>());
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<INotificationReadRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationLookupRepository>(static provider => provider.GetRequiredService<INotificationRepository>());

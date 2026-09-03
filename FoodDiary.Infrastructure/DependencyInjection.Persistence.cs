@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Infrastructure.Events;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Interceptors;
 using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Infrastructure.Services;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Infrastructure;
@@ -20,6 +22,7 @@ public static partial class DependencyInjection {
         services.AddSingleton<DatabaseCommandTelemetryInterceptor>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddScoped<IOutboxDeadLetterReplayService, OutboxDeadLetterReplayService>();
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, EmailOutboxReplayStream>());
         services.AddScoped<IDomainEventPublisher, MediatorDomainEventPublisher>();
         services.AddScoped<DomainEventDispatchInterceptor>();
         services.AddDbContext<FoodDiaryDbContext>((sp, options) => {

@@ -5,7 +5,11 @@
 Images and Gamification own their stream-specific records and EF mappings in
 their existing PersistenceModel projects. Shared Outbox.Abstractions carries only
 the lifecycle contract; the common engine/claimer/replay and migration boundary
-remain central. See `docs/ai/module-outbox-persistence.md` for this tranche.
+remain central. Replay query/preview adapters now belong to Images, Notifications
+and Gamification through an extension port in existing Infrastructure; email
+remains shared and non-replayable. The coordinator alone saves/commits replay plus
+audit. See `docs/ai/outbox-replay-stream-boundary.md` and
+`docs/ai/module-outbox-persistence.md`.
 
 ## Purpose
 

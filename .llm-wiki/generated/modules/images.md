@@ -77,6 +77,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/Integration/ImageAssetRepositoryIntegrationTests.cs`
 - [integration] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/Integration/ImageObjectDeletionOutboxMessageTests.cs`
 - [integration] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/Integration/ImageOutboxModelIntegrationTests.cs`
+- [integration] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/Integration/OutboxReplayStreamTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ImagesModuleExtractionTests.cs`
 
 ## Working Rule

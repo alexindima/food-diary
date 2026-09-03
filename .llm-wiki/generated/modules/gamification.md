@@ -77,6 +77,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/Achievements/UserAchievementTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Domain.Tests/Domain/GamificationIdConversionTests.cs`
 - [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/AchievementPersistenceTests.cs`
+- [behavioral-or-text-match] `Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/OutboxReplayStreamTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/GamificationModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/GamificationHttpMappingsTests.cs`
 

@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1070,
+    "contracts": 1071,
     "ambiguousContracts": 0,
-    "consumerEdges": 7680,
-    "productionConsumerEdges": 4560,
-    "testConsumerEdges": 3120,
-    "consumedContracts": 1070,
+    "consumerEdges": 7703,
+    "productionConsumerEdges": 4570,
+    "testConsumerEdges": 3133,
+    "consumedContracts": 1071,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -11264,6 +11264,23 @@
       ],
       "definitionPaths": [
         "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -75550,6 +75567,71 @@
       "referenceCount": 7
     },
     {
+      "contract": "IOutboxDeadLetterReplayService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Outbox/IOutboxDeadLetterReplayService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/OutboxReplayBoundaryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxDeadLetterReplayService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Outbox/IOutboxDeadLetterReplayService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/OutboxReplayTestScope.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IOutboxDeadLetterReplayService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Outbox/IOutboxDeadLetterReplayService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxDeadLetterReplayService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Outbox/IOutboxDeadLetterReplayService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs",
+      "isTest": true,
+      "referenceCount": 9
+    },
+    {
+      "contract": "IOutboxDeadLetterReplayService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Outbox/IOutboxDeadLetterReplayService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/OutboxReplayTestScope.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
       "contract": "IOutboxMessage",
       "roles": [
         "Other"
@@ -75573,7 +75655,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
       "isTest": false,
-      "referenceCount": 5
+      "referenceCount": 1
     },
     {
       "contract": "IOutboxMessage",
@@ -75600,6 +75682,19 @@
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
       "isTest": false,
       "referenceCount": 4
+    },
+    {
+      "contract": "IOutboxMessage",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxReplayEntry.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "IOutboxMessage",
@@ -75662,7 +75757,228 @@
         "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/OutboxReplayBoundaryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxReplayStream.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
+      "isTest": false,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxReplayStream.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Infrastructure/DependencyInjection.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Infrastructure/Persistence/Images/ImageDeletionOutboxReplayStream.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Infrastructure/Persistence/WebPushOutboxReplayStream.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/OutboxReplayStreamTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/Integration/OutboxReplayStreamTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Persistence/OutboxReplayStreamTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/OutboxReplayOwnershipTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/OutboxReplayBoundaryIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/OutboxReplayTestScope.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/OutboxReplayRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 9
+    },
+    {
+      "contract": "IOutboxReplayStream",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Infrastructure/Persistence/Outbox/IOutboxReplayStream.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/OutboxReplayTestScope.cs",
       "isTest": true,
       "referenceCount": 3
     },

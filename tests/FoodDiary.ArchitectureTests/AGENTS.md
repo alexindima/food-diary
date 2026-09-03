@@ -23,6 +23,10 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Rules
 
+- `OutboxReplayOwnershipTests` rejects concrete stream types/names in the common
+  replay coordinator and saving/transactions in its module-owned stream adapters.
+  Keep the same scoped context, explicit tie ordering and email replay prohibition.
+
 - `UsersAdministrationReaderOwnershipTests` keeps both administrative read aliases
   and focused SQL tests in Users, while Users tracked lookup/Google/write ports
   and Users security-state reader retain their separate responsibilities.

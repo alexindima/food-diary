@@ -1,8 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
-using FoodDiary.Infrastructure.Persistence.Email;
-using FoodDiary.Infrastructure.Persistence.Images;
-using FoodDiary.Infrastructure.Persistence.Notifications;
-using FoodDiary.Infrastructure.Persistence.Achievements;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -11,8 +7,11 @@ namespace FoodDiary.Infrastructure.Persistence.Outbox;
 
 internal sealed class OutboxDeadLetterReplayService(
     FoodDiaryDbContext context,
-    TimeProvider timeProvider) : IOutboxDeadLetterReplayService {
+    TimeProvider timeProvider,
+    IEnumerable<IOutboxReplayStream> streams) : IOutboxDeadLetterReplayService {
     private const int MaximumListLimit = 200;
+    private readonly IReadOnlyDictionary<string, IOutboxReplayStream> _streams =
+        streams.ToDictionary(static stream => stream.Name, StringComparer.Ordinal);
 
     public async Task<IReadOnlyList<OutboxDeadLetterMessageModel>> ListDeadLettersAsync(
         string? outboxName,
@@ -22,17 +21,10 @@ internal sealed class OutboxDeadLetterReplayService(
         string? normalizedName = NormalizeOptionalOutboxName(outboxName);
         var result = new List<OutboxDeadLetterMessageModel>();
 
-        if (normalizedName is null or "email") {
-            result.AddRange(await ListEmailAsync(boundedLimit, cancellationToken).ConfigureAwait(false));
-        }
-        if (normalizedName is null or "image_object_deletion") {
-            result.AddRange(await ListImageDeletionAsync(boundedLimit, cancellationToken).ConfigureAwait(false));
-        }
-        if (normalizedName is null or "notification_web_push") {
-            result.AddRange(await ListWebPushAsync(boundedLimit, cancellationToken).ConfigureAwait(false));
-        }
-        if (normalizedName is null or "achievement_evaluation") {
-            result.AddRange(await ListAchievementEvaluationAsync(boundedLimit, cancellationToken).ConfigureAwait(false));
+        foreach (IOutboxReplayStream stream in _streams.Values.OrderBy(static stream => stream.Order)) {
+            if (normalizedName is null || string.Equals(normalizedName, stream.Name, StringComparison.Ordinal)) {
+                result.AddRange(await stream.ListAsync(boundedLimit, cancellationToken).ConfigureAwait(false));
+            }
         }
 
         return [.. result
@@ -45,12 +37,12 @@ internal sealed class OutboxDeadLetterReplayService(
         Guid messageId,
         CancellationToken cancellationToken = default) {
         ValidateMessageId(messageId);
-        IOutboxMessage? message = await FindAsync(
+        OutboxReplayEntry? message = await FindAsync(
             NormalizeOutboxName(outboxName),
             messageId,
             forUpdate: false,
             cancellationToken).ConfigureAwait(false);
-        return message?.DeadLetteredOnUtc is null ? null : ToModel(NormalizeOutboxName(outboxName), message);
+        return message?.Message.DeadLetteredOnUtc is null ? null : ToModel(NormalizeOutboxName(outboxName), message);
     }
 
     public async Task<IReadOnlyList<OutboxReplayAuditModel>> ListReplayHistoryAsync(
@@ -100,20 +92,20 @@ internal sealed class OutboxDeadLetterReplayService(
         }
 
         string normalizedName = NormalizeOutboxName(outboxName);
-        if (string.Equals(normalizedName, "email", StringComparison.Ordinal)) {
-            throw new InvalidOperationException(
-                "Dead-lettered emails cannot be replayed because their sensitive payloads are removed. Regenerate the email through its originating workflow.");
+        if (_streams[normalizedName].ReplayRejectionReason is { } rejectionReason) {
+            throw new InvalidOperationException(rejectionReason);
         }
         IDbContextTransaction? transaction = context.Database.IsRelational()
             ? await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false)
             : null;
         try {
-            IOutboxMessage message = await FindAsync(
+            OutboxReplayEntry entry = await FindAsync(
                 normalizedName,
                 messageId,
                 forUpdate: transaction is not null,
                 cancellationToken).ConfigureAwait(false)
                 ?? throw new InvalidOperationException("Outbox message was not found.");
+            IOutboxMessage message = entry.Message;
             if (message.DeadLetteredOnUtc is null || message.ProcessedOnUtc is not null) {
                 throw new InvalidOperationException("Only a dead-lettered, unprocessed message can be replayed.");
             }
@@ -132,7 +124,7 @@ internal sealed class OutboxDeadLetterReplayService(
                 reason,
                 nowUtc,
                 message.AttemptCount,
-                GetLastError(message));
+                entry.LastError);
             context.OutboxReplayAudits.Add(audit);
             message.MarkReplayed(nowUtc);
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
@@ -147,164 +139,16 @@ internal sealed class OutboxDeadLetterReplayService(
         }
     }
 
-    private async Task<IOutboxMessage?> FindAsync(
+    private Task<OutboxReplayEntry?> FindAsync(
         string outboxName,
         Guid messageId,
         bool forUpdate,
         CancellationToken cancellationToken) =>
-        outboxName switch {
-            "email" => await FindEmailAsync(messageId, forUpdate, cancellationToken).ConfigureAwait(false),
-            "image_object_deletion" => await FindImageDeletionAsync(messageId, forUpdate, cancellationToken).ConfigureAwait(false),
-            "notification_web_push" => await FindWebPushAsync(messageId, forUpdate, cancellationToken).ConfigureAwait(false),
-            "achievement_evaluation" => await FindAchievementEvaluationAsync(messageId, forUpdate, cancellationToken).ConfigureAwait(false),
-            _ => throw new ArgumentOutOfRangeException(nameof(outboxName), "Unsupported outbox name."),
-        };
+        _streams[outboxName].FindAsync(messageId, forUpdate, cancellationToken);
 
-    private Task<EmailOutboxMessage?> FindEmailAsync(Guid messageId, bool forUpdate, CancellationToken cancellationToken) =>
-        (forUpdate
-            ? context.EmailOutbox.FromSqlInterpolated($"SELECT * FROM \"EmailOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
-            : context.EmailOutbox)
-        .SingleOrDefaultAsync(cancellationToken);
-
-    private Task<ImageObjectDeletionOutboxMessage?> FindImageDeletionAsync(
-        Guid messageId,
-        bool forUpdate,
-        CancellationToken cancellationToken) =>
-        (forUpdate
-            ? context.ImageObjectDeletionOutbox.FromSqlInterpolated($"SELECT * FROM \"ImageObjectDeletionOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
-            : context.ImageObjectDeletionOutbox)
-        .SingleOrDefaultAsync(cancellationToken);
-
-    private Task<NotificationWebPushOutboxMessage?> FindWebPushAsync(
-        Guid messageId,
-        bool forUpdate,
-        CancellationToken cancellationToken) =>
-        (forUpdate
-            ? context.NotificationWebPushOutbox.FromSqlInterpolated($"SELECT * FROM \"NotificationWebPushOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
-            : context.NotificationWebPushOutbox)
-        .SingleOrDefaultAsync(cancellationToken);
-
-    private Task<AchievementEvaluationOutboxMessage?> FindAchievementEvaluationAsync(
-        Guid messageId,
-        bool forUpdate,
-        CancellationToken cancellationToken) =>
-        (forUpdate
-            ? context.AchievementEvaluationOutbox.FromSqlInterpolated($"SELECT * FROM \"AchievementEvaluationOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
-            : context.AchievementEvaluationOutbox)
-        .SingleOrDefaultAsync(cancellationToken);
-
-    private async Task<IReadOnlyList<OutboxDeadLetterMessageModel>> ListEmailAsync(
-        int limit,
-        CancellationToken cancellationToken) =>
-        await context.EmailOutbox
-            .AsNoTracking()
-            .Where(message => message.DeadLetteredOnUtc != null && message.ProcessedOnUtc == null)
-            .OrderByDescending(message => message.DeadLetteredOnUtc)
-            .Take(limit)
-            .Select(message => new OutboxDeadLetterMessageModel(
-                "email",
-                message.Id,
-                message.CreatedOnUtc,
-                message.DeadLetteredOnUtc!.Value,
-                message.AttemptCount,
-                message.LastError,
-                message.Subject))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
-
-    private async Task<IReadOnlyList<OutboxDeadLetterMessageModel>> ListImageDeletionAsync(
-        int limit,
-        CancellationToken cancellationToken) =>
-        await context.ImageObjectDeletionOutbox
-            .AsNoTracking()
-            .Where(message => message.DeadLetteredOnUtc != null && message.ProcessedOnUtc == null)
-            .OrderByDescending(message => message.DeadLetteredOnUtc)
-            .Take(limit)
-            .Select(message => new OutboxDeadLetterMessageModel(
-                "image_object_deletion",
-                message.Id,
-                message.CreatedOnUtc,
-                message.DeadLetteredOnUtc!.Value,
-                message.AttemptCount,
-                message.LastError,
-                message.ObjectKey))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
-
-    private async Task<IReadOnlyList<OutboxDeadLetterMessageModel>> ListWebPushAsync(
-        int limit,
-        CancellationToken cancellationToken) =>
-        await context.NotificationWebPushOutbox
-            .AsNoTracking()
-            .Where(message => message.DeadLetteredOnUtc != null && message.ProcessedOnUtc == null)
-            .OrderByDescending(message => message.DeadLetteredOnUtc)
-            .Take(limit)
-            .Select(message => new OutboxDeadLetterMessageModel(
-                "notification_web_push",
-                message.Id,
-                message.CreatedOnUtc,
-                message.DeadLetteredOnUtc!.Value,
-                message.AttemptCount,
-                message.LastError,
-                message.NotificationId.Value.ToString()))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
-
-    private async Task<IReadOnlyList<OutboxDeadLetterMessageModel>> ListAchievementEvaluationAsync(
-        int limit,
-        CancellationToken cancellationToken) =>
-        await context.AchievementEvaluationOutbox
-            .AsNoTracking()
-            .Where(message => message.DeadLetteredOnUtc != null && message.ProcessedOnUtc == null)
-            .OrderByDescending(message => message.DeadLetteredOnUtc)
-            .Take(limit)
-            .Select(message => new OutboxDeadLetterMessageModel(
-                "achievement_evaluation",
-                message.Id,
-                message.CreatedOnUtc,
-                message.DeadLetteredOnUtc!.Value,
-                message.AttemptCount,
-                message.LastError,
-                message.UserId.Value.ToString()))
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
-
-    private static OutboxDeadLetterMessageModel ToModel(string outboxName, IOutboxMessage message) =>
-        message switch {
-            EmailOutboxMessage email => new(
-                outboxName,
-                email.Id,
-                email.CreatedOnUtc,
-                email.DeadLetteredOnUtc!.Value,
-                email.AttemptCount,
-                email.LastError,
-                email.Subject),
-            ImageObjectDeletionOutboxMessage image => new(
-                outboxName,
-                image.Id,
-                image.CreatedOnUtc,
-                image.DeadLetteredOnUtc!.Value,
-                image.AttemptCount,
-                image.LastError,
-                image.ObjectKey),
-            NotificationWebPushOutboxMessage notification => new(
-                outboxName,
-                notification.Id,
-                notification.CreatedOnUtc,
-                notification.DeadLetteredOnUtc!.Value,
-                notification.AttemptCount,
-                notification.LastError,
-                notification.NotificationId.Value.ToString()),
-            AchievementEvaluationOutboxMessage achievement => new(
-                outboxName,
-                achievement.Id,
-                achievement.CreatedOnUtc,
-                achievement.DeadLetteredOnUtc!.Value,
-                achievement.AttemptCount,
-                achievement.LastError,
-                achievement.UserId.Value.ToString()),
-            _ => throw new ArgumentOutOfRangeException(nameof(message)),
-        };
+    private static OutboxDeadLetterMessageModel ToModel(string outboxName, OutboxReplayEntry entry) =>
+        new(outboxName, entry.Message.Id, entry.Message.CreatedOnUtc,
+            entry.Message.DeadLetteredOnUtc!.Value, entry.Message.AttemptCount, entry.LastError, entry.Summary);
 
     private static OutboxReplayAuditModel ToModel(OutboxReplayAudit audit) =>
         new(
@@ -331,23 +175,14 @@ internal sealed class OutboxDeadLetterReplayService(
         }
     }
 
-    private static string? NormalizeOptionalOutboxName(string? outboxName) =>
+    private string? NormalizeOptionalOutboxName(string? outboxName) =>
         string.IsNullOrWhiteSpace(outboxName) ? null : NormalizeOutboxName(outboxName);
 
-    private static string NormalizeOutboxName(string outboxName) {
+    private string NormalizeOutboxName(string outboxName) {
         ArgumentException.ThrowIfNullOrWhiteSpace(outboxName);
         string normalized = outboxName.Trim().ToLowerInvariant();
-        return normalized is "email" or "image_object_deletion" or "notification_web_push" or "achievement_evaluation"
+        return _streams.ContainsKey(normalized)
             ? normalized
             : throw new ArgumentOutOfRangeException(nameof(outboxName), "Unsupported outbox name.");
     }
-
-    private static string? GetLastError(IOutboxMessage message) =>
-        message switch {
-            EmailOutboxMessage email => email.LastError,
-            ImageObjectDeletionOutboxMessage image => image.LastError,
-            NotificationWebPushOutboxMessage notification => notification.LastError,
-            AchievementEvaluationOutboxMessage achievement => achievement.LastError,
-            _ => null,
-        };
 }

@@ -4,8 +4,11 @@
 
 Images deletion and Gamification evaluation records/mappings compile in their
 existing PersistenceModel projects, sharing only Outbox.Abstractions. Their
-processors remain module-owned; DbContext, migrations, generic claiming/retry and
-mixed dead-letter replay remain central. See `docs/ai/module-outbox-persistence.md`.
+processors remain module-owned; DbContext, migrations and generic claiming/retry
+remain central. Dead-letter replay keeps a shared transaction/audit coordinator,
+with Images/Notifications/Gamification query/preview adapters and a shared email
+adapter. See `docs/ai/outbox-replay-stream-boundary.md` and
+`docs/ai/module-outbox-persistence.md`.
 
 Use this file when deciding where backend code belongs.
 
