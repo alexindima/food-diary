@@ -52,22 +52,14 @@
       "pageSha256": "a12fef9a11365dd6a6c58228abc9447b6f005042e43ab58532b8250805df1709",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "2b2c030ad76fe98e4e71dc661e4cbf3b3399482240b4a24c7f0277fa8179de65"
-        },
-        {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "13744de68e30c49a170cd2046d63c1ea55f41e7d3f6066c7767ffa253c45790b"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "98170e65e804c34ebc5a6700395aad3415a1d7cfedb00d4b4cc3a2e8dbec8218"
+          "sha256": "c010e959ea638009cc31da1f92e1935b3850fedf1d188e7a574a217ac995bdee"
         }
       ],
-      "reason": "No HTTP/application contracts or host files changed. Stream names/normalization/limits/order, email rejection, stale-attempt checks and audit remain compatible. All hosts already compose the three owners; coordinated rebuild required.",
+      "reason": "All removed methods are private and repository search finds only the central call chain and guardrails. AddInfrastructure retains the exact effective Audit and Email registrations/order. No host, HTTP, Swagger, DI lifetime or external consumer contract change.",
       "baseRef": "HEAD",
-      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
-      "reviewedAtUtc": "2026-09-03T12:08:04.0409649Z"
+      "gitHead": "664e0f0a86b02917bff97d8cb4c554d674b76a5e",
+      "reviewedAtUtc": "2026-09-03T18:19:17.8153532Z"
     },
     {
       "pageId": "system.architecture",
@@ -801,13 +793,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "58328e2ae38feaf750bdcc58d08d6a2d7c39b0a49f170595b2ada8b220e62135"
+          "sha256": "7d89db5862a70d99e39380d957aa5732089c23cdfd9069a47fc895a5436e18c0"
         }
       ],
-      "reason": "Thirteen composed Npgsql model conversion cases passed before removal. After deletion full central infrastructure, architecture and PostgreSQL suites pass; actual EF pending-model check confirms unchanged schema. Only obsolete helper test replaced, no collector, policy or retrieval-quality claim.",
+      "reason": "Source audit proves the two removed hooks were empty and effective registrations remain exact. Full Infrastructure 550 and Architecture 1047 suites pass without failures/skips; locked builds zero warnings/errors. No coverage collector or database suite needed for no-op composition cleanup.",
       "baseRef": "HEAD",
-      "gitHead": "b5cc09818082c84d8e5e03ecc9c9439d0fba2dc0",
-      "reviewedAtUtc": "2026-09-03T14:18:54.9325378Z"
+      "gitHead": "664e0f0a86b02917bff97d8cb4c554d674b76a5e",
+      "reviewedAtUtc": "2026-09-03T18:19:18.2485356Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -884,13 +876,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "f50bc61e85f70dc5daaccd02ab177d80e4a1b1a901e38801f73319c86bddf95d"
+          "sha256": "2e5a80590e3551f84716aee84330e939716564730b5d0a248a2658e08c3d40a7"
         }
       ],
-      "reason": "Update obsolete converter ownership and interview references with current module mapping ownership and explicit user-approved removal decision. Source audit protects all module mappings, context, migrations, project references and DI. Evidence includes initial analyzer failure and corrected executions.",
+      "reason": "Replace the historical compatibility-hook statement with current explicit shared composition and record why Audit/Email are not assigned to one feature. Guardrails now reject legacy files and continue rejecting central feature repository ownership.",
       "baseRef": "HEAD",
-      "gitHead": "b5cc09818082c84d8e5e03ecc9c9439d0fba2dc0",
-      "reviewedAtUtc": "2026-09-03T14:18:55.7395339Z"
+      "gitHead": "664e0f0a86b02917bff97d8cb4c554d674b76a5e",
+      "reviewedAtUtc": "2026-09-03T18:19:18.9761736Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -899,17 +891,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "58328e2ae38feaf750bdcc58d08d6a2d7c39b0a49f170595b2ada8b220e62135"
+          "sha256": "7d89db5862a70d99e39380d957aa5732089c23cdfd9069a47fc895a5436e18c0"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "f50bc61e85f70dc5daaccd02ab177d80e4a1b1a901e38801f73319c86bddf95d"
+          "sha256": "2e5a80590e3551f84716aee84330e939716564730b5d0a248a2658e08c3d40a7"
         }
       ],
-      "reason": "No credential/data collection/sharing/logging/retention or provider behavior change. Tests use a synthetic connection string and inspect Npgsql metadata without opening a connection; full PostgreSQL verification uses local test containers.",
+      "reason": "No data access, authentication, authorization, payload, storage, logging, retention or provider behavior changes. Shared Audit and Email mechanisms remain central and unchanged; no external security scan claimed.",
       "baseRef": "HEAD",
-      "gitHead": "b5cc09818082c84d8e5e03ecc9c9439d0fba2dc0",
-      "reviewedAtUtc": "2026-09-03T14:18:56.2684905Z"
+      "gitHead": "664e0f0a86b02917bff97d8cb4c554d674b76a5e",
+      "reviewedAtUtc": "2026-09-03T18:19:19.5439180Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1147,13 +1139,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "a22c1be3441fcafa601cf8296e3cdd4eca5fe81fce767758600aa86875b7a891"
+          "sha256": "6e249c98fd65d522a22ba999c7717b5825ccff800b7e0fedc0996ec2f52b6b92"
         }
       ],
-      "reason": "Update obsolete converter ownership and interview references with current module mapping ownership and explicit user-approved removal decision. Source audit protects all module mappings, context, migrations, project references and DI. Evidence includes initial analyzer failure and corrected executions.",
+      "reason": "Replace the historical compatibility-hook statement with current explicit shared composition and record why Audit/Email are not assigned to one feature. Guardrails now reject legacy files and continue rejecting central feature repository ownership.",
       "baseRef": "HEAD",
-      "gitHead": "b5cc09818082c84d8e5e03ecc9c9439d0fba2dc0",
-      "reviewedAtUtc": "2026-09-03T14:18:55.3097323Z"
+      "gitHead": "664e0f0a86b02917bff97d8cb4c554d674b76a5e",
+      "reviewedAtUtc": "2026-09-03T18:19:18.6321702Z"
     },
     {
       "pageId": "workflow.review-diff",

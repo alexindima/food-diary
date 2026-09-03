@@ -122,6 +122,10 @@ tests leave the mixed Dietologist class; see
 13. The converter audit found no production consumers and one isolated helper
     test. Remove the dead container/test and verify the actual composed Npgsql
     mappings instead; see `docs/ai/strongly-typed-id-converter-retirement.md`.
+14. Remove the empty Food/Moderation composition hooks and their misleading
+    feature-repository wrapper. Central Infrastructure now registers Audit and
+    Email persistence explicitly; module persistence remains host-composed. See
+    `docs/ai/legacy-infrastructure-composition-cleanup.md`.
 
 Remaining shared mechanisms above require a demonstrated ownership boundary,
 not another folder-only relocation.

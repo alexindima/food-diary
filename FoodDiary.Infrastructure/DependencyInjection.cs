@@ -11,7 +11,8 @@ public static partial class DependencyInjection {
         services.AddLogging();
         services.AddInfrastructureOptions(configuration);
         services.AddPersistence(configuration);
-        services.AddFeatureRepositories();
+        services.AddAuditPersistence();
+        services.AddEmailPersistence();
         services.AddAuthenticationInfrastructure();
 
         return services;

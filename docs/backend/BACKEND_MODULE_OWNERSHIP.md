@@ -222,7 +222,7 @@ Other modules use `IRecipeLookupService` or `IRecipeAccessService` for existence
 
 ### Infrastructure composition
 
-The historical `AddFoodPersistence` method is an empty compatibility hook. Hosts explicitly compose Products, RecentItems, Meals and Recipes through their current module registration facades. Product and Recipe EF configurations live in their respective `Modules/<Module>/Infrastructure/Model` projects and are applied explicitly by the shared context.
+The historical empty `AddFoodPersistence` and `AddModerationPersistence` hooks and their `AddFeatureRepositories` wrapper are removed. `AddInfrastructure` explicitly composes only the shared Audit and Email persistence mechanisms; hosts compose Products, RecentItems, Meals, Recipes and moderation owners through their module registration facades. Module EF configurations remain in `Modules/<Module>/Infrastructure/Model` and are applied explicitly by the shared context.
 
 ## Meal Diary and RecentItems boundaries
 

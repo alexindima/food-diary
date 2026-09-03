@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3553,
-    "symbols": 3525,
+    "sourceFiles": 3550,
+    "symbols": 3522,
     "interfaceImplementationLinks": 235,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 1850,
+      "class": 1847,
       "enum": 62,
       "interface": 424,
       "record": 1069,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1388,
+      "Other": 1385,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -2144,20 +2144,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Food.cs",
-      "line": 4
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Moderation.cs",
-      "line": 4
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Options.cs",
       "line": 8
     },
@@ -2167,13 +2153,6 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
       "line": 19
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Repositories.cs",
-      "line": 4
     },
     {
       "name": "DomainEventNotification",

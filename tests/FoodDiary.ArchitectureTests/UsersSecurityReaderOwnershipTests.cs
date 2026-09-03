@@ -11,7 +11,7 @@ public sealed class UsersSecurityReaderOwnershipTests {
             () => Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs"))),
             () => Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/Integration/UserAccessTokenSecurityReaderIntegrationTests.cs"))));
         string[] repositoryIdentifiers = ReadIdentifiers("Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs");
-        string[] registrations = ReadIdentifiers("FoodDiary.Infrastructure/DependencyInjection.Repositories.cs");
+        string[] registrations = ReadIdentifiers("FoodDiary.Infrastructure/DependencyInjection.cs");
         string[] moduleRegistrations = ReadIdentifiers("Modules/Users/Infrastructure/UsersModuleRegistration.cs");
 
         Assert.Multiple(

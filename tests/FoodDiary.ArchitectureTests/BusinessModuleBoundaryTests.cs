@@ -685,11 +685,8 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Fact]
-    public void FoodPersistenceComposition_DelegatesToOwnedRegistrationModules() {
-        string path = Path.Combine(
-            ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Infrastructure",
-            "DependencyInjection.Food.cs");
+    public void FoodPersistenceComposition_RemainsOwnedByModules() {
+        string path = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "DependencyInjection.cs");
         string source = File.ReadAllText(path);
 
         Assert.DoesNotContain(".AddProductsPersistence()", source, StringComparison.Ordinal);
@@ -697,6 +694,7 @@ public sealed class BusinessModuleBoundaryTests {
         Assert.DoesNotContain("AddRecentItems", source, StringComparison.Ordinal);
         Assert.DoesNotContain(".AddMealsPersistence()", source, StringComparison.Ordinal);
         Assert.DoesNotContain("AddScoped<", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("AddFoodPersistence", source, StringComparison.Ordinal);
     }
 
     [Theory]

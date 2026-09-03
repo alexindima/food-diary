@@ -22,7 +22,7 @@ public sealed class UsersAdministrationReaderOwnershipTests {
             Assert.DoesNotContain(method, moduleMethods, StringComparer.Ordinal);
         }
 
-        string centralRegistration = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/DependencyInjection.Repositories.cs"));
+        string centralRegistration = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/DependencyInjection.cs"));
         string moduleRegistration = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Users/Infrastructure/UsersModuleRegistration.cs"));
         string[] centralNames = ReadIdentifiers(centralRegistration);
         string[] moduleNames = ReadIdentifiers(moduleRegistration);

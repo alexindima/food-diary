@@ -20,7 +20,7 @@ public sealed class UsersRepositoryOwnershipTests {
         Assert.DoesNotContain("SaveChangesAsync", calls, StringComparer.Ordinal);
         Assert.DoesNotContain("SaveChanges", calls, StringComparer.Ordinal);
         Assert.DoesNotContain("BeginTransactionAsync", calls, StringComparer.Ordinal);
-        string central = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/DependencyInjection.Repositories.cs"));
+        string central = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure/DependencyInjection.cs"));
         string[] identifiers = [.. CSharpSyntaxTree.ParseText(central).GetRoot().DescendantTokens()
             .Where(token => token.RawKind == (int)SyntaxKind.IdentifierToken).Select(token => token.ValueText)];
         Assert.DoesNotContain("AddUserPersistence", identifiers, StringComparer.Ordinal);

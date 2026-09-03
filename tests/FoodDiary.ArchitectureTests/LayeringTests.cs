@@ -310,7 +310,8 @@ public class LayeringTests {
             "services.AddLogging();",
             "services.AddInfrastructureOptions(configuration);",
             "services.AddPersistence(configuration);",
-            "services.AddFeatureRepositories();",
+            "services.AddAuditPersistence();",
+            "services.AddEmailPersistence();",
             "services.AddAuthenticationInfrastructure();",
         ];
 
@@ -345,20 +346,15 @@ public class LayeringTests {
     }
 
     [Fact]
-    public void InfrastructureFeatureRepositoryComposition_StaysLimitedToApprovedFeatureModules() {
-        string dependencyInjectionPath = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "DependencyInjection.Repositories.cs");
-        string[] expectedRegistrations = [
-            "services.AddAuditPersistence();",
-            "services.AddFoodPersistence();",
-            "services.AddEmailPersistence();",
-            "services.AddModerationPersistence();",
+    public void InfrastructureLegacyFeatureCompositionFiles_DoNotReturn() {
+        string[] obsoletePaths = [
+            "DependencyInjection.Repositories.cs",
+            "DependencyInjection.Food.cs",
+            "DependencyInjection.Moderation.cs",
         ];
 
-        string[] actualRegistrations = [.. File.ReadLines(dependencyInjectionPath)
-            .Select(static line => line.Trim())
-            .Where(static line => line.StartsWith("services.", StringComparison.Ordinal))];
-
-        Assert.Equal(expectedRegistrations, actualRegistrations);
+        Assert.All(obsoletePaths, path => Assert.False(File.Exists(
+            ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", path))));
     }
 
     [Fact]
