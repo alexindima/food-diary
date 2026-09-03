@@ -10,6 +10,7 @@ public static class IdentityAuthenticationRegistration {
     public static IServiceCollection AddIdentityAuthenticationInfrastructure(this IServiceCollection services) {
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        services.AddSingleton<IAdminSsoService, AdminSsoService>();
         return services;
     }
 }

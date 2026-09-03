@@ -9,6 +9,8 @@ public sealed class IdentityAuthenticationOwnershipTests {
     [Theory]
     [InlineData("FoodDiary.Infrastructure/Authentication/JwtTokenGenerator.cs", "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs")]
     [InlineData("FoodDiary.Infrastructure/Services/PasswordHasher.cs", "Modules/Identity/Infrastructure/Services/PasswordHasher.cs")]
+    [InlineData("FoodDiary.Infrastructure/Authentication/AdminSsoService.cs", "Modules/Identity/Infrastructure/Authentication/AdminSsoService.cs")]
+    [InlineData("tests/FoodDiary.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs", "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs")]
     [InlineData("tests/FoodDiary.Infrastructure.Tests/Authentication/JwtTokenGeneratorTests.cs", "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/JwtTokenGeneratorTests.cs")]
     [InlineData("tests/FoodDiary.Infrastructure.Tests/Services/PasswordHasherTests.cs", "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/PasswordHasherTests.cs")]
     public void AuthenticationAdaptersAndFocusedTests_StayWithIdentity(string donor, string owned) {
@@ -43,6 +45,8 @@ public sealed class IdentityAuthenticationOwnershipTests {
         Assert.Multiple(
             () => Assert.DoesNotContain("JwtTokenGenerator", identifiers, StringComparer.Ordinal),
             () => Assert.DoesNotContain("PasswordHasher", identifiers, StringComparer.Ordinal),
+            () => Assert.DoesNotContain("AdminSsoService", identifiers, StringComparer.Ordinal),
+            () => Assert.Contains("InMemoryAdminSsoCodeStore", identifiers, StringComparer.Ordinal),
             () => Assert.DoesNotContain("BCrypt.Net-Next", centralPackages, StringComparer.Ordinal),
             () => Assert.DoesNotContain("System.IdentityModel.Tokens.Jwt", centralPackages, StringComparer.Ordinal),
             () => Assert.Contains("BCrypt.Net-Next", modulePackages, StringComparer.Ordinal),

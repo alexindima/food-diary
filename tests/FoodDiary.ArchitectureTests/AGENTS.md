@@ -25,7 +25,8 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 - `IdentityAuthenticationOwnershipTests` protects module-owned JWT/password-hash
   implementations/tests, direct crypto package ownership and explicit registration
-  in all three hosts; shared JwtOptions remain central.
+  in all three hosts; shared JwtOptions remain central. It also protects ordinary
+  SSO service/test ownership and keeps the shared in-memory store registration central.
 
 - `DietologistAuditOwnershipTests` protects module-owned collaboration audit rules
   and focused tests. Central persistence resolves EF's interceptor port, never the

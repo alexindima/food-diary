@@ -1,12 +1,19 @@
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Authentication;
+using FoodDiary.Infrastructure;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Infrastructure.Tests.Authentication;
+namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
-public sealed class AdminSsoServiceTests {
+public sealed class AdminSsoServiceTests : IDisposable {
     private static readonly DateTime FixedUtcNow = new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
+
+    private readonly ServiceProvider _provider = CreateProvider();
+
+    public void Dispose() => _provider.Dispose();
 
     [Fact]
     public async Task CreateCodeAsync_ReturnsNonEmptyCode() {
@@ -74,9 +81,14 @@ public sealed class AdminSsoServiceTests {
         Assert.Equal(userId, exchanged);
     }
 
-    private static AdminSsoService CreateService() {
-        var timeProvider = new StubDateTimeProvider();
-        return new AdminSsoService(new InMemoryAdminSsoCodeStore(timeProvider), timeProvider);
+    private AdminSsoService CreateService() => new(
+        _provider.GetRequiredService<IAdminSsoCodeStore>(), _provider.GetRequiredService<TimeProvider>());
+
+    private static ServiceProvider CreateProvider() {
+        var services = new ServiceCollection();
+        services.AddSingleton<TimeProvider>(new StubDateTimeProvider());
+        services.AddInfrastructure(new ConfigurationBuilder().Build());
+        return services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
     }
 
     [ExcludeFromCodeCoverage]

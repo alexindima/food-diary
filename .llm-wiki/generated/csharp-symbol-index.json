@@ -11,7 +11,7 @@
     "sourceFiles": 3547,
     "symbols": 3532,
     "interfaceImplementationLinks": 234,
-    "dependencyInjectionRegistrations": 160,
+    "dependencyInjectionRegistrations": 159,
     "kinds": {
       "class": 1859,
       "enum": 62,
@@ -2103,13 +2103,6 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeTelemetry.cs",
-      "line": 6
-    },
-    {
-      "name": "AdminSsoService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Infrastructure/Authentication/AdminSsoService.cs",
       "line": 6
     },
     {
@@ -17646,6 +17639,13 @@
       "line": 6
     },
     {
+      "name": "AdminSsoService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Infrastructure/Authentication/AdminSsoService.cs",
+      "line": 6
+    },
+    {
       "name": "JwtTokenGenerator",
       "kind": "class",
       "role": "Other",
@@ -24882,7 +24882,7 @@
       "interface": "IAdminSsoService",
       "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
       "implementation": "AdminSsoService",
-      "implementationPath": "FoodDiary.Infrastructure/Authentication/AdminSsoService.cs",
+      "implementationPath": "Modules/Identity/Infrastructure/Authentication/AdminSsoService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26456,18 +26456,11 @@
       "line": 11
     },
     {
-      "service": "IAdminSsoService",
-      "implementation": "AdminSsoService",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 12
-    },
-    {
       "service": "IAuditLogger",
       "implementation": "StructuredAuditLogger",
       "lifetime": "Singleton",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "line": 13
+      "line": 12
     },
     {
       "service": "IEmailOutbox",

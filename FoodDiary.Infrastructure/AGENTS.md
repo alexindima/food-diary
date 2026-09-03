@@ -69,8 +69,9 @@ AdminImpersonationSession Domain, its explicit EF model and reporting/session
 adapters under Modules/Admin. Legacy application assembly and CLR namespaces
 remain stable; compatibility requires coordinated host rebuilds. Email templates
 remain Identity-owned and role audit/User capabilities remain Users-owned despite
-legacy Admin namespaces. Shared context/migrations, SSO store/JWT providers,
-HTTP authorization, structured audit and MailInbox client bridge remain central.
+legacy Admin namespaces. Shared context/migrations and SSO storage remain central;
+JWT and ordinary SSO protocol implementations belong to Identity. HTTP authorization,
+structured audit and MailInbox client bridge retain their established owners.
 Hosts call AddAdminModule; JobManager adds only AddAdminPersistence. See
 docs/ai/admin-ownership-inventory.md for current source evidence and test ownership.
 
@@ -103,9 +104,12 @@ RecentItems repository, post-commit recorder, DI and EF mapping live under `Modu
 
 JWT issuance/refresh validation and password hashing are registered by Identity's
 `AddIdentityAuthenticationInfrastructure`, not central authentication DI. Central
-JwtOptions/binding and SSO/Redis seams stay here. The generic Email outbox remains
+JwtOptions/binding and the shared SSO store remain here. Identity also registers
+ordinary AdminSsoService; Admin retains impersonation and the API selects Redis.
+Do not reintroduce the ordinary SSO protocol registration centrally. The generic Email outbox remains
 central: independent producers supply fully rendered envelopes; Identity does not
 own every email delivery policy. See `docs/ai/identity-authentication-adapters.md`.
+See `docs/ai/identity-sso-ownership.md` for protocol/store ownership and isolation.
 
 Identity owns login-event persistence/reporting and cached email-template lookup
 under `Modules/Identity/Infrastructure`. Do not register these adapters in central

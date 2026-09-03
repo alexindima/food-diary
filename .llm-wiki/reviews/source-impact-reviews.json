@@ -8,17 +8,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "695b56a99d9d6a41fd6699cf93124fcdb6c163afdf6f8ba791c654f65b0afe4e"
+          "sha256": "4ada4ed10ea42fa7c427637849ff271d2e4c7f8f9f0998b2f32c69e7e315251f"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7a81d6c72c769f6928a9bb7b6c85a19b8398aa8c7da5ee893dde1884f2dff918"
+          "sha256": "c0489ba75d4be453d2b84f1548cea62fee7eb85f27776ad75e798b1e2db6ed69"
         }
       ],
-      "reason": "No new project or dependency edge. Crypto direct references transfer to existing adapter project at unchanged centrally managed versions. Shared JwtOptions, SSO/provider/Redis/UserRepository/context/migrations and generic Email/replay are not relocated.",
+      "reason": "No project, reference, package, host, model or API surface change. Identity owns ordinary SSO protocol; central store serves it and independent Admin impersonation. API retains Redis selection. Durable report and scoped guides describe the actual boundary.",
       "baseRef": "HEAD",
-      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
-      "reviewedAtUtc": "2026-09-03T02:31:34.2114451Z"
+      "gitHead": "2f717d9f8fde6523443e978482c7b518394e7d3a",
+      "reviewedAtUtc": "2026-09-03T04:35:19.4272363Z"
     },
     {
       "pageId": "module.frontend",
@@ -42,17 +42,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "695b56a99d9d6a41fd6699cf93124fcdb6c163afdf6f8ba791c654f65b0afe4e"
+          "sha256": "4ada4ed10ea42fa7c427637849ff271d2e4c7f8f9f0998b2f32c69e7e315251f"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7a81d6c72c769f6928a9bb7b6c85a19b8398aa8c7da5ee893dde1884f2dff918"
+          "sha256": "c0489ba75d4be453d2b84f1548cea62fee7eb85f27776ad75e798b1e2db6ed69"
         }
       ],
-      "reason": "No new project or dependency edge. Crypto direct references transfer to existing adapter project at unchanged centrally managed versions. Shared JwtOptions, SSO/provider/Redis/UserRepository/context/migrations and generic Email/replay are not relocated.",
+      "reason": "No project, reference, package, host, model or API surface change. Identity owns ordinary SSO protocol; central store serves it and independent Admin impersonation. API retains Redis selection. Durable report and scoped guides describe the actual boundary.",
       "baseRef": "HEAD",
-      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
-      "reviewedAtUtc": "2026-09-03T02:31:34.3888593Z"
+      "gitHead": "2f717d9f8fde6523443e978482c7b518394e7d3a",
+      "reviewedAtUtc": "2026-09-03T04:35:19.5781963Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -61,21 +61,21 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7a81d6c72c769f6928a9bb7b6c85a19b8398aa8c7da5ee893dde1884f2dff918"
+          "sha256": "c0489ba75d4be453d2b84f1548cea62fee7eb85f27776ad75e798b1e2db6ed69"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "cad24c1310dd6cec7a0a1385e3d47b6154d7fae44a4f271e75a81a775aaead1c"
+          "sha256": "bfca9c90daf40f6ef7185709f42278c82f174bc5545f057d4890de8d890bc33c"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "95633f547329b46db0f6d4e4ebde1f851f3d6ae99ccdfe90b2142b82bb148c6b"
+          "sha256": "c554de0c0b472cea4c3952d7d047c9fe2d5ffd332c8ce42e4db37befd3eefd68"
         }
       ],
-      "reason": "All three hosts explicitly compose moved singleton authentication adapters. Exact JWT/password implementation blobs and unchanged handlers/options/API validation preserve claims, hashes, routes, payloads and statuses; full HTTP182 and host suites are actual evidence. Coordinated rebuild, not old-binary forwarding.",
+      "reason": "Only ordinary SSO singleton ownership changes. All three hosts already call the module registration; host source, transport, handlers, authorization and API snapshots are unchanged. Full HTTP and host suites are actual evidence; coordinated rebuild, not binary forwarding.",
       "baseRef": "HEAD",
-      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
-      "reviewedAtUtc": "2026-09-03T02:31:34.5591961Z"
+      "gitHead": "2f717d9f8fde6523443e978482c7b518394e7d3a",
+      "reviewedAtUtc": "2026-09-03T04:35:19.7155520Z"
     },
     {
       "pageId": "system.architecture",
@@ -84,17 +84,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "695b56a99d9d6a41fd6699cf93124fcdb6c163afdf6f8ba791c654f65b0afe4e"
+          "sha256": "4ada4ed10ea42fa7c427637849ff271d2e4c7f8f9f0998b2f32c69e7e315251f"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7a81d6c72c769f6928a9bb7b6c85a19b8398aa8c7da5ee893dde1884f2dff918"
+          "sha256": "c0489ba75d4be453d2b84f1548cea62fee7eb85f27776ad75e798b1e2db6ed69"
         }
       ],
-      "reason": "No new project or dependency edge. Crypto direct references transfer to existing adapter project at unchanged centrally managed versions. Shared JwtOptions, SSO/provider/Redis/UserRepository/context/migrations and generic Email/replay are not relocated.",
+      "reason": "No project, reference, package, host, model or API surface change. Identity owns ordinary SSO protocol; central store serves it and independent Admin impersonation. API retains Redis selection. Durable report and scoped guides describe the actual boundary.",
       "baseRef": "HEAD",
-      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
-      "reviewedAtUtc": "2026-09-03T02:31:34.7423500Z"
+      "gitHead": "2f717d9f8fde6523443e978482c7b518394e7d3a",
+      "reviewedAtUtc": "2026-09-03T04:35:19.8580622Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -231,13 +231,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "fd3ad1b711af70491cd0cc893bf35b30316492ee8dae197049cce471cc67c9a6"
+          "sha256": "e32e65c16ed42b74b55f93c2a8666819bfd879184a2a090cf38a538191eda0a8"
         }
       ],
-      "reason": "All three hosts explicitly compose moved singleton authentication adapters. Exact JWT/password implementation blobs and unchanged handlers/options/API validation preserve claims, hashes, routes, payloads and statuses; full HTTP182 and host suites are actual evidence. Coordinated rebuild, not old-binary forwarding.",
+      "reason": "Only ordinary SSO singleton ownership changes. All three hosts already call the module registration; host source, transport, handlers, authorization and API snapshots are unchanged. Full HTTP and host suites are actual evidence; coordinated rebuild, not binary forwarding.",
       "baseRef": "HEAD",
-      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
-      "reviewedAtUtc": "2026-09-03T02:31:35.2687038Z"
+      "gitHead": "2f717d9f8fde6523443e978482c7b518394e7d3a",
+      "reviewedAtUtc": "2026-09-03T04:35:20.2481725Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -494,13 +494,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "95633f547329b46db0f6d4e4ebde1f851f3d6ae99ccdfe90b2142b82bb148c6b"
+          "sha256": "c554de0c0b472cea4c3952d7d047c9fe2d5ffd332c8ce42e4db37befd3eefd68"
         }
       ],
-      "reason": "Password and JWT test bodies/helper preserved with namespace alignment; seven options theories remain central. Typed real DI singleton/order/assembly and refresh roundtrip tests plus exact owner/host/package guards pass. Two source-proven expected-path substitutions only, frozen100/ranking unchanged.",
+      "reason": "All six original focused method bodies retained, fixture resolves real store via public DI and is disposed. New format, payload, expiry, cancellation, singleton and host-replacement regressions plus physical owner guards pass. No evaluation or ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
-      "reviewedAtUtc": "2026-09-03T02:31:35.7599809Z"
+      "gitHead": "2f717d9f8fde6523443e978482c7b518394e7d3a",
+      "reviewedAtUtc": "2026-09-03T04:35:20.4353277Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -817,13 +817,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "28dc33205140307c1331ac7e70f242946cf37ab2d7f20855d10ccff729369eb2"
+          "sha256": "934d374b64a2f31f432af92c3d6829b70b3506255485c187e594b4fc8ddb3570"
         }
       ],
-      "reason": "Password and JWT test bodies/helper preserved with namespace alignment; seven options theories remain central. Typed real DI singleton/order/assembly and refresh roundtrip tests plus exact owner/host/package guards pass. Two source-proven expected-path substitutions only, frozen100/ranking unchanged.",
+      "reason": "All six original focused method bodies retained, fixture resolves real store via public DI and is disposed. New format, payload, expiry, cancellation, singleton and host-replacement regressions plus physical owner guards pass. No evaluation or ranking changes.",
       "baseRef": "HEAD",
-      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
-      "reviewedAtUtc": "2026-09-03T02:31:36.2351683Z"
+      "gitHead": "2f717d9f8fde6523443e978482c7b518394e7d3a",
+      "reviewedAtUtc": "2026-09-03T04:35:20.7342732Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -900,13 +900,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "77d9f5fe8f1483c7bdbe9432f60ab1992eb9a54665fb0cfe88c04dce6062c483"
+          "sha256": "7a01315e6e74f16046e9eff64ea8dcd09bbdc1cc1ab5d874119affb799343938"
         }
       ],
-      "reason": "No new project or dependency edge. Crypto direct references transfer to existing adapter project at unchanged centrally managed versions. Shared JwtOptions, SSO/provider/Redis/UserRepository/context/migrations and generic Email/replay are not relocated.",
+      "reason": "No project, reference, package, host, model or API surface change. Identity owns ordinary SSO protocol; central store serves it and independent Admin impersonation. API retains Redis selection. Durable report and scoped guides describe the actual boundary.",
       "baseRef": "HEAD",
-      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
-      "reviewedAtUtc": "2026-09-03T02:31:36.8160986Z"
+      "gitHead": "2f717d9f8fde6523443e978482c7b518394e7d3a",
+      "reviewedAtUtc": "2026-09-03T04:35:21.2174152Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -915,17 +915,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "28dc33205140307c1331ac7e70f242946cf37ab2d7f20855d10ccff729369eb2"
+          "sha256": "934d374b64a2f31f432af92c3d6829b70b3506255485c187e594b4fc8ddb3570"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "77d9f5fe8f1483c7bdbe9432f60ab1992eb9a54665fb0cfe88c04dce6062c483"
+          "sha256": "7a01315e6e74f16046e9eff64ea8dcd09bbdc1cc1ab5d874119affb799343938"
         }
       ],
-      "reason": "No algorithm, token, credential storage, logging, consent, retention or provider change. Users retains credential operations; Identity owns technical implementations. Email outbox is deliberately unchanged after source ownership review. No security-scan claim.",
+      "reason": "Exact SSO implementation blob preserved: same random encoding, two-minute TTL, validation before consumption, GUID payload and cancellation. Shared store and Redis atomic consume adapter, Admin prefixes, credentials and logs unchanged. Cross-protocol tests remain central; no security scan claim.",
       "baseRef": "HEAD",
-      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
-      "reviewedAtUtc": "2026-09-03T02:31:37.3594380Z"
+      "gitHead": "2f717d9f8fde6523443e978482c7b518394e7d3a",
+      "reviewedAtUtc": "2026-09-03T04:35:21.5466984Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1163,13 +1163,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "9c5d5ba16a198b9edeba842068e72b31287d0486395cc7dc2364f263aa111225"
+          "sha256": "d393fda8f4203cd08e106abae07a2d6b798e077afd78a87b680e7c59a99fab7a"
         }
       ],
-      "reason": "No new project or dependency edge. Crypto direct references transfer to existing adapter project at unchanged centrally managed versions. Shared JwtOptions, SSO/provider/Redis/UserRepository/context/migrations and generic Email/replay are not relocated.",
+      "reason": "No project, reference, package, host, model or API surface change. Identity owns ordinary SSO protocol; central store serves it and independent Admin impersonation. API retains Redis selection. Durable report and scoped guides describe the actual boundary.",
       "baseRef": "HEAD",
-      "gitHead": "a2c8291c27a4cf45f5bc4e05ea34e587a6e246a1",
-      "reviewedAtUtc": "2026-09-03T02:31:36.5062192Z"
+      "gitHead": "2f717d9f8fde6523443e978482c7b518394e7d3a",
+      "reviewedAtUtc": "2026-09-03T04:35:20.9705218Z"
     },
     {
       "pageId": "workflow.review-diff",

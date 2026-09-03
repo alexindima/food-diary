@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 223,
-    "documentationPages": 130
+    "documentationPages": 131
   },
   "dotnet": {
     "projects": [
@@ -12646,6 +12646,7 @@
       "docs/ai/identity-module-extraction-wiki-findings.md",
       "docs/ai/identity-ownership-inventory.md",
       "docs/ai/identity-persistence-adapters.md",
+      "docs/ai/identity-sso-ownership.md",
       "docs/ai/identity-telegram-replay-persistence.md",
       "docs/ai/images-domain-extraction.md",
       "docs/ai/mealplanning-module-extraction-wiki-findings.md",

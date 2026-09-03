@@ -184,8 +184,9 @@ AdminImpersonationSession Domain, its explicit EF model and reporting/session
 adapters under Modules/Admin. Legacy application assembly and CLR namespaces
 remain stable; compatibility requires coordinated host rebuilds. Email templates
 remain Identity-owned and role audit/User capabilities remain Users-owned despite
-legacy Admin namespaces. Shared context/migrations, SSO store/JWT providers,
-HTTP authorization, structured audit and MailInbox client bridge remain central.
+legacy Admin namespaces. Shared context/migrations and SSO storage remain central;
+JWT and ordinary SSO protocol implementations belong to Identity. HTTP authorization,
+structured audit and MailInbox client bridge retain their established owners.
 Hosts call AddAdminModule; JobManager adds only AddAdminPersistence. See
 docs/ai/admin-ownership-inventory.md for current source evidence and test ownership.
 
@@ -223,3 +224,8 @@ Identity also owns JWT generation and password algorithms, wired as singletons b
 retains credential operations/state; JwtOptions and API validation keep their
 owners. Email outbox remains a technical queue for prepared messages from Identity
 and Dietologist. See `docs/ai/identity-authentication-adapters.md`.
+
+Ordinary Admin SSO also belongs to Identity's authentication registration. The
+shared one-time store/Redis selection and Admin impersonation protocol retain
+their owners; see `docs/ai/identity-sso-ownership.md`. No host, EF or HTTP behavior
+changes accompany this physical move.

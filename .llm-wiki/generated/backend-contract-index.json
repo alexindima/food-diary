@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7652,
+    "consumerEdges": 7657,
     "productionConsumerEdges": 4560,
-    "testConsumerEdges": 3092,
+    "testConsumerEdges": 3097,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -44710,19 +44710,6 @@
         "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Authentication/AdminSsoService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IAdminSsoCodeStore",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Authentication/InMemoryAdminSsoCodeStore.cs",
       "isTest": false,
       "referenceCount": 1
@@ -44788,34 +44775,60 @@
         "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Web.Api.Tests/Extensions/ExtensionsTests.cs",
+      "consumerPath": "Modules/Identity/Infrastructure/Authentication/AdminSsoService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminSsoCodeStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoProtocolTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "IAdminSsoCodeStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
     {
-      "contract": "IAdminSsoService",
+      "contract": "IAdminSsoCodeStore",
       "roles": [
-        "Service"
+        "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Authentication/AdminSsoService.cs",
-      "isTest": false,
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/IdentityAuthenticationRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
-      "contract": "IAdminSsoService",
+      "contract": "IAdminSsoCodeStore",
       "roles": [
-        "Service"
+        "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "isTest": false,
+      "consumerPath": "tests/FoodDiary.Web.Api.Tests/Extensions/ExtensionsTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -44853,9 +44866,61 @@
         "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Authentication/AdminSsoService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminSsoService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminSsoService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IAdminSsoService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoProtocolTests.cs",
+      "isTest": true,
+      "referenceCount": 7
+    },
+    {
+      "contract": "IAdminSsoService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/IdentityAuthenticationRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "IAdminUserLoginReadService",

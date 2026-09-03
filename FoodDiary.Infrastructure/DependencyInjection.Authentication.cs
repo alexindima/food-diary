@@ -9,8 +9,6 @@ namespace FoodDiary.Infrastructure;
 public static partial class DependencyInjection {
     private static void AddAuthenticationInfrastructure(this IServiceCollection services) {
         services.AddSingleton<IAdminSsoCodeStore, InMemoryAdminSsoCodeStore>();
-        services.AddSingleton<IAdminSsoService, AdminSsoService>();
         services.AddSingleton<IAuditLogger, StructuredAuditLogger>();
-
     }
 }

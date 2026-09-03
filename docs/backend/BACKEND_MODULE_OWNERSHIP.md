@@ -252,6 +252,9 @@ cached email-template provider, registered through `AddIdentityPersistence`.
 JWT/password algorithm adapters are registered separately through
 `AddIdentityAuthenticationInfrastructure`. Users owns credential operations/state
 while consuming the hasher port; JwtOptions/API validation keep their owners.
+Ordinary AdminSsoService belongs to the same Identity authentication registration;
+Admin's distinct impersonation protocol and shared one-time code store/API Redis
+adapter retain their owners. See `docs/ai/identity-sso-ownership.md`.
 Email outbox remains shared technical delivery for fully prepared messages.
 Its reporting join to Users does not transfer User ownership. Shared DbContext,
 migrations/snapshot, combined UserRepository, replay guard and mail transport stay
@@ -411,8 +414,9 @@ AdminImpersonationSession Domain, its explicit EF model and reporting/session
 adapters under Modules/Admin. Legacy application assembly and CLR namespaces
 remain stable; compatibility requires coordinated host rebuilds. Email templates
 remain Identity-owned and role audit/User capabilities remain Users-owned despite
-legacy Admin namespaces. Shared context/migrations, SSO store/JWT providers,
-HTTP authorization, structured audit and MailInbox client bridge remain central.
+legacy Admin namespaces. Shared context/migrations and SSO storage remain central;
+JWT and ordinary SSO protocol implementations belong to Identity. HTTP authorization,
+structured audit and MailInbox client bridge retain their established owners.
 Hosts call AddAdminModule; JobManager adds only AddAdminPersistence. See
 docs/ai/admin-ownership-inventory.md for current source evidence and test ownership.
 

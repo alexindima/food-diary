@@ -4585,14 +4585,6 @@
       "structuralRiskScore": 12.28
     },
     {
-      "path": "FoodDiary.Infrastructure/Authentication/AdminSsoService.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.26
-    },
-    {
       "path": "FoodDiary.Infrastructure/Authentication/InMemoryAdminSsoCodeStore.cs",
       "nonBlankLines": 23,
       "decisionPoints": 2,
@@ -4610,11 +4602,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Authentication.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.24
     },
     {
       "path": "FoodDiary.Infrastructure/DependencyInjection.Email.cs",
@@ -30593,6 +30585,14 @@
       "structuralRiskScore": 12.54
     },
     {
+      "path": "Modules/Identity/Infrastructure/Authentication/AdminSsoService.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.26
+    },
+    {
       "path": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
       "nonBlankLines": 206,
       "decisionPoints": 11,
@@ -30602,11 +30602,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityAuthenticationRegistration.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.28
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",

@@ -5,9 +5,11 @@ login auditing, initial-admin bootstrap, and application email-template use case
 Authentication and Email remain logical areas inside one application assembly.
 
 Preserve the legacy `FoodDiary.Application.Identity` assembly and CLR namespaces.
-Keep shared authentication/email contracts central. The User/Role CLR graph and credential state belong to Users Domain. Keep shared DbContext, migrations/snapshot, and combined UserRepository central as compatibility seams. External provider implementations and SSO/Redis adapters,
+Keep shared authentication/email contracts central. The User/Role CLR graph and credential state belong to Users Domain. Keep shared DbContext, migrations/snapshot, and combined UserRepository central as compatibility seams. External provider implementations and shared SSO/Redis storage,
 MailInbox/MailRelay integration, HTTP transport, and hosts remain with their current
-owners.
+owners. The ordinary `AdminSsoService` protocol now belongs to Identity Infrastructure;
+shared in-memory/Redis single-consumption storage and Admin's impersonation protocol
+retain their existing owners. See `docs/ai/identity-sso-ownership.md`.
 
 Identity physically owns EmailTemplate, UserRefreshTokenSession, and UserLoginEvent
 through its Domain project, plus their EF model and independent template/session
@@ -28,3 +30,7 @@ Infrastructure. Hosts compose `AddIdentityAuthenticationInfrastructure` beside
 `AddIdentityPersistence`. Users still owns credential operations and stored hashes;
 it consumes the existing password-hasher port. JwtOptions/configuration and API
 bearer validation retain their current owners.
+
+The same authentication registration owns the singleton `IAdminSsoService`.
+Preserve code encoding, two-minute TTL, validation-before-consumption and GUID
+payload semantics. Do not register the shared store here or override host Redis selection.

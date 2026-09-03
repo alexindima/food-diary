@@ -42,7 +42,7 @@ tests leave the mixed Dietologist class; see
 | Current source | Likely owner / next action | Required boundary proof |
 | --- | --- | --- |
 | `Persistence/Email/*` outbox stream | Retain shared technical delivery for now | Identity and Dietologist supply fully rendered messages; the queue owns no authentication/template policy. A communications module needs a separate design, not forced assignment to Identity. |
-| SSO service/store and JWT options | Separate SSO/host-configuration review | JWT generation and password algorithms now belong to Identity; one-time SSO, provider validation and shared configuration have different consumers. |
+| Shared SSO store and JWT options | Retain technical/host seams | Ordinary SSO protocol now belongs to Identity; Admin's impersonation remains distinct. Both consume atomic one-time storage. API Redis selection and shared JWT configuration stay unchanged. |
 
 ## Intentionally shared or mixed
 
@@ -85,8 +85,12 @@ tests leave the mixed Dietologist class; see
    credential operations; JwtOptions/API validation stay with their owners. Email
    outbox remains shared technical persistence/dispatch. See
    `docs/ai/identity-authentication-adapters.md`.
-6. Review SSO, mixed replay and UserRepository seams independently; do not redesign
-   them while performing physical relocation.
+6. Ordinary SSO protocol and focused tests now belong to Identity, using its
+   existing singleton authentication registration. Shared store/Redis and Admin
+   impersonation stay outside the move; see `docs/ai/identity-sso-ownership.md`.
+7. Review mixed replay and UserRepository seams independently; do not redesign
+   them while performing physical relocation. Shared SSO storage is not an
+   uncompleted Identity protocol move.
 
 Every persistence tranche must keep the dependency graph acyclic, preserve model
 identity, retain real provider tests and check composition roots. Avoid adding new

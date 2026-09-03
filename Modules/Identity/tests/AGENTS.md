@@ -19,3 +19,10 @@ Registration tests verify scoped lifetime and model/adapter assembly ownership.
 Infrastructure.Tests/Authentication owns JWT behavior and password-hash tests plus
 singleton/assembly/composition contracts. Shared JwtOptions validation tests stay
 in central Infrastructure.Tests; HTTP authentication tests remain host-owned.
+
+Authentication also owns all six relocated AdminSsoService cases and protocol
+regressions. Resolve the real internal in-memory store through public central DI
+and dispose the fixture provider; do not add public/internal-access test seams.
+Verify encoding/payload/token forwarding, exact expiry boundary, cancellation,
+singleton composition and host-selected store replacement. Mixed Admin/Identity
+protocol-isolation tests stay central; never duplicate them in module tests.

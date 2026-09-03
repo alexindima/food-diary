@@ -34,10 +34,15 @@ public sealed class IdentityAuthenticationRegistrationTests {
         using IServiceScope second = provider.CreateScope();
         IJwtTokenGenerator tokens = first.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
         IPasswordHasher hasher = first.ServiceProvider.GetRequiredService<IPasswordHasher>();
+        IAdminSsoService sso = first.ServiceProvider.GetRequiredService<IAdminSsoService>();
 
         Assert.Multiple(
             () => Assert.IsType<JwtTokenGenerator>(tokens),
             () => Assert.IsType<PasswordHasher>(hasher),
+            () => Assert.IsType<AdminSsoService>(sso),
+            () => Assert.Same(sso, second.ServiceProvider.GetRequiredService<IAdminSsoService>()),
+            () => Assert.Same(sso, provider.GetRequiredService<IAdminSsoService>()),
+            () => Assert.Same(typeof(IdentityAuthenticationRegistration).Assembly, sso.GetType().Assembly),
             () => Assert.Same(tokens, second.ServiceProvider.GetRequiredService<IJwtTokenGenerator>()),
             () => Assert.Same(hasher, second.ServiceProvider.GetRequiredService<IPasswordHasher>()),
             () => Assert.Same(tokens, provider.GetRequiredService<IJwtTokenGenerator>()),
@@ -48,7 +53,11 @@ public sealed class IdentityAuthenticationRegistrationTests {
 
     [Fact]
     public void AddIdentityAuthenticationInfrastructure_ResolvesWithoutPersistenceAndPreservesContracts() {
+        var storageServices = new ServiceCollection();
+        storageServices.AddInfrastructure(new ConfigurationBuilder().Build());
+        using ServiceProvider storage = storageServices.BuildServiceProvider();
         var services = new ServiceCollection();
+        services.AddSingleton(storage.GetRequiredService<IAdminSsoCodeStore>());
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton(CreateOptions());
         services.AddIdentityAuthenticationInfrastructure();
@@ -77,6 +86,7 @@ public sealed class IdentityAuthenticationRegistrationTests {
 
         Assert.Multiple(
             () => Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IJwtTokenGenerator)),
+            () => Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IAdminSsoService)),
             () => Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IPasswordHasher)));
     }
 
