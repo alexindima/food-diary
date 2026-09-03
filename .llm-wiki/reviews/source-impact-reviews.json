@@ -8,13 +8,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "d0d9182d395a4286b017228a3e5656665a8a0381b14443e61af39b03cd927c9d"
+          "sha256": "88804dd28f4b802ac27978475ada41a0d02f7c53c027e60994fde11b2456cce9"
         }
       ],
-      "reason": "Identity owns the guard plus technical model state, Users and shared context/migrations retain their existing responsibilities. Guides, manifest and the residual audit match current paths; no new shared assembly or production dependency.",
+      "reason": "Both existing PersistenceModel projects own the records and mappings through shared Outbox.Abstractions. Central context, migrations and mixed replay retain ownership. Exact matrix edges and dependency locks follow this graph without new projects.",
       "baseRef": "HEAD",
-      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
-      "reviewedAtUtc": "2026-09-02T23:47:20.1627672Z"
+      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
+      "reviewedAtUtc": "2026-09-03T00:25:31.9041181Z"
     },
     {
       "pageId": "module.frontend",
@@ -38,13 +38,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "d0d9182d395a4286b017228a3e5656665a8a0381b14443e61af39b03cd927c9d"
+          "sha256": "88804dd28f4b802ac27978475ada41a0d02f7c53c027e60994fde11b2456cce9"
         }
       ],
-      "reason": "Identity owns the guard plus technical model state, Users and shared context/migrations retain their existing responsibilities. Guides, manifest and the residual audit match current paths; no new shared assembly or production dependency.",
+      "reason": "Both existing PersistenceModel projects own the records and mappings through shared Outbox.Abstractions. Central context, migrations and mixed replay retain ownership. Exact matrix edges and dependency locks follow this graph without new projects.",
       "baseRef": "HEAD",
-      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
-      "reviewedAtUtc": "2026-09-02T23:47:20.3230649Z"
+      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
+      "reviewedAtUtc": "2026-09-03T00:25:32.0544154Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -52,26 +52,22 @@
       "pageSha256": "a12fef9a11365dd6a6c58228abc9447b6f005042e43ab58532b8250805df1709",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "826b8a0fa2d43c3adf397832d4fd7c63d2f4c98d2d9d359b16b4b5f3f7dca464"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "d0d9182d395a4286b017228a3e5656665a8a0381b14443e61af39b03cd927c9d"
+          "sha256": "88804dd28f4b802ac27978475ada41a0d02f7c53c027e60994fde11b2456cce9"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "0b273368ac8109a0196e59c9e95ffb7adfc8866bd2bbd53aca692f0572a2c7c8"
+          "sha256": "aa5236fea4b44743068bcaec6bfc03479b581b6703e2e0f61e95a4a2970cbb79"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "70c0ba5fdad0ed06361e0cc45e4f0fb6dcf0fa0dd86587e8520120798c75863e"
+          "sha256": "3165f9c7cbf5b480ad5024e3970cd1ab2df356720e8af8341996338f6f1933af"
         }
       ],
-      "reason": "Only Identity replay persistence ownership changes. Signature and age validation, widget prefix, auth errors, controllers and response contracts remain unchanged. HTTP tests are separate verification; this source-impact review is not their execution evidence.",
+      "reason": "Four source-identical model files relocate without changing routes, payloads, handlers, processors or hosts. HTTP and provider execution are separate receipts, not inferred from this source review.",
       "baseRef": "HEAD",
-      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
-      "reviewedAtUtc": "2026-09-02T23:47:20.4811195Z"
+      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
+      "reviewedAtUtc": "2026-09-03T00:25:32.2474958Z"
     },
     {
       "pageId": "system.architecture",
@@ -79,18 +75,18 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "826b8a0fa2d43c3adf397832d4fd7c63d2f4c98d2d9d359b16b4b5f3f7dca464"
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "88804dd28f4b802ac27978475ada41a0d02f7c53c027e60994fde11b2456cce9"
         },
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "d0d9182d395a4286b017228a3e5656665a8a0381b14443e61af39b03cd927c9d"
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "39cf001b0e7ed42f2fb586e0420397c4db66d2f6d2ab71fb110e21784cdc2ed5"
         }
       ],
-      "reason": "Identity owns the guard plus technical model state, Users and shared context/migrations retain their existing responsibilities. Guides, manifest and the residual audit match current paths; no new shared assembly or production dependency.",
+      "reason": "Both existing PersistenceModel projects own the records and mappings through shared Outbox.Abstractions. Central context, migrations and mixed replay retain ownership. Exact matrix edges and dependency locks follow this graph without new projects.",
       "baseRef": "HEAD",
-      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
-      "reviewedAtUtc": "2026-09-02T23:47:20.6341230Z"
+      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
+      "reviewedAtUtc": "2026-09-03T00:25:32.4088501Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -207,14 +203,18 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "826b8a0fa2d43c3adf397832d4fd7c63d2f4c98d2d9d359b16b4b5f3f7dca464"
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "df2e45b3bbb2ad32861c69cc82a725a92990269d08df92f61f60f446b2beed05"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "39cf001b0e7ed42f2fb586e0420397c4db66d2f6d2ab71fb110e21784cdc2ed5"
         }
       ],
-      "reason": "Existing Identity test projects own the moved provider test and new deterministic regression. Exactly two expected path literals follow source-identical moves, not ranking/query/threshold changes. Initial compiler failures and actual Wiki exits remain in the evidence.",
+      "reason": "Six image record Facts move with identical bodies, and new assembly/lifecycle/provider cases protect module ownership. One corpus expectation follows a proven mapping move, with no ranking/query/threshold edits. Actual failed or interrupted outcomes remain separate.",
       "baseRef": "HEAD",
-      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
-      "reviewedAtUtc": "2026-09-02T23:47:20.9544661Z"
+      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
+      "reviewedAtUtc": "2026-09-03T00:25:32.5972784Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -223,13 +223,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "70c896a2f8a93ffc09bbf158b8161b259a2dac39981efd8f0ab9b24c93d55f4f"
+          "sha256": "673444b7bd846f01f6f84e04904f3b9be340f8db264a7e402e0dba6e497c1050"
         }
       ],
-      "reason": "Only Identity replay persistence ownership changes. Signature and age validation, widget prefix, auth errors, controllers and response contracts remain unchanged. HTTP tests are separate verification; this source-impact review is not their execution evidence.",
+      "reason": "Four source-identical model files relocate without changing routes, payloads, handlers, processors or hosts. HTTP and provider execution are separate receipts, not inferred from this source review.",
       "baseRef": "HEAD",
-      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
-      "reviewedAtUtc": "2026-09-02T23:47:21.3940481Z"
+      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
+      "reviewedAtUtc": "2026-09-03T00:25:33.1052503Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -268,13 +268,13 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "4fcee00f8b431139c6e2b35a0094868008684048b98dd0f0d2072e9cd5484f52"
+          "sha256": "8951db30a7e4ec027cd27ef98c0b84c92eb4965ad83cbae25c538ec99fd9f2a6"
         }
       ],
-      "reason": "Existing Identity test projects own the moved provider test and new deterministic regression. Exactly two expected path literals follow source-identical moves, not ranking/query/threshold changes. Initial compiler failures and actual Wiki exits remain in the evidence.",
+      "reason": "Six image record Facts move with identical bodies, and new assembly/lifecycle/provider cases protect module ownership. One corpus expectation follows a proven mapping move, with no ranking/query/threshold edits. Actual failed or interrupted outcomes remain separate.",
       "baseRef": "HEAD",
-      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
-      "reviewedAtUtc": "2026-09-02T23:47:21.5803085Z"
+      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
+      "reviewedAtUtc": "2026-09-03T00:25:33.3291631Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -486,17 +486,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "7bdf205d333c2a2eb6784f75eabd8927a4232c9e98f52362eba83740812f7b9d"
+          "sha256": "d116d66eb27debffa957fb205e0029a2b343b997cbd52a878be6989e4059ebd3"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "70c0ba5fdad0ed06361e0cc45e4f0fb6dcf0fa0dd86587e8520120798c75863e"
+          "sha256": "3165f9c7cbf5b480ad5024e3970cd1ab2df356720e8af8341996338f6f1933af"
         }
       ],
-      "reason": "Existing Identity test projects own the moved provider test and new deterministic regression. Exactly two expected path literals follow source-identical moves, not ranking/query/threshold changes. Initial compiler failures and actual Wiki exits remain in the evidence.",
+      "reason": "Six image record Facts move with identical bodies, and new assembly/lifecycle/provider cases protect module ownership. One corpus expectation follows a proven mapping move, with no ranking/query/threshold edits. Actual failed or interrupted outcomes remain separate.",
       "baseRef": "HEAD",
-      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
-      "reviewedAtUtc": "2026-09-02T23:47:21.7558095Z"
+      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
+      "reviewedAtUtc": "2026-09-03T00:25:33.5224502Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -813,13 +813,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5ce0e77bbd8edce150bcd068d1aaa3a1e7a08d59cabeecad8960bc52972bfa8a"
+          "sha256": "bd835adff0627b446d10e0ba50144f193172d956493ba5edefec2cc385d9d926"
         }
       ],
-      "reason": "Existing Identity test projects own the moved provider test and new deterministic regression. Exactly two expected path literals follow source-identical moves, not ranking/query/threshold changes. Initial compiler failures and actual Wiki exits remain in the evidence.",
+      "reason": "Six image record Facts move with identical bodies, and new assembly/lifecycle/provider cases protect module ownership. One corpus expectation follows a proven mapping move, with no ranking/query/threshold edits. Actual failed or interrupted outcomes remain separate.",
       "baseRef": "HEAD",
-      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
-      "reviewedAtUtc": "2026-09-02T23:47:22.1550032Z"
+      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
+      "reviewedAtUtc": "2026-09-03T00:25:33.9147355Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -896,13 +896,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dcc3dcefaa30f95c0af9b8ff2ebd0815d1d023e350c03dca656497952be82e6b"
+          "sha256": "8076e9c565b0970da65d6db49e8de3b6b06cfcc883cac0f9236436b710ae39f4"
         }
       ],
-      "reason": "Identity owns the guard plus technical model state, Users and shared context/migrations retain their existing responsibilities. Guides, manifest and the residual audit match current paths; no new shared assembly or production dependency.",
+      "reason": "Both existing PersistenceModel projects own the records and mappings through shared Outbox.Abstractions. Central context, migrations and mixed replay retain ownership. Exact matrix edges and dependency locks follow this graph without new projects.",
       "baseRef": "HEAD",
-      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
-      "reviewedAtUtc": "2026-09-02T23:47:22.7789170Z"
+      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
+      "reviewedAtUtc": "2026-09-03T00:25:34.3977188Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -911,17 +911,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5ce0e77bbd8edce150bcd068d1aaa3a1e7a08d59cabeecad8960bc52972bfa8a"
+          "sha256": "bd835adff0627b446d10e0ba50144f193172d956493ba5edefec2cc385d9d926"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dcc3dcefaa30f95c0af9b8ff2ebd0815d1d023e350c03dca656497952be82e6b"
+          "sha256": "8076e9c565b0970da65d6db49e8de3b6b06cfcc883cac0f9236436b710ae39f4"
         }
       ],
-      "reason": "The three moved production Git blobs are identical. Store only the same SHA256 fingerprint and expiry, retain DELETE and atomic ON CONFLICT INSERT, with no new logging, credential storage, sharing or retention policy. Real PostgreSQL replay, concurrency, expiry and cancellation tests protect the boundary; no broad security-scan claim.",
+      "reason": "Same object key/confirmation and user/revision data, errors, due dates and leases. No new logging, sharing, retention or provider access. Generic claiming/retry/replay and all stream processors have zero diff; no new exactly-once promise.",
       "baseRef": "HEAD",
-      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
-      "reviewedAtUtc": "2026-09-02T23:47:23.3449049Z"
+      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
+      "reviewedAtUtc": "2026-09-03T00:25:34.7809405Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1159,17 +1159,17 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "4fcee00f8b431139c6e2b35a0094868008684048b98dd0f0d2072e9cd5484f52"
+          "sha256": "8951db30a7e4ec027cd27ef98c0b84c92eb4965ad83cbae25c538ec99fd9f2a6"
         },
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "974c73a5b555f913f7ac33616b0425b3d685f1917280d493d63e2f3292ecf56e"
+          "sha256": "40936a856be31669cea4d135ecd62850ed13414cfc97af0e2a13923ca7145b79"
         }
       ],
-      "reason": "Identity owns the guard plus technical model state, Users and shared context/migrations retain their existing responsibilities. Guides, manifest and the residual audit match current paths; no new shared assembly or production dependency.",
+      "reason": "Both existing PersistenceModel projects own the records and mappings through shared Outbox.Abstractions. Central context, migrations and mixed replay retain ownership. Exact matrix edges and dependency locks follow this graph without new projects.",
       "baseRef": "HEAD",
-      "gitHead": "e304b1148fd901a8531883ba45db11ba33441bfd",
-      "reviewedAtUtc": "2026-09-02T23:47:22.5067691Z"
+      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
+      "reviewedAtUtc": "2026-09-03T00:25:34.1660745Z"
     },
     {
       "pageId": "workflow.review-diff",

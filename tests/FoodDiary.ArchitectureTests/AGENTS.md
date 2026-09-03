@@ -23,6 +23,10 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Rules
 
+- `ModuleOutboxOwnershipTests` protects Images/Gamification technical records and
+  mappings in their PersistenceModel projects; the dependency matrix permits the
+  shared Outbox.Abstractions edge, not a context-to-adapter dependency.
+
 - `AdminModuleExtractionTests` distinguishes Admin's role-audit read projection
   from Users' role-audit entity ownership; require the module adapter and focused
   PostgreSQL tests, and prevent the old central helper from returning.

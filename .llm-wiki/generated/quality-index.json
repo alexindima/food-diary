@@ -4729,14 +4729,6 @@
       "structuralRiskScore": 4.76
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxMessage.cs",
-      "nonBlankLines": 85,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.7
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Audit/AuditEntry.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
@@ -4753,14 +4745,6 @@
       "structuralRiskScore": 2.54
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Audit/AuditEntryConfiguration.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
@@ -4775,14 +4759,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.44
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageObjectDeletionOutboxMessageConfiguration.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Outbox/OutboxReplayAuditConfiguration.cs",
@@ -4943,14 +4919,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.4
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutboxMessage.cs",
-      "nonBlankLines": 80,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.1
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs",
@@ -29641,12 +29609,28 @@
       "structuralRiskScore": 0.06
     },
     {
+      "path": "Modules/Gamification/Infrastructure/Model/Achievements/AchievementEvaluationOutboxMessage.cs",
+      "nonBlankLines": 85,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.7
+    },
+    {
       "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/AchievementDefinitionConfiguration.cs",
       "nonBlankLines": 23,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.46
+    },
+    {
+      "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
     },
     {
       "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/UserAchievementConfiguration.cs",
@@ -30975,6 +30959,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.44
+    },
+    {
+      "path": "Modules/Images/Infrastructure/Model/Configurations/Images/ImageObjectDeletionOutboxMessageConfiguration.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Images/Infrastructure/Model/Images/ImageObjectDeletionOutboxMessage.cs",
+      "nonBlankLines": 80,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.1
     },
     {
       "path": "Modules/Images/Infrastructure/Model/ImagesPersistenceModelBuilderExtensions.cs",

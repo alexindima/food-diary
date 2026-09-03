@@ -1,5 +1,12 @@
 # Backend module ownership
 
+## Outbox stream records
+
+Images and Gamification own their stream-specific records and EF mappings in
+their existing PersistenceModel projects. Shared Outbox.Abstractions carries only
+the lifecycle contract; the common engine/claimer/replay and migration boundary
+remain central. See `docs/ai/module-outbox-persistence.md` for this tranche.
+
 ## Purpose
 
 This document defines business-module ownership inside the primary FoodDiary modular monolith. Project/layer boundaries remain defined by `docs/ARCHITECTURE.md`; this document adds the vertical business boundaries inside those layers.

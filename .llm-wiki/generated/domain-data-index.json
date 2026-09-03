@@ -5340,7 +5340,7 @@
         "message => new { message.ProcessedOnUtc, message.DeadLetteredOnUtc, message.NextAttemptOnUtc, message.LockedUntilUtc })"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs"
+      "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5925,7 +5925,7 @@
         "message => new { message.ProcessedOnUtc, message.DeadLetteredOnUtc, message.NextAttemptOnUtc, message.LockedUntilUtc })"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageObjectDeletionOutboxMessageConfiguration.cs"
+      "path": "Modules/Images/Infrastructure/Model/Configurations/Images/ImageObjectDeletionOutboxMessageConfiguration.cs"
     },
     {
       "area": "FoodDiary",

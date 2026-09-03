@@ -6,6 +6,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\FoodDiary.Modules.Gamification.Domain.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../../../Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />

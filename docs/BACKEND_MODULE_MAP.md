@@ -1,5 +1,12 @@
 # Backend Module Map
 
+## Outbox stream model ownership
+
+Images deletion and Gamification evaluation records/mappings compile in their
+existing PersistenceModel projects, sharing only Outbox.Abstractions. Their
+processors remain module-owned; DbContext, migrations, generic claiming/retry and
+mixed dead-letter replay remain central. See `docs/ai/module-outbox-persistence.md`.
+
 Use this file when deciding where backend code belongs.
 
 ## Primary FoodDiary Backend

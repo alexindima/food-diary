@@ -900,7 +900,7 @@ public sealed class BusinessModuleBoundaryTests {
         } else if (string.Equals(fileName, "ImageAssetConfiguration.cs", StringComparison.Ordinal)) {
             expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Images", "Infrastructure", "Model", "Configurations", fileName);
         } else {
-            expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Infrastructure", "Persistence", expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar), fileName);
+            expectedPath = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Images", "Infrastructure", "Model", expectedRelativeDirectory.Replace('/', Path.DirectorySeparatorChar), fileName);
         }
 
         Assert.True(File.Exists(expectedPath), $"{fileName} should stay in {expectedRelativeDirectory}.");

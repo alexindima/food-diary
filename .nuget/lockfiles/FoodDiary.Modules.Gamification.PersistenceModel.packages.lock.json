@@ -119,6 +119,9 @@
           "FoodDiary.Domain.Primitives": "[1.0.0, )"
         }
       },
+      "fooddiary.outbox.abstractions": {
+        "type": "Project"
+      },
       "Microsoft.Extensions.DependencyInjection": {
         "type": "CentralTransitive",
         "requested": "[10.0.11, )",

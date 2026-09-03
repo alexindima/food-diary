@@ -9,6 +9,11 @@ references Users Domain for User and Users Domain.Contracts for UserId.
 through persistence read joins. Shared DbContext, migrations/snapshot, storage
 providers and generic deletion outbox processing keep their existing shared owners. UserCleanup belongs to Modules/Users/Infrastructure.
 
+The image-deletion outbox record and mapping belong to Images PersistenceModel,
+using shared Outbox.Abstractions. Its enqueue/dispatch adapters remain in Images
+Infrastructure; generic claiming/retry/replay stay central. Preserve IsConfirmed,
+object-key normalization, lifecycle and model identity during ownership changes.
+
 Users owns the complete User aggregate, all credential/security partials, roles,
 role audit and weight/waist goals under `Modules/Users/Domain`. `UserId` lives in
 `Modules/Users/Domain.Contracts`, depending only on shared primitives. Consumers

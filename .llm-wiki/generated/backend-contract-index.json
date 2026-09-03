@@ -75428,33 +75428,7 @@
         "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxMessage.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IOutboxMessage",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxMessage.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IOutboxMessage",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutboxMessage.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -75496,6 +75470,32 @@
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
       "isTest": false,
       "referenceCount": 4
+    },
+    {
+      "contract": "IOutboxMessage",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Gamification/Infrastructure/Model/Achievements/AchievementEvaluationOutboxMessage.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOutboxMessage",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Infrastructure/Model/Images/ImageObjectDeletionOutboxMessage.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "IOutboxMessage",

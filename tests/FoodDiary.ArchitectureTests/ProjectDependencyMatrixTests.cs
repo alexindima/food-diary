@@ -190,7 +190,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Modules.Gamification.Application"] = ["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Gamification.Application.Abstractions", "FoodDiary.Modules.Gamification.Domain", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Domain"],
             ["FoodDiary.Modules.Gamification.Application.Abstractions"] = ["FoodDiary.Modules.Gamification.Domain", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Results"],
             ["FoodDiary.Modules.Gamification.Domain"] = ["FoodDiary.Modules.Users.Domain"],
-            ["FoodDiary.Modules.Gamification.PersistenceModel"] = ["FoodDiary.Modules.Gamification.Domain", "FoodDiary.Modules.Users.Domain"],
+            ["FoodDiary.Modules.Gamification.PersistenceModel"] = ["FoodDiary.Modules.Gamification.Domain", "FoodDiary.Modules.Users.Domain", "FoodDiary.Outbox.Abstractions"],
             ["FoodDiary.Modules.Gamification.Infrastructure"] = [
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Modules.Gamification.Application",
@@ -221,7 +221,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Modules.Images.Application.Abstractions"] = ["FoodDiary.Modules.Images.Domain", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Results"],
             ["FoodDiary.Modules.Images.Contracts"] = ["FoodDiary.Domain.Primitives"],
             ["FoodDiary.Modules.Images.Domain"] = ["FoodDiary.Modules.Images.Contracts", "FoodDiary.Modules.Users.Domain"],
-            ["FoodDiary.Modules.Images.PersistenceModel"] = ["FoodDiary.Modules.Images.Domain", "FoodDiary.Modules.Users.Domain"],
+            ["FoodDiary.Modules.Images.PersistenceModel"] = ["FoodDiary.Modules.Images.Domain", "FoodDiary.Modules.Users.Domain", "FoodDiary.Outbox.Abstractions"],
             ["FoodDiary.Modules.Images.Infrastructure"] = [
                 "FoodDiary.Application.Images",
                 "FoodDiary.Infrastructure",

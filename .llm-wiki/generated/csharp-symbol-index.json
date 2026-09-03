@@ -2232,13 +2232,6 @@
       "line": 2
     },
     {
-      "name": "AchievementEvaluationOutboxMessage",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxMessage.cs",
-      "line": 5
-    },
-    {
       "name": "AuditEntry",
       "kind": "class",
       "role": "Other",
@@ -2253,13 +2246,6 @@
       "line": 7
     },
     {
-      "name": "AchievementEvaluationOutboxMessageConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs",
-      "line": 7
-    },
-    {
       "name": "AuditEntryConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -2271,13 +2257,6 @@
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Email/EmailOutboxMessageConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "ImageObjectDeletionOutboxMessageConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Images/ImageObjectDeletionOutboxMessageConfiguration.cs",
       "line": 6
     },
     {
@@ -2510,13 +2489,6 @@
       "role": "Factory",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
       "line": 6
-    },
-    {
-      "name": "ImageObjectDeletionOutboxMessage",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutboxMessage.cs",
-      "line": 4
     },
     {
       "name": "CollaborationAuditInterceptor",
@@ -16827,10 +16799,24 @@
       "line": 4
     },
     {
+      "name": "AchievementEvaluationOutboxMessage",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Gamification/Infrastructure/Model/Achievements/AchievementEvaluationOutboxMessage.cs",
+      "line": 5
+    },
+    {
       "name": "AchievementDefinitionConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/AchievementDefinitionConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "AchievementEvaluationOutboxMessageConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/AchievementEvaluationOutboxMessageConfiguration.cs",
       "line": 7
     },
     {
@@ -17966,6 +17952,20 @@
       "role": "Configuration",
       "path": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs",
       "line": 7
+    },
+    {
+      "name": "ImageObjectDeletionOutboxMessageConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Modules/Images/Infrastructure/Model/Configurations/Images/ImageObjectDeletionOutboxMessageConfiguration.cs",
+      "line": 6
+    },
+    {
+      "name": "ImageObjectDeletionOutboxMessage",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/Model/Images/ImageObjectDeletionOutboxMessage.cs",
+      "line": 4
     },
     {
       "name": "ImagesPersistenceModelBuilderExtensions",

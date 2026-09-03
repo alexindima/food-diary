@@ -16,6 +16,30 @@ public sealed class AchievementPersistenceTests {
     private static readonly DateTime Now = new(2026, 8, 11, 0, 0, 0, DateTimeKind.Utc);
 
     [Fact]
+    public void EvaluationRevision_PreservesClaimUntilExplicitRelease_AndUsesModuleModel() {
+        var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now);
+        message.MarkClaimed(Now.AddMinutes(5), "worker");
+
+        message.RequestEvaluation(Now.AddMinutes(1));
+
+        Assert.Multiple(
+            () => Assert.Same(typeof(GamificationPersistenceModelRegistration).Assembly, message.GetType().Assembly),
+            () => Assert.Equal(2, message.Revision),
+            () => Assert.Equal(Now.AddMinutes(1), message.NextAttemptOnUtc),
+            () => Assert.Equal("worker", message.LockedBy),
+            () => Assert.Equal(Now.AddMinutes(5), message.LockedUntilUtc),
+            () => Assert.Null(message.ProcessedOnUtc));
+
+        message.ReleaseForUpdatedRevision();
+
+        Assert.Multiple(
+            () => Assert.Null(message.LockedBy),
+            () => Assert.Null(message.LockedUntilUtc),
+            () => Assert.Equal(2, message.Revision),
+            () => Assert.Null(message.ProcessedOnUtc));
+    }
+
+    [Fact]
     public void AchievementEvaluationMessage_WithEmptyUserId_Throws() => Assert.Throws<ArgumentException>(() =>
         AchievementEvaluationOutboxMessage.Create(UserId.Empty, Now));
 

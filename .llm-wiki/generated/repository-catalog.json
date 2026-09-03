@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 223,
-    "documentationPages": 127
+    "documentationPages": 128
   },
   "dotnet": {
     "projects": [
@@ -4635,7 +4635,8 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Gamification/Domain/FoodDiary.Modules.Gamification.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj"
         ],
         "packageReferences": [
           {
@@ -5380,11 +5381,16 @@
         "isTestProject": false,
         "projectReferences": [
           "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj",
-          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj"
         ],
         "packageReferences": [
           {
             "name": "Microsoft.EntityFrameworkCore",
+            "version": null
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.Relational",
             "version": null
           }
         ]
@@ -12646,6 +12652,7 @@
       "docs/ai/meals-ownership-inventory.md",
       "docs/ai/module-integration-20260831.md",
       "docs/ai/module-integration-exercises-mealplanning-recipecommunity.md",
+      "docs/ai/module-outbox-persistence.md",
       "docs/ai/notifications-extraction-handoff.md",
       "docs/ai/notifications-module-extraction-wiki-findings.md",
       "docs/ai/notifications-ownership-inventory.md",
