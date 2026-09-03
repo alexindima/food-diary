@@ -41,7 +41,6 @@ tests leave the mixed Dietologist class; see
 
 | Current source | Likely owner / next action | Required boundary proof |
 | --- | --- | --- |
-| `Persistence/Interceptors/CollaborationAuditInterceptor.cs` | Dietologist-specific audit rules | It switches explicitly on invitation, recommendation, client task and bulk dispatch. Move rule ownership without making central DI reference module adapters; preserve SaveChanges timing. |
 | `Persistence/Email/*` outbox stream | Decide Identity/email capability boundary | Used by multiple modules; separate stream-specific records/dispatch from the generic processing engine. Shared consumption alone is not ownership. |
 | `Authentication/*`, JWT options and password hashing | Separate Identity/Users boundary review | Authentication orchestration, credential hashing and shared caches have different consumers; do not move solely by directory name. |
 
@@ -76,8 +75,13 @@ tests leave the mixed Dietologist class; see
    Notifications precedent in their module PersistenceModel projects. The engine,
    claiming, replay and DbContext remain central; see
    `docs/ai/module-outbox-persistence.md` for the unchanged lifecycle boundary.
-4. Design Dietologist audit registration, mixed replay and UserRepository seams
-   independently. Do not redesign them while performing physical relocation.
+4. Dietologist audit rules and focused tests now live in its existing
+   Infrastructure module. Central DI consumes EF's ISaveChangesInterceptor port
+   after domain-event dispatch, and the module registers it once per scope.
+   Shared AuditEntry/table/writer remain central. See
+   `docs/ai/dietologist-audit-persistence.md`.
+5. Review the Email stream, mixed replay and UserRepository seams independently.
+   Do not redesign them while performing physical relocation.
 
 Every persistence tranche must keep the dependency graph acyclic, preserve model
 identity, retain real provider tests and check composition roots. Avoid adding new

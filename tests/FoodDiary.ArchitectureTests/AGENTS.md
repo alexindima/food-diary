@@ -23,6 +23,11 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Rules
 
+- `DietologistAuditOwnershipTests` protects module-owned collaboration audit rules
+  and focused tests. Central persistence resolves EF's interceptor port, never the
+  Dietologist implementation; behavior/order/lifetime and PostgreSQL rollback are
+  tested at the module/shared integration boundaries.
+
 - `ModuleOutboxOwnershipTests` protects Images/Gamification technical records and
   mappings in their PersistenceModel projects; the dependency matrix permits the
   shared Outbox.Abstractions edge, not a context-to-adapter dependency.

@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1070,
     "ambiguousContracts": 0,
-    "consumerEdges": 7645,
+    "consumerEdges": 7650,
     "productionConsumerEdges": 4560,
-    "testConsumerEdges": 3085,
+    "testConsumerEdges": 3090,
     "consumedContracts": 1070,
     "unconsumedContracts": 0
   },
@@ -30090,6 +30090,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "DietologistInvitationAcceptedDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Domain/Events/DietologistInvitationAcceptedDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DietologistPersistenceIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "DietologistInvitationDeclinedDomainEvent",
       "roles": [
         "Event"
@@ -59829,6 +59842,19 @@
         "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DietologistPersistenceIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Domain.Primitives/IDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/DomainEventDispatchInterceptorTests.cs",
       "isTest": true,
       "referenceCount": 5
@@ -59910,6 +59936,32 @@
       "consumerPath": "FoodDiary.Infrastructure/Persistence/Interceptors/DomainEventDispatchInterceptor.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/Persistence/CollaborationAuditRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IDomainEventPublisher",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Events/IDomainEventPublisher.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DietologistPersistenceIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IDomainEventPublisher",
@@ -105721,6 +105773,19 @@
       "consumerPath": "tests/FoodDiary.Domain.Tests/Domain/DomainEventInvariantTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "RecommendationCreatedDomainEvent",
+      "roles": [
+        "Event"
+      ],
+      "definitionPaths": [
+        "Modules/Dietologist/Domain/Events/RecommendationCreatedDomainEvent.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/DietologistPersistenceIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "RecommendationCreatedDomainEvent",

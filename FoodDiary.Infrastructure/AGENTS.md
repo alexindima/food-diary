@@ -17,6 +17,10 @@ Rules for `FoodDiary.Infrastructure/`.
 - Keep dependency direction inward (Infrastructure depends on Application/Domain, not vice versa).
 - Keep project references aligned with the enforced dependency matrix: approved shared/module contracts, Domain owners, PersistenceModel assemblies and shared primitives. Do not reference module adapter implementations, presentation projects, host projects, or resources.
 - Keep shared external provider adapters that are not persistence concerns in `FoodDiary.Integrations`; Notifications-owned web-push adapters live in `Modules/Notifications/Infrastructure`.
+- Resolve module-owned EF `ISaveChangesInterceptor` registrations after the
+  explicit telemetry and domain-event interceptors. Dietologist owns collaboration
+  audit rules/registration; central Infrastructure owns only generic audit storage.
+  Do not reference the Dietologist interceptor type or adapter project here.
 - Export PDF rendering and its safe image HTTP client belong to `Modules/Export/Infrastructure`; executable hosts register AddExportInfrastructure explicitly. Do not reintroduce QuestPDF or a central PDF implementation.
 - Notifications configurations are registered explicitly from its PersistenceModel assembly; generic outbox processing/claiming/replay remain central and use the shared Outbox.Abstractions contract.
 - Images and Gamification outbox records/configurations likewise belong to their existing PersistenceModel assemblies. Keep their DbSets and generic engine/claiming/replay here, but do not reintroduce duplicate central mappings or record classes.

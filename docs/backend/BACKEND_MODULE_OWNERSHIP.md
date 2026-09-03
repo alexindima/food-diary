@@ -288,6 +288,12 @@ Image EF configuration and object-deletion outbox configuration live in `Configu
 
 ## Dietologist relationships and recipe social boundaries
 
+Dietologist also owns collaboration audit rule selection and its SaveChanges
+interceptor. Central persistence resolves the existing EF interceptor port after
+domain-event dispatch; AuditEntry, its table/mapping and generic reader/writer stay
+central. No central-to-module-adapter reference is introduced. See
+`docs/ai/dietologist-audit-persistence.md` for composition and transaction evidence.
+
 Dietologist Relationships owns invitations, relationship permissions and recommendations. Users profile composition consumes `IDietologistInvitationReadService`; it no longer queries the Dietologist read-model repository directly. Notification production uses Notifications writer/refresh capabilities, while role changes use the Users role-membership capability.
 
 Its owned Domain, Application, Application Abstractions, EF configuration model, persistence adapters, and focused tests are physically isolated under `Modules/Dietologist`. The shared `FoodDiaryDbContext`, historical migrations, model snapshot, HTTP transport, and genuine cross-module integration tests remain central. Relationship authorization continues to flow through current-user access plus explicit relationship permissions; extraction does not expose repository implementations or broaden client-health-data access.

@@ -73,6 +73,16 @@ Core rules:
 - Shared MSBuild settings prune non-target SkiaSharp native assets and native PDB files from build output; deployment publishes must use the destination runtime identifier.
 
 ## Application Read Boundaries
+
+Dietologist-specific collaboration auditing is composed through EF's existing
+`ISaveChangesInterceptor` port. The owning module registers its scoped interceptor
+idempotently; central persistence appends module registrations after telemetry and
+domain-event dispatch. Rules still add generic AuditEntry records to the same
+SaveChanges transaction. Audit storage remains central with an exact Dietologist
+Infrastructure friend assembly, not a public entity API or reverse project edge.
+Module registrations must be complete before resolving a context. All executable
+hosts already compose Dietologist; coordinated host rebuilds are required.
+
 Business-module ownership inside the primary backend is defined in `docs/backend/BACKEND_MODULE_OWNERSHIP.md`. Layer sharing and a shared `DbContext` do not imply shared write ownership: cross-module mutations go through the owning module, while composed reads use explicit projection/read-service contracts. Fasting introduced the executable vertical-boundary pattern; it is now applied across the governed modules, hosts/adapters and the explicit cross-module projection allowlist.
 
 Application service composition follows the same ownership model. `FoodDiary.Application.Runtime` registers mediator, validation, transaction, and post-commit behaviors. Each feature project owns its registration, and executable composition roots register the required modules explicitly. Fasting established the complete `Modules/<Feature>` pilot; Hydration, WeeklyGoals, Lessons, DailyAdvices, and Dietologist own their aggregates, application ports, persistence models, and adapters under `Modules/<Feature>`. Hydration keeps a one-way aggregate navigation to Users-owned `User` and intentionally has no inverse `User.HydrationEntries` collection. Dietologist deliberately keeps no Contracts project: its current consumers use mediator requests or application abstractions, and introducing another public surface would not represent proven ownership. DailyAdvices likewise has no Contracts layer because Dashboard consumes it through the mediator/query boundary. WeeklyCheckIn, TDEE, and Statistics are application-only modules because they own orchestration and calculations but no domain aggregate, persistence port, or adapter. Statistics composes Dashboard and Body Metrics projections through central application read contracts instead of adding a redundant Contracts surface. Legacy CLR namespaces and assembly identities remain unchanged, and module Domain projects reference their exact module and shared Primitives owners while `UserId` belongs to Users Domain.Contracts. The former central Domain and Nutrition assemblies are retired under ADR 0027. The shared `FoodDiaryDbContext`, migration history, and model snapshot remain in central Infrastructure so the application keeps one migration host and one database. Architecture tests prevent feature-project aggregators from regrowing and enforce the intentional module boundaries.

@@ -4,10 +4,20 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Abstractions.Audit.Models;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
+using FoodDiary.Domain.Primitives;
+using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.Events;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Audit;
 using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Infrastructure.Persistence.Recommendations;
+using FoodDiary.Modules.Dietologist.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
@@ -16,6 +26,85 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     private static readonly DateTime UtcNow = new(2026, 7, 25, 12, 0, 0, DateTimeKind.Utc);
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [RequiresDockerFact]
+    public async Task ModuleAudit_ComposesAfterDomainEvents_AndSharesCommitAndRollback() {
+        await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
+        var dietologist = User.Create($"audit-diet-{Guid.NewGuid():N}@example.com", "hash");
+        var client = User.Create($"audit-client-{Guid.NewGuid():N}@example.com", "hash");
+        database.Users.AddRange(dietologist, client);
+        await database.SaveChangesAsync();
+
+        IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(
+            new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["ConnectionStrings:DefaultConnection"] = database.Database.GetConnectionString(),
+                ["Database:EnableRetries"] = "false",
+            }).Build();
+        var services = new ServiceCollection();
+        services.AddSingleton(FixedTime);
+        services.AddInfrastructure(configuration);
+        services.AddDietologistModule().AddDietologistModule();
+        services.AddScoped(_ => Substitute.For<IDomainEventPublisher>());
+        await using ServiceProvider provider = services.BuildServiceProvider(validateScopes: true);
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
+        FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        var invitation = DietologistInvitation.Create(
+            client.Id, dietologist.Email, "token-hash", DateTime.UtcNow.AddDays(1), DietologistPermissions.AllEnabled);
+        context.DietologistInvitations.Add(invitation);
+        SaveSynchronously(context);
+
+        AuditEntry created = Assert.Single(await database.AuditEntries.AsNoTracking().ToListAsync());
+        Assert.Multiple(
+            () => Assert.Equal(client.Id.Value, created.ActorUserId),
+            () => Assert.Equal(client.Id.Value, created.SubjectClientUserId),
+            () => Assert.Equal("dietologist.invitation.created", created.Action),
+            () => Assert.Equal(invitation.Id.Value.ToString(), created.TargetId),
+            () => Assert.Equal(UtcNow, created.CreatedAtUtc),
+            () => Assert.Null(created.Metadata));
+
+        IDomainEventPublisher publisher = scope.ServiceProvider.GetRequiredService<IDomainEventPublisher>();
+        publisher.PublishAsync(Arg.Is<IDomainEvent>(domainEvent => domainEvent is DietologistInvitationAcceptedDomainEvent), Arg.Any<CancellationToken>()).Returns(_ => {
+            context.Recommendations.Add(Recommendation.Create(dietologist.Id, client.Id, "Created during dispatch"));
+            return Task.CompletedTask;
+        });
+
+        await using (IDbContextTransaction transaction = await context.Database.BeginTransactionAsync()) {
+            invitation.Accept(dietologist.Id);
+            await context.SaveChangesAsync();
+
+            await publisher.Received(1).PublishAsync(
+                Arg.Is<IDomainEvent>(domainEvent => domainEvent is DietologistInvitationAcceptedDomainEvent), Arg.Any<CancellationToken>());
+            await publisher.Received(1).PublishAsync(
+                Arg.Is<IDomainEvent>(domainEvent => domainEvent is RecommendationCreatedDomainEvent), Arg.Any<CancellationToken>());
+            AuditEntry[] transactionalAudit = await context.AuditEntries.AsNoTracking().ToArrayAsync();
+            Assert.Equal(3, transactionalAudit.Length);
+            Assert.Contains(transactionalAudit, entry => string.Equals(entry.Action, "dietologist.recommendation.created", StringComparison.Ordinal));
+            AuditEntry accepted = Assert.Single(transactionalAudit, entry => string.Equals(entry.Action, "dietologist.invitation.accepted", StringComparison.Ordinal));
+            Assert.Multiple(
+                () => Assert.Equal(dietologist.Id.Value, accepted.ActorUserId),
+                () => Assert.Equal(client.Id.Value, accepted.SubjectClientUserId),
+                () => Assert.Equal("""{"status":"Accepted"}""", accepted.Metadata),
+                () => Assert.Equal(UtcNow, accepted.CreatedAtUtc));
+            Assert.Equal(1, await database.AuditEntries.CountAsync());
+            Assert.Empty(await database.Recommendations.ToListAsync());
+            await transaction.RollbackAsync();
+        }
+
+        Assert.Equal(1, await database.AuditEntries.CountAsync());
+        Assert.Empty(await database.Recommendations.ToListAsync());
+        Assert.Equal(DietologistInvitationStatus.Pending,
+            (await database.DietologistInvitations.AsNoTracking().SingleAsync()).Status);
+
+        await using AsyncServiceScope committedScope = provider.CreateAsyncScope();
+        FoodDiaryDbContext committedContext = committedScope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        DietologistInvitation committed = await committedContext.DietologistInvitations.SingleAsync();
+        committed.Accept(dietologist.Id);
+        await committedContext.SaveChangesAsync();
+        Assert.Equal(DietologistInvitationStatus.Accepted,
+            (await database.DietologistInvitations.AsNoTracking().SingleAsync()).Status);
+        Assert.Equal(2, await database.AuditEntries.CountAsync());
+        Assert.Single(await database.AuditEntries.Where(entry => entry.Action == "dietologist.invitation.accepted").ToListAsync());
+    }
 
     [RequiresDockerFact]
     public async Task RecommendationRepositories_AddAndQueryEveryShape() {
@@ -114,6 +203,9 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
             () => Assert.Equal("""{"value":1}""", filtered.Metadata),
             () => Assert.Equal(UtcNow, filtered.CreatedAtUtc));
     }
+
+    // Exercise the synchronous EF entrypoint deliberately; the rest of the test uses async saves.
+    private static void SaveSynchronously(FoodDiaryDbContext context) => context.SaveChanges();
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider : TimeProvider {

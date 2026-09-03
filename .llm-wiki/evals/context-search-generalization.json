@@ -234,7 +234,7 @@
       "id": "collaboration-audit-interceptor",
       "query": "audit collaborative entity changes during database save",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs"]
+      "expectedPaths": ["Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs"]
     },
     {
       "id": "outbox-processing-policy",

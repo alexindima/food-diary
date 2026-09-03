@@ -11,6 +11,14 @@ Rules for `Modules/Dietologist/`.
 - Keep client health data behind relationship authorization and explicit `DietologistPermissions`; no consumer may bypass `IDietologistDashboardAccessService` or the attention-signal projection.
 - Register application behavior through `AddDietologistApplication`; composition roots use Infrastructure's `AddDietologistModule` facade.
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
+- Own collaboration audit rule selection in Infrastructure's `CollaborationAuditInterceptor`.
+  `AddDietologistModule` registers one scoped EF `ISaveChangesInterceptor` with
+  `TryAddEnumerable`; central persistence installs module interceptors after domain
+  event dispatch. Preserve synchronous/asynchronous SaveChanges timing and the
+  shared transaction. AuditEntry/table/writer stay central; the exact module IVT
+  grants internal storage access without making a public audit entity API.
+- Focused audit rule/composition tests live in the existing module Infrastructure
+  tests. Central PostgreSQL tests retain the shared dispatch/transaction boundary.
 - Do not add a Contracts project until a stable cross-module API distinct from adapter-facing application ports is proven.
 
 ## Verification

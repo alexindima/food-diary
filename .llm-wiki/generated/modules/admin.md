@@ -24,7 +24,6 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Infrastructure/Persistence/Admin`
 - `FoodDiary.Integrations/Services/MailInbox`
 - `FoodDiary.Presentation.Api/Features/Admin`
 - `Modules/Admin/Application`

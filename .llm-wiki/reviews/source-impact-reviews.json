@@ -7,14 +7,18 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "11ba50b671c89651c7c6fad192019549ffa33b87b1dc8a7a0de92078e7ad477a"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "88804dd28f4b802ac27978475ada41a0d02f7c53c027e60994fde11b2456cce9"
+          "sha256": "5aec6029bc943cc12a5ae18fb7917c7308eef14a548a0accd924c01f11702c32"
         }
       ],
-      "reason": "Both existing PersistenceModel projects own the records and mappings through shared Outbox.Abstractions. Central context, migrations and mixed replay retain ownership. Exact matrix edges and dependency locks follow this graph without new projects.",
+      "reason": "Dietologist owns rule selection; central Infrastructure resolves EF port and retains audit storage, shared context/model/migrations. One exact IVT uses existing friend-assembly precedent without new public API or project edge.",
       "baseRef": "HEAD",
-      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
-      "reviewedAtUtc": "2026-09-03T00:25:31.9041181Z"
+      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
+      "reviewedAtUtc": "2026-09-03T01:28:47.0699621Z"
     },
     {
       "pageId": "module.frontend",
@@ -37,14 +41,18 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "11ba50b671c89651c7c6fad192019549ffa33b87b1dc8a7a0de92078e7ad477a"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "88804dd28f4b802ac27978475ada41a0d02f7c53c027e60994fde11b2456cce9"
+          "sha256": "5aec6029bc943cc12a5ae18fb7917c7308eef14a548a0accd924c01f11702c32"
         }
       ],
-      "reason": "Both existing PersistenceModel projects own the records and mappings through shared Outbox.Abstractions. Central context, migrations and mixed replay retain ownership. Exact matrix edges and dependency locks follow this graph without new projects.",
+      "reason": "Dietologist owns rule selection; central Infrastructure resolves EF port and retains audit storage, shared context/model/migrations. One exact IVT uses existing friend-assembly precedent without new public API or project edge.",
       "baseRef": "HEAD",
-      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
-      "reviewedAtUtc": "2026-09-03T00:25:32.0544154Z"
+      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
+      "reviewedAtUtc": "2026-09-03T01:28:47.2120809Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -53,21 +61,21 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "88804dd28f4b802ac27978475ada41a0d02f7c53c027e60994fde11b2456cce9"
+          "sha256": "5aec6029bc943cc12a5ae18fb7917c7308eef14a548a0accd924c01f11702c32"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "aa5236fea4b44743068bcaec6bfc03479b581b6703e2e0f61e95a4a2970cbb79"
+          "sha256": "f78deacccf3c5c3d84d53121dce1566b93c2dc58cc64fefa5d7b0c17de7c5871"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "3165f9c7cbf5b480ad5024e3970cd1ab2df356720e8af8341996338f6f1933af"
+          "sha256": "9c1ab1242ee8ece6c65485eec8e3da1c4179acf7b00a4ae295a4549b6511384a"
         }
       ],
-      "reason": "Four source-identical model files relocate without changing routes, payloads, handlers, processors or hosts. HTTP and provider execution are separate receipts, not inferred from this source review.",
+      "reason": "All three hosts already compose Dietologist; handlers, routes, payloads and HTTP surface have no diff. Coordinated rebuild required for moved interceptor assembly, not binary forwarding.",
       "baseRef": "HEAD",
-      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
-      "reviewedAtUtc": "2026-09-03T00:25:32.2474958Z"
+      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
+      "reviewedAtUtc": "2026-09-03T01:28:47.3693144Z"
     },
     {
       "pageId": "system.architecture",
@@ -75,18 +83,18 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "88804dd28f4b802ac27978475ada41a0d02f7c53c027e60994fde11b2456cce9"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "11ba50b671c89651c7c6fad192019549ffa33b87b1dc8a7a0de92078e7ad477a"
         },
         {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "39cf001b0e7ed42f2fb586e0420397c4db66d2f6d2ab71fb110e21784cdc2ed5"
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "5aec6029bc943cc12a5ae18fb7917c7308eef14a548a0accd924c01f11702c32"
         }
       ],
-      "reason": "Both existing PersistenceModel projects own the records and mappings through shared Outbox.Abstractions. Central context, migrations and mixed replay retain ownership. Exact matrix edges and dependency locks follow this graph without new projects.",
+      "reason": "Dietologist owns rule selection; central Infrastructure resolves EF port and retains audit storage, shared context/model/migrations. One exact IVT uses existing friend-assembly precedent without new public API or project edge.",
       "baseRef": "HEAD",
-      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
-      "reviewedAtUtc": "2026-09-03T00:25:32.4088501Z"
+      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
+      "reviewedAtUtc": "2026-09-03T01:28:47.5503650Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -223,13 +231,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "673444b7bd846f01f6f84e04904f3b9be340f8db264a7e402e0dba6e497c1050"
+          "sha256": "a36a99c3c6b40c3ccad40a9b0d54d1b4287546aea904c85926c6c8111f8229d3"
         }
       ],
-      "reason": "Four source-identical model files relocate without changing routes, payloads, handlers, processors or hosts. HTTP and provider execution are separate receipts, not inferred from this source review.",
+      "reason": "All three hosts already compose Dietologist; handlers, routes, payloads and HTTP surface have no diff. Coordinated rebuild required for moved interceptor assembly, not binary forwarding.",
       "baseRef": "HEAD",
-      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
-      "reviewedAtUtc": "2026-09-03T00:25:33.1052503Z"
+      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
+      "reviewedAtUtc": "2026-09-03T01:28:48.0061896Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -267,14 +275,14 @@
       "pageSha256": "8c9843eeb4fbb377b79e506bb7a2969dd0393e10cc6fc0a1ec924ccbd6ee22f9",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "8951db30a7e4ec027cd27ef98c0b84c92eb4965ad83cbae25c538ec99fd9f2a6"
+          "path": ".llm-wiki/evals/context-search-generalization.json",
+          "sha256": "181520c64115a7f1b20c17750ca1879a88f1b24237ff742f4f16b62c558bd4d8"
         }
       ],
-      "reason": "Six image record Facts move with identical bodies, and new assembly/lifecycle/provider cases protect module ownership. One corpus expectation follows a proven mapping move, with no ranking/query/threshold edits. Actual failed or interrupted outcomes remain separate.",
+      "reason": "Four existing Facts move source-identically. New module composition tests protect scope/order/repeat registration; actual PostgreSQL exercises domain-event-generated recommendation and atomic audit rollback/commit. One proven generalization-corpus path move; frozen100 and retrieval policy unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
-      "reviewedAtUtc": "2026-09-03T00:25:33.3291631Z"
+      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
+      "reviewedAtUtc": "2026-09-03T01:28:48.1933778Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -485,18 +493,14 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "d116d66eb27debffa957fb205e0029a2b343b997cbd52a878be6989e4059ebd3"
-        },
-        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "3165f9c7cbf5b480ad5024e3970cd1ab2df356720e8af8341996338f6f1933af"
+          "sha256": "9c1ab1242ee8ece6c65485eec8e3da1c4179acf7b00a4ae295a4549b6511384a"
         }
       ],
-      "reason": "Six image record Facts move with identical bodies, and new assembly/lifecycle/provider cases protect module ownership. One corpus expectation follows a proven mapping move, with no ranking/query/threshold edits. Actual failed or interrupted outcomes remain separate.",
+      "reason": "Four existing Facts move source-identically. New module composition tests protect scope/order/repeat registration; actual PostgreSQL exercises domain-event-generated recommendation and atomic audit rollback/commit. One proven generalization-corpus path move; frozen100 and retrieval policy unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
-      "reviewedAtUtc": "2026-09-03T00:25:33.5224502Z"
+      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
+      "reviewedAtUtc": "2026-09-03T01:28:48.3909229Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -813,13 +817,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bd835adff0627b446d10e0ba50144f193172d956493ba5edefec2cc385d9d926"
+          "sha256": "cabab6d9f2291b76fbc6ac88caea71e82ff0d3d9923356392f467453502cee1c"
         }
       ],
-      "reason": "Six image record Facts move with identical bodies, and new assembly/lifecycle/provider cases protect module ownership. One corpus expectation follows a proven mapping move, with no ranking/query/threshold edits. Actual failed or interrupted outcomes remain separate.",
+      "reason": "Four existing Facts move source-identically. New module composition tests protect scope/order/repeat registration; actual PostgreSQL exercises domain-event-generated recommendation and atomic audit rollback/commit. One proven generalization-corpus path move; frozen100 and retrieval policy unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
-      "reviewedAtUtc": "2026-09-03T00:25:33.9147355Z"
+      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
+      "reviewedAtUtc": "2026-09-03T01:28:48.7032868Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -896,13 +900,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8076e9c565b0970da65d6db49e8de3b6b06cfcc883cac0f9236436b710ae39f4"
+          "sha256": "a8bdd90acdb88e687137877ec93c2218ea95504209a5da90ad21f58d789235ea"
         }
       ],
-      "reason": "Both existing PersistenceModel projects own the records and mappings through shared Outbox.Abstractions. Central context, migrations and mixed replay retain ownership. Exact matrix edges and dependency locks follow this graph without new projects.",
+      "reason": "Dietologist owns rule selection; central Infrastructure resolves EF port and retains audit storage, shared context/model/migrations. One exact IVT uses existing friend-assembly precedent without new public API or project edge.",
       "baseRef": "HEAD",
-      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
-      "reviewedAtUtc": "2026-09-03T00:25:34.3977188Z"
+      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
+      "reviewedAtUtc": "2026-09-03T01:28:49.1271041Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -911,17 +915,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bd835adff0627b446d10e0ba50144f193172d956493ba5edefec2cc385d9d926"
+          "sha256": "cabab6d9f2291b76fbc6ac88caea71e82ff0d3d9923356392f467453502cee1c"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "8076e9c565b0970da65d6db49e8de3b6b06cfcc883cac0f9236436b710ae39f4"
+          "sha256": "a8bdd90acdb88e687137877ec93c2218ea95504209a5da90ad21f58d789235ea"
         }
       ],
-      "reason": "Same object key/confirmation and user/revision data, errors, due dates and leases. No new logging, sharing, retention or provider access. Generic claiming/retry/replay and all stream processors have zero diff; no new exactly-once promise.",
+      "reason": "Rule body and actor/client/action/metadata/timestamp construction unchanged. Shared audit storage, authorization, retention and logs unchanged. No new provider or security-scan claim.",
       "baseRef": "HEAD",
-      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
-      "reviewedAtUtc": "2026-09-03T00:25:34.7809405Z"
+      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
+      "reviewedAtUtc": "2026-09-03T01:28:49.4159600Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1158,18 +1162,14 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "8951db30a7e4ec027cd27ef98c0b84c92eb4965ad83cbae25c538ec99fd9f2a6"
-        },
-        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "40936a856be31669cea4d135ecd62850ed13414cfc97af0e2a13923ca7145b79"
+          "sha256": "9b29ab23f485737ab1444498c5f55797985fff992fa21678fc30ad9a0d196089"
         }
       ],
-      "reason": "Both existing PersistenceModel projects own the records and mappings through shared Outbox.Abstractions. Central context, migrations and mixed replay retain ownership. Exact matrix edges and dependency locks follow this graph without new projects.",
+      "reason": "Dietologist owns rule selection; central Infrastructure resolves EF port and retains audit storage, shared context/model/migrations. One exact IVT uses existing friend-assembly precedent without new public API or project edge.",
       "baseRef": "HEAD",
-      "gitHead": "adfdd053b5e9b1f5ab2675f8abc386d2d800b85d",
-      "reviewedAtUtc": "2026-09-03T00:25:34.1660745Z"
+      "gitHead": "cf5589740b7c41ca28917733323458d720a254d7",
+      "reviewedAtUtc": "2026-09-03T01:28:48.9049241Z"
     },
     {
       "pageId": "workflow.review-diff",

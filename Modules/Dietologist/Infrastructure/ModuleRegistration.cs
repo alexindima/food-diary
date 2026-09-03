@@ -1,14 +1,18 @@
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Dietologist;
 using FoodDiary.Infrastructure.Persistence.Dietologist;
+using FoodDiary.Infrastructure.Persistence.Interceptors;
 using FoodDiary.Infrastructure.Persistence.Recommendations;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FoodDiary.Modules.Dietologist.Infrastructure;
 
 public static class ModuleRegistration {
     public static IServiceCollection AddDietologistModule(this IServiceCollection services) {
         services.AddDietologistApplication();
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<ISaveChangesInterceptor, CollaborationAuditInterceptor>());
         services.AddScoped<IDietologistInvitationRepository, DietologistInvitationRepository>();
         services.AddScoped<IDietologistInvitationReadRepository>(static provider => provider.GetRequiredService<IDietologistInvitationRepository>());
         services.AddScoped<IDietologistInvitationReadModelRepository>(static provider => provider.GetRequiredService<IDietologistInvitationRepository>());

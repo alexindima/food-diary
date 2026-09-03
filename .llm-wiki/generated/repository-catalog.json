@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 223,
-    "documentationPages": 128
+    "documentationPages": 129
   },
   "dotnet": {
     "projects": [
@@ -12636,6 +12636,7 @@
       "docs/ai/dashboard-module-integration.md",
       "docs/ai/dashboard-ownership-inventory.md",
       "docs/ai/dashboard-wiki-supplemental-evals.md",
+      "docs/ai/dietologist-audit-persistence.md",
       "docs/ai/domain-guard-extraction.md",
       "docs/ai/exercises-module-extraction-wiki-findings.md",
       "docs/ai/exercises-ownership-inventory.md",

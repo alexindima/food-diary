@@ -2180,7 +2180,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "DependencyInjection",
@@ -2489,13 +2489,6 @@
       "role": "Factory",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
       "line": 6
-    },
-    {
-      "name": "CollaborationAuditInterceptor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs",
-      "line": 9
     },
     {
       "name": "DomainEventDispatcher",
@@ -14710,7 +14703,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dietologist/Infrastructure/ModuleRegistration.cs",
-      "line": 8
+      "line": 11
     },
     {
       "name": "AttentionSignalMetricsReadService",
@@ -14725,6 +14718,13 @@
       "role": "Repository",
       "path": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/DietologistInvitationRepository.cs",
       "line": 11
+    },
+    {
+      "name": "CollaborationAuditInterceptor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs",
+      "line": 9
     },
     {
       "name": "ClientTaskRepository",
@@ -26495,21 +26495,21 @@
       "implementation": "EfUnitOfWork",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 20
+      "line": 21
     },
     {
       "service": "IOutboxDeadLetterReplayService",
       "implementation": "OutboxDeadLetterReplayService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 21
+      "line": 22
     },
     {
       "service": "IDomainEventPublisher",
       "implementation": "MediatorDomainEventPublisher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Persistence.cs",
-      "line": 22
+      "line": 23
     },
     {
       "service": "IEmailVerificationNotifier",

@@ -8,6 +8,7 @@ using FoodDiary.Infrastructure.Persistence.Interceptors;
 using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -21,7 +22,6 @@ public static partial class DependencyInjection {
         services.AddScoped<IOutboxDeadLetterReplayService, OutboxDeadLetterReplayService>();
         services.AddScoped<IDomainEventPublisher, MediatorDomainEventPublisher>();
         services.AddScoped<DomainEventDispatchInterceptor>();
-        services.AddScoped<CollaborationAuditInterceptor>();
         services.AddDbContext<FoodDiaryDbContext>((sp, options) => {
             DatabaseOptions databaseOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
             options
@@ -37,8 +37,8 @@ public static partial class DependencyInjection {
                     })
                 .AddInterceptors(
                     sp.GetRequiredService<DatabaseCommandTelemetryInterceptor>(),
-                    sp.GetRequiredService<DomainEventDispatchInterceptor>(),
-                    sp.GetRequiredService<CollaborationAuditInterceptor>());
+                    sp.GetRequiredService<DomainEventDispatchInterceptor>())
+                .AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
         });
 
     }
