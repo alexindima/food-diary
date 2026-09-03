@@ -36,12 +36,12 @@ Shared processing/claim/retry, stream lifecycle classes, migrations/model/contex
 public application contracts, HTTP/authorization and delivery policies are not
 changed. Coordinated host rebuild is required; no binary-forwarder guarantee.
 
-Source review found a pre-existing defect: each non-locking Find branch calls
+Source review during extraction found a pre-existing defect: each non-locking Find branch called
 SingleOrDefaultAsync on the entire DbSet without a messageId predicate. With
 multiple rows preview can throw; with one row it can return that row for a
-different id. Relational replay's FOR UPDATE query does filter by id. This task
-preserves both branches rather than hide a functional fix inside extraction.
-Fix the lookup separately with single/multiple/missing-id regression tests.
+different id. Relational replay's FOR UPDATE query does filter by id. The extraction
+preserved both branches; the separate corrective follow-up below adds the missing
+predicate with single/multiple/missing-id regression tests.
 
 ## Verification and Wiki
 
@@ -122,3 +122,62 @@ HTTP/notification/JobManager suites, not a new route, job or exactly-once promis
 Only migration Designer/snapshot-update criteria are inapplicable because no
 migration/model change exists. Native final acceptance/context/delivery receipts
 are retained with the evidence, separately from runtime results.
+
+## Corrective follow-up: address non-locking lookups by message ID
+
+Baseline: clean master `67f46de86490a5edc39f87f02f3be755638843dd`.
+
+The four non-locking adapter branches filter by `message.Id == messageId` before
+SingleOrDefaultAsync. Filtering belongs in the database query, not after loading
+rows or through FirstOrDefault. Each table already has an Id primary key; no new
+index or migration is needed. Tracking, cancellation, list queries and the exact
+FOR UPDATE SQL remain unchanged. The coordinator still owns validation, preview
+eligibility, transactions and audits; adapters still cannot save or reset rows.
+
+Initializer's show-dead-letter and replay-outbox commands consume the preview.
+Unknown IDs must never return another record; active records still have no
+dead-letter preview. Non-relational replay also uses the non-locking branch:
+an unknown ID must throw not-found without resetting another row or writing an
+audit. Relational replay already uses the correctly filtered FOR UPDATE branch.
+Email replay remains rejected after payload purging. No HTTP contract, provider,
+message lifecycle, DI, dependency or persistence-model change is part of this fix.
+
+Evidence is separate from the extraction: `.artifacts/outbox-lookup-evidence`.
+New central regression theories cover all four streams and the three replayable
+non-relational streams. A real PostgreSQL preview case uses one then multiple
+records per stream, checks the requested metadata and unchanged tracked entity,
+and verifies active/missing IDs and absent audits. Owner adapter tests additionally
+check that Find still returns an active record (eligibility belongs to preview).
+Existing provider lock/concurrency/rollback/cancellation cases remain intact.
+
+Wiki develop/research/brief/test-plan/journeys and the required start/design route
+were used. The first verbose intent caused overbroad architectural classification;
+the explicit four-branch correction still selected governed feature work. Start
+generated eight generic acceptance criteria instead of the supplied seven concrete
+ones; the concrete scenarios are mapped to the primary-outcome criterion with
+test evidence. No classification, ranking, threshold or generator code is changed.
+
+### Lookup-fix runtime evidence
+
+The first test build stopped on three task-introduced explicit-type analyzer
+errors; these were corrected before execution. The original production then
+failed all 11 new unit cases and the new PostgreSQL case: wrong-row preview,
+multiple-row SingleOrDefault exception and wrong-row non-relational replay.
+Those actual failed TRX/logs remain separate from final verification.
+
+After the four predicates, six complete, unfiltered suites passed 1,774 cases,
+zero failures/skips: central Infrastructure 538, central PostgreSQL 93, Images
+PostgreSQL 11, Notifications Infrastructure 77, Gamification Infrastructure 8,
+Architecture 1,047. The final PostgreSQL run took 4m41s and includes the new
+preview case plus the unchanged lock/rollback/concurrency/cancellation cases.
+Each project was restored in locked mode and built successfully with isolated
+outputs; no package/lockfile edits or coverage collector. No old extraction run
+is counted as execution evidence for this fix.
+
+The production audit reverses exactly one predicate addition in each adapter to
+recover its baseline source. No other production/project/model/host/DI/lifecycle
+file changed. Query-only correction does not require another migration/model
+comparison or HTTP snapshot change; this turn does not claim a new EF or HTTP
+suite execution. Native clean removed this run's build outputs successfully
+with zero warnings/errors, preserving logs/TRX and shared Wiki caches. Final
+Wiki, context and delivery receipts are retained beside the runtime evidence.

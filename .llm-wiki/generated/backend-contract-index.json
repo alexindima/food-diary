@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1071,
     "ambiguousContracts": 0,
-    "consumerEdges": 7703,
+    "consumerEdges": 7704,
     "productionConsumerEdges": 4570,
-    "testConsumerEdges": 3133,
+    "testConsumerEdges": 3134,
     "consumedContracts": 1071,
     "unconsumedContracts": 0
   },
@@ -75759,7 +75759,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/OutboxReplayBoundaryIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 8
+    },
+    {
+      "contract": "IOutboxMessage",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Persistence/OutboxReplayLookupTests.cs",
+      "isTest": true,
+      "referenceCount": 7
     },
     {
       "contract": "IOutboxReplayStream",

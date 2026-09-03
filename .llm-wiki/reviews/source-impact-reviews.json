@@ -215,13 +215,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "8c3aa9801e87d697aa4204a9eefd18a46f296e8ce44a70fc07b9bfaee88a1cdd"
+          "sha256": "3ae04ede412580e2370373e7b2d07d9d9570d030a8d80cc29fabf90647ef2e97"
         }
       ],
-      "reason": "No HTTP/application contracts or host files changed. Stream names/normalization/limits/order, email rejection, stale-attempt checks and audit remain compatible. All hosts already compose the three owners; coordinated rebuild required.",
+      "reason": "Only four non-locking query branches gain the missing messageId predicate. Initializer CLI is the existing preview consumer; no HTTP/public contract/DI/host/model change. Existing FOR UPDATE and coordinator validation are exact unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
-      "reviewedAtUtc": "2026-09-03T12:08:04.7753555Z"
+      "gitHead": "67f46de86490a5edc39f87f02f3be755638843dd",
+      "reviewedAtUtc": "2026-09-03T12:59:57.4063837Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -884,13 +884,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "be6c3f18e61cc16c1d664527228433d10fefb25cc9ab4562bd00f260cbd59213"
+          "sha256": "28858e4a26ef27957bb5ba380e183d8793ad0b55eac8a08110301832f6271433"
         }
       ],
-      "reason": "Maps/guides/report distinguish module stream SQL/metadata from central transactional replay coordinator and generic email. No project/package/lock/schema changes or new job. Ownership empty results and overbroad inferred obligations are navigation limitations, not code authority.",
+      "reason": "Separate corrective follow-up on base67f46de preserves prior ownership extraction evidence. Four-branch source equality audit protects locking/transaction/lifecycle/model/DI and old list queries. Initial test analyzer failures retained separately. Remaining StronglyTypedIdConverters review is not included.",
       "baseRef": "HEAD",
-      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
-      "reviewedAtUtc": "2026-09-03T12:08:06.1590861Z"
+      "gitHead": "67f46de86490a5edc39f87f02f3be755638843dd",
+      "reviewedAtUtc": "2026-09-03T12:59:57.7514959Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -898,18 +898,14 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d5f10673350d937a4182d48b634dea67aca52215da8882145f4a9b80f26d6a1e"
-        },
-        {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "be6c3f18e61cc16c1d664527228433d10fefb25cc9ab4562bd00f260cbd59213"
+          "sha256": "28858e4a26ef27957bb5ba380e183d8793ad0b55eac8a08110301832f6271433"
         }
       ],
-      "reason": "Same object keys/notification and user ids, email payload purge, operator/reason/error audit and lifecycle. No new logging/sharing/provider call/authentication policy. Exact SQL/projection audit and local transactional tests; existing unfiltered non-locking lookup defect explicitly retained for separate repair, not a security scan.",
+      "reason": "Missing IDs no longer expose another stored record through preview or reset it through non-relational replay. Same metadata, error payload, email purge/rejection and audit schema; no new collection/logging/provider sharing. Synthetic local tests, no external security scan.",
       "baseRef": "HEAD",
-      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
-      "reviewedAtUtc": "2026-09-03T12:08:06.5894236Z"
+      "gitHead": "67f46de86490a5edc39f87f02f3be755638843dd",
+      "reviewedAtUtc": "2026-09-03T12:59:58.0846201Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

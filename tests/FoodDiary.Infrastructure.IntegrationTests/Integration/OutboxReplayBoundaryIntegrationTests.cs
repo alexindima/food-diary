@@ -10,6 +10,7 @@ using FoodDiary.Infrastructure.Persistence.Images;
 using FoodDiary.Infrastructure.Persistence.Notifications;
 using FoodDiary.Infrastructure.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -20,6 +21,42 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 public sealed class OutboxReplayBoundaryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     private static readonly DateTime Now = new(2026, 9, 3, 10, 0, 0, DateTimeKind.Utc);
     private static readonly TimeProvider Clock = new ReplayTimeProvider();
+
+    [RequiresDockerFact]
+    public async Task Preview_LooksUpOnlyRequestedIdsAcrossAllStreams() {
+        await using FoodDiaryDbContext seed = await databaseFixture.CreateDbContextAsync();
+        await CreateLookupBatchAsync(seed, "other", deadLettered: true);
+        await using FoodDiaryDbContext observer = databaseFixture.CreateDbContext(seed.Database.GetConnectionString()!);
+        using var scope = new OutboxReplayTestScope(observer, Clock);
+        string[] names = ["email", "image_object_deletion", "notification_web_push", "achievement_evaluation"];
+        foreach (string name in names) {
+            Assert.Null(await scope.Service.GetDeadLetterAsync(name, Guid.NewGuid()));
+            Assert.Empty(observer.ChangeTracker.Entries());
+        }
+
+        IOutboxMessage[] requested = await CreateLookupBatchAsync(seed, "requested", deadLettered: true);
+        IOutboxMessage[] active = await CreateLookupBatchAsync(seed, "active", deadLettered: false);
+        for (int index = 0; index < names.Length; index++) {
+            observer.ChangeTracker.Clear();
+            OutboxDeadLetterMessageModel? preview = await scope.Service.GetDeadLetterAsync(names[index], requested[index].Id);
+            Assert.NotNull(preview);
+            Assert.Multiple(
+                () => Assert.Equal(requested[index].Id, preview.MessageId),
+                () => Assert.Equal("failure-requested", preview.LastError),
+                () => Assert.Equal(1, preview.AttemptCount),
+                () => Assert.Equal(Now, preview.DeadLetteredOnUtc));
+            EntityEntry tracked = Assert.Single(observer.ChangeTracker.Entries());
+            Assert.Equal(requested[index].Id, Assert.IsAssignableFrom<IOutboxMessage>(tracked.Entity).Id);
+            Assert.Equal(EntityState.Unchanged, tracked.State);
+            observer.ChangeTracker.Clear();
+            Assert.Null(await scope.Service.GetDeadLetterAsync(names[index], active[index].Id));
+            observer.ChangeTracker.Clear();
+            Assert.Null(await scope.Service.GetDeadLetterAsync(names[index], Guid.NewGuid()));
+            Assert.Empty(observer.ChangeTracker.Entries());
+            Assert.Equal(2, (await scope.Service.ListDeadLettersAsync(names[index], 10)).Count);
+        }
+        Assert.Empty(await observer.OutboxReplayAudits.ToListAsync());
+    }
 
     [RequiresDockerFact]
     public async Task Replay_PreservesFourStreamOrderingMetadataAndAtomicAudit() {
@@ -164,6 +201,26 @@ public sealed class OutboxReplayBoundaryIntegrationTests(PostgresDatabaseFixture
 
     private static FoodDiaryDbContext CreateContext(string connection, IInterceptor interceptor) =>
         new(new DbContextOptionsBuilder<FoodDiaryDbContext>().UseNpgsql(connection).AddInterceptors(interceptor).Options);
+
+    private static async Task<IOutboxMessage[]> CreateLookupBatchAsync(FoodDiaryDbContext context, string marker, bool deadLettered) {
+        var user = User.Create($"{marker}@example.com", "hash");
+        var notification = Notification.Create(user.Id, "info", "{}");
+        IOutboxMessage[] messages = [
+            EmailOutboxMessage.Create(new EmailMessage("from@example.com", "Sender", ["to@example.com"], marker, "body", TextBody: null), Now),
+            ImageObjectDeletionOutboxMessage.Create($"users/test/{marker}.webp", Now),
+            NotificationWebPushOutboxMessage.Create(notification.Id, Now),
+            AchievementEvaluationOutboxMessage.Create(user.Id, Now),
+        ];
+        foreach (IOutboxMessage message in messages) {
+            if (deadLettered) {
+                message.MarkDeadLettered($"failure-{marker}", Now);
+            }
+            context.Add(message);
+        }
+        context.AddRange(user, notification);
+        await context.SaveChangesAsync();
+        return messages;
+    }
 
     private static async Task<ImageObjectDeletionOutboxMessage> SeedImageAsync(FoodDiaryDbContext context) {
         var image = ImageObjectDeletionOutboxMessage.Create("users/test/replay.webp", Now.AddMinutes(-2));

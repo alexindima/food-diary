@@ -12,7 +12,7 @@ internal sealed class EmailOutboxReplayStream(FoodDiaryDbContext context) : IOut
     public async Task<OutboxReplayEntry?> FindAsync(Guid messageId, bool forUpdate, CancellationToken cancellationToken = default) {
         EmailOutboxMessage? message = await (forUpdate
             ? context.EmailOutbox.FromSqlInterpolated($"SELECT * FROM \"EmailOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
-            : context.EmailOutbox)
+            : context.EmailOutbox.Where(message => message.Id == messageId))
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         return message is null ? null : new OutboxReplayEntry(message, message.LastError, message.Subject);
     }

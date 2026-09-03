@@ -12,7 +12,7 @@ internal sealed class WebPushOutboxReplayStream(FoodDiaryDbContext context) : IO
     public async Task<OutboxReplayEntry?> FindAsync(Guid messageId, bool forUpdate, CancellationToken cancellationToken = default) {
         NotificationWebPushOutboxMessage? message = await (forUpdate
             ? context.NotificationWebPushOutbox.FromSqlInterpolated($"SELECT * FROM \"NotificationWebPushOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
-            : context.NotificationWebPushOutbox)
+            : context.NotificationWebPushOutbox.Where(message => message.Id == messageId))
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         return message is null ? null : new OutboxReplayEntry(message, message.LastError, message.NotificationId.Value.ToString());
     }

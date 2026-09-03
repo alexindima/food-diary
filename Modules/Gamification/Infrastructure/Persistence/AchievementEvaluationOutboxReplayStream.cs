@@ -12,7 +12,7 @@ internal sealed class AchievementEvaluationOutboxReplayStream(FoodDiaryDbContext
     public async Task<OutboxReplayEntry?> FindAsync(Guid messageId, bool forUpdate, CancellationToken cancellationToken = default) {
         AchievementEvaluationOutboxMessage? message = await (forUpdate
             ? context.AchievementEvaluationOutbox.FromSqlInterpolated($"SELECT * FROM \"AchievementEvaluationOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
-            : context.AchievementEvaluationOutbox)
+            : context.AchievementEvaluationOutbox.Where(message => message.Id == messageId))
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         return message is null ? null : new OutboxReplayEntry(message, message.LastError, message.UserId.Value.ToString());
     }

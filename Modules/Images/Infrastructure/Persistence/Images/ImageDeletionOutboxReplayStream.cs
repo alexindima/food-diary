@@ -12,7 +12,7 @@ internal sealed class ImageDeletionOutboxReplayStream(FoodDiaryDbContext context
     public async Task<OutboxReplayEntry?> FindAsync(Guid messageId, bool forUpdate, CancellationToken cancellationToken = default) {
         ImageObjectDeletionOutboxMessage? message = await (forUpdate
             ? context.ImageObjectDeletionOutbox.FromSqlInterpolated($"SELECT * FROM \"ImageObjectDeletionOutbox\" WHERE \"Id\" = {messageId} FOR UPDATE")
-            : context.ImageObjectDeletionOutbox)
+            : context.ImageObjectDeletionOutbox.Where(message => message.Id == messageId))
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         return message is null ? null : new OutboxReplayEntry(message, message.LastError, message.ObjectKey);
     }

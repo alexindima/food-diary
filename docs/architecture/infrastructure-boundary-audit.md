@@ -112,9 +112,13 @@ tests leave the mixed Dietologist class; see
     an extension port in existing Infrastructure. No new assembly, schema or
     processing-engine redesign; see `docs/ai/outbox-replay-stream-boundary.md`.
 
+12. The separate replay lookup correction adds the missing message-ID predicate
+    to all four non-locking adapters. Single/multiple/missing-ID tests protect
+    preview selection and prevent wrong-row resets in non-relational replay;
+    relational FOR UPDATE SQL and shared transaction/audit behavior are unchanged.
+    See the corrective follow-up in `docs/ai/outbox-replay-stream-boundary.md`.
+
 Next review StronglyTypedIdConverters compatibility consumers before any removal.
-Separately fix the pre-existing non-locking replay preview lookup lacking an ID
-predicate; its unchanged SQL is explicitly documented in the replay report.
 
 Every persistence tranche must keep the dependency graph acyclic, preserve model
 identity, retain real provider tests and check composition roots. Avoid adding new

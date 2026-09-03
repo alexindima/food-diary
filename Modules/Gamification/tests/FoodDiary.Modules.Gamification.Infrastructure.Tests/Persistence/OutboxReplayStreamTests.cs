@@ -38,6 +38,8 @@ public sealed class OutboxReplayStreamTests {
             () => Assert.Equal(message.UserId.Value.ToString(), listed.Summary),
             () => Assert.Equal("failure", listed.LastError),
             () => Assert.Equal(1, listed.AttemptCount));
+        Assert.Null(await stream.FindAsync(Guid.NewGuid(), forUpdate: false));
+        Assert.Empty(context.ChangeTracker.Entries());
         OutboxReplayEntry? found = await stream.FindAsync(message.Id, forUpdate: false);
         Assert.NotNull(found);
         Assert.Same(context.ChangeTracker.Entries<AchievementEvaluationOutboxMessage>().Single().Entity, found.Message);
@@ -53,6 +55,13 @@ public sealed class OutboxReplayStreamTests {
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
         Assert.Equal(message.Id, Assert.Single(await stream.ListAsync(1)).MessageId);
+        Assert.Empty(context.ChangeTracker.Entries());
+        OutboxReplayEntry? activeEntry = await stream.FindAsync(active.Id, forUpdate: false);
+        Assert.NotNull(activeEntry);
+        Assert.Equal(active.Id, activeEntry.Message.Id);
+        Assert.Equal(EntityState.Unchanged, context.Entry(activeEntry.Message).State);
+        context.ChangeTracker.Clear();
+        Assert.Null(await stream.FindAsync(Guid.NewGuid(), forUpdate: false));
         Assert.Empty(context.ChangeTracker.Entries());
     }
 }
