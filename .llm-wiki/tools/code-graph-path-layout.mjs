@@ -13,6 +13,7 @@ export function rankingPathIdentities(value) {
       : `fooddiary.application.${module}/${tail}`];
   }
   if (layer === 'domain') return [path, `fooddiary.domain/${tail}`];
+  if (tail.startsWith('providers/')) return [path, `fooddiary.integrations/${tail.slice('providers/'.length)}`];
   return [path, tail.startsWith('model/')
     ? `fooddiary.infrastructure/persistence/${tail.slice('model/'.length)}`
     : `fooddiary.infrastructure/${tail}`];

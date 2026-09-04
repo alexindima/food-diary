@@ -12,9 +12,9 @@
     "health": 660,
     "financial": 120,
     "privateContent": 300,
-    "boundaryFiles": 174,
+    "boundaryFiles": 167,
     "potentialLoggingLeads": 1,
-    "externalTransferLeads": 2
+    "externalTransferLeads": 0
   },
   "fields": [
     {
@@ -68,20 +68,6 @@
     },
     {
       "category": "credential",
-      "name": "ClientSecret",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/FitbitOptions.cs",
-      "line": 7
-    },
-    {
-      "category": "credential",
-      "name": "ApiKey",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/OpenAiOptions.cs",
-      "line": 6
-    },
-    {
-      "category": "credential",
       "name": "ApiKey",
       "type": "string",
       "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
@@ -131,31 +117,10 @@
     },
     {
       "category": "credential",
-      "name": "ApiKey",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/UsdaApiOptions.cs",
-      "line": 6
-    },
-    {
-      "category": "credential",
       "name": "SecretKey",
       "type": "string",
       "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
       "line": 7
-    },
-    {
-      "category": "credential",
-      "name": "AccessToken",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "line": 214
-    },
-    {
-      "category": "credential",
-      "name": "RefreshToken",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "line": 217
     },
     {
       "category": "credential",
@@ -600,6 +565,13 @@
     },
     {
       "category": "credential",
+      "name": "ApiKey",
+      "type": "string",
+      "path": "Modules/Ai/Infrastructure/Providers/Options/OpenAiOptions.cs",
+      "line": 6
+    },
+    {
+      "category": "credential",
       "name": "PaddleClientToken",
       "type": "string?",
       "path": "Modules/Billing/Application/Abstractions/Models/BillingPublicConfigModel.cs",
@@ -800,6 +772,13 @@
       "type": "bool",
       "path": "Modules/Notifications/Application/Common/NotificationUserContext.cs",
       "line": 5
+    },
+    {
+      "category": "credential",
+      "name": "ApiKey",
+      "type": "string",
+      "path": "Modules/Usda/Infrastructure/Providers/Options/UsdaApiOptions.cs",
+      "line": 6
     },
     {
       "category": "credential",
@@ -1038,6 +1017,27 @@
       "type": "ProtectedWearableToken?",
       "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
       "line": 17
+    },
+    {
+      "category": "credential",
+      "name": "ClientSecret",
+      "type": "string",
+      "path": "Modules/Wearables/Infrastructure/Providers/Options/FitbitOptions.cs",
+      "line": 7
+    },
+    {
+      "category": "credential",
+      "name": "AccessToken",
+      "type": "string",
+      "path": "Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs",
+      "line": 214
+    },
+    {
+      "category": "credential",
+      "name": "RefreshToken",
+      "type": "string",
+      "path": "Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs",
+      "line": 217
     },
     {
       "category": "financial",
@@ -1878,13 +1878,6 @@
       "type": "IReadOnlyList<ProfileWebPushSubscriptionModel>",
       "path": "Modules/Users/Contracts/Users/Models/ProfileOverviewModel.cs",
       "line": 6
-    },
-    {
-      "category": "health",
-      "name": "GramWeight",
-      "type": "double?",
-      "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 232
     },
     {
       "category": "health",
@@ -5311,6 +5304,13 @@
     },
     {
       "category": "health",
+      "name": "GramWeight",
+      "type": "double?",
+      "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
+      "line": 232
+    },
+    {
+      "category": "health",
       "name": "DesiredWaistCm",
       "type": "double?",
       "path": "Modules/Users/Application/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
@@ -6515,13 +6515,6 @@
     },
     {
       "category": "identity",
-      "name": "UserAgent",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/OpenFoodFactsApiOptions.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
       "name": "ToEmail",
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/AdminEmailTemplateTestHttpRequest.cs",
@@ -7341,6 +7334,13 @@
     },
     {
       "category": "identity",
+      "name": "UserAgent",
+      "type": "string",
+      "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Options/OpenFoodFactsApiOptions.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "Modules/Users/Contracts/Users/Models/ProfileDietologistRelationshipModel.cs",
@@ -7569,20 +7569,6 @@
       "type": "DateTime?",
       "path": "Modules/Users/Domain/ValueObjects/UserSecurityState.cs",
       "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 402
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 419
     },
     {
       "category": "privateContent",
@@ -8986,6 +8972,20 @@
     },
     {
       "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs",
+      "line": 402
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs",
+      "line": 419
+    },
+    {
+      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Products/Application/Commands/CreateProduct/CreateProductCommand.cs",
@@ -9688,27 +9688,6 @@
       "fieldCount": 8
     },
     {
-      "path": "FoodDiary.Integrations/Options/FitbitOptions.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/OpenAiOptions.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/OpenFoodFactsApiOptions.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
       "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
       "categories": [
         "credential",
@@ -9739,40 +9718,12 @@
       "fieldCount": 1
     },
     {
-      "path": "FoodDiary.Integrations/Options/UsdaApiOptions.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
       "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
       "categories": [
         "credential",
         "financial"
       ],
       "fieldCount": 4
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "categories": [
-        "privateContent"
-      ],
-      "fieldCount": 2
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "categories": [
-        "health"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 2
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Admin/Requests/AdminAiPromptUpsertHttpRequest.cs",
@@ -10941,36 +10892,5 @@
       ]
     }
   ],
-  "externalTransfers": [
-    {
-      "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 208,
-      "providerHost": "api.openai.com",
-      "dataNames": [
-        "description",
-        "imageUrl",
-        "promptTemplate",
-        "text"
-      ],
-      "categories": [
-        "privateContent"
-      ],
-      "evidence": "External HttpClient destination and sensitive method parameters occur in the same integration client. Verify the runtime data flow in source."
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 354,
-      "providerHost": "api.openai.com",
-      "dataNames": [
-        "description",
-        "imageUrl",
-        "promptTemplate",
-        "text"
-      ],
-      "categories": [
-        "privateContent"
-      ],
-      "evidence": "External HttpClient destination and sensitive method parameters occur in the same integration client. Verify the runtime data flow in source."
-    }
-  ]
+  "externalTransfers": []
 }

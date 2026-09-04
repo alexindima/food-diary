@@ -80,8 +80,8 @@
           "Modules/Ai/Infrastructure"
         ],
         "adapterAreas": [
-          "FoodDiary.Integrations/Services/OpenAi",
-          "FoodDiary.Presentation.Api/Features/Ai"
+          "FoodDiary.Presentation.Api/Features/Ai",
+          "Modules/Ai/Infrastructure/Providers"
         ]
       }
     },
@@ -549,6 +549,9 @@
         "infrastructureProjects": [
           "FoodDiary.Modules.OpenFoodFacts.Infrastructure",
           "FoodDiary.Modules.OpenFoodFacts.PersistenceModel"
+        ],
+        "adapterAreas": [
+          "Modules/OpenFoodFacts/Infrastructure/Providers"
         ]
       }
     },
@@ -702,7 +705,10 @@
         "applicationAbstractionProjects": ["Modules/Usda/Application/Abstractions"],
         "contractProjects": ["Modules/Usda/Contracts"],
         "domainProjects": ["Modules/Usda/Domain"],
-        "persistenceAreas": ["Modules/Usda/Infrastructure"]
+        "persistenceAreas": ["Modules/Usda/Infrastructure"],
+        "adapterAreas": [
+          "Modules/Usda/Infrastructure/Providers"
+        ]
       }
     },
     "Users": {
@@ -752,7 +758,7 @@
           "Modules/Wearables/Infrastructure"
         ],
         "adapterAreas": [
-          "FoodDiary.Integrations/Wearables"
+          "Modules/Wearables/Infrastructure/Providers"
         ]
       }
     },

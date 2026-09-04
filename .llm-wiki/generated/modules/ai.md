@@ -24,13 +24,13 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Integrations/Services/OpenAi`
 - `FoodDiary.Presentation.Api/Features/Ai`
 - `Modules/Ai/Application`
 - `Modules/Ai/Application/Abstractions`
 - `Modules/Ai/Domain`
 - `Modules/Ai/Infrastructure`
 - `Modules/Ai/Infrastructure/Model`
+- `Modules/Ai/Infrastructure/Providers`
 
 ## HTTP Surface
 
@@ -107,6 +107,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/Domain/AiPromptTemplateInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Domain.Tests/Domain/AiUsageInvariantTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Integrations/ProviderOptionsTests.cs`
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Persistence/AiQuotaRepositoryTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/AiPromptProviderTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs`

@@ -18,7 +18,7 @@
       "id": "openai-request-factory-probe-2",
       "query": "factory builds outbound OpenAI food request payloads",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Services/OpenAi/OpenAiRequestFactory.cs"]
+      "expectedPaths": ["Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiRequestFactory.cs"]
     },
     {
       "id": "web-push-client-adapter-probe-2",

@@ -7,22 +7,14 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "43f437de3654023609053df7870090bb35da8dc6a2380b70e9747e731d45fc23"
-        },
-        {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "0da18ca6e7fce142dc20f0c5d3e618e0b8d2f727d0712c2bdf746d8cb72415ab"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "dc10abcd07ce5bfcac5b04496cc96b4d0ca5d6a7455164ac25ad010093b3bd45"
+          "sha256": "dc2292803642e41a32c7ce25882ea505255e6ca04c7b5eaddaaf5bcdead63a73"
         }
       ],
-      "reason": "Remove9unused central ProjectReferences, add131existing owner references across80consumers, exact81project inventory and matrix. Central32to23, all201production emitted reference sets identical. Preserve remaining Errors/shared types and DbContext ownership. Updated scoped guides and Dashboard direct-contract routing, no new project or runtime layer.",
+      "reason": "OpenAI/Fitbit/USDA/OpenFoodFacts providers and options move to existing module Infrastructure/Providers. Explicit API/JobManager composition and one-way shared transport reference; seven central owner refs removed, one USDA test leaf added. Exact matrix and HTTP/clock/options/host guards updated. New project generated catalog current.",
       "baseRef": "HEAD",
-      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
-      "reviewedAtUtc": "2026-09-04T08:31:09.5506482Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T12:30:17.8003300Z"
     },
     {
       "pageId": "module.frontend",
@@ -45,18 +37,14 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "0da18ca6e7fce142dc20f0c5d3e618e0b8d2f727d0712c2bdf746d8cb72415ab"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "dc10abcd07ce5bfcac5b04496cc96b4d0ca5d6a7455164ac25ad010093b3bd45"
+          "sha256": "dc2292803642e41a32c7ce25882ea505255e6ca04c7b5eaddaaf5bcdead63a73"
         }
       ],
-      "reason": "Remove9unused central ProjectReferences, add131existing owner references across80consumers, exact81project inventory and matrix. Central32to23, all201production emitted reference sets identical. Preserve remaining Errors/shared types and DbContext ownership. Updated scoped guides and Dashboard direct-contract routing, no new project or runtime layer.",
+      "reason": "OpenAI/Fitbit/USDA/OpenFoodFacts providers and options move to existing module Infrastructure/Providers. Explicit API/JobManager composition and one-way shared transport reference; seven central owner refs removed, one USDA test leaf added. Exact matrix and HTTP/clock/options/host guards updated. New project generated catalog current.",
       "baseRef": "HEAD",
-      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
-      "reviewedAtUtc": "2026-09-04T08:31:09.7427532Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T12:30:17.9674871Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -64,14 +52,22 @@
       "pageSha256": "a12fef9a11365dd6a6c58228abc9447b6f005042e43ab58532b8250805df1709",
       "sources": [
         {
-          "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "3c8a5cfa15d7813a60a6f5bd91f002e23be4512ef25d1bfe519249992344fa56"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "55cce6b2daa225d27d709def50a9d5d3d7c525ff0b9e13dcbfd99673a5b7c9dc"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "dc2292803642e41a32c7ce25882ea505255e6ca04c7b5eaddaaf5bcdead63a73"
+        },
+        {
+          "path": "FoodDiary.Integrations/AGENTS.md",
+          "sha256": "88d6599067be420ad5e458dfd19cd27a3d2c8a1e34e8de8981153c3540169cd7"
         }
       ],
-      "reason": "Retire20public CSharp nested types with coordinated source rebuild; no outside repository consumers per user.110production caller token bodies unchanged except receiver/imports,18factories unchanged,2member bodies moved unchanged. Full HTTP/Presentation/catalog tests and actual API comparison preserve contracts; no old-binary promise.",
+      "reason": "Twelve existing provider/options types preserve CLR names but move assemblies: coordinated rebuild of hosts required, not old-binary compatibility. API comparison reports zero changes; full HTTP/Presentation tests run. Initializer acquires only Docker copies for transitive Integrations, not provider registrations or validation.",
       "baseRef": "HEAD",
-      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
-      "reviewedAtUtc": "2026-09-04T11:12:57.0535637Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T12:30:18.1662638Z"
     },
     {
       "pageId": "system.architecture",
@@ -79,14 +75,22 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "55cce6b2daa225d27d709def50a9d5d3d7c525ff0b9e13dcbfd99673a5b7c9dc"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "dc2292803642e41a32c7ce25882ea505255e6ca04c7b5eaddaaf5bcdead63a73"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "33d5a9edfe93bf67a621f09c89d11834b94ac3632a735ff1dac1dd1b3a7ed1a7"
+          "sha256": "e71f36e13e9fac9d08aa931db0dad48f19fc9d8d2cd777cee0a7ad8a22e727f2"
         }
       ],
-      "reason": "20central feature facades retired across16owners; central18to5references. Existing consumers declare actual owners directly, preserving reachability or documented factory moves. Exact matrix and standalone guards updated, no new project/package or runtime redesign. Only Authentication/Validation and central resolver/SSO seams remain.",
+      "reason": "OpenAI/Fitbit/USDA/OpenFoodFacts providers and options move to existing module Infrastructure/Providers. Explicit API/JobManager composition and one-way shared transport reference; seven central owner refs removed, one USDA test leaf added. Exact matrix and HTTP/clock/options/host guards updated. New project generated catalog current.",
       "baseRef": "HEAD",
-      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
-      "reviewedAtUtc": "2026-09-04T11:12:57.2317083Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T12:30:18.3671291Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -140,13 +144,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "fb9f0243b2f69817af3e1f2ca9f59abd008e2407ec55888513b15449f74a6842"
+          "sha256": "55cce6b2daa225d27d709def50a9d5d3d7c525ff0b9e13dcbfd99673a5b7c9dc"
         }
       ],
-      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
+      "reason": "OpenAI/Fitbit/USDA/OpenFoodFacts providers and options move to existing module Infrastructure/Providers. Explicit API/JobManager composition and one-way shared transport reference; seven central owner refs removed, one USDA test leaf added. Exact matrix and HTTP/clock/options/host guards updated. New project generated catalog current.",
       "baseRef": "HEAD",
-      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
-      "reviewedAtUtc": "2026-09-04T02:37:38.4228348Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T12:30:18.6291972Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -204,17 +208,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "4db5e3a905da4c6b050b3fa2b55075c16b099b86ade5dd1e75b09aa1dda28bfb"
+          "sha256": "119480e7a74f084a5af34456a82002551254b6cd8862d3b861813bd1e9c0f7c9"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "55cce6b2daa225d27d709def50a9d5d3d7c525ff0b9e13dcbfd99673a5b7c9dc"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "33d5a9edfe93bf67a621f09c89d11834b94ac3632a735ff1dac1dd1b3a7ed1a7"
+          "sha256": "e71f36e13e9fac9d08aa931db0dad48f19fc9d8d2cd777cee0a7ad8a22e727f2"
         }
       ],
-      "reason": "50 final unfiltered suites,6286 passed,zero failed/skipped.75literal factory member contracts across16owner suites,owner assembly/namespace and culture cases; shared/presentation catalogs retain full enumeration. Initial two build errors retained/fixed before tests; metadata audits verify direct owners. Full solution/central build,EF unchanged,NuGet clean; no collectors.",
+      "reason": "18 final unfiltered suites,4138 passed,zero failed/skipped.169 existing method bodies/attributes preserved,8 new standalone registration tests; full HTTP/PostgreSQL, EF unchanged, NuGet audit clean. Initial Architecture catalog and Docker omissions retained and fixed; full rerun. No collectors.11 source-proven expectedPaths remapped in10 eval corpora with reverse equality; queries/thresholds/ranking/history unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
-      "reviewedAtUtc": "2026-09-04T11:12:57.4288282Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T12:30:18.9274336Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -222,14 +230,14 @@
       "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
-          "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "3c8a5cfa15d7813a60a6f5bd91f002e23be4512ef25d1bfe519249992344fa56"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "bdd5875bb84146328c80e9470529664786c71e1c1bf5610ce2d9dfb703060319"
         }
       ],
-      "reason": "Retire20public CSharp nested types with coordinated source rebuild; no outside repository consumers per user.110production caller token bodies unchanged except receiver/imports,18factories unchanged,2member bodies moved unchanged. Full HTTP/Presentation/catalog tests and actual API comparison preserve contracts; no old-binary promise.",
+      "reason": "Twelve existing provider/options types preserve CLR names but move assemblies: coordinated rebuild of hosts required, not old-binary compatibility. API comparison reports zero changes; full HTTP/Presentation tests run. Initializer acquires only Docker copies for transitive Integrations, not provider registrations or validation.",
       "baseRef": "HEAD",
-      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
-      "reviewedAtUtc": "2026-09-04T11:12:57.6213903Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T12:30:19.5245398Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -267,14 +275,50 @@
       "pageSha256": "8c9843eeb4fbb377b79e506bb7a2969dd0393e10cc6fc0a1ec924ccbd6ee22f9",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
-          "sha256": "0331fdbf34331d8c995b22ce505f35ae8545b41519870611038124141113a5b4"
+          "path": ".llm-wiki/evals/context-search-generalization.json",
+          "sha256": "0f9622886aafed74c45a0ee300c89c60d272eae762a4fe5c8ca052bf0255b73e"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-holdout.json",
+          "sha256": "ac5320c6d9ac31c5a45fce534ea259634de3d87c100fd9bda0562aaf267b091c"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-posttune-control-30.json",
+          "sha256": "c1e2fb98702944b139c141c99b4820d37d9fdd0fd949c3aed11b8741b5ae1057"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe-2.json",
+          "sha256": "c68c3cd236b0c40b9cdc651489894c3fbacd8627fbd71a9c9ddea4ac2336b6d8"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe-3.json",
+          "sha256": "b0b5f2de8a74b34e0c2d4484ce5f5011a3c97a062f56a335a87bea839cf4d841"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "7377f5962d9a2f06001db9c12bc1575cef0ead95aa82308ea5a7dca5d6ce3a1d"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-validation.json",
+          "sha256": "9335565ce76c2b7366986c8ae8794934e513efc074200cc211a082c2933fd2ff"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search.json",
+          "sha256": "9d0a58d0624589da259b0136197c5f95af90531d62d4795ad612ba4196d80e00"
+        },
+        {
+          "path": ".llm-wiki/evals/development-context-bundles.json",
+          "sha256": "0a91bbe4590fdc97bd40e3287f75fe01e40219521924a3090d225d8fccd827fe"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          "sha256": "ef15ee65f5503d2cf08c0f8cd6e788943e78a43483bc6df494c363df50a2a177"
         }
       ],
-      "reason": "44 final unfiltered suites6055passed0failed0skipped, including all33 module Application suites, Architecture1072, centralPG93, HTTP182. Three independent new-project builds, full solution builds0warnings/errors. Exact source equivalence117 and retained lock versions verified. Failed initial builds/architecture and Wiki projection/fixture attempts retained. Receipt test and14case SQL/JSON parity pass; no collectors or weakened assertions.",
+      "reason": "18unfiltered suites4138pass,EF/NuGet clean. Generic provider path identity regression FAIL-before/PASS-after restores USDA20/20 without ranking-policy/query/threshold changes.11one-to-one fixture moves plus one preserved5+5split; reverse corpus audit. FullWiki actualFAIL frozen100DomainGuard99/100 exactbase identical. Supplemental unseen62/83base to60/82current includes new YooKassa testcollision10to17, explicitly NOT baseline-waived. Raw results/limitations in committed report.",
       "baseRef": "HEAD",
-      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
-      "reviewedAtUtc": "2026-09-04T02:37:39.8305005Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T13:07:53.5395438Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -451,14 +495,14 @@
       "pageSha256": "b8326a8fc44d9de804aa9a021771d97014a2ead8b3db08959f38add670525ba4",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
+          "path": ".llm-wiki/generated/configuration-index.json",
+          "sha256": "7111e50e9063842699ef560294d68b3dc5d4c9935387dd30b211beae9b17f5d4"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:36.2325400Z"
+      "reason": "OpenAI/Fitbit/USDA/OpenFoodFacts providers and options move to existing module Infrastructure/Providers. Explicit API/JobManager composition and one-way shared transport reference; seven central owner refs removed, one USDA test leaf added. Exact matrix and HTTP/clock/options/host guards updated. New project generated catalog current.",
+      "baseRef": "HEAD",
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T12:30:20.0224976Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -764,13 +808,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "aa60f355f938118bcdb62fe509708378795db04cb0d49b05d664cc8a0da75ed6"
+          "sha256": "4b89823e8e71f84f4d44249819c03e2f1ef8512a8c082ef6aec2fc92218ca471"
         }
       ],
-      "reason": "No auth/tenant/lifecycle/provider/dataflow edits. Preserve Notifications Dietologist.InvitationNotFound, Favorites Meal.NotFound, Export empty-GUID Cycle.NotFound and all identifiers/messages/kinds. Four existing cross-module cases assert literal values; no external security scan.",
+      "reason": "Provider request bodies, bounded response parsing, auth headers/options, URI validation, logger categories/suppression and meter/tag names preserved by token audits and provider tests. No new sharing/lifecycle/export, credential access, provider calls or external security scan. Common helpers remain single implementations.",
       "baseRef": "HEAD",
-      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
-      "reviewedAtUtc": "2026-09-04T11:12:57.8882651Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T12:30:20.3263471Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -809,13 +853,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c58985098b35dd6c18b9ac3fd784ac0740bef3952ba1c59d5998adaf86559f21"
+          "sha256": "d928438a814882dd9f2e68c13a31b3b23e808e65f259a14b6c6e2558f0cfe3b6"
         }
       ],
-      "reason": "50 final unfiltered suites,6286 passed,zero failed/skipped.75literal factory member contracts across16owner suites,owner assembly/namespace and culture cases; shared/presentation catalogs retain full enumeration. Initial two build errors retained/fixed before tests; metadata audits verify direct owners. Full solution/central build,EF unchanged,NuGet clean; no collectors.",
+      "reason": "18 final unfiltered suites,4138 passed,zero failed/skipped.169 existing method bodies/attributes preserved,8 new standalone registration tests; full HTTP/PostgreSQL, EF unchanged, NuGet audit clean. Initial Architecture catalog and Docker omissions retained and fixed; full rerun. No collectors.11 source-proven expectedPaths remapped in10 eval corpora with reverse equality; queries/thresholds/ranking/history unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
-      "reviewedAtUtc": "2026-09-04T11:12:58.4133545Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T12:30:20.7658552Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -892,13 +936,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "59a3ea5843c7770713dd467ebf2daec73fc7b8610d9e966318105ffc43c93122"
+          "sha256": "af4f9e4ab3d420aa0b4ba1b26ad026816b2bdf1c38320281f00475311404b077"
         }
       ],
-      "reason": "20central feature facades retired across16owners; central18to5references. Existing consumers declare actual owners directly, preserving reachability or documented factory moves. Exact matrix and standalone guards updated, no new project/package or runtime redesign. Only Authentication/Validation and central resolver/SSO seams remain.",
+      "reason": "OpenAI/Fitbit/USDA/OpenFoodFacts providers and options move to existing module Infrastructure/Providers. Explicit API/JobManager composition and one-way shared transport reference; seven central owner refs removed, one USDA test leaf added. Exact matrix and HTTP/clock/options/host guards updated. New project generated catalog current.",
       "baseRef": "HEAD",
-      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
-      "reviewedAtUtc": "2026-09-04T11:12:58.9709726Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T12:30:21.3713405Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -907,21 +951,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c58985098b35dd6c18b9ac3fd784ac0740bef3952ba1c59d5998adaf86559f21"
+          "sha256": "d928438a814882dd9f2e68c13a31b3b23e808e65f259a14b6c6e2558f0cfe3b6"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "59a3ea5843c7770713dd467ebf2daec73fc7b8610d9e966318105ffc43c93122"
+          "sha256": "af4f9e4ab3d420aa0b4ba1b26ad026816b2bdf1c38320281f00475311404b077"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "aa60f355f938118bcdb62fe509708378795db04cb0d49b05d664cc8a0da75ed6"
+          "sha256": "4b89823e8e71f84f4d44249819c03e2f1ef8512a8c082ef6aec2fc92218ca471"
         }
       ],
-      "reason": "No auth/tenant/lifecycle/provider/dataflow edits. Preserve Notifications Dietologist.InvitationNotFound, Favorites Meal.NotFound, Export empty-GUID Cycle.NotFound and all identifiers/messages/kinds. Four existing cross-module cases assert literal values; no external security scan.",
+      "reason": "Provider request bodies, bounded response parsing, auth headers/options, URI validation, logger categories/suppression and meter/tag names preserved by token audits and provider tests. No new sharing/lifecycle/export, credential access, provider calls or external security scan. Common helpers remain single implementations.",
       "baseRef": "HEAD",
-      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
-      "reviewedAtUtc": "2026-09-04T11:12:59.3607805Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T12:30:21.7350687Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1158,14 +1202,18 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "7377f5962d9a2f06001db9c12bc1575cef0ead95aa82308ea5a7dca5d6ce3a1d"
+        },
+        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "9a5cbf04458e13cee2c9caf767298477073c05c9f24b89db4add9e27d617dbd5"
+          "sha256": "06a5671a6c3cd3c018d9f99d88b487637c75b081ce5668d80080fac87e3c9f2c"
         }
       ],
-      "reason": "20central feature facades retired across16owners; central18to5references. Existing consumers declare actual owners directly, preserving reachability or documented factory moves. Exact matrix and standalone guards updated, no new project/package or runtime redesign. Only Authentication/Validation and central resolver/SSO seams remain.",
+      "reason": "Four providers in existing moduleInfrastructure with one-way central safety/telemetry helpers; newUSDA testleaf and exactrefs/Docker/ownershipguards. Report separates runtimepass from knownbaseline fullWikiFAIL and additional navigation regression; no allgreen quality claim.",
       "baseRef": "HEAD",
-      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
-      "reviewedAtUtc": "2026-09-04T11:12:58.7126812Z"
+      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
+      "reviewedAtUtc": "2026-09-04T13:00:05.3837915Z"
     },
     {
       "pageId": "workflow.review-diff",

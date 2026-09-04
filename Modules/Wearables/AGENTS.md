@@ -7,7 +7,7 @@ Rules for `Modules/Wearables/`.
 ## Ownership
 
 - Own provider connections, OAuth state, protected provider tokens, synchronization history, and daily wearable summaries.
-- Keep Fitbit and future provider HTTP adapters/options in `FoodDiary.Integrations`; they implement module-owned ports.
+- Own Fitbit HTTP adapters/options in Infrastructure/Providers. Hosts call AddWearablesProvider explicitly; shared HTTP/URI helpers remain in Integrations through a one-way reference.
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot central.
 - Preserve the legacy `FoodDiary.Application.Wearables` assembly and CLR/EF identities unless a separately reviewed migration changes them.
 

@@ -286,6 +286,14 @@ The same registration owns ordinary Admin SSO; shared code storage, API Redis
 selection and Admin impersonation remain outside Identity's protocol adapter.
 See `docs/ai/identity-sso-ownership.md` for the tested boundary.
 
+## Provider adapter ownership
+
+OpenAI, Fitbit, USDA and OpenFoodFacts provider implementations/options now live
+in their owners' Infrastructure/Providers folders. API and JobManager explicitly
+compose provider registrations; shared HTTP bounds, URI validation and telemetry
+stay in Integrations. See docs/ai/provider-adapter-ownership.md. Initializer does
+not gain external provider configuration.
+
 ## RecentItems physical ownership
 
 RecentItems aggregate/ID/enum, narrow usage abstractions, repository, post-commit recorder and EF model live under `Modules/RecentItems`; focused tests are nested there. Central User/UserId, DbContext, migrations/snapshot, post-commit queue/UoW and Users cleanup orchestration remain compatibility seams. Products, Recipes and Meals consume narrow module abstractions, and hosts compose `AddRecentItemsModule`. See `docs/ai/recent-items-ownership-inventory.md`.

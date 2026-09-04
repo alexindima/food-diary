@@ -25,6 +25,7 @@ sources:
 ## Source Areas
 
 - `FoodDiary.Presentation.Api/Features/OpenFoodFacts`
+- `Modules/OpenFoodFacts/Infrastructure/Providers`
 
 ## HTTP Surface
 
@@ -63,9 +64,13 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Domain.Tests/Domain/OpenFoodFactsProductTests.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/Integrations/OpenFoodFactsExternalFoodServiceTests.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/Integrations/ProviderOptionsTests.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/ModuleRegistrationTests.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/OpenFoodFactsTestCollection.cs`
+- [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/Services/OpenFoodFactsServiceTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/OpenFoodFactsModuleExtractionTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/OpenFoodFactsServiceTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/OpenFoodFactsControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/OpenFoodFactsHttpMappingsTests.cs`
 

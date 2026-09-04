@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1071,
     "ambiguousContracts": 0,
-    "consumerEdges": 7720,
+    "consumerEdges": 7724,
     "productionConsumerEdges": 4570,
-    "testConsumerEdges": 3150,
+    "testConsumerEdges": 3154,
     "consumedContracts": 1071,
     "unconsumedContracts": 0
   },
@@ -75081,33 +75081,33 @@
         "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/DependencyInjection.Ai.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IOpenAiFoodClient",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IOpenAiFoodClient",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenAiFoodClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/AiProviderRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenAiFoodClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -75123,6 +75123,19 @@
       "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IOpenAiFoodClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IOpenAiFoodClient",
@@ -75562,32 +75575,6 @@
         "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/DependencyInjection.FoodData.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IOpenFoodFactsService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IOpenFoodFactsService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/OpenFoodFacts/Application/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -75614,9 +75601,48 @@
         "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/Infrastructure/OpenFoodFactsProviderRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenFoodFactsService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IOpenFoodFactsService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Application.Tests/OpenFoodFacts/OpenFoodFactsFeatureTests.cs",
       "isTest": true,
       "referenceCount": 10
+    },
+    {
+      "contract": "IOpenFoodFactsService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IOpenFoodFactsService",
@@ -91071,32 +91097,6 @@
         "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/DependencyInjection.FoodData.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUsdaFoodSearchService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUsdaFoodSearchService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Application/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
       "isTest": false,
       "referenceCount": 1
@@ -91123,9 +91123,48 @@
         "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUsdaFoodSearchService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/Infrastructure/UsdaProviderRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUsdaFoodSearchService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
       "isTest": true,
       "referenceCount": 10
+    },
+    {
+      "contract": "IUsdaFoodSearchService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Usda/Application/Abstractions/Common/IUsdaFoodSearchService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IUsdaFoodSearchService",
@@ -98026,32 +98065,6 @@
         "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/DependencyInjection.Wearables.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWearableClient",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IWearableClient",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/Application/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
       "isTest": false,
       "referenceCount": 2
@@ -98091,9 +98104,48 @@
         "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWearableClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/Infrastructure/WearablesProviderRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IWearableClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/Wearables/WearablesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IWearableClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Wearables/Application/Abstractions/Common/IWearableClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IWearableClient",
@@ -103980,19 +104032,6 @@
         "Modules/Ai/Application/Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "isTest": false,
-      "referenceCount": 15
-    },
-    {
-      "contract": "OpenAiFoodClientResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Modules/Ai/Application/Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Abstractions/Ai/Common/IOpenAiFoodClient.cs",
       "isTest": false,
       "referenceCount": 3
@@ -104009,6 +104048,19 @@
       "consumerPath": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
       "isTest": false,
       "referenceCount": 4
+    },
+    {
+      "contract": "OpenAiFoodClientResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+      "isTest": false,
+      "referenceCount": 15
     },
     {
       "contract": "OpenAiFoodClientResponse",

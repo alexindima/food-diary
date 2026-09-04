@@ -1,3 +1,5 @@
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
+using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Modules.Export.Infrastructure;
 using FoodDiary.Modules.Dashboard.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
@@ -38,7 +40,7 @@ builder.Services.AddMealsPersistence();
 builder.Services.AddRecentItemsModule();
 builder.Services.AddInfrastructure(builder.Configuration).AddExportInfrastructure().AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
 builder.Services.AddImagesInfrastructure();
-builder.Services.AddIntegrations(builder.Configuration);
+builder.Services.AddIntegrations(builder.Configuration).AddAiProvider(builder.Configuration).AddUsdaProvider(builder.Configuration).AddOpenFoodFactsProvider(builder.Configuration).AddWearablesProvider(builder.Configuration);
 builder.Services.AddDataProtection();
 builder.Services.AddNotificationResources();
 builder.Services.AddJobManagerServices(builder.Configuration);

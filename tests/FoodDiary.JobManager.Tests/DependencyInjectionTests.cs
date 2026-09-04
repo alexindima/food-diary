@@ -1,3 +1,5 @@
+using FoodDiary.Modules.OpenFoodFacts.Infrastructure;
+using FoodDiary.Modules.Usda.Infrastructure;
 using FoodDiary.Modules.Notifications.Infrastructure;
 using FoodDiary.Application.Runtime;
 using FoodDiary.Modules.Billing.Infrastructure;
@@ -128,7 +130,7 @@ public sealed class DependencyInjectionTests {
         services.AddNotificationsModule().AddNotificationsInfrastructure(configuration);
         services.AddWeeklyGoalsModule();
         services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
-        services.AddIntegrations(configuration);
+        services.AddIntegrations(configuration).AddAiProvider(configuration).AddUsdaProvider(configuration).AddOpenFoodFactsProvider(configuration).AddWearablesProvider(configuration);
         services.AddDataProtection();
         services.AddNotificationResources();
         services.AddJobManagerServices(configuration);

@@ -26,38 +26,6 @@ public sealed class IntegrationOptionsTests {
     }
 
     [Theory]
-    [InlineData("", "", "", true, true)]
-    [InlineData("key", "vision", "", false, true)]
-    [InlineData("key", "", "text", true, false)]
-    [InlineData("key", "vision", "text", true, true)]
-    public void OpenAiOptions_ValidationDependsOnConfiguredApiKeyAndVisionModel(
-        string apiKey,
-        string visionModel,
-        string textModel,
-        bool expectedTextModelValid,
-        bool expectedVisionModelValid) {
-        var options = new OpenAiOptions {
-            ApiKey = apiKey,
-            VisionModel = visionModel,
-            VisionFallbackModel = "fallback",
-            TextModel = textModel,
-        };
-
-        Assert.Equal(expectedTextModelValid, OpenAiOptions.HasTextModelWhenApiKeyConfigured(options));
-        Assert.Equal(expectedVisionModelValid, OpenAiOptions.HasVisionModelWhenApiKeyConfigured(options));
-    }
-
-    [Fact]
-    public void OpenAiOptions_WhenVisionModelConfigured_RequiresFallbackModel() {
-        var options = new OpenAiOptions {
-            VisionModel = "vision",
-            VisionFallbackModel = "   ",
-        };
-
-        Assert.False(OpenAiOptions.HasVisionFallbackWhenVisionModelConfigured(options));
-    }
-
-    [Theory]
     [InlineData(0, false)]
     [InlineData(1, true)]
     [InlineData(50 * 1024 * 1024, true)]
@@ -110,43 +78,6 @@ public sealed class IntegrationOptionsTests {
         var options = new TelegramAuthOptions { AuthTtlSeconds = authTtlSeconds };
 
         Assert.Equal(expected, TelegramAuthOptions.HasValidAuthTtl(options));
-    }
-
-    [Theory]
-    [InlineData("https://api.nal.usda.gov/fdc/v1", true)]
-    [InlineData("http://api.example.com", false)]
-    [InlineData("/relative", false)]
-    [InlineData("https://user:secret@api.example.com", false)]
-    [InlineData("https://api.example.com?key=value", false)]
-    [InlineData("https://api.example.com#fragment", false)]
-    public void UsdaApiOptions_HasValidBaseUrl_RequiresAbsoluteHttpsUrl(string baseUrl, bool expected) {
-        var options = new UsdaApiOptions { BaseUrl = baseUrl };
-
-        Assert.Equal(expected, UsdaApiOptions.HasValidBaseUrl(options));
-    }
-
-    [Theory]
-    [InlineData("https://world.openfoodfacts.org", true)]
-    [InlineData("http://openfoodfacts.example.com", false)]
-    [InlineData("not-a-url", false)]
-    [InlineData("https://user:secret@openfoodfacts.example.com", false)]
-    [InlineData("https://openfoodfacts.example.com?query=value", false)]
-    [InlineData("https://openfoodfacts.example.com#fragment", false)]
-    public void OpenFoodFactsApiOptions_HasValidBaseUrl_RequiresAbsoluteHttpsUrl(string baseUrl, bool expected) {
-        var options = new OpenFoodFactsApiOptions { BaseUrl = baseUrl };
-
-        Assert.Equal(expected, OpenFoodFactsApiOptions.HasValidBaseUrl(options));
-    }
-
-    [Theory]
-    [InlineData("FoodDiary/1.0", true)]
-    [InlineData("FoodDiary/1.0 (contact@example.com)", true)]
-    [InlineData("", false)]
-    [InlineData("FoodDiary/1.0 (", false)]
-    public void OpenFoodFactsApiOptions_HasValidUserAgent_RequiresValidHttpUserAgent(string userAgent, bool expected) {
-        var options = new OpenFoodFactsApiOptions { UserAgent = userAgent };
-
-        Assert.Equal(expected, OpenFoodFactsApiOptions.HasValidUserAgent(options));
     }
 
     [Theory]
@@ -333,31 +264,6 @@ public sealed class IntegrationOptionsTests {
             PrivateKey = keys.PrivateKey,
             DefaultUrl = defaultUrl,
         };
-    }
-
-    [Theory]
-    [InlineData("", "", "", true)]
-    [InlineData("client", "secret", "https://app.example.com/fitbit", true)]
-    [InlineData("client", "secret", "http://localhost:4200/fitbit", true)]
-    [InlineData("client", "secret", "http://app.example.com/fitbit", false)]
-    [InlineData("client", "secret", "javascript:alert(1)", false)]
-    [InlineData("client", "secret", "https://user:secret@app.example.com/fitbit", false)]
-    [InlineData("client", "secret", "https://app.example.com/fitbit#fragment", false)]
-    public void FitbitOptions_IsEmptyOrComplete_RequiresSecureRedirectUrl(
-        string clientId,
-        string clientSecret,
-        string redirectUri,
-        bool expected) {
-        var options = new FitbitOptions {
-            ClientId = clientId,
-            ClientSecret = clientSecret,
-            RedirectUri = redirectUri,
-        };
-
-        Assert.Equal(expected, FitbitOptions.IsEmptyOrComplete(options));
-        Assert.Equal(
-            expected && !string.IsNullOrWhiteSpace(clientId),
-            FitbitOptions.HasCompleteConfiguration(options));
     }
 
     [Theory]

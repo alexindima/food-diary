@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "e9fb436813c0714696923fe9221e9bdca6549f5086b9cea46923c4a889c5f516",
-    "sourceFileCount": 3527
+    "sourceFingerprint": "e450d01abeaa134a26ce2c48fad7c4633f89e0839c8f74de2723a3105a6e2d81",
+    "sourceFileCount": 3528
   },
   "summary": {
     "composeServices": 17,
@@ -583,7 +583,7 @@
     {
       "contract": null,
       "implementation": "FitbitClient",
-      "registrationPath": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
+      "registrationPath": "Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "timeout-or-delay"
@@ -611,7 +611,7 @@
     {
       "contract": "IOpenAiFoodClient",
       "implementation": "OpenAiFoodClient",
-      "registrationPath": "FoodDiary.Integrations/DependencyInjection.Ai.cs",
+      "registrationPath": "Modules/Ai/Infrastructure/AiProviderRegistration.cs",
       "behaviorSignals": [
         "retry-or-resilience",
         "timeout-or-delay"
@@ -621,7 +621,7 @@
     {
       "contract": "IOpenFoodFactsService",
       "implementation": "OpenFoodFactsService",
-      "registrationPath": "FoodDiary.Integrations/DependencyInjection.FoodData.cs",
+      "registrationPath": "Modules/OpenFoodFacts/Infrastructure/OpenFoodFactsProviderRegistration.cs",
       "behaviorSignals": [
         "retry-or-resilience",
         "timeout-or-delay"
@@ -650,9 +650,8 @@
     {
       "contract": "IUsdaFoodSearchService",
       "implementation": "UsdaFoodSearchService",
-      "registrationPath": "FoodDiary.Integrations/DependencyInjection.FoodData.cs",
+      "registrationPath": "Modules/Usda/Infrastructure/UsdaProviderRegistration.cs",
       "behaviorSignals": [
-        "retry-or-resilience",
         "timeout-or-delay"
       ],
       "behaviorSignalScope": "registration-window"
@@ -1139,7 +1138,7 @@
     },
     {
       "name": "FitbitClient",
-      "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
+      "path": "Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs",
       "securitySignals": [
         "ip-address-policy",
         "response-size-policy",
@@ -1235,7 +1234,7 @@
     },
     {
       "name": "OpenAiFoodClient",
-      "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
       "securitySignals": [
         "ip-address-policy",
         "response-size-policy",
@@ -1256,7 +1255,7 @@
     },
     {
       "name": "OpenFoodFactsService",
-      "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
+      "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs",
       "securitySignals": [
         "ip-address-policy",
         "response-size-policy",
@@ -1429,7 +1428,7 @@
     },
     {
       "name": "UsdaFoodSearchService",
-      "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
+      "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
       "securitySignals": [
         "ip-address-policy",
         "response-size-policy",

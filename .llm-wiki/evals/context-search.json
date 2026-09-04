@@ -36,7 +36,7 @@
       "id": "usda-provider",
       "query": "search external USDA foods over HTTP provider",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Services/UsdaFoodSearchService.cs"]
+      "expectedPaths": ["Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs"]
     },
     {
       "id": "usda-limits",
@@ -87,7 +87,7 @@
       "id": "open-food-facts-provider",
       "query": "look up product barcode through external Open Food Facts API",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Services/OpenFoodFactsService.cs"]
+      "expectedPaths": ["Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs"]
     },
     {
       "id": "s3-image-storage",

@@ -24,10 +24,10 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Integrations/Wearables`
 - `FoodDiary.Presentation.Api/Features/Wearables`
 - `Modules/Wearables/Application`
 - `Modules/Wearables/Application/Abstractions`
+- `Modules/Wearables/Infrastructure/Providers`
 
 ## HTTP Surface
 
@@ -93,6 +93,9 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/PostgresDatabaseFixture.cs`
 - [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/WearableTransactionRunnerIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Authentication/WearableOAuthStateServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Integrations/ProviderOptionsTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs`
+- [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Integrations/WearableClientTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/LegacyTokenUpgradeTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/ModuleRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Services/WearableTokenProtectorTests.cs`

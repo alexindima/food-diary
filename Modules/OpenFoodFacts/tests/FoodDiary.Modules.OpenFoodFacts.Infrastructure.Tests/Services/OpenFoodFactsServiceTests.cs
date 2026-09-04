@@ -7,7 +7,7 @@ using FoodDiary.Integrations.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace FoodDiary.Infrastructure.Tests.Services;
+namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 [Collection("OpenFoodFacts shared state")]

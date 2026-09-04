@@ -16,6 +16,8 @@
     <ProjectReference Include="Model\FoodDiary.Modules.Wearables.PersistenceModel.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../FoodDiary.Integrations/FoodDiary.Integrations.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Wearables.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +26,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
   </ItemGroup>
 
 </Project>

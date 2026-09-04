@@ -8,6 +8,8 @@ const moved = [
   ['Modules/Inventory/Domain/Entities/Stock/Stock.cs', 'FoodDiary.Domain/Entities/Stock/Stock.cs'],
   ['Modules/Inventory/Infrastructure/Persistence/Stock/StockStore.cs', 'FoodDiary.Infrastructure/Persistence/Stock/StockStore.cs'],
   ['Modules/Inventory/Infrastructure/Model/Stock/StockReservation.cs', 'FoodDiary.Infrastructure/Persistence/Stock/StockReservation.cs'],
+  ['Modules/Inventory/Infrastructure/Providers/Services/SupplierClient.cs', 'FoodDiary.Integrations/Services/SupplierClient.cs'],
+  ['Modules/Shipping/Infrastructure/Providers/Options/CarrierOptions.cs', 'FoodDiary.Integrations/Options/CarrierOptions.cs'],
 ];
 for (const [current, legacy] of moved) {
   assert.deepEqual(rankingPathIdentities(current), [current.toLowerCase(), legacy.toLowerCase()]);
@@ -21,6 +23,9 @@ for (const path of ['Modules/Inventory/tests/Inventory.Tests/Domain/Test.cs', 'M
   assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase()]);
 }
 const abstractions = rankingPathIdentities(moved[1][0]);
+for (const path of ['Modules/Inventory/Infrastructure/ProvidersExtra/Client.cs', 'Modules/Inventory/Infrastructure/Persistence/Providers/Client.cs', 'Modules/Inventory/Contracts/Providers/Dto.cs', 'Modules/Inventory/Infrastructure/Providers/tests/ClientTests.cs', 'Modules/Inventory/Infrastructure/Providers/Client.test.ts']) {
+  assert.equal(rankingPathIdentities(path).some(alias => alias.startsWith('fooddiary.integrations/')), false);
+}
 assert.equal(abstractions.some(path => path.startsWith('fooddiary.application.inventory/')), false);
 assert.equal(abstractions.some(path => path.startsWith('fooddiary.application.abstractions/')), true);
 assert.equal(rankingModuleIdentity(moved[0][0]), rankingModuleIdentity(moved[0][1]));

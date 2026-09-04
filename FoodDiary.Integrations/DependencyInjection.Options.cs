@@ -9,7 +9,6 @@ public static partial class DependencyInjection {
     private static void AddIntegrationOptions(this IServiceCollection services, IConfiguration configuration) {
         services.AddGeneralIntegrationOptions(configuration);
         services.AddBillingIntegrationOptions(configuration);
-        services.AddProviderIntegrationOptions(configuration);
     }
 
     private static void AddGeneralIntegrationOptions(
@@ -27,17 +26,6 @@ public static partial class DependencyInjection {
                 "S3:AllowPublicImageAccess must be true for configured storage because image URLs are shared with users and external AI providers.")
             .Validate(S3Options.HasValidServiceUrl,
                 "S3:ServiceUrl must be an absolute HTTP or HTTPS URL when provided.")
-            .ValidateOnStart();
-        services.AddOptions<OpenAiOptions>()
-            .Bind(configuration.GetSection(OpenAiOptions.SectionName))
-            .Validate(OpenAiOptions.HasVisionFallbackWhenVisionModelConfigured,
-                "OpenAi:VisionFallbackModel is required when VisionModel is configured.")
-            .Validate(OpenAiOptions.HasTextModelWhenApiKeyConfigured,
-                "OpenAi:TextModel is required when ApiKey is configured.")
-            .Validate(OpenAiOptions.HasVisionModelWhenApiKeyConfigured,
-                "OpenAi:VisionModel is required when ApiKey is configured.")
-            .Validate(OpenAiOptions.HasValidMaxOutputTokens,
-                "OpenAi:MaxOutputTokens must be between 1 and 32768.")
             .ValidateOnStart();
         services.AddOptions<GoogleAuthOptions>()
             .Bind(configuration.GetSection(GoogleAuthOptions.SectionName))
@@ -90,28 +78,6 @@ public static partial class DependencyInjection {
                         YooKassaOptions.HasAnyConfiguration(options)) ||
                     YooKassaOptions.HasValidCheckoutConfiguration(options),
                 "YooKassa configuration is incomplete for the active billing provider.")
-            .ValidateOnStart();
-    }
-
-    private static void AddProviderIntegrationOptions(
-        this IServiceCollection services,
-        IConfiguration configuration) {
-        services.AddOptions<UsdaApiOptions>()
-            .Bind(configuration.GetSection(UsdaApiOptions.SectionName))
-            .Validate(UsdaApiOptions.HasValidBaseUrl,
-                "UsdaApi:BaseUrl must be an absolute HTTPS URL.")
-            .ValidateOnStart();
-        services.AddOptions<OpenFoodFactsApiOptions>()
-            .Bind(configuration.GetSection(OpenFoodFactsApiOptions.SectionName))
-            .Validate(OpenFoodFactsApiOptions.HasValidBaseUrl,
-                "OpenFoodFacts:BaseUrl must be an absolute HTTPS URL.")
-            .Validate(OpenFoodFactsApiOptions.HasValidUserAgent,
-                "OpenFoodFacts:UserAgent must be a valid HTTP User-Agent value.")
-            .ValidateOnStart();
-        services.AddOptions<FitbitOptions>()
-            .Bind(configuration.GetSection(FitbitOptions.SectionName))
-            .Validate(FitbitOptions.IsEmptyOrComplete,
-                "Fitbit configuration must be empty or include ClientId, ClientSecret, and an HTTPS RedirectUri (HTTP is allowed only for loopback).")
             .ValidateOnStart();
     }
 

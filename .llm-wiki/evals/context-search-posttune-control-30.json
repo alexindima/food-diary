@@ -71,7 +71,7 @@
     { "id": "posttune-back-002", "cohort": "backend-roles", "query": "admin read service уроков питания", "changeType": "Backend", "expectedPaths": ["Modules/Lessons/Application/Services/LessonAdministrationReadService.cs"] },
     { "id": "posttune-back-003", "cohort": "backend-roles", "query": "planner intermittent fasting notifications", "changeType": "Backend", "expectedPaths": ["Modules/Fasting/Application/Services/FastingIntermittentNotificationPlanner.cs"] },
     { "id": "posttune-back-004", "cohort": "backend-roles", "query": "обязательный parser id упражнения", "changeType": "Backend", "expectedPaths": ["Modules/Exercises/Application/Internal/RequiredIdParser.cs"] },
-    { "id": "posttune-back-005", "cohort": "backend-roles", "query": "options USDA API integration", "changeType": "Backend", "expectedPaths": ["FoodDiary.Integrations/Options/UsdaApiOptions.cs"] },
+    { "id": "posttune-back-005", "cohort": "backend-roles", "query": "options USDA API integration", "changeType": "Backend", "expectedPaths": ["Modules/Usda/Infrastructure/Providers/Options/UsdaApiOptions.cs"] },
 
     { "id": "posttune-data-001", "cohort": "domain-persistence", "query": "доменная session refresh token пользователя", "changeType": "Backend", "expectedPaths": ["Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs"] },
     { "id": "posttune-data-002", "cohort": "domain-persistence", "query": "value object оценки качества еды", "changeType": "Backend", "expectedPaths": ["FoodDiary.Domain/ValueObjects/FoodQualityGrade.cs"] },

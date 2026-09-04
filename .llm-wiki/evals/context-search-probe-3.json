@@ -78,7 +78,7 @@
       "id": "openai-error-metadata-probe-3",
       "query": "summarize safe diagnostic metadata from an OpenAI error response",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Services/OpenAi/OpenAiErrorMetadata.cs"]
+      "expectedPaths": ["Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiErrorMetadata.cs"]
     },
     {
       "id": "stripe-billing-gateway-probe-3",

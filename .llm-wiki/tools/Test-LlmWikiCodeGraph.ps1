@@ -106,7 +106,7 @@ if (@($build.compiledIndexes.indexes).Count -ne 3 -or
     [int]$compiledCounts['frontend/localization'] -ne @($frontendSource.localization).Count) {
     throw 'Code graph build did not publish the catalog, C# symbol, and frontend compiled-index projections.'
 }
-$taskBriefImpactPath = 'FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs'
+$taskBriefImpactPath = 'Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs'
 $taskBriefImpact = & $manager task-brief-impact -ChangedPath $taskBriefImpactPath -SkipRefresh -Format Json | ConvertFrom-Json
 $sensitiveSource = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/generated/sensitive-data-index.json') -Raw | ConvertFrom-Json
 $expectedSensitiveFields = @($sensitiveSource.fields | Where-Object path -eq $taskBriefImpactPath).Count
@@ -216,7 +216,7 @@ if (@($graphTestPlan.recommended | Where-Object { $_ -match 'RecipesFeatureTests
     @($graphTestPlan.required | Where-Object { $_ -match 'RecipesFeatureTests\.cs$' }).Count -ne 0) {
     throw 'Graph-only test plan did not classify a transitive Recipes test consumer as recommended.'
 }
-$cyclePredictionImpact = & $manager impact -ChangedPath 'FoodDiary.Application.Cycles/Services/CyclePredictionService.cs' -Limit 100 -Format Json | ConvertFrom-Json
+$cyclePredictionImpact = & $manager impact -ChangedPath 'Modules/Cycles/Application/Services/CyclePredictionService.cs' -Limit 100 -Format Json | ConvertFrom-Json
 if (@($cyclePredictionImpact.consumers | Where-Object { $_.language -ne 'csharp' }).Count -gt 0 -or
     @($cyclePredictionImpact.references | Where-Object { $_.declarationPath -match '^FoodDiary\.Web\.Client/' }).Count -gt 0) {
     throw 'C# cycle prediction impact retained an unexplained cross-language token link.'
@@ -237,7 +237,7 @@ if (@($broadFrontendPlan.scopeTooBroad).Count -ne 1 -or $broadFrontendPlan.confi
 }
 $auditRankingCases = @(
     @{ Query = 'OpenFoodFacts barcode lookup'; ChangeType = 'Backend'; ExpectedPrefix = 'Modules/OpenFoodFacts/Application/'; ExpectedPattern = '' }
-    @{ Query = 'create meal command'; ChangeType = 'Backend'; ExpectedPrefix = 'FoodDiary.Application.Meals/'; ExpectedPattern = '' }
+    @{ Query = 'create meal command'; ChangeType = 'Backend'; ExpectedPrefix = 'Modules/Meals/Application/'; ExpectedPattern = '' }
     @{ Query = 'dashboard query'; ChangeType = 'Backend'; ExpectedPrefix = 'Modules/Dashboard/Application/'; ExpectedPattern = '' }
     @{ Query = 'Telegram notification sender'; ChangeType = 'Backend'; ExpectedPrefix = ''; ExpectedPattern = '^(?:FoodDiary\.Telegram\.Bot|Modules/Notifications/(?:Application|Infrastructure)|FoodDiary\.Integrations)/' }
 )

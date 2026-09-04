@@ -198,7 +198,7 @@
         "ClientSecret",
         "RedirectUri"
       ],
-      "path": "FoodDiary.Integrations/Options/FitbitOptions.cs"
+      "path": "Modules/Wearables/Infrastructure/Providers/Options/FitbitOptions.cs"
     },
     {
       "type": "GoogleAuthOptions",
@@ -502,7 +502,7 @@
         "VisionFallbackModel",
         "VisionModel"
       ],
-      "path": "FoodDiary.Integrations/Options/OpenAiOptions.cs"
+      "path": "Modules/Ai/Infrastructure/Providers/Options/OpenAiOptions.cs"
     },
     {
       "type": "OpenFoodFactsApiOptions",
@@ -511,7 +511,7 @@
         "BaseUrl",
         "UserAgent"
       ],
-      "path": "FoodDiary.Integrations/Options/OpenFoodFactsApiOptions.cs"
+      "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Options/OpenFoodFactsApiOptions.cs"
     },
     {
       "type": "OpenTelemetryOptions",
@@ -638,7 +638,7 @@
         "ApiKey",
         "BaseUrl"
       ],
-      "path": "FoodDiary.Integrations/Options/UsdaApiOptions.cs"
+      "path": "Modules/Usda/Infrastructure/Providers/Options/UsdaApiOptions.cs"
     },
     {
       "type": "UserCleanupOptions",

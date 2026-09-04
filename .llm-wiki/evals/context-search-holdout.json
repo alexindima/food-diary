@@ -24,7 +24,7 @@
       "id": "ru-usda-external-search",
       "query": "какой код ходит во внешний сервис USDA за продуктами",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Services/UsdaFoodSearchService.cs"]
+      "expectedPaths": ["Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs"]
     },
     {
       "id": "ru-weekly-goal-reminder",

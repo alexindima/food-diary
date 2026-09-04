@@ -94,7 +94,7 @@
       "intent": "Review the external USDA food-search provider",
       "query": "external USDA food search HTTP provider implementation",
       "plannedPath": null,
-      "expectedPaths": ["FoodDiary.Integrations/Services/UsdaFoodSearchService.cs"],
+      "expectedPaths": ["Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs"],
       "expectedLayers": []
     },
     {

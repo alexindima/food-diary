@@ -286,6 +286,7 @@
     <Project Path="Modules/Usda/Infrastructure/Model/FoodDiary.Modules.Usda.PersistenceModel.csproj" />
   </Folder>
   <Folder Name="/Modules/Usda/tests/">
+    <Project Path="Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/FoodDiary.Modules.Usda.Infrastructure.Tests.csproj" />
     <Project Path="Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/FoodDiary.Modules.Usda.Application.Tests.csproj" />
     <Project Path="Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/FoodDiary.Modules.Usda.Domain.Tests.csproj" />
   </Folder>

@@ -8,5 +8,7 @@
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
   <ItemGroup><Using Include="Xunit" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj" />  <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
+  </ItemGroup>
 </Project>

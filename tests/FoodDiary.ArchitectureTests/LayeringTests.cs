@@ -107,9 +107,14 @@ public class LayeringTests {
         Assert.Equal(allowedPackages, packages);
     }
 
-    [Fact]
-    public void IntegrationsProject_UsesTimeProviderInsteadOfDirectUtcNow() {
-        string integrationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations");
+    [Theory]
+    [InlineData("FoodDiary.Integrations")]
+    [InlineData("Modules/Ai/Infrastructure/Providers")]
+    [InlineData("Modules/Wearables/Infrastructure/Providers")]
+    [InlineData("Modules/Usda/Infrastructure/Providers")]
+    [InlineData("Modules/OpenFoodFacts/Infrastructure/Providers")]
+    public void IntegrationsProject_UsesTimeProviderInsteadOfDirectUtcNow(string providerPath) {
+        string integrationsRoot = ArchitectureTestPaths.FromRoot(providerPath);
 
         string[] violations = SourceScanner.FindLinePatternViolations(integrationsRoot, [
             "DateTime.UtcNow",
@@ -119,9 +124,14 @@ public class LayeringTests {
         Assert.Empty(violations);
     }
 
-    [Fact]
-    public void IntegrationsSource_DoesNotReferenceConcreteApplicationHostPresentationOrServerMailLayers() {
-        string integrationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations");
+    [Theory]
+    [InlineData("FoodDiary.Integrations")]
+    [InlineData("Modules/Ai/Infrastructure/Providers")]
+    [InlineData("Modules/Wearables/Infrastructure/Providers")]
+    [InlineData("Modules/Usda/Infrastructure/Providers")]
+    [InlineData("Modules/OpenFoodFacts/Infrastructure/Providers")]
+    public void IntegrationsSource_DoesNotReferenceConcreteApplicationHostPresentationOrServerMailLayers(string providerPath) {
+        string integrationsRoot = ArchitectureTestPaths.FromRoot(providerPath);
         string root = ArchitectureTestPaths.RepositoryRoot;
         string[] forbiddenPatterns = [
             "FoodDiary.Application;",
@@ -188,9 +198,14 @@ public class LayeringTests {
         Assert.Empty(unexpectedDirectories);
     }
 
-    [Fact]
-    public void IntegrationsOptions_AreKeptInOptionsFolder() {
-        string integrationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations");
+    [Theory]
+    [InlineData("FoodDiary.Integrations")]
+    [InlineData("Modules/Ai/Infrastructure/Providers")]
+    [InlineData("Modules/Wearables/Infrastructure/Providers")]
+    [InlineData("Modules/Usda/Infrastructure/Providers")]
+    [InlineData("Modules/OpenFoodFacts/Infrastructure/Providers")]
+    public void IntegrationsOptions_AreKeptInOptionsFolder(string providerPath) {
+        string integrationsRoot = ArchitectureTestPaths.FromRoot(providerPath);
         string optionsRoot = Path.Combine(integrationsRoot, "Options");
         var optionsTypePattern = new Regex(
             @"\b(?:class|record)\s+\w+Options\b",
@@ -219,9 +234,6 @@ public class LayeringTests {
             "services.AddMailIntegrations(configuration);",
             "services.AddAuthenticationIntegrations();",
             "services.AddBillingIntegrations();",
-            "services.AddAiIntegrations();",
-            "services.AddFoodDataIntegrations(configuration);",
-            "services.AddWearableIntegrations(configuration);",
         ];
 
         string[] actualRegistrations = [.. File.ReadLines(dependencyInjectionPath)

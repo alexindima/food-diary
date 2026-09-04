@@ -1,4 +1,4 @@
-﻿root = true
+root = true
 
 [*]
 charset = utf-8
@@ -507,4 +507,8 @@ dotnet_diagnostic.RCS1170.severity = none
 
 # These two relocated helpers retain their existing public CLR namespace.
 [Modules/Dietologist/Application/Common/Validation/Dietologist{RequiredId,EnumValue}Parser.cs]
+dotnet_diagnostic.IDE0130.severity = none
+
+# Provider relocations preserve public CLR names and ILogger<T> categories; exact owner tests guard these types.
+[Modules/{Ai,Wearables,Usda,OpenFoodFacts}/Infrastructure/Providers/**/*.cs]
 dotnet_diagnostic.IDE0130.severity = none

@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4749,
+    "productionFiles": 4750,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -199,7 +199,7 @@
       "structuralRiskScore": 136.16
     },
     {
-      "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
       "nonBlankLines": 527,
       "decisionPoints": 83,
       "criticalSymbols": 0,
@@ -3801,14 +3801,6 @@
       "structuralRiskScore": 70.3
     },
     {
-      "path": "FoodDiary.Integrations/DependencyInjection.Ai.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
-    },
-    {
       "path": "FoodDiary.Integrations/DependencyInjection.Authentication.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
@@ -3825,14 +3817,6 @@
       "structuralRiskScore": 0.6
     },
     {
-      "path": "FoodDiary.Integrations/DependencyInjection.FoodData.cs",
-      "nonBlankLines": 33,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.16
-    },
-    {
       "path": "FoodDiary.Integrations/DependencyInjection.Mail.cs",
       "nonBlankLines": 43,
       "decisionPoints": 7,
@@ -3842,11 +3826,11 @@
     },
     {
       "path": "FoodDiary.Integrations/DependencyInjection.Options.cs",
-      "nonBlankLines": 119,
-      "decisionPoints": 10,
+      "nonBlankLines": 86,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.38
+      "structuralRiskScore": 15.22
     },
     {
       "path": "FoodDiary.Integrations/DependencyInjection.Storage.cs",
@@ -3857,20 +3841,12 @@
       "structuralRiskScore": 2.28
     },
     {
-      "path": "FoodDiary.Integrations/DependencyInjection.Wearables.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.36
-    },
-    {
       "path": "FoodDiary.Integrations/DependencyInjection.cs",
-      "nonBlankLines": 16,
+      "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
+      "structuralRiskScore": 0.26
     },
     {
       "path": "FoodDiary.Integrations/Http/BoundedHttpContentReader.cs",
@@ -3889,14 +3865,6 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "FoodDiary.Integrations/Options/FitbitOptions.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.86
-    },
-    {
       "path": "FoodDiary.Integrations/Options/GoogleAuthOptions.cs",
       "nonBlankLines": 13,
       "decisionPoints": 3,
@@ -3911,22 +3879,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 22.02
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/OpenAiOptions.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.9
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/OpenFoodFactsApiOptions.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
     },
     {
       "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
@@ -3961,14 +3913,6 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "FoodDiary.Integrations/Options/UsdaApiOptions.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
       "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
       "nonBlankLines": 30,
       "decisionPoints": 10,
@@ -3978,11 +3922,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.14
     },
     {
       "path": "FoodDiary.Integrations/Services/IObjectStorageClient.cs",
@@ -4007,38 +3951,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.58
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiErrorMetadata.cs",
-      "nonBlankLines": 51,
-      "decisionPoints": 12,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.02
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 527,
-      "decisionPoints": 83,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 135.04
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiRequestFactory.cs",
-      "nonBlankLines": 182,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.64
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "nonBlankLines": 385,
-      "decisionPoints": 35,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 60.2
     },
     {
       "path": "FoodDiary.Integrations/Services/RelayEmailTransport.cs",
@@ -4081,44 +3993,12 @@
       "structuralRiskScore": 0.72
     },
     {
-      "path": "FoodDiary.Integrations/Services/UsdaFoodDetailCache.cs",
-      "nonBlankLines": 102,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.54
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/UsdaFoodDetailLookupResult.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "nonBlankLines": 205,
-      "decisionPoints": 19,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 32.6
-    },
-    {
-      "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "nonBlankLines": 197,
-      "decisionPoints": 25,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 41.44
-    },
-    {
       "path": "FoodDiary.JobManager/Program.cs",
-      "nonBlankLines": 60,
+      "nonBlankLines": 62,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.7
+      "structuralRiskScore": 2.74
     },
     {
       "path": "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -21145,6 +21025,14 @@
       "structuralRiskScore": 0.18
     },
     {
+      "path": "Modules/Ai/Infrastructure/AiProviderRegistration.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.66
+    },
+    {
       "path": "Modules/Ai/Infrastructure/AssemblyInfo.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
@@ -21263,6 +21151,38 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 13.18
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Options/OpenAiOptions.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.9
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiErrorMetadata.cs",
+      "nonBlankLines": 51,
+      "decisionPoints": 12,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 19.02
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+      "nonBlankLines": 527,
+      "decisionPoints": 83,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 135.04
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiRequestFactory.cs",
+      "nonBlankLines": 182,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.64
     },
     {
       "path": "Modules/Billing/Application/Abstractions/Common/BillingErrors.cs",
@@ -33618,11 +33538,11 @@
     },
     {
       "path": "Modules/OpenFoodFacts/Infrastructure/AssemblyInfo.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/OpenFoodFacts/Infrastructure/Model/Configurations/OpenFoodFactsProductConfiguration.cs",
@@ -33649,12 +33569,36 @@
       "structuralRiskScore": 0.28
     },
     {
+      "path": "Modules/OpenFoodFacts/Infrastructure/OpenFoodFactsProviderRegistration.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.24
+    },
+    {
       "path": "Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsProductCacheRepository.cs",
       "nonBlankLines": 129,
       "decisionPoints": 19,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 31.08
+    },
+    {
+      "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Options/OpenFoodFactsApiOptions.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs",
+      "nonBlankLines": 385,
+      "decisionPoints": 35,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 60.2
     },
     {
       "path": "Modules/Products/Application/Abstractions/Products/Common/IProductMutationTransactionRunner.cs",
@@ -36090,11 +36034,11 @@
     },
     {
       "path": "Modules/Usda/Infrastructure/AssemblyInfo.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/Usda/Infrastructure/Model/Configurations/Usda/DailyReferenceValueConfiguration.cs",
@@ -36159,6 +36103,46 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 9.2
+    },
+    {
+      "path": "Modules/Usda/Infrastructure/Providers/Options/UsdaApiOptions.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodDetailCache.cs",
+      "nonBlankLines": 102,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.54
+    },
+    {
+      "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodDetailLookupResult.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Usda/Infrastructure/Providers/Services/UsdaFoodSearchService.cs",
+      "nonBlankLines": 205,
+      "decisionPoints": 19,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 32.6
+    },
+    {
+      "path": "Modules/Usda/Infrastructure/UsdaProviderRegistration.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.42
     },
     {
       "path": "Modules/Users/Application/Abstractions/Users/Common/IUserAdminReadModelRepository.cs",
@@ -38186,11 +38170,11 @@
     },
     {
       "path": "Modules/Wearables/Infrastructure/AssemblyInfo.cs",
-      "nonBlankLines": 4,
+      "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Wearables/Infrastructure/Authentication/WearableOAuthStateService.cs",
@@ -38257,12 +38241,36 @@
       "structuralRiskScore": 8.4
     },
     {
+      "path": "Modules/Wearables/Infrastructure/Providers/Options/FitbitOptions.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.86
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs",
+      "nonBlankLines": 197,
+      "decisionPoints": 25,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 41.44
+    },
+    {
       "path": "Modules/Wearables/Infrastructure/Services/WearableTokenProtector.cs",
       "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Wearables/Infrastructure/WearablesProviderRegistration.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.02
     },
     {
       "path": "Modules/WeeklyCheckIn/Application/AssemblyInfo.cs",

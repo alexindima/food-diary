@@ -280,7 +280,8 @@
       "query": "automated checks for integrations external service",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Infrastructure.Tests/Integrations/ExternalFoodServiceTests.cs"
+        "Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Integrations/UsdaExternalFoodServiceTests.cs",
+        "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/Integrations/OpenFoodFactsExternalFoodServiceTests.cs"
       ]
     },
     {
@@ -685,7 +686,7 @@
       "query": "storage or provider implementation for wearable provider options",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Integrations/Options/FitbitOptions.cs"
+        "Modules/Wearables/Infrastructure/Providers/Options/FitbitOptions.cs"
       ]
     },
     {

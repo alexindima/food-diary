@@ -1,20 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Modules\OpenFoodFacts\Application\Abstractions\FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Modules\OpenFoodFacts\Contracts\FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
-    <ProjectReference Include="..\Modules\Usda\Application\Abstractions\FoodDiary.Modules.Usda.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Modules\Usda\Contracts\FoodDiary.Modules.Usda.Contracts.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Modules\Wearables\Application\Abstractions\FoodDiary.Modules.Wearables.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Modules\Wearables\Domain\FoodDiary.Modules.Wearables.Domain.csproj" />
     <ProjectReference Include="..\MailInbox\FoodDiary.MailInbox.Client\FoodDiary.MailInbox.Client.csproj" />
     <ProjectReference Include="..\MailRelay\FoodDiary.MailRelay.Client\FoodDiary.MailRelay.Client.csproj" />
     <ProjectReference Include="../Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
-    <ProjectReference Include="../Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
   </ItemGroup>
 

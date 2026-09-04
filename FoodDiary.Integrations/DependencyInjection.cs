@@ -10,9 +10,6 @@ public static partial class DependencyInjection {
         services.AddMailIntegrations(configuration);
         services.AddAuthenticationIntegrations();
         services.AddBillingIntegrations();
-        services.AddAiIntegrations();
-        services.AddFoodDataIntegrations(configuration);
-        services.AddWearableIntegrations(configuration);
 
         return services;
     }

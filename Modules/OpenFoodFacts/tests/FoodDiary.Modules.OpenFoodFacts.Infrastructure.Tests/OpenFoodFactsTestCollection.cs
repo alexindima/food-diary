@@ -1,4 +1,4 @@
-namespace FoodDiary.Infrastructure.Tests;
+namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 [CollectionDefinition("OpenFoodFacts shared state", DisableParallelization = true)]

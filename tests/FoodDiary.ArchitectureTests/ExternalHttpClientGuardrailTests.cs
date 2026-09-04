@@ -45,8 +45,14 @@ public sealed class ExternalHttpClientGuardrailTests {
     }
 
     private static IEnumerable<InvocationExpressionSyntax> ReadInvocations() {
-        string integrationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations");
-        return SourceScanner.SourceFiles(integrationsRoot)
+        string[] providerRoots = [
+            "FoodDiary.Integrations",
+            "Modules/Ai/Infrastructure/Providers",
+            "Modules/Wearables/Infrastructure/Providers",
+            "Modules/Usda/Infrastructure/Providers",
+            "Modules/OpenFoodFacts/Infrastructure/Providers",
+        ];
+        return providerRoots.SelectMany(path => SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot(path)))
             .SelectMany(path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path)
                 .GetRoot()
                 .DescendantNodes()

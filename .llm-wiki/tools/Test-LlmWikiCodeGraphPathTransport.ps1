@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 $manager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
 $graph = Join-Path $PSScriptRoot 'code-graph.mjs'
 $scope = @('AGENTS.md', 'FoodDiary.slnx', '.llm-wiki/index.md', ('missing path/' + ('проверка ' * 60) + '.cs'))
-$sourcePath = 'FoodDiary.Domain/Entities/Users/User.cs'
+$sourcePath = 'Modules/Users/Domain/Entities/Users/User.cs'
 $longScope = @($scope * 100) + @($sourcePath)
 $scope += $sourcePath
 if (($longScope -join ';').Length -le 32767) { throw 'The regression must exceed the Windows command-line limit.' }

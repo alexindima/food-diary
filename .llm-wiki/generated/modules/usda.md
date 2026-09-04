@@ -29,6 +29,7 @@ sources:
 - `Modules/Usda/Application/Abstractions`
 - `Modules/Usda/Contracts`
 - `Modules/Usda/Domain`
+- `Modules/Usda/Infrastructure/Providers`
 
 ## HTTP Surface
 
@@ -84,8 +85,11 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/Domain/ReferenceDataInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/ValueObjects/AdditionalValueObjectsInvariantTestsHealthAreaTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Domain.Tests/ValueObjects/SecondPassDomainHardeningTestsHealthAreaTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Integrations/ProviderOptionsTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Integrations/UsdaExternalFoodServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Services/UsdaFoodSearchServiceTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsdaModuleExtractionTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/UsdaFoodSearchServiceTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs`
 
 ## Working Rule

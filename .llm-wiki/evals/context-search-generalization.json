@@ -18,7 +18,7 @@
       "id": "fitbit-http-client",
       "query": "client that talks to Fitbit for wearable health data",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Wearables/FitbitClient.cs"]
+      "expectedPaths": ["Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs"]
     },
     {
       "id": "ru-weekly-goal-job",

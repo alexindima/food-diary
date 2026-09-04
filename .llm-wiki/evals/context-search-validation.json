@@ -18,7 +18,7 @@
       "id": "openai-food-http-client",
       "query": "HTTP client sends food recognition requests to OpenAI",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs"]
+      "expectedPaths": ["Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs"]
     },
     {
       "id": "s3-object-storage-client",

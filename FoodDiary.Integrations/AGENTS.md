@@ -8,6 +8,7 @@ Rules for `FoodDiary.Integrations/`.
 - Implement abstractions declared in application-facing layers.
 - Keep provider options and transport-specific registration here.
 - Exception for extracted ownership: the Notifications-only web-push provider/options live in `Modules/Notifications/Infrastructure`, preserving legacy CLR namespaces. Hosts register that module explicitly.
+- OpenAI, Fitbit, USDA and OpenFoodFacts providers/options now belong to their module Infrastructure/Providers folders. Hosts explicitly register them; do not restore their central registration or owner ProjectReferences. Only shared HTTP bounds, URI validation and telemetry remain here with one-way internal friend access. See docs/ai/provider-adapter-ownership.md.
 
 ## Rules
 - Do not add EF Core persistence or migrations here.
