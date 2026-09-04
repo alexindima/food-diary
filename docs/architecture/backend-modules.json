@@ -15,10 +15,8 @@
     ]
   },
   "applicationAbstractionOwnership": {
-    "Admin": "Admin",
     "Audit": "Application.Runtime",
     "Authentication": "Identity",
-    "Billing": "Billing",
     "Common": "Shared",
     "Email": "Application.Runtime",
     "Nutrition": "Shared",
@@ -106,8 +104,7 @@
           "Email"
         ],
         "abstractionAreas": [
-          "FoodDiary.Application.Abstractions/Authentication",
-          "FoodDiary.Application.Abstractions/Email"
+          "Modules/Identity/Application/Abstractions"
         ],
         "adapterAreas": [
           "FoodDiary.Presentation.Api/Features/Auth"
@@ -724,6 +721,8 @@
         "logicalRoot": "Modules/Users",
         "applicationProjects": ["Modules/Users/Application"],
         "applicationAbstractionAreas": ["FoodDiary.Application.Abstractions/Users"],
+        "applicationAbstractionProjects": ["Modules/Users/Application/Abstractions"],
+        "contractProjects": ["Modules/Users/Contracts"],
         "domainAreas": ["Modules/Users/Domain", "Modules/Users/Domain.Contracts"],
         "persistenceAreas": ["Modules/Users/Infrastructure", "Modules/Users/Infrastructure/Model"],
         "centralPersistenceSeams": [],

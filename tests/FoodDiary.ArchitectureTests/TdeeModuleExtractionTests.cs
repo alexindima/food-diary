@@ -23,7 +23,9 @@ public sealed class TdeeModuleExtractionTests {
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Application", "Abstractions")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Users", "Domain", "Entities", "Users", "User.Tdee.cs")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application.Abstractions",
+            "Modules",
+            "Users",
+            "Contracts",
             "Users",
             "Common",
             "IUserTdeeProfileReadService.cs")));

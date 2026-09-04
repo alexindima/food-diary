@@ -52,7 +52,7 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Fact]
-    public void UsersProfileReadContracts_LiveInApplicationAbstractions() {
+    public void UsersProfileReadContracts_LiveInUsersContracts() {
         string legacyModelsRoot = ArchitectureTestPaths.FromRoot(
             "FoodDiary.Application",
             "Users",
@@ -63,7 +63,9 @@ public sealed class BusinessModuleBoundaryTests {
             "Common",
             "IUserProfileReadService.cs");
         string abstractionContractPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application.Abstractions",
+            "Modules",
+            "Users",
+            "Contracts",
             "Users",
             "Common",
             "IUserProfileReadService.cs");

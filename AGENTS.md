@@ -65,6 +65,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Hydration persistence model: `Modules/Hydration/Infrastructure/Model/AGENTS.md`
 - Hydration tests: `Modules/Hydration/tests/AGENTS.md`
 - Identity logical module: `Modules/Identity/AGENTS.md`
+- Identity application contracts: `Modules/Identity/Application/Abstractions/AGENTS.md`
 - Identity application: `Modules/Identity/Application/AGENTS.md`
 - Identity domain: `Modules/Identity/Domain/AGENTS.md`
 - Identity infrastructure: `Modules/Identity/Infrastructure/AGENTS.md`
@@ -160,6 +161,8 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Notifications persistence model: `Modules/Notifications/Infrastructure/Model/AGENTS.md`
 - Shared outbox record contract: `Shared/FoodDiary.Outbox.Abstractions/AGENTS.md`
 - Users logical module: `Modules/Users/AGENTS.md`
+- Users consumer contracts: `Modules/Users/Contracts/AGENTS.md`
+- Users application ports: `Modules/Users/Application/Abstractions/AGENTS.md`
 - Users domain: `Modules/Users/Domain/AGENTS.md`
 - Users domain contracts: `Modules/Users/Domain.Contracts/AGENTS.md`
 - Users application: `Modules/Users/Application/AGENTS.md`

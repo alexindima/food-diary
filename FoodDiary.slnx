@@ -5,6 +5,8 @@
   </Folder>
   <Folder Name="/Modules/" />
   <Folder Name="/Modules/Users/">
+    <Project Path="Modules/Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj" />
+    <Project Path="Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <Project Path="Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <Project Path="Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <Project Path="Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj" />
@@ -17,6 +19,7 @@
     <Project Path="Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/FoodDiary.Modules.Users.Application.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Identity/">
+    <Project Path="Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <Project Path="Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj" />
     <Project Path="Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj" />
     <Project Path="Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj" />

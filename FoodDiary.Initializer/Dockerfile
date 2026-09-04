@@ -22,6 +22,8 @@ COPY Modules/Marketing/Domain/*.csproj Modules/Marketing/Domain/
 COPY Modules/Marketing/Infrastructure/*.csproj Modules/Marketing/Infrastructure/
 COPY Modules/Marketing/Infrastructure/Model/*.csproj Modules/Marketing/Infrastructure/Model/
 COPY Modules/Users/Application/*.csproj Modules/Users/Application/
+COPY Modules/Users/Application/Abstractions/*.csproj Modules/Users/Application/Abstractions/
+COPY Modules/Users/Contracts/*.csproj Modules/Users/Contracts/
 COPY Modules/Users/Domain/*.csproj Modules/Users/Domain/
 COPY Modules/Users/Domain.Contracts/*.csproj Modules/Users/Domain.Contracts/
 COPY Modules/Users/Infrastructure/*.csproj Modules/Users/Infrastructure/
@@ -44,6 +46,7 @@ COPY Modules/Favorites/Domain/*.csproj Modules/Favorites/Domain/
 COPY Modules/Favorites/Infrastructure/*.csproj Modules/Favorites/Infrastructure/
 COPY Modules/Favorites/Infrastructure/Model/*.csproj Modules/Favorites/Infrastructure/Model/
 COPY Modules/Identity/Application/*.csproj Modules/Identity/Application/
+COPY Modules/Identity/Application/Abstractions/*.csproj Modules/Identity/Application/Abstractions/
 COPY Modules/Identity/Domain/*.csproj Modules/Identity/Domain/
 COPY Modules/Identity/Infrastructure/*.csproj Modules/Identity/Infrastructure/
 COPY Modules/Identity/Infrastructure/Model/*.csproj Modules/Identity/Infrastructure/Model/
@@ -206,6 +209,8 @@ COPY Modules/Marketing/Domain/ Modules/Marketing/Domain/
 COPY Modules/Marketing/Infrastructure/ Modules/Marketing/Infrastructure/
 COPY Modules/Marketing/Infrastructure/Model/ Modules/Marketing/Infrastructure/Model/
 COPY Modules/Users/Application/ Modules/Users/Application/
+COPY Modules/Users/Application/Abstractions/ Modules/Users/Application/Abstractions/
+COPY Modules/Users/Contracts/ Modules/Users/Contracts/
 COPY Modules/Users/Domain/ Modules/Users/Domain/
 COPY Modules/Users/Domain.Contracts/ Modules/Users/Domain.Contracts/
 COPY Modules/Users/Infrastructure/ Modules/Users/Infrastructure/
@@ -230,6 +235,7 @@ COPY Modules/Favorites/Domain/ Modules/Favorites/Domain/
 COPY Modules/Favorites/Infrastructure/ Modules/Favorites/Infrastructure/
 COPY Modules/Favorites/Infrastructure/Model/ Modules/Favorites/Infrastructure/Model/
 COPY Modules/Identity/Application/ Modules/Identity/Application/
+COPY Modules/Identity/Application/Abstractions/ Modules/Identity/Application/Abstractions/
 COPY Modules/Identity/Domain/ Modules/Identity/Domain/
 COPY Modules/Identity/Infrastructure/ Modules/Identity/Infrastructure/
 COPY Modules/Identity/Infrastructure/Model/ Modules/Identity/Infrastructure/Model/

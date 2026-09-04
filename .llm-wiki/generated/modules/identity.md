@@ -24,10 +24,9 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Authentication`
-- `FoodDiary.Application.Abstractions/Email`
 - `FoodDiary.Presentation.Api/Features/Auth`
 - `Modules/Identity/Application`
+- `Modules/Identity/Application/Abstractions`
 - `Modules/Identity/Domain`
 - `Modules/Identity/Infrastructure`
 - `Modules/Identity/Infrastructure/Model`
@@ -48,28 +47,28 @@ No literal attribute-routed controller was associated with this module.
 ## Public Surface
 
 - Public contract types: 45
-- Interfaces: 23
-- DTO/read-model/projection types: 2
+- Interfaces: 25
+- DTO/read-model/projection types: 3
 - Enums: 0
-- Exported repository-shaped contracts: 7
-- Contracts referencing domain entities: 3
-- `class ApplicationEmailTelemetry`
+- Exported repository-shaped contracts: 10
+- Contracts referencing domain entities: 6
 - `class AuthenticationInputLimits`
-- `class EmailOptions`
 - `class JwtImpersonationClaimNames`
 - `class JwtSecurityClaimNames`
 - `class JwtTokenUseClaimNames`
 - `class SecurityTokenGenerator`
-- `interface IAdminSsoCodeStore`
 - `interface IAdminSsoService`
 - `interface IAuthenticationLoginEventCleanupService`
 - `interface IAuthenticationLoginEventReadService`
 - `interface IAuthenticationTokenService`
-- `interface IEmailOutbox`
-- `interface IEmailOutboxProcessor`
 - `interface IEmailSender`
+- `interface IEmailTemplateAdministrationReadService`
+- `interface IEmailTemplateAdministrationService`
 - `interface IEmailTemplateProvider`
-- `interface IEmailTransport`
+- `interface IEmailTemplateReadModelRepository`
+- `interface IEmailTemplateReadRepository`
+- `interface IEmailTemplateRepository`
+- `interface IEmailTemplateWriteRepository`
 - `interface IEmailVerificationNotifier`
 - `interface IGoogleTokenValidator`
 - `interface IJwtTokenGenerator`

@@ -7,6 +7,7 @@ Rules for `FoodDiary.Application.Abstractions/`.
 - Own application-facing contracts used by the primary FoodDiary application and its adapters.
 - Keep interfaces and models close to their feature unless they are genuinely cross-cutting.
 - Keep this project independent from hosts, presentation, infrastructure implementations, provider SDKs, and ASP.NET transport details.
+- Users owns its Contracts and repository ports; Identity owns Authentication/email-template contracts; Admin owns role-audit reader contracts; Billing owns its marketing consumer port. Keep facade references, CurrentUserAccessResolver and shared IAdminSsoCodeStore here. See docs/ai/contracts-batch-ownership.md.
 
 ## Structure
 - Feature-specific contracts should live under `Feature/Common/`, `Feature/Abstractions/`, or `Feature/Services/`.

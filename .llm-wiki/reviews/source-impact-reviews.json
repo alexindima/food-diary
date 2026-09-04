@@ -8,13 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "b63cb3b7682e1cdfd4b68f0d6fc085a164bc4cfe3a8b743b84c78b5d01eae02c"
+          "sha256": "a4ad7286d8addf1d9b2a9e6dd6bbc04d1d7684b33d7fbd0bbf0c26a9ea151952"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "f5b3b97268b16286ecbdea208041d1b306da2cb6bbb6d2b731edf9972691e5e9"
         }
       ],
-      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
+      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:31.3437277Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:37.2158285Z"
     },
     {
       "pageId": "module.frontend",
@@ -38,13 +42,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "50d3a20007a2f716c324930a2d73b56fdeaf631def62c32dc5cbce6ea347c491"
+          "sha256": "f5b3b97268b16286ecbdea208041d1b306da2cb6bbb6d2b731edf9972691e5e9"
         }
       ],
-      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
+      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:22.4190712Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:37.4325050Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -53,17 +57,25 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b8564a5e6d94b38b59550c8ff97648da50e1a0fabc54cd412fe5e142ffc07c5c"
+          "sha256": "fb9f0243b2f69817af3e1f2ca9f59abd008e2407ec55888513b15449f74a6842"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "f5b3b97268b16286ecbdea208041d1b306da2cb6bbb6d2b731edf9972691e5e9"
+        },
+        {
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "06e2f5292d99e182f87d2bc6cfd9475600e05d262cd18ed185d16ba8a4912369"
         },
         {
           "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "b08adfe73c75ad3a3806e8cc3d2851b100f6ec66a5ea7c5acb77502eeb4715f6"
+          "sha256": "6f44cc4533aff38b631cc07bb4dc2509c9c51dfef6f053621b8d4064b070124a"
         }
       ],
-      "reason": "All five factory source bodies and central delegating facades are unchanged. New typed tests assert exact codes, literal messages, ErrorKind, nullable/default locale, timestamp format and facade equality; Presentation and five owner suites pass. No HTTP source/snapshot change. Rebuild hosts together; old precompiled declaring-assembly compatibility is not promised.",
+      "reason": "117 source-identical contract/helper relocations preserve CLR namespaces/signatures and default interface behavior. All33 module application suites and full solution rebuild pass; full unfiltered HTTP182, Presentation825 and APIunit247 preserve routes/payloads/status/Swagger. No HTTP source or snapshot changes. Coordinated rebuild, no external consumers, not precompiled binary compatibility.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:31.5992127Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:37.6460227Z"
     },
     {
       "pageId": "system.architecture",
@@ -72,17 +84,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b8564a5e6d94b38b59550c8ff97648da50e1a0fabc54cd412fe5e142ffc07c5c"
+          "sha256": "fb9f0243b2f69817af3e1f2ca9f59abd008e2407ec55888513b15449f74a6842"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "f5b3b97268b16286ecbdea208041d1b306da2cb6bbb6d2b731edf9972691e5e9"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "31eed20d8c87a283ebf85bae40b6fc769a262d98267cf26695e24e5dfa589508"
+          "sha256": "ccba264e967f8a6940d3599cd3604109ce7e90570a7e425d3511ad008eb111aa"
         }
       ],
-      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
+      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:31.8493452Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:37.9239602Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -121,13 +137,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "b63cb3b7682e1cdfd4b68f0d6fc085a164bc4cfe3a8b743b84c78b5d01eae02c"
+          "sha256": "a4ad7286d8addf1d9b2a9e6dd6bbc04d1d7684b33d7fbd0bbf0c26a9ea151952"
         }
       ],
-      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
+      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:32.0998749Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:38.2181536Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -136,13 +152,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b8564a5e6d94b38b59550c8ff97648da50e1a0fabc54cd412fe5e142ffc07c5c"
+          "sha256": "fb9f0243b2f69817af3e1f2ca9f59abd008e2407ec55888513b15449f74a6842"
         }
       ],
-      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
+      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:32.3033688Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:38.4228348Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -200,21 +216,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c83b4b424a7d0cc68f6039bf08c174940cb060d0db9183ee09cc9926b380bf27"
+          "sha256": "eb934ad7c67f1168a819dc93a6d1034b303f2e2e4a3e7476b39a3c01e67f4636"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "b8564a5e6d94b38b59550c8ff97648da50e1a0fabc54cd412fe5e142ffc07c5c"
+          "sha256": "fb9f0243b2f69817af3e1f2ca9f59abd008e2407ec55888513b15449f74a6842"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "31eed20d8c87a283ebf85bae40b6fc769a262d98267cf26695e24e5dfa589508"
+          "sha256": "ccba264e967f8a6940d3599cd3604109ce7e90570a7e425d3511ad008eb111aa"
         }
       ],
-      "reason": "Eight full unfiltered unit/application/architecture/Presentation suites: 2901 passed, zero failures/skips. Independent five owner-port builds and full solution build pass. New typed compatibility and ownership guards included; no collector. No database source changes, so no migration or new relational behavior claim.",
+      "reason": "44 final unfiltered suites6055passed0failed0skipped, including all33 module Application suites, Architecture1072, centralPG93, HTTP182. Three independent new-project builds, full solution builds0warnings/errors. Exact source equivalence117 and retained lock versions verified. Failed initial builds/architecture and Wiki projection/fixture attempts retained. Receipt test and14case SQL/JSON parity pass; no collectors or weakened assertions.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:32.5914633Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:38.6487671Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -222,14 +238,18 @@
       "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "53fd58ab3b173bb1db2fcf7f4e0cbcca03d7cf2dab6d676f7230ca73a25066a9"
+        },
+        {
           "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "b08adfe73c75ad3a3806e8cc3d2851b100f6ec66a5ea7c5acb77502eeb4715f6"
+          "sha256": "6f44cc4533aff38b631cc07bb4dc2509c9c51dfef6f053621b8d4064b070124a"
         }
       ],
-      "reason": "All five factory source bodies and central delegating facades are unchanged. New typed tests assert exact codes, literal messages, ErrorKind, nullable/default locale, timestamp format and facade equality; Presentation and five owner suites pass. No HTTP source/snapshot change. Rebuild hosts together; old precompiled declaring-assembly compatibility is not promised.",
+      "reason": "117 source-identical contract/helper relocations preserve CLR namespaces/signatures and default interface behavior. All33 module application suites and full solution rebuild pass; full unfiltered HTTP182, Presentation825 and APIunit247 preserve routes/payloads/status/Swagger. No HTTP source or snapshot changes. Coordinated rebuild, no external consumers, not precompiled binary compatibility.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:32.8747394Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:39.3102468Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -267,14 +287,14 @@
       "pageSha256": "8c9843eeb4fbb377b79e506bb7a2969dd0393e10cc6fc0a1ec924ccbd6ee22f9",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-postfix-control-30.json",
-          "sha256": "3580e0d19e30516095fb15a5bde08b2468bbd042afee1608e26641295754e13e"
+          "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
+          "sha256": "0331fdbf34331d8c995b22ce505f35ae8545b41519870611038124141113a5b4"
         }
       ],
-      "reason": "Seven Users-only SQL tests moved as a whole file unchanged; mixed Users/Identity test remains byte-equivalent. Five new provider tests and expanded DI/ownership guards protect tracking/filter/transaction/save behavior. No collectors. Single source-proven postfix control30 expectedPath relocation with reverse equality, no query/ranking/threshold edits.",
+      "reason": "44 final unfiltered suites6055passed0failed0skipped, including all33 module Application suites, Architecture1072, centralPG93, HTTP182. Three independent new-project builds, full solution builds0warnings/errors. Exact source equivalence117 and retained lock versions verified. Failed initial builds/architecture and Wiki projection/fixture attempts retained. Receipt test and14case SQL/JSON parity pass; no collectors or weakened assertions.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:16.8553434Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:39.8305005Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -764,13 +784,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "55cd19db8e07042506c90ace53355cecb91af1dab5ec701d95e451554d416143"
+          "sha256": "a20ae8505e60cba5b902872c342652603f1e7fe6ae276422a5678597cbe3cbb4"
         }
       ],
-      "reason": "UserId predicates, favorite source access, private relationship/read projections, SQL, error codes, cancellation and DI lifetimes unchanged. No new data collection/logging/provider calls. Source audit rejects protected repository/model/HTTP changes; PostgreSQL and HTTP suites pass.",
+      "reason": "Authentication/password/token/email-template/current-user interfaces move unchanged; provider/security/authorization implementations and data flows are untouched. Identity171+59+PG7, Users156+PG30, Admin52 and full HTTP182 pass. No new credentials/logs/sharing/cache/notification delivery paths. Context trust assessment separate; no external security scan.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:25.1018458Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:40.2366841Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -809,13 +829,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a2c4c8bc16090c70e0a91ad77ff0f923348cc25d350c0a57cf3b3f5c1f5d8067"
+          "sha256": "1a83011ab79bcafeab5bd886a45b92c885c92be820a6c24fe09ad3887095defc"
         }
       ],
-      "reason": "Eight full unfiltered unit/application/architecture/Presentation suites: 2901 passed, zero failures/skips. Independent five owner-port builds and full solution build pass. New typed compatibility and ownership guards included; no collector. No database source changes, so no migration or new relational behavior claim.",
+      "reason": "44 final unfiltered suites6055passed0failed0skipped, including all33 module Application suites, Architecture1072, centralPG93, HTTP182. Three independent new-project builds, full solution builds0warnings/errors. Exact source equivalence117 and retained lock versions verified. Failed initial builds/architecture and Wiki projection/fixture attempts retained. Receipt test and14case SQL/JSON parity pass; no collectors or weakened assertions.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:33.6019761Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:40.6400446Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -892,13 +912,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6b86c28dc4f00cad1c6001ec4efb64222913ed1e204d9252684ad67d6af3cee1"
+          "sha256": "69681cb63fad605ced28d5d17de0bb4c78ed81abbeddad9b728d74d233348791"
         }
       ],
-      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
+      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:34.6535188Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:41.5852530Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -907,17 +927,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a2c4c8bc16090c70e0a91ad77ff0f923348cc25d350c0a57cf3b3f5c1f5d8067"
+          "sha256": "1a83011ab79bcafeab5bd886a45b92c885c92be820a6c24fe09ad3887095defc"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6b86c28dc4f00cad1c6001ec4efb64222913ed1e204d9252684ad67d6af3cee1"
+          "sha256": "69681cb63fad605ced28d5d17de0bb4c78ed81abbeddad9b728d74d233348791"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "a20ae8505e60cba5b902872c342652603f1e7fe6ae276422a5678597cbe3cbb4"
         }
       ],
-      "reason": "No authorization or data-flow behavior changes. Existing Hydration inaccessible error remains NotFound and Meals InvalidData remains Internal. Repository, Domain, persistence/model and HTTP source protected by diff audit; no notification/outbox/provider/logging changes or external security scan.",
+      "reason": "Authentication/password/token/email-template/current-user interfaces move unchanged; provider/security/authorization implementations and data flows are untouched. Identity171+59+PG7, Users156+PG30, Admin52 and full HTTP182 pass. No new credentials/logs/sharing/cache/notification delivery paths. Context trust assessment separate; no external security scan.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:35.3683687Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:42.0860203Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1095,13 +1119,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "b63cb3b7682e1cdfd4b68f0d6fc085a164bc4cfe3a8b743b84c78b5d01eae02c"
+          "sha256": "a4ad7286d8addf1d9b2a9e6dd6bbc04d1d7684b33d7fbd0bbf0c26a9ea151952"
         }
       ],
-      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
+      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:33.1505410Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:39.5429564Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1155,17 +1179,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "a8f6c097f83bd151917334a9af25af09f8b0cb824250d084a175acee8bbf275a"
+          "sha256": "ac36d1e1c9fc8fe17fb3edd43822a01e5609c346fc00b5c3e900222465bcc4a8"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
+          "sha256": "0331fdbf34331d8c995b22ce505f35ae8545b41519870611038124141113a5b4"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "b63cb3b7682e1cdfd4b68f0d6fc085a164bc4cfe3a8b743b84c78b5d01eae02c"
+          "sha256": "a4ad7286d8addf1d9b2a9e6dd6bbc04d1d7684b33d7fbd0bbf0c26a9ea151952"
         }
       ],
-      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
+      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:33.9671468Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:40.9329113Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1174,13 +1202,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "b63cb3b7682e1cdfd4b68f0d6fc085a164bc4cfe3a8b743b84c78b5d01eae02c"
+          "sha256": "a4ad7286d8addf1d9b2a9e6dd6bbc04d1d7684b33d7fbd0bbf0c26a9ea151952"
         }
       ],
-      "reason": "Eight full unfiltered unit/application/architecture/Presentation suites: 2901 passed, zero failures/skips. Independent five owner-port builds and full solution build pass. New typed compatibility and ownership guards included; no collector. No database source changes, so no migration or new relational behavior claim.",
+      "reason": "44 final unfiltered suites6055passed0failed0skipped, including all33 module Application suites, Architecture1072, centralPG93, HTTP182. Three independent new-project builds, full solution builds0warnings/errors. Exact source equivalence117 and retained lock versions verified. Failed initial builds/architecture and Wiki projection/fixture attempts retained. Receipt test and14case SQL/JSON parity pass; no collectors or weakened assertions.",
       "baseRef": "HEAD",
-      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
-      "reviewedAtUtc": "2026-09-04T01:20:34.3305382Z"
+      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
+      "reviewedAtUtc": "2026-09-04T02:37:41.2591246Z"
     }
   ]
 }

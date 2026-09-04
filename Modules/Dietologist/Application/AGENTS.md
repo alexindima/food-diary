@@ -7,6 +7,7 @@ Rules for `Modules/Dietologist/Application/`.
 ## Boundaries
 
 - This project owns Dietologist application use cases, policies, mappings, models, and services.
+- Own DietologistRequiredIdParser and DietologistEnumValueParser under Common/Validation; preserve their namespaces, parsing/error behavior and focused tests.
 - Depend on Dietologist Domain/Application.Abstractions, Users Domain/Domain.Contracts, shared application abstractions and Mediator, as declared in the project reference matrix.
 - Reference Users Domain.Contracts directly for ActivityLevel already exposed by profile projections; this enum dependency does not broaden relationship permissions or access to user data.
 - Interact with Users, Dashboard, Notifications and Audit through their established application contracts; use module `Application/Abstractions` for Dietologist persistence ports.

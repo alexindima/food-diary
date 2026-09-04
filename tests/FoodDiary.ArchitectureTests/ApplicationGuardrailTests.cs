@@ -486,7 +486,10 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string userRepositoryPath = Path.Combine(
             root,
-            "FoodDiary.Application.Abstractions",
+            "Modules",
+            "Users",
+            "Application",
+            "Abstractions",
             "Users",
             "Common",
             "IUserRepository.cs");
@@ -643,6 +646,7 @@ public sealed class ApplicationGuardrailTests {
             "Results",
             facadeFileName);
         string featureErrorsPath = featureDirectory switch {
+            "Users" => Path.Combine(root, "Modules", "Users", "Contracts", "Users", featureCommonDirectory, featureErrorsFileName),
             "DailyAdvices" or "Fasting" or "Hydration" => Path.Combine(root, "Modules", featureDirectory, "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName),
             "Dietologist" or "Meals" => Path.Combine(root, "Modules", featureDirectory, "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
             "FavoriteMeals" or "FavoriteProducts" or "FavoriteRecipes" => Path.Combine(root, "Modules", "Favorites", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
@@ -1411,7 +1415,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string[] contractFiles = [
             Path.Combine(root, "Modules", "Lessons", "Application", "Abstractions", "Common", "INutritionLessonReadRepository.cs"),
-            Path.Combine(root, "FoodDiary.Application.Abstractions", "Admin", "Common", "IEmailTemplateReadRepository.cs"),
+            Path.Combine(root, "Modules", "Identity", "Application", "Abstractions", "Admin", "Common", "IEmailTemplateReadRepository.cs"),
             Path.Combine(root, "Modules", "ContentReports", "Application", "Abstractions", "Common", "IContentReportReadModelRepository.cs"),
         ];
 
@@ -1512,7 +1516,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "Modules", "Fasting", "Application", "Abstractions", "Common", "IFastingOccurrenceReadRepository.cs"),
             Path.Combine(root, "Modules", "Fasting", "Application", "Abstractions", "Common", "IFastingCheckInReadRepository.cs"),
             Path.Combine(root, "Modules", "Billing", "Application", "Abstractions", "Common", "IBillingSubscriptionReadRepository.cs"),
-            Path.Combine(root, "FoodDiary.Application.Abstractions", "Users", "Common", "IUserAdminReadRepository.cs"),
+            Path.Combine(root, "Modules", "Users", "Application", "Abstractions", "Users", "Common", "IUserAdminReadRepository.cs"),
             Path.Combine(root, "Modules", "Notifications", "Application", "Abstractions", "Common", "INotificationReadRepository.cs"),
             Path.Combine(root, "Modules", "Notifications", "Application", "Abstractions", "Common", "IWebPushSubscriptionReadRepository.cs"),
             Path.Combine(root, "Modules", "Wearables", "Application", "Abstractions", "Common", "IWearableSyncReadRepository.cs"),

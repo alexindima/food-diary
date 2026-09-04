@@ -19,101 +19,10 @@
   "fields": [
     {
       "category": "credential",
-      "name": "TemporaryPassword",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/AccountCreatedMessage.cs",
-      "line": 5
-    },
-    {
-      "category": "credential",
-      "name": "Token",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/EmailVerificationMessage.cs",
-      "line": 6
-    },
-    {
-      "category": "credential",
-      "name": "Token",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/PasswordResetMessage.cs",
-      "line": 6
-    },
-    {
-      "category": "credential",
-      "name": "AccessToken",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
-      "line": 3
-    },
-    {
-      "category": "credential",
-      "name": "RefreshToken",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
-      "line": 3
-    },
-    {
-      "category": "credential",
       "name": "PasswordResetPath",
       "type": "string",
       "path": "FoodDiary.Application.Abstractions/Email/Common/EmailOptions.cs",
       "line": 11
-    },
-    {
-      "category": "credential",
-      "name": "TemporaryPassword",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminCreateModel.cs",
-      "line": 11
-    },
-    {
-      "category": "credential",
-      "name": "RequirePasswordChange",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminCreateModel.cs",
-      "line": 13
-    },
-    {
-      "category": "credential",
-      "name": "HasPassword",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 9
-    },
-    {
-      "category": "credential",
-      "name": "AccessTokenCapUtc",
-      "type": "DateTime?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAuthenticationPrincipalModel.cs",
-      "line": 9
-    },
-    {
-      "category": "credential",
-      "name": "HasPassword",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 9
-    },
-    {
-      "category": "credential",
-      "name": "HasPassword",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserNotificationProfileModel.cs",
-      "line": 7
-    },
-    {
-      "category": "credential",
-      "name": "Password",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserRegistrationModel.cs",
-      "line": 5
-    },
-    {
-      "category": "credential",
-      "name": "EmailVerificationToken",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserRegistrationModel.cs",
-      "line": 7
     },
     {
       "category": "credential",
@@ -740,6 +649,41 @@
     },
     {
       "category": "credential",
+      "name": "TemporaryPassword",
+      "type": "string",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/AccountCreatedMessage.cs",
+      "line": 5
+    },
+    {
+      "category": "credential",
+      "name": "Token",
+      "type": "string",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/EmailVerificationMessage.cs",
+      "line": 6
+    },
+    {
+      "category": "credential",
+      "name": "Token",
+      "type": "string",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/PasswordResetMessage.cs",
+      "line": 6
+    },
+    {
+      "category": "credential",
+      "name": "AccessToken",
+      "type": "string",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
+      "line": 3
+    },
+    {
+      "category": "credential",
+      "name": "RefreshToken",
+      "type": "string",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
+      "line": 3
+    },
+    {
+      "category": "credential",
       "name": "Password",
       "type": "string",
       "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
@@ -877,6 +821,62 @@
       "type": "string",
       "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommand.cs",
       "line": 8
+    },
+    {
+      "category": "credential",
+      "name": "TemporaryPassword",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminCreateModel.cs",
+      "line": 11
+    },
+    {
+      "category": "credential",
+      "name": "RequirePasswordChange",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminCreateModel.cs",
+      "line": 13
+    },
+    {
+      "category": "credential",
+      "name": "HasPassword",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "AccessTokenCapUtc",
+      "type": "DateTime?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAuthenticationPrincipalModel.cs",
+      "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "HasPassword",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "HasPassword",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/UserNotificationProfileModel.cs",
+      "line": 7
+    },
+    {
+      "category": "credential",
+      "name": "Password",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserRegistrationModel.cs",
+      "line": 5
+    },
+    {
+      "category": "credential",
+      "name": "EmailVerificationToken",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserRegistrationModel.cs",
+      "line": 7
     },
     {
       "category": "credential",
@@ -1045,13 +1045,6 @@
       "type": "IRequest<TResponse>,",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs",
       "line": 5
-    },
-    {
-      "category": "financial",
-      "name": "WebPushSubscriptions",
-      "type": "IReadOnlyList<ProfileWebPushSubscriptionModel>",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/ProfileOverviewModel.cs",
-      "line": 6
     },
     {
       "category": "financial",
@@ -1880,466 +1873,11 @@
       "line": 71
     },
     {
-      "category": "health",
-      "name": "DesiredWeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "DesiredWaistCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
-      "line": 14
-    },
-    {
-      "category": "health",
-      "name": "MondayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
-      "line": 16
-    },
-    {
-      "category": "health",
-      "name": "TuesdayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
-      "line": 17
-    },
-    {
-      "category": "health",
-      "name": "WednesdayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "ThursdayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
-      "line": 19
-    },
-    {
-      "category": "health",
-      "name": "FridayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
-      "line": 20
-    },
-    {
-      "category": "health",
-      "name": "SaturdayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
-      "line": 21
-    },
-    {
-      "category": "health",
-      "name": "SundayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
-      "line": 22
-    },
-    {
-      "category": "health",
-      "name": "ShareWeight",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistPermissionsModel.cs",
+      "category": "financial",
+      "name": "WebPushSubscriptions",
+      "type": "IReadOnlyList<ProfileWebPushSubscriptionModel>",
+      "path": "Modules/Users/Contracts/Users/Models/ProfileOverviewModel.cs",
       "line": 6
-    },
-    {
-      "category": "health",
-      "name": "ShareWaist",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistPermissionsModel.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "ShareHydration",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistPermissionsModel.cs",
-      "line": 9
-    },
-    {
-      "category": "health",
-      "name": "ShareFasting",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistPermissionsModel.cs",
-      "line": 11
-    },
-    {
-      "category": "health",
-      "name": "BirthDate",
-      "type": "DateTime?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "Gender",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 14
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 15
-    },
-    {
-      "category": "health",
-      "name": "DesiredWeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 16
-    },
-    {
-      "category": "health",
-      "name": "DesiredWaistCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 17
-    },
-    {
-      "category": "health",
-      "name": "HeightCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "ActivityLevel",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 19
-    },
-    {
-      "category": "health",
-      "name": "HydrationGoal",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 27
-    },
-    {
-      "category": "health",
-      "name": "MondayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 29
-    },
-    {
-      "category": "health",
-      "name": "TuesdayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 30
-    },
-    {
-      "category": "health",
-      "name": "WednesdayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 31
-    },
-    {
-      "category": "health",
-      "name": "ThursdayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 32
-    },
-    {
-      "category": "health",
-      "name": "FridayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 33
-    },
-    {
-      "category": "health",
-      "name": "SaturdayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 34
-    },
-    {
-      "category": "health",
-      "name": "SundayCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 35
-    },
-    {
-      "category": "health",
-      "name": "FastingPushNotificationsEnabled",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 43
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInReminderHours",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 45
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 46
-    },
-    {
-      "category": "health",
-      "name": "DesiredWeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "DesiredWaistCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
-      "line": 11
-    },
-    {
-      "category": "health",
-      "name": "HydrationGoal",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "CalorieSchedule",
-      "type": "UserCalorieSchedule",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "DesiredWaistCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserDesiredWaistModel.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
-      "name": "DesiredWeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserDesiredWeightModel.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
-      "name": "CalorieSchedule",
-      "type": "UserCalorieSchedule",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserGamificationProfileModel.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "BirthDate",
-      "type": "DateTime?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "Gender",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 14
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 15
-    },
-    {
-      "category": "health",
-      "name": "DesiredWeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 16
-    },
-    {
-      "category": "health",
-      "name": "DesiredWaistCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 17
-    },
-    {
-      "category": "health",
-      "name": "HeightCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 18
-    },
-    {
-      "category": "health",
-      "name": "ActivityLevel",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 19
-    },
-    {
-      "category": "health",
-      "name": "HydrationGoal",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 27
-    },
-    {
-      "category": "health",
-      "name": "FastingPushNotificationsEnabled",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 32
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInReminderHours",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 34
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 35
-    },
-    {
-      "category": "health",
-      "name": "FastingPushNotificationsEnabled",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserNotificationPreferencesModel.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInReminderHours",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserNotificationPreferencesModel.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserNotificationPreferencesModel.cs",
-      "line": 8
-    },
-    {
-      "category": "health",
-      "name": "FastingPushNotificationsEnabled",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserNotificationProfileModel.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInReminderHours",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserNotificationProfileModel.cs",
-      "line": 12
-    },
-    {
-      "category": "health",
-      "name": "FastingCheckInFollowUpReminderHours",
-      "type": "int",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserNotificationProfileModel.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "EstimatedTdee",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserTdeeProfileModel.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "WeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserTdeeProfileModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "DesiredWeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserTdeeProfileModel.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "TargetWaistCm",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/WaistGoalHistoryModel.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "StartWaistCm",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/WaistGoalHistoryModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "EndWaistCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/WaistGoalHistoryModel.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "HeightCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/WaistHistoryProfileModel.cs",
-      "line": 4
-    },
-    {
-      "category": "health",
-      "name": "TargetWeightKg",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/WeightGoalHistoryModel.cs",
-      "line": 5
-    },
-    {
-      "category": "health",
-      "name": "StartWeightKg",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/WeightGoalHistoryModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "EndWeightKg",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/WeightGoalHistoryModel.cs",
-      "line": 7
-    },
-    {
-      "category": "health",
-      "name": "HeightCm",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/WeightHistoryProfileModel.cs",
-      "line": 4
     },
     {
       "category": "health",
@@ -5878,6 +5416,468 @@
     },
     {
       "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/GoalsModel.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/GoalsModel.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "MondayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/GoalsModel.cs",
+      "line": 16
+    },
+    {
+      "category": "health",
+      "name": "TuesdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/GoalsModel.cs",
+      "line": 17
+    },
+    {
+      "category": "health",
+      "name": "WednesdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/GoalsModel.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "ThursdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/GoalsModel.cs",
+      "line": 19
+    },
+    {
+      "category": "health",
+      "name": "FridayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/GoalsModel.cs",
+      "line": 20
+    },
+    {
+      "category": "health",
+      "name": "SaturdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/GoalsModel.cs",
+      "line": 21
+    },
+    {
+      "category": "health",
+      "name": "SundayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/GoalsModel.cs",
+      "line": 22
+    },
+    {
+      "category": "health",
+      "name": "ShareWeight",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/ProfileDietologistPermissionsModel.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "ShareWaist",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/ProfileDietologistPermissionsModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "ShareHydration",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/ProfileDietologistPermissionsModel.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "ShareFasting",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/ProfileDietologistPermissionsModel.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "BirthDate",
+      "type": "DateTime?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "string?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 16
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 17
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "ActivityLevel",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 19
+    },
+    {
+      "category": "health",
+      "name": "HydrationGoal",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 27
+    },
+    {
+      "category": "health",
+      "name": "MondayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 29
+    },
+    {
+      "category": "health",
+      "name": "TuesdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 30
+    },
+    {
+      "category": "health",
+      "name": "WednesdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 31
+    },
+    {
+      "category": "health",
+      "name": "ThursdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 32
+    },
+    {
+      "category": "health",
+      "name": "FridayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 33
+    },
+    {
+      "category": "health",
+      "name": "SaturdayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 34
+    },
+    {
+      "category": "health",
+      "name": "SundayCalories",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 35
+    },
+    {
+      "category": "health",
+      "name": "FastingPushNotificationsEnabled",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 43
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 45
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 46
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserDashboardProfileModel.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserDashboardProfileModel.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "HydrationGoal",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserDashboardProfileModel.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "CalorieSchedule",
+      "type": "UserCalorieSchedule",
+      "path": "Modules/Users/Contracts/Users/Models/UserDashboardProfileModel.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserDesiredWaistModel.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserDesiredWeightModel.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "CalorieSchedule",
+      "type": "UserCalorieSchedule",
+      "path": "Modules/Users/Contracts/Users/Models/UserGamificationProfileModel.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "BirthDate",
+      "type": "DateTime?",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "string?",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 15
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 16
+    },
+    {
+      "category": "health",
+      "name": "DesiredWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 17
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 18
+    },
+    {
+      "category": "health",
+      "name": "ActivityLevel",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 19
+    },
+    {
+      "category": "health",
+      "name": "HydrationGoal",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 27
+    },
+    {
+      "category": "health",
+      "name": "FastingPushNotificationsEnabled",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 32
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 34
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 35
+    },
+    {
+      "category": "health",
+      "name": "FastingPushNotificationsEnabled",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/UserNotificationPreferencesModel.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Contracts/Users/Models/UserNotificationPreferencesModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Contracts/Users/Models/UserNotificationPreferencesModel.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "FastingPushNotificationsEnabled",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/UserNotificationProfileModel.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Contracts/Users/Models/UserNotificationProfileModel.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "FastingCheckInFollowUpReminderHours",
+      "type": "int",
+      "path": "Modules/Users/Contracts/Users/Models/UserNotificationProfileModel.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "EstimatedTdee",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserTdeeProfileModel.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "WeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserTdeeProfileModel.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "DesiredWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/UserTdeeProfileModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "TargetWaistCm",
+      "type": "double",
+      "path": "Modules/Users/Contracts/Users/Models/WaistGoalHistoryModel.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "StartWaistCm",
+      "type": "double",
+      "path": "Modules/Users/Contracts/Users/Models/WaistGoalHistoryModel.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "EndWaistCm",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/WaistGoalHistoryModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/WaistHistoryProfileModel.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
+      "name": "TargetWeightKg",
+      "type": "double",
+      "path": "Modules/Users/Contracts/Users/Models/WeightGoalHistoryModel.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "StartWeightKg",
+      "type": "double",
+      "path": "Modules/Users/Contracts/Users/Models/WeightGoalHistoryModel.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "EndWeightKg",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/WeightGoalHistoryModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "double?",
+      "path": "Modules/Users/Contracts/Users/Models/WeightHistoryProfileModel.cs",
+      "line": 4
+    },
+    {
+      "category": "health",
       "name": "TargetWaistCm",
       "type": "double",
       "path": "Modules/Users/Domain/Entities/Tracking/WaistGoal.cs",
@@ -6501,223 +6501,6 @@
     },
     {
       "category": "identity",
-      "name": "ActorEmail",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminUserRoleAuditEventReadModel.cs",
-      "line": 9
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "ToEmail",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/AccountCreatedMessage.cs",
-      "line": 4
-    },
-    {
-      "category": "identity",
-      "name": "ToEmail",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/EmailVerificationMessage.cs",
-      "line": 4
-    },
-    {
-      "category": "identity",
-      "name": "ToEmail",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/PasswordResetMessage.cs",
-      "line": 4
-    },
-    {
-      "category": "identity",
-      "name": "ToEmail",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/TestEmailMessage.cs",
-      "line": 4
-    },
-    {
-      "category": "identity",
-      "name": "IpAddress",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
-      "line": 5
-    },
-    {
-      "category": "identity",
-      "name": "UserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "UserEmail",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Models/UserLoginEventReadModel.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "IpAddress",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Models/UserLoginEventReadModel.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
-      "name": "UserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Models/UserLoginEventReadModel.cs",
-      "line": 9
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistRelationshipModel.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "UserAgent",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/ProfileWebPushSubscriptionModel.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminCreateModel.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "IsEmailConfirmed",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminCreateModel.cs",
-      "line": 12
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
-      "name": "TelegramUserId",
-      "type": "long?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 47
-    },
-    {
-      "category": "identity",
-      "name": "IsEmailConfirmed",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 49
-    },
-    {
-      "category": "identity",
-      "name": "IsEmailConfirmed",
-      "type": "bool?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminUpdateModel.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAuthenticationPrincipalModel.cs",
-      "line": 7
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserBillingProfileModel.cs",
-      "line": 7
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
-      "line": 7
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserDietologistProfileModel.cs",
-      "line": 5
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserEmailVerificationDeliveryModel.cs",
-      "line": 5
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserGoogleAuthenticationModel.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserInitialAdminBootstrapModel.cs",
-      "line": 3
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
-      "name": "IsEmailConfirmed",
-      "type": "bool",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 40
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserPasswordResetDeliveryModel.cs",
-      "line": 5
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserRegistrationModel.cs",
-      "line": 4
-    },
-    {
-      "category": "identity",
-      "name": "EmailVerificationExpiresAtUtc",
-      "type": "DateTime",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserRegistrationModel.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "FoodDiary.Initializer/InitialAdminBootstrapOptions.cs",
@@ -7117,6 +6900,13 @@
     },
     {
       "category": "identity",
+      "name": "ActorEmail",
+      "type": "string?",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminUserRoleAuditEventReadModel.cs",
+      "line": 9
+    },
+    {
+      "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "Modules/Admin/Application/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
@@ -7357,6 +7147,76 @@
       "category": "identity",
       "name": "Email",
       "type": "string",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "ToEmail",
+      "type": "string",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/AccountCreatedMessage.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "ToEmail",
+      "type": "string",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/EmailVerificationMessage.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "ToEmail",
+      "type": "string",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/PasswordResetMessage.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "ToEmail",
+      "type": "string",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/TestEmailMessage.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "IpAddress",
+      "type": "string?",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/AuthenticationClientContext.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "UserAgent",
+      "type": "string?",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/AuthenticationClientContext.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "UserEmail",
+      "type": "string",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/UserLoginEventReadModel.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "IpAddress",
+      "type": "string?",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/UserLoginEventReadModel.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "UserAgent",
+      "type": "string?",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/UserLoginEventReadModel.cs",
+      "line": 9
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
       "path": "Modules/Identity/Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
       "line": 7
     },
@@ -7481,6 +7341,146 @@
     },
     {
       "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/ProfileDietologistRelationshipModel.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "UserAgent",
+      "type": "string?",
+      "path": "Modules/Users/Contracts/Users/Models/ProfileWebPushSubscriptionModel.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminCreateModel.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "IsEmailConfirmed",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminCreateModel.cs",
+      "line": 12
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "TelegramUserId",
+      "type": "long?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 47
+    },
+    {
+      "category": "identity",
+      "name": "IsEmailConfirmed",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 49
+    },
+    {
+      "category": "identity",
+      "name": "IsEmailConfirmed",
+      "type": "bool?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminUpdateModel.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserAuthenticationPrincipalModel.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserBillingProfileModel.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserDashboardProfileModel.cs",
+      "line": 7
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserDietologistProfileModel.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserEmailVerificationDeliveryModel.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserGoogleAuthenticationModel.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserInitialAdminBootstrapModel.cs",
+      "line": 3
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "IsEmailConfirmed",
+      "type": "bool",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 40
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserPasswordResetDeliveryModel.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Users/Contracts/Users/Models/UserRegistrationModel.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "EmailVerificationExpiresAtUtc",
+      "type": "DateTime",
+      "path": "Modules/Users/Contracts/Users/Models/UserRegistrationModel.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
       "name": "EmailConfirmationSentAtUtc",
       "type": "normalizedIssuedAtUtc,",
       "path": "Modules/Users/Domain/Entities/Users/User.Credentials.cs",
@@ -7569,20 +7569,6 @@
       "type": "DateTime?",
       "path": "Modules/Users/Domain/ValueObjects/UserSecurityState.cs",
       "line": 10
-    },
-    {
-      "category": "privateContent",
-      "name": "ProfileImageAssetId",
-      "type": "Guid?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 37
-    },
-    {
-      "category": "privateContent",
-      "name": "ProfileImageAssetId",
-      "type": "Guid?",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 37
     },
     {
       "category": "privateContent",
@@ -9634,6 +9620,20 @@
       "type": "ImageAssetId?",
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
       "line": 30
+    },
+    {
+      "category": "privateContent",
+      "name": "ProfileImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 37
+    },
+    {
+      "category": "privateContent",
+      "name": "ProfileImageAssetId",
+      "type": "Guid?",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 37
     },
     {
       "category": "privateContent",

@@ -97,76 +97,6 @@
       "line": 10
     },
     {
-      "name": "IAdminUserRoleAuditReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IAdminUserRoleAuditRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IEmailTemplateAdministrationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs",
-      "line": 4
-    },
-    {
-      "name": "IEmailTemplateAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs",
-      "line": 5
-    },
-    {
-      "name": "IEmailTemplateReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IEmailTemplateReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateReadRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IEmailTemplateRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IEmailTemplateWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "AdminUserRoleAuditEventReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/AdminUserRoleAuditEventReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "EmailTemplateReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Admin/Models/EmailTemplateReadModel.cs",
-      "line": 6
-    },
-    {
       "name": "IAuditEntryReadService",
       "kind": "interface",
       "role": "Service",
@@ -188,283 +118,10 @@
       "line": 2
     },
     {
-      "name": "AdminSsoCode",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/AdminSsoCode.cs",
-      "line": 2
-    },
-    {
-      "name": "GoogleIdentityPayload",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
-      "line": 2
-    },
-    {
       "name": "IAdminSsoCodeStore",
       "kind": "interface",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs",
-      "line": 2
-    },
-    {
-      "name": "IAdminSsoService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
-      "line": 4
-    },
-    {
-      "name": "IGoogleTokenValidator",
-      "kind": "interface",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "IJwtTokenGenerator",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
-      "line": 4
-    },
-    {
-      "name": "ITelegramAuthValidator",
-      "kind": "interface",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "ITelegramLoginWidgetValidator",
-      "kind": "interface",
-      "role": "Validator",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "JwtImpersonationClaimNames",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/JwtImpersonationClaimNames.cs",
-      "line": 2
-    },
-    {
-      "name": "JwtImpersonationContext",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/JwtImpersonationContext.cs",
-      "line": 4
-    },
-    {
-      "name": "JwtTokenUseClaimNames",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/JwtTokenUseClaimNames.cs",
-      "line": 2
-    },
-    {
-      "name": "TelegramInitData",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/TelegramInitData.cs",
-      "line": 2
-    },
-    {
-      "name": "TelegramLoginWidgetData",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/TelegramLoginWidgetData.cs",
-      "line": 2
-    },
-    {
-      "name": "AccountCreatedMessage",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/AccountCreatedMessage.cs",
-      "line": 2
-    },
-    {
-      "name": "AuthenticationInputLimits",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/AuthenticationInputLimits.cs",
-      "line": 2
-    },
-    {
-      "name": "EmailTemplateContent",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/EmailTemplateContent.cs",
-      "line": 2
-    },
-    {
-      "name": "EmailVerificationMessage",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/EmailVerificationMessage.cs",
-      "line": 2
-    },
-    {
-      "name": "IAuthenticationLoginEventCleanupService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
-      "line": 2
-    },
-    {
-      "name": "IAuthenticationLoginEventReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/IAuthenticationLoginEventReadService.cs",
-      "line": 4
-    },
-    {
-      "name": "IEmailSender",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/IEmailSender.cs",
-      "line": 2
-    },
-    {
-      "name": "IEmailTemplateProvider",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/IEmailTemplateProvider.cs",
-      "line": 2
-    },
-    {
-      "name": "IEmailVerificationNotifier",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
-      "line": 2
-    },
-    {
-      "name": "IPasswordHasher",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs",
-      "line": 2
-    },
-    {
-      "name": "IRefreshTokenSessionReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IRefreshTokenSessionRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IRefreshTokenSessionWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "ITelegramAssertionReplayGuard",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
-      "line": 2
-    },
-    {
-      "name": "IUserLoginEventReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IUserLoginEventRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IUserLoginEventWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "JwtSecurityClaimNames",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/JwtSecurityClaimNames.cs",
-      "line": 2
-    },
-    {
-      "name": "PasswordResetMessage",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/PasswordResetMessage.cs",
-      "line": 2
-    },
-    {
-      "name": "SecurityTokenGenerator",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/SecurityTokenGenerator.cs",
-      "line": 5
-    },
-    {
-      "name": "TestEmailMessage",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Common/TestEmailMessage.cs",
-      "line": 2
-    },
-    {
-      "name": "AuthenticationClientContext",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Models/AuthenticationClientContext.cs",
-      "line": 2
-    },
-    {
-      "name": "UserLoginDeviceSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Models/UserLoginDeviceSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserLoginEventReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Models/UserLoginEventReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "IAuthenticationTokenService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
-      "line": 5
-    },
-    {
-      "name": "IssuedAuthenticationTokens",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
-      "line": 2
-    },
-    {
-      "name": "IBillingMarketingConversionRecorder",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Billing/Common/IBillingMarketingConversionRecorder.cs",
       "line": 2
     },
     {
@@ -979,20 +636,6 @@
       "line": 2
     },
     {
-      "name": "DietologistEnumValueParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Validation/DietologistEnumValueParser.cs",
-      "line": 5
-    },
-    {
-      "name": "DietologistRequiredIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Validation/DietologistRequiredIdParser.cs",
-      "line": 5
-    },
-    {
       "name": "PaginationPolicy",
       "kind": "class",
       "role": "Other",
@@ -1075,468 +718,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Users/Common/CurrentUserAccessResolver.cs",
       "line": 6
-    },
-    {
-      "name": "ICurrentUserAccessService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs",
-      "line": 5
-    },
-    {
-      "name": "IProfileDietologistReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IProfileDietologistReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IProfileNotificationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IProfileNotificationReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IUserAccessTokenSecurityReader",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs",
-      "line": 2
-    },
-    {
-      "name": "IUserAdministrationMutationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserAdministrationMutationService.cs",
-      "line": 5
-    },
-    {
-      "name": "IUserAdministrationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserAdministrationReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IUserAdminReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IUserAdminReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserAdminReadRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IUserAiProfileReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserAiProfileReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IUserAuthenticationIdentityService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationIdentityService.cs",
-      "line": 6
-    },
-    {
-      "name": "IUserAuthenticationRegistrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationRegistrationService.cs",
-      "line": 5
-    },
-    {
-      "name": "IUserBillingService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserBillingService.cs",
-      "line": 6
-    },
-    {
-      "name": "IUserCleanupService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserCleanupService.cs",
-      "line": 2
-    },
-    {
-      "name": "IUserCredentialVerificationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserCredentialVerificationService.cs",
-      "line": 5
-    },
-    {
-      "name": "IUserCurrentWaistProvider",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWaistProvider.cs",
-      "line": 4
-    },
-    {
-      "name": "IUserCurrentWeightProvider",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWeightProvider.cs",
-      "line": 4
-    },
-    {
-      "name": "IUserDashboardProfileReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserDashboardProfileReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IUserDietologistProfileReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserDietologistProfileReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IUserGamificationProfileReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserGamificationProfileReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IUserGoogleIdentityRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserGoogleIdentityRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "IUserHydrationProfileReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserHydrationProfileReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IUserLookupRepository",
-      "kind": "interface",
-      "role": "LookupRepository",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserLookupRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IUserNotificationProfileService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserNotificationProfileService.cs",
-      "line": 7
-    },
-    {
-      "name": "IUserProfileReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserProfileReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IUserRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IUserRoleCatalogService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserRoleCatalogService.cs",
-      "line": 4
-    },
-    {
-      "name": "IUserRoleMembershipService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserRoleMembershipService.cs",
-      "line": 4
-    },
-    {
-      "name": "IUserTdeeProfileReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserTdeeProfileReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IUserWeeklyCheckInProfileReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserWeeklyCheckInProfileReadService.cs",
-      "line": 6
-    },
-    {
-      "name": "IUserWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserWriteRepository.cs",
-      "line": 4
-    },
-    {
-      "name": "UserAccountStatusFilter",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/UserAccountStatusFilter.cs",
-      "line": 2
-    },
-    {
-      "name": "UserErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/UserErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "DashboardLayoutModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/DashboardLayoutModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GoalsModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
-      "line": 6
-    },
-    {
-      "name": "ProfileDietologistPermissionsModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistPermissionsModel.cs",
-      "line": 2
-    },
-    {
-      "name": "ProfileDietologistRelationshipModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/ProfileDietologistRelationshipModel.cs",
-      "line": 2
-    },
-    {
-      "name": "ProfileOverviewModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/ProfileOverviewModel.cs",
-      "line": 2
-    },
-    {
-      "name": "ProfileWebPushSubscriptionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/ProfileWebPushSubscriptionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserAdminCreateModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminCreateModel.cs",
-      "line": 4
-    },
-    {
-      "name": "UserAdminReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
-      "line": 6
-    },
-    {
-      "name": "UserAdminUpdateModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminUpdateModel.cs",
-      "line": 4
-    },
-    {
-      "name": "UserAiProfileModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAiProfileModel.cs",
-      "line": 4
-    },
-    {
-      "name": "UserAuthenticationPrincipalModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserAuthenticationPrincipalModel.cs",
-      "line": 4
-    },
-    {
-      "name": "UserBillingProfileModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserBillingProfileModel.cs",
-      "line": 4
-    },
-    {
-      "name": "UserDashboardProfileModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
-      "line": 4
-    },
-    {
-      "name": "UserDesiredWaistModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserDesiredWaistModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserDesiredWeightModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserDesiredWeightModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserDietologistProfileModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserDietologistProfileModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserEmailVerificationDeliveryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserEmailVerificationDeliveryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserGamificationProfileModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserGamificationProfileModel.cs",
-      "line": 4
-    },
-    {
-      "name": "UserGoogleAuthenticationModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserGoogleAuthenticationModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserHydrationProfileModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserHydrationProfileModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserInitialAdminBootstrapModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserInitialAdminBootstrapModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
-      "line": 6
-    },
-    {
-      "name": "UserNotificationPreferencesModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserNotificationPreferencesModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserNotificationProfileModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserNotificationProfileModel.cs",
-      "line": 4
-    },
-    {
-      "name": "UserPasswordResetDeliveryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserPasswordResetDeliveryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserPasswordResetIssueModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserPasswordResetIssueModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserPasswordResetIssueStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserPasswordResetIssueStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "UserRegistrationModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserRegistrationModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserTdeeProfileModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserTdeeProfileModel.cs",
-      "line": 2
-    },
-    {
-      "name": "UserWeeklyCheckInProfileModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/UserWeeklyCheckInProfileModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WaistGoalHistoryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/WaistGoalHistoryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WaistHistoryProfileModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/WaistHistoryProfileModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WeightGoalHistoryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/WeightGoalHistoryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "WeightHistoryProfileModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Models/WeightHistoryProfileModel.cs",
-      "line": 2
     },
     {
       "name": "CommandTransactionBehavior",
@@ -8945,6 +8126,20 @@
       "line": 4
     },
     {
+      "name": "IAdminUserRoleAuditReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IAdminUserRoleAuditRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs",
+      "line": 2
+    },
+    {
       "name": "AdminBillingListFilter",
       "kind": "record",
       "role": "Other",
@@ -9019,6 +8214,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxMessageSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminUserRoleAuditEventReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminUserRoleAuditEventReadModel.cs",
       "line": 2
     },
     {
@@ -10531,6 +9733,13 @@
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Billing/Application/Abstractions/Common/IBillingCheckoutLock.cs",
+      "line": 2
+    },
+    {
+      "name": "IBillingMarketingConversionRecorder",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Common/IBillingMarketingConversionRecorder.cs",
       "line": 2
     },
     {
@@ -13810,6 +13019,20 @@
       "line": 6
     },
     {
+      "name": "DietologistEnumValueParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dietologist/Application/Common/Validation/DietologistEnumValueParser.cs",
+      "line": 5
+    },
+    {
+      "name": "DietologistRequiredIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dietologist/Application/Common/Validation/DietologistRequiredIdParser.cs",
+      "line": 5
+    },
+    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
@@ -16986,6 +16209,321 @@
       "role": "Repository",
       "path": "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs",
       "line": 10
+    },
+    {
+      "name": "IEmailTemplateAdministrationReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs",
+      "line": 4
+    },
+    {
+      "name": "IEmailTemplateAdministrationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs",
+      "line": 5
+    },
+    {
+      "name": "IEmailTemplateReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IEmailTemplateReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IEmailTemplateRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IEmailTemplateWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateWriteRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "EmailTemplateReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Admin/Models/EmailTemplateReadModel.cs",
+      "line": 6
+    },
+    {
+      "name": "AdminSsoCode",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/AdminSsoCode.cs",
+      "line": 2
+    },
+    {
+      "name": "GoogleIdentityPayload",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/GoogleIdentityPayload.cs",
+      "line": 2
+    },
+    {
+      "name": "IAdminSsoService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
+      "line": 4
+    },
+    {
+      "name": "IGoogleTokenValidator",
+      "kind": "interface",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "IJwtTokenGenerator",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
+      "line": 4
+    },
+    {
+      "name": "ITelegramAuthValidator",
+      "kind": "interface",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "ITelegramLoginWidgetValidator",
+      "kind": "interface",
+      "role": "Validator",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "JwtImpersonationClaimNames",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/JwtImpersonationClaimNames.cs",
+      "line": 2
+    },
+    {
+      "name": "JwtImpersonationContext",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/JwtImpersonationContext.cs",
+      "line": 4
+    },
+    {
+      "name": "JwtTokenUseClaimNames",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/JwtTokenUseClaimNames.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramInitData",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramInitData.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramLoginWidgetData",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/TelegramLoginWidgetData.cs",
+      "line": 2
+    },
+    {
+      "name": "AccountCreatedMessage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/AccountCreatedMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "AuthenticationInputLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/AuthenticationInputLimits.cs",
+      "line": 2
+    },
+    {
+      "name": "EmailTemplateContent",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/EmailTemplateContent.cs",
+      "line": 2
+    },
+    {
+      "name": "EmailVerificationMessage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/EmailVerificationMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "IAuthenticationLoginEventCleanupService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
+      "line": 2
+    },
+    {
+      "name": "IAuthenticationLoginEventReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventReadService.cs",
+      "line": 4
+    },
+    {
+      "name": "IEmailSender",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailSender.cs",
+      "line": 2
+    },
+    {
+      "name": "IEmailTemplateProvider",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailTemplateProvider.cs",
+      "line": 2
+    },
+    {
+      "name": "IEmailVerificationNotifier",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
+      "line": 2
+    },
+    {
+      "name": "IPasswordHasher",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IPasswordHasher.cs",
+      "line": 2
+    },
+    {
+      "name": "IRefreshTokenSessionReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IRefreshTokenSessionRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IRefreshTokenSessionWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "ITelegramAssertionReplayGuard",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
+      "line": 2
+    },
+    {
+      "name": "IUserLoginEventReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventReadRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IUserLoginEventRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IUserLoginEventWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventWriteRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "JwtSecurityClaimNames",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/JwtSecurityClaimNames.cs",
+      "line": 2
+    },
+    {
+      "name": "PasswordResetMessage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/PasswordResetMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "SecurityTokenGenerator",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/SecurityTokenGenerator.cs",
+      "line": 5
+    },
+    {
+      "name": "TestEmailMessage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/TestEmailMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "AuthenticationClientContext",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/AuthenticationClientContext.cs",
+      "line": 2
+    },
+    {
+      "name": "UserLoginDeviceSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/UserLoginDeviceSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserLoginEventReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/UserLoginEventReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "IAuthenticationTokenService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
+      "line": 5
+    },
+    {
+      "name": "IssuedAuthenticationTokens",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
+      "line": 2
     },
     {
       "name": "AdminSsoExchangeCommand",
@@ -22896,6 +22434,55 @@
       "line": 8
     },
     {
+      "name": "IUserAdminReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Users/Application/Abstractions/Users/Common/IUserAdminReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IUserAdminReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Users/Application/Abstractions/Users/Common/IUserAdminReadRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IUserGoogleIdentityRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Users/Application/Abstractions/Users/Common/IUserGoogleIdentityRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "IUserLookupRepository",
+      "kind": "interface",
+      "role": "LookupRepository",
+      "path": "Modules/Users/Application/Abstractions/Users/Common/IUserLookupRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IUserRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Users/Application/Abstractions/Users/Common/IUserRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IUserRoleCatalogService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Application/Abstractions/Users/Common/IUserRoleCatalogService.cs",
+      "line": 4
+    },
+    {
+      "name": "IUserWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Users/Application/Abstractions/Users/Common/IUserWriteRepository.cs",
+      "line": 4
+    },
+    {
       "name": "AcceptAiConsentCommand",
       "kind": "record",
       "role": "Command",
@@ -23363,6 +22950,419 @@
       "role": "Service",
       "path": "Modules/Users/Application/Services/UserNotificationProfileService.cs",
       "line": 10
+    },
+    {
+      "name": "ICurrentUserAccessService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/ICurrentUserAccessService.cs",
+      "line": 5
+    },
+    {
+      "name": "IProfileDietologistReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IProfileDietologistReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IProfileNotificationReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IProfileNotificationReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IUserAccessTokenSecurityReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Common/IUserAccessTokenSecurityReader.cs",
+      "line": 2
+    },
+    {
+      "name": "IUserAdministrationMutationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserAdministrationMutationService.cs",
+      "line": 5
+    },
+    {
+      "name": "IUserAdministrationReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserAdministrationReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IUserAiProfileReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserAiProfileReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IUserAuthenticationIdentityService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserAuthenticationIdentityService.cs",
+      "line": 6
+    },
+    {
+      "name": "IUserAuthenticationRegistrationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserAuthenticationRegistrationService.cs",
+      "line": 5
+    },
+    {
+      "name": "IUserBillingService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserBillingService.cs",
+      "line": 6
+    },
+    {
+      "name": "IUserCleanupService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserCleanupService.cs",
+      "line": 2
+    },
+    {
+      "name": "IUserCredentialVerificationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserCredentialVerificationService.cs",
+      "line": 5
+    },
+    {
+      "name": "IUserCurrentWaistProvider",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Common/IUserCurrentWaistProvider.cs",
+      "line": 4
+    },
+    {
+      "name": "IUserCurrentWeightProvider",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Common/IUserCurrentWeightProvider.cs",
+      "line": 4
+    },
+    {
+      "name": "IUserDashboardProfileReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserDashboardProfileReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IUserDietologistProfileReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserDietologistProfileReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IUserGamificationProfileReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserGamificationProfileReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IUserHydrationProfileReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserHydrationProfileReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IUserNotificationProfileService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserNotificationProfileService.cs",
+      "line": 7
+    },
+    {
+      "name": "IUserProfileReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserProfileReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IUserRoleMembershipService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserRoleMembershipService.cs",
+      "line": 4
+    },
+    {
+      "name": "IUserTdeeProfileReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserTdeeProfileReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "IUserWeeklyCheckInProfileReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserWeeklyCheckInProfileReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "UserAccountStatusFilter",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Common/UserAccountStatusFilter.cs",
+      "line": 2
+    },
+    {
+      "name": "UserErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Common/UserErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "DashboardLayoutModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/DashboardLayoutModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GoalsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/GoalsModel.cs",
+      "line": 6
+    },
+    {
+      "name": "ProfileDietologistPermissionsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/ProfileDietologistPermissionsModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ProfileDietologistRelationshipModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/ProfileDietologistRelationshipModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ProfileOverviewModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/ProfileOverviewModel.cs",
+      "line": 2
+    },
+    {
+      "name": "ProfileWebPushSubscriptionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/ProfileWebPushSubscriptionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserAdminCreateModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminCreateModel.cs",
+      "line": 4
+    },
+    {
+      "name": "UserAdminReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminReadModel.cs",
+      "line": 6
+    },
+    {
+      "name": "UserAdminUpdateModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserAdminUpdateModel.cs",
+      "line": 4
+    },
+    {
+      "name": "UserAiProfileModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserAiProfileModel.cs",
+      "line": 4
+    },
+    {
+      "name": "UserAuthenticationPrincipalModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserAuthenticationPrincipalModel.cs",
+      "line": 4
+    },
+    {
+      "name": "UserBillingProfileModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserBillingProfileModel.cs",
+      "line": 4
+    },
+    {
+      "name": "UserDashboardProfileModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserDashboardProfileModel.cs",
+      "line": 4
+    },
+    {
+      "name": "UserDesiredWaistModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserDesiredWaistModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserDesiredWeightModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserDesiredWeightModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserDietologistProfileModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserDietologistProfileModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserEmailVerificationDeliveryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserEmailVerificationDeliveryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserGamificationProfileModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserGamificationProfileModel.cs",
+      "line": 4
+    },
+    {
+      "name": "UserGoogleAuthenticationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserGoogleAuthenticationModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserHydrationProfileModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserHydrationProfileModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserInitialAdminBootstrapModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserInitialAdminBootstrapModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserModel.cs",
+      "line": 6
+    },
+    {
+      "name": "UserNotificationPreferencesModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserNotificationPreferencesModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserNotificationProfileModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserNotificationProfileModel.cs",
+      "line": 4
+    },
+    {
+      "name": "UserPasswordResetDeliveryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserPasswordResetDeliveryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserPasswordResetIssueModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserPasswordResetIssueModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserPasswordResetIssueStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserPasswordResetIssueStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "UserRegistrationModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserRegistrationModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserTdeeProfileModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserTdeeProfileModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UserWeeklyCheckInProfileModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/UserWeeklyCheckInProfileModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WaistGoalHistoryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/WaistGoalHistoryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WaistHistoryProfileModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/WaistHistoryProfileModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightGoalHistoryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/WeightGoalHistoryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "WeightHistoryProfileModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Models/WeightHistoryProfileModel.cs",
+      "line": 2
     },
     {
       "name": "ActivityLevel",
@@ -24810,7 +24810,7 @@
     },
     {
       "interface": "IAdminSsoService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
       "implementation": "AdminSsoService",
       "implementationPath": "Modules/Identity/Infrastructure/Authentication/AdminSsoService.cs",
       "confidence": "naming-convention"
@@ -24831,7 +24831,7 @@
     },
     {
       "interface": "IAdminUserRoleAuditRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs",
+      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs",
       "implementation": "AdminUserRoleAuditRepository",
       "implementationPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
       "confidence": "naming-convention"
@@ -24894,21 +24894,21 @@
     },
     {
       "interface": "IAuthenticationLoginEventCleanupService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
       "implementation": "AuthenticationLoginEventCleanupService",
       "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAuthenticationLoginEventReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IAuthenticationLoginEventReadService.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IAuthenticationLoginEventReadService.cs",
       "implementation": "AuthenticationLoginEventReadService",
       "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationLoginEventReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAuthenticationTokenService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
       "implementation": "AuthenticationTokenService",
       "implementationPath": "Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs",
       "confidence": "naming-convention"
@@ -25251,42 +25251,42 @@
     },
     {
       "interface": "IEmailSender",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IEmailSender.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailSender.cs",
       "implementation": "EmailSender",
       "implementationPath": "Modules/Identity/Application/Authentication/Services/EmailSender.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailTemplateAdministrationReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs",
       "implementation": "EmailTemplateAdministrationReadService",
       "implementationPath": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailTemplateAdministrationService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs",
       "implementation": "EmailTemplateAdministrationService",
       "implementationPath": "Modules/Identity/Application/Email/Services/EmailTemplateAdministrationService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailTemplateProvider",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IEmailTemplateProvider.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailTemplateProvider.cs",
       "implementation": "EmailTemplateProvider",
       "implementationPath": "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailTemplateRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateRepository.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateRepository.cs",
       "implementation": "EmailTemplateRepository",
       "implementationPath": "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailVerificationNotifier",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
       "implementation": "EmailVerificationNotifier",
       "implementationPath": "FoodDiary.Presentation.Api/Services/EmailVerificationNotifier.cs",
       "confidence": "naming-convention"
@@ -25440,7 +25440,7 @@
     },
     {
       "interface": "IGoogleTokenValidator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs",
       "implementation": "GoogleTokenValidator",
       "implementationPath": "FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs",
       "confidence": "naming-convention"
@@ -25510,7 +25510,7 @@
     },
     {
       "interface": "IJwtTokenGenerator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IJwtTokenGenerator.cs",
       "implementation": "JwtTokenGenerator",
       "implementationPath": "Modules/Identity/Infrastructure/Authentication/JwtTokenGenerator.cs",
       "confidence": "naming-convention"
@@ -25818,7 +25818,7 @@
     },
     {
       "interface": "IPasswordHasher",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IPasswordHasher.cs",
       "implementation": "PasswordHasher",
       "implementationPath": "Modules/Identity/Infrastructure/Services/PasswordHasher.cs",
       "confidence": "naming-convention"
@@ -25986,7 +25986,7 @@
     },
     {
       "interface": "IRefreshTokenSessionRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
       "implementation": "RefreshTokenSessionRepository",
       "implementationPath": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
       "confidence": "naming-convention"
@@ -26028,21 +26028,21 @@
     },
     {
       "interface": "ITelegramAssertionReplayGuard",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/ITelegramAssertionReplayGuard.cs",
       "implementation": "TelegramAssertionReplayGuard",
       "implementationPath": "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "ITelegramAuthValidator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
       "implementation": "TelegramAuthValidator",
       "implementationPath": "FoodDiary.Integrations/Authentication/TelegramAuthValidator.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "ITelegramLoginWidgetValidator",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs",
       "implementation": "TelegramLoginWidgetValidator",
       "implementationPath": "FoodDiary.Integrations/Authentication/TelegramLoginWidgetValidator.cs",
       "confidence": "naming-convention"
@@ -26091,7 +26091,7 @@
     },
     {
       "interface": "IUserAccessTokenSecurityReader",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserAccessTokenSecurityReader.cs",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserAccessTokenSecurityReader.cs",
       "implementation": "UserAccessTokenSecurityReader",
       "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs",
       "confidence": "naming-convention"
@@ -26105,14 +26105,14 @@
     },
     {
       "interface": "IUserAdministrationMutationService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserAdministrationMutationService.cs",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserAdministrationMutationService.cs",
       "implementation": "UserAdministrationMutationService",
       "implementationPath": "Modules/Users/Application/Services/UserAdministrationMutationService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserAdministrationReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserAdministrationReadService.cs",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserAdministrationReadService.cs",
       "implementation": "UserAdministrationReadService",
       "implementationPath": "Modules/Users/Application/Services/UserAdministrationReadService.cs",
       "confidence": "naming-convention"
@@ -26126,28 +26126,28 @@
     },
     {
       "interface": "IUserAuthenticationIdentityService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationIdentityService.cs",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserAuthenticationIdentityService.cs",
       "implementation": "UserAuthenticationIdentityService",
       "implementationPath": "Modules/Users/Application/Services/UserAuthenticationIdentityService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserAuthenticationRegistrationService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationRegistrationService.cs",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserAuthenticationRegistrationService.cs",
       "implementation": "UserAuthenticationRegistrationService",
       "implementationPath": "Modules/Users/Application/Services/UserAuthenticationRegistrationService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserBillingService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserBillingService.cs",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserBillingService.cs",
       "implementation": "UserBillingService",
       "implementationPath": "Modules/Users/Application/Services/UserBillingService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserCleanupService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserCleanupService.cs",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserCleanupService.cs",
       "implementation": "UserCleanupService",
       "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
       "confidence": "naming-convention"
@@ -26161,21 +26161,21 @@
     },
     {
       "interface": "IUserCredentialVerificationService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserCredentialVerificationService.cs",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserCredentialVerificationService.cs",
       "implementation": "UserCredentialVerificationService",
       "implementationPath": "Modules/Users/Application/Services/UserCredentialVerificationService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserCurrentWaistProvider",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWaistProvider.cs",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserCurrentWaistProvider.cs",
       "implementation": "UserCurrentWaistProvider",
       "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserCurrentWeightProvider",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWeightProvider.cs",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserCurrentWeightProvider.cs",
       "implementation": "UserCurrentWeightProvider",
       "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
       "confidence": "naming-convention"
@@ -26189,35 +26189,35 @@
     },
     {
       "interface": "IUserLoginEventRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
+      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
       "implementation": "UserLoginEventRepository",
       "implementationPath": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserNotificationProfileService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserNotificationProfileService.cs",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserNotificationProfileService.cs",
       "implementation": "UserNotificationProfileService",
       "implementationPath": "Modules/Users/Application/Services/UserNotificationProfileService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserRepository.cs",
+      "interfacePath": "Modules/Users/Application/Abstractions/Users/Common/IUserRepository.cs",
       "implementation": "UserRepository",
       "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserRoleCatalogService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserRoleCatalogService.cs",
+      "interfacePath": "Modules/Users/Application/Abstractions/Users/Common/IUserRoleCatalogService.cs",
       "implementation": "UserRoleCatalogService",
       "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IUserRoleMembershipService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserRoleMembershipService.cs",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserRoleMembershipService.cs",
       "implementation": "UserRoleMembershipService",
       "implementationPath": "Modules/Users/Infrastructure/Persistence/Users/UserRoleMembershipService.cs",
       "confidence": "naming-convention"

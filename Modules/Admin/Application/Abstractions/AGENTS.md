@@ -2,4 +2,4 @@
 
 Rules for `Modules/Admin/Application/Abstractions/`.
 
-Own Admin billing-report, impersonation and MailInbox reader ports/models. Depend only on Admin Domain and shared Results. Preserve legacy CLR namespaces. Identity email-template and Users role-audit contracts remain central.
+Own Admin billing-report, impersonation, MailInbox and administrative role-audit reader ports/models. Depend on Admin Domain, Users Domain.Contracts and Results. Preserve legacy CLR namespaces. Identity owns email-template contracts; Users owns its role-audit aggregate.

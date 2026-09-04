@@ -1,5 +1,15 @@
 # Backend module ownership
 
+## Users and Identity application contracts
+
+Users Contracts owns semantic capabilities/models/errors; Users Application/Abstractions
+owns aggregate/repository ports. Identity Application/Abstractions owns Authentication
+and email-template contracts. Admin owns role-audit reader ports; Billing owns its
+Marketing-implemented conversion recorder; Dietologist owns its two parsing helpers.
+Central Application.Abstractions retains shared interfaces and compatibility references,
+not copies of these declarations. CurrentUserAccessResolver and the shared single-use
+SSO store contract remain central. See `docs/ai/contracts-batch-ownership.md`.
+
 ## Outbox stream records
 
 Images and Gamification own their stream-specific records and EF mappings in

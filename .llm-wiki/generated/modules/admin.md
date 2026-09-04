@@ -160,17 +160,17 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AdminImpersonationSession
-- Public contract files: 19
+- Public contract files: 22
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 19
-- Interfaces: 7
-- DTO/read-model/projection types: 10
+- Public contract types: 22
+- Interfaces: 9
+- DTO/read-model/projection types: 11
 - Enums: 0
-- Exported repository-shaped contracts: 5
+- Exported repository-shaped contracts: 7
 - Contracts referencing domain entities: 1
 - `class AdminMailInboxErrors`
 - `interface IAdminBillingReadRepository`
@@ -180,6 +180,8 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - `interface IAdminImpersonationSessionRepository`
 - `interface IAdminImpersonationSessionWriteRepository`
 - `interface IAdminMailInboxReader`
+- `interface IAdminUserRoleAuditReadRepository`
+- `interface IAdminUserRoleAuditRepository`
 - `record AdminBillingListFilter`
 - `record AdminBillingPaymentReadModel`
 - `record AdminBillingRevenueCurrencyReadModel`
@@ -191,6 +193,7 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - `record AdminMailInboxDmarcReportModel`
 - `record AdminMailInboxMessageDetailsModel`
 - `record AdminMailInboxMessageSummaryModel`
+- `record AdminUserRoleAuditEventReadModel`
 
 ## Focused Tests
 

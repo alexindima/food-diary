@@ -9,7 +9,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
         string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
         string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
 
-        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Billing.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.DailyAdvices.Application.Abstractions", "FoodDiary.Modules.Dashboard.Contracts", "FoodDiary.Modules.Dietologist.Application.Abstractions", "FoodDiary.Modules.Exercises.Application.Abstractions", "FoodDiary.Modules.Fasting.Application.Abstractions", "FoodDiary.Modules.Favorites.Application.Abstractions", "FoodDiary.Modules.Hydration.Application.Abstractions", "FoodDiary.Modules.Identity.Domain", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Marketing.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.Meals.Application.Abstractions", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.RecipeCommunity.Application.Abstractions", "FoodDiary.Modules.Recipes.Application.Abstractions", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Wearables.Application.Abstractions", "FoodDiary.Results"], projectReferences);
+        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Billing.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.DailyAdvices.Application.Abstractions", "FoodDiary.Modules.Dashboard.Contracts", "FoodDiary.Modules.Dietologist.Application.Abstractions", "FoodDiary.Modules.Exercises.Application.Abstractions", "FoodDiary.Modules.Fasting.Application.Abstractions", "FoodDiary.Modules.Favorites.Application.Abstractions", "FoodDiary.Modules.Hydration.Application.Abstractions", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Marketing.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.Meals.Application.Abstractions", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.RecipeCommunity.Application.Abstractions", "FoodDiary.Modules.Recipes.Application.Abstractions", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Users.Application.Abstractions", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Modules.Wearables.Application.Abstractions", "FoodDiary.Results"], projectReferences);
         Assert.Empty(packageReferences);
     }
 
@@ -26,7 +26,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
     }
 
     [Fact]
-    public void ApplicationAbstractions_FeatureFolders_HaveCommonContractsFolder() {
+    public void ApplicationAbstractions_FeatureFolders_HavePurposeContractsFolder() {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
         var excludedDirectories = new HashSet<string>(StringComparer.Ordinal) {
@@ -37,7 +37,9 @@ public sealed class ApplicationAbstractionsBoundaryTests {
 
         string[] violations = [.. Directory.GetDirectories(abstractionsRoot)
             .Where(path => !excludedDirectories.Contains(Path.GetFileName(path)))
-            .Where(path => !Directory.Exists(Path.Combine(path, "Common")))
+            .Where(path => SourceScanner.SourceFiles(path).Any())
+            .Where(path => !Directory.Exists(Path.Combine(path, "Common")) &&
+                           !Directory.Exists(Path.Combine(path, "Abstractions")))
             .Select(path => Path.GetRelativePath(root, path))
             .Order(StringComparer.Ordinal)];
 

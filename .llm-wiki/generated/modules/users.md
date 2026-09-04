@@ -27,6 +27,8 @@ sources:
 - `FoodDiary.Application.Abstractions/Users`
 - `FoodDiary.Presentation.Api/Features/Users`
 - `Modules/Users/Application`
+- `Modules/Users/Application/Abstractions`
+- `Modules/Users/Contracts`
 
 ## HTTP Surface
 
@@ -81,18 +83,18 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - Physical isolation: module-root-with-shared-persistence-and-identity-seams
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 67
+- Public contract files: 60
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 67
-- Interfaces: 30
+- Public contract types: 60
+- Interfaces: 23
 - DTO/read-model/projection types: 33
 - Enums: 2
-- Exported repository-shaped contracts: 6
-- Contracts referencing domain entities: 5
+- Exported repository-shaped contracts: 0
+- Contracts referencing domain entities: 0
 - `class CurrentUserAccessResolver`
 - `class UserErrors`
 - `enum UserAccountStatusFilter`
@@ -103,8 +105,6 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - `interface IUserAccessTokenSecurityReader`
 - `interface IUserAdministrationMutationService`
 - `interface IUserAdministrationReadService`
-- `interface IUserAdminReadModelRepository`
-- `interface IUserAdminReadRepository`
 - `interface IUserAiProfileReadService`
 - `interface IUserAuthenticationIdentityService`
 - `interface IUserAuthenticationRegistrationService`
@@ -116,14 +116,16 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - `interface IUserDashboardProfileReadService`
 - `interface IUserDietologistProfileReadService`
 - `interface IUserGamificationProfileReadService`
-- `interface IUserGoogleIdentityRepository`
 - `interface IUserHydrationProfileReadService`
-- `interface IUserLookupRepository`
 - `interface IUserNotificationProfileService`
 - `interface IUserProfileReadService`
-- `interface IUserRepository`
-- `interface IUserRoleCatalogService`
-- ... 37 more type(s)
+- `interface IUserRoleMembershipService`
+- `interface IUserTdeeProfileReadService`
+- `interface IUserWeeklyCheckInProfileReadService`
+- `record DashboardLayoutModel`
+- `record GoalsModel`
+- `record ProfileDietologistPermissionsModel`
+- ... 30 more type(s)
 
 ## Extraction Readiness
 

@@ -7,7 +7,10 @@ $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $command = 'dotnet test tests/Example.Tests.csproj --no-restore'
 $receiptRoot = Get-LlmWikiVerificationReceiptRoot $repositoryRoot
 $receiptPath = Join-Path $receiptRoot "$(Get-LlmWikiSha256 (Normalize-LlmWikiVerificationCommand $command)).json"
-$planCommand = 'dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore'
+# The moved Users contract has many module consumers; Ai is an actual focused
+# consumer in the bounded current test plan. This fixture tests receipt reuse,
+# not a requirement that shared contracts belong to central Application.Tests.
+$planCommand = 'dotnet test Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/FoodDiary.Modules.Ai.Application.Tests.csproj --no-restore'
 $planReceiptPath = Join-Path $receiptRoot "$(Get-LlmWikiSha256 (Normalize-LlmWikiVerificationCommand $planCommand)).json"
 $importCommand = 'dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj'
 $importReceiptPath = Join-Path $receiptRoot "$(Get-LlmWikiSha256 (Normalize-LlmWikiVerificationCommand $importCommand)).json"
@@ -35,7 +38,7 @@ try {
         -CoverageScope 'application-contract' `
         -Format Json | Out-Null
     $plan = & (Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1') `
-        -ChangedPath 'FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs' `
+        -ChangedPath 'Modules/Users/Contracts/Users/Common/ICurrentUserAccessService.cs' `
         -Format Json | ConvertFrom-Json
     $normalizedPlanCommand = Normalize-LlmWikiVerificationCommand $planCommand
     $applicationCheck = @($plan.commands | Where-Object {
@@ -63,7 +66,7 @@ try {
     $null = New-Item -ItemType Directory -Path $absoluteWorkspace -Force
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiEvidence.ps1') init `
         -Path "$workspace/evidence.json" `
-        -ChangedPath 'FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs' | Out-Null
+        -ChangedPath 'Modules/Users/Contracts/Users/Common/ICurrentUserAccessService.cs' | Out-Null
     $import = & (Join-Path $PSScriptRoot 'Import-LlmWikiEvidenceReceipts.ps1') `
         -WorkspacePath $workspace `
         -Format Json | ConvertFrom-Json

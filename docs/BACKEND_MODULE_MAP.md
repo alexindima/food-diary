@@ -1,5 +1,15 @@
 # Backend Module Map
 
+## Users and Identity application contracts
+
+Users Contracts owns semantic capabilities/models/errors; Users Application/Abstractions
+owns aggregate/repository ports. Identity Application/Abstractions owns Authentication
+and email-template contracts. Admin owns role-audit reader ports; Billing owns its
+Marketing-implemented conversion recorder; Dietologist owns its two parsing helpers.
+Central Application.Abstractions retains shared interfaces and compatibility references,
+not copies of these declarations. CurrentUserAccessResolver and the shared single-use
+SSO store contract remain central. See `docs/ai/contracts-batch-ownership.md`.
+
 ## Outbox stream model ownership
 
 Images deletion and Gamification evaluation records/mappings compile in their
@@ -20,7 +30,7 @@ Use this file when deciding where backend code belongs.
 | Product identity and units | `Modules/Products/Domain.Contracts` | ProductId, ProductType, MeasurementUnit | Aggregate dependencies and calculations |
 | Nutrient health scoring | `Modules/Usda/Domain` | HealthAreaScore, HealthAreaGrade, HealthAreaScores | Reverse Products dependencies |
 | Domain model | Owning `Modules/<Feature>/Domain` | Entities, value objects, aggregate behavior, domain events | EF Core, HTTP, external SDKs, central shared domain buckets |
-| Application ports/models | `FoodDiary.Application.Abstractions` | Feature ports, application-facing models, shared result abstractions | ASP.NET, EF Core, provider SDKs, host config |
+| Application ports/models | Owning module Contracts or Application/Abstractions; central shared compatibility seams | Semantic consumer contracts separated from owner repository ports | Foreign aggregates/repositories in public contracts, ASP.NET, EF Core, provider SDKs |
 | Application runtime | `FoodDiary.Application.Runtime` | Mediator pipeline behaviors, transaction boundary, post-commit queue registration | Feature handlers, validators, business services, module aggregation |
 | Use cases | Owning `FoodDiary.Application.<Feature>` project or `Modules/<Feature>/Application` | Commands, queries, handlers, validators, application services | Cross-feature shared buckets, persistence implementation, HTTP request/response DTOs |
 | BodyMetrics domain | `Modules/BodyMetrics/Domain` | Weight/waist measurement entries, IDs, and invariants with legacy CLR namespaces and a one-way dependency on Users-owned `User`/`UserId`; User-owned goal lifecycle belongs to Users Domain | Reverse User measurement navigations, goal lifecycle, application orchestration, EF mappings, transport |

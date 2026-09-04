@@ -504,3 +504,7 @@ dotnet_diagnostic.RCS1181.severity = none
 # Preserve EF navigation setters after RecipeCommunity entity extraction.
 [Modules/RecipeCommunity/Domain/Entities/**/*.cs]
 dotnet_diagnostic.RCS1170.severity = none
+
+# These two relocated helpers retain their existing public CLR namespace.
+[Modules/Dietologist/Application/Common/Validation/Dietologist{RequiredId,EnumValue}Parser.cs]
+dotnet_diagnostic.IDE0130.severity = none
