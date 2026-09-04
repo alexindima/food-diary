@@ -6,7 +6,7 @@ import { basename, dirname, extname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
 import { traceCandidateMatchesScope } from './code-graph-trace-scope.mjs';
-import { directIdentifierTermMatchesMinimum, implicitImplementationIntent, rankingModuleIdentity, rankingPathIdentities } from './code-graph-path-layout.mjs';
+import { directIdentifierTermMatchesMinimum, implicitImplementationIntent, isModuleEntryPointQuery, rankingModuleIdentity, rankingPathIdentities, testIdentityWeights } from './code-graph-path-layout.mjs';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
@@ -2262,6 +2262,9 @@ function searchContext(database, query, limit, filters = {}) {
   const changeType = String(filters.changeType ?? 'Any').toLowerCase();
   const stronglyRequestsTest = explicitlyRequestsTest &&
     (changeType === 'tests' || (changeType === 'frontend' && directTerms.includes('tests')));
+  const testSubjectWeights = stronglyRequestsTest ? testIdentityWeights(directTerms,
+    candidates.map(item => ({ path: String(item.path ?? ''), identity: expandSearchText(basename(String(item.path ?? '').replaceAll('\\', '/'))).toLowerCase() })),
+    contextSearchRanking.directFileNameAffinity ?? {}) : new Map();
   const eligibleTermsForBoost = (boost) => boost.directOnly ? directTerms : boostTerms;
   const boostMatchesQuery = (boost, defaultMinimum = 1) => {
     const eligibleTerms = eligibleTermsForBoost(boost);
@@ -2412,6 +2415,10 @@ function searchContext(database, query, limit, filters = {}) {
         genericAffinity.wikiToolPathPrefixes, genericAffinity.wikiToolScore);
     }
     if (isExplicitTestCandidate && stronglyRequestsTest) {
+      const subjectScore = Math.min(directFileNameMatches.reduce((total, term) => total + (testSubjectWeights.get(term) ?? 0), 0),
+        Number(directFileNameAffinity.maximumScore ?? 0));
+      score += subjectScore;
+      if (subjectScore > 0) reasons.push(`direct test-subject specificity ${subjectScore}`);
       const explicitTestAffinity = contextSearchRanking.explicitTestAffinity ?? {};
       const explicitTestScore = Math.min(
         identityMatches.length * Number(explicitTestAffinity.scorePerMatch ?? 0),
@@ -2531,7 +2538,9 @@ function searchContext(database, query, limit, filters = {}) {
       score -= Number(documentationPenalty.score ?? 0);
       reasons.push('documentation candidate penalty for implementation intent');
     }
-    const requestsAbstraction = terms.some((term) => ['interface', 'contract', 'abstraction'].includes(term));
+    const moduleEntryPoint = isModuleEntryPointQuery(path, changeType, directTerms, boostTerms, contextSearchRanking);
+    const requestsAbstraction = moduleEntryPoint || terms.some((term) => ['interface', 'contract', 'abstraction'].includes(term));
+    if (moduleEntryPoint) reasons.push('module entry-point abstraction penalty waived');
     if (!requestsAbstraction && selectorPaths.some((selectorPath) => selectorPath.startsWith('fooddiary.application.abstractions/'))) {
       score -= Number(contextSearchRanking.applicationAbstractionPenalty ?? 0);
     }

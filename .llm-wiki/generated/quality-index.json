@@ -24,11 +24,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 1320,
-      "decisionPoints": 265,
+      "nonBlankLines": 1397,
+      "decisionPoints": 290,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 423.9
+      "structuralRiskScore": 462.94
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
@@ -3098,11 +3098,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 1320,
-      "decisionPoints": 265,
+      "nonBlankLines": 1397,
+      "decisionPoints": 290,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 423.9
+      "structuralRiskScore": 462.94
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",

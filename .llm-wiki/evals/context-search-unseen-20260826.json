@@ -73,7 +73,7 @@
       "query": "domain rule for ids shopping list item identifier",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/ValueObjects/Ids/ShoppingListItemId.cs"
+        "Modules/MealPlanning/Domain/ValueObjects/Ids/ShoppingListItemId.cs"
       ]
     },
     {
@@ -235,7 +235,7 @@
       "query": "domain rule for recipe update",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/ValueObjects/RecipeUpdate.cs"
+        "Modules/Recipes/Domain/ValueObjects/RecipeUpdate.cs"
       ]
     },
     {
@@ -290,7 +290,7 @@
       "query": "domain rule for users user lifecycle",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/Entities/Users/User.Lifecycle.cs"
+        "Modules/Users/Domain/Entities/Users/User.Lifecycle.cs"
       ]
     },
     {
@@ -398,7 +398,7 @@
       "query": "domain rule for user artificial intelligence token limit update",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/ValueObjects/UserAiTokenLimitUpdate.cs"
+        "Modules/Users/Domain/ValueObjects/UserAiTokenLimitUpdate.cs"
       ]
     },
     {
@@ -506,7 +506,7 @@
       "query": "domain rule for meals meal artificial intelligence item",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/Entities/Meals/MealAiItem.cs"
+        "Modules/Meals/Domain/Entities/Meals/MealAiItem.cs"
       ]
     },
     {
@@ -560,7 +560,7 @@
       "query": "domain rule for user profile media state",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/ValueObjects/UserProfileMediaState.cs"
+        "Modules/Users/Domain/ValueObjects/UserProfileMediaState.cs"
       ]
     },
     {
@@ -614,7 +614,7 @@
       "query": "domain rule for email address",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/ValueObjects/EmailAddress.cs"
+        "Shared/FoodDiary.Domain.Primitives/EmailAddress.cs"
       ]
     },
     {
@@ -668,7 +668,7 @@
       "query": "domain rule for enums report target type",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/Enums/ReportTargetType.cs"
+        "Modules/ContentReports/Domain/Enums/ReportTargetType.cs"
       ]
     },
     {
@@ -722,7 +722,7 @@
       "query": "domain rule for ids cycle identifier",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/ValueObjects/Ids/CycleId.cs"
+        "Modules/Cycles/Domain/ValueObjects/Ids/CycleId.cs"
       ]
     },
     {
@@ -767,7 +767,7 @@
       "query": "automated checks for user security version",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Domain.Tests/Domain/UserSecurityVersionTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/UserSecurityVersionTests.cs"
       ]
     },
     {
@@ -884,7 +884,7 @@
       "query": "domain rule for users user role",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/Entities/Users/UserRole.cs"
+        "Modules/Users/Domain/Entities/Users/UserRole.cs"
       ]
     },
     {
@@ -938,7 +938,7 @@
       "query": "domain rule for recipe nutrition",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Domain/ValueObjects/RecipeNutrition.cs"
+        "Modules/Recipes/Domain/ValueObjects/RecipeNutrition.cs"
       ]
     },
     {

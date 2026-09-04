@@ -120,7 +120,7 @@
       "id": "recent-item-postcommit-recorder",
       "query": "record recent item usage only after a successful commit",
       "changeType": "Database",
-      "expectedPaths": ["FoodDiary.Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs"]
+      "expectedPaths": ["Modules/RecentItems/Infrastructure/Persistence/RecentItems/PostCommitRecentItemUsageRecorder.cs"]
     },
     {
       "id": "recipe-overview-reader-validation",

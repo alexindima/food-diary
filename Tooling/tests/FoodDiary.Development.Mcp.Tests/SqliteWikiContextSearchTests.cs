@@ -48,6 +48,19 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("Modules/Inventory/Domain/Entities/Notifications/StockNotice.cs", "inventory domain user channel notification", "structural role notification-domain-entity-role", true)]
     [InlineData("FoodDiary.Domain/Entities/Notifications/StockNotice.cs", "inventory user channel notification", "structural role notification-domain-entity-role", true)]
     [InlineData("Modules/Inventory/Infrastructure/R7Probe.cs", "r7", "direct file-name affinity r7", true)]
+    [InlineData("Modules/Inventory/Infrastructure/Providers/Services/SupplierClient.cs", "external supplier client", "generic integration-layer affinity", true)]
+    [InlineData("Modules\\Inventory\\Infrastructure\\Providers\\Services\\SupplierClient.cs", "external supplier client", "generic integration-layer affinity", true)]
+    [InlineData("Modules/Inventory/Infrastructure/ProvidersExtra/SupplierClient.cs", "external supplier client", "generic integration-layer affinity", false)]
+    [InlineData("Modules/Inventory/Infrastructure/Providers/tests/SupplierClient.cs", "external supplier client", "generic integration-layer affinity", false)]
+    [InlineData("Shared/FoodDiary.Domain.Primitives/RequiredValue.cs", "domain required value", "generic domain-layer affinity", true)]
+    [InlineData("Shared\\FoodDiary.Domain.Primitives\\RequiredValue.cs", "domain required value", "generic domain-layer affinity", true)]
+    [InlineData("Shared/FoodDiary.Domain.PrimitivesExtra/RequiredValue.cs", "domain required value", "generic domain-layer affinity", false)]
+    [InlineData("Shared/FoodDiary.Domain.Primitives/tests/RequiredValue.cs", "domain required value", "generic domain-layer affinity", false)]
+    [InlineData("Modules/Inventory/Application/Abstractions/IStockService.cs", "inventory stock lookup", "module entry-point abstraction penalty waived", true)]
+    [InlineData("Modules/Inventory/Application/Abstractions/IStockService.cs", "inventory external provider lookup", "module entry-point abstraction penalty waived", false)]
+    [InlineData("Modules/Inventory/Application/Abstractions/IStockService.cs", "inventory http lookup", "module entry-point abstraction penalty waived", false)]
+    [InlineData("Modules/Inventory/Application/Abstractions/IStockService.cs", "shipping stock lookup", "module entry-point abstraction penalty waived", false)]
+    [InlineData("Modules/Inventory/Application/tests/IStockService.cs", "inventory stock lookup", "module entry-point abstraction penalty waived", false)]
     public async Task SearchAsync_RecognizesModuleLayerSelectors(
         string path,
         string query,
@@ -75,6 +88,43 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         Assert.Equal(path, candidate.Path);
         Assert.Equal(expectedMatch, candidate.Reasons.Any(reason =>
             reason.StartsWith(expectedReason, StringComparison.Ordinal)));
+    }
+
+    [Theory]
+    [InlineData("Acme", "Tests", true)]
+    [InlineData("Zephyr", "Tests", true)]
+    [InlineData("Acme", "Backend", false)]
+    public async Task SearchAsync_PrefersDirectTestSubjectOverGenericClientVocabulary(
+        string subject, string changeType, bool expectsSpecificity) {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand clear = connection.CreateCommand();
+        clear.CommandText = "DELETE FROM context_search;";
+        await clear.ExecuteNonQueryAsync();
+        // Keep the client/provider role equal; vary subject versus scaffolding only.
+        string expectedPath = $"tests/Suite0/{subject}ProviderClientTests.cs";
+        for (int index = 0; index < 16; index++) {
+            await using SqliteCommand insert = connection.CreateCommand();
+            insert.CommandText = "INSERT INTO context_search VALUES ('code', $key, $path, $path, 'csharp', 'Client tests', $body);";
+            insert.Parameters.AddWithValue("$key", FormattableString.Invariant($"subject-{index}"));
+            string genericPath = index == 1 ? "tests/Suite1/FeatureProviderClientTests.cs" : FormattableString.Invariant($"tests/Suite{index}/ProviderClientTests.cs");
+            insert.Parameters.AddWithValue("$path", index == 0 ? expectedPath : genericPath);
+            insert.Parameters.AddWithValue("$body", $"automated tests {subject} provider client");
+            await insert.ExecuteNonQueryAsync();
+        }
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+        WikiContextSearchResult result = await search.SearchAsync(
+            $"automated tests {subject} provider client feature", limit: 20, changeType,
+            module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        Assert.True(result.Ready, result.UnavailableReason);
+        WikiContextSearchCandidate subjectCandidate = Assert.Single(result.Candidates, candidate => string.Equals(candidate.Path, expectedPath, StringComparison.Ordinal));
+        Assert.Equal(expectsSpecificity, subjectCandidate.Reasons.Contains("direct test-subject specificity 105", StringComparer.Ordinal));
+        if (expectsSpecificity) {
+            Assert.Equal(expectedPath, result.Candidates[0].Path);
+            Assert.All(result.Candidates.Skip(1), candidate => Assert.DoesNotContain(
+                candidate.Reasons, reason => reason.StartsWith("direct test-subject specificity", StringComparison.Ordinal)));
+        }
     }
 
     [Fact]

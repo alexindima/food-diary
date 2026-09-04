@@ -352,6 +352,17 @@ loads the ranking policy once per process; moving that policy into SQLite would
 not improve steady-state query latency and would make policy review and Git
 diffs less transparent.
 
+Relocated sources retain their real owner identity. Structural selector aliases
+cover module Providers, shared domain primitives and Shared/Tooling test roots
+in both Node and the in-process reader. A module-qualified neutral backend query
+does not penalize its Application entry-point interface simply for being an
+abstraction; explicit implementation/layer requests retain their preferences.
+Explicit test queries additionally use bounded direct-filename specificity,
+computed from distinct candidate paths with integer frequency buckets. This
+reuses existing score caps and leaves candidate recall and requested-limit
+independence intact. See `docs/ai/wiki-retrieval-ownership.md` for scope and
+measured evidence; historical quality figures below are not current guarantees.
+
 A separate post-fix control froze 30 additional unique targets before its first
 run and reused none of the earlier 550 targets. Without further tuning it
 produced 17/30 top-1, 29/30 top-10, and 0.7079 MRR. Preserve that first-run

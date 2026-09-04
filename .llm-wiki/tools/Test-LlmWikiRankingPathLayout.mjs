@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import * as layout from './code-graph-path-layout.mjs';
 import { directIdentifierTermMatchesMinimum, implicitImplementationIntent, rankingModuleIdentity, rankingPathIdentities } from './code-graph-path-layout.mjs';
 
 // Synthetic names deliberately independent of evaluation queries and targets.
@@ -55,4 +56,32 @@ assert.equal(directIdentifierTermMatchesMinimum('r7probe', 3), true);
 assert.equal(directIdentifierTermMatchesMinimum('of', 3), false);
 assert.equal(directIdentifierTermMatchesMinimum('7', 3), false);
 assert.equal(directIdentifierTermMatchesMinimum('r-', 3), false);
+for (const path of ['Shared/FoodDiary.Domain.Primitives/Value.cs', 'Shared\\FoodDiary.Domain.Primitives\\Value.cs']) {
+  assert.deepEqual(rankingPathIdentities(path), [path.replaceAll('\\', '/').toLowerCase(), 'fooddiary.domain/value.cs']);
+}
+for (const root of ['Shared', 'Tooling']) {
+  const path = `${root}/tests/FoodDiary.Sample.Tests/ValueTests.cs`;
+  assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase(), 'tests/fooddiary.sample.tests/valuetests.cs']);
+}
+for (const path of ['Shared/FoodDiary.Domain.PrimitivesExtra/Value.cs', 'Shared/FoodDiary.Domain.Primitives/tests/ValueTests.cs', 'Shared/FoodDiary.Domain.Primitives/Value.test.js']) {
+  assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase()]);
+}
+const entryPolicy = { ...intentPolicy, moduleIdentityMinimumLength: 8, moduleIdentityLeadingTermCount: 1, genericAffinities: intentPolicy };
+const entry = 'Modules/Inventory/Application/Abstractions/IStockService.cs';
+assert.equal(layout.isModuleEntryPointQuery(entry, 'Backend', ['inventory', 'lookup'], ['inventory', 'lookup'], entryPolicy), true);
+for (const term of ['adapter', 'endpoint', 'entity', 'storage', 'implementation', 'options']) {
+  assert.equal(layout.isModuleEntryPointQuery(entry, 'Backend', ['inventory', term], ['inventory', term], entryPolicy), false);
+}
+for (const [path, changeType, direct] of [[entry, 'Tests', ['inventory']], [entry, 'Backend', ['shipping']], ['Modules/Inventory/Infrastructure/Stock.cs', 'Backend', ['inventory']], ['Modules/Inventory/Application/tests/IStockService.cs', 'Backend', ['inventory']]]) {
+  assert.equal(layout.isModuleEntryPointQuery(path, changeType, direct, direct, entryPolicy), false);
+}
+const testRows = Array.from({ length: 16 }, (_, i) => ({ path: `tests/Suite${i}/ProviderTests.cs`, identity: i === 0 ? 'acme client tests' : 'provider client tests' }));
+const weights = layout.testIdentityWeights(['acme', 'client', 'ab'], testRows, { minimumTermLength: 3, scorePerMatch: 35, maximumScore: 175 });
+assert.equal(weights.get('acme'), 105);
+assert.equal(weights.get('client'), 0);
+assert.equal(weights.has('ab'), false);
+assert.deepEqual(layout.testIdentityWeights(['acme', 'client', 'ab'], [...testRows, ...testRows].reverse(), { minimumTermLength: 3, scorePerMatch: 35, maximumScore: 175 }), weights);
+const scaffoldWeights = layout.testIdentityWeights(['acme', 'feature', 'tests', 'spec'], testRows,
+  { minimumTermLength: 3, scorePerMatch: 35, maximumScore: 175 });
+assert.deepEqual([...scaffoldWeights.keys()], ['acme']);
 console.log('Ranking layout regression PASS: layer selectors, exclusions, exact module identity, Windows paths, legacy compatibility and negative boundaries.');

@@ -230,14 +230,14 @@
       "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "bdd5875bb84146328c80e9470529664786c71e1c1bf5610ce2d9dfb703060319"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "0ea63ac3d39dbb4accd78915f7925a6152e10e018f6d12dab8c7024a54fa9f7d"
         }
       ],
-      "reason": "Twelve existing provider/options types preserve CLR names but move assemblies: coordinated rebuild of hosts required, not old-binary compatibility. API comparison reports zero changes; full HTTP/Presentation tests run. Initializer acquires only Docker copies for transitive Integrations, not provider registrations or validation.",
+      "reason": "Search result contracts and candidate recall limits unchanged; no application API or provider runtime changes.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T12:30:19.5245398Z"
+      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
+      "reviewedAtUtc": "2026-09-04T15:06:34.2024786Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -619,14 +619,14 @@
       "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "0ea63ac3d39dbb4accd78915f7925a6152e10e018f6d12dab8c7024a54fa9f7d"
         }
       ],
-      "reason": "Reviewed documentation impact from current modular Identity paths in task briefs, test plans, and evaluation fixtures.",
+      "reason": "16 path literals follow audited Git renames in four corpora; reverse mapping reproduces original files. Report separates full-run failures, focused correction, measured improvements and unresolved quality gates.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:56:18.1401243Z"
+      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
+      "reviewedAtUtc": "2026-09-04T15:06:34.5130282Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -807,14 +807,14 @@
       "pageSha256": "e01ff59cf70144c17231e65657507cbf611981c565cc6c4e6c0504ac567e6a77",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4b89823e8e71f84f4d44249819c03e2f1ef8512a8c082ef6aec2fc92218ca471"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "0ea63ac3d39dbb4accd78915f7925a6152e10e018f6d12dab8c7024a54fa9f7d"
         }
       ],
-      "reason": "Provider request bodies, bounded response parsing, auth headers/options, URI validation, logger categories/suppression and meter/tag names preserved by token audits and provider tests. No new sharing/lifecycle/export, credential access, provider calls or external security scan. Common helpers remain single implementations.",
+      "reason": "Only local read-only search ranking and fixtures changed. No credentials, provider calls, telemetry payloads or authorization changes; no external security scan.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T12:30:20.3263471Z"
+      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
+      "reviewedAtUtc": "2026-09-04T15:06:34.7930853Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -853,13 +853,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d928438a814882dd9f2e68c13a31b3b23e808e65f259a14b6c6e2558f0cfe3b6"
+          "sha256": "e39972e0626127fdde0a34d6f83c6a186829e22f46e3710fbf911ca638b62972"
         }
       ],
-      "reason": "18 final unfiltered suites,4138 passed,zero failed/skipped.169 existing method bodies/attributes preserved,8 new standalone registration tests; full HTTP/PostgreSQL, EF unchanged, NuGet audit clean. Initial Architecture catalog and Docker omissions retained and fixed; full rerun. No collectors.11 source-proven expectedPaths remapped in10 eval corpora with reverse equality; queries/thresholds/ranking/history unchanged.",
+      "reason": "Structural module entry-point waiver, bounded test-subject specificity and Node/MCP layout parity; no file-specific boosts. Synthetic regressions, 18-corpus comparison and exact reader parity retained. Historical thresholds and query text unchanged; known strict quality gaps remain explicit.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T12:30:20.7658552Z"
+      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
+      "reviewedAtUtc": "2026-09-04T15:06:35.2022658Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -936,13 +936,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "af4f9e4ab3d420aa0b4ba1b26ad026816b2bdf1c38320281f00475311404b077"
+          "sha256": "0a6567ea2eb27a483a53883ada8910cdad1910f3e8440f656d487a20fa2965fd"
         }
       ],
-      "reason": "OpenAI/Fitbit/USDA/OpenFoodFacts providers and options move to existing module Infrastructure/Providers. Explicit API/JobManager composition and one-way shared transport reference; seven central owner refs removed, one USDA test leaf added. Exact matrix and HTTP/clock/options/host guards updated. New project generated catalog current.",
+      "reason": "16 path literals follow audited Git renames in four corpora; reverse mapping reproduces original files. Report separates full-run failures, focused correction, measured improvements and unresolved quality gates.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T12:30:21.3713405Z"
+      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
+      "reviewedAtUtc": "2026-09-04T15:06:35.8657793Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -951,21 +951,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d928438a814882dd9f2e68c13a31b3b23e808e65f259a14b6c6e2558f0cfe3b6"
+          "sha256": "e39972e0626127fdde0a34d6f83c6a186829e22f46e3710fbf911ca638b62972"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "af4f9e4ab3d420aa0b4ba1b26ad026816b2bdf1c38320281f00475311404b077"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "4b89823e8e71f84f4d44249819c03e2f1ef8512a8c082ef6aec2fc92218ca471"
+          "sha256": "0a6567ea2eb27a483a53883ada8910cdad1910f3e8440f656d487a20fa2965fd"
         }
       ],
-      "reason": "Provider request bodies, bounded response parsing, auth headers/options, URI validation, logger categories/suppression and meter/tag names preserved by token audits and provider tests. No new sharing/lifecycle/export, credential access, provider calls or external security scan. Common helpers remain single implementations.",
+      "reason": "Only local read-only search ranking and fixtures changed. No credentials, provider calls, telemetry payloads or authorization changes; no external security scan.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T12:30:21.7350687Z"
+      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
+      "reviewedAtUtc": "2026-09-04T15:06:36.2503997Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1203,17 +1199,21 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "7377f5962d9a2f06001db9c12bc1575cef0ead95aa82308ea5a7dca5d6ce3a1d"
+          "sha256": "2d1bc5b0ab6b9fa4aaf651d10da4ad9ec410b6657aaf8b951648b3d63c19b7ae"
         },
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "06a5671a6c3cd3c018d9f99d88b487637c75b081ce5668d80080fac87e3c9f2c"
+          "sha256": "b823e60fc9745d22a01dc3063942ef1876e2afafce6c8ccb9370b896f0a8cfdb"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "0ea63ac3d39dbb4accd78915f7925a6152e10e018f6d12dab8c7024a54fa9f7d"
         }
       ],
-      "reason": "Four providers in existing moduleInfrastructure with one-way central safety/telemetry helpers; newUSDA testleaf and exactrefs/Docker/ownershipguards. Report separates runtimepass from knownbaseline fullWikiFAIL and additional navigation regression; no allgreen quality claim.",
+      "reason": "16 path literals follow audited Git renames in four corpora; reverse mapping reproduces original files. Report separates full-run failures, focused correction, measured improvements and unresolved quality gates.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T13:00:05.3837915Z"
+      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
+      "reviewedAtUtc": "2026-09-04T15:06:35.5654087Z"
     },
     {
       "pageId": "workflow.review-diff",

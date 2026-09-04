@@ -396,6 +396,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             (string.Equals(changeType, "Tests", StringComparison.OrdinalIgnoreCase) ||
                 (string.Equals(changeType, "Frontend", StringComparison.OrdinalIgnoreCase) &&
                     directTerms.Contains("tests")));
+        Dictionary<string, int> testSubjectWeights = stronglyRequestsTest
+            ? GetTestIdentityWeights(directQueryTerms, candidates, policy.DirectFileNameAffinity)
+            : [];
         List<RankedCandidate> ranked = [];
         for (int index = 0; index < candidates.Count; index++) {
             RawCandidate candidate = candidates[index];
@@ -603,6 +606,13 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     genericAffinity.WikiToolScore);
             }
             if (isExplicitTestCandidate && stronglyRequestsTest) {
+                int subjectScore = Math.Min(
+                    directFileNameMatches.Sum(term => testSubjectWeights.GetValueOrDefault(term)),
+                    policy.DirectFileNameAffinity.MaximumScore);
+                score += subjectScore;
+                if (subjectScore > 0) {
+                    reasons.Add(FormattableString.Invariant($"direct test-subject specificity {subjectScore}"));
+                }
                 int explicitTestScore = Math.Min(
                     identityMatches.Length * policy.ExplicitTestAffinity.ScorePerMatch,
                     policy.ExplicitTestAffinity.MaximumScore);
@@ -798,7 +808,11 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 score -= policy.DocumentationImplementationPenalty.Score;
                 reasons.Add("documentation candidate penalty for implementation intent");
             }
-            bool requestsAbstraction = terms.Overlaps(["interface", "contract", "abstraction"]);
+            bool moduleEntryPoint = IsModuleEntryPointQuery(normalizedPath, changeType, directQueryTerms, terms, policy);
+            bool requestsAbstraction = moduleEntryPoint || terms.Overlaps(["interface", "contract", "abstraction"]);
+            if (moduleEntryPoint) {
+                reasons.Add("module entry-point abstraction penalty waived");
+            }
             if (!requestsAbstraction && selectorPaths.Any(selectorPath => selectorPath.StartsWith(
                 "fooddiary.application.abstractions/",
                 StringComparison.Ordinal))) {
@@ -1163,6 +1177,17 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         Math.Round(stopwatch.Elapsed.TotalMilliseconds, 2, MidpointRounding.AwayFromZero);
 
     private static string[] GetRankingPathIdentities(string path) {
+        string[] rootParts = path.Split('/', 3);
+        if (rootParts.Length == 3 && rootParts[0] is "shared" or "tooling" && string.Equals(rootParts[1], "tests", StringComparison.Ordinal)) {
+            string[] testPath = rootParts[2].Split('/', 2);
+            if (testPath.Length == 2 && testPath[0].EndsWith(".tests", StringComparison.Ordinal) && testPath[1].Length > 0) {
+                return [path, $"tests/{rootParts[2]}"];
+            }
+        }
+        const string primitivesPrefix = "shared/fooddiary.domain.primitives/";
+        if (path.StartsWith(primitivesPrefix, StringComparison.Ordinal) && !TestPath.IsMatch(path)) {
+            return [path, $"fooddiary.domain/{path[primitivesPrefix.Length..]}"];
+        }
         string[] parts = path.Split('/', 4);
         if (parts.Length == 4 && string.Equals(parts[0], "modules", StringComparison.Ordinal) &&
             string.Equals(parts[2], "tests", StringComparison.Ordinal)) {
@@ -1185,6 +1210,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 ? $"fooddiary.application.abstractions/{tail["abstractions/".Length..]}"
                 : $"fooddiary.application.{parts[1]}/{tail}",
             "domain" => $"fooddiary.domain/{tail}",
+            "infrastructure" when tail.StartsWith("providers/", StringComparison.Ordinal) =>
+                $"fooddiary.integrations/{tail["providers/".Length..]}",
             "infrastructure" => tail.StartsWith("model/", StringComparison.Ordinal)
                 ? $"fooddiary.infrastructure/persistence/{tail["model/".Length..]}"
                 : $"fooddiary.infrastructure/{tail}",
@@ -1203,6 +1230,58 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             root = root["fooddiary.".Length..];
         }
         return new string([.. root.Where(char.IsLetterOrDigit)]);
+    }
+
+    // Keep this penalty waiver and the integer frequency buckets in parity with
+    // code-graph-path-layout.mjs. Neither changes candidate recall or module identity.
+    private static bool IsModuleEntryPointQuery(
+        string path,
+        string changeType,
+        IReadOnlyList<string> directTerms,
+        HashSet<string> terms,
+        RankingPolicy policy) {
+        string[] parts = path.Split('/', 4);
+        if (changeType.ToLowerInvariant() is not ("backend" or "any") ||
+            parts.Length != 4 || !string.Equals(parts[0], "modules", StringComparison.Ordinal) ||
+            !string.Equals(parts[2], "application", StringComparison.Ordinal) || TestPath.IsMatch(path)) {
+            return false;
+        }
+        string module = GetRankingModuleIdentity(path);
+        if (module.Length < policy.ModuleIdentityMinimumLength ||
+            !directTerms.Take(policy.ModuleIdentityLeadingTermCount)
+                .Select(term => new string([.. term.Where(char.IsLetterOrDigit)]))
+                .Contains(module, StringComparer.Ordinal)) {
+            return false;
+        }
+        GenericAffinities affinity = policy.GenericAffinities;
+        return !affinity.DomainIntentTerms.Concat(affinity.ApiIntentTerms)
+            .Concat(affinity.DatabaseIntentTerms).Concat(affinity.IntegrationIntentTerms)
+            .Concat(affinity.InfrastructureIntentTerms)
+            .Concat(["implementation", "options", "configuration", "test"])
+            .Any(term => terms.Contains(term.ToLowerInvariant()));
+    }
+
+    private static Dictionary<string, int> GetTestIdentityWeights(
+        IReadOnlyList<string> directTerms,
+        IReadOnlyList<RawCandidate> candidates,
+        DirectFileNameAffinity affinity) {
+        string[] identities = [.. candidates.Select(candidate => NormalizePath(candidate.Path).ToLowerInvariant())
+            .Distinct(StringComparer.Ordinal)
+            .Select(path => ExpandSearchText(Path.GetFileName(path)).ToLowerInvariant())];
+        Dictionary<string, int> weights = new(StringComparer.Ordinal);
+        foreach (string term in directTerms.Distinct(StringComparer.Ordinal)) {
+            if (term is "test" or "tests" or "spec" or "specs" or "feature" or "features") {
+                continue;
+            }
+            if (!(term.Length >= affinity.MinimumTermLength ||
+                (term.Length >= 2 && term.All(char.IsLetterOrDigit) && term.Any(char.IsLetter) && term.Any(char.IsDigit)))) {
+                continue;
+            }
+            int frequency = identities.Count(identity => identity.Contains(term, StringComparison.Ordinal));
+            int buckets = frequency == 0 ? 0 : (int)Math.Floor(Math.Log2((identities.Length + 1d) / (frequency + 1d)));
+            weights[term] = Math.Min(buckets * affinity.ScorePerMatch, affinity.MaximumScore);
+        }
+        return weights;
     }
 
     private static string NormalizePath(string path) => path.Replace('\\', '/');
