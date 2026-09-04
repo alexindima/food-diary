@@ -24,7 +24,6 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Fasting`
 - `FoodDiary.Presentation.Api/Features/Fasting`
 - `Modules/Fasting/Application`
 - `Modules/Fasting/Application/Abstractions`
@@ -68,19 +67,18 @@ Source: `FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FastingPlan, FastingOccurrence, FastingCheckIn, FastingSession, FastingTelemetryEvent
-- Public contract files: 10
+- Public contract files: 9
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 10
+- Public contract types: 9
 - Interfaces: 3
 - DTO/read-model/projection types: 6
 - Enums: 0
 - Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
-- `class FastingErrors`
 - `interface IFastingNotificationScheduler`
 - `interface IFastingReadService`
 - `interface IFastingTelemetryCleanupService`

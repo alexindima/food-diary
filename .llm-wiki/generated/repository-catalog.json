@@ -21,8 +21,8 @@
     "backendBusinessModules": 34,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 225,
-    "documentationPages": 138
+    "agentGuides": 226,
+    "documentationPages": 139
   },
   "dotnet": {
     "projects": [
@@ -60,13 +60,18 @@
           "Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
           "Modules/BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj",
           "Modules/Cycles/Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj",
+          "Modules/DailyAdvices/Application/Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj",
           "Modules/Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj",
+          "Modules/Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj",
           "Modules/Exercises/Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj",
+          "Modules/Fasting/Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj",
           "Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj",
+          "Modules/Hydration/Application/Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj",
           "Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj",
           "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
           "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
           "Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
+          "Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
           "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
           "Modules/Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj",
           "Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj",
@@ -3096,7 +3101,9 @@
           "net10.0"
         ],
         "isTestProject": false,
-        "projectReferences": [],
+        "projectReferences": [
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
+        ],
         "packageReferences": []
       },
       {
@@ -3500,9 +3507,9 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
           "Modules/Dietologist/Domain/FoodDiary.Modules.Dietologist.Domain.csproj",
-          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": []
       },
@@ -6286,7 +6293,8 @@
         "projectReferences": [
           "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
           "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
-          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": []
       },
@@ -12543,6 +12551,7 @@
       "Modules/Dashboard/tests/AGENTS.md",
       "Modules/Dietologist/AGENTS.md",
       "Modules/Dietologist/Application/AGENTS.md",
+      "Modules/Dietologist/Application/Abstractions/AGENTS.md",
       "Modules/Exercises/AGENTS.md",
       "Modules/Exercises/Application/AGENTS.md",
       "Modules/Exercises/Application/Abstractions/AGENTS.md",
@@ -12759,6 +12768,7 @@
       "docs/ai/mealplanning-shopping-domain-extraction.md",
       "docs/ai/meals-module-extraction-wiki-findings.md",
       "docs/ai/meals-ownership-inventory.md",
+      "docs/ai/module-error-ownership.md",
       "docs/ai/module-integration-20260831.md",
       "docs/ai/module-integration-exercises-mealplanning-recipecommunity.md",
       "docs/ai/module-outbox-persistence.md",

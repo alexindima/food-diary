@@ -643,6 +643,8 @@ public sealed class ApplicationGuardrailTests {
             "Results",
             facadeFileName);
         string featureErrorsPath = featureDirectory switch {
+            "DailyAdvices" or "Fasting" or "Hydration" => Path.Combine(root, "Modules", featureDirectory, "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName),
+            "Dietologist" or "Meals" => Path.Combine(root, "Modules", featureDirectory, "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
             "FavoriteMeals" or "FavoriteProducts" or "FavoriteRecipes" => Path.Combine(root, "Modules", "Favorites", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
             "Admin" => Path.Combine(root, "Modules", "Admin", "Application", "Abstractions", "Admin", featureCommonDirectory, featureErrorsFileName),
             "Ai" => Path.Combine(root, "Modules", "Ai", "Application", "Abstractions", "Ai", featureCommonDirectory, featureErrorsFileName),

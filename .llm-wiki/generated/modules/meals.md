@@ -49,18 +49,19 @@ Source: `FoodDiary.Presentation.Api/Features/Meals/MealsController.cs`
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Meal, MealItem, MealAiSession, MealAiItem
-- Public contract files: 17
+- Public contract files: 18
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 17
+- Public contract types: 18
 - Interfaces: 10
 - DTO/read-model/projection types: 6
 - Enums: 0
 - Exported repository-shaped contracts: 6
 - Contracts referencing domain entities: 2
+- `class MealErrors`
 - `interface IMealActivityReadRepository`
 - `interface IMealActivityReadService`
 - `interface IMealExportReadService`

@@ -99,6 +99,9 @@
         "dependencies": {
           "FoodDiary.Domain.Primitives": "[1.0.0, )"
         }
+      },
+      "fooddiary.results": {
+        "type": "Project"
       }
     }
   }

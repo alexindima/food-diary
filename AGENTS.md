@@ -38,6 +38,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Cycles persistence model: `Modules/Cycles/Infrastructure/Model/AGENTS.md`
 - Dietologist logical module: `Modules/Dietologist/AGENTS.md`
 - Dietologist application: `Modules/Dietologist/Application/AGENTS.md`
+- Dietologist application abstractions: `Modules/Dietologist/Application/Abstractions/AGENTS.md`
 - Exercises logical module: `Modules/Exercises/AGENTS.md`
 - Exercises application: `Modules/Exercises/Application/AGENTS.md`
 - Exercises application abstractions: `Modules/Exercises/Application/Abstractions/AGENTS.md`

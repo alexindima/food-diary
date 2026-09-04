@@ -38,6 +38,7 @@ COPY Modules/Fasting/Domain/*.csproj Modules/Fasting/Domain/
 COPY Modules/Fasting/Infrastructure/*.csproj Modules/Fasting/Infrastructure/
 COPY Modules/Fasting/Infrastructure/Model/*.csproj Modules/Fasting/Infrastructure/Model/
 COPY Modules/Hydration/Contracts/*.csproj Modules/Hydration/Contracts/
+COPY Modules/Hydration/Application/Abstractions/*.csproj Modules/Hydration/Application/Abstractions/
 COPY Modules/Hydration/Domain/*.csproj Modules/Hydration/Domain/
 COPY Modules/Hydration/Infrastructure/Model/*.csproj Modules/Hydration/Infrastructure/Model/
 COPY Modules/Lessons/Domain/*.csproj Modules/Lessons/Domain/
@@ -215,6 +216,7 @@ COPY Modules/Fasting/Domain/ Modules/Fasting/Domain/
 COPY Modules/Fasting/Infrastructure/ Modules/Fasting/Infrastructure/
 COPY Modules/Fasting/Infrastructure/Model/ Modules/Fasting/Infrastructure/Model/
 COPY Modules/Hydration/Contracts/ Modules/Hydration/Contracts/
+COPY Modules/Hydration/Application/Abstractions/ Modules/Hydration/Application/Abstractions/
 COPY Modules/Hydration/Domain/ Modules/Hydration/Domain/
 COPY Modules/Hydration/Infrastructure/Model/ Modules/Hydration/Infrastructure/Model/
 COPY Modules/Lessons/Domain/ Modules/Lessons/Domain/

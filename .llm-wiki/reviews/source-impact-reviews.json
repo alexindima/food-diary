@@ -8,17 +8,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "8ec8a240a2e4be36dcf24894c45d692b8a28ae0d833bf002d0c7eb2083f6e3ba"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "50d3a20007a2f716c324930a2d73b56fdeaf631def62c32dc5cbce6ea347c491"
+          "sha256": "b63cb3b7682e1cdfd4b68f0d6fc085a164bc4cfe3a8b743b84c78b5d01eae02c"
         }
       ],
-      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
+      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:22.1167639Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:31.3437277Z"
     },
     {
       "pageId": "module.frontend",
@@ -57,25 +53,17 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "c1d4168328bae9f1157e1922d662f98ccceefe35ffbbce02723d5ab200820e8d"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "50d3a20007a2f716c324930a2d73b56fdeaf631def62c32dc5cbce6ea347c491"
-        },
-        {
-          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "b1706e4257c600ad9b76cdbf8ca0f7594b42975d1b582eadf4f3e8264452c254"
+          "sha256": "b8564a5e6d94b38b59550c8ff97648da50e1a0fabc54cd412fe5e142ffc07c5c"
         },
         {
           "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "c192cf0e69ead0e384211a1dc0493ac1913c1bf7d01379886e340916959412b6"
+          "sha256": "b08adfe73c75ad3a3806e8cc3d2851b100f6ec66a5ea7c5acb77502eeb4715f6"
         }
       ],
-      "reason": "26 declarations/source bodies are normalized-identical. Namespaces/signatures/defaults and HTTP bodies/snapshots unchanged. Full consumer and HTTP suites pass. New declaring assemblies require coordinated host rebuilds; no old precompiled binary compatibility is promised.",
+      "reason": "All five factory source bodies and central delegating facades are unchanged. New typed tests assert exact codes, literal messages, ErrorKind, nullable/default locale, timestamp format and facade equality; Presentation and five owner suites pass. No HTTP source/snapshot change. Rebuild hosts together; old precompiled declaring-assembly compatibility is not promised.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:22.6806847Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:31.5992127Z"
     },
     {
       "pageId": "system.architecture",
@@ -84,25 +72,17 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "c1d4168328bae9f1157e1922d662f98ccceefe35ffbbce02723d5ab200820e8d"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "50d3a20007a2f716c324930a2d73b56fdeaf631def62c32dc5cbce6ea347c491"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs",
-          "sha256": "eb28c8d25a9e4f71532dbd0aa683a1aca0b99e3531af8a93be3519b6e92817c8"
+          "sha256": "b8564a5e6d94b38b59550c8ff97648da50e1a0fabc54cd412fe5e142ffc07c5c"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "72c214d3810044404e54fb6217b0b8848d18a14dce8b8086addded35a37992a2"
+          "sha256": "31eed20d8c87a283ebf85bae40b6fc769a262d98267cf26695e24e5dfa589508"
         }
       ],
-      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
+      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:22.9284498Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:31.8493452Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -141,13 +121,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "8ec8a240a2e4be36dcf24894c45d692b8a28ae0d833bf002d0c7eb2083f6e3ba"
+          "sha256": "b63cb3b7682e1cdfd4b68f0d6fc085a164bc4cfe3a8b743b84c78b5d01eae02c"
         }
       ],
-      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
+      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:23.1995665Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:32.0998749Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -156,13 +136,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "c1d4168328bae9f1157e1922d662f98ccceefe35ffbbce02723d5ab200820e8d"
+          "sha256": "b8564a5e6d94b38b59550c8ff97648da50e1a0fabc54cd412fe5e142ffc07c5c"
         }
       ],
-      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
+      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:23.4415808Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:32.3033688Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -220,21 +200,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "71f3ca7df359287981dd64ea7b0b8599e111d800d0d5e79bd4cc0824c48c3d64"
+          "sha256": "c83b4b424a7d0cc68f6039bf08c174940cb060d0db9183ee09cc9926b380bf27"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "c1d4168328bae9f1157e1922d662f98ccceefe35ffbbce02723d5ab200820e8d"
+          "sha256": "b8564a5e6d94b38b59550c8ff97648da50e1a0fabc54cd412fe5e142ffc07c5c"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "72c214d3810044404e54fb6217b0b8848d18a14dce8b8086addded35a37992a2"
+          "sha256": "31eed20d8c87a283ebf85bae40b6fc769a262d98267cf26695e24e5dfa589508"
         }
       ],
-      "reason": "All twelve planned suites ran unfiltered: 3693 passed, zero failures/skips; six new default-forwarding tests and ownership guards included. Full solution build and EF no-model-change check pass. Initial two style errors were fixed and successful build repeated. No collectors. Empty untracked directories are not source areas; a regression enforces this without exempting actual contracts.",
+      "reason": "Eight full unfiltered unit/application/architecture/Presentation suites: 2901 passed, zero failures/skips. Independent five owner-port builds and full solution build pass. New typed compatibility and ownership guards included; no collector. No database source changes, so no migration or new relational behavior claim.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:23.7515929Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:32.5914633Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -242,18 +222,14 @@
       "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "55bd96eb408a29f2129f6fe19a83500a22d92873499ee1406cf9586a446404bc"
-        },
-        {
           "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "c192cf0e69ead0e384211a1dc0493ac1913c1bf7d01379886e340916959412b6"
+          "sha256": "b08adfe73c75ad3a3806e8cc3d2851b100f6ec66a5ea7c5acb77502eeb4715f6"
         }
       ],
-      "reason": "26 declarations/source bodies are normalized-identical. Namespaces/signatures/defaults and HTTP bodies/snapshots unchanged. Full consumer and HTTP suites pass. New declaring assemblies require coordinated host rebuilds; no old precompiled binary compatibility is promised.",
+      "reason": "All five factory source bodies and central delegating facades are unchanged. New typed tests assert exact codes, literal messages, ErrorKind, nullable/default locale, timestamp format and facade equality; Presentation and five owner suites pass. No HTTP source/snapshot change. Rebuild hosts together; old precompiled declaring-assembly compatibility is not promised.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:24.4075207Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:32.8747394Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -833,13 +809,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7af30ee33a9557a7670bcaab176e4854ccd4abb586071f1e0182993512ed676b"
+          "sha256": "a2c4c8bc16090c70e0a91ad77ff0f923348cc25d350c0a57cf3b3f5c1f5d8067"
         }
       ],
-      "reason": "All twelve planned suites ran unfiltered: 3693 passed, zero failures/skips; six new default-forwarding tests and ownership guards included. Full solution build and EF no-model-change check pass. Initial two style errors were fixed and successful build repeated. No collectors. Empty untracked directories are not source areas; a regression enforces this without exempting actual contracts.",
+      "reason": "Eight full unfiltered unit/application/architecture/Presentation suites: 2901 passed, zero failures/skips. Independent five owner-port builds and full solution build pass. New typed compatibility and ownership guards included; no collector. No database source changes, so no migration or new relational behavior claim.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:25.6103494Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:33.6019761Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -916,13 +892,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "04d52eb10439e803dd6b5a7480267442a27a27054daf5abd65d3ef2cc37567ac"
+          "sha256": "6b86c28dc4f00cad1c6001ec4efb64222913ed1e204d9252684ad67d6af3cee1"
         }
       ],
-      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
+      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:26.7180985Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:34.6535188Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -931,21 +907,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7af30ee33a9557a7670bcaab176e4854ccd4abb586071f1e0182993512ed676b"
+          "sha256": "a2c4c8bc16090c70e0a91ad77ff0f923348cc25d350c0a57cf3b3f5c1f5d8067"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "04d52eb10439e803dd6b5a7480267442a27a27054daf5abd65d3ef2cc37567ac"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "55cd19db8e07042506c90ace53355cecb91af1dab5ec701d95e451554d416143"
+          "sha256": "6b86c28dc4f00cad1c6001ec4efb64222913ed1e204d9252684ad67d6af3cee1"
         }
       ],
-      "reason": "UserId predicates, favorite source access, private relationship/read projections, SQL, error codes, cancellation and DI lifetimes unchanged. No new data collection/logging/provider calls. Source audit rejects protected repository/model/HTTP changes; PostgreSQL and HTTP suites pass.",
+      "reason": "No authorization or data-flow behavior changes. Existing Hydration inaccessible error remains NotFound and Meals InvalidData remains Internal. Repository, Domain, persistence/model and HTTP source protected by diff audit; no notification/outbox/provider/logging changes or external security scan.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:27.2085138Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:35.3683687Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1123,13 +1095,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "8ec8a240a2e4be36dcf24894c45d692b8a28ae0d833bf002d0c7eb2083f6e3ba"
+          "sha256": "b63cb3b7682e1cdfd4b68f0d6fc085a164bc4cfe3a8b743b84c78b5d01eae02c"
         }
       ],
-      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
+      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:24.7815049Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:33.1505410Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1183,17 +1155,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "b4007e7759dbce668157be2625603654503fbbab2dedac3784d78acee8b16c51"
+          "sha256": "a8f6c097f83bd151917334a9af25af09f8b0cb824250d084a175acee8bbf275a"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "8ec8a240a2e4be36dcf24894c45d692b8a28ae0d833bf002d0c7eb2083f6e3ba"
+          "sha256": "b63cb3b7682e1cdfd4b68f0d6fc085a164bc4cfe3a8b743b84c78b5d01eae02c"
         }
       ],
-      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
+      "reason": "Five error factories now belong to existing module Abstractions; central Errors facades remain. Dietologist obsolete reverse dependency is replaced with direct Results and compile-proven; no new projects or runtime redesign. Source-less central manifest keys removed; Wiki notification criteria are explicitly not applicable.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:26.0669760Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:33.9671468Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1202,13 +1174,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "8ec8a240a2e4be36dcf24894c45d692b8a28ae0d833bf002d0c7eb2083f6e3ba"
+          "sha256": "b63cb3b7682e1cdfd4b68f0d6fc085a164bc4cfe3a8b743b84c78b5d01eae02c"
         }
       ],
-      "reason": "All twelve planned suites ran unfiltered: 3693 passed, zero failures/skips; six new default-forwarding tests and ownership guards included. Full solution build and EF no-model-change check pass. Initial two style errors were fixed and successful build repeated. No collectors. Empty untracked directories are not source areas; a regression enforces this without exempting actual contracts.",
+      "reason": "Eight full unfiltered unit/application/architecture/Presentation suites: 2901 passed, zero failures/skips. Independent five owner-port builds and full solution build pass. New typed compatibility and ownership guards included; no collector. No database source changes, so no migration or new relational behavior claim.",
       "baseRef": "HEAD",
-      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
-      "reviewedAtUtc": "2026-09-04T00:39:26.4113255Z"
+      "gitHead": "f065a0fa956afa89cbf07456c1f9f9962f987ffe",
+      "reviewedAtUtc": "2026-09-04T01:20:34.3305382Z"
     }
   ]
 }

@@ -20,12 +20,7 @@
     "Authentication": "Identity",
     "Billing": "Billing",
     "Common": "Shared",
-    "DailyAdvices": "DailyAdvices",
-    "Dietologist": "Dietologist",
     "Email": "Application.Runtime",
-    "Fasting": "Fasting",
-    "Hydration": "Hydration",
-    "Meals": "Meals",
     "Nutrition": "Shared",
     "Users": "Users"
   },

@@ -1021,20 +1021,6 @@
       "line": 6
     },
     {
-      "name": "DailyAdviceErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/DailyAdvices/Common/DailyAdviceErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "DietologistErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Dietologist/Common/DietologistErrors.cs",
-      "line": 4
-    },
-    {
       "name": "ApplicationEmailTelemetry",
       "kind": "class",
       "role": "Other",
@@ -1075,27 +1061,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Email/Common/IEmailTransport.cs",
       "line": 2
-    },
-    {
-      "name": "FastingErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Fasting/Common/FastingErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "HydrationEntryErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Hydration/Common/HydrationEntryErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "MealErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Meals/Common/MealErrors.cs",
-      "line": 4
     },
     {
       "name": "ManualNutritionLimits",
@@ -12585,6 +12550,13 @@
       "line": 10
     },
     {
+      "name": "DailyAdviceErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Application/Abstractions/Common/DailyAdviceErrors.cs",
+      "line": 4
+    },
+    {
       "name": "IDailyAdviceReadModelRepository",
       "kind": "interface",
       "role": "ReadModelRepository",
@@ -13150,6 +13122,13 @@
       "role": "Service",
       "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
       "line": 12
+    },
+    {
+      "name": "DietologistErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dietologist/Application/Abstractions/Dietologist/Common/DietologistErrors.cs",
+      "line": 4
     },
     {
       "name": "DietologistInvitationMessage",
@@ -14935,6 +14914,13 @@
       "role": "Other",
       "path": "Modules/Export/Infrastructure/Services/DiaryPdf/RemoteImageAddressPolicy.cs",
       "line": 5
+    },
+    {
+      "name": "FastingErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Abstractions/Common/FastingErrors.cs",
+      "line": 4
     },
     {
       "name": "FastingTelemetryEventRecord",
@@ -16748,6 +16734,13 @@
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/Persistence/UserAchievementStore.cs",
       "line": 8
+    },
+    {
+      "name": "HydrationEntryErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/Application/Abstractions/Common/HydrationEntryErrors.cs",
+      "line": 4
     },
     {
       "name": "IHydrationEntryReadModelRepository",
@@ -19141,6 +19134,13 @@
       "kind": "interface",
       "role": "WriteRepository",
       "path": "Modules/Meals/Application/Abstractions/Meals/Common/IMealWriteRepository.cs",
+      "line": 4
+    },
+    {
+      "name": "MealErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Meals/Application/Abstractions/Meals/Common/MealErrors.cs",
       "line": 4
     },
     {

@@ -15,6 +15,8 @@ Rules for `FoodDiary.Application.Abstractions/`.
 - Keep namespaces aligned with folder paths.
 
 ## Rules
+
+- DailyAdvices, Dietologist, Fasting, Hydration and Meals own their error factories in module Application/Abstractions. Keep only delegating Errors facades here; codes/messages/kinds and legacy namespaces remain stable. Owner abstractions must not depend back on this assembly.
 - Do not reference `FoodDiary.Web.Api`, `FoodDiary.Presentation.Api`, or `FoodDiary.Infrastructure`.
 - Do not introduce ASP.NET types such as `HttpContext`, `IActionResult`, or `ControllerBase`.
 - Do not bind configuration directly here with `IConfiguration` or `IOptions<T>`.

@@ -24,7 +24,6 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/Dietologist`
 - `FoodDiary.Presentation.Api/Features/Dietologist`
 - `Modules/Dietologist/Application`
 - `Modules/Dietologist/Application/Abstractions`
@@ -118,19 +117,19 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsControll
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ClientTask, DietologistInvitation, Recommendation, RecommendationBulkDispatch, RecommendationComment, RecommendationTemplate
-- Public contract files: 1
+- Public contract files: 0
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 1
+- Public contract types: 0
 - Interfaces: 0
 - DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
-- `class DietologistErrors`
+- No public declaration was found in the mapped abstraction areas.
 
 ## Focused Tests
 

@@ -1,0 +1,22 @@
+namespace FoodDiary.ArchitectureTests;
+
+[ExcludeFromCodeCoverage]
+public sealed class ModuleErrorOwnershipTests {
+    [Theory]
+    [InlineData("DailyAdvices", "Common", "DailyAdviceErrors")]
+    [InlineData("Dietologist", "Dietologist/Common", "DietologistErrors")]
+    [InlineData("Fasting", "Common", "FastingErrors")]
+    [InlineData("Hydration", "Common", "HydrationEntryErrors")]
+    [InlineData("Meals", "Meals/Common", "MealErrors")]
+    public void ErrorFactory_IsModuleOwnedWithoutCentralDependency(string module, string relativeFolder, string type) {
+        string source = ArchitectureTestPaths.FromRoot($"Modules/{module}/Application/Abstractions/{relativeFolder}/{type}.cs");
+        Assert.True(File.Exists(source), $"Missing owned factory: {source}");
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot($"FoodDiary.Application.Abstractions/{module}/Common/{type}.cs")));
+        string project = $"Modules/{module}/Application/Abstractions/FoodDiary.Modules.{module}.Application.Abstractions.csproj";
+        string[] references = ProjectReferenceReader.ReadProjectReferences(project);
+        Assert.Contains("FoodDiary.Results", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Application.Abstractions", references, StringComparer.Ordinal);
+        Assert.Contains($"FoodDiary.Modules.{module}.Application.Abstractions",
+            ProjectReferenceReader.ReadProjectReferences("FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj"), StringComparer.Ordinal);
+    }
+}
