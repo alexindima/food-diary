@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using SmtpServer;
 using SmtpServer.Mail;
 using SmtpServer.Net;
+using SmtpServer.Protocol;
 using SmtpServer.Storage;
 using FoodDiary.MailInbox.Infrastructure.Options;
 
@@ -42,7 +43,7 @@ public sealed class MailInboxMailboxFilter(
 
         if (!TryStartSessionMessage(context)) {
             MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.SessionRateLimited);
-            return Task.FromResult(false);
+            throw TemporaryAdmissionFailure();
         }
 
         string sourceAddress = remoteAddress is null ? "unknown" : MailInboxNetworkIdentity.GetKey(remoteAddress);
@@ -52,7 +53,7 @@ public sealed class MailInboxMailboxFilter(
                 _options.MaxMessagesPerIpPerHour,
                 RateLimitWindow)) {
             MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.IpRateLimited);
-            return Task.FromResult(false);
+            throw TemporaryAdmissionFailure();
         }
 
         if (!rateLimiter.TryAcquire(
@@ -61,7 +62,7 @@ public sealed class MailInboxMailboxFilter(
                 _options.MaxMessagesPerSenderPerHour,
                 RateLimitWindow)) {
             MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.SenderRateLimited);
-            return Task.FromResult(false);
+            throw TemporaryAdmissionFailure();
         }
 
         MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.Accepted);
@@ -82,7 +83,9 @@ public sealed class MailInboxMailboxFilter(
 
         if (!TryAddRecipient(context)) {
             MailInboxTelemetry.RecordAdmission(MailInboxAdmissionOutcome.RecipientLimitExceeded);
-            return Task.FromResult(false);
+            throw new SmtpResponseException(new SmtpResponse(
+                SmtpReplyCode.InsufficientStorage,
+                "Too many recipients in this transaction. Retry the remaining recipients later."));
         }
 
         return Task.FromResult(true);
@@ -104,6 +107,12 @@ public sealed class MailInboxMailboxFilter(
             return true;
         }
     }
+
+    // A false mailbox-filter result becomes a permanent 550 in SmtpServer.
+    // Capacity limits must keep the sender's message eligible for retry.
+    private static SmtpResponseException TemporaryAdmissionFailure() => new(new SmtpResponse(
+        SmtpReplyCode.Unavailable,
+        "Mail admission capacity is temporarily exhausted. Retry later."));
 
     private bool TryAddRecipient(ISessionContext? context) {
         if (context is null) {

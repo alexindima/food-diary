@@ -24,7 +24,10 @@ public sealed class DmarcReportParser : IMailInboxDmarcReportParser {
     private const int MaxDmarcXmlElements = 250_000;
     private const int MaxDmarcRecords = 10_000;
 
-    public DmarcReportPreview? TryParse(string rawMime, CancellationToken cancellationToken = default) {
+    public DmarcReportPreview? TryParse(string rawMime, CancellationToken cancellationToken = default) =>
+        TryParse(Encoding.UTF8.GetBytes(rawMime), cancellationToken);
+
+    public DmarcReportPreview? TryParse(byte[] rawMime, CancellationToken cancellationToken = default) {
         var budget = new DmarcParseBudget(cancellationToken);
         try {
             foreach (string xml in ExtractXmlPayloads(rawMime, budget)) {
@@ -42,10 +45,10 @@ public sealed class DmarcReportParser : IMailInboxDmarcReportParser {
         return null;
     }
 
-    private static IEnumerable<string> ExtractXmlPayloads(string rawMime, DmarcParseBudget budget) {
+    private static IEnumerable<string> ExtractXmlPayloads(byte[] rawMime, DmarcParseBudget budget) {
         budget.ThrowIfCancellationRequested();
-        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(rawMime));
-        var message = MimeMessage.Load(stream);
+        using var stream = new MemoryStream(rawMime, writable: false);
+        using var message = MimeMessage.Load(stream, budget.CancellationToken);
         foreach (MimePart part in message.BodyParts.OfType<MimePart>()) {
             budget.ThrowIfCancellationRequested();
             string fileName = part.FileName ?? string.Empty;
@@ -55,7 +58,7 @@ public sealed class DmarcReportParser : IMailInboxDmarcReportParser {
             }
 
             using var content = new MemoryStream();
-            part.Content.DecodeTo(content);
+            part.Content.DecodeTo(content, budget.CancellationToken);
             budget.AddAttachmentBytes(content.Length);
             if (content.Length > MaxDmarcAttachmentBytes) {
                 continue;
@@ -84,7 +87,8 @@ public sealed class DmarcReportParser : IMailInboxDmarcReportParser {
                 contentType.Equals("application/xml", StringComparison.OrdinalIgnoreCase) ||
                 contentType.Equals("text/xml", StringComparison.OrdinalIgnoreCase)) {
                 budget.StartXmlDocument();
-                yield return budget.CompleteXmlDocument(Encoding.UTF8.GetString(bytes));
+                using var xmlStream = new MemoryStream(bytes, writable: false);
+                yield return budget.CompleteXmlDocument(ReadTextWithLimit(xmlStream, budget));
             }
         }
     }
@@ -310,6 +314,8 @@ public sealed class DmarcReportParser : IMailInboxDmarcReportParser {
         private long _attachmentBytes;
         private int _xmlCharacters;
         private int _xmlDocuments;
+
+        public CancellationToken CancellationToken => cancellationToken;
 
         public bool IsCancellationRequested => cancellationToken.IsCancellationRequested;
 

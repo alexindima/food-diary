@@ -7,6 +7,7 @@ using SmtpServer;
 using SmtpServer.IO;
 using SmtpServer.Mail;
 using SmtpServer.Net;
+using SmtpServer.Protocol;
 
 namespace FoodDiary.MailInbox.Infrastructure.Tests;
 
@@ -58,7 +59,7 @@ public sealed class MailInboxMailboxFilterTests {
     }
 
     [Fact]
-    public async Task CanAcceptFromAsync_WhenSessionMessageLimitIsExceeded_ReturnsFalse() {
+    public async Task CanAcceptFromAsync_WhenSessionMessageLimitIsExceeded_ReturnsTemporaryFailure() {
         MailInboxMailboxFilter filter = CreateFilter(new MailInboxSmtpOptions {
             AllowedRecipients = ["admin@fooddiary.club"],
             MaxMessagesPerSession = 1,
@@ -70,14 +71,14 @@ public sealed class MailInboxMailboxFilterTests {
             new Mailbox("sender", "example.com"),
             size: 100,
             CancellationToken.None);
-        bool second = await filter.CanAcceptFromAsync(
+        SmtpResponseException second = await Assert.ThrowsAsync<SmtpResponseException>(() => filter.CanAcceptFromAsync(
             context,
             new Mailbox("sender", "example.com"),
             size: 100,
-            CancellationToken.None);
+            CancellationToken.None));
 
         Assert.True(first);
-        Assert.False(second);
+        Assert.Equal(SmtpReplyCode.Unavailable, second.Response.ReplyCode);
     }
 
     [Fact]
@@ -97,7 +98,7 @@ public sealed class MailInboxMailboxFilterTests {
     }
 
     [Fact]
-    public async Task CanDeliverToAsync_WhenRecipientLimitIsExceeded_ReturnsFalse() {
+    public async Task CanDeliverToAsync_WhenRecipientLimitIsExceeded_ReturnsTemporaryFailure() {
         MailInboxMailboxFilter filter = CreateFilter(new MailInboxSmtpOptions {
             AllowedRecipients = ["admin@fooddiary.club", "support@fooddiary.club"],
             MaxRecipientsPerMessage = 1,
@@ -114,18 +115,18 @@ public sealed class MailInboxMailboxFilterTests {
             new Mailbox("admin", "fooddiary.club"),
             new Mailbox("sender", "example.com"),
             CancellationToken.None);
-        bool second = await filter.CanDeliverToAsync(
+        SmtpResponseException second = await Assert.ThrowsAsync<SmtpResponseException>(() => filter.CanDeliverToAsync(
             context,
             new Mailbox("support", "fooddiary.club"),
             new Mailbox("sender", "example.com"),
-            CancellationToken.None);
+            CancellationToken.None));
 
         Assert.True(first);
-        Assert.False(second);
+        Assert.Equal(SmtpReplyCode.InsufficientStorage, second.Response.ReplyCode);
     }
 
     [Fact]
-    public async Task CanAcceptFromAsync_WhenSenderWindowIsExhausted_ReturnsFalse() {
+    public async Task CanAcceptFromAsync_WhenSenderWindowIsExhausted_ReturnsTemporaryFailure() {
         MailInboxMailboxFilter filter = CreateFilter(new MailInboxSmtpOptions {
             AllowedRecipients = ["admin@fooddiary.club"],
             MaxMessagesPerSenderPerHour = 1,
@@ -136,14 +137,14 @@ public sealed class MailInboxMailboxFilterTests {
             new Mailbox("sender", "example.com"),
             size: 100,
             CancellationToken.None);
-        bool second = await filter.CanAcceptFromAsync(
+        SmtpResponseException second = await Assert.ThrowsAsync<SmtpResponseException>(() => filter.CanAcceptFromAsync(
             new TestSessionContext(),
             new Mailbox("sender", "example.com"),
             size: 100,
-            CancellationToken.None);
+            CancellationToken.None));
 
         Assert.True(first);
-        Assert.False(second);
+        Assert.Equal(SmtpReplyCode.Unavailable, second.Response.ReplyCode);
     }
 
     [Fact]
@@ -170,7 +171,7 @@ public sealed class MailInboxMailboxFilterTests {
     }
 
     [Fact]
-    public async Task CanAcceptFromAsync_WhenIpWindowIsExhausted_ReturnsFalse() {
+    public async Task CanAcceptFromAsync_WhenIpWindowIsExhausted_ReturnsTemporaryFailure() {
         MailInboxMailboxFilter filter = CreateFilter(new MailInboxSmtpOptions {
             AllowedRecipients = ["admin@fooddiary.club"],
             MaxMessagesPerIpPerHour = 1,
@@ -182,14 +183,14 @@ public sealed class MailInboxMailboxFilterTests {
             new Mailbox("first", "example.com"),
             size: 100,
             CancellationToken.None);
-        bool second = await filter.CanAcceptFromAsync(
+        SmtpResponseException second = await Assert.ThrowsAsync<SmtpResponseException>(() => filter.CanAcceptFromAsync(
             new TestSessionContext(sourceAddress),
             new Mailbox("second", "example.com"),
             size: 100,
-            CancellationToken.None);
+            CancellationToken.None));
 
         Assert.True(first);
-        Assert.False(second);
+        Assert.Equal(SmtpReplyCode.Unavailable, second.Response.ReplyCode);
     }
 
     [Fact]
@@ -204,14 +205,14 @@ public sealed class MailInboxMailboxFilterTests {
             new Mailbox("first", "example.com"),
             size: 100,
             CancellationToken.None);
-        bool rotated = await filter.CanAcceptFromAsync(
+        SmtpResponseException rotated = await Assert.ThrowsAsync<SmtpResponseException>(() => filter.CanAcceptFromAsync(
             new TestSessionContext(IPAddress.Parse("2001:db8:1234:5678::ffff")),
             new Mailbox("second", "example.com"),
             size: 100,
-            CancellationToken.None);
+            CancellationToken.None));
 
         Assert.True(first);
-        Assert.False(rotated);
+        Assert.Equal(SmtpReplyCode.Unavailable, rotated.Response.ReplyCode);
     }
 
     [Fact]

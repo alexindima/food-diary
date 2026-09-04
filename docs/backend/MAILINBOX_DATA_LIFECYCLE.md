@@ -8,10 +8,13 @@ MailInbox accepts untrusted SMTP traffic and can receive personal data, attachme
 - `MailInboxSmtp:AllowUntrustedSources=true` explicitly enables direct SMTP delivery from sources outside `TrustedRelayNetworks`; setting it to `false` creates a relay-only boundary and rejects other sources before they consume message-rate quota.
 - `TrustedRelayNetworks` records network provenance and reserves storage capacity. It does not authenticate the SMTP envelope sender or the MIME `From:` header. A trusted upstream relay is responsible for SPF/DKIM/DMARC authentication, alignment decisions, and removing untrusted `Authentication-Results` headers before forwarding.
 - Message admission is bounded per session, source address, envelope sender, and actual DATA bytes per source address. Source and sender values are hashed before they become in-memory rate-limit keys.
+- Temporary message-rate exhaustion returns SMTP `450`; excess envelope recipients return `452` so senders can retry. Unknown recipients and disallowed sources remain permanent rejections. Returning `false` from an SMTP mailbox filter maps to `550` and must not be used for temporary capacity limits.
 - Per-source and per-envelope-sender limits use exact sliding windows, so a fixed-window boundary cannot temporarily double the configured budget.
 - Message size, persisted header fields, envelope recipient count, MIME part count, extracted body length, concurrent MIME processing, and concurrent message-detail parsing are bounded.
 - Daily message and accounted-storage quotas are updated atomically with the message insert. Accounted storage includes raw MIME and every separately persisted text/metadata copy. A quota rejection rolls back the insert and returns a temporary SMTP failure.
 - Raw MIME is stored as PostgreSQL `bytea`; the ingest path does not convert arbitrary MIME bytes to UTF-8 before persistence.
+- DMARC parsing consumes those original bytes, including binary compressed attachments. Plain XML, gzip and ZIP payloads use bounded text decoding with BOM detection. The existing HTTP `RawMime` string is a text preview, not a lossless binary export.
+- Extracted text and HTML bodies are truncated without splitting UTF-16 surrogate pairs; the original MIME remains intact until content retention expires.
 - A fingerprint of the canonical envelope and raw MIME bytes deduplicates SMTP retries inside the configured window. `Message-Id` is not trusted as the sole idempotency key.
 
 ## Retention policy

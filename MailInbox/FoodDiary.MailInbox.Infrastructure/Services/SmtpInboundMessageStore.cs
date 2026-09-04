@@ -194,8 +194,18 @@ public sealed class SmtpInboundMessageStore(
         }
     }
 
-    private static string? Truncate(string? value, int maxCharacters) =>
-        value is null || value.Length <= maxCharacters ? value : value[..maxCharacters];
+    private static string? Truncate(string? value, int maxCharacters) {
+        if (value is null || value.Length <= maxCharacters) {
+            return value;
+        }
+
+        int length = maxCharacters;
+        if (length > 0 && char.IsHighSurrogate(value[length - 1]) && char.IsLowSurrogate(value[length])) {
+            length--;
+        }
+
+        return value[..length];
+    }
 
     private sealed class MimeStructureLimitExceededException : Exception;
 }

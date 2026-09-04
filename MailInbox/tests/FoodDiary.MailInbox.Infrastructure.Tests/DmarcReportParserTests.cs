@@ -11,6 +11,21 @@ namespace FoodDiary.MailInbox.Infrastructure.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class DmarcReportParserTests {
     [Fact]
+    public void TryParse_WhenXmlAttachmentUsesUtf16Bom_ReturnsPreview() {
+        string xml = CreateDmarcXml().Replace("UTF-8", "UTF-16", StringComparison.Ordinal);
+        byte[] bytes = [.. Encoding.Unicode.GetPreamble(), .. Encoding.Unicode.GetBytes(xml)];
+        string rawMime = CreateRawMessage(new MimePart("application", "xml") {
+            Content = new MimeContent(new MemoryStream(bytes)),
+            ContentTransferEncoding = ContentEncoding.Base64,
+        });
+
+        DmarcReportPreview? report = new DmarcReportParser().TryParse(rawMime);
+
+        Assert.NotNull(report);
+        Assert.Equal("fooddiary.club", report.Domain);
+    }
+
+    [Fact]
     public void TryParse_WhenMessageContainsGzipDmarcReport_ReturnsPreview() {
         string rawMime = CreateRawMessage(CreateGzipReportAttachment());
         var parser = new DmarcReportParser();

@@ -4,12 +4,41 @@ using FoodDiary.MailInbox.Infrastructure.Services;
 using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.IntegrationTests.TestInfrastructure;
 using Npgsql;
+using System.IO.Compression;
+using System.Text;
 
 namespace FoodDiary.MailInbox.IntegrationTests;
 
 [Collection("mailinbox-postgres")]
 [ExcludeFromCodeCoverage]
 public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixture fixture) {
+    [RequiresDockerFact]
+    public async Task GetMessageDetailsAsync_WhenDmarcAttachmentIsBinary_PreservesReportBytes() {
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        using NpgsqlInboundMailStore store = CreateStore(dataSource);
+        await using var compressed = new MemoryStream();
+        await using (var gzip = new GZipStream(compressed, CompressionMode.Compress, leaveOpen: true)) {
+            await gzip.WriteAsync(Encoding.UTF8.GetBytes(
+                "<feedback><policy_published><domain>fooddiary.club</domain></policy_published></feedback>"));
+        }
+
+        byte[] headers = Encoding.ASCII.GetBytes(
+            "From: reports@example.com\r\nTo: dmarc@fooddiary.club\r\n" +
+            "MIME-Version: 1.0\r\nContent-Type: application/gzip\r\n" +
+            "Content-Transfer-Encoding: binary\r\n\r\n");
+        byte[] rawMime = [.. headers, .. compressed.ToArray()];
+        var message = InboundMailMessage.Receive(
+            messageId: null, "reports@example.com", ["dmarc@fooddiary.club"], "Report", textBody: null, htmlBody: null,
+            rawMime, FixedTime.GetUtcNow());
+        InboundMailSaveResult saved = await store.SaveAsync(message, CancellationToken.None);
+
+        InboundMailMessageDetails? details = await store.GetMessageDetailsAsync(saved.Id, CancellationToken.None);
+
+        Assert.NotNull(details);
+        Assert.NotNull(details.DmarcReport);
+        Assert.Equal("fooddiary.club", details.DmarcReport.Domain);
+    }
+
     [RequiresDockerFact]
     public async Task EnsureSchemaAsync_CreatesCurrentSchemaAndRecordsMigrations() {
         fixture.EnsureAvailable();
@@ -950,7 +979,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
 
         public void Release() => _release.Set();
 
-        public DmarcReportPreview? TryParse(string rawMime, CancellationToken cancellationToken = default) {
+        public DmarcReportPreview? TryParse(byte[] rawMime, CancellationToken cancellationToken = default) {
             int activeCalls = Interlocked.Increment(ref _activeCalls);
             UpdateMaximum(activeCalls);
             if (activeCalls >= expectedConcurrentCalls) {

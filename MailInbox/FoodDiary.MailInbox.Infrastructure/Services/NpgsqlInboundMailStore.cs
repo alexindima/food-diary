@@ -460,9 +460,9 @@ public sealed class NpgsqlInboundMailStore(
                         ? null
                         : await reader.GetFieldValueAsync<byte[]>(7, cancellationToken).ConfigureAwait(false);
                     string? rawMime = rawMimeBytes is null ? null : Encoding.UTF8.GetString(rawMimeBytes);
-                    DmarcReportPreview? dmarcReport = rawMime is null
+                    DmarcReportPreview? dmarcReport = rawMimeBytes is null
                         ? null
-                        : dmarcReportParser.TryParse(rawMime, cancellationToken);
+                        : dmarcReportParser.TryParse(rawMimeBytes, cancellationToken);
 
                     details = new InboundMailMessageDetails(
                         reader.GetGuid(0),

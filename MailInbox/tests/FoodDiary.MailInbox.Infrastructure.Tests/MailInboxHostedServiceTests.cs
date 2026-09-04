@@ -18,6 +18,57 @@ namespace FoodDiary.MailInbox.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxHostedServiceTests {
+    [Theory]
+    [InlineData("session")]
+    [InlineData("source")]
+    [InlineData("sender")]
+    [InlineData("recipient")]
+    public async Task SmtpHostedService_WhenMessageRateLimitIsReached_ReturnsRetryableResponse(string limit) {
+        int port = GetFreeTcpPort();
+        using CertificateFiles certificateFiles = CreateCertificateFiles("localhost");
+        using MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
+            ServerName = "localhost",
+            ListenAddress = System.Net.IPAddress.Loopback.ToString(),
+            Port = port,
+            CertificatePath = certificateFiles.CertificatePath,
+            PrivateKeyPath = certificateFiles.PrivateKeyPath,
+            MaxMessagesPerSession = string.Equals(limit, "session", StringComparison.Ordinal) ? 1 : 10,
+            MaxMessagesPerIpPerHour = string.Equals(limit, "source", StringComparison.Ordinal) ? 1 : 100,
+            MaxMessagesPerSenderPerHour = string.Equals(limit, "sender", StringComparison.Ordinal) ? 1 : 20,
+            MaxRecipientsPerMessage = 1,
+        });
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+        await service.StartAsync(timeout.Token);
+        try {
+            await WaitForPortAsync(port, timeout.Token);
+            using var client = new TcpClient();
+            await client.ConnectAsync(System.Net.IPAddress.Loopback, port, timeout.Token);
+            using var reader = new StreamReader(client.GetStream(), Encoding.ASCII);
+            await using var writer = new StreamWriter(client.GetStream(), Encoding.ASCII, leaveOpen: true) {
+                AutoFlush = true,
+                NewLine = "\r\n",
+            };
+            Assert.StartsWith("220", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
+            await writer.WriteLineAsync("EHLO localhost");
+            await ReadSmtpResponseAsync(reader, "250");
+            await writer.WriteLineAsync("MAIL FROM:<sender@example.com>");
+            Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
+            if (string.Equals(limit, "recipient", StringComparison.Ordinal)) {
+                await writer.WriteLineAsync("RCPT TO:<admin@fooddiary.club>");
+                Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
+                await writer.WriteLineAsync("RCPT TO:<support@fooddiary.club>");
+            } else {
+                await writer.WriteLineAsync("RSET");
+                Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
+                await writer.WriteLineAsync("MAIL FROM:<sender@example.com>");
+            }
+
+            Assert.StartsWith("4", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
+        } finally {
+            await service.StopAsync(CancellationToken.None);
+        }
+    }
+
     [Fact]
     public async Task SmtpHostedService_WhenDisabled_CompletesWithoutStartingListener() {
         MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions { Enabled = false });
@@ -203,7 +254,7 @@ public sealed class MailInboxHostedServiceTests {
     }
 
     [Fact]
-    public async Task SmtpHostedService_WhenPerIpConnectionLimitIsReached_ClosesExcessSession() {
+    public async Task SmtpHostedService_WhenPerIpConnectionLimitIsReached_ClosesExcessSessionAndKeepsListening() {
         int port = GetFreeTcpPort();
         using CertificateFiles certificateFiles = CreateCertificateFiles("localhost");
         MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
@@ -237,6 +288,22 @@ public sealed class MailInboxHostedServiceTests {
                 .WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System);
 
             Assert.Null(excessBanner);
+
+            firstClient.Dispose();
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            string? nextBanner;
+            do {
+                using var nextClient = new TcpClient();
+                await nextClient.ConnectAsync(System.Net.IPAddress.Loopback, port, timeout.Token);
+                using var nextReader = new StreamReader(nextClient.GetStream());
+                nextBanner = await nextReader.ReadLineAsync(timeout.Token);
+                if (nextBanner is null) {
+                    // Peer closure and server-side session cleanup are asynchronous.
+                    await Task.Delay(TimeSpan.FromMilliseconds(25), TimeProvider.System, timeout.Token);
+                }
+            } while (nextBanner is null);
+
+            Assert.StartsWith("220", nextBanner, StringComparison.Ordinal);
         } finally {
             await service.StopAsync(CancellationToken.None);
         }

@@ -399,6 +399,25 @@ public sealed class SmtpInboundMessageStoreTests {
     }
 
     [Fact]
+    public async Task SaveAsync_WhenBodyLimitSplitsSurrogatePair_StoresValidUnicode() {
+        var store = new RecordingInboundMailStore();
+        using SmtpInboundMessageStore messageStore = CreateMessageStore(
+            store,
+            new MailInboxSmtpOptions { MaxExtractedBodyCharacters = 2 });
+        byte[] rawMime = CreateRawMimeBytes(new TextPart("plain") { Text = "a\U0001F600z" });
+
+        SmtpResponse response = await messageStore.SaveAsync(
+            context: null!,
+            new TestMessageTransaction(["admin@fooddiary.club"]),
+            new ReadOnlySequence<byte>(rawMime),
+            CancellationToken.None);
+
+        Assert.Equal(SmtpResponse.Ok.ReplyCode, response.ReplyCode);
+        Assert.NotNull(store.LastSaved);
+        Assert.Equal("a", store.LastSaved.TextBody);
+    }
+
+    [Fact]
     public async Task SaveAsync_WhenProcessingSlotsStayBusy_ReturnsTemporaryOverload() {
         var store = new BlockingInboundMailStore(expectedConcurrentCalls: 1);
         SmtpInboundMessageStore messageStore = CreateMessageStore(
