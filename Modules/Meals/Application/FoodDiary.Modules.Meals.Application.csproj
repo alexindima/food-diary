@@ -11,7 +11,7 @@
     <ProjectReference Include="../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../RecentItems/Application/Abstractions/FoodDiary.Modules.RecentItems.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../Gamification/Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Images/Application/FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
@@ -24,6 +24,7 @@
     <ProjectReference Include="../../Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Recipes/Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Nutrition.Contracts\FoodDiary.Nutrition.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" />

@@ -11,12 +11,14 @@
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="Abstractions\FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Domain\FoodDiary.Modules.Dietologist.Domain.csproj" />
-    <ProjectReference Include="..\..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Audit.Contracts\FoodDiary.Audit.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Email.Contracts\FoodDiary.Email.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

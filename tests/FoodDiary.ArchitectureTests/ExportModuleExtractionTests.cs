@@ -5,7 +5,7 @@ public sealed class ExportModuleExtractionTests {
     [Fact]
     public void ExportApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Export");
-        string legacyAbstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions", "Export");
+        string legacyAbstractionsRoot = ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts", "Export");
         string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Export", "Application");
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.Empty(Directory.Exists(legacyAbstractionsRoot) ? SourceScanner.SourceFiles(legacyAbstractionsRoot) : []);
@@ -16,14 +16,14 @@ public sealed class ExportModuleExtractionTests {
     public void ExtractedExportAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Cycles", "FoodDiary.Mediator", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.Export.Application.Abstractions", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Application.Cycles", "FoodDiary.Mediator", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.Export.Application.Abstractions", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Fact]
     public void ExportAbstractions_HaveOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

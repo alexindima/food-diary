@@ -9,6 +9,7 @@ public sealed class InitializerGuardrailTests {
         const string relativeProjectPath = "FoodDiary.Initializer/FoodDiary.Initializer.csproj";
         string[] expectedProjectReferences = [
             "FoodDiary.Application.BodyMetrics",
+            "FoodDiary.Application.Contracts",
             "FoodDiary.Application.Exercises",
             "FoodDiary.Application.Images",
             "FoodDiary.Application.MealPlanning",
@@ -60,6 +61,8 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Modules.Wearables.Infrastructure",
             "FoodDiary.Modules.WeeklyCheckIn.Application",
             "FoodDiary.Modules.WeeklyGoals.Infrastructure",
+            "FoodDiary.Outbox.Abstractions",
+            "FoodDiary.Outbox.Management.Contracts",
         ];
         string[] expectedPackageReferences = [
             "Microsoft.EntityFrameworkCore",

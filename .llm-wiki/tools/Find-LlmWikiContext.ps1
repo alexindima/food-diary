@@ -388,7 +388,12 @@ $changeTypeContextProjects = @{
     )
     Backend = @(
         'FoodDiary.Application'
-        'FoodDiary.Application.Abstractions'
+        'FoodDiary.Application.Contracts'
+        'FoodDiary.Audit.Contracts'
+        'FoodDiary.Authentication.Contracts'
+        'FoodDiary.Email.Contracts'
+        'FoodDiary.Nutrition.Contracts'
+        'FoodDiary.Outbox.Management.Contracts'
         'FoodDiary.Domain'
         'FoodDiary.Infrastructure'
         'FoodDiary.ArchitectureTests'

@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: none observed
+- Abstraction-contract dependencies: Dashboard
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Dashboard.Application, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -25,6 +25,7 @@ sources:
 ## Source Areas
 
 - `FoodDiary.Presentation.Api/Features/Statistics`
+- `Modules/Dashboard/Application/Abstractions`
 
 ## HTTP Surface
 
@@ -41,19 +42,33 @@ Source: `FoodDiary.Presentation.Api/Features/Statistics/StatisticsController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 0
+- Public contract files: 15
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 15
+- Interfaces: 3
+- DTO/read-model/projection types: 11
 - Enums: 0
 - Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- `interface IDashboardBodyReadService`
+- `interface IDashboardMealsReadService`
+- `interface IDashboardReadService`
+- `record DashboardBodyReadModel`
+- `record DashboardMealAiItemReadModel`
+- `record DashboardMealAiSessionReadModel`
+- `record DashboardMealItemReadModel`
+- `record DashboardMealReadModel`
+- `record DashboardMealsReadModel`
+- `record DashboardReadModel`
+- `record DashboardReadSections`
+- `record DashboardWaistPointReadModel`
+- `record DashboardWaistSummaryReadModel`
+- `record DashboardWeightPointReadModel`
+- `record DashboardWeightSummaryReadModel`
 
 ## Focused Tests
 

@@ -17,5 +17,7 @@
     <ProjectReference Include="../../../BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Audit.Contracts\FoodDiary.Audit.Contracts.csproj" />
   </ItemGroup>
 </Project>

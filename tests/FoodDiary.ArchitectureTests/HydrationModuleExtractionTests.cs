@@ -14,7 +14,7 @@ public sealed class HydrationModuleExtractionTests {
     public void ExtractedHydrationAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Hydration.Application.Abstractions", "FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Hydration.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Hydration.Application.Abstractions", "FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Hydration.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Fact]

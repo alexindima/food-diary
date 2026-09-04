@@ -45,7 +45,7 @@ are reported separately; `none observed` never means proven isolation.
 | [RecentItems](recent-items.md) | aggregate-owner | 0 | 0 | 0 | 0 | project-reference-matrix |
 | [RecipeCommunity](recipe-community.md) | aggregate-owner | 0 | 5 | 0 | 4 | project-reference-matrix |
 | [Recipes](recipes.md) | aggregate-owner | 0 | 6 | 0 | 4 | project-reference-matrix |
-| [Statistics](statistics.md) | read-composer | 0 | 0 | 0 | 5 | project-reference-matrix |
+| [Statistics](statistics.md) | read-composer | 0 | 1 | 0 | 5 | project-reference-matrix |
 | [Tdee](tdee.md) | read-composer | 0 | 3 | 0 | 5 | project-reference-matrix |
 | [Usda](usda.md) | reference-data-owner | 0 | 3 | 0 | 6 | project-reference-matrix-and-module-boundary-tests |
 | [Users](users.md) | aggregate-owner | 0 | 2 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |

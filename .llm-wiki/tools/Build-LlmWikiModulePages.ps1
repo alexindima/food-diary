@@ -214,7 +214,11 @@ function Resolve-AbstractionAreaPath {
     if (Test-Path -LiteralPath (Join-Path $repositoryRoot $rootDirectory) -PathType Container) {
         return $normalizedArea
     }
-    return "FoodDiary.Application.Abstractions/$normalizedArea"
+    $moduleAbstractions = "Modules/$rootDirectory/Application/Abstractions"
+    if (Test-Path -LiteralPath (Join-Path $repositoryRoot $moduleAbstractions) -PathType Container) {
+        return $moduleAbstractions
+    }
+    return $normalizedArea
 }
 
 function Get-ReferencedContractAreas {
@@ -306,7 +310,7 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
     $contractProjectAreas = @(Get-BoundaryMappingValues $boundary 'contractProjects' @())
     $contractDependencies = @(Get-ReferencedContractAreas $applicationSourceAreas $moduleName)
     $hostConsumers = @(Get-HostConsumers $moduleName $contractAreas ([string]$module.project))
-    $publicContractFiles = @(
+    $publicContractFiles = @(@(
         foreach ($area in $contractAreas) {
             $contractArea = Resolve-AbstractionAreaPath ([string]$area)
             Get-SourceFilesUnder $contractArea | Where-Object {
@@ -318,7 +322,7 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
                 $_.content -match '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum)\b'
             }
         }
-    )
+    ) | Sort-Object { Get-LlmWikiOrdinalSortKey $_.path } -Unique)
     $publicContractTypes = @(
         foreach ($contractFile in $publicContractFiles) {
             $content = $contractFile.content

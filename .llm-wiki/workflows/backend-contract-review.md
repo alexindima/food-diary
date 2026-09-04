@@ -13,7 +13,12 @@ sources:
   - .llm-wiki/tools/Find-LlmWikiBackendContract.ps1
   - .llm-wiki/tools/code-graph.mjs
   - .llm-wiki/tools/Test-LlmWikiBackendContractSqlParity.ps1
-  - FoodDiary.Application.Abstractions/AGENTS.md
+  - Shared/FoodDiary.Application.Contracts/AGENTS.md
+  - Shared/FoodDiary.Audit.Contracts/AGENTS.md
+  - Shared/FoodDiary.Authentication.Contracts/AGENTS.md
+  - Shared/FoodDiary.Email.Contracts/AGENTS.md
+  - Shared/FoodDiary.Nutrition.Contracts/AGENTS.md
+  - Shared/FoodDiary.Outbox.Management.Contracts/AGENTS.md
 ---
 
 # Review Backend Contract Consumers

@@ -67,12 +67,16 @@
     <ProjectReference Include="../../Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Usda/Application/Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
   </ItemGroup>
-
-
 </Project>

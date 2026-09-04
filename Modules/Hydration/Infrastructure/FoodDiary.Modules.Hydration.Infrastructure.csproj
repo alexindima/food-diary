@@ -15,6 +15,7 @@
     <ProjectReference Include="Model\FoodDiary.Modules.Hydration.PersistenceModel.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

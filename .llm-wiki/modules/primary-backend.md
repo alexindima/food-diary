@@ -4,7 +4,12 @@ kind: module
 status: current
 sources:
   - FoodDiary.Application.Runtime/AGENTS.md
-  - FoodDiary.Application.Abstractions/AGENTS.md
+  - Shared/FoodDiary.Application.Contracts/AGENTS.md
+  - Shared/FoodDiary.Audit.Contracts/AGENTS.md
+  - Shared/FoodDiary.Authentication.Contracts/AGENTS.md
+  - Shared/FoodDiary.Email.Contracts/AGENTS.md
+  - Shared/FoodDiary.Nutrition.Contracts/AGENTS.md
+  - Shared/FoodDiary.Outbox.Management.Contracts/AGENTS.md
   - Shared/FoodDiary.Domain.Primitives/AGENTS.md
   - docs/adr/0027-retire-shared-domain-assemblies.md
   - FoodDiary.Infrastructure/AGENTS.md
@@ -26,7 +31,7 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 | Concern | Project |
 | --- | --- |
 | Domain behavior and invariants | Owning module Domain project; generic values and guards in `FoodDiary.Domain.Primitives`. The former central and Nutrition assemblies are retired under ADR 0027. |
-| Application-facing ports and models | Owning module abstractions plus shared `FoodDiary.Application.Abstractions` |
+| Application-facing ports and models | Owning module contracts plus narrow shared contract projects under `Shared/` |
 | Cross-cutting application execution pipeline | `FoodDiary.Application.Runtime` |
 | Business use cases | Owning module Application project under `Modules/<Module>/Application`; legacy assembly names may remain |
 | Billing use cases | `Modules/Billing/Application` |

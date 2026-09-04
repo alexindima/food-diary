@@ -111,7 +111,7 @@ $fingerprint = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($
     [IO.File]::WriteAllText((Join-Path $probeFixtureRoot 'Directory.Build.targets'), '<Project />', $encoding)
     Copy-Item -LiteralPath (Join-Path $repositoryRoot 'Directory.Packages.props') -Destination $probeFixtureRoot
     foreach ($project in @(
-        'FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj'
+        'Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj'
         'Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj'
         'Owner & Contracts/Sample.Owner.csproj'
     )) {

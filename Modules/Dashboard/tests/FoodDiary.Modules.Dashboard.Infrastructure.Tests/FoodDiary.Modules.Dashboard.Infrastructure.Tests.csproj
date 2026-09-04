@@ -3,11 +3,6 @@
     <RootNamespace>FoodDiary.Infrastructure.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Products\Domain.Contracts\FoodDiary.Modules.Products.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
-    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
-    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
-    <ProjectReference Include="../../Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -17,5 +12,11 @@
     <Using Include="System.Diagnostics.CodeAnalysis" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
+    <ProjectReference Include="..\..\..\Products\Domain.Contracts\FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
+    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj" />
+    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,5 @@
 <Solution>
   <Folder Name="/Application/">
-    <Project Path="FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj" />
     <Project Path="FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj" />
   </Folder>
   <Folder Name="/Modules/" />
@@ -345,9 +344,15 @@
     <Project Path="MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj" />
   </Folder>
   <Folder Name="/Shared/">
+    <Project Path="Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
+    <Project Path="Shared/FoodDiary.Audit.Contracts/FoodDiary.Audit.Contracts.csproj" />
+    <Project Path="Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <Project Path="Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj" />
+    <Project Path="Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
     <Project Path="Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
+    <Project Path="Shared/FoodDiary.Nutrition.Contracts/FoodDiary.Nutrition.Contracts.csproj" />
     <Project Path="Shared/FoodDiary.Outbox.Abstractions/FoodDiary.Outbox.Abstractions.csproj" />
+    <Project Path="Shared/FoodDiary.Outbox.Management.Contracts/FoodDiary.Outbox.Management.Contracts.csproj" />
     <Project Path="Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
   </Folder>
   <Folder Name="/Tooling/">

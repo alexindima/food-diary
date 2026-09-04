@@ -1,12 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><RootNamespace>FoodDiary.Application.Tests</RootNamespace></PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
-    <ProjectReference Include="..\..\Application\FoodDiary.Application.Cycles.csproj" />
-    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
-    <ProjectReference Include="../../../Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
-    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\Application\FoodDiary.Application.Cycles.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

@@ -8,21 +8,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "d4a1cdad8cc0a2480537d91d799bc27b5b80827467d9853a7b1f98c110fc7e41"
+          "sha256": "ca44a54386242d2fcb3f1d5d4a36558f2d62ce4840b535e59fd5d1a4f0caedf9"
         },
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "5e5a02fd49b0fa3d46d24bf898829bf73d52c44c110da0723d4fe5f1a2d4765e"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "184672c3c3b2f089d97f92e40a476d7f45081ee8717a41140db79e956afc0f80"
+          "sha256": "f511419852ddcf9ec44fe36ef982e3f9391a1873c69c845f24f82df939aaf8ee"
         }
       ],
-      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
+      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:10.9951395Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:33:06.5519964Z"
     },
     {
       "pageId": "module.frontend",
@@ -46,17 +42,13 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "5e5a02fd49b0fa3d46d24bf898829bf73d52c44c110da0723d4fe5f1a2d4765e"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "184672c3c3b2f089d97f92e40a476d7f45081ee8717a41140db79e956afc0f80"
+          "sha256": "f511419852ddcf9ec44fe36ef982e3f9391a1873c69c845f24f82df939aaf8ee"
         }
       ],
-      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
+      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:11.2045697Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:33:07.4597983Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -88,21 +80,25 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "5e5a02fd49b0fa3d46d24bf898829bf73d52c44c110da0723d4fe5f1a2d4765e"
+          "sha256": "f511419852ddcf9ec44fe36ef982e3f9391a1873c69c845f24f82df939aaf8ee"
         },
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "184672c3c3b2f089d97f92e40a476d7f45081ee8717a41140db79e956afc0f80"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "e7aa21146919a05002431dcf0749785735fd54ff65112596d1168f238190afaf"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs",
+          "sha256": "c7cb2ed3fdb3614b5d33a492779c071bdaa5e63154318f8cb0bab563a629a2f2"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "d71881ee6578343081bca2c23b0376ef21bf522ed54cd2b61b9c9c4dbb4a39c1"
+          "sha256": "35f19fbe9704a8e935020e99b956571d57ba82331f9909f72d6bdf48ab65e91b"
         }
       ],
-      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
+      "reason": "Updated the current architecture, ownership inventory, ADRs, module guides, backend manifest, and generated navigation to describe the six narrow shared contract owners and Users-owned helpers.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:11.6184277Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T22:41:13.6777866Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -141,13 +137,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "d4a1cdad8cc0a2480537d91d799bc27b5b80827467d9853a7b1f98c110fc7e41"
+          "sha256": "ca44a54386242d2fcb3f1d5d4a36558f2d62ce4840b535e59fd5d1a4f0caedf9"
+        },
+        {
+          "path": "docs/adr/README.md",
+          "sha256": "0179f56aac38827e6681230401562642fd68d60bb23858315c282b49918ce6a6"
         }
       ],
-      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
+      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:11.8301609Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:33:09.2544224Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -155,14 +155,18 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+          "sha256": "0641baab5ef0c3199fa437ab6cf285078353800bf562b539fe3d7fb2f73b8b8b"
+        },
+        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "d91d924875ebd2a45a5bf42046931fe159f4d503881dfecb2699e9f20e89eaa3"
+          "sha256": "e7aa21146919a05002431dcf0749785735fd54ff65112596d1168f238190afaf"
         }
       ],
-      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
+      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:26.6744067Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:33:10.2107568Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -186,17 +190,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
-          "sha256": "08e3258c70c5e8fd38cc3057436d33c7e23a82b336d5501d378fe8a07f5958ab"
+          "sha256": "8e4f9d7b01d4d121c06dfcc38399ca4472edd1b4160bf972af9431a66b149b3f"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
-          "sha256": "8e0803dfd0e1d1bce08bfd2cc8aefc39628adecc92e651b93a564a676b434ec9"
+          "sha256": "b2108ffefc4e186747c4aa572bc12a2b3582fded8c1c42873be342c5f6c51b8f"
         }
       ],
-      "reason": "All 43 Nutrition cases and 38 central cases plus five CycleId reflection cases move without loss. Full unfiltered regression results and failed intermediate attempts are kept separately. Synthetic compile-probe regression exercises real native compilation, conditional aliased references, invalid source diagnostics and enabled-cache behavior. No policy or ranking changes.",
+      "reason": "Reviewed Wiki tooling, architecture matrix, quality indexes and workflow pages against the generic catalog, path resolver, deduplication and extraction-readiness regressions; no ranking, query, threshold or frozen evaluation target changed.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:47.3854690Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:33:11.0714387Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -220,17 +224,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "684e694aeebfdb91c5a5482fa69dc64d5d44ae5cbf72f5db58691ddf0e4b00b9"
+          "sha256": "f6822bcc32e35f1eaa7949a6cb7e53384b9f3985ad7ed403bbba981e32c83df5"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "e7aa21146919a05002431dcf0749785735fd54ff65112596d1168f238190afaf"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "d71881ee6578343081bca2c23b0376ef21bf522ed54cd2b61b9c9c4dbb4a39c1"
+          "sha256": "35f19fbe9704a8e935020e99b956571d57ba82331f9909f72d6bdf48ab65e91b"
         }
       ],
-      "reason": "Reviewed generated catalog, dependency, topology, quality and retrieval guidance against current projects; retired Resources entries are gone and the two source-proven retrieval paths/prefix follow their module owners.",
+      "reason": "Reviewed generic Wiki path resolution, module inference, semantic ranking regression, frozen holdout relocation, architecture guardrails, test ledger, EF comparison, and NuGet audit against current source.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:12.0669564Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T22:41:14.6162138Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -239,13 +247,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "95d514059dd0fc4c25c03298c5c62aac5e480505dc7a0de6f8ab2edc9ede7cc6"
+          "sha256": "346db818da04c931bb8c5f2975027953f7c46b14b1b775d2f1b77cd720a44a24"
+        },
+        {
+          "path": "FoodDiary.Application.Abstractions/AGENTS.md",
+          "sha256": "<missing>"
         }
       ],
-      "reason": "Reviewed module/host ownership after relocating resource adapters; routes, payloads, Swagger surface, application contracts and localized values are unchanged.",
+      "reason": "Reviewed the shared-contract split against current source, direct project references, public CLR namespaces, and unchanged HTTP/Swagger surface; generated contract navigation now reflects the six narrow owners.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:12.6200561Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:33:13.3581432Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -284,17 +296,33 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "470b527694e7018cb9f0c9e93dcd112f462674a2dcb598151760429763e5b82d"
+          "sha256": "ca4df132747e83d083c475cc7daebd55d637308a4156aa093692df5beeb1eb03"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "32e4fb5f8f85a05007e534bad5d1e6a98b055e30dec4d93c6c297f9b2c986e75"
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "185dc40899cc26632ac6f847f2da7f707153b7db2b7282eff8c7eabe62a78e19"
+          "sha256": "5cec974cc9f3f942985a0f1212a2ce9c2aeec8fa8832ade1573ade859d001bd5"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "4e78ee04548f64e6aed709d9d887de3eb36625522fa453d9365687c03f479f33"
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "229b107140848b762408ba5062b63475fc97d6a0b509a23915bc4a0050fab3fe"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          "sha256": "66f3851493648beb8668bb00c5bd9db867c2a309c86185480237fd875e2e61cf"
         }
       ],
-      "reason": "Reviewed generated catalog, dependency, topology, quality and retrieval guidance against current projects; retired Resources entries are gone and the two source-proven retrieval paths/prefix follow their module owners.",
+      "reason": "Reviewed generic Wiki path resolution, module inference, semantic ranking regression, frozen holdout relocation, architecture guardrails, test ledger, EF comparison, and NuGet audit against current source.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:13.1568334Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T22:41:15.5741422Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -332,14 +360,14 @@
       "pageSha256": "2adbebf7ac1a14cca9d9ab6aa9a8bdd9502bef62346c9960e3c3d5901ba7545e",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "229b107140848b762408ba5062b63475fc97d6a0b509a23915bc4a0050fab3fe"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:33.9187587Z"
+      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
+      "baseRef": "HEAD",
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:33:16.1064166Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -457,13 +485,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "d79a67f0044707f488920e51058b74600bb5f08d1ec6143756e556272e1a1396"
+          "sha256": "0179f56aac38827e6681230401562642fd68d60bb23858315c282b49918ce6a6"
         }
       ],
-      "reason": "ADR 0027 states the accepted Products scoring dependency and supersedes the previous separate Nutrition design. Current owner guides, module map, testing guide and the stale Recipes domain-area manifest path are corrected. The domain exception/result note is retained under docs/architecture.",
+      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
       "baseRef": "HEAD",
-      "gitHead": "71bf4fd473790d7bf85d89a8d7fbf259012ca370",
-      "reviewedAtUtc": "2026-09-02T12:58:50.5296052Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:33:17.0986521Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -472,13 +500,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "d85a7e2029fe5cc0cbc5665f9d70d83dbba6487e1e37e12d38dcc82f042f7aa9"
+          "sha256": "73e41b43ccfd909fe42cde58f48df44596ab6048d7deff18974ca2f3cf38111c"
         }
       ],
-      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
+      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:29.5266873Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:33:17.8867885Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -596,13 +624,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "0ea63ac3d39dbb4accd78915f7925a6152e10e018f6d12dab8c7024a54fa9f7d"
+          "sha256": "4e78ee04548f64e6aed709d9d887de3eb36625522fa453d9365687c03f479f33"
         }
       ],
-      "reason": "16 path literals follow audited Git renames in four corpora; reverse mapping reproduces original files. Report separates full-run failures, focused correction, measured improvements and unresolved quality gates.",
+      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph.",
       "baseRef": "HEAD",
-      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
-      "reviewedAtUtc": "2026-09-04T15:06:34.5130282Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:53:00.6593066Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -784,13 +812,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "80517abc7b2e9de42d9d0bf918c18a6694640d4b8a91f1068e03f0413c954b2b"
+          "sha256": "f89c9f1465c682cb1df13ca9d0a4795db25cc8b3dfd44eb1d431bb0b6baefc67"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "4e78ee04548f64e6aed709d9d887de3eb36625522fa453d9365687c03f479f33"
         }
       ],
-      "reason": "All twelve provider/options source bodies and option chains are source/token-equivalent. The user-approved sole runtime correction conditionally assigns S3 ServiceURL, fixing the pre-existing region-only constructor failure; offline null/whitespace/custom URL regressions pass. All other singleton tokens, Google issuer/audience/signing/verified-email/cancellation, Telegram HMAC/clock, S3 staged byte/dimension/public-policy/deletion behavior are unchanged. Shared URI and telemetry remain one implementation. No credentials read, real external provider call, new sharing/lifecycle or external security scan.",
+      "reason": "Reviewed sensitive-data and security navigation; contract relocation changes no collection, storage, logging, provider sharing, authorization, credentials or retention behavior.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:30.2334523Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:53:01.9070023Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -829,13 +861,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6273e8961d7ec15ef8bbaf77b858c6ec47848d28c8423580557a4923b545429d"
+          "sha256": "01544b2405f909f5550513bf7997ae25b580bb04e380bc79d4df8fcc94953b3a"
         }
       ],
-      "reason": "Reviewed generated catalog, dependency, topology, quality and retrieval guidance against current projects; retired Resources entries are gone and the two source-proven retrieval paths/prefix follow their module owners.",
+      "reason": "Reviewed generic Wiki path resolution, module inference, semantic ranking regression, frozen holdout relocation, architecture guardrails, test ledger, EF comparison, and NuGet audit against current source.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:13.7226868Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T22:41:16.8242733Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -912,13 +944,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "413b4a3620e32d8ec161802370b051e115ae7c64ed7249dffcda6983b77dbc12"
+          "sha256": "c36ace783f6586c28678db755ba5a2b6514ed5da2cdc1eab0576e5b65725bbb2"
         }
       ],
-      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
+      "reason": "Updated the current architecture, ownership inventory, ADRs, module guides, backend manifest, and generated navigation to describe the six narrow shared contract owners and Users-owned helpers.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:14.9107643Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T22:41:18.9090594Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -927,21 +959,25 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6273e8961d7ec15ef8bbaf77b858c6ec47848d28c8423580557a4923b545429d"
+          "sha256": "01544b2405f909f5550513bf7997ae25b580bb04e380bc79d4df8fcc94953b3a"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "413b4a3620e32d8ec161802370b051e115ae7c64ed7249dffcda6983b77dbc12"
+          "sha256": "c36ace783f6586c28678db755ba5a2b6514ed5da2cdc1eab0576e5b65725bbb2"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "f89c9f1465c682cb1df13ca9d0a4795db25cc8b3dfd44eb1d431bb0b6baefc67"
         },
         {
           "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "185dc40899cc26632ac6f847f2da7f707153b7db2b7282eff8c7eabe62a78e19"
+          "sha256": "5cec974cc9f3f942985a0f1212a2ce9c2aeec8fa8832ade1573ade859d001bd5"
         }
       ],
-      "reason": "Reviewed resource and topology indexes; the move introduces no new data collection, logging, sharing, provider call, credential or retention path.",
+      "reason": "Contract relocation adds no collection, disclosure, credential, logging, cache, queue, or retention behavior; authentication and user access interfaces retain their existing namespaces and implementations.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:15.4838323Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T22:41:20.0577471Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1119,13 +1155,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "d4a1cdad8cc0a2480537d91d799bc27b5b80827467d9853a7b1f98c110fc7e41"
+          "sha256": "ca44a54386242d2fcb3f1d5d4a36558f2d62ce4840b535e59fd5d1a4f0caedf9"
         }
       ],
-      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
+      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:12.8613227Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:33:14.2830080Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1179,21 +1215,37 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "470b527694e7018cb9f0c9e93dcd112f462674a2dcb598151760429763e5b82d"
+          "sha256": "ca4df132747e83d083c475cc7daebd55d637308a4156aa093692df5beeb1eb03"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "32e4fb5f8f85a05007e534bad5d1e6a98b055e30dec4d93c6c297f9b2c986e75"
         },
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "329bf028feff6666e2a6324b47760e0d2e2b34f7002c241760fdc9ac8204995e"
+          "sha256": "cb4c14ed4c375ac596353f7f00dc982ef596991c59d943cb1d912547944e4fac"
+        },
+        {
+          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+          "sha256": "0641baab5ef0c3199fa437ab6cf285078353800bf562b539fe3d7fb2f73b8b8b"
+        },
+        {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "4e78ee04548f64e6aed709d9d887de3eb36625522fa453d9365687c03f479f33"
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "229b107140848b762408ba5062b63475fc97d6a0b509a23915bc4a0050fab3fe"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "d4a1cdad8cc0a2480537d91d799bc27b5b80827467d9853a7b1f98c110fc7e41"
+          "sha256": "ca44a54386242d2fcb3f1d5d4a36558f2d62ce4840b535e59fd5d1a4f0caedf9"
         }
       ],
-      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
+      "reason": "Updated the current architecture, ownership inventory, ADRs, module guides, backend manifest, and generated navigation to describe the six narrow shared contract owners and Users-owned helpers.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:14.1863343Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T22:41:17.9068962Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1202,13 +1254,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "d4a1cdad8cc0a2480537d91d799bc27b5b80827467d9853a7b1f98c110fc7e41"
+          "sha256": "ca44a54386242d2fcb3f1d5d4a36558f2d62ce4840b535e59fd5d1a4f0caedf9"
         }
       ],
-      "reason": "Reviewed generated catalog, dependency, topology, quality and retrieval guidance against current projects; retired Resources entries are gone and the two source-proven retrieval paths/prefix follow their module owners.",
+      "reason": "Reviewed Wiki tooling, architecture matrix, quality indexes and workflow pages against the generic catalog, path resolver, deduplication and extraction-readiness regressions; no ranking, query, threshold or frozen evaluation target changed.",
       "baseRef": "HEAD",
-      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
-      "reviewedAtUtc": "2026-09-04T18:30:14.5323570Z"
+      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
+      "reviewedAtUtc": "2026-09-04T21:33:21.9755209Z"
     }
   ]
 }

@@ -30,7 +30,7 @@ public sealed class BodyMetricsModuleExtractionTests {
     public void ExtractedBodyMetricsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj");
-        string[] expectedReferences = ["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Users.Domain.Contracts"];
+        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);
     }
@@ -59,8 +59,8 @@ public sealed class BodyMetricsModuleExtractionTests {
 
     [Fact]
     public void BodyMetricsOwnedContracts_LiveInModuleAbstractions() {
-        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions", "WeightEntries")));
-        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions", "WaistEntries")));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts", "WeightEntries")));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts", "WaistEntries")));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(
             "Modules", "BodyMetrics", "Application", "Abstractions", "FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj")));
     }

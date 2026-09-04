@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><IsPackable>false</IsPackable><RootNamespace>FoodDiary.Infrastructure.Tests</RootNamespace></PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj" />
-    <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
+    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj" />
+    <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup><Using Include="NSubstitute" /><Using Include="Xunit" /><Using Include="System.Diagnostics.CodeAnalysis" /></ItemGroup>
 </Project>

@@ -930,7 +930,7 @@ function contextSearchFeatures(path, recordType) {
   const fileName = basename(lower);
   const extension = extname(lower);
   const isTest = /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/i.test(normalized);
-  const moduleFolderMatch = /^Modules\/([^/]+)\/(?:Application|Contracts)(?:\/|$)/i.exec(normalized);
+  const moduleFolderMatch = /^Modules\/([^/]+)\/(?:Application|Contracts|Domain(?:\.Contracts)?|Infrastructure)(?:\/|$)/i.exec(normalized);
   const layer = lower.startsWith('.llm-wiki/') ? 'wiki'
     : lower.startsWith('docs/') ? 'documentation'
       : isTest ? 'tests'
@@ -2433,7 +2433,9 @@ function searchContext(database, query, limit, filters = {}) {
     for (const boost of applicableIdentityBoosts) {
       const eligibleQueryTerms = boost.directOnly ? directTerms : boostTerms;
       if (changeType === 'tests' && isTest && !String(boost.id ?? '').toLowerCase().includes('test')) continue;
-      const eligibleIdentity = boost.identityScope === 'file' ? searchableFileIdentity : searchablePath;
+      const eligibleIdentity = boost.identityScope === 'file'
+        ? searchableFileIdentity
+        : boost.identityScope === 'identity' ? searchableIdentity : searchablePath;
       const queryMatches = (boost.queryTerms ?? []).filter((term) => eligibleQueryTerms.includes(String(term).toLowerCase()));
       const identityMatchesBoost = (boost.identityTerms ?? []).filter((term) =>
         eligibleIdentity.includes(String(term).toLowerCase()));

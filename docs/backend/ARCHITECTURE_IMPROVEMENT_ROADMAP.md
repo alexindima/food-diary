@@ -29,7 +29,7 @@ The backend now has first-pass guardrails for the reliability split:
 
 The backend also has structural guardrails for the main ownership boundaries:
 
-- `FoodDiary.Application.Abstractions` keeps feature contracts in feature folders and does not place contracts in the project root.
+- Module-owned contract projects contain feature contracts; narrow shared contract projects under `Shared/` contain only genuinely cross-cutting technical seams.
 - Each `FoodDiary.Application.<Feature>` project keeps source in use-case purpose folders and owns only its feature registration.
 - `FoodDiary.Application.Runtime` stays limited to cross-cutting mediator execution and does not aggregate feature modules.
 - `FoodDiary.Infrastructure` and `FoodDiary.Integrations` keep root folders limited to technical implementation and provider-adapter areas.

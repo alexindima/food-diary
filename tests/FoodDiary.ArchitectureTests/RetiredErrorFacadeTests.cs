@@ -30,7 +30,7 @@ public sealed class RetiredErrorFacadeTests {
     [InlineData("Users", "User")]
     [InlineData("Wearables", "Wearable")]
     public void CentralAbstractions_DoNotDeclareOrExportRetiredFacade(string module, string facade) {
-        string central = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+        string central = ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts");
         string[] declarations = [.. SourceScanner.SourceFiles(central)
             .SelectMany(CSharpSyntaxReader.ReadTypeDeclarations)
             .Where(type => string.Equals(type.Name, facade, StringComparison.Ordinal))
@@ -40,7 +40,7 @@ public sealed class RetiredErrorFacadeTests {
             () => Assert.Empty(declarations),
             () => Assert.False(File.Exists(Path.Combine(central, "Common", "Abstractions", "Results", $"Errors.{facade}.cs"))),
             () => Assert.DoesNotContain($"FoodDiary.Modules.{module}.Application.Abstractions",
-                ProjectReferenceReader.ReadProjectReferences("FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj"),
+                ProjectReferenceReader.ReadProjectReferences("Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj"),
                 StringComparer.Ordinal));
     }
 }

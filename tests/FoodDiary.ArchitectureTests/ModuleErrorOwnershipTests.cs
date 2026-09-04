@@ -15,8 +15,8 @@ public sealed class ModuleErrorOwnershipTests {
         string project = $"Modules/{module}/Application/Abstractions/FoodDiary.Modules.{module}.Application.Abstractions.csproj";
         string[] references = ProjectReferenceReader.ReadProjectReferences(project);
         Assert.Contains("FoodDiary.Results", references, StringComparer.Ordinal);
-        Assert.DoesNotContain("FoodDiary.Application.Abstractions", references, StringComparer.Ordinal);
-        string[] centralReferences = ProjectReferenceReader.ReadProjectReferences("FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj");
+        Assert.DoesNotContain("FoodDiary.Application.Contracts", references, StringComparer.Ordinal);
+        string[] centralReferences = ProjectReferenceReader.ReadProjectReferences("Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj");
         Assert.DoesNotContain($"FoodDiary.Modules.{module}.Application.Abstractions", centralReferences, StringComparer.Ordinal);
     }
 }

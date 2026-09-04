@@ -121,13 +121,11 @@
           "xunit.extensibility.core": "[2.9.3]"
         }
       },
-      "fooddiary.application.abstractions": {
+      "fooddiary.application.contracts": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
@@ -136,7 +134,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Domain": "[1.0.0, )",
@@ -250,6 +248,7 @@
       "fooddiary.modules.users.contracts": {
         "type": "Project",
         "dependencies": {
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"

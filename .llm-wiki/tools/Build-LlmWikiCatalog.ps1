@@ -234,7 +234,7 @@ $extractedApplicationModules = @(
     $dotnetProjects |
         Where-Object {
             -not $_.isTestProject -and
-            ($_.name -match '^FoodDiary\.Application\.(?!(?:Abstractions|Runtime)$)(?<module>[^.]+)$' -or
+            ($_.name -match '^FoodDiary\.Application\.(?!(?:Abstractions|Contracts|Runtime)$)(?<module>[^.]+)$' -or
              $_.name -match '^FoodDiary\.Modules\.(?<module>[^.]+)\.Application$')
         } |
         ForEach-Object {

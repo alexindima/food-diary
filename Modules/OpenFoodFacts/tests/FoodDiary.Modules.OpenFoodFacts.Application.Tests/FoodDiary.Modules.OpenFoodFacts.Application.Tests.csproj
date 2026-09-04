@@ -10,6 +10,6 @@
   <ItemGroup><Using Include="FoodDiary.Modules.OpenFoodFacts.Application.Tests.Support" /><Using Include="NSubstitute" /><Using Include="Xunit" /></ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Application\FoodDiary.Modules.OpenFoodFacts.Application.csproj" />
-    <ProjectReference Include="..\..\..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
   </ItemGroup>
 </Project>

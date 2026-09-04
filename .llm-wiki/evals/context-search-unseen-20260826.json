@@ -118,7 +118,7 @@
       "query": "automated checks for architecture abstractions boundary",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.ArchitectureTests/ApplicationAbstractionsBoundaryTests.cs"
+        "tests/FoodDiary.ArchitectureTests/SharedApplicationContractsBoundaryTests.cs"
       ]
     },
     {

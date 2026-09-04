@@ -8,7 +8,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Abstractions\FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
     <ProjectReference Include="..\Domain\FoodDiary.Modules.Gamification.Domain.csproj" />
     <ProjectReference Include="..\..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />

@@ -29,7 +29,7 @@ Use `FoodDiary.Application.Runtime` for mediator pipeline behaviors, the transac
 
 The runtime project:
 
-- depends only on `FoodDiary.Application.Abstractions` and `FoodDiary.Mediator`;
+- depends only on `FoodDiary.Application.Contracts` and `FoodDiary.Mediator`;
 - does not reference or scan feature application projects;
 - does not contain business handlers, validators, models, or feature services;
 - is referenced by executable composition roots, not presentation or infrastructure projects;

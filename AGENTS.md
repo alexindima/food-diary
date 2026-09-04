@@ -8,7 +8,12 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 ## Project Guides
 
 - Build-time analyzers: `FoodDiary.Analyzers/AGENTS.md`
-- Application abstractions: `FoodDiary.Application.Abstractions/AGENTS.md`
+- Shared application contracts: `Shared/FoodDiary.Application.Contracts/AGENTS.md`
+- Shared audit contracts: `Shared/FoodDiary.Audit.Contracts/AGENTS.md`
+- Shared authentication contracts: `Shared/FoodDiary.Authentication.Contracts/AGENTS.md`
+- Shared email contracts: `Shared/FoodDiary.Email.Contracts/AGENTS.md`
+- Shared nutrition contracts: `Shared/FoodDiary.Nutrition.Contracts/AGENTS.md`
+- Shared outbox management contracts: `Shared/FoodDiary.Outbox.Management.Contracts/AGENTS.md`
 - Admin logical module: `Modules/Admin/AGENTS.md`
 - Admin application: `Modules/Admin/Application/AGENTS.md`
 - Admin ports: `Modules/Admin/Application/Abstractions/AGENTS.md`
@@ -245,7 +250,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Use K&R brace style for C# code (opening brace on the same line).
 - Prefer C# primary constructors where applicable.
 - Respect the dependency matrix enforced in `tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs`.
-- Reference the owning contract project directly when consuming its types; do not add unused module references to central Application.Abstractions to make them transitively available. Explicit references document existing use, not permission to acquire foreign aggregate writes.
+- Reference the owning module or narrow shared contract project directly when consuming its types; do not add unused references to `FoodDiary.Application.Contracts` or another shared package merely to make types transitively available. Explicit references document existing use, not permission to acquire foreign aggregate writes.
 - Primary FoodDiary core projects may interact with MailRelay/MailInbox only through approved client packages. Today that cross-service access belongs in `FoodDiary.Integrations`.
 - Keep executable hosts as composition roots. Put HTTP transport in presentation projects, use cases in application projects, persistence/provider implementations in infrastructure projects, and domain rules in domain projects.
 - Async backend methods should use the `Async` suffix and accept `CancellationToken` unless they are framework entrypoints covered by architecture-test exceptions.

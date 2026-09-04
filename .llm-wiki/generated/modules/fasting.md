@@ -67,27 +67,49 @@ Source: `FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FastingPlan, FastingOccurrence, FastingCheckIn, FastingSession, FastingTelemetryEvent
-- Public contract files: 9
+- Public contract files: 34
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 9
-- Interfaces: 3
-- DTO/read-model/projection types: 6
+- Public contract types: 34
+- Interfaces: 21
+- DTO/read-model/projection types: 11
 - Enums: 0
-- Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 0
+- Exported repository-shaped contracts: 17
+- Contracts referencing domain entities: 8
+- `class FastingErrors`
+- `interface IFastingCheckInReadModelRepository`
+- `interface IFastingCheckInReadRepository`
+- `interface IFastingCheckInRepository`
+- `interface IFastingCheckInWriteRepository`
 - `interface IFastingNotificationScheduler`
+- `interface IFastingOccurrenceReadModelRepository`
+- `interface IFastingOccurrenceReadRepository`
+- `interface IFastingOccurrenceRepository`
+- `interface IFastingOccurrenceWriteRepository`
+- `interface IFastingPlanReadRepository`
+- `interface IFastingPlanRepository`
+- `interface IFastingPlanWriteRepository`
 - `interface IFastingReadService`
+- `interface IFastingSessionReadRepository`
+- `interface IFastingSessionRepository`
+- `interface IFastingSessionWriteRepository`
 - `interface IFastingTelemetryCleanupService`
+- `interface IFastingTelemetryEventReadRepository`
+- `interface IFastingTelemetryEventRepository`
+- `interface IFastingTelemetryEventWriteRepository`
+- `interface IFastingTelemetrySummaryReadService`
 - `record FastingCheckInModel`
+- `record FastingCheckInReadModel`
 - `record FastingInsightsModel`
 - `record FastingMessageModel`
+- `record FastingOccurrenceReadModel`
 - `record FastingOverviewModel`
+- `record FastingPlanReadModel`
 - `record FastingSessionModel`
-- `record FastingStatsModel`
+- ... 4 more type(s)
 
 ## Focused Tests
 

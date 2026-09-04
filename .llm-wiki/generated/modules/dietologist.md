@@ -117,19 +117,49 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsControll
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ClientTask, DietologistInvitation, Recommendation, RecommendationBulkDispatch, RecommendationComment, RecommendationTemplate
-- Public contract files: 0
+- Public contract files: 35
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 35
+- Interfaces: 23
+- DTO/read-model/projection types: 10
 - Enums: 0
-- Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- Exported repository-shaped contracts: 20
+- Contracts referencing domain entities: 8
+- `class DietologistErrors`
+- `interface IAttentionSignalMetricsReadService`
+- `interface IClientTaskReadModelRepository`
+- `interface IClientTaskRepository`
+- `interface IClientTaskWriteRepository`
+- `interface IDietologistDashboardAccessService`
+- `interface IDietologistEmailSender`
+- `interface IDietologistInvitationReadModelRepository`
+- `interface IDietologistInvitationReadRepository`
+- `interface IDietologistInvitationRepository`
+- `interface IDietologistInvitationWriteRepository`
+- `interface IRecommendationBulkDispatchLookupRepository`
+- `interface IRecommendationBulkDispatchRepository`
+- `interface IRecommendationBulkDispatchWriteRepository`
+- `interface IRecommendationCommentReadModelRepository`
+- `interface IRecommendationCommentRepository`
+- `interface IRecommendationCommentWriteRepository`
+- `interface IRecommendationReadModelRepository`
+- `interface IRecommendationReadRepository`
+- `interface IRecommendationRepository`
+- `interface IRecommendationTemplateReadModelRepository`
+- `interface IRecommendationTemplateRepository`
+- `interface IRecommendationTemplateWriteRepository`
+- `interface IRecommendationWriteRepository`
+- `record AttentionSignalDailyCaloriesReadModel`
+- `record AttentionSignalMetricsReadModel`
+- `record AttentionSignalWeightPointReadModel`
+- `record ClientTaskReadModel`
+- `record DietologistInvitationMessage`
+- `record DietologistInvitationReadModel`
+- ... 5 more type(s)
 
 ## Focused Tests
 

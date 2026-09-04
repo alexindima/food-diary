@@ -26,7 +26,7 @@ public sealed class BillingModuleExtractionTests {
             "Modules/Billing/Application/FoodDiary.Application.Billing.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application", references, StringComparer.Ordinal);
-        Assert.Contains("FoodDiary.Application.Abstractions", references, StringComparer.Ordinal);
+        Assert.Contains("FoodDiary.Application.Contracts", references, StringComparer.Ordinal);
         Assert.Contains("FoodDiary.Modules.Billing.Application.Abstractions", references, StringComparer.Ordinal);
         Assert.Contains("FoodDiary.Modules.Billing.Domain", references, StringComparer.Ordinal);
     }

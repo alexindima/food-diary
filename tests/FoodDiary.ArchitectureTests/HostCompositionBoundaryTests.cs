@@ -114,7 +114,7 @@ public sealed class HostCompositionBoundaryTests {
     public void ApplicationAndPresentationProjects_DoNotReferenceHostOnlyOptionsOrExtensions() {
         string[] sourceRoots = [
             ArchitectureTestPaths.FromRoot("FoodDiary.Application"),
-            ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Presentation.Api"),
         ];
         string[] forbiddenPatterns = [

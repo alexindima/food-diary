@@ -29,7 +29,7 @@ Use `Meal` and `Meals` as the canonical terminology. The application capability 
 
 The change is a coordinated breaking contract migration with no legacy route alias. Existing domain entities and database mappings already use `Meal`, so no data migration is required. Aggregate-loading persistence uses `IMealReadRepository`; optimized application projections use `IMealProjectionReadRepository` and `MealProjectionReadModel`.
 
-Shared manual-nutrition limits used by both Meals and Recipes live in `FoodDiary.Application.Abstractions/Nutrition` and do not constitute a standalone Nutrition application module.
+Shared manual-nutrition limits used by both Meals and Recipes live in `Shared/FoodDiary.Nutrition.Contracts` and do not constitute a standalone Nutrition application module.
 
 ## Consequences
 

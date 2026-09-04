@@ -93,7 +93,7 @@ public sealed class UsersModuleExtractionTests {
             "Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application", references, StringComparer.Ordinal);
-        Assert.Contains("FoodDiary.Application.Abstractions", references, StringComparer.Ordinal);
+        Assert.Contains("FoodDiary.Application.Contracts", references, StringComparer.Ordinal);
     }
 
     [Theory]

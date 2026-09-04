@@ -48,22 +48,31 @@ Source: `FoodDiary.Presentation.Api/Features/Lessons/LessonsController.cs`
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: NutritionLesson, UserLessonProgress
-- Public contract files: 4
+- Public contract files: 13
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 4
-- Interfaces: 2
-- DTO/read-model/projection types: 1
-- Enums: 0
-- Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 1
+- Public contract types: 13
+- Interfaces: 6
+- DTO/read-model/projection types: 4
+- Enums: 1
+- Exported repository-shaped contracts: 4
+- Contracts referencing domain entities: 3
+- `class LessonErrors`
+- `enum LessonSortOption`
 - `interface ILessonAdministrationReadService`
 - `interface ILessonAdministrationService`
+- `interface INutritionLessonReadModelRepository`
+- `interface INutritionLessonReadRepository`
+- `interface INutritionLessonRepository`
+- `interface INutritionLessonWriteRepository`
 - `record LessonAdministrationItem`
 - `record LessonAdminReadModel`
+- `record LessonDetailReadModel`
+- `record LessonSummaryPageReadModel`
+- `record LessonSummaryReadModel`
 
 ## Focused Tests
 

@@ -1,22 +1,48 @@
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
-public sealed class ApplicationAbstractionsBoundaryTests {
+public sealed class SharedApplicationContractsBoundaryTests {
+    [Fact]
+    public void RetiredApplicationAbstractionsAggregator_IsAbsent() {
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
+            ".nuget",
+            "lockfiles",
+            "FoodDiary.Application.Abstractions.packages.lock.json")));
+    }
+
+    [Theory]
+    [InlineData("FoodDiary.Audit.Contracts", "FoodDiary.Modules.Users.Domain.Contracts")]
+    [InlineData("FoodDiary.Authentication.Contracts")]
+    [InlineData("FoodDiary.Email.Contracts")]
+    [InlineData("FoodDiary.Nutrition.Contracts")]
+    [InlineData("FoodDiary.Outbox.Management.Contracts")]
+    public void NarrowSharedContractProjects_HaveOnlyApprovedDependencies(
+        string projectName,
+        params string[] expectedReferences) {
+        string relativeProjectPath = $"Shared/{projectName}/{projectName}.csproj";
+
+        Assert.Equal(expectedReferences.Order(StringComparer.Ordinal),
+            ProjectReferenceReader.ReadProjectReferences(relativeProjectPath),
+            StringComparer.Ordinal);
+        Assert.Empty(ProjectReferenceReader.ReadPackageReferences(relativeProjectPath));
+    }
+
     [Fact]
     public void ApplicationAbstractionsProject_StaysDependencyLightweight() {
-        const string relativeProjectPath = "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj";
+        const string relativeProjectPath = "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj";
 
         string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
         string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
 
-        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Mediator", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Results"], projectReferences);
+        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Mediator", "FoodDiary.Results"], projectReferences);
         Assert.Empty(packageReferences);
     }
 
     [Fact]
     public void ApplicationAbstractions_SourceFiles_AreKeptOutOfProjectRoot() {
         string root = ArchitectureTestPaths.RepositoryRoot;
-        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+        string abstractionsRoot = ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts");
 
         string[] violations = [.. Directory.GetFiles(abstractionsRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(path => Path.GetRelativePath(root, path))
@@ -28,7 +54,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
     [Fact]
     public void ApplicationAbstractions_FeatureFolders_HavePurposeContractsFolder() {
         string root = ArchitectureTestPaths.RepositoryRoot;
-        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+        string abstractionsRoot = ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts");
         var excludedDirectories = new HashSet<string>(StringComparer.Ordinal) {
             "bin",
             "Common",
@@ -49,7 +75,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
     [Fact]
     public void ApplicationAbstractions_FeatureSourceFiles_StayInPurposeFolders() {
         string root = ArchitectureTestPaths.RepositoryRoot;
-        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+        string abstractionsRoot = ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts");
         var excludedDirectories = new HashSet<string>(StringComparer.Ordinal) {
             "bin",
             "Common",
@@ -82,7 +108,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
     [Fact]
     public void ApplicationAbstractions_Interfaces_AreKeptInPurposeFolders() {
         string root = ArchitectureTestPaths.RepositoryRoot;
-        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+        string abstractionsRoot = ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts");
         var allowedPurposeFolders = new HashSet<string>(StringComparer.Ordinal) {
             "Abstractions",
             "Common",
@@ -112,7 +138,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
 
     [Fact]
     public void ApplicationAbstractions_SourceFiles_DoNotReferenceHostPresentationOrInfrastructureNamespaces() {
-        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+        string abstractionsRoot = ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts");
         string[] forbiddenPatterns = [
             "FoodDiary.Web.Api",
             "FoodDiary.Presentation.Api",

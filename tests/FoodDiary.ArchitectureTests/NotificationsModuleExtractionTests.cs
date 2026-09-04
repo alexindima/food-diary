@@ -43,7 +43,7 @@ public sealed class NotificationsModuleExtractionTests {
     public void ExtractedNotificationsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj");
-        string[] expectedReferences = ["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Dietologist.Application.Abstractions", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Notifications.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain"];
+        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Audit.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Dietologist.Application.Abstractions", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Notifications.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain"];
 
         Assert.Equal(expectedReferences, references);
     }

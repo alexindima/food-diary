@@ -14,7 +14,7 @@ public sealed class DirectOwnerContractReferenceTests {
     [InlineData("FoodDiary.Modules.Notifications.Application.Abstractions")]
     public void CentralAbstractions_DoNotReExportUnusedOwnerContracts(string projectName) {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj");
+            "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj");
 
         Assert.DoesNotContain(projectName, references, StringComparer.Ordinal);
     }

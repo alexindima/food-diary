@@ -8,7 +8,12 @@ COPY FoodDiary.Analyzers/*.csproj FoodDiary.Analyzers/
 COPY Shared/FoodDiary.Domain.Primitives/*.csproj Shared/FoodDiary.Domain.Primitives/
 COPY Shared/FoodDiary.Mediator/*.csproj Shared/FoodDiary.Mediator/
 COPY Shared/FoodDiary.Results/*.csproj Shared/FoodDiary.Results/
-COPY FoodDiary.Application.Abstractions/*.csproj FoodDiary.Application.Abstractions/
+COPY Shared/FoodDiary.Application.Contracts/*.csproj Shared/FoodDiary.Application.Contracts/
+COPY Shared/FoodDiary.Audit.Contracts/*.csproj Shared/FoodDiary.Audit.Contracts/
+COPY Shared/FoodDiary.Authentication.Contracts/*.csproj Shared/FoodDiary.Authentication.Contracts/
+COPY Shared/FoodDiary.Email.Contracts/*.csproj Shared/FoodDiary.Email.Contracts/
+COPY Shared/FoodDiary.Nutrition.Contracts/*.csproj Shared/FoodDiary.Nutrition.Contracts/
+COPY Shared/FoodDiary.Outbox.Management.Contracts/*.csproj Shared/FoodDiary.Outbox.Management.Contracts/
 COPY Modules/Export/Application/Abstractions/*.csproj Modules/Export/Application/Abstractions/
 COPY FoodDiary.Application.Runtime/*.csproj FoodDiary.Application.Runtime/
 COPY Modules/Billing/Application/*.csproj Modules/Billing/Application/
@@ -194,7 +199,12 @@ COPY Shared/FoodDiary.Domain.Primitives/ Shared/FoodDiary.Domain.Primitives/
 COPY FoodDiary.Analyzers/ FoodDiary.Analyzers/
 COPY Shared/FoodDiary.Mediator/ Shared/FoodDiary.Mediator/
 COPY Shared/FoodDiary.Results/ Shared/FoodDiary.Results/
-COPY FoodDiary.Application.Abstractions/ FoodDiary.Application.Abstractions/
+COPY Shared/FoodDiary.Application.Contracts/ Shared/FoodDiary.Application.Contracts/
+COPY Shared/FoodDiary.Audit.Contracts/ Shared/FoodDiary.Audit.Contracts/
+COPY Shared/FoodDiary.Authentication.Contracts/ Shared/FoodDiary.Authentication.Contracts/
+COPY Shared/FoodDiary.Email.Contracts/ Shared/FoodDiary.Email.Contracts/
+COPY Shared/FoodDiary.Nutrition.Contracts/ Shared/FoodDiary.Nutrition.Contracts/
+COPY Shared/FoodDiary.Outbox.Management.Contracts/ Shared/FoodDiary.Outbox.Management.Contracts/
 COPY Modules/Export/Application/Abstractions/ Modules/Export/Application/Abstractions/
 COPY FoodDiary.Application.Runtime/ FoodDiary.Application.Runtime/
 COPY Modules/Billing/Application/ Modules/Billing/Application/

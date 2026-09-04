@@ -29,5 +29,9 @@
     <ProjectReference Include="../../../Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Audit.Contracts\FoodDiary.Audit.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Authentication.Contracts\FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Email.Contracts\FoodDiary.Email.Contracts.csproj" />
   </ItemGroup>
 </Project>

@@ -606,6 +606,7 @@ Assert-Wiki ($catalog.extractedApplicationModules.Count -ge 2) 'Expected at leas
 Assert-Wiki (@($catalog.extractedApplicationModules.name) -contains 'Billing') 'Billing is missing from extracted application modules.'
 Assert-Wiki (@($catalog.extractedApplicationModules.name) -contains 'Marketing') 'Marketing is missing from extracted application modules.'
 Assert-Wiki (@($catalog.extractedApplicationModules.name) -notcontains 'Runtime') 'Application runtime must not be classified as a business module.'
+Assert-Wiki (@($catalog.extractedApplicationModules.name) -notcontains 'Contracts') 'Shared application contracts must not be classified as a business module.'
 Assert-Wiki ($modulePages.Count -eq ($catalog.applicationModules.Count + $catalog.extractedApplicationModules.Count + 1)) 'Generated module-page count does not match catalog modules plus index.'
 
 $symbols = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/csharp-symbol-index.json') -Raw | ConvertFrom-Json

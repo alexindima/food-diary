@@ -14,6 +14,9 @@
     <ProjectReference Include="Model\FoodDiary.Modules.Images.PersistenceModel.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Outbox.Abstractions\FoodDiary.Outbox.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Outbox.Management.Contracts\FoodDiary.Outbox.Management.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup><PackageReference Include="Microsoft.EntityFrameworkCore" /><PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" /><PackageReference Include="Microsoft.Extensions.Logging.Abstractions" /></ItemGroup>
 </Project>

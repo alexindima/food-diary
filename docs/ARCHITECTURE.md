@@ -5,7 +5,7 @@ FoodDiary is a modular monolith with separately deployed supporting services.
 
 The primary product backend is a modular monolith:
 - module-owned Domain and Domain.Contracts projects with generic shared Primitives
-- `FoodDiary.Application.Abstractions`
+- narrow shared contract projects under `Shared/` (`FoodDiary.Application.Contracts`, Audit, Authentication, Email, Nutrition, and Outbox Management)
 - `FoodDiary.Application.Runtime`
 - independently compiled `FoodDiary.Application.<Feature>` modules
 - `FoodDiary.Infrastructure`
@@ -46,12 +46,12 @@ flowchart LR
     WebApi --> Infrastructure["FoodDiary.Infrastructure\npersistence + implementations"]
     WebApi --> Integrations["FoodDiary.Integrations\nexternal adapters"]
     Presentation --> Modules
-    Runtime --> Abstractions["FoodDiary.Application.Abstractions\nports + models"]
-    Modules --> Abstractions
+    Runtime --> Contracts["Narrow shared contracts\napplication + technical seams"]
+    Modules --> Contracts
     Modules --> Domain["Module-owned Domain\ndomain model"]
-    Infrastructure --> Abstractions
+    Infrastructure --> Contracts
     Infrastructure --> Domain
-    Integrations --> Abstractions
+    Integrations --> Contracts
     Integrations --> Domain
 ```
 
@@ -59,8 +59,8 @@ Core rules:
 - `Domain` has no application, infrastructure, presentation, or host dependencies.
 - Each business module owns its use cases and depends only on approved abstractions, domain types, and mediator contracts. Most remain `Application.<Feature>` projects; incrementally extracted modules may use a canonical `Modules/<Feature>` root.
 - `Application.Runtime` owns mediator behaviors, transaction boundaries, and post-commit execution; it does not aggregate feature modules.
-- `Application.Abstractions` owns ports/models, not infrastructure or transport.
-- Consumers reference the owning module's contract project directly. Central Application.Abstractions retains only dependencies used by its own shared types and error facades, not unused exports. See `docs/ai/direct-contract-dependencies.md` for the audited 131 explicit-reference additions and unchanged production assembly graph.
+- Module-specific ports and models belong to their owning module. Cross-cutting contracts are split by concern into dependency-light projects under `Shared/`; there is no central feature-contract aggregator.
+- Consumers reference the owning module or narrow shared contract project directly. `FoodDiary.Application.Contracts` contains only generic request, event, transaction, result-taxonomy, pagination, temporal, and enum-validation contracts; Audit, Authentication, Email, Nutrition, and Outbox Management have separate packages.
 - `Infrastructure` implements abstractions and owns EF Core/persistence; its composition root delegates to explicit technical modules.
 - `Integrations` owns external provider adapters and typed client bridges to supporting services; provider options and registrations stay in provider-specific modules.
 - `Presentation.Api` owns HTTP/SignalR transport, request/response DTOs, and mapping; HTTP contracts stay in feature `Requests`/`Responses` folders.
@@ -85,7 +85,7 @@ Business-module ownership inside the primary backend is defined in `docs/backend
 
 Application service composition follows the same ownership model. `FoodDiary.Application.Runtime` registers mediator, validation, transaction, and post-commit behaviors. Each feature project owns its registration, and executable composition roots register the required modules explicitly. Fasting established the complete `Modules/<Feature>` pilot; Hydration, WeeklyGoals, Lessons, DailyAdvices, and Dietologist own their aggregates, application ports, persistence models, and adapters under `Modules/<Feature>`. Hydration keeps a one-way aggregate navigation to Users-owned `User` and intentionally has no inverse `User.HydrationEntries` collection. Dietologist deliberately keeps no Contracts project: its current consumers use mediator requests or application abstractions, and introducing another public surface would not represent proven ownership. DailyAdvices likewise has no Contracts layer because Dashboard consumes it through the mediator/query boundary. WeeklyCheckIn, TDEE, and Statistics are application-only modules because they own orchestration and calculations but no domain aggregate, persistence port, or adapter. Statistics composes Dashboard through a direct Dashboard.Contracts reference and Body Metrics through existing read contracts instead of adding a redundant Contracts surface. Legacy CLR namespaces and assembly identities remain unchanged, and module Domain projects reference their exact module and shared Primitives owners while `UserId` belongs to Users Domain.Contracts. The former central Domain and Nutrition assemblies are retired under ADR 0027. The shared `FoodDiaryDbContext`, migration history, and model snapshot remain in central Infrastructure so the application keeps one migration host and one database. Architecture tests prevent feature-project aggregators from regrowing and enforce the intentional module boundaries.
 
-Business use cases are physically extracted across the feature projects listed in `docs/BACKEND_MODULE_MAP.md`. They reference application-facing abstractions, domain where required, and the shared mediator, never another application implementation as a shortcut. Stable module-specific cross-module surfaces may live in `Modules/<Feature>/Contracts`; shared command/query contracts and the `ITransactionalCommand` marker remain in `FoodDiary.Application.Abstractions`, so the runtime mediator pipeline remains applicable without reversing project dependencies.
+Business use cases are physically extracted across the feature projects listed in `docs/BACKEND_MODULE_MAP.md`. They reference owner contracts, domain where required, and the shared mediator, never another application implementation as a shortcut. Stable module-specific cross-module surfaces live in `Modules/<Feature>/Contracts` or `Application/Abstractions`; generic command/query contracts and the `ITransactionalCommand` marker live in `Shared/FoodDiary.Application.Contracts`, so the runtime mediator pipeline remains applicable without reversing project dependencies.
 
 Application read paths should use the narrowest contract that matches the behavior:
 - `*ReadModelRepository` for projection reads, counters, summaries, and API/UI read models.

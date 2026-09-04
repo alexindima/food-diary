@@ -160,12 +160,18 @@ foreach ($searchCase in @(
     @{ Query = 'Mail inbox SMTP rate limiter'; ExpectedPath = 'MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs' }
     @{ Query = 'weight history measurements'; ExpectedPath = 'FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.ts' }
     @{ Query = 'periodic cleanup fasting telemetry registration'; ExpectedPath = 'FoodDiary.JobManager/Services/FastingTelemetryCleanupJob.cs' }
+    @{ Query = 'регистрация resource renderer для уведомлений в JobManager'; ExpectedPath = 'Modules/Notifications/Infrastructure/ModuleRegistration.cs' }
     @{ Query = $russianServerQuery; ExpectedPath = 'AGENTS.md' }
 )) {
     $searchResult = & $manager search -Query $searchCase.Query -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
     if ($searchCase.ExpectedPath -notin @($searchResult.records.path)) {
         throw "SQLite FTS context search did not locate '$($searchCase.ExpectedPath)' for '$($searchCase.Query)'."
     }
+}
+$notificationRegistrationSearch = & $manager search -Query 'регистрация resource renderer для уведомлений в JobManager' -Limit 10 -SkipRefresh -Format Json | ConvertFrom-Json
+$notificationRegistration = @($notificationRegistrationSearch.records | Where-Object path -eq 'Modules/Notifications/Infrastructure/ModuleRegistration.cs')
+if ($notificationRegistration.Count -ne 1 -or $notificationRegistration[0].module -ne 'Notifications') {
+    throw 'Context search did not preserve the Notifications module identity for its infrastructure registration.'
 }
 $symbol = & $manager symbol -Query RecipeNutritionUpdater -Format Json | ConvertFrom-Json
 if (@($symbol.symbols | Where-Object path -eq "$recipesSourcePrefix/Services/RecipeNutritionUpdater.cs").Count -ne 1) {

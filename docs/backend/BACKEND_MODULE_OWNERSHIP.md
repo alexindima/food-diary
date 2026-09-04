@@ -128,7 +128,7 @@ It must not acquire repositories or application services from other features wit
 
 ### Current compromise
 
-`IFastingReadService` and its stable projection contract live in `FoodDiary.Application.Abstractions`, allowing Dashboard to consume the Fasting-owned read capability without referencing the Fasting implementation project. Keep future cross-module reads on similarly narrow abstraction-level contracts.
+`IFastingReadService` and its stable projection contract live in `Modules/Fasting/Contracts`, allowing Dashboard to consume the Fasting-owned read capability without referencing the Fasting implementation project. Keep future cross-module reads on similarly narrow owner contracts.
 
 ## Evolution checklist
 
@@ -143,11 +143,11 @@ When changing a module boundary:
 
 ## Users assembly boundary
 
-Users owns the `User`, `Role`, `UserRole` and `UserRoleAuditEvent` aggregates. Cross-module profile reads use `IUserProfileReadService` and projection models from `FoodDiary.Application.Abstractions/Users`; consumers must not depend on `FoodDiary.Application.Users.Models`.
+Users owns the `User`, `Role`, `UserRole` and `UserRoleAuditEvent` aggregates. Cross-module profile reads use `IUserProfileReadService` and projection models from `Modules/Users/Contracts`; consumers must not depend on Users application implementation models.
 
-The aggregate-oriented `IUserContextService` remains internal to the Users application module. Cross-module consumers use `ICurrentUserAccessService`, `IUserProfileReadService` or another narrow abstraction-level capability instead of acquiring `IUserContextService` or a Users repository. `CurrentUserAccessResolver`, `UserIdParser` and the profile-composition ports also live in `FoodDiary.Application.Abstractions`, so ordinary application modules no longer need the Users implementation namespace merely to validate an acting user.
+The aggregate-oriented `IUserContextService` remains internal to the Users application module. Cross-module consumers use `ICurrentUserAccessService`, `IUserProfileReadService` or another narrow owner contract instead of acquiring `IUserContextService` or a Users repository. `CurrentUserAccessResolver`, `UserIdParser` and the profile-composition ports live in `Modules/Users/Contracts`, so ordinary application modules do not need the Users implementation namespace merely to validate an acting user.
 
-AI, Dashboard, Dietologist, Gamification, Hydration, TDEE (physically isolated under `Modules/Tdee/Application`) and Weekly Check-In use dedicated projection contracts from `FoodDiary.Application.Abstractions/Users`. Their application services receive only the fields required by their calculation or display behavior; they do not receive the `User` aggregate. Dashboard, Dietologist and Weekly Check-In perform access validation through `ICurrentUserAccessService`; Gamification receives only the immutable calorie schedule required by its calculations. Dietologist receives identity/display fields and role membership through `UserDietologistProfileModel`, including its lookup and notification flows.
+AI, Dashboard, Dietologist, Gamification, Hydration, TDEE and Weekly Check-In use dedicated projection contracts from `Modules/Users/Contracts`. Their application services receive only the fields required by their calculation or display behavior; they do not receive the `User` aggregate.
 
 The Users application implementation now lives in the dedicated `FoodDiary.Application.Users` assembly. Executable hosts register it through `AddUsersModule()`, while other application modules continue to depend only on abstraction-level capabilities and projection models.
 

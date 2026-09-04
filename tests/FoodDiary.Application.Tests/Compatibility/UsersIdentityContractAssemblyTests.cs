@@ -22,8 +22,8 @@ public sealed class UsersIdentityContractAssemblyTests {
     [InlineData(typeof(IBillingMarketingConversionRecorder), "FoodDiary.Modules.Billing.Application.Abstractions")]
     [InlineData(typeof(DietologistRequiredIdParser), "FoodDiary.Application.Dietologist")]
     [InlineData(typeof(DietologistEnumValueParser), "FoodDiary.Application.Dietologist")]
-    [InlineData(typeof(CurrentUserAccessResolver), "FoodDiary.Application.Abstractions")]
-    [InlineData(typeof(IAdminSsoCodeStore), "FoodDiary.Application.Abstractions")]
+    [InlineData(typeof(CurrentUserAccessResolver), "FoodDiary.Modules.Users.Contracts")]
+    [InlineData(typeof(IAdminSsoCodeStore), "FoodDiary.Authentication.Contracts")]
     public void ExistingSourceContracts_ResolveToTheirOwner(Type type, string expectedAssembly) {
         Assert.Equal(expectedAssembly, type.Assembly.GetName().Name);
     }

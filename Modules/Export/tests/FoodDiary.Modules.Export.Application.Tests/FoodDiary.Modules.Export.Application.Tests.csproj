@@ -16,15 +16,10 @@
     <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
-    <ProjectReference Include="../../../Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
-    <ProjectReference Include="..\..\..\Cycles\Application\FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="../../../Meals/Application/FoodDiary.Modules.Meals.Application.csproj" />
-    <ProjectReference Include="..\..\Application\FoodDiary.Modules.Export.Application.csproj" />
-    <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
-    <ProjectReference Include="../../../Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
-    <ProjectReference Include="../../../Cycles/Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../../Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Cycles\Application\FoodDiary.Application.Cycles.csproj" />
+    <ProjectReference Include="..\..\Application\FoodDiary.Modules.Export.Application.csproj" />
   </ItemGroup>
 </Project>

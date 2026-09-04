@@ -54,7 +54,7 @@ public sealed class AiModuleExtractionTests {
     public void ExtractedAiAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Ai.Domain", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Images.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Ai.Domain", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Images.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

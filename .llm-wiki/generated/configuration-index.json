@@ -158,7 +158,7 @@
         "PasswordResetPath",
         "VerificationPath"
       ],
-      "path": "FoodDiary.Application.Abstractions/Email/Common/EmailOptions.cs"
+      "path": "Shared/FoodDiary.Email.Contracts/Email/Common/EmailOptions.cs"
     },
     {
       "type": "EmailOutboxOptions",

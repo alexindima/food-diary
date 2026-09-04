@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><IsPackable>false</IsPackable></PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj" />
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Authentication.Contracts\FoodDiary.Authentication.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />

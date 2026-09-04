@@ -147,24 +147,17 @@
           "xunit.extensibility.core": "[2.9.3]"
         }
       },
-      "fooddiary.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Domain.Primitives": "[1.0.0, )",
-          "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
       "FoodDiary.Application.Admin": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Application.Ai": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Gamification": "[1.0.0, )",
+          "FoodDiary.Audit.Contracts": "[1.0.0, )",
+          "FoodDiary.Authentication.Contracts": "[1.0.0, )",
+          "FoodDiary.Email.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
@@ -183,7 +176,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Ai.Domain": "[1.0.0, )",
@@ -198,7 +191,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Domain": "[1.0.0, )",
@@ -211,7 +204,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Domain": "[1.0.0, )",
@@ -225,7 +218,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.ContentReports.Contracts": "[1.0.0, )",
@@ -234,12 +227,20 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
+      "fooddiary.application.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
       "fooddiary.application.cycles": {
         "type": "Project",
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
@@ -253,7 +254,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.Domain": "[1.0.0, )",
@@ -266,12 +267,13 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Cycles": "[1.0.0, )",
           "FoodDiary.Application.DailyAdvices": "[1.0.0, )",
           "FoodDiary.Application.Meals": "[1.0.0, )",
           "FoodDiary.Application.Statistics": "[1.0.0, )",
           "FoodDiary.Application.Tdee": "[1.0.0, )",
+          "FoodDiary.Audit.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Dashboard.Application.Abstractions": "[1.0.0, )",
@@ -292,7 +294,9 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Audit.Contracts": "[1.0.0, )",
+          "FoodDiary.Email.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Domain": "[1.0.0, )",
@@ -308,7 +312,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.Contracts": "[1.0.0, )",
@@ -322,6 +326,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Cycles": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
@@ -339,7 +344,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.Contracts": "[1.0.0, )",
@@ -354,7 +359,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Contracts": "[1.0.0, )",
@@ -377,7 +382,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Gamification.Application.Abstractions": "[1.0.0, )",
@@ -392,7 +397,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Hydration.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )",
@@ -406,7 +411,10 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Audit.Contracts": "[1.0.0, )",
+          "FoodDiary.Authentication.Contracts": "[1.0.0, )",
+          "FoodDiary.Email.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Domain": "[1.0.0, )",
@@ -418,10 +426,11 @@
       "fooddiary.application.images": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Images.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
@@ -430,7 +439,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Gamification.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Lessons.Application.Abstractions": "[1.0.0, )",
@@ -443,7 +452,7 @@
       "fooddiary.application.marketing": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Marketing.Application.Abstractions": "[1.0.0, )"
@@ -454,7 +463,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Domain": "[1.0.0, )",
@@ -471,7 +480,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Images": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Application.Abstractions": "[1.0.0, )",
@@ -489,7 +498,8 @@
           "FoodDiary.Modules.Recipes.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Nutrition.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.application.notifications": {
@@ -497,7 +507,8 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Audit.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )",
@@ -511,7 +522,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )"
@@ -522,7 +533,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Images": "[1.0.0, )",
           "FoodDiary.Application.Usda": "[1.0.0, )",
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
@@ -546,7 +557,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.RecipeCommunity.Application.Abstractions": "[1.0.0, )",
@@ -562,7 +573,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Images": "[1.0.0, )",
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
@@ -576,7 +587,8 @@
           "FoodDiary.Modules.Recipes.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Nutrition.Contracts": "[1.0.0, )"
         }
       },
       "FoodDiary.Application.Statistics": {
@@ -584,7 +596,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
@@ -597,7 +609,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
@@ -611,7 +623,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Products.Application.Abstractions": "[1.0.0, )",
@@ -629,7 +641,8 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Audit.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
@@ -645,7 +658,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
@@ -658,7 +671,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
@@ -673,7 +686,7 @@
         "dependencies": {
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )",
@@ -684,7 +697,19 @@
           "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )"
         }
       },
+      "fooddiary.audit.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
+        }
+      },
+      "fooddiary.authentication.contracts": {
+        "type": "Project"
+      },
       "fooddiary.domain.primitives": {
+        "type": "Project"
+      },
+      "fooddiary.email.contracts": {
         "type": "Project"
       },
       "fooddiary.mediator": {
@@ -850,7 +875,7 @@
       "fooddiary.modules.export.application.abstractions": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
@@ -866,7 +891,7 @@
       "fooddiary.modules.fasting.contracts": {
         "type": "Project",
         "dependencies": {
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
@@ -944,6 +969,7 @@
       "fooddiary.modules.identity.application.abstractions": {
         "type": "Project",
         "dependencies": {
+          "FoodDiary.Authentication.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
@@ -1190,6 +1216,7 @@
       "fooddiary.modules.users.contracts": {
         "type": "Project",
         "dependencies": {
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
@@ -1243,16 +1270,19 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
+      "fooddiary.nutrition.contracts": {
+        "type": "Project"
+      },
       "fooddiary.presentation.api": {
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Application.Admin": "[1.0.0, )",
           "FoodDiary.Application.Ai": "[1.0.0, )",
           "FoodDiary.Application.Billing": "[1.0.0, )",
           "FoodDiary.Application.BodyMetrics": "[1.0.0, )",
           "FoodDiary.Application.ContentReports": "[1.0.0, )",
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Cycles": "[1.0.0, )",
           "FoodDiary.Application.DailyAdvices": "[1.0.0, )",
           "FoodDiary.Application.Dashboard": "[1.0.0, )",

@@ -49,9 +49,9 @@ foreach ($expectedExtractedProject in $expectedExtractedProjects.GetEnumerator()
         throw "Extracted Application project '$($expectedExtractedProject.Key)' is not discovered at '$($expectedExtractedProject.Value)'."
     }
 }
-if ('Meals' -notin @($manifest.modules.Meals.sourceMappings.domainAreas) -or
-    'Meals' -notin @($manifest.modules.Meals.sourceMappings.persistenceAreas)) {
-    throw 'Meals does not map its Meals domain/persistence vocabulary explicitly.'
+if ('Modules/Meals/Domain' -notin @($manifest.modules.Meals.sourceMappings.domainProjects) -or
+    'Modules/Meals/Infrastructure/Model' -notin @($manifest.modules.Meals.sourceMappings.persistenceModelProjects)) {
+    throw 'Meals does not map its extracted domain and persistence-model projects explicitly.'
 }
 $fastingMappings = $manifest.modules.Fasting.sourceMappings
 foreach ($requiredMapping in @('applicationProjects', 'applicationAbstractionProjects', 'contractProjects', 'domainProjects', 'infrastructureProjects', 'persistenceModelProjects')) {
@@ -90,8 +90,8 @@ $resolver = $generatorAst.Find({ param($node)
 if ($null -eq $resolver) { throw 'Module-page abstraction path resolver is missing.' }
 . ([scriptblock]::Create($resolver.Extent.Text))
 foreach ($case in @(
-    @{ area = 'Users'; expected = 'FoodDiary.Application.Abstractions/Users' }
-    @{ area = 'Authentication/Abstractions'; expected = 'FoodDiary.Application.Abstractions/Authentication/Abstractions' }
+    @{ area = 'Users'; expected = 'Modules/Users/Application/Abstractions' }
+    @{ area = 'Authentication/Abstractions'; expected = 'Authentication/Abstractions' }
     @{ area = 'Modules/BodyMetrics/Application/Abstractions'; expected = 'Modules/BodyMetrics/Application/Abstractions' }
     @{ area = '.\Modules\Billing\Application\Abstractions\'; expected = 'Modules/Billing/Application/Abstractions' }
     @{ area = 'FoodDiary.Application.Abstractions/Users'; expected = 'FoodDiary.Application.Abstractions/Users' }

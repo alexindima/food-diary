@@ -1,6 +1,6 @@
 # ADR 0004: Application Abstractions Project
 
-- Status: Accepted
+- Status: Superseded by ADR 0028
 - Date: 2026-05-21
 - Owners: Backend architecture
 - Related: ADR-0001, ADR-0006

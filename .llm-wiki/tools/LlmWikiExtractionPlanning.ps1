@@ -49,7 +49,15 @@ function Get-LlmWikiExtractionPlan([string]$Objective, [string]$RepositoryRoot) 
         "FoodDiary.Application.$module"
         $logicalRoots
         $mappedProjectPaths
-        @($abstractionAreas | ForEach-Object { "FoodDiary.Application.Abstractions/$_" })
+        @($abstractionAreas | ForEach-Object {
+            $normalizedArea = ((([string]$_).Replace('\', '/')) -replace '^\./', '').TrimEnd('/')
+            if (Test-Path -LiteralPath (Join-Path $RepositoryRoot $normalizedArea)) {
+                $normalizedArea
+            } else {
+                $moduleAbstractions = "Modules/$module/Application/Abstractions"
+                if (Test-Path -LiteralPath (Join-Path $RepositoryRoot $moduleAbstractions)) { $moduleAbstractions }
+            }
+        })
         'FoodDiary.Application/DependencyInjection.cs'
         "FoodDiary.Application/DependencyInjection.$module.cs"
         'FoodDiary.Initializer/DependencyInjection.cs'

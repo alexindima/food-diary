@@ -54,7 +54,8 @@ public sealed class SideEffectReliabilityGuardrailTests {
     [Fact]
     public void PostCommitQueueContract_DocumentsBestEffortSemantics() {
         string contractPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application.Abstractions",
+            "Shared",
+            "FoodDiary.Application.Contracts",
             "Common",
             "Abstractions",
             "Persistence",
@@ -253,7 +254,8 @@ public sealed class SideEffectReliabilityGuardrailTests {
             "FoodDiary.Domain.Primitives",
             "IDomainEvent.cs");
         string integrationEventPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application.Abstractions",
+            "Shared",
+            "FoodDiary.Application.Contracts",
             "Common",
             "Abstractions",
             "Events",

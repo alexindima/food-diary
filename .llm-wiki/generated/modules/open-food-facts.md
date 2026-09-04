@@ -25,6 +25,7 @@ sources:
 ## Source Areas
 
 - `FoodDiary.Presentation.Api/Features/OpenFoodFacts`
+- `Modules/OpenFoodFacts/Application/Abstractions`
 - `Modules/OpenFoodFacts/Infrastructure/Providers`
 
 ## HTTP Surface
@@ -42,19 +43,22 @@ Source: `FoodDiary.Presentation.Api/Features/OpenFoodFacts/OpenFoodFactsControll
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: OpenFoodFactsProduct
-- Public contract files: 0
+- Public contract files: 4
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
+- Public contract types: 4
+- Interfaces: 4
 - DTO/read-model/projection types: 0
 - Enums: 0
-- Exported repository-shaped contracts: 0
+- Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- `interface IOpenFoodFactsProductCacheReadRepository`
+- `interface IOpenFoodFactsProductCacheRepository`
+- `interface IOpenFoodFactsProductCacheWriteRepository`
+- `interface IOpenFoodFactsService`
 
 ## Focused Tests
 

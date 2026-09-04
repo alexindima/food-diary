@@ -35,7 +35,7 @@ public sealed class MealPlanningModuleExtractionTests {
     public void ExtractedMealPlanningAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj");
-        string[] expectedReferences = ["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
+        string[] expectedReferences = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);
     }
@@ -71,7 +71,7 @@ public sealed class MealPlanningModuleExtractionTests {
             "Modules", "MealPlanning", "Infrastructure", "Persistence", area, repository)));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
             "FoodDiary.Infrastructure", "Persistence", area, repository)));
-        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions", area)));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts", area)));
         Assert.NotEmpty(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot(
             "Modules", "MealPlanning", "Application", "Abstractions", area)));
     }

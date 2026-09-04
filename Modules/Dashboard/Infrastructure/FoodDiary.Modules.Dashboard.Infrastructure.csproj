@@ -3,15 +3,15 @@
     <RootNamespace>FoodDiary.Modules.Dashboard.Infrastructure</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <ProjectReference Include="..\..\Products\Domain\FoodDiary.Modules.Products.Domain.csproj" />
     <ProjectReference Include="../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
   </ItemGroup>
 </Project>

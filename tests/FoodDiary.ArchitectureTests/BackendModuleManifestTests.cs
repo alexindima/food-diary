@@ -63,21 +63,20 @@ public sealed class BackendModuleManifestTests {
     }
 
     [Fact]
-    public void BoundaryManifest_AssignsEveryApplicationAbstractionAreaToOneOwner() {
+    public void BoundaryManifest_AssignsEverySharedContractProjectToOneOwner() {
         BackendModuleManifest manifest = LoadManifest();
-        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
-        string[] actualAreas = ReadSourceAreas(abstractionsRoot);
-        string[] declaredAreas = [.. manifest.ApplicationAbstractionOwnership.Keys.Order(StringComparer.Ordinal)];
-        var validOwners = new HashSet<string>(manifest.Modules.Keys, StringComparer.Ordinal) {
-            "Application.Runtime",
-            "Shared",
-        };
-        string[] invalidOwners = [.. manifest.ApplicationAbstractionOwnership
-            .Where(pair => string.IsNullOrWhiteSpace(pair.Value) || !validOwners.Contains(pair.Value))
-            .Select(pair => $"{pair.Key}: {pair.Value}")
+        string[] declaredProjects = [.. manifest.SharedContractOwnership.Keys.Order(StringComparer.Ordinal)];
+        string[] missingProjects = [.. declaredProjects
+            .Where(relativeRoot => !Directory.Exists(ArchitectureTestPaths.FromRoot(relativeRoot)) ||
+                                   Directory.GetFiles(ArchitectureTestPaths.FromRoot(relativeRoot), "*.csproj", SearchOption.TopDirectoryOnly).Length != 1)
+            .Order(StringComparer.Ordinal)];
+        string[] invalidOwners = [.. manifest.SharedContractOwnership
+            .Where(pair => string.IsNullOrWhiteSpace(pair.Value))
+            .Select(pair => $"{pair.Key}: owner is empty")
             .Order(StringComparer.Ordinal)];
 
-        Assert.Equal(actualAreas, declaredAreas, StringComparer.Ordinal);
+        Assert.Equal(6, declaredProjects.Length);
+        Assert.Empty(missingProjects);
         Assert.Empty(invalidOwners);
     }
 
@@ -113,7 +112,7 @@ public sealed class BackendModuleManifestTests {
     private sealed record BackendModuleManifest(
         int SchemaVersion,
         ModuleInventory Inventory,
-        Dictionary<string, string> ApplicationAbstractionOwnership,
+        Dictionary<string, string> SharedContractOwnership,
         Dictionary<string, ModuleBoundary> Modules);
 
     [ExcludeFromCodeCoverage]

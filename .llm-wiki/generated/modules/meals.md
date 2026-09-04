@@ -28,6 +28,9 @@ sources:
 - `Modules/Meals/Application`
 - `Modules/Meals/Application/Abstractions`
 - `Modules/Meals/Contracts`
+- `Modules/Meals/Domain`
+- `Modules/Meals/Infrastructure`
+- `Modules/Meals/Infrastructure/Model`
 
 ## HTTP Surface
 

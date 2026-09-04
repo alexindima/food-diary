@@ -14,13 +14,13 @@
       "Test discovery is navigation evidence unless an execution receipt is present."
     ]
   },
-  "applicationAbstractionOwnership": {
-    "Audit": "Application.Runtime",
-    "Authentication": "Identity",
-    "Common": "Shared",
-    "Email": "Application.Runtime",
-    "Nutrition": "Shared",
-    "Users": "Users"
+  "sharedContractOwnership": {
+    "Shared/FoodDiary.Application.Contracts": "Shared",
+    "Shared/FoodDiary.Audit.Contracts": "Audit",
+    "Shared/FoodDiary.Authentication.Contracts": "Identity",
+    "Shared/FoodDiary.Email.Contracts": "Email",
+    "Shared/FoodDiary.Nutrition.Contracts": "Nutrition",
+    "Shared/FoodDiary.Outbox.Management.Contracts": "Outbox"
   },
   "modules": {
     "Admin": {
@@ -191,11 +191,26 @@
           "Modules/Meals/Application/Abstractions",
           "Modules/Meals/Contracts"
         ],
+        "applicationAbstractionProjects": [
+          "Modules/Meals/Application/Abstractions"
+        ],
+        "contractProjects": [
+          "Modules/Meals/Contracts"
+        ],
+        "domainProjects": [
+          "Modules/Meals/Domain"
+        ],
         "domainAreas": [
           "Modules/Meals/Domain"
         ],
+        "infrastructureProjects": [
+          "Modules/Meals/Infrastructure"
+        ],
         "infrastructureAreas": [
           "Modules/Meals/Infrastructure"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Meals/Infrastructure/Model"
         ],
         "adapterAreas": [
           "FoodDiary.Presentation.Api/Features/Meals"
@@ -715,7 +730,7 @@
     },
     "Users": {
       "role": "aggregate-owner",
-      "physicalIsolation": "module-root-with-shared-persistence-and-identity-seams",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix-and-module-boundary-tests",
       "ownedEntities": [
         "User",
@@ -728,7 +743,7 @@
       "sourceMappings": {
         "logicalRoot": "Modules/Users",
         "applicationProjects": ["Modules/Users/Application"],
-        "applicationAbstractionAreas": ["FoodDiary.Application.Abstractions/Users"],
+        "abstractionAreas": ["Modules/Users/Application/Abstractions"],
         "applicationAbstractionProjects": ["Modules/Users/Application/Abstractions"],
         "contractProjects": ["Modules/Users/Contracts"],
         "domainAreas": ["Modules/Users/Domain", "Modules/Users/Domain.Contracts"],

@@ -1033,10 +1033,10 @@
       "id": "notification-resource-registration-role",
       "queryTerms": ["registration", "resource", "renderer", "notification"],
       "minimumMatches": 3,
-      "identityTerms": ["notification", "resource", "extensions"],
+      "identityTerms": ["notification", "resource", "registration"],
       "minimumIdentityMatches": 3,
       "score": 850,
-      "identityScope": "file"
+      "identityScope": "identity"
     },
     {
       "id": "telemetry-privacy-processor-role",

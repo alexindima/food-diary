@@ -6,7 +6,7 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class UsersIdentityContractOwnershipTests {
     [Theory]
-    [InlineData("Modules/Users/Contracts", 59)]
+    [InlineData("Modules/Users/Contracts", 61)]
     [InlineData("Modules/Users/Application/Abstractions", 7)]
     [InlineData("Modules/Identity/Application/Abstractions", 45)]
     public void ContractSources_AreOwnedByTheDeclaredProject(string relativeRoot, int count) {
@@ -14,17 +14,11 @@ public sealed class UsersIdentityContractOwnershipTests {
     }
 
     [Theory]
-    [InlineData("Users", "Common/CurrentUserAccessResolver.cs")]
-    [InlineData("Authentication", "Abstractions/IAdminSsoCodeStore.cs")]
-    [InlineData("Admin", null)]
-    [InlineData("Billing", null)]
-    public void CentralAreas_RetainOnlyExplicitSharedSeams(string area, string? retainedFile) {
-        string root = ArchitectureTestPaths.FromRoot($"FoodDiary.Application.Abstractions/{area}");
-        string[] actual = Directory.Exists(root)
-            ? [.. SourceScanner.SourceFiles(root).Select(path => Path.GetRelativePath(root, path).Replace('\\', '/')).Order(StringComparer.Ordinal)]
-            : [];
-        string[] expected = retainedFile is null ? [] : [retainedFile];
-        Assert.Equal(expected, actual);
+    [InlineData("Modules/Users/Contracts/Users/Common/CurrentUserAccessResolver.cs")]
+    [InlineData("Shared/FoodDiary.Authentication.Contracts/Authentication/Abstractions/IAdminSsoCodeStore.cs")]
+    public void FormerCentralSeams_HaveExplicitNarrowOwners(string relativePath) {
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot(relativePath)));
+        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions")));
     }
 
     [Fact]
@@ -46,7 +40,9 @@ public sealed class UsersIdentityContractOwnershipTests {
     [InlineData("Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj")]
     public void OwnedContracts_NeverDependBackOnCentralOrImplementations(string project) {
         string[] references = ProjectReferenceReader.ReadProjectReferences(project);
-        Assert.DoesNotContain("FoodDiary.Application.Abstractions", references, StringComparer.Ordinal);
+        if (!project.StartsWith("Modules/Users/Contracts/", StringComparison.Ordinal)) {
+            Assert.DoesNotContain("FoodDiary.Application.Contracts", references, StringComparer.Ordinal);
+        }
         Assert.DoesNotContain(references, name => name.EndsWith(".Infrastructure", StringComparison.Ordinal) ||
             name.EndsWith(".Application", StringComparison.Ordinal) || name.StartsWith("FoodDiary.Web.", StringComparison.Ordinal));
         if (project.StartsWith("Modules/Users/", StringComparison.Ordinal)) {
@@ -59,7 +55,7 @@ public sealed class UsersIdentityContractOwnershipTests {
     [InlineData("DietologistEnumValueParser")]
     public void DietologistValidation_HasOnePhysicalOwner(string name) {
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot($"Modules/Dietologist/Application/Common/Validation/{name}.cs")));
-        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot($"FoodDiary.Application.Abstractions/Common/Validation/{name}.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot($"Shared/FoodDiary.Application.Contracts/Common/Validation/{name}.cs")));
     }
 
     [Fact]

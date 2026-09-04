@@ -60,19 +60,49 @@ Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationsControll
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Notification, WebPushSubscription, NotificationWebPushOutboxMessage
-- Public contract files: 0
+- Public contract files: 41
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 41
+- Interfaces: 22
+- DTO/read-model/projection types: 2
 - Enums: 0
-- Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- Exported repository-shaped contracts: 9
+- Contracts referencing domain entities: 6
+- `class NotificationErrors`
+- `class NotificationPayloads`
+- `class NotificationPayloadSerializer`
+- `class NotificationTargetUrlResolver`
+- `class NotificationTypes`
+- `class WebPushDeliveryLimits`
+- `interface INotificationCleanupService`
+- `interface INotificationClientRefreshService`
+- `interface INotificationDeduplicationService`
+- `interface INotificationLookupRepository`
+- `interface INotificationPusher`
+- `interface INotificationReadModelRepository`
+- `interface INotificationReadRepository`
+- `interface INotificationRepository`
+- `interface INotificationTestScheduler`
+- `interface INotificationTextRenderer`
+- `interface INotificationWebPushOutbox`
+- `interface INotificationWebPushOutboxProcessor`
+- `interface INotificationWriter`
+- `interface INotificationWriteRepository`
+- `interface ITestNotificationDeliveryDispatcher`
+- `interface IWebPushConfigurationProvider`
+- `interface IWebPushDeliveryAudienceService`
+- `interface IWebPushNotificationSender`
+- `interface IWebPushSubscriptionReadModelRepository`
+- `interface IWebPushSubscriptionReadRepository`
+- `interface IWebPushSubscriptionRepository`
+- `interface IWebPushSubscriptionWriteRepository`
+- `record DietologistInvitationDecisionNotificationPayload`
+- `record DietologistInvitationReceivedNotificationPayload`
+- ... 11 more type(s)
 
 ## Focused Tests
 

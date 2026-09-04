@@ -266,7 +266,7 @@ if ($CompileProbe) {
                 }
             }
             foreach ($reference in @(
-                'FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj'
+                'Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj'
                 'Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj'
                 $projectDependencies | ForEach-Object { $dependencyProjects[$_] }
             )) {

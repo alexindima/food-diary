@@ -26,7 +26,7 @@ public sealed class MarketingModuleExtractionTests {
             "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application", references, StringComparer.Ordinal);
-        Assert.Contains("FoodDiary.Application.Abstractions", references, StringComparer.Ordinal);
+        Assert.Contains("FoodDiary.Application.Contracts", references, StringComparer.Ordinal);
     }
 
     [Theory]

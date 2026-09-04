@@ -11,7 +11,7 @@ public sealed class ApplicationGuardrailTests {
     public void ApplicationRuntimeProject_StaysDependencyLightweight() {
         const string relativeProjectPath = "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj";
         string[] allowedProjectReferences = [
-            "FoodDiary.Application.Abstractions",
+            "FoodDiary.Application.Contracts",
             "FoodDiary.Mediator",
         ];
         string[] allowedPackageReferences = [
@@ -30,7 +30,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationAbstractionWriteRepositories_DoNotInheritReadRepositories() {
         string root = GetRepositoryRoot();
-        string abstractionsRoot = Path.Combine(root, "FoodDiary.Application.Abstractions");
+        string abstractionsRoot = Path.Combine(root, "Shared", "FoodDiary.Application.Contracts");
         string[] files = [.. SourceScanner.SourceFiles(abstractionsRoot)
             .Where(path => Path.GetFileName(path).EndsWith("WriteRepository.cs", StringComparison.Ordinal))];
 
@@ -349,11 +349,13 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void UserIdParser_LivesInApplicationAbstractions() {
+    public void UserIdParser_LivesWithUsersContracts() {
         string root = GetRepositoryRoot();
         string parserPath = Path.Combine(
             root,
-            "FoodDiary.Application.Abstractions",
+            "Modules",
+            "Users",
+            "Contracts",
             "Common",
             "Validation",
             "UserIdParser.cs");
@@ -364,7 +366,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationAbstractionsCommonModels_StayLimitedToSharedApplicationResponsePrimitives() {
         string root = GetRepositoryRoot();
-        string modelsRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Models");
+        string modelsRoot = Path.Combine(root, "Shared", "FoodDiary.Application.Contracts", "Common", "Models");
         string[] allowedFiles = [
             "PagedResponse.cs",
         ];
@@ -429,7 +431,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationCommonServiceInterfaces_StayLimitedToTrueCrossCuttingAbstractions() {
         string root = GetRepositoryRoot();
-        string servicesRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Services");
+        string servicesRoot = Path.Combine(root, "Shared", "FoodDiary.Application.Contracts", "Common", "Interfaces", "Services");
         string[] allowedFiles = [];
 
         string?[] actualFiles = [.. GetFilesIfDirectoryExists(servicesRoot, "*.cs", SearchOption.TopDirectoryOnly)
@@ -442,7 +444,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationAbstractionsCommonPersistenceInterfaces_DoNotRegrowMovedFeatureSpecificContracts() {
         string root = GetRepositoryRoot();
-        string persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
+        string persistenceRoot = Path.Combine(root, "Shared", "FoodDiary.Application.Contracts", "Common", "Interfaces", "Persistence");
         string[] forbiddenFiles = [
             "IAiUsageRepository.cs",
             "ICycleRepository.cs",
@@ -471,7 +473,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationAbstractionsCommonPersistenceInterfaces_StayLimitedToCurrentCrossFeatureContracts() {
         string root = GetRepositoryRoot();
-        string persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
+        string persistenceRoot = Path.Combine(root, "Shared", "FoodDiary.Application.Contracts", "Common", "Interfaces", "Persistence");
         string[] allowedFiles = [];
 
         string?[] actualFiles = [.. GetFilesIfDirectoryExists(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
@@ -541,7 +543,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationAbstractionsErrorsRoot_StaysAsThinPartialFacade() {
         string root = GetRepositoryRoot();
-        string resultsRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Abstractions", "Results");
+        string resultsRoot = Path.Combine(root, "Shared", "FoodDiary.Application.Contracts", "Common", "Abstractions", "Results");
         string errorsRootPath = Path.Combine(resultsRoot, "Errors.cs");
 
         string source = File.ReadAllText(errorsRootPath);
@@ -558,7 +560,7 @@ public sealed class ApplicationGuardrailTests {
 
     [Fact]
     public void ApplicationAbstractionsErrorsRoot_ContainsOnlyUsedCommonTaxonomy() {
-        string resultsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions/Common/Abstractions/Results");
+        string resultsRoot = ArchitectureTestPaths.FromRoot("Shared/FoodDiary.Application.Contracts/Common/Abstractions/Results");
         string[] files = [.. Directory.GetFiles(resultsRoot, "Errors.*.cs", SearchOption.TopDirectoryOnly)
             .Select(path => Path.GetFileName(path))
             .Order(StringComparer.Ordinal)];
@@ -591,7 +593,7 @@ public sealed class ApplicationGuardrailTests {
         IReadOnlyList<CSharpSyntaxReader.TypeDeclaration> declarations = CSharpSyntaxReader.ReadTypeDeclarations(source);
         Assert.Contains(declarations, type => string.Equals(type.Name, factory, StringComparison.Ordinal));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
-            $"FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.{facade}.cs")));
+            $"Shared/FoodDiary.Application.Contracts/Common/Abstractions/Results/Errors.{facade}.cs")));
     }
 
     [Fact]
@@ -3179,7 +3181,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void AggregateReadRepositories_DoNotExposeReadModelsOutsideApprovedProjectionContracts() {
         string root = GetRepositoryRoot();
-        string abstractionsRoot = Path.Combine(root, "FoodDiary.Application.Abstractions");
+        string abstractionsRoot = Path.Combine(root, "Shared", "FoodDiary.Application.Contracts");
         string[] allowedRelativePaths = [
             Path.Combine("Admin", "Common", "IAdminBillingReadRepository.cs"),
             Path.Combine("Admin", "Common", "IAdminImpersonationSessionReadRepository.cs"),

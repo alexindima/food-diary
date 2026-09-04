@@ -97,265 +97,6 @@
       "line": 10
     },
     {
-      "name": "IAuditEntryReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Audit/Common/IAuditEntryReadService.cs",
-      "line": 3
-    },
-    {
-      "name": "IAuditEntryWriter",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Audit/Common/IAuditEntryWriter.cs",
-      "line": 4
-    },
-    {
-      "name": "AuditEntryReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Audit/Models/AuditEntryReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "IAdminSsoCodeStore",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoCodeStore.cs",
-      "line": 2
-    },
-    {
-      "name": "IAuditLogger",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Audit/IAuditLogger.cs",
-      "line": 4
-    },
-    {
-      "name": "IDomainEventPublisher",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Events/IDomainEventPublisher.cs",
-      "line": 4
-    },
-    {
-      "name": "IIntegrationEvent",
-      "kind": "interface",
-      "role": "Event",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Events/IIntegrationEvent.cs",
-      "line": 10
-    },
-    {
-      "name": "ICommand",
-      "kind": "interface",
-      "role": "Command",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs",
-      "line": 4
-    },
-    {
-      "name": "ICommandHandler",
-      "kind": "interface",
-      "role": "CommandHandler",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "IQuery",
-      "kind": "interface",
-      "role": "Query",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs",
-      "line": 4
-    },
-    {
-      "name": "IQueryHandler",
-      "kind": "interface",
-      "role": "QueryHandler",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "ITransactionalCommand",
-      "kind": "interface",
-      "role": "Command",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ITransactionalCommand.cs",
-      "line": 2
-    },
-    {
-      "name": "IUserRequest",
-      "kind": "interface",
-      "role": "Request",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "IOutboxDeadLetterReplayService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Outbox/IOutboxDeadLetterReplayService.cs",
-      "line": 2
-    },
-    {
-      "name": "OutboxDeadLetterMessageModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Outbox/OutboxDeadLetterMessageModel.cs",
-      "line": 2
-    },
-    {
-      "name": "OutboxReplayAuditModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Outbox/OutboxReplayAuditModel.cs",
-      "line": 2
-    },
-    {
-      "name": "IPostCommitActionQueue",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs",
-      "line": 11
-    },
-    {
-      "name": "IUnitOfWork",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs",
-      "line": 2
-    },
-    {
-      "name": "ErrorKindResolver",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/ErrorKindResolver.cs",
-      "line": 4
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Authentication.cs",
-      "line": 4
-    },
-    {
-      "name": "Authentication",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Authentication.cs",
-      "line": 6
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.cs",
-      "line": 2
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Validation.cs",
-      "line": 4
-    },
-    {
-      "name": "Validation",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Validation.cs",
-      "line": 6
-    },
-    {
-      "name": "PagedResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "PaginationPolicy",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Validation/PaginationPolicy.cs",
-      "line": 2
-    },
-    {
-      "name": "SharedEnumValueParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Validation/SharedEnumValueParser.cs",
-      "line": 5
-    },
-    {
-      "name": "TemporalRangePolicy",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Validation/TemporalRangePolicy.cs",
-      "line": 2
-    },
-    {
-      "name": "UserIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Validation/UserIdParser.cs",
-      "line": 6
-    },
-    {
-      "name": "ApplicationEmailTelemetry",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Email/Common/ApplicationEmailTelemetry.cs",
-      "line": 4
-    },
-    {
-      "name": "EmailMessage",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Email/Common/EmailMessage.cs",
-      "line": 2
-    },
-    {
-      "name": "EmailOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Application.Abstractions/Email/Common/EmailOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "IEmailOutbox",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Email/Common/IEmailOutbox.cs",
-      "line": 2
-    },
-    {
-      "name": "IEmailOutboxProcessor",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Email/Common/IEmailOutboxProcessor.cs",
-      "line": 2
-    },
-    {
-      "name": "IEmailTransport",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Email/Common/IEmailTransport.cs",
-      "line": 2
-    },
-    {
-      "name": "ManualNutritionLimits",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Nutrition/Common/ManualNutritionLimits.cs",
-      "line": 2
-    },
-    {
-      "name": "CurrentUserAccessResolver",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Users/Common/CurrentUserAccessResolver.cs",
-      "line": 6
-    },
-    {
       "name": "CommandTransactionBehavior",
       "kind": "class",
       "role": "Other",
@@ -6030,7 +5771,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "MailInboxNetworkIdentity",
@@ -22581,6 +22322,20 @@
       "line": 10
     },
     {
+      "name": "UserIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Common/Validation/UserIdParser.cs",
+      "line": 6
+    },
+    {
+      "name": "CurrentUserAccessResolver",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Common/CurrentUserAccessResolver.cs",
+      "line": 6
+    },
+    {
       "name": "ICurrentUserAccessService",
       "kind": "interface",
       "role": "Service",
@@ -24135,6 +23890,181 @@
       "line": 7
     },
     {
+      "name": "IDomainEventPublisher",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs",
+      "line": 4
+    },
+    {
+      "name": "IIntegrationEvent",
+      "kind": "interface",
+      "role": "Event",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IIntegrationEvent.cs",
+      "line": 10
+    },
+    {
+      "name": "ICommand",
+      "kind": "interface",
+      "role": "Command",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs",
+      "line": 4
+    },
+    {
+      "name": "ICommandHandler",
+      "kind": "interface",
+      "role": "CommandHandler",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommandHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "IQuery",
+      "kind": "interface",
+      "role": "Query",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs",
+      "line": 4
+    },
+    {
+      "name": "IQueryHandler",
+      "kind": "interface",
+      "role": "QueryHandler",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "ITransactionalCommand",
+      "kind": "interface",
+      "role": "Command",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ITransactionalCommand.cs",
+      "line": 2
+    },
+    {
+      "name": "IUserRequest",
+      "kind": "interface",
+      "role": "Request",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "IPostCommitActionQueue",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs",
+      "line": 11
+    },
+    {
+      "name": "IUnitOfWork",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs",
+      "line": 2
+    },
+    {
+      "name": "ErrorKindResolver",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Results/ErrorKindResolver.cs",
+      "line": 4
+    },
+    {
+      "name": "Errors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Results/Errors.Authentication.cs",
+      "line": 4
+    },
+    {
+      "name": "Authentication",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Results/Errors.Authentication.cs",
+      "line": 6
+    },
+    {
+      "name": "Errors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Results/Errors.cs",
+      "line": 2
+    },
+    {
+      "name": "Errors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Results/Errors.Validation.cs",
+      "line": 4
+    },
+    {
+      "name": "Validation",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Results/Errors.Validation.cs",
+      "line": 6
+    },
+    {
+      "name": "PagedResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "PaginationPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Validation/PaginationPolicy.cs",
+      "line": 2
+    },
+    {
+      "name": "SharedEnumValueParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Validation/SharedEnumValueParser.cs",
+      "line": 5
+    },
+    {
+      "name": "TemporalRangePolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Validation/TemporalRangePolicy.cs",
+      "line": 2
+    },
+    {
+      "name": "IAuditEntryReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Shared/FoodDiary.Audit.Contracts/Audit/Common/IAuditEntryReadService.cs",
+      "line": 3
+    },
+    {
+      "name": "IAuditEntryWriter",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Audit.Contracts/Audit/Common/IAuditEntryWriter.cs",
+      "line": 4
+    },
+    {
+      "name": "AuditEntryReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Audit.Contracts/Audit/Models/AuditEntryReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "IAuditLogger",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Audit.Contracts/Common/Abstractions/Audit/IAuditLogger.cs",
+      "line": 4
+    },
+    {
+      "name": "IAdminSsoCodeStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Authentication.Contracts/Authentication/Abstractions/IAdminSsoCodeStore.cs",
+      "line": 2
+    },
+    {
       "name": "AggregateRoot",
       "kind": "class",
       "role": "Other",
@@ -24202,6 +24132,48 @@
       "kind": "enum",
       "role": "Other",
       "path": "Shared/FoodDiary.Domain.Primitives/Visibility.cs",
+      "line": 2
+    },
+    {
+      "name": "ApplicationEmailTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.Contracts/Email/Common/ApplicationEmailTelemetry.cs",
+      "line": 4
+    },
+    {
+      "name": "EmailMessage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.Contracts/Email/Common/EmailMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "EmailOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Shared/FoodDiary.Email.Contracts/Email/Common/EmailOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "IEmailOutbox",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailOutbox.cs",
+      "line": 2
+    },
+    {
+      "name": "IEmailOutboxProcessor",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailOutboxProcessor.cs",
+      "line": 2
+    },
+    {
+      "name": "IEmailTransport",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailTransport.cs",
       "line": 2
     },
     {
@@ -24317,10 +24289,38 @@
       "line": 6
     },
     {
+      "name": "ManualNutritionLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Nutrition.Contracts/Nutrition/Common/ManualNutritionLimits.cs",
+      "line": 2
+    },
+    {
       "name": "IOutboxMessage",
       "kind": "interface",
       "role": "Other",
       "path": "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "IOutboxDeadLetterReplayService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Shared/FoodDiary.Outbox.Management.Contracts/Common/Abstractions/Outbox/IOutboxDeadLetterReplayService.cs",
+      "line": 2
+    },
+    {
+      "name": "OutboxDeadLetterMessageModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.Management.Contracts/Common/Abstractions/Outbox/OutboxDeadLetterMessageModel.cs",
+      "line": 2
+    },
+    {
+      "name": "OutboxReplayAuditModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.Management.Contracts/Common/Abstractions/Outbox/OutboxReplayAuditModel.cs",
       "line": 2
     },
     {
@@ -24887,14 +24887,14 @@
     },
     {
       "interface": "IEmailOutbox",
-      "interfacePath": "FoodDiary.Application.Abstractions/Email/Common/IEmailOutbox.cs",
+      "interfacePath": "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailOutbox.cs",
       "implementation": "EmailOutbox",
       "implementationPath": "FoodDiary.Infrastructure/Persistence/Email/EmailOutbox.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IEmailOutboxProcessor",
-      "interfacePath": "FoodDiary.Application.Abstractions/Email/Common/IEmailOutboxProcessor.cs",
+      "interfacePath": "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailOutboxProcessor.cs",
       "implementation": "EmailOutboxProcessor",
       "implementationPath": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxProcessor.cs",
       "confidence": "naming-convention"
@@ -25461,7 +25461,7 @@
     },
     {
       "interface": "IOutboxDeadLetterReplayService",
-      "interfacePath": "FoodDiary.Application.Abstractions/Common/Abstractions/Outbox/IOutboxDeadLetterReplayService.cs",
+      "interfacePath": "Shared/FoodDiary.Outbox.Management.Contracts/Common/Abstractions/Outbox/IOutboxDeadLetterReplayService.cs",
       "implementation": "OutboxDeadLetterReplayService",
       "implementationPath": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
       "confidence": "naming-convention"
@@ -25475,7 +25475,7 @@
     },
     {
       "interface": "IPostCommitActionQueue",
-      "interfacePath": "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs",
+      "interfacePath": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs",
       "implementation": "PostCommitActionQueue",
       "implementationPath": "FoodDiary.Application.Runtime/Common/Services/PostCommitActionQueue.cs",
       "confidence": "naming-convention"

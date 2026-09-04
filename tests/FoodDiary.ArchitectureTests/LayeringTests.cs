@@ -29,7 +29,7 @@ public class LayeringTests {
     public void DomainProject_DoesNotReference_OtherApplicationLayers(string module) {
         HashSet<string> references = GetProjectReferences($"Modules/{module}/Domain/FoodDiary.Modules.{module}.Domain.csproj");
 
-        Assert.DoesNotContain("FoodDiary.Application.Abstractions", references);
+        Assert.DoesNotContain("FoodDiary.Application.Contracts", references);
         Assert.DoesNotContain("FoodDiary.Application", references);
         Assert.DoesNotContain("FoodDiary.Infrastructure", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
@@ -38,7 +38,7 @@ public class LayeringTests {
 
     [Fact]
     public void ApplicationAbstractionsProject_ReferencesOnly_DomainAmongCoreProjects() {
-        HashSet<string> references = GetProjectReferences("FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj");
+        HashSet<string> references = GetProjectReferences("Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj");
 
         Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Application", references);
@@ -52,7 +52,7 @@ public class LayeringTests {
     public void ApplicationRuntimeProject_ReferencesOnly_ApplicationContractsAmongCoreProjects() {
         HashSet<string> references = GetProjectReferences("FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
-        Assert.Contains("FoodDiary.Application.Abstractions", references);
+        Assert.Contains("FoodDiary.Application.Contracts", references);
         Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Resources", references);
         Assert.DoesNotContain("FoodDiary.Infrastructure", references);
@@ -64,7 +64,7 @@ public class LayeringTests {
     public void InfrastructureProject_ReferencesOnly_DomainAndApplicationAbstractions_AmongCoreProjects() {
         HashSet<string> references = GetProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
 
-        Assert.Contains("FoodDiary.Application.Abstractions", references);
+        Assert.Contains("FoodDiary.Application.Contracts", references);
         Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Application", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
@@ -76,7 +76,7 @@ public class LayeringTests {
     public void IntegrationsProject_ReferencesApplicationAbstractionsAndExternalClients_ButNotInfrastructure() {
         HashSet<string> references = GetProjectReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
 
-        Assert.Contains("FoodDiary.Application.Abstractions", references);
+        Assert.Contains("FoodDiary.Application.Contracts", references);
         Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.Contains("FoodDiary.MailInbox.Client", references);
         Assert.Contains("FoodDiary.MailRelay.Client", references);

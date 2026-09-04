@@ -4,6 +4,15 @@
     <AssemblyName>FoodDiary.Application.Tests</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="FoodDiary.Application.Tests.Support" />
+    <Using Include="NSubstitute" />
+    <Using Include="Xunit" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.Dashboard.Application.csproj" />
     <ProjectReference Include="../../../BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="../../../Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj" />
@@ -15,14 +24,6 @@
     <ProjectReference Include="../../../BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Exercises/Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
-    <PackageReference Include="coverlet.collector" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="NSubstitute" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" />
-    <Using Include="System.Diagnostics.CodeAnalysis" />
-    <Using Include="FoodDiary.Application.Tests.Support" />
-    <Using Include="NSubstitute" />
-    <Using Include="Xunit" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
   </ItemGroup>
 </Project>

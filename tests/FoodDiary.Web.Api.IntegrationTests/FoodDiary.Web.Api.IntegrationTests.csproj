@@ -35,19 +35,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\FoodDiary.Domain.Primitives\FoodDiary.Domain.Primitives.csproj" />
-    <ProjectReference Include="..\..\Modules\Products\Domain.Contracts\FoodDiary.Modules.Products.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Presentation.Api\FoodDiary.Presentation.Api.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Web.Api\FoodDiary.Web.Api.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
-    <ProjectReference Include="..\FoodDiary.Testing\FoodDiary.Testing.csproj" />
-    <ProjectReference Include="../../Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
-    <ProjectReference Include="../../Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Presentation.Api\FoodDiary.Presentation.Api.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Web.Api\FoodDiary.Web.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Products\Domain.Contracts\FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="..\..\Shared\FoodDiary.Authentication.Contracts\FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="..\..\Shared\FoodDiary.Domain.Primitives\FoodDiary.Domain.Primitives.csproj" />
+    <ProjectReference Include="..\FoodDiary.Testing\FoodDiary.Testing.csproj" />
   </ItemGroup>
 
 </Project>

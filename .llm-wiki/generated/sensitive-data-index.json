@@ -19,13 +19,6 @@
   "fields": [
     {
       "category": "credential",
-      "name": "PasswordResetPath",
-      "type": "string",
-      "path": "FoodDiary.Application.Abstractions/Email/Common/EmailOptions.cs",
-      "line": 11
-    },
-    {
-      "category": "credential",
       "name": "SecretKey",
       "type": "string",
       "path": "FoodDiary.Infrastructure/Options/JwtOptions.cs",
@@ -1040,11 +1033,11 @@
       "line": 217
     },
     {
-      "category": "financial",
-      "name": "ITransactionalCommand",
-      "type": "IRequest<TResponse>,",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs",
-      "line": 5
+      "category": "credential",
+      "name": "PasswordResetPath",
+      "type": "string",
+      "path": "Shared/FoodDiary.Email.Contracts/Email/Common/EmailOptions.cs",
+      "line": 11
     },
     {
       "category": "financial",
@@ -1878,6 +1871,13 @@
       "type": "IReadOnlyList<ProfileWebPushSubscriptionModel>",
       "path": "Modules/Users/Contracts/Users/Models/ProfileOverviewModel.cs",
       "line": 6
+    },
+    {
+      "category": "financial",
+      "name": "ITransactionalCommand",
+      "type": "IRequest<TResponse>,",
+      "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs",
+      "line": 5
     },
     {
       "category": "health",

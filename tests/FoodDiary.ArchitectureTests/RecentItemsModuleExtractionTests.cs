@@ -5,7 +5,7 @@ public sealed class RecentItemsModuleExtractionTests {
     [Fact]
     public void RecentItemsOwnerSource_LivesOnlyInModule() {
         string[] legacyPaths = [
-            ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions", "RecentItems"),
+            ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts", "RecentItems"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Entities", "Recents"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence", "RecentItems"),
         ];

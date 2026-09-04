@@ -49,18 +49,24 @@ Source: `FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs`
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: DailyReferenceValue, UsdaFood, UsdaFoodNutrient, UsdaFoodPortion, UsdaNutrient
-- Public contract files: 11
+- Public contract files: 17
 - Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 11
-- Interfaces: 0
+- Public contract types: 17
+- Interfaces: 5
 - DTO/read-model/projection types: 11
 - Enums: 0
-- Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 0
+- Exported repository-shaped contracts: 3
+- Contracts referencing domain entities: 1
+- `class UsdaErrors`
+- `interface IUsdaDailyMicronutrientReadService`
+- `interface IUsdaFoodReadModelRepository`
+- `interface IUsdaFoodReadRepository`
+- `interface IUsdaFoodRepository`
+- `interface IUsdaFoodSearchService`
 - `record DailyMicronutrientModel`
 - `record DailyMicronutrientSummaryModel`
 - `record HealthAreaScoreModel`

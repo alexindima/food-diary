@@ -6,5 +6,6 @@
     <ProjectReference Include="../Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj" />
   </ItemGroup>
 </Project>

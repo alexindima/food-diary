@@ -14,7 +14,7 @@ public sealed class OpenFoodFactsModuleExtractionTests {
     public void ExtractedOpenFoodFactsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions", "FoodDiary.Modules.OpenFoodFacts.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions", "FoodDiary.Modules.OpenFoodFacts.Contracts"], references);
     }
 
     [Theory]

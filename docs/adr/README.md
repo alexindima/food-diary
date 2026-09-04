@@ -18,7 +18,7 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 | [0001](0001-modular-monolith-with-supporting-services.md) | Modular monolith with supporting services | Accepted | 2026-05-21 |
 | [0002](0002-mailrelay-mailinbox-as-separate-services.md) | MailRelay and MailInbox as separate services | Accepted | 2026-05-21 |
 | [0003](0003-presentation-models-live-in-presentation-api.md) | HTTP models live in presentation projects | Accepted | 2026-05-21 |
-| [0004](0004-application-abstractions-project.md) | Application abstractions project | Accepted | 2026-05-21 |
+| [0004](0004-application-abstractions-project.md) | Application abstractions project | Superseded | 2026-05-21 |
 | [0005](0005-api-contract-snapshot-policy.md) | API contract snapshot policy | Accepted | 2026-05-21 |
 | [0006](0006-business-module-ownership-and-fasting-pilot.md) | Business-module ownership and Fasting pilot | Accepted | 2026-07-13 |
 | [0007](0007-backend-side-effect-transaction-semantics.md) | Backend side-effect and transaction semantics | Accepted | 2026-07-05 |
@@ -39,6 +39,7 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 | [0026](0026-recent-items-bounded-context-extraction.md) | Extract the RecentItems bounded context | Accepted | 2026-09-01 |
 
 | [0027](0027-retire-shared-domain-assemblies.md) | Retire residual central and Nutrition domain assemblies | Accepted | 2026-09-02 |
+| [0028](0028-retire-central-application-abstractions.md) | Retire the central application abstractions aggregator | Accepted | 2026-09-05 |
 
 ## Creating A Record
 

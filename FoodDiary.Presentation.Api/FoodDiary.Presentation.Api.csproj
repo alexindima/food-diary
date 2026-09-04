@@ -12,7 +12,7 @@
     <ProjectReference Include="../Modules/Favorites/Contracts/FoodDiary.Modules.Favorites.Contracts.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Domain.Primitives\FoodDiary.Domain.Primitives.csproj" />
     <ProjectReference Include="../Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
-    <ProjectReference Include="..\FoodDiary.Application.Abstractions\FoodDiary.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../Modules/RecentItems/Application/Abstractions/FoodDiary.Modules.RecentItems.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />
