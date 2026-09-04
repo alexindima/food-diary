@@ -1881,55 +1881,6 @@
     },
     {
       "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealModel.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealSourceModel.cs",
-      "line": 6
-    },
-    {
-      "category": "health",
-      "name": "CaloriesPerBase",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
-      "line": 13
-    },
-    {
-      "category": "health",
-      "name": "CaloriesPerBase",
-      "type": "double",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
-      "line": 16
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
-      "name": "TotalCalories",
-      "type": "double?",
-      "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
-      "line": 10
-    },
-    {
-      "category": "health",
       "name": "DesiredWeightKg",
       "type": "double?",
       "path": "FoodDiary.Application.Abstractions/Users/Models/GoalsModel.cs",
@@ -4905,6 +4856,55 @@
     },
     {
       "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Models/FavoriteMealSourceModel.cs",
+      "line": 6
+    },
+    {
+      "category": "health",
+      "name": "CaloriesPerBase",
+      "type": "double",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
+      "line": 16
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double?",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Models/FavoriteMealModel.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
+      "name": "CaloriesPerBase",
+      "type": "double",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductModel.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "TotalCalories",
+      "type": "double?",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
+      "line": 10
+    },
+    {
+      "category": "health",
       "name": "HydrationEntryId",
       "type": "Guid",
       "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
@@ -7572,48 +7572,6 @@
     },
     {
       "category": "privateContent",
-      "name": "Comment",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
-      "line": 11
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
-      "line": 12
-    },
-    {
-      "category": "privateContent",
-      "name": "Comment",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
-      "line": 14
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
-      "line": 15
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
-      "line": 9
-    },
-    {
-      "category": "privateContent",
-      "name": "ImageUrl",
-      "type": "string?",
-      "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
-      "line": 9
-    },
-    {
-      "category": "privateContent",
       "name": "ProfileImageAssetId",
       "type": "Guid?",
       "path": "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
@@ -8654,6 +8612,48 @@
       "type": "bool?",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingTelemetryEvent.cs",
       "line": 34
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
+      "line": 14
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
+      "line": 15
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "Comment",
+      "type": "string?",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductModel.cs",
+      "line": 11
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductModel.cs",
+      "line": 12
+    },
+    {
+      "category": "privateContent",
+      "name": "ImageUrl",
+      "type": "string?",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
+      "line": 9
     },
     {
       "category": "privateContent",

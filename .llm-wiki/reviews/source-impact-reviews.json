@@ -7,14 +7,18 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
+          "path": "AGENTS.md",
+          "sha256": "8ec8a240a2e4be36dcf24894c45d692b8a28ae0d833bf002d0c7eb2083f6e3ba"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "2b2c030ad76fe98e4e71dc661e4cbf3b3399482240b4a24c7f0277fa8179de65"
+          "sha256": "50d3a20007a2f716c324930a2d73b56fdeaf631def62c32dc5cbce6ea347c491"
         }
       ],
-      "reason": "Maps/guides/report distinguish module stream SQL/metadata from central transactional replay coordinator and generic email. No project/package/lock/schema changes or new job. Ownership empty results and overbroad inferred obligations are navigation limitations, not code authority.",
+      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
       "baseRef": "HEAD",
-      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
-      "reviewedAtUtc": "2026-09-03T12:08:03.6351541Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:22.1167639Z"
     },
     {
       "pageId": "module.frontend",
@@ -38,13 +42,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "2b2c030ad76fe98e4e71dc661e4cbf3b3399482240b4a24c7f0277fa8179de65"
+          "sha256": "50d3a20007a2f716c324930a2d73b56fdeaf631def62c32dc5cbce6ea347c491"
         }
       ],
-      "reason": "Maps/guides/report distinguish module stream SQL/metadata from central transactional replay coordinator and generic email. No project/package/lock/schema changes or new job. Ownership empty results and overbroad inferred obligations are navigation limitations, not code authority.",
+      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
       "baseRef": "HEAD",
-      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
-      "reviewedAtUtc": "2026-09-03T12:08:03.8412913Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:22.4190712Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -52,14 +56,26 @@
       "pageSha256": "a12fef9a11365dd6a6c58228abc9447b6f005042e43ab58532b8250805df1709",
       "sources": [
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "c1d4168328bae9f1157e1922d662f98ccceefe35ffbbce02723d5ab200820e8d"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "50d3a20007a2f716c324930a2d73b56fdeaf631def62c32dc5cbce6ea347c491"
+        },
+        {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "c010e959ea638009cc31da1f92e1935b3850fedf1d188e7a574a217ac995bdee"
+          "sha256": "b1706e4257c600ad9b76cdbf8ca0f7594b42975d1b582eadf4f3e8264452c254"
+        },
+        {
+          "path": "FoodDiary.Application.Abstractions/AGENTS.md",
+          "sha256": "c192cf0e69ead0e384211a1dc0493ac1913c1bf7d01379886e340916959412b6"
         }
       ],
-      "reason": "All removed methods are private and repository search finds only the central call chain and guardrails. AddInfrastructure retains the exact effective Audit and Email registrations/order. No host, HTTP, Swagger, DI lifetime or external consumer contract change.",
+      "reason": "26 declarations/source bodies are normalized-identical. Namespaces/signatures/defaults and HTTP bodies/snapshots unchanged. Full consumer and HTTP suites pass. New declaring assemblies require coordinated host rebuilds; no old precompiled binary compatibility is promised.",
       "baseRef": "HEAD",
-      "gitHead": "664e0f0a86b02917bff97d8cb4c554d674b76a5e",
-      "reviewedAtUtc": "2026-09-03T18:19:17.8153532Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:22.6806847Z"
     },
     {
       "pageId": "system.architecture",
@@ -67,14 +83,26 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "c1d4168328bae9f1157e1922d662f98ccceefe35ffbbce02723d5ab200820e8d"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "2b2c030ad76fe98e4e71dc661e4cbf3b3399482240b4a24c7f0277fa8179de65"
+          "sha256": "50d3a20007a2f716c324930a2d73b56fdeaf631def62c32dc5cbce6ea347c491"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs",
+          "sha256": "eb28c8d25a9e4f71532dbd0aa683a1aca0b99e3531af8a93be3519b6e92817c8"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "72c214d3810044404e54fb6217b0b8848d18a14dce8b8086addded35a37992a2"
         }
       ],
-      "reason": "Maps/guides/report distinguish module stream SQL/metadata from central transactional replay coordinator and generic email. No project/package/lock/schema changes or new job. Ownership empty results and overbroad inferred obligations are navigation limitations, not code authority.",
+      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
       "baseRef": "HEAD",
-      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
-      "reviewedAtUtc": "2026-09-03T12:08:04.2301641Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:22.9284498Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -113,13 +141,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "4dfca8f3a498d22b9084a854a5b057f43d59482e0cbc97bc082dc2f5592824a1"
+          "sha256": "8ec8a240a2e4be36dcf24894c45d692b8a28ae0d833bf002d0c7eb2083f6e3ba"
         }
       ],
-      "reason": "Only five focused test projects moved into Shared/tests and Tooling/tests. Project identities, dependency targets, test bodies and runtime source are preserved; central test props and editor rules are retained. Solution ownership guards and current test commands were updated. Seven evaluation target literals follow these exact moved test sources; queries, thresholds, weights and historical results are unchanged. This is test placement, not a new runtime boundary or ADR.",
+      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
       "baseRef": "HEAD",
-      "gitHead": "0c3b805571fd75a396d4f8bbaedf556aedbdaaf1",
-      "reviewedAtUtc": "2026-09-02T21:26:03.0499356Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:23.1995665Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -128,13 +156,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "684e343459808a939611b1b7d8ed2e326959b543f72d54ea631fad9fa1025598"
+          "sha256": "c1d4168328bae9f1157e1922d662f98ccceefe35ffbbce02723d5ab200820e8d"
         }
       ],
-      "reason": "Current module manifest/maps/guides place repository and four aliases in Users and preserve central context/migrations/unit of work. No project/package/model/host changes. Existing separate admin and security readers remain separate. Original planning path error and Wiki limitations documented.",
+      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:15.7831067Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:23.4415808Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -191,14 +219,22 @@
       "pageSha256": "a698963b28452ed2f9c719952b723fcaeae31c4004178bea002f2ad484926da9",
       "sources": [
         {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "71f3ca7df359287981dd64ea7b0b8599e111d800d0d5e79bd4cc0824c48c3d64"
+        },
+        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "684e343459808a939611b1b7d8ed2e326959b543f72d54ea631fad9fa1025598"
+          "sha256": "c1d4168328bae9f1157e1922d662f98ccceefe35ffbbce02723d5ab200820e8d"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "72c214d3810044404e54fb6217b0b8848d18a14dce8b8086addded35a37992a2"
         }
       ],
-      "reason": "Seven Users-only SQL tests moved as a whole file unchanged; mixed Users/Identity test remains byte-equivalent. Five new provider tests and expanded DI/ownership guards protect tracking/filter/transaction/save behavior. No collectors. Single source-proven postfix control30 expectedPath relocation with reverse equality, no query/ranking/threshold edits.",
+      "reason": "All twelve planned suites ran unfiltered: 3693 passed, zero failures/skips; six new default-forwarding tests and ownership guards included. Full solution build and EF no-model-change check pass. Initial two style errors were fixed and successful build repeated. No collectors. Empty untracked directories are not source areas; a regression enforces this without exempting actual contracts.",
       "baseRef": "HEAD",
-      "gitHead": "de0f11423fce89f5124de462fa423ad3bddda2eb",
-      "reviewedAtUtc": "2026-09-03T11:07:16.0654765Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:23.7515929Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -207,13 +243,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "3ae04ede412580e2370373e7b2d07d9d9570d030a8d80cc29fabf90647ef2e97"
+          "sha256": "55bd96eb408a29f2129f6fe19a83500a22d92873499ee1406cf9586a446404bc"
+        },
+        {
+          "path": "FoodDiary.Application.Abstractions/AGENTS.md",
+          "sha256": "c192cf0e69ead0e384211a1dc0493ac1913c1bf7d01379886e340916959412b6"
         }
       ],
-      "reason": "Only four non-locking query branches gain the missing messageId predicate. Initializer CLI is the existing preview consumer; no HTTP/public contract/DI/host/model change. Existing FOR UPDATE and coordinator validation are exact unchanged.",
+      "reason": "26 declarations/source bodies are normalized-identical. Namespaces/signatures/defaults and HTTP bodies/snapshots unchanged. Full consumer and HTTP suites pass. New declaring assemblies require coordinated host rebuilds; no old precompiled binary compatibility is promised.",
       "baseRef": "HEAD",
-      "gitHead": "67f46de86490a5edc39f87f02f3be755638843dd",
-      "reviewedAtUtc": "2026-09-03T12:59:57.4063837Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:24.4075207Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -748,13 +788,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "82fe207d66903bb7f8b9e71d5e7dede54e1efa2e680471a5bd59c5963d41fad9"
+          "sha256": "55cd19db8e07042506c90ace53355cecb91af1dab5ec701d95e451554d416143"
         }
       ],
-      "reason": "Source audit15 namespace-only renderer/policy moves; DNS/IP pinning, timeout/cancellation, disabled redirects/proxy, bounded images and request lifetime unchanged. Adapter78 tests pass. No new storage, telemetry or destinations.",
+      "reason": "UserId predicates, favorite source access, private relationship/read projections, SQL, error codes, cancellation and DI lifetimes unchanged. No new data collection/logging/provider calls. Source audit rejects protected repository/model/HTTP changes; PostgreSQL and HTTP suites pass.",
       "baseRef": "HEAD",
-      "gitHead": "a8dac6a1b5d78776f30ab9057463cc20be1202f2",
-      "reviewedAtUtc": "2026-09-02T20:37:35.2402772Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:25.1018458Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -793,13 +833,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7d89db5862a70d99e39380d957aa5732089c23cdfd9069a47fc895a5436e18c0"
+          "sha256": "7af30ee33a9557a7670bcaab176e4854ccd4abb586071f1e0182993512ed676b"
         }
       ],
-      "reason": "Source audit proves the two removed hooks were empty and effective registrations remain exact. Full Infrastructure 550 and Architecture 1047 suites pass without failures/skips; locked builds zero warnings/errors. No coverage collector or database suite needed for no-op composition cleanup.",
+      "reason": "All twelve planned suites ran unfiltered: 3693 passed, zero failures/skips; six new default-forwarding tests and ownership guards included. Full solution build and EF no-model-change check pass. Initial two style errors were fixed and successful build repeated. No collectors. Empty untracked directories are not source areas; a regression enforces this without exempting actual contracts.",
       "baseRef": "HEAD",
-      "gitHead": "664e0f0a86b02917bff97d8cb4c554d674b76a5e",
-      "reviewedAtUtc": "2026-09-03T18:19:18.2485356Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:25.6103494Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -876,13 +916,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2e5a80590e3551f84716aee84330e939716564730b5d0a248a2658e08c3d40a7"
+          "sha256": "04d52eb10439e803dd6b5a7480267442a27a27054daf5abd65d3ef2cc37567ac"
         }
       ],
-      "reason": "Replace the historical compatibility-hook statement with current explicit shared composition and record why Audit/Email are not assigned to one feature. Guardrails now reject legacy files and continue rejecting central feature repository ownership.",
+      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
       "baseRef": "HEAD",
-      "gitHead": "664e0f0a86b02917bff97d8cb4c554d674b76a5e",
-      "reviewedAtUtc": "2026-09-03T18:19:18.9761736Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:26.7180985Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -891,17 +931,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7d89db5862a70d99e39380d957aa5732089c23cdfd9069a47fc895a5436e18c0"
+          "sha256": "7af30ee33a9557a7670bcaab176e4854ccd4abb586071f1e0182993512ed676b"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "2e5a80590e3551f84716aee84330e939716564730b5d0a248a2658e08c3d40a7"
+          "sha256": "04d52eb10439e803dd6b5a7480267442a27a27054daf5abd65d3ef2cc37567ac"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "55cd19db8e07042506c90ace53355cecb91af1dab5ec701d95e451554d416143"
         }
       ],
-      "reason": "No data access, authentication, authorization, payload, storage, logging, retention or provider behavior changes. Shared Audit and Email mechanisms remain central and unchanged; no external security scan claimed.",
+      "reason": "UserId predicates, favorite source access, private relationship/read projections, SQL, error codes, cancellation and DI lifetimes unchanged. No new data collection/logging/provider calls. Source audit rejects protected repository/model/HTTP changes; PostgreSQL and HTTP suites pass.",
       "baseRef": "HEAD",
-      "gitHead": "664e0f0a86b02917bff97d8cb4c554d674b76a5e",
-      "reviewedAtUtc": "2026-09-03T18:19:19.5439180Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:27.2085138Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1079,13 +1123,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "4dfca8f3a498d22b9084a854a5b057f43d59482e0cbc97bc082dc2f5592824a1"
+          "sha256": "8ec8a240a2e4be36dcf24894c45d692b8a28ae0d833bf002d0c7eb2083f6e3ba"
         }
       ],
-      "reason": "Only five focused test projects moved into Shared/tests and Tooling/tests. Project identities, dependency targets, test bodies and runtime source are preserved; central test props and editor rules are retained. Solution ownership guards and current test commands were updated. Seven evaluation target literals follow these exact moved test sources; queries, thresholds, weights and historical results are unchanged. This is test placement, not a new runtime boundary or ADR.",
+      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
       "baseRef": "HEAD",
-      "gitHead": "0c3b805571fd75a396d4f8bbaedf556aedbdaaf1",
-      "reviewedAtUtc": "2026-09-02T21:26:04.3006799Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:24.7815049Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1139,13 +1183,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "6e249c98fd65d522a22ba999c7717b5825ccff800b7e0fedc0996ec2f52b6b92"
+          "sha256": "b4007e7759dbce668157be2625603654503fbbab2dedac3784d78acee8b16c51"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "8ec8a240a2e4be36dcf24894c45d692b8a28ae0d833bf002d0c7eb2083f6e3ba"
         }
       ],
-      "reason": "Replace the historical compatibility-hook statement with current explicit shared composition and record why Audit/Email are not assigned to one feature. Guardrails now reject legacy files and continue rejecting central feature repository ownership.",
+      "reason": "Owner ports20 versus public read contracts6, Meals implementation dependency, central Errors facade and residual FavoriteMealId/MealId Domain references documented. Canonical manifest replaces stale central paths. Existing architecture policy is applied, not redesigned.",
       "baseRef": "HEAD",
-      "gitHead": "664e0f0a86b02917bff97d8cb4c554d674b76a5e",
-      "reviewedAtUtc": "2026-09-03T18:19:18.6321702Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:26.0669760Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1154,13 +1202,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "4dfca8f3a498d22b9084a854a5b057f43d59482e0cbc97bc082dc2f5592824a1"
+          "sha256": "8ec8a240a2e4be36dcf24894c45d692b8a28ae0d833bf002d0c7eb2083f6e3ba"
         }
       ],
-      "reason": "Only five focused test projects moved into Shared/tests and Tooling/tests. Project identities, dependency targets, test bodies and runtime source are preserved; central test props and editor rules are retained. Solution ownership guards and current test commands were updated. Seven evaluation target literals follow these exact moved test sources; queries, thresholds, weights and historical results are unchanged. This is test placement, not a new runtime boundary or ADR.",
+      "reason": "All twelve planned suites ran unfiltered: 3693 passed, zero failures/skips; six new default-forwarding tests and ownership guards included. Full solution build and EF no-model-change check pass. Initial two style errors were fixed and successful build repeated. No collectors. Empty untracked directories are not source areas; a regression enforces this without exempting actual contracts.",
       "baseRef": "HEAD",
-      "gitHead": "0c3b805571fd75a396d4f8bbaedf556aedbdaaf1",
-      "reviewedAtUtc": "2026-09-02T21:26:07.2591422Z"
+      "gitHead": "ce95230d30f0585fb495ba55fedb2df5ce506d3f",
+      "reviewedAtUtc": "2026-09-04T00:39:26.4113255Z"
     }
   ]
 }

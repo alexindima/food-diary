@@ -8,7 +8,7 @@ Rules for `Modules/Favorites/Application/`.
 
 - Own favorite meal, product, and recipe use cases in one cohesive physical module.
 - Preserve the three favorite types as separate logical feature areas.
-- Depend on other business areas only through `FoodDiary.Application.Abstractions` contracts.
+- Use module-owned contracts and approved central compatibility contracts for other business areas. Own Favorites repository/source-reader ports in `Abstractions` and public read projections in `../Contracts`; exclude nested Abstractions sources from this project's compilation.
 - Reference Meals Domain directly for MealType used by the existing favorite-meal mappings; this does not add aggregate mutation capabilities.
 
 ## Boundaries

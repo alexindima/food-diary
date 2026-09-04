@@ -30,7 +30,7 @@ are reported separately; `none observed` never means proven isolation.
 | [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 0 | 4 | project-reference-matrix |
 | [Export](export.md) | read-composer | 0 | 1 | 0 | 4 | project-reference-matrix |
 | [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 0 | 4 | project-reference-matrix |
-| [Favorites](favorites.md) | aggregate-owner | 0 | 3 | 0 | 4 | project-reference-matrix |
+| [Favorites](favorites.md) | aggregate-owner | 0 | 7 | 0 | 4 | project-reference-matrix |
 | [Gamification](gamification.md) | read-composer | 0 | 4 | 0 | 5 | project-reference-matrix |
 | [Hydration](hydration.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix |
 | [Identity](identity.md) | aggregate-owner | 0 | 5 | 0 | 4 | project-reference-matrix-and-module-boundary-tests |

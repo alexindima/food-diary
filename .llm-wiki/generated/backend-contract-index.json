@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1071,
     "ambiguousContracts": 0,
-    "consumerEdges": 7704,
+    "consumerEdges": 7707,
     "productionConsumerEdges": 4570,
-    "testConsumerEdges": 3134,
+    "testConsumerEdges": 3137,
     "consumedContracts": 1071,
     "unconsumedContracts": 0
   },
@@ -9185,7 +9185,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9202,7 +9202,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9219,7 +9219,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9236,7 +9236,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9253,7 +9253,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9270,7 +9270,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9287,7 +9287,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9304,7 +9304,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9321,7 +9321,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9338,7 +9338,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9355,7 +9355,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9372,7 +9372,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9389,7 +9389,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9406,7 +9406,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9423,7 +9423,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -9440,7 +9440,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -64432,10 +64432,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
+      "consumerPath": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -64445,7 +64445,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Services/FavoriteMealReadService.cs",
@@ -64458,7 +64458,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
@@ -64471,7 +64471,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/FavoriteMealReadServiceCoverageTests.cs",
@@ -64484,7 +64484,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
@@ -64497,7 +64497,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -64510,7 +64510,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -64523,10 +64523,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
+      "consumerPath": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -64536,7 +64536,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
@@ -64549,7 +64549,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -64562,7 +64562,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -64575,7 +64575,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -64588,7 +64588,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/DependencyInjection.cs",
@@ -64601,7 +64601,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
@@ -64614,7 +64614,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
@@ -64627,7 +64627,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Services/FavoriteMealReadService.cs",
@@ -64640,7 +64640,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
@@ -64653,7 +64653,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs",
@@ -64666,7 +64666,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
@@ -64679,7 +64679,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.cs",
@@ -64692,7 +64692,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -64705,7 +64705,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -64718,7 +64718,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -64731,7 +64731,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
@@ -64744,7 +64744,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Common/IMealReadService.cs",
@@ -64757,7 +64757,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/DependencyInjection.cs",
@@ -64770,7 +64770,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Services/MealReadService.cs",
@@ -64783,7 +64783,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
@@ -64791,15 +64791,28 @@
       "referenceCount": 3
     },
     {
+      "contract": "IFavoriteMealSourceReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/FavoritesContractOwnershipTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IFavoriteMealWriteRepository",
       "roles": [
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
+      "consumerPath": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -64809,7 +64822,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
@@ -64822,7 +64835,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
@@ -64835,7 +64848,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
@@ -64848,7 +64861,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
@@ -64861,7 +64874,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -64874,7 +64887,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -64887,10 +64900,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
+      "consumerPath": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -64900,7 +64913,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Services/FavoriteProductReadService.cs",
@@ -64913,7 +64926,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
@@ -64926,7 +64939,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
@@ -64939,7 +64952,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -64952,7 +64965,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -64965,10 +64978,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
+      "consumerPath": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -64978,7 +64991,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
@@ -64991,7 +65004,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -65004,7 +65017,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -65017,7 +65030,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -65030,7 +65043,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/DependencyInjection.cs",
@@ -65043,7 +65056,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
@@ -65056,7 +65069,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
@@ -65069,7 +65082,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Services/FavoriteProductReadService.cs",
@@ -65082,7 +65095,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Products/Application/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
@@ -65095,7 +65108,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
@@ -65108,7 +65121,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
@@ -65121,7 +65134,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
@@ -65134,7 +65147,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
@@ -65147,7 +65160,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs",
@@ -65160,7 +65173,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -65173,7 +65186,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -65186,7 +65199,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -65199,10 +65212,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
+      "consumerPath": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65212,7 +65225,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
@@ -65225,7 +65238,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
@@ -65238,7 +65251,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
@@ -65251,7 +65264,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
@@ -65264,7 +65277,20 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/Favorites/FavoriteWriteContractTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IFavoriteProductWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -65277,7 +65303,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -65290,10 +65316,10 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
+      "consumerPath": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65303,7 +65329,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
@@ -65316,7 +65342,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
@@ -65329,7 +65355,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs",
@@ -65342,7 +65368,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -65355,7 +65381,7 @@
         "ReadModelRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -65368,10 +65394,10 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
+      "consumerPath": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65381,7 +65407,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
@@ -65394,7 +65420,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -65407,7 +65433,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -65420,7 +65446,7 @@
         "ReadRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -65433,7 +65459,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/DependencyInjection.cs",
@@ -65446,7 +65472,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
@@ -65459,7 +65485,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
@@ -65472,7 +65498,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
@@ -65485,7 +65511,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Recipes/Application/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
@@ -65498,7 +65524,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+        "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs",
@@ -65511,7 +65537,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
@@ -65524,7 +65550,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
@@ -65537,7 +65563,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs",
@@ -65550,7 +65576,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs",
@@ -65563,7 +65589,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -65576,7 +65602,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -65589,7 +65615,7 @@
         "Repository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
@@ -65602,10 +65628,10 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
+      "consumerPath": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -65615,7 +65641,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
@@ -65628,7 +65654,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
@@ -65641,7 +65667,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Favorites/Infrastructure/ModuleRegistration.cs",
@@ -65654,7 +65680,20 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/Favorites/FavoriteWriteContractTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "IFavoriteRecipeWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
@@ -65667,7 +65706,7 @@
         "WriteRepository"
       ],
       "definitionPaths": [
-        "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
+        "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",

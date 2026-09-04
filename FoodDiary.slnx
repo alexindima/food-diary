@@ -181,6 +181,8 @@
     <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Favorites/">
+    <Project Path="Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
+    <Project Path="Modules/Favorites/Contracts/FoodDiary.Modules.Favorites.Contracts.csproj" />
     <Project Path="Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj" />
     <Project Path="Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj" />
     <Project Path="Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj" />

@@ -17,16 +17,19 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: FavoriteMeals, FavoriteProducts, FavoriteRecipes
+- Abstraction-contract dependencies: FavoriteMeals, FavoriteProducts, FavoriteRecipes, Meals, Products, Recipes, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application.Abstractions/FavoriteMeals`
-- `FoodDiary.Application.Abstractions/FavoriteProducts`
-- `FoodDiary.Application.Abstractions/FavoriteRecipes`
+- `Modules/Favorites/Application`
+- `Modules/Favorites/Application/Abstractions`
+- `Modules/Favorites/Contracts`
+- `Modules/Favorites/Domain`
+- `Modules/Favorites/Infrastructure`
+- `Modules/Favorites/Infrastructure/Model`
 
 ## HTTP Surface
 
@@ -34,7 +37,7 @@ No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: project
+- Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FavoriteMeal, FavoriteProduct, FavoriteRecipe
 - Public contract files: 26
@@ -86,12 +89,14 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/Favorites/FavoriteCommandValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/Favorites/FavoriteWriteContractTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/TestProductOverview.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/TestRecipeOverview.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/ContentInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/Domain/FavoriteIdConversionTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FavoriteInvariantTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/FavoritesContractOwnershipTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/FavoritesModuleExtractionTests.cs`
 
 ## Working Rule

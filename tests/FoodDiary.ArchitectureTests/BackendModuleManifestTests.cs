@@ -66,10 +66,7 @@ public sealed class BackendModuleManifestTests {
     public void BoundaryManifest_AssignsEveryApplicationAbstractionAreaToOneOwner() {
         BackendModuleManifest manifest = LoadManifest();
         string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
-        string[] actualAreas = [.. Directory.GetDirectories(abstractionsRoot)
-            .Select(static path => Path.GetFileName(path) ?? throw new InvalidOperationException("Application abstraction area has no folder name."))
-            .Where(static name => name is not ("bin" or "obj"))
-            .Order(StringComparer.Ordinal)];
+        string[] actualAreas = ReadSourceAreas(abstractionsRoot);
         string[] declaredAreas = [.. manifest.ApplicationAbstractionOwnership.Keys.Order(StringComparer.Ordinal)];
         var validOwners = new HashSet<string>(manifest.Modules.Keys, StringComparer.Ordinal) {
             "Application.Runtime",
@@ -83,6 +80,28 @@ public sealed class BackendModuleManifestTests {
         Assert.Equal(actualAreas, declaredAreas, StringComparer.Ordinal);
         Assert.Empty(invalidOwners);
     }
+
+    [Fact]
+    public void AbstractionAreaInventory_IgnoresEmptyDirectoriesButIncludesNestedSources() {
+        string root = Path.Combine(Path.GetTempPath(), $"fooddiary-abstraction-areas-{Guid.NewGuid():N}");
+        try {
+            Directory.CreateDirectory(Path.Combine(root, "EmptyArea"));
+            string sourceDirectory = Path.Combine(root, "Owned", "Common");
+            Directory.CreateDirectory(sourceDirectory);
+            File.WriteAllText(Path.Combine(sourceDirectory, "IPort.cs"), "namespace Fixture; public interface IPort { }");
+
+            Assert.Equal(["Owned"], ReadSourceAreas(root));
+        } finally {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
+    private static string[] ReadSourceAreas(string abstractionsRoot) =>
+        [.. Directory.GetDirectories(abstractionsRoot)
+            .Where(static path => Path.GetFileName(path) is not ("bin" or "obj"))
+            .Where(static path => SourceScanner.SourceFiles(path).Any())
+            .Select(static path => Path.GetFileName(path) ?? throw new InvalidOperationException("Application abstraction area has no folder name."))
+            .Order(StringComparer.Ordinal)];
 
     private static BackendModuleManifest LoadManifest() {
         string path = ArchitectureTestPaths.FromRoot("docs", "architecture", "backend-modules.json");

@@ -24,9 +24,6 @@
     "Dietologist": "Dietologist",
     "Email": "Application.Runtime",
     "Fasting": "Fasting",
-    "FavoriteMeals": "Favorites",
-    "FavoriteProducts": "Favorites",
-    "FavoriteRecipes": "Favorites",
     "Hydration": "Hydration",
     "Meals": "Meals",
     "Nutrition": "Shared",
@@ -355,7 +352,7 @@
     },
     "Favorites": {
       "role": "aggregate-owner",
-      "physicalIsolation": "project",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix",
       "ownedEntities": [
         "FavoriteMeal",
@@ -363,22 +360,23 @@
         "FavoriteRecipe"
       ],
       "sourceMappings": {
+        "logicalRoot": "Modules/Favorites",
         "applicationProjects": [
-          "FoodDiary.Application.Favorites"
+          "Modules/Favorites/Application"
         ],
+        "applicationAbstractionProjects": ["Modules/Favorites/Application/Abstractions"],
+        "contractProjects": ["Modules/Favorites/Contracts"],
         "abstractionAreas": [
-          "FavoriteMeals",
-          "FavoriteProducts",
-          "FavoriteRecipes"
+          "Modules/Favorites/Application/Abstractions"
         ],
+        "domainProjects": ["Modules/Favorites/Domain"],
         "domainAreas": [
-          "FavoriteMeals",
-          "FavoriteProducts",
-          "FavoriteRecipes"
+          "Modules/Favorites/Domain"
         ],
-        "persistenceAreas": [
-          "Favorites"
-        ]
+        "infrastructureProjects": ["Modules/Favorites/Infrastructure"],
+        "persistenceModelProjects": ["Modules/Favorites/Infrastructure/Model"],
+        "persistenceAreas": ["Modules/Favorites/Infrastructure"],
+        "testAreas": ["Modules/Favorites/tests"]
       }
     },
     "Gamification": {

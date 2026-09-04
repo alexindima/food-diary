@@ -42,6 +42,8 @@ Use this file when deciding where backend code belongs.
 | Hydration infrastructure | `Modules/Hydration/Infrastructure` | Hydration repository implementation and complete module registration | HTTP transport and central migrations |
 | Favorites domain | `Modules/Favorites/Domain` | Favorite meal, product, and recipe aggregates and identifiers with preserved CLR namespaces | Application orchestration, EF mappings, transport |
 | Favorites use cases | `Modules/Favorites/Application` | Favorite commands, queries, validators, mappings, read services, and application registration with preserved assembly identity | Persistence implementations and HTTP transport |
+| Favorites owner ports | `Modules/Favorites/Application/Abstractions` | Repository ports, persistence projections, errors and consumed source-meal reader | Public consumer read API, application implementations |
+| Favorites consumer contracts | `Modules/Favorites/Contracts` | Three semantic read services and their projection models | Aggregate repositories, mutations, EF and HTTP transport |
 | Favorites persistence model | `Modules/Favorites/Infrastructure/Model` | Favorites EF configurations and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
 | Favorites infrastructure | `Modules/Favorites/Infrastructure` | Favorites repositories and complete module registration | HTTP transport and central migrations |
 | WeeklyGoals contracts | `Modules/WeeklyGoals/Contracts` | Stable weekly-goal read model and read-service contract | Repositories, handlers, EF, HTTP transport |

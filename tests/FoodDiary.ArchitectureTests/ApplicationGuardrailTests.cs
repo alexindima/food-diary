@@ -643,6 +643,7 @@ public sealed class ApplicationGuardrailTests {
             "Results",
             facadeFileName);
         string featureErrorsPath = featureDirectory switch {
+            "FavoriteMeals" or "FavoriteProducts" or "FavoriteRecipes" => Path.Combine(root, "Modules", "Favorites", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
             "Admin" => Path.Combine(root, "Modules", "Admin", "Application", "Abstractions", "Admin", featureCommonDirectory, featureErrorsFileName),
             "Ai" => Path.Combine(root, "Modules", "Ai", "Application", "Abstractions", "Ai", featureCommonDirectory, featureErrorsFileName),
             "MealPlans" or "ShoppingLists" => Path.Combine(root, "Modules", "MealPlanning", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
@@ -1458,7 +1459,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string contractPath = Path.Combine(
             root,
-            "FoodDiary.Application.Abstractions",
+            "Modules", "Favorites", "Application", "Abstractions",
             "FavoriteMeals",
             "Common",
             "IFavoriteMealReadRepository.cs");
@@ -1584,7 +1585,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string contractPath = Path.Combine(
             root,
-            "FoodDiary.Application.Abstractions",
+            "Modules", "Favorites", "Application", "Abstractions",
             "FavoriteProducts",
             "Common",
             "IFavoriteProductReadRepository.cs");
@@ -1606,7 +1607,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string contractPath = Path.Combine(
             root,
-            "FoodDiary.Application.Abstractions",
+            "Modules", "Favorites", "Application", "Abstractions",
             "FavoriteRecipes",
             "Common",
             "IFavoriteRecipeReadRepository.cs");

@@ -54,6 +54,8 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Fasting persistence model: `Modules/Fasting/Infrastructure/Model/AGENTS.md`
 - Favorites logical module: `Modules/Favorites/AGENTS.md`
 - Favorites application: `Modules/Favorites/Application/AGENTS.md`
+- Favorites application ports: `Modules/Favorites/Application/Abstractions/AGENTS.md`
+- Favorites consumer contracts: `Modules/Favorites/Contracts/AGENTS.md`
 - Hydration logical module: `Modules/Hydration/AGENTS.md`
 - Hydration application abstractions: `Modules/Hydration/Application/Abstractions/AGENTS.md`
 - Hydration contracts: `Modules/Hydration/Contracts/AGENTS.md`

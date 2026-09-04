@@ -25,4 +25,4 @@ Rules for `FoodDiary.Application.Abstractions/`.
 - Build: `dotnet build FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj`
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
-The existing FavoriteProductReadModel uses ProductType and MeasurementUnit from Products Domain.Contracts. Reference this exact owner; do not add aggregate behavior or change the projection contract.
+Favorites ports/errors and persistence projections belong to Modules/Favorites/Application/Abstractions; public read services/models belong to Modules/Favorites/Contracts. Keep only the delegating Errors.Favorite* facades here. Do not restore central FavoriteMeals/FavoriteProducts/FavoriteRecipes source folders or a direct Favorites Domain reference.

@@ -1084,188 +1084,6 @@
       "line": 4
     },
     {
-      "name": "FavoriteMealErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Common/FavoriteMealErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "IFavoriteMealReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IFavoriteMealReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IFavoriteMealReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IFavoriteMealRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IFavoriteMealSourceReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IFavoriteMealWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "FavoriteMealModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FavoriteMealReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FavoriteMealSourceModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealSourceModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FavoriteProductErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Common/FavoriteProductErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "IFavoriteProductReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IFavoriteProductReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IFavoriteProductReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IFavoriteProductRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IFavoriteProductWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "FavoriteProductModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FavoriteProductReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
-      "line": 4
-    },
-    {
-      "name": "FavoriteRecipeErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/FavoriteRecipeErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "IFavoriteRecipeReadModelRepository",
-      "kind": "interface",
-      "role": "ReadModelRepository",
-      "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IFavoriteRecipeReadRepository",
-      "kind": "interface",
-      "role": "ReadRepository",
-      "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "IFavoriteRecipeReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IFavoriteRecipeRepository",
-      "kind": "interface",
-      "role": "Repository",
-      "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
-      "line": 2
-    },
-    {
-      "name": "IFavoriteRecipeWriteRepository",
-      "kind": "interface",
-      "role": "WriteRepository",
-      "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs",
-      "line": 5
-    },
-    {
-      "name": "FavoriteRecipeModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FavoriteRecipeReadModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
-      "line": 2
-    },
-    {
       "name": "HydrationEntryErrors",
       "kind": "class",
       "role": "Other",
@@ -16071,6 +15889,146 @@
       "line": 8
     },
     {
+      "name": "FavoriteMealErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/FavoriteMealErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "IFavoriteMealReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IFavoriteMealReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IFavoriteMealRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IFavoriteMealSourceReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IFavoriteMealWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "FavoriteMealReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FavoriteMealSourceModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Models/FavoriteMealSourceModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FavoriteProductErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/FavoriteProductErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "IFavoriteProductReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IFavoriteProductReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IFavoriteProductRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IFavoriteProductWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "FavoriteProductReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
+      "line": 4
+    },
+    {
+      "name": "FavoriteRecipeErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/FavoriteRecipeErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "IFavoriteRecipeReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IFavoriteRecipeReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "IFavoriteRecipeRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IFavoriteRecipeWriteRepository",
+      "kind": "interface",
+      "role": "WriteRepository",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs",
+      "line": 5
+    },
+    {
+      "name": "FavoriteRecipeReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
+      "line": 2
+    },
+    {
       "name": "RequiredIdParser",
       "kind": "class",
       "role": "Other",
@@ -16335,6 +16293,48 @@
       "role": "Service",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
       "line": 7
+    },
+    {
+      "name": "IFavoriteMealReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "FavoriteMealModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Models/FavoriteMealModel.cs",
+      "line": 2
+    },
+    {
+      "name": "IFavoriteProductReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "FavoriteProductModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Contracts/FavoriteProducts/Models/FavoriteProductModel.cs",
+      "line": 2
+    },
+    {
+      "name": "IFavoriteRecipeReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "FavoriteRecipeModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Contracts/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
+      "line": 2
     },
     {
       "name": "FavoriteMeal",
@@ -25384,42 +25384,42 @@
     },
     {
       "interface": "IFavoriteMealReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs",
+      "interfacePath": "Modules/Favorites/Contracts/FavoriteMeals/Common/IFavoriteMealReadService.cs",
       "implementation": "FavoriteMealReadService",
       "implementationPath": "Modules/Favorites/Application/FavoriteMeals/Services/FavoriteMealReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFavoriteMealRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
+      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
       "implementation": "FavoriteMealRepository",
       "implementationPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFavoriteProductReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs",
+      "interfacePath": "Modules/Favorites/Contracts/FavoriteProducts/Common/IFavoriteProductReadService.cs",
       "implementation": "FavoriteProductReadService",
       "implementationPath": "Modules/Favorites/Application/FavoriteProducts/Services/FavoriteProductReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFavoriteProductRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
+      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
       "implementation": "FavoriteProductRepository",
       "implementationPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFavoriteRecipeReadService",
-      "interfacePath": "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs",
+      "interfacePath": "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs",
       "implementation": "FavoriteRecipeReadService",
       "implementationPath": "Modules/Favorites/Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IFavoriteRecipeRepository",
-      "interfacePath": "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
+      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
       "implementation": "FavoriteRecipeRepository",
       "implementationPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
       "confidence": "naming-convention"

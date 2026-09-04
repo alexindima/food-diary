@@ -38,6 +38,8 @@ COPY Modules/Fasting/Domain/*.csproj Modules/Fasting/Domain/
 COPY Modules/Fasting/Infrastructure/*.csproj Modules/Fasting/Infrastructure/
 COPY Modules/Fasting/Infrastructure/Model/*.csproj Modules/Fasting/Infrastructure/Model/
 COPY Modules/Favorites/Application/*.csproj Modules/Favorites/Application/
+COPY Modules/Favorites/Application/Abstractions/*.csproj Modules/Favorites/Application/Abstractions/
+COPY Modules/Favorites/Contracts/*.csproj Modules/Favorites/Contracts/
 COPY Modules/Favorites/Domain/*.csproj Modules/Favorites/Domain/
 COPY Modules/Favorites/Infrastructure/*.csproj Modules/Favorites/Infrastructure/
 COPY Modules/Favorites/Infrastructure/Model/*.csproj Modules/Favorites/Infrastructure/Model/
@@ -222,6 +224,8 @@ COPY Modules/Fasting/Infrastructure/ Modules/Fasting/Infrastructure/
 COPY Modules/Fasting/Infrastructure/Model/ Modules/Fasting/Infrastructure/Model/
 COPY Modules/Favorites/ Modules/Favorites/
 COPY Modules/Favorites/Application/ Modules/Favorites/Application/
+COPY Modules/Favorites/Application/Abstractions/ Modules/Favorites/Application/Abstractions/
+COPY Modules/Favorites/Contracts/ Modules/Favorites/Contracts/
 COPY Modules/Favorites/Domain/ Modules/Favorites/Domain/
 COPY Modules/Favorites/Infrastructure/ Modules/Favorites/Infrastructure/
 COPY Modules/Favorites/Infrastructure/Model/ Modules/Favorites/Infrastructure/Model/

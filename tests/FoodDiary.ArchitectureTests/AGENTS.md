@@ -23,6 +23,8 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Rules
 
+- `FavoritesContractOwnershipTests` protects the 20 owner-port/error/read-model files and six public read-service/projection files in separate Favorites projects, rejects central duplicates and aggregate/repository types in consumer contracts, and keeps Meals' source-reader dependency one-way.
+
 - `OutboxReplayOwnershipTests` rejects concrete stream types/names in the common
   replay coordinator and saving/transactions in its module-owned stream adapters.
   Keep the same scoped context, explicit tie ordering and email replay prohibition.
