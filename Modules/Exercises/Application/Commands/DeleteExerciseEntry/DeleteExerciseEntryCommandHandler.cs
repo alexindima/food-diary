@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Exercises.Internal;
@@ -37,7 +36,7 @@ public sealed class DeleteExerciseEntryCommandHandler(
         ExerciseEntryId entryId = entryIdResult.Value;
         ExerciseEntry? entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (entry is null) {
-            return Result.Failure(Errors.Exercise.NotAccessible(command.EntryId));
+            return Result.Failure(ExerciseErrors.NotAccessible(command.EntryId));
         }
 
         await repository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);

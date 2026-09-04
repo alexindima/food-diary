@@ -71,6 +71,7 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/MeasurementErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesValidatorTests.cs`

@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.BodyMetrics.Common;
@@ -45,7 +44,7 @@ public sealed class UpdateWeightEntryCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (existingEntry is null) {
-            return Result.Failure<WeightEntryModel>(Errors.WeightEntry.NotAccessible(command.WeightEntryId));
+            return Result.Failure<WeightEntryModel>(WeightEntryErrors.NotAccessible(command.WeightEntryId));
         }
 
         DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
@@ -56,7 +55,7 @@ public sealed class UpdateWeightEntryCommandHandler(
 
         if (duplicate is not null && duplicate.Id != existingEntry.Id) {
             return Result.Failure<WeightEntryModel>(
-                Errors.WeightEntry.AlreadyExists(normalizedDate));
+                WeightEntryErrors.AlreadyExists(normalizedDate));
         }
 
         existingEntry.Update(command.WeightKg, normalizedDate);

@@ -6,6 +6,9 @@ public sealed class RetiredErrorFacadeTests {
     [InlineData("DailyAdvices", "DailyAdvice")]
     [InlineData("Fasting", "Fasting")]
     [InlineData("Hydration", "HydrationEntry")]
+    [InlineData("BodyMetrics", "WeightEntry")]
+    [InlineData("BodyMetrics", "WaistEntry")]
+    [InlineData("Exercises", "Exercise")]
     public void CentralAbstractions_DoNotDeclareOrExportRetiredFacade(string module, string facade) {
         string central = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
         string[] declarations = [.. SourceScanner.SourceFiles(central)

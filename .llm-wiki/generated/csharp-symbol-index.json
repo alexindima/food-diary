@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3547,
-    "symbols": 3516,
+    "sourceFiles": 3544,
+    "symbols": 3510,
     "interfaceImplementationLinks": 235,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 1841,
+      "class": 1835,
       "enum": 62,
       "interface": 424,
       "record": 1069,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1379,
+      "Other": 1373,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -324,20 +324,6 @@
       "name": "Errors",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Exercise.cs",
-      "line": 6
-    },
-    {
-      "name": "Exercise",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Exercise.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.FavoriteMeal.cs",
       "line": 6
     },
@@ -548,20 +534,6 @@
       "name": "Errors",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.WaistEntry.cs",
-      "line": 6
-    },
-    {
-      "name": "WaistEntry",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.WaistEntry.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Wearable.cs",
       "line": 6
     },
@@ -570,20 +542,6 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Wearable.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.WeightEntry.cs",
-      "line": 6
-    },
-    {
-      "name": "WeightEntry",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.WeightEntry.cs",
       "line": 8
     },
     {
@@ -10391,7 +10349,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "CreateWaistEntryCommandValidator",
@@ -10412,7 +10370,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "DeleteWaistEntryCommandValidator",
@@ -10433,7 +10391,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "UpdateWaistEntryCommandValidator",
@@ -10552,7 +10510,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "CreateWeightEntryCommandValidator",
@@ -10573,7 +10531,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "DeleteWeightEntryCommandValidator",
@@ -10594,7 +10552,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "UpdateWeightEntryCommandValidator",
@@ -13681,7 +13639,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Exercises/Application/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "UpdateExerciseEntryCommand",
@@ -13695,7 +13653,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "UpdateExerciseEntryCommandValidator",

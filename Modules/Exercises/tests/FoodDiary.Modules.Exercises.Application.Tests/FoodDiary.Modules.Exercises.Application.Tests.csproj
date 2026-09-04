@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Application\FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />

@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.BodyMetrics.Common;
@@ -39,7 +38,7 @@ public sealed class CreateWaistEntryCommandHandler(
             }
 
             return Result.Failure<WaistEntryModel>(
-                Errors.WaistEntry.AlreadyExists(normalizedDate));
+                WaistEntryErrors.AlreadyExists(normalizedDate));
         }
 
         var entry = WaistEntry.Create(userId, normalizedDate, command.CircumferenceCm);

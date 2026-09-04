@@ -17,6 +17,8 @@ Rules for `FoodDiary.Application.Abstractions/`.
 
 ## Rules
 
+- BodyMetrics and Exercises own their error factories and direct callers. Do not recreate Errors.WeightEntry, Errors.WaistEntry, Errors.Exercise or central references to their owner Abstractions. Existing consumers reference the owners explicitly; see docs/ai/measurement-error-facades.md.
+
 - DailyAdvices, Fasting and Hydration own their error factories and direct callers; their central Errors facades and owner references are retired. Dietologist and Meals still have delegating facades pending a separate cross-module consumer review. Preserve codes/messages/kinds; owner abstractions must not depend back on this assembly. See docs/ai/error-facade-retirement.md.
 - Do not reference `FoodDiary.Web.Api`, `FoodDiary.Presentation.Api`, or `FoodDiary.Infrastructure`.
 - Do not introduce ASP.NET types such as `HttpContext`, `IActionResult`, or `ControllerBase`.

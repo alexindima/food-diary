@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.BodyMetrics.Common;
@@ -45,7 +44,7 @@ public sealed class UpdateWaistEntryCommandHandler(
             cancellationToken).ConfigureAwait(false);
 
         if (entry is null) {
-            return Result.Failure<WaistEntryModel>(Errors.WaistEntry.NotAccessible(command.WaistEntryId));
+            return Result.Failure<WaistEntryModel>(WaistEntryErrors.NotAccessible(command.WaistEntryId));
         }
 
         DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
@@ -56,7 +55,7 @@ public sealed class UpdateWaistEntryCommandHandler(
 
         if (existing is not null && existing.Id != entry.Id) {
             return Result.Failure<WaistEntryModel>(
-                Errors.WaistEntry.AlreadyExists(normalizedDate));
+                WaistEntryErrors.AlreadyExists(normalizedDate));
         }
 
         entry.Update(command.CircumferenceCm, normalizedDate);

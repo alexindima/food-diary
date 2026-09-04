@@ -3,7 +3,6 @@
     <ProjectReference Include="../Modules/Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Modules\Usda\Application\Abstractions\FoodDiary.Modules.Usda.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Modules\BodyMetrics\Application\Abstractions\FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Modules\Wearables\Application\Abstractions\FoodDiary.Modules.Wearables.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Modules\Cycles\Application\Abstractions\FoodDiary.Modules.Cycles.Application.Abstractions.csproj" />
@@ -12,7 +11,6 @@
     <ProjectReference Include="..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
     <ProjectReference Include="..\Modules\MealPlanning\Application\Abstractions\FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Modules\Exercises\Application\Abstractions\FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/RecipeCommunity/Application/Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Recipes/Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" />

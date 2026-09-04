@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Exercises.Internal;
@@ -51,7 +50,7 @@ public sealed class UpdateExerciseEntryCommandHandler(
         ExerciseEntryId entryId = entryIdResult.Value;
         ExerciseEntry? entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (entry is null) {
-            return Result.Failure<ExerciseEntryModel>(Errors.Exercise.NotAccessible(command.EntryId));
+            return Result.Failure<ExerciseEntryModel>(ExerciseErrors.NotAccessible(command.EntryId));
         }
 
         ExerciseType? exerciseType = null;

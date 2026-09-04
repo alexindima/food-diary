@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4770,
+    "productionFiles": 4767,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -2697,14 +2697,6 @@
       "structuralRiskScore": 0.32
     },
     {
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Exercise.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.FavoriteMeal.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
@@ -2825,28 +2817,12 @@
       "structuralRiskScore": 0.4
     },
     {
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.WaistEntry.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Wearable.cs",
       "nonBlankLines": 13,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.26
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.WeightEntry.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
     },
     {
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.cs",
@@ -22290,11 +22266,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
-      "nonBlankLines": 44,
+      "nonBlankLines": 43,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.38
+      "structuralRiskScore": 7.36
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandValidator.cs",
@@ -22314,11 +22290,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
-      "nonBlankLines": 44,
+      "nonBlankLines": 43,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.38
+      "structuralRiskScore": 7.36
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandValidator.cs",
@@ -22338,11 +22314,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-      "nonBlankLines": 58,
+      "nonBlankLines": 57,
       "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.66
+      "structuralRiskScore": 10.64
     },
     {
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandValidator.cs",
@@ -22474,11 +22450,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
-      "nonBlankLines": 41,
+      "nonBlankLines": 40,
       "decisionPoints": 2,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.82
+      "structuralRiskScore": 5.8
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandValidator.cs",
@@ -22498,11 +22474,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
-      "nonBlankLines": 44,
+      "nonBlankLines": 43,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.38
+      "structuralRiskScore": 7.36
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandValidator.cs",
@@ -22522,11 +22498,11 @@
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-      "nonBlankLines": 58,
+      "nonBlankLines": 57,
       "decisionPoints": 5,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.66
+      "structuralRiskScore": 10.64
     },
     {
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandValidator.cs",
@@ -26106,11 +26082,11 @@
     },
     {
       "path": "Modules/Exercises/Application/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
-      "nonBlankLines": 41,
+      "nonBlankLines": 40,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.32
+      "structuralRiskScore": 7.3
     },
     {
       "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
@@ -26122,11 +26098,11 @@
     },
     {
       "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
-      "nonBlankLines": 67,
+      "nonBlankLines": 66,
       "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.34
+      "structuralRiskScore": 12.32
     },
     {
       "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandValidator.cs",
@@ -39496,7 +39472,7 @@
       "name": "CreateWaistEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
-      "line": 14,
+      "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
@@ -39509,7 +39485,7 @@
       "name": "CreateWeightEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
-      "line": 14,
+      "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
@@ -39574,7 +39550,7 @@
       "name": "DeleteExerciseEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Exercises/Application/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
-      "line": 12,
+      "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/Exercises/ExercisesFeatureTests.cs",
@@ -39704,7 +39680,7 @@
       "name": "DeleteWaistEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
-      "line": 12,
+      "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
@@ -39717,7 +39693,7 @@
       "name": "DeleteWeightEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
-      "line": 12,
+      "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
@@ -40685,7 +40661,7 @@
       "name": "UpdateExerciseEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Exercises/Application/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
-      "line": 15,
+      "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/Exercises/ExercisesFeatureTests.cs",
@@ -40869,7 +40845,7 @@
       "name": "UpdateWaistEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-      "line": 14,
+      "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
@@ -40882,7 +40858,7 @@
       "name": "UpdateWeightEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/BodyMetrics/Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-      "line": 14,
+      "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",

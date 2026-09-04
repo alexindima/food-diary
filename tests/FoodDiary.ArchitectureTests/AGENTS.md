@@ -25,6 +25,8 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Rules
 
+- RetiredErrorFacadeTests also rejects WeightEntry/WaistEntry/Exercise central facades and BodyMetrics/Exercises owner exports. Exact contract and invariant date tests live in the existing owner application suites.
+
 - UsersIdentityContractOwnershipTests separates Users semantic contracts from
   aggregate repository ports, protects Identity's one-way dependency on Users
   Contracts, and retains only the explicit central resolver/SSO seams. Central

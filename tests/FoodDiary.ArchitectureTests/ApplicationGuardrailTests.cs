@@ -571,7 +571,6 @@ public sealed class ApplicationGuardrailTests {
             "Errors.Cycle.cs",
             "Errors.CycleDay.cs",
             "Errors.Dietologist.cs",
-            "Errors.Exercise.cs",
             "Errors.FavoriteMeal.cs",
             "Errors.FavoriteProduct.cs",
             "Errors.FavoriteRecipe.cs",
@@ -585,9 +584,7 @@ public sealed class ApplicationGuardrailTests {
             "Errors.ShoppingList.cs",
             "Errors.Usda.cs",
             "Errors.User.cs",
-            "Errors.WaistEntry.cs",
             "Errors.Wearable.cs",
-            "Errors.WeightEntry.cs",
         ];
         var allowedFiles = commonTaxonomyFiles
             .Concat(migratedFacadeFiles)
@@ -604,9 +601,6 @@ public sealed class ApplicationGuardrailTests {
 
     [Theory]
     [InlineData("Errors.Product.cs", "Products", "Common", "ProductErrors.cs", "ProductErrors.", "Product.")]
-    [InlineData("Errors.WeightEntry.cs", "WeightEntries", "Common", "WeightEntryErrors.cs", "WeightEntryErrors.", "WeightEntry.")]
-    [InlineData("Errors.WaistEntry.cs", "WaistEntries", "Common", "WaistEntryErrors.cs", "WaistEntryErrors.", "WaistEntry.")]
-    [InlineData("Errors.Exercise.cs", "Exercises", "Common", "ExerciseErrors.cs", "ExerciseErrors.", "Exercise.")]
     [InlineData("Errors.FavoriteProduct.cs", "FavoriteProducts", "Common", "FavoriteProductErrors.cs", "FavoriteProductErrors.", "FavoriteProduct.")]
     [InlineData("Errors.FavoriteRecipe.cs", "FavoriteRecipes", "Common", "FavoriteRecipeErrors.cs", "FavoriteRecipeErrors.", "FavoriteRecipe.")]
     [InlineData("Errors.RecipeComment.cs", "RecipeComments", "Common", "RecipeCommentErrors.cs", "RecipeCommentErrors.", "RecipeComment.")]

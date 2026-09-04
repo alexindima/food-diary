@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.BodyMetrics.Common;
@@ -41,7 +40,7 @@ public sealed class DeleteWeightEntryCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (entry is null) {
-            return Result.Failure(Errors.WeightEntry.NotAccessible(command.WeightEntryId));
+            return Result.Failure(WeightEntryErrors.NotAccessible(command.WeightEntryId));
         }
 
         await weightEntryRepository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);
