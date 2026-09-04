@@ -29,12 +29,12 @@ public sealed class ExtendActiveFastingCommandHandler(
         UserId userId = userIdResult.Value;
         FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (current is null) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+            return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
 
         FastingPlan? plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (plan is null) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+            return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
         if (plan.Type != FastingPlanType.Extended) {
             return Result.Failure<FastingSessionModel>(
@@ -47,7 +47,7 @@ public sealed class ExtendActiveFastingCommandHandler(
             return Result.Failure<FastingSessionModel>(
                 Errors.Validation.Invalid(nameof(command.AdditionalHours), "Additional fasting hours are invalid."));
         } catch (InvalidOperationException) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+            return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
 
         await fastingOccurrenceRepository.UpdateAsync(current, cancellationToken).ConfigureAwait(false);

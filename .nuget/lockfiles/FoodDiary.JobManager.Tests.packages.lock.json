@@ -695,12 +695,9 @@
           "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.DailyAdvices.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Fasting.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Hydration.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Application.Abstractions": "[1.0.0, )",
@@ -1694,6 +1691,7 @@
         "dependencies": {
           "FoodDiary.Application.Fasting": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Modules.Fasting.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Fasting.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
@@ -1799,14 +1797,6 @@
           "FoodDiary.Outbox.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
-        }
-      },
-      "fooddiary.modules.hydration.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Hydration.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
         }
       },
       "fooddiary.modules.hydration.contracts": {

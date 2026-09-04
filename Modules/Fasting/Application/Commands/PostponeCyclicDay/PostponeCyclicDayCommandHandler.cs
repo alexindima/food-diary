@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Application.Common;
@@ -30,15 +29,15 @@ public sealed class PostponeCyclicDayCommandHandler(
         UserId userId = userIdResult.Value;
         FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (current is null) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+            return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
 
         FastingPlan? plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (plan is null) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+            return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
         if (!FastingCyclicTransitionPlanner.CanTransition(plan, current)) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.InvalidCyclicAction("Only an active cyclic period can be postponed."));
+            return Result.Failure<FastingSessionModel>(FastingErrors.InvalidCyclicAction("Only an active cyclic period can be postponed."));
         }
 
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
@@ -47,9 +46,9 @@ public sealed class PostponeCyclicDayCommandHandler(
             current.Postpone(now, postponedUntil);
             plan.ScheduleNextCyclicPhase(postponedUntil);
         } catch (ArgumentOutOfRangeException) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.InvalidCyclicAction("The cyclic period can only be postponed to a later date."));
+            return Result.Failure<FastingSessionModel>(FastingErrors.InvalidCyclicAction("The cyclic period can only be postponed to a later date."));
         } catch (InvalidOperationException) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.InvalidCyclicAction("The current cyclic period cannot be postponed."));
+            return Result.Failure<FastingSessionModel>(FastingErrors.InvalidCyclicAction("The current cyclic period cannot be postponed."));
         }
 
         FastingOccurrence nextOccurrence = FastingCyclicTransitionPlanner.CreateAfterPostpone(plan, current, userId, now);

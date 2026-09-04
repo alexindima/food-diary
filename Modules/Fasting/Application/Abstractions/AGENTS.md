@@ -7,7 +7,7 @@ Rules for `Modules/Fasting/Application/Abstractions/`.
 ## Role
 
 - Own internal repository ports, persistence projections, and application read abstractions for Fasting.
-- Own FastingErrors; preserve codes/messages/kinds and the central delegating facade.
+- Own FastingErrors; callers use this factory directly. Preserve codes/messages/kinds; do not restore the retired central Errors.Fasting facade.
 - Preserve the legacy `FoodDiary.Application.Abstractions.Fasting` namespace during extraction while all consumers migrate by project reference.
 
 ## Boundaries

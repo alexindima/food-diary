@@ -570,14 +570,11 @@ public sealed class ApplicationGuardrailTests {
             "Errors.Meal.cs",
             "Errors.Cycle.cs",
             "Errors.CycleDay.cs",
-            "Errors.DailyAdvice.cs",
             "Errors.Dietologist.cs",
             "Errors.Exercise.cs",
-            "Errors.Fasting.cs",
             "Errors.FavoriteMeal.cs",
             "Errors.FavoriteProduct.cs",
             "Errors.FavoriteRecipe.cs",
-            "Errors.HydrationEntry.cs",
             "Errors.Image.cs",
             "Errors.Lesson.cs",
             "Errors.MailInbox.cs",
@@ -609,18 +606,15 @@ public sealed class ApplicationGuardrailTests {
     [InlineData("Errors.Product.cs", "Products", "Common", "ProductErrors.cs", "ProductErrors.", "Product.")]
     [InlineData("Errors.WeightEntry.cs", "WeightEntries", "Common", "WeightEntryErrors.cs", "WeightEntryErrors.", "WeightEntry.")]
     [InlineData("Errors.WaistEntry.cs", "WaistEntries", "Common", "WaistEntryErrors.cs", "WaistEntryErrors.", "WaistEntry.")]
-    [InlineData("Errors.HydrationEntry.cs", "Hydration", "Common", "HydrationEntryErrors.cs", "HydrationEntryErrors.", "HydrationEntry.")]
     [InlineData("Errors.Exercise.cs", "Exercises", "Common", "ExerciseErrors.cs", "ExerciseErrors.", "Exercise.")]
     [InlineData("Errors.FavoriteProduct.cs", "FavoriteProducts", "Common", "FavoriteProductErrors.cs", "FavoriteProductErrors.", "FavoriteProduct.")]
     [InlineData("Errors.FavoriteRecipe.cs", "FavoriteRecipes", "Common", "FavoriteRecipeErrors.cs", "FavoriteRecipeErrors.", "FavoriteRecipe.")]
     [InlineData("Errors.RecipeComment.cs", "RecipeComments", "Common", "RecipeCommentErrors.cs", "RecipeCommentErrors.", "RecipeComment.")]
     [InlineData("Errors.ShoppingList.cs", "ShoppingLists", "Common", "ShoppingListErrors.cs", "ShoppingListErrors.", "ShoppingList.")]
     [InlineData("Errors.MealPlan.cs", "MealPlans", "Common", "MealPlanErrors.cs", "MealPlanErrors.", "MealPlan.")]
-    [InlineData("Errors.DailyAdvice.cs", "DailyAdvices", "Common", "DailyAdviceErrors.cs", "DailyAdviceErrors.", "DailyAdvice.")]
     [InlineData("Errors.Cycle.cs", "Cycles", "Common", "CycleErrors.cs", "CycleErrors.", "Cycle.")]
     [InlineData("Errors.CycleDay.cs", "Cycles", "Common", "CycleDayErrors.cs", "CycleDayErrors.", "CycleDay.")]
     [InlineData("Errors.Image.cs", "Images", "Common", "ImageErrors.cs", "ImageErrors.", "Image.")]
-    [InlineData("Errors.Fasting.cs", "Fasting", "Common", "FastingErrors.cs", "FastingErrors.", "Fasting.")]
     [InlineData("Errors.Wearable.cs", "Wearables", "Common", "WearableErrors.cs", "WearableErrors.", "Wearable.")]
     [InlineData("Errors.Usda.cs", "Usda", "Common", "UsdaErrors.cs", "UsdaErrors.", "Usda.")]
     [InlineData("Errors.FavoriteMeal.cs", "FavoriteMeals", "Common", "FavoriteMealErrors.cs", "FavoriteMealErrors.", "FavoriteMeal.")]

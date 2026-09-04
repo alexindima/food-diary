@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3550,
-    "symbols": 3522,
+    "sourceFiles": 3547,
+    "symbols": 3516,
     "interfaceImplementationLinks": 235,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 1847,
+      "class": 1841,
       "enum": 62,
       "interface": 424,
       "record": 1069,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1385,
+      "Other": 1379,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -310,20 +310,6 @@
       "name": "Errors",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.DailyAdvice.cs",
-      "line": 6
-    },
-    {
-      "name": "DailyAdvice",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.DailyAdvice.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Dietologist.cs",
       "line": 6
     },
@@ -346,20 +332,6 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Exercise.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Fasting.cs",
-      "line": 6
-    },
-    {
-      "name": "Fasting",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Fasting.cs",
       "line": 8
     },
     {
@@ -403,20 +375,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.FavoriteRecipe.cs",
       "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.HydrationEntry.cs",
-      "line": 5
-    },
-    {
-      "name": "HydrationEntry",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.HydrationEntry.cs",
-      "line": 7
     },
     {
       "name": "Errors",
@@ -11826,7 +11784,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/DailyAdvices/Application/Services/DailyAdviceReadService.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "DailyAdviceSelector",
@@ -14325,7 +14283,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "EndFastingCommandValidator",
@@ -14367,7 +14325,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "PostponeCyclicDayCommandValidator",
@@ -14423,7 +14381,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "SkipCyclicDayCommandValidator",
@@ -14437,7 +14395,7 @@
       "kind": "class",
       "role": "Factory",
       "path": "Modules/Fasting/Application/Commands/StartFasting/FastingStartFactory.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "StartFastingCommand",
@@ -14451,7 +14409,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "StartFastingCommandValidator",
@@ -16026,7 +15984,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "DeleteHydrationEntryCommandValidator",
@@ -16047,7 +16005,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "UpdateHydrationEntryCommandValidator",

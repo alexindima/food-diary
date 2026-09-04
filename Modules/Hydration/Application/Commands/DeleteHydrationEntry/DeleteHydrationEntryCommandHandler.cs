@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Hydration.Internal;
@@ -37,7 +36,7 @@ public sealed class DeleteHydrationEntryCommandHandler(
 
         HydrationEntry? entry = await repository.GetByIdForUpdateAsync(hydrationEntryId, cancellationToken).ConfigureAwait(false);
         if (entry is null || entry.UserId != userId) {
-            return Result.Failure(Errors.HydrationEntry.NotAccessible(command.HydrationEntryId));
+            return Result.Failure(HydrationEntryErrors.NotAccessible(command.HydrationEntryId));
         }
 
         await repository.DeleteAsync(entry, cancellationToken).ConfigureAwait(false);

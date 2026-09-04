@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Hydration.Internal;
@@ -43,7 +42,7 @@ public sealed class UpdateHydrationEntryCommandHandler(
             hydrationEntryId,
             cancellationToken).ConfigureAwait(false);
         if (entry is null || entry.UserId != userId) {
-            return Result.Failure<HydrationEntryModel>(Errors.HydrationEntry.NotAccessible(command.HydrationEntryId));
+            return Result.Failure<HydrationEntryModel>(HydrationEntryErrors.NotAccessible(command.HydrationEntryId));
         }
 
         if (command.AmountMl.HasValue) {

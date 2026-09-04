@@ -31,12 +31,12 @@ public sealed class ReduceActiveFastingTargetCommandHandler(
         UserId userId = userIdResult.Value;
         FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (current is null) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+            return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
 
         FastingPlan? plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (plan is null) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+            return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
         if (plan.Type != FastingPlanType.Extended) {
             return Result.Failure<FastingSessionModel>(
@@ -49,7 +49,7 @@ public sealed class ReduceActiveFastingTargetCommandHandler(
             return Result.Failure<FastingSessionModel>(
                 Errors.Validation.Invalid(nameof(command.ReducedHours), "Reduced fasting hours are invalid."));
         } catch (InvalidOperationException) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+            return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
 
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;

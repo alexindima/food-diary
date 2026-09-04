@@ -71,6 +71,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationEntryReadModelTests.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/HydrationErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Domain.Tests/Domain/HydrationEntryInvariantTests.cs`
 - [integration] `Modules/Hydration/tests/FoodDiary.Modules.Hydration.Infrastructure.Tests/HydrationEntryRepositoryIntegrationTests.cs`

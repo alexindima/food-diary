@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Application.Common;
@@ -30,15 +29,15 @@ public sealed class SkipCyclicDayCommandHandler(
         UserId userId = userIdResult.Value;
         FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (current is null) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+            return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
 
         FastingPlan? plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (plan is null) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+            return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
         if (!FastingCyclicTransitionPlanner.CanTransition(plan, current)) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.InvalidCyclicAction("Only an active cyclic period can be skipped."));
+            return Result.Failure<FastingSessionModel>(FastingErrors.InvalidCyclicAction("Only an active cyclic period can be skipped."));
         }
 
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
@@ -46,7 +45,7 @@ public sealed class SkipCyclicDayCommandHandler(
             current.Skip(now);
             plan.ScheduleNextCyclicPhase(DateTime.SpecifyKind(now.Date.AddDays(1), DateTimeKind.Utc));
         } catch (InvalidOperationException) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.InvalidCyclicAction("The current cyclic period cannot be skipped."));
+            return Result.Failure<FastingSessionModel>(FastingErrors.InvalidCyclicAction("The current cyclic period cannot be skipped."));
         }
 
         FastingOccurrence nextOccurrence = FastingCyclicTransitionPlanner.CreateAfterSkip(plan, current, userId, now);

@@ -119,12 +119,9 @@
           "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.DailyAdvices.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Dietologist.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Fasting.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Hydration.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.MealPlanning.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Application.Abstractions": "[1.0.0, )",
@@ -204,12 +201,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
-      "fooddiary.modules.dailyadvices.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
       "fooddiary.modules.dietologist.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -248,20 +239,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
-      "fooddiary.modules.fasting.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Fasting.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.fasting.domain": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
-        }
-      },
       "fooddiary.modules.favorites.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -279,21 +256,6 @@
           "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.hydration.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Hydration.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.hydration.domain": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
         }
       },

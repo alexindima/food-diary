@@ -17,5 +17,6 @@
     <ProjectReference Include="..\..\..\..\Modules\Notifications\Application\FoodDiary.Application.Notifications.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../../Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj" />
   </ItemGroup>
 </Project>

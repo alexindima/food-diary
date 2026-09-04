@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4773,
+    "productionFiles": 4770,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -2689,14 +2689,6 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.DailyAdvice.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Dietologist.cs",
       "nonBlankLines": 16,
       "decisionPoints": 0,
@@ -2706,14 +2698,6 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Exercise.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Fasting.cs",
       "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
@@ -2743,14 +2727,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.18
-    },
-    {
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.HydrationEntry.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
     },
     {
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Image.cs",
@@ -23922,11 +23898,11 @@
     },
     {
       "path": "Modules/DailyAdvices/Application/Services/DailyAdviceReadService.cs",
-      "nonBlankLines": 34,
+      "nonBlankLines": 33,
       "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.18
+      "structuralRiskScore": 8.16
     },
     {
       "path": "Modules/DailyAdvices/Application/Services/DailyAdviceSelector.cs",
@@ -26850,11 +26826,11 @@
     },
     {
       "path": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandHandler.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 41,
       "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.84
+      "structuralRiskScore": 8.82
     },
     {
       "path": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandValidator.cs",
@@ -26898,11 +26874,11 @@
     },
     {
       "path": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
-      "nonBlankLines": 55,
+      "nonBlankLines": 54,
       "decisionPoints": 7,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.6
+      "structuralRiskScore": 13.58
     },
     {
       "path": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandValidator.cs",
@@ -26962,11 +26938,11 @@
     },
     {
       "path": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
-      "nonBlankLines": 52,
+      "nonBlankLines": 51,
       "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.04
+      "structuralRiskScore": 12.02
     },
     {
       "path": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandValidator.cs",
@@ -26978,11 +26954,11 @@
     },
     {
       "path": "Modules/Fasting/Application/Commands/StartFasting/FastingStartFactory.cs",
-      "nonBlankLines": 113,
+      "nonBlankLines": 112,
       "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.76
+      "structuralRiskScore": 27.74
     },
     {
       "path": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs",
@@ -26994,11 +26970,11 @@
     },
     {
       "path": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs",
-      "nonBlankLines": 41,
+      "nonBlankLines": 40,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.32
+      "structuralRiskScore": 7.3
     },
     {
       "path": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandValidator.cs",
@@ -28834,11 +28810,11 @@
     },
     {
       "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 39,
       "decisionPoints": 4,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.8
+      "structuralRiskScore": 8.78
     },
     {
       "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
@@ -28858,11 +28834,11 @@
     },
     {
       "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-      "nonBlankLines": 56,
+      "nonBlankLines": 55,
       "decisionPoints": 6,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.12
+      "structuralRiskScore": 12.1
     },
     {
       "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
@@ -39611,7 +39587,7 @@
       "name": "DeleteHydrationEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
-      "line": 12,
+      "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
@@ -39830,7 +39806,7 @@
       "name": "EndFastingCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Fasting/Application/Commands/EndFasting/EndFastingCommandHandler.cs",
-      "line": 13,
+      "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.End.cs"
@@ -40119,7 +40095,7 @@
       "name": "PostponeCyclicDayCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Fasting/Application/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
-      "line": 13,
+      "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs"
@@ -40466,7 +40442,7 @@
       "name": "SkipCyclicDayCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Fasting/Application/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
-      "line": 13,
+      "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs"
@@ -40491,7 +40467,7 @@
       "name": "StartFastingCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs",
-      "line": 12,
+      "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
         "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingFeatureTests.Start.cs"
@@ -40747,7 +40723,7 @@
       "name": "UpdateHydrationEntryCommandHandler",
       "role": "CommandHandler",
       "path": "Modules/Hydration/Application/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-      "line": 15,
+      "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",

@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.DailyAdvices.Common;
 using FoodDiary.Application.Abstractions.DailyAdvices.Models;
@@ -22,12 +21,12 @@ public sealed class DailyAdviceReadService(IDailyAdviceReadModelRepository advic
         }
 
         if (advices.Count == 0) {
-            return Result.Failure<DailyAdviceModel>(Errors.DailyAdvice.NotFound(normalizedLocale));
+            return Result.Failure<DailyAdviceModel>(DailyAdviceErrors.NotFound(normalizedLocale));
         }
 
         DailyAdviceReadModel? advice = DailyAdviceSelector.SelectReadModelForDate(advices, date, normalizedLocale);
         if (advice is null) {
-            return Result.Failure<DailyAdviceModel>(Errors.DailyAdvice.NotFound(normalizedLocale));
+            return Result.Failure<DailyAdviceModel>(DailyAdviceErrors.NotFound(normalizedLocale));
         }
 
         return Result.Success(new DailyAdviceModel(

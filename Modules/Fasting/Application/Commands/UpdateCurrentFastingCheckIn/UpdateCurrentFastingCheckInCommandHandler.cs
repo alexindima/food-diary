@@ -29,7 +29,7 @@ public sealed class UpdateCurrentFastingCheckInCommandHandler(
         UserId userId = userIdResult.Value;
         FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (current is null) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
+            return Result.Failure<FastingSessionModel>(FastingErrors.NoActiveSession);
         }
 
         FastingCheckIn checkIn;

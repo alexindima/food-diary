@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Modules.Fasting.Application.Common;
@@ -29,7 +28,7 @@ public sealed class StartFastingCommandHandler(
         UserId userId = userIdResult.Value;
         FastingPlan? currentPlan = await fastingPlanRepository.GetActiveAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (currentPlan is not null) {
-            return Result.Failure<FastingSessionModel>(Errors.Fasting.AlreadyActive);
+            return Result.Failure<FastingSessionModel>(FastingErrors.AlreadyActive);
         }
 
         DateTime startedAtUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
