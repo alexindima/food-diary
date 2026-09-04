@@ -8,7 +8,7 @@ Rules for `FoodDiary.Application.Identity/`.
 
 - Own authentication, account recovery, external login, token issuance, login auditing, initial-admin bootstrap, and application email-template use cases.
 - Keep `Authentication` and `Email` as logical feature areas within one physical module.
-- Depend on other business areas only through `FoodDiary.Application.Abstractions` contracts.
+- Depend on other business areas through their owner contracts, including a direct Notifications Application/Abstractions reference. Preserve semantic Users capabilities; do not acquire aggregate repository ports through an umbrella reference.
 
 ## Boundaries
 

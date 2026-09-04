@@ -6,9 +6,11 @@ Users Contracts owns semantic capabilities/models/errors; Users Application/Abst
 owns aggregate/repository ports. Identity Application/Abstractions owns Authentication
 and email-template contracts. Admin owns role-audit reader ports; Billing owns its
 Marketing-implemented conversion recorder; Dietologist owns its two parsing helpers.
-Central Application.Abstractions retains shared interfaces and compatibility references,
-not copies of these declarations. CurrentUserAccessResolver and the shared single-use
-SSO store contract remain central. See `docs/ai/contracts-batch-ownership.md`.
+Central Application.Abstractions retains shared interfaces and only references needed
+by its remaining facades/types, not unused umbrella exports or copies of these declarations.
+Consumers reference the actual contract owner directly. CurrentUserAccessResolver and the shared single-use
+SSO store contract remain central. See `docs/ai/contracts-batch-ownership.md` and
+`docs/ai/direct-contract-dependencies.md` for the explicit consumer-reference inventory.
 
 ## Outbox stream records
 

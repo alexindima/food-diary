@@ -8,7 +8,7 @@ Rules for `Modules/RecipeCommunity/Application/`.
 
 - Own recipe comment and recipe like use cases in one cohesive social-interaction module.
 - Preserve comments and likes as separate logical feature areas.
-- Depend on Recipes and Users only through `FoodDiary.Application.Abstractions` contracts.
+- Depend on Recipes and Users through their semantic contracts; reference Recipes.Contracts directly instead of relying on central Application.Abstractions to re-export it.
 
 ## Boundaries
 

@@ -218,8 +218,8 @@ Ai owns Application, Application/Abstractions, Domain, Infrastructure/Model and 
 
 `Modules/Dashboard` owns Application, Application/Abstractions, Contracts and
 Infrastructure. It is a read composer with no Domain or PersistenceModel. Stable
-statistics contracts retain their CLR namespaces and are referenced one-way by
-central Abstractions for Statistics/Cycles/WeeklyCheckIn/Tdee/Gamification consumers.
+statistics contracts retain their CLR namespaces and are referenced directly by
+Statistics/Cycles/WeeklyCheckIn/Tdee/Gamification consumers, not re-exported by central Abstractions.
 Optimized projection readers own no contributing aggregates. Shared DbContext,
 migrations/model snapshot and HTTP transport remain central. Hosts explicitly call
 `AddDashboardReadServices` after infrastructure registration; Application fallback

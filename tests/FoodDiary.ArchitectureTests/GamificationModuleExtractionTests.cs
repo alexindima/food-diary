@@ -14,7 +14,7 @@ public sealed class GamificationModuleExtractionTests {
     public void ExtractedGamificationAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Gamification.Application.Abstractions", "FoodDiary.Modules.Gamification.Domain", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Domain"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Dashboard.Contracts", "FoodDiary.Modules.Gamification.Application.Abstractions", "FoodDiary.Modules.Gamification.Domain", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Domain"], references);
     }
 
     [Theory]

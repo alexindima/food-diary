@@ -10,7 +10,7 @@ migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
 
-Preserve the FoodDiary.Application.Users assembly identity. Keep semantic capabilities/models in Users Contracts and the seven aggregate/repository ports in Application/Abstractions; retain central CurrentUserAccessResolver and compatibility references and compose AddUsersModule from the existing hosts.
+Preserve the FoodDiary.Application.Users assembly identity. Keep semantic capabilities/models in Users Contracts and the seven aggregate/repository ports in Application/Abstractions; retain central CurrentUserAccessResolver and its Users.Contracts reference. Consumers of repository ports reference the owner directly, not a central umbrella. Compose AddUsersModule from the existing hosts.
 
 Users Infrastructure owns the independent access-token security-state reader.
 The port signature is unchanged and now belongs to Users Contracts; API bearer validation consumes it without receiving

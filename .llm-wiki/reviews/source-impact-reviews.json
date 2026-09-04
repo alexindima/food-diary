@@ -8,17 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "a4ad7286d8addf1d9b2a9e6dd6bbc04d1d7684b33d7fbd0bbf0c26a9ea151952"
+          "sha256": "43f437de3654023609053df7870090bb35da8dc6a2380b70e9747e731d45fc23"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "0da18ca6e7fce142dc20f0c5d3e618e0b8d2f727d0712c2bdf746d8cb72415ab"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "f5b3b97268b16286ecbdea208041d1b306da2cb6bbb6d2b731edf9972691e5e9"
+          "sha256": "dc10abcd07ce5bfcac5b04496cc96b4d0ca5d6a7455164ac25ad010093b3bd45"
         }
       ],
-      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
+      "reason": "Remove9unused central ProjectReferences, add131existing owner references across80consumers, exact81project inventory and matrix. Central32to23, all201production emitted reference sets identical. Preserve remaining Errors/shared types and DbContext ownership. Updated scoped guides and Dashboard direct-contract routing, no new project or runtime layer.",
       "baseRef": "HEAD",
-      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
-      "reviewedAtUtc": "2026-09-04T02:37:37.2158285Z"
+      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
+      "reviewedAtUtc": "2026-09-04T08:31:09.5506482Z"
     },
     {
       "pageId": "module.frontend",
@@ -41,14 +45,18 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "0da18ca6e7fce142dc20f0c5d3e618e0b8d2f727d0712c2bdf746d8cb72415ab"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "f5b3b97268b16286ecbdea208041d1b306da2cb6bbb6d2b731edf9972691e5e9"
+          "sha256": "dc10abcd07ce5bfcac5b04496cc96b4d0ca5d6a7455164ac25ad010093b3bd45"
         }
       ],
-      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
+      "reason": "Remove9unused central ProjectReferences, add131existing owner references across80consumers, exact81project inventory and matrix. Central32to23, all201production emitted reference sets identical. Preserve remaining Errors/shared types and DbContext ownership. Updated scoped guides and Dashboard direct-contract routing, no new project or runtime layer.",
       "baseRef": "HEAD",
-      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
-      "reviewedAtUtc": "2026-09-04T02:37:37.4325050Z"
+      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
+      "reviewedAtUtc": "2026-09-04T08:31:09.7427532Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -56,26 +64,22 @@
       "pageSha256": "a12fef9a11365dd6a6c58228abc9447b6f005042e43ab58532b8250805df1709",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "fb9f0243b2f69817af3e1f2ca9f59abd008e2407ec55888513b15449f74a6842"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "f5b3b97268b16286ecbdea208041d1b306da2cb6bbb6d2b731edf9972691e5e9"
+          "sha256": "dc10abcd07ce5bfcac5b04496cc96b4d0ca5d6a7455164ac25ad010093b3bd45"
         },
         {
           "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "06e2f5292d99e182f87d2bc6cfd9475600e05d262cd18ed185d16ba8a4912369"
+          "sha256": "d10d34e233296b212d8dde9d0ae07e381c396c8169fadd49019a0f1990cd60d2"
         },
         {
           "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "6f44cc4533aff38b631cc07bb4dc2509c9c51dfef6f053621b8d4064b070124a"
+          "sha256": "66e47150e923ae5a77df1dc718690ed0e8b845cfebbbb6cb4dade211c6643ac5"
         }
       ],
-      "reason": "117 source-identical contract/helper relocations preserve CLR namespaces/signatures and default interface behavior. All33 module application suites and full solution rebuild pass; full unfiltered HTTP182, Presentation825 and APIunit247 preserve routes/payloads/status/Swagger. No HTTP source or snapshot changes. Coordinated rebuild, no external consumers, not precompiled binary compatibility.",
+      "reason": "No production CSharp, namespace, type signature, HTTP source or Swagger snapshot edits. All201production emitted assembly-reference sets equal exact baseline after rebuilding324projects. Existing consumers receive explicit references to contracts already used; full unfiltered HTTP/Presentation/API suites pass. Whole-host build, no deployment or external consumer.",
       "baseRef": "HEAD",
-      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
-      "reviewedAtUtc": "2026-09-04T02:37:37.6460227Z"
+      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
+      "reviewedAtUtc": "2026-09-04T08:31:09.9348790Z"
     },
     {
       "pageId": "system.architecture",
@@ -83,22 +87,22 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "fb9f0243b2f69817af3e1f2ca9f59abd008e2407ec55888513b15449f74a6842"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "0da18ca6e7fce142dc20f0c5d3e618e0b8d2f727d0712c2bdf746d8cb72415ab"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "f5b3b97268b16286ecbdea208041d1b306da2cb6bbb6d2b731edf9972691e5e9"
+          "sha256": "dc10abcd07ce5bfcac5b04496cc96b4d0ca5d6a7455164ac25ad010093b3bd45"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "ccba264e967f8a6940d3599cd3604109ce7e90570a7e425d3511ad008eb111aa"
+          "sha256": "7549daa3c9e24031e9e313c5e579a439e3dba9d5428adc256fbd79b4e77d1889"
         }
       ],
-      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
+      "reason": "Remove9unused central ProjectReferences, add131existing owner references across80consumers, exact81project inventory and matrix. Central32to23, all201production emitted reference sets identical. Preserve remaining Errors/shared types and DbContext ownership. Updated scoped guides and Dashboard direct-contract routing, no new project or runtime layer.",
       "baseRef": "HEAD",
-      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
-      "reviewedAtUtc": "2026-09-04T02:37:37.9239602Z"
+      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
+      "reviewedAtUtc": "2026-09-04T08:31:10.1181417Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -137,13 +141,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "a4ad7286d8addf1d9b2a9e6dd6bbc04d1d7684b33d7fbd0bbf0c26a9ea151952"
+          "sha256": "43f437de3654023609053df7870090bb35da8dc6a2380b70e9747e731d45fc23"
         }
       ],
-      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
+      "reason": "Remove9unused central ProjectReferences, add131existing owner references across80consumers, exact81project inventory and matrix. Central32to23, all201production emitted reference sets identical. Preserve remaining Errors/shared types and DbContext ownership. Updated scoped guides and Dashboard direct-contract routing, no new project or runtime layer.",
       "baseRef": "HEAD",
-      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
-      "reviewedAtUtc": "2026-09-04T02:37:38.2181536Z"
+      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
+      "reviewedAtUtc": "2026-09-04T08:31:10.3196618Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -216,21 +220,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "eb934ad7c67f1168a819dc93a6d1034b303f2e2e4a3e7476b39a3c01e67f4636"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "fb9f0243b2f69817af3e1f2ca9f59abd008e2407ec55888513b15449f74a6842"
+          "sha256": "8e09aa7f689e5cc3d33d0ad7d3636668757674d96712debab04b4226601c2216"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "ccba264e967f8a6940d3599cd3604109ce7e90570a7e425d3511ad008eb111aa"
+          "sha256": "7549daa3c9e24031e9e313c5e579a439e3dba9d5428adc256fbd79b4e77d1889"
         }
       ],
-      "reason": "44 final unfiltered suites6055passed0failed0skipped, including all33 module Application suites, Architecture1072, centralPG93, HTTP182. Three independent new-project builds, full solution builds0warnings/errors. Exact source equivalence117 and retained lock versions verified. Failed initial builds/architecture and Wiki projection/fixture attempts retained. Receipt test and14case SQL/JSON parity pass; no collectors or weakened assertions.",
+      "reason": "56 final unfiltered suites,6532 passed,0failed0skipped, including all module Application suites and fullArchitecture. New13guard assertions fail-before/pass-after;20exact existing expectations updated only after baseline-set equivalence audit. Fullsolution and independentcentral build0warnings/errors, EFunchanged, packageaudit no vulnerabilities. No collectors or weakened checks. Failed firstcompile/architecture retained.",
       "baseRef": "HEAD",
-      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
-      "reviewedAtUtc": "2026-09-04T02:37:38.6487671Z"
+      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
+      "reviewedAtUtc": "2026-09-04T08:31:10.5350779Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -238,18 +238,14 @@
       "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "53fd58ab3b173bb1db2fcf7f4e0cbcca03d7cf2dab6d676f7230ca73a25066a9"
-        },
-        {
           "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "6f44cc4533aff38b631cc07bb4dc2509c9c51dfef6f053621b8d4064b070124a"
+          "sha256": "66e47150e923ae5a77df1dc718690ed0e8b845cfebbbb6cb4dade211c6643ac5"
         }
       ],
-      "reason": "117 source-identical contract/helper relocations preserve CLR namespaces/signatures and default interface behavior. All33 module application suites and full solution rebuild pass; full unfiltered HTTP182, Presentation825 and APIunit247 preserve routes/payloads/status/Swagger. No HTTP source or snapshot changes. Coordinated rebuild, no external consumers, not precompiled binary compatibility.",
+      "reason": "No production CSharp, namespace, type signature, HTTP source or Swagger snapshot edits. All201production emitted assembly-reference sets equal exact baseline after rebuilding324projects. Existing consumers receive explicit references to contracts already used; full unfiltered HTTP/Presentation/API suites pass. Whole-host build, no deployment or external consumer.",
       "baseRef": "HEAD",
-      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
-      "reviewedAtUtc": "2026-09-04T02:37:39.3102468Z"
+      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
+      "reviewedAtUtc": "2026-09-04T08:31:10.7550473Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -1119,13 +1115,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "a4ad7286d8addf1d9b2a9e6dd6bbc04d1d7684b33d7fbd0bbf0c26a9ea151952"
+          "sha256": "43f437de3654023609053df7870090bb35da8dc6a2380b70e9747e731d45fc23"
         }
       ],
-      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
+      "reason": "Remove9unused central ProjectReferences, add131existing owner references across80consumers, exact81project inventory and matrix. Central32to23, all201production emitted reference sets identical. Preserve remaining Errors/shared types and DbContext ownership. Updated scoped guides and Dashboard direct-contract routing, no new project or runtime layer.",
       "baseRef": "HEAD",
-      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
-      "reviewedAtUtc": "2026-09-04T02:37:39.5429564Z"
+      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
+      "reviewedAtUtc": "2026-09-04T08:31:11.0070389Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1179,21 +1175,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "ac36d1e1c9fc8fe17fb3edd43822a01e5609c346fc00b5c3e900222465bcc4a8"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
-          "sha256": "0331fdbf34331d8c995b22ce505f35ae8545b41519870611038124141113a5b4"
+          "sha256": "1a9cd866c0484ab7617f9f4dafe3012718404b99a8ba00b58724abbfed3ded37"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "a4ad7286d8addf1d9b2a9e6dd6bbc04d1d7684b33d7fbd0bbf0c26a9ea151952"
+          "sha256": "43f437de3654023609053df7870090bb35da8dc6a2380b70e9747e731d45fc23"
         }
       ],
-      "reason": "Users59 semantic contracts and7 owner ports, Identity45 auth/email-template contracts, Admin3 audit projection ports/model, Dietologist2 parsers and Billing1 consumer-owned recorder physically assigned. Three new projects with one-way refs; central resolver/shared SSO/email transport/audit remain. Users public value-type Domain reference is explicit, aggregate/repository leakage guarded. Module map/manifest/guides and exact matrix/Docker references updated.",
+      "reason": "Remove9unused central ProjectReferences, add131existing owner references across80consumers, exact81project inventory and matrix. Central32to23, all201production emitted reference sets identical. Preserve remaining Errors/shared types and DbContext ownership. Updated scoped guides and Dashboard direct-contract routing, no new project or runtime layer.",
       "baseRef": "HEAD",
-      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
-      "reviewedAtUtc": "2026-09-04T02:37:40.9329113Z"
+      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
+      "reviewedAtUtc": "2026-09-04T08:31:11.3597271Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1202,13 +1194,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "a4ad7286d8addf1d9b2a9e6dd6bbc04d1d7684b33d7fbd0bbf0c26a9ea151952"
+          "sha256": "43f437de3654023609053df7870090bb35da8dc6a2380b70e9747e731d45fc23"
         }
       ],
-      "reason": "44 final unfiltered suites6055passed0failed0skipped, including all33 module Application suites, Architecture1072, centralPG93, HTTP182. Three independent new-project builds, full solution builds0warnings/errors. Exact source equivalence117 and retained lock versions verified. Failed initial builds/architecture and Wiki projection/fixture attempts retained. Receipt test and14case SQL/JSON parity pass; no collectors or weakened assertions.",
+      "reason": "56 final unfiltered suites,6532 passed,0failed0skipped, including all module Application suites and fullArchitecture. New13guard assertions fail-before/pass-after;20exact existing expectations updated only after baseline-set equivalence audit. Fullsolution and independentcentral build0warnings/errors, EFunchanged, packageaudit no vulnerabilities. No collectors or weakened checks. Failed firstcompile/architecture retained.",
       "baseRef": "HEAD",
-      "gitHead": "4ca71ff9e1e291904305abc00ec62684763e802b",
-      "reviewedAtUtc": "2026-09-04T02:37:41.2591246Z"
+      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
+      "reviewedAtUtc": "2026-09-04T08:31:11.6344165Z"
     }
   ]
 }

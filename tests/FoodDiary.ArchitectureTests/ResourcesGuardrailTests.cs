@@ -10,6 +10,7 @@ public sealed class ResourcesGuardrailTests {
         string[] expectedProjectReferences = [
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Modules.Export.Application.Abstractions",
+            "FoodDiary.Modules.Notifications.Application.Abstractions",
         ];
 
         string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);

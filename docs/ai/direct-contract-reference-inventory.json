@@ -1,0 +1,709 @@
+[
+  {
+    "path": "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+    "project": "FoodDiary.Application.Abstractions",
+    "added": [],
+    "removed": [
+      "FoodDiary.Modules.Products.Domain.Contracts",
+      "FoodDiary.Modules.Notifications.Application.Abstractions",
+      "FoodDiary.Modules.Billing.Application.Abstractions",
+      "FoodDiary.Modules.Marketing.Application.Abstractions",
+      "FoodDiary.Modules.Dashboard.Contracts",
+      "FoodDiary.Modules.Recipes.Contracts",
+      "FoodDiary.Modules.Products.Contracts",
+      "FoodDiary.Modules.Users.Application.Abstractions",
+      "FoodDiary.Modules.Identity.Application.Abstractions"
+    ]
+  },
+  {
+    "path": "Modules/Users/tests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests/FoodDiary.Modules.Users.Infrastructure.IntegrationTests.csproj",
+    "project": "FoodDiary.Modules.Users.Infrastructure.IntegrationTests",
+    "added": [
+      "FoodDiary.Modules.Users.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/FoodDiary.Modules.Users.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Users.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Notifications.Application.Abstractions",
+      "FoodDiary.Modules.Users.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
+    "project": "FoodDiary.Modules.Identity.Application",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/FoodDiary.Modules.Identity.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Identity.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Notifications.Application.Abstractions",
+      "FoodDiary.Modules.Users.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/FoodDiary.Modules.Identity.Infrastructure.Tests.csproj",
+    "project": "FoodDiary.Modules.Identity.Infrastructure.Tests",
+    "added": [
+      "FoodDiary.Modules.Identity.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests.csproj",
+    "project": "FoodDiary.Modules.Identity.Infrastructure.IntegrationTests",
+    "added": [
+      "FoodDiary.Modules.Identity.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj",
+    "project": "FoodDiary.Modules.Export.Application",
+    "added": [
+      "FoodDiary.Modules.Identity.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Export/tests/FoodDiary.Modules.Export.Application.Tests/FoodDiary.Modules.Export.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Export.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/FoodDiary.Modules.Export.Infrastructure.Tests.csproj",
+    "project": "FoodDiary.Modules.Export.Infrastructure.Tests",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj",
+    "project": "FoodDiary.Modules.Statistics.Application",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/FoodDiary.Modules.Statistics.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Statistics.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/FoodDiary.Modules.Billing.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Billing.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Billing.Application.Abstractions",
+      "FoodDiary.Modules.Marketing.Application.Abstractions",
+      "FoodDiary.Modules.Users.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/FoodDiary.Modules.Billing.Infrastructure.Tests.csproj",
+    "project": "FoodDiary.Modules.Billing.Infrastructure.Tests",
+    "added": [
+      "FoodDiary.Modules.Billing.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/FoodDiary.Modules.Notifications.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Notifications.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions",
+      "FoodDiary.Modules.Users.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/FoodDiary.Modules.Notifications.Infrastructure.Tests.csproj",
+    "project": "FoodDiary.Modules.Notifications.Infrastructure.Tests",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions",
+      "FoodDiary.Modules.Users.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/FoodDiary.Modules.Marketing.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Marketing.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Billing.Application.Abstractions",
+      "FoodDiary.Modules.Marketing.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests.csproj",
+    "project": "FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests",
+    "added": [
+      "FoodDiary.Modules.Marketing.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj",
+    "project": "FoodDiary.Application.Cycles",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/FoodDiary.Modules.Cycles.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Cycles.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj",
+    "project": "FoodDiary.Application.Favorites",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts",
+      "FoodDiary.Modules.Recipes.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj",
+    "project": "FoodDiary.Modules.Favorites.Domain",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Favorites/Infrastructure/Model/FoodDiary.Modules.Favorites.PersistenceModel.csproj",
+    "project": "FoodDiary.Modules.Favorites.PersistenceModel",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FoodDiary.Modules.Favorites.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Favorites.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts",
+      "FoodDiary.Modules.Recipes.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FoodDiary.Modules.Favorites.Domain.Tests.csproj",
+    "project": "FoodDiary.Modules.Favorites.Domain.Tests",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj",
+    "project": "FoodDiary.Modules.Dietologist.Application",
+    "added": [
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Application.Tests/FoodDiary.Modules.Dietologist.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Dietologist.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Notifications.Application.Abstractions",
+      "FoodDiary.Modules.Users.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests/FoodDiary.Modules.Dietologist.Infrastructure.Tests.csproj",
+    "project": "FoodDiary.Modules.Dietologist.Infrastructure.Tests",
+    "added": [
+      "FoodDiary.Modules.Identity.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj",
+    "project": "FoodDiary.Modules.Fasting.Application",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/FoodDiary.Modules.Fasting.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Fasting.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj",
+    "project": "FoodDiary.Modules.Gamification.Application",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/FoodDiary.Modules.Gamification.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Gamification.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
+    "project": "FoodDiary.Modules.Tdee.Application",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/FoodDiary.Modules.Tdee.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Tdee.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj",
+    "project": "FoodDiary.Modules.WeeklyGoals.Application",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Application.Tests/FoodDiary.Modules.WeeklyGoals.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.WeeklyGoals.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Usda/Application/FoodDiary.Application.Usda.csproj",
+    "project": "FoodDiary.Application.Usda",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts",
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/FoodDiary.Modules.Usda.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Usda.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj",
+    "project": "FoodDiary.Modules.WeeklyCheckIn.Application",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.WeeklyCheckIn.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
+    "project": "FoodDiary.Integrations",
+    "added": [
+      "FoodDiary.Modules.Billing.Application.Abstractions",
+      "FoodDiary.Modules.Identity.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+    "project": "FoodDiary.Presentation.Api",
+    "added": [
+      "FoodDiary.Modules.Billing.Application.Abstractions",
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "FoodDiary.Resources/FoodDiary.Resources.csproj",
+    "project": "FoodDiary.Resources",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
+    "project": "FoodDiary.Initializer",
+    "added": [
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "FoodDiary.JobManager/FoodDiary.JobManager.csproj",
+    "project": "FoodDiary.JobManager",
+    "added": [
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
+    "project": "FoodDiary.Web.Api",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj",
+    "project": "FoodDiary.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Billing.Application.Abstractions",
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Notifications.Application.Abstractions",
+      "FoodDiary.Modules.Products.Contracts",
+      "FoodDiary.Modules.Recipes.Contracts",
+      "FoodDiary.Modules.Users.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj",
+    "project": "FoodDiary.Infrastructure.IntegrationTests",
+    "added": [
+      "FoodDiary.Modules.Billing.Application.Abstractions",
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Notifications.Application.Abstractions",
+      "FoodDiary.Modules.Products.Contracts",
+      "FoodDiary.Modules.Recipes.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj",
+    "project": "FoodDiary.Infrastructure.Tests",
+    "added": [
+      "FoodDiary.Modules.Billing.Application.Abstractions",
+      "FoodDiary.Modules.Dashboard.Contracts",
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj",
+    "project": "FoodDiary.JobManager.Tests",
+    "added": [
+      "FoodDiary.Modules.Billing.Application.Abstractions",
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Marketing.Application.Abstractions",
+      "FoodDiary.Modules.Notifications.Application.Abstractions",
+      "FoodDiary.Modules.Users.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj",
+    "project": "FoodDiary.Presentation.Api.Tests",
+    "added": [
+      "FoodDiary.Modules.Billing.Application.Abstractions",
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Marketing.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "tests/FoodDiary.Resources.Tests/FoodDiary.Resources.Tests.csproj",
+    "project": "FoodDiary.Resources.Tests",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj",
+    "project": "FoodDiary.Web.Api.IntegrationTests",
+    "added": [
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Products.Contracts",
+      "FoodDiary.Modules.Recipes.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj",
+    "project": "FoodDiary.Web.Api.Tests",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
+    "project": "FoodDiary.Application.MealPlanning",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj",
+    "project": "FoodDiary.Modules.MealPlanning.Infrastructure",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/MealPlanning/Infrastructure/Model/FoodDiary.Modules.MealPlanning.PersistenceModel.csproj",
+    "project": "FoodDiary.Modules.MealPlanning.PersistenceModel",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Application.Tests/FoodDiary.Modules.MealPlanning.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.MealPlanning.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/RecentItems/Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj",
+    "project": "FoodDiary.Modules.RecentItems.Infrastructure",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Infrastructure.IntegrationTests/FoodDiary.Modules.RecentItems.Infrastructure.IntegrationTests.csproj",
+    "project": "FoodDiary.Modules.RecentItems.Infrastructure.IntegrationTests",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/RecentItems/tests/FoodDiary.Modules.RecentItems.Infrastructure.Tests/FoodDiary.Modules.RecentItems.Infrastructure.Tests.csproj",
+    "project": "FoodDiary.Modules.RecentItems.Infrastructure.Tests",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj",
+    "project": "FoodDiary.Application.RecipeCommunity",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions",
+      "FoodDiary.Modules.Recipes.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/FoodDiary.Modules.RecipeCommunity.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.RecipeCommunity.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Notifications.Application.Abstractions",
+      "FoodDiary.Modules.Recipes.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj",
+    "project": "FoodDiary.Modules.Dashboard.Application",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts",
+      "FoodDiary.Modules.Identity.Application.Abstractions",
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj",
+    "project": "FoodDiary.Modules.Dashboard.Infrastructure",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/FoodDiary.Modules.Dashboard.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Dashboard.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts",
+      "FoodDiary.Modules.Identity.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests.csproj",
+    "project": "FoodDiary.Modules.Dashboard.Infrastructure.Tests",
+    "added": [
+      "FoodDiary.Modules.Dashboard.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj",
+    "project": "FoodDiary.Modules.Recipes.Application",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts",
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj",
+    "project": "FoodDiary.Modules.Recipes.Domain",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj",
+    "project": "FoodDiary.Modules.Recipes.Infrastructure",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts",
+      "FoodDiary.Modules.Recipes.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Recipes/Infrastructure/Model/FoodDiary.Modules.Recipes.PersistenceModel.csproj",
+    "project": "FoodDiary.Modules.Recipes.PersistenceModel",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/FoodDiary.Modules.Recipes.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Recipes.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts",
+      "FoodDiary.Modules.Recipes.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/FoodDiary.Modules.Recipes.Domain.Tests.csproj",
+    "project": "FoodDiary.Modules.Recipes.Domain.Tests",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
+    "project": "FoodDiary.Modules.Admin.Application",
+    "added": [
+      "FoodDiary.Modules.Billing.Domain",
+      "FoodDiary.Modules.Identity.Application.Abstractions"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj",
+    "project": "FoodDiary.Modules.Products.Application.Abstractions",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj",
+    "project": "FoodDiary.Modules.Products.Infrastructure",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/FoodDiary.Modules.Products.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Products.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests.csproj",
+    "project": "FoodDiary.Modules.Products.Infrastructure.IntegrationTests",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
+    "project": "FoodDiary.Modules.Meals.Application",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts",
+      "FoodDiary.Modules.Recipes.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Meals/Infrastructure/Model/FoodDiary.Modules.Meals.PersistenceModel.csproj",
+    "project": "FoodDiary.Modules.Meals.PersistenceModel",
+    "added": [
+      "FoodDiary.Modules.Products.Domain.Contracts"
+    ],
+    "removed": []
+  },
+  {
+    "path": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/FoodDiary.Modules.Meals.Application.Tests.csproj",
+    "project": "FoodDiary.Modules.Meals.Application.Tests",
+    "added": [
+      "FoodDiary.Modules.Products.Contracts",
+      "FoodDiary.Modules.Recipes.Contracts"
+    ],
+    "removed": []
+  }
+]

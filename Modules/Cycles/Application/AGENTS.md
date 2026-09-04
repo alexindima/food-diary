@@ -9,4 +9,4 @@ Rules for `Modules/Cycles/Application/`.
 - Own cycle profile, factors, symptoms, bleeding entries, fertility signals, and their use cases.
 - Do not reference the core `FoodDiary.Application` project.
 - Register handlers, validators, and read services through `AddCyclesModule`.
-- Depend on other business areas only through `FoodDiary.Application.Abstractions` contracts.
+- Depend on other business areas through their owner contracts, with direct ProjectReferences for used types (including Dashboard.Contracts), not foreign implementations or central umbrella exports.

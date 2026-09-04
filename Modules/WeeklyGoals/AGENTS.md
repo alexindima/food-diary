@@ -11,7 +11,7 @@ Rules for `Modules/WeeklyGoals/`.
 - Do not reference the core `FoodDiary.Application` project.
 - Register application behavior through `AddWeeklyGoalsApplication`; composition roots use Infrastructure's `AddWeeklyGoalsModule` facade.
 - Read meal activity only through `IMealActivityReadService`; do not load Meal aggregates.
-- Keep notification delivery and the shared unit of work behind central application contracts.
+- Reference Notifications Application/Abstractions directly for notification delivery; keep the shared unit of work behind central application contracts.
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
 - Keep `WeeklyGoal`, `WeeklyGoalId`, and `WeeklyGoalType` in `Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj` while preserving their existing `FoodDiary.Domain.*` CLR namespaces.
 - Keep the module Domain dependency on Users Domain.Contracts for `UserId`; do not add a WeeklyGoals navigation to the `User` aggregate.

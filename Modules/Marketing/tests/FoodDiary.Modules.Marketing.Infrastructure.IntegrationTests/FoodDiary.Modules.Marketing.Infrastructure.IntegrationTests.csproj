@@ -4,6 +4,7 @@
     <ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.Marketing.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\..\FoodDiary.Initializer\FoodDiary.Initializer.csproj" />
     <ProjectReference Include="..\..\..\..\tests\FoodDiary.Testing\FoodDiary.Testing.csproj" />
+    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.collector" />

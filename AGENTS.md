@@ -246,6 +246,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Use K&R brace style for C# code (opening brace on the same line).
 - Prefer C# primary constructors where applicable.
 - Respect the dependency matrix enforced in `tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs`.
+- Reference the owning contract project directly when consuming its types; do not add unused module references to central Application.Abstractions to make them transitively available. Explicit references document existing use, not permission to acquire foreign aggregate writes.
 - Primary FoodDiary core projects may interact with MailRelay/MailInbox only through approved client packages. Today that cross-service access belongs in `FoodDiary.Integrations`.
 - Keep executable hosts as composition roots. Put HTTP transport in presentation projects, use cases in application projects, persistence/provider implementations in infrastructure projects, and domain rules in domain projects.
 - Async backend methods should use the `Async` suffix and accept `CancellationToken` unless they are framework entrypoints covered by architecture-test exceptions.
