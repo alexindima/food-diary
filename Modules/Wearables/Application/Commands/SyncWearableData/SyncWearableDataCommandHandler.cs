@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
@@ -42,7 +41,7 @@ public sealed class SyncWearableDataCommandHandler(
 
         IWearableClient? client = wearableClients.FirstOrDefault(c => c.Provider == provider);
         if (client is null) {
-            return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.ProviderNotConfigured(command.Provider));
+            return Result.Failure<WearableDailySummaryModel>(WearableErrors.ProviderNotConfigured(command.Provider));
         }
 
         string serializationKey = FormattableString.Invariant(
@@ -67,7 +66,7 @@ public sealed class SyncWearableDataCommandHandler(
         CancellationToken cancellationToken) {
         WearableConnection? connection = await connectionRepository.GetAsync(userId, provider, cancellationToken).ConfigureAwait(false);
         if (connection?.IsActive != true) {
-            return Result.Failure<bool>(Errors.Wearable.NotConnected(command.Provider));
+            return Result.Failure<bool>(WearableErrors.NotConnected(command.Provider));
         }
 
         // Refresh token if expired
@@ -77,7 +76,7 @@ public sealed class SyncWearableDataCommandHandler(
             if (refreshResult is null) {
                 connection.Deactivate();
                 await PersistConnectionAsync(connection, cancellationToken).ConfigureAwait(false);
-                return Result.Failure<bool>(Errors.Wearable.AuthFailed(command.Provider));
+                return Result.Failure<bool>(WearableErrors.AuthFailed(command.Provider));
             }
             ProtectedWearableToken protectedAccessToken = tokenProtector.Protect(refreshResult.AccessToken);
             ProtectedWearableToken? protectedRefreshToken = refreshResult.RefreshToken is null ? null : tokenProtector.Protect(refreshResult.RefreshToken);

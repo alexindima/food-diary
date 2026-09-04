@@ -48,7 +48,7 @@ public sealed class LessonAdministrationService(INutritionLessonRepository repos
         CancellationToken cancellationToken) {
         NutritionLesson? lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
-            return Result.Failure<NutritionLesson>(Errors.Lesson.NotFound(lessonId.Value));
+            return Result.Failure<NutritionLesson>(LessonErrors.NotFound(lessonId.Value));
         }
 
         lesson.Update(title, content, summary, locale, category, difficulty, estimatedReadMinutes, sortOrder);
@@ -59,7 +59,7 @@ public sealed class LessonAdministrationService(INutritionLessonRepository repos
     public async Task<Result> DeleteAsync(NutritionLessonId lessonId, CancellationToken cancellationToken) {
         NutritionLesson? lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
-            return Result.Failure(Errors.Lesson.NotFound(lessonId.Value));
+            return Result.Failure(LessonErrors.NotFound(lessonId.Value));
         }
 
         await repository.DeleteAsync(lesson, cancellationToken).ConfigureAwait(false);

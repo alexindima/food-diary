@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
@@ -31,7 +30,7 @@ public sealed class DeleteRecipeCommentCommandHandler(
         RecipeComment? comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
         if (comment is null || comment.RecipeId != recipeId) {
-            return Result.Failure(Errors.RecipeComment.NotFound(command.CommentId));
+            return Result.Failure(RecipeCommentErrors.NotFound(command.CommentId));
         }
 
         // Author or recipe owner can delete
@@ -41,7 +40,7 @@ public sealed class DeleteRecipeCommentCommandHandler(
                 recipeId, userIdResult.Value, includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (recipe is null) {
-                return Result.Failure(Errors.RecipeComment.NotAuthor);
+                return Result.Failure(RecipeCommentErrors.NotAuthor);
             }
         }
 

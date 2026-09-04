@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Products.Commands.UpdateProduct;
 using FoodDiary.Domain.Entities.Products;
@@ -597,7 +597,7 @@ public partial class ProductsFeatureTests {
     public async Task UpdateProductCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
         var user = User.Create("update-product-forbidden-image@example.com", "hash");
         RecordingImageAssetAccessService access = new FoodDiary.Application.Tests.Support.RecordingImageAssetAccessService()
-            .WithFailure(Errors.Image.Forbidden());
+            .WithFailure(ImageErrors.Forbidden());
         var handler = new UpdateProductCommandHandler(
             new NoopProductRepository(),
             new NoopProductRepository(),

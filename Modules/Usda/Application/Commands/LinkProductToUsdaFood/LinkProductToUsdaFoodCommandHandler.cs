@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Usda.Common;
@@ -30,12 +29,12 @@ public sealed class LinkProductToUsdaFoodCommandHandler(
             productId, userIdResult.Value, cancellationToken).ConfigureAwait(false);
 
         if (!isAccessible) {
-            return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
+            return Result.Failure(ProductErrors.NotAccessible(command.ProductId));
         }
 
         UsdaFood? usdaFood = await usdaFoodRepository.GetByFdcIdAsync(command.FdcId, cancellationToken).ConfigureAwait(false);
         if (usdaFood is null) {
-            return Result.Failure(Errors.Usda.FoodNotFound(command.FdcId));
+            return Result.Failure(UsdaErrors.FoodNotFound(command.FdcId));
         }
 
         bool linked = await productLinkService.LinkAsync(
@@ -44,7 +43,7 @@ public sealed class LinkProductToUsdaFoodCommandHandler(
             command.FdcId,
             cancellationToken).ConfigureAwait(false);
         if (!linked) {
-            return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
+            return Result.Failure(ProductErrors.NotAccessible(command.ProductId));
         }
 
         return Result.Success();

@@ -263,7 +263,7 @@ public sealed class UpdateUserCommandHandlerTests {
     public async Task Handle_WhenProfileImageAccessFails_ReturnsFailure() {
         var user = User.Create("user@example.com", "hash");
         RecordingImageAssetAccessService imageAccess = new FoodDiary.Application.Tests.Support.RecordingImageAssetAccessService()
-            .WithFailure(Errors.Image.NotFound(Guid.NewGuid()));
+            .WithFailure(ImageErrors.NotFound(Guid.NewGuid()));
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
             CreateImageAssetCleanupService(),

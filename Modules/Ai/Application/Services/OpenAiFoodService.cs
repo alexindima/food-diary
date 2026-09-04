@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Ai.Common;
@@ -67,7 +66,7 @@ public sealed class OpenAiFoodService(
             await ReconcileAsync(requestId, response.Value, budgetResult.Value).ConfigureAwait(false);
             return Result.Success(response.Value.Value);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {
-            return Result.Failure<FoodVisionModel>(Errors.Ai.OpenAiFailed("OpenAI operation deadline expired."));
+            return Result.Failure<FoodVisionModel>(AiErrors.OpenAiFailed("OpenAI operation deadline expired."));
         }
     }
 
@@ -113,7 +112,7 @@ public sealed class OpenAiFoodService(
             await ReconcileAsync(requestId, response.Value, budgetResult.Value).ConfigureAwait(false);
             return Result.Success(response.Value.Value);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {
-            return Result.Failure<FoodVisionModel>(Errors.Ai.OpenAiFailed("OpenAI operation deadline expired."));
+            return Result.Failure<FoodVisionModel>(AiErrors.OpenAiFailed("OpenAI operation deadline expired."));
         }
     }
 
@@ -156,7 +155,7 @@ public sealed class OpenAiFoodService(
             await ReconcileAsync(requestId, response.Value, budgetResult.Value).ConfigureAwait(false);
             return Result.Success(response.Value.Value);
         } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested && deadline.IsCancellationRequested) {
-            return Result.Failure<FoodNutritionModel>(Errors.Ai.OpenAiFailed("OpenAI operation deadline expired."));
+            return Result.Failure<FoodNutritionModel>(AiErrors.OpenAiFailed("OpenAI operation deadline expired."));
         }
     }
 
@@ -181,7 +180,7 @@ public sealed class OpenAiFoodService(
 
         return contextResult.Value.HasAcceptedAiConsent
             ? contextResult
-            : Result.Failure<AiUserContext>(Errors.Ai.ConsentRequired());
+            : Result.Failure<AiUserContext>(AiErrors.ConsentRequired());
     }
 
     private async Task<Result> ReserveAsync(
@@ -212,7 +211,7 @@ public sealed class OpenAiFoodService(
         }
 
         ApplicationAiTelemetry.RecordQuotaRejection(operation);
-        return Result.Failure(Errors.Ai.QuotaExceeded());
+        return Result.Failure(AiErrors.QuotaExceeded());
     }
 
     private async Task ReconcileAsync<T>(

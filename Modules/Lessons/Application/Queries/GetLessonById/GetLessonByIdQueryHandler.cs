@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
@@ -32,7 +33,7 @@ public sealed class GetLessonByIdQueryHandler(
         var lessonId = new NutritionLessonId(query.LessonId);
         LessonDetailModel? lesson = await lessonReadService.GetByIdAsync(userIdResult.Value, lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
-            return Result.Failure<LessonDetailModel>(Errors.Lesson.NotFound(query.LessonId));
+            return Result.Failure<LessonDetailModel>(LessonErrors.NotFound(query.LessonId));
         }
 
         return Result.Success(lesson);

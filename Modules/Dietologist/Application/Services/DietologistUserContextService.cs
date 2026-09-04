@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Dietologist.Common;
@@ -30,7 +30,7 @@ internal sealed class DietologistUserContextService(
         UserId userId,
         CancellationToken cancellationToken) {
         Result<UserModel> userResult = await userProfileReadService.GetUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        return userResult.IsFailure ? Result.Failure<UserModel>(Errors.Dietologist.AccessDenied) : userResult;
+        return userResult.IsFailure ? Result.Failure<UserModel>(DietologistErrors.AccessDenied) : userResult;
     }
 
     public Task<Result<UserDietologistProfileModel>> GetAccessibleProfileAsync(UserId userId, CancellationToken cancellationToken) =>

@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
@@ -13,7 +12,7 @@ public sealed class GetAdminMailInboxMessageDetailsQueryHandler(IAdminMailInboxR
         CancellationToken cancellationToken) {
         AdminMailInboxMessageDetailsModel? message = await reader.GetMessageAsync(query.Id, cancellationToken).ConfigureAwait(false);
         return message is null
-            ? Result.Failure<AdminMailInboxMessageDetailsModel>(Errors.MailInbox.MessageNotFound(query.Id))
+            ? Result.Failure<AdminMailInboxMessageDetailsModel>(AdminMailInboxErrors.MessageNotFound(query.Id))
             : Result.Success(message);
     }
 }

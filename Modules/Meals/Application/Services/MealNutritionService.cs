@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
@@ -32,13 +31,13 @@ public sealed class MealNutritionService(
         IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
         if (products.Count != productIds.Count) {
             ProductId missingProduct = productIds.First(id => !products.ContainsKey(id));
-            return Result.Failure<MealNutritionSummary>(Errors.Product.NotAccessible(missingProduct.Value));
+            return Result.Failure<MealNutritionSummary>(ProductErrors.NotAccessible(missingProduct.Value));
         }
 
         IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipes = await recipeLookupService.GetAccessibleByIdsAsync(recipeIds, userId, cancellationToken).ConfigureAwait(false);
         if (recipes.Count != recipeIds.Count) {
             RecipeId missingRecipe = recipeIds.First(id => !recipes.ContainsKey(id));
-            return Result.Failure<MealNutritionSummary>(Errors.Recipe.NotAccessible(missingRecipe.Value));
+            return Result.Failure<MealNutritionSummary>(RecipeErrors.NotAccessible(missingRecipe.Value));
         }
 
         ApplyItemSnapshots(meal, products, recipes);

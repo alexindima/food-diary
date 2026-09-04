@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.MealPlanning.Common.Validation;
@@ -41,7 +40,7 @@ public sealed class AdoptMealPlanCommandHandler(
             includeDays: true,
             cancellationToken).ConfigureAwait(false);
         if (sourcePlan is null) {
-            return Result.Failure<MealPlanModel>(Errors.MealPlan.NotFound(command.PlanId));
+            return Result.Failure<MealPlanModel>(MealPlanErrors.NotFound(command.PlanId));
         }
 
         MealPlan adoptedPlan = sourcePlan.Adopt(userIdResult.Value);

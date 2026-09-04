@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
@@ -32,7 +31,7 @@ public sealed class RecommendationDiscussionReadService(
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (recommendation is null ||
             (recommendation.ClientUserId != userId && recommendation.DietologistUserId != userId)) {
-            return Result.Failure<IReadOnlyList<RecommendationCommentModel>>(Errors.Dietologist.InvitationNotFound);
+            return Result.Failure<IReadOnlyList<RecommendationCommentModel>>(DietologistErrors.InvitationNotFound);
         }
 
         IReadOnlyList<RecommendationCommentReadModel> comments =

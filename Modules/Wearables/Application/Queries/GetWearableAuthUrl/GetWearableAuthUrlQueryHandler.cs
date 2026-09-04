@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Wearables.Common;
@@ -34,7 +33,7 @@ public sealed class GetWearableAuthUrlQueryHandler(
 
         IWearableClient? client = wearableClients.FirstOrDefault(c => c.Provider == provider);
         if (client is null) {
-            return Result.Failure<string>(Errors.Wearable.ProviderNotConfigured(query.Provider));
+            return Result.Failure<string>(WearableErrors.ProviderNotConfigured(query.Provider));
         }
 
         string state = stateService.CreateState(userIdResult.Value, provider, query.State);

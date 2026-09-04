@@ -15,6 +15,9 @@
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../../Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
     <ProjectReference Include="../../Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
+    <ProjectReference Include="../../../Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

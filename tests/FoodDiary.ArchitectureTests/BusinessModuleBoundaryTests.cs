@@ -260,6 +260,7 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedNotificationsApplicationDependencies = new(StringComparer.Ordinal) {
+        "FoodDiary.Application.Abstractions.Dietologist.Common.DietologistErrors",
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Notifications",
         "FoodDiary.Application.Abstractions.Users.Common",

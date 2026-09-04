@@ -63,7 +63,7 @@ public class TdeeFeatureTests {
         var user = User.Create("disappearing-tdee-user@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
         GetTdeeInsightQueryHandler handler = CreateHandler(
-            profileService: CreateFailingProfileService(Errors.User.NotFound()),
+            profileService: CreateFailingProfileService(UserErrors.NotFound()),
             currentUserAccessService: CreateCurrentUserAccessService(user));
 
         Result<TdeeInsightModel> result = await handler.Handle(

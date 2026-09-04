@@ -105,7 +105,7 @@ internal sealed class UserAuthenticationIdentityService(
         CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.User.NotFound(userId));
+            return Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound(userId));
         }
 
         if (string.IsNullOrWhiteSpace(user.PasswordResetTokenHash) ||
@@ -157,7 +157,7 @@ internal sealed class UserAuthenticationIdentityService(
         CancellationToken cancellationToken = default) {
         User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
-            return Result.Failure<bool>(Errors.User.NotFound(userId));
+            return Result.Failure<bool>(UserErrors.NotFound(userId));
         }
 
         if (user.IsEmailConfirmed) {
@@ -274,7 +274,7 @@ internal sealed class UserAuthenticationIdentityService(
             .GetByIdIncludingDeletedAsync(userId, cancellationToken)
             .ConfigureAwait(false);
         if (user is null) {
-            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.User.NotFound());
+            return Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound());
         }
 
         if (user.DeletedAt is not null) {

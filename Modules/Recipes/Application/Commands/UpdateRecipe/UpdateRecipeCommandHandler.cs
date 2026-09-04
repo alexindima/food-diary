@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
@@ -97,7 +96,7 @@ public sealed class UpdateRecipeCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (updated is null) {
-            return Result.Failure<Recipe>(Errors.Recipe.InvalidData("Failed to load updated recipe."));
+            return Result.Failure<Recipe>(RecipeErrors.InvalidData("Failed to load updated recipe."));
         }
 
         await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeNutritionWriter, cancellationToken).ConfigureAwait(false);

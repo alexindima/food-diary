@@ -427,7 +427,7 @@ public class ExportFeatureTests {
         IUserCredentialVerificationService credentialVerificationService = Substitute.For<IUserCredentialVerificationService>();
         credentialVerificationService
             .VerifyPasswordAsync(user.Id, "wrong", Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure(Errors.User.InvalidPassword)));
+            .Returns(Task.FromResult(Result.Failure(UserErrors.InvalidPassword)));
         credentialVerificationService
             .VerifyPasswordAsync(user.Id, "correct-password", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Success()));
@@ -480,7 +480,11 @@ public class ExportFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("Cycle.NotFound", result.Error.Code);
+        Assert.Multiple(
+            () => Assert.Equal("Cycle.NotFound", result.Error.Code),
+            () => Assert.Equal("Cycle with ID 00000000-0000-0000-0000-000000000000 was not found.", result.Error.Message),
+            () => Assert.Equal(ErrorKind.NotFound, result.Error.Kind),
+            () => Assert.Null(result.Error.Details));
     }
 
     [Fact]

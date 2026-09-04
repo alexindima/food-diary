@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -35,7 +34,7 @@ public sealed class DisconnectWearableCommandHandler(
 
         WearableConnection? connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
         if (connection is null) {
-            return Result.Failure(Errors.Wearable.NotConnected(command.Provider));
+            return Result.Failure(WearableErrors.NotConnected(command.Provider));
         }
 
         connection.Deactivate();

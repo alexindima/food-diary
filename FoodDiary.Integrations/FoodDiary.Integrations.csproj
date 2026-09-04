@@ -13,6 +13,9 @@
     <ProjectReference Include="../Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

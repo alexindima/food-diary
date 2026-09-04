@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
@@ -37,7 +36,7 @@ public sealed class GetRecipeCommentsQueryHandler(
             includePublic: true,
             cancellationToken).ConfigureAwait(false);
         if (recipe is null) {
-            return Result.Failure<PagedResponse<RecipeCommentModel>>(Errors.Recipe.NotFound(query.RecipeId));
+            return Result.Failure<PagedResponse<RecipeCommentModel>>(RecipeErrors.NotFound(query.RecipeId));
         }
 
         PagedResponse<RecipeCommentModel> comments = await commentReadService

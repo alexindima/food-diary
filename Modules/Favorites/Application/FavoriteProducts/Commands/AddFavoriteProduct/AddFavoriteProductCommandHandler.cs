@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
@@ -44,12 +43,12 @@ public sealed class AddFavoriteProductCommandHandler(
             .ConfigureAwait(false);
         ProductOverviewReadItem? product = products.GetValueOrDefault(productId);
         if (product is null) {
-            return Result.Failure<FavoriteProductModel>(Errors.Product.NotFound(command.ProductId));
+            return Result.Failure<FavoriteProductModel>(ProductErrors.NotFound(command.ProductId));
         }
 
         FavoriteProduct? existing = await favoriteProductRepository.GetByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
-            return Result.Failure<FavoriteProductModel>(Errors.FavoriteProduct.AlreadyExists);
+            return Result.Failure<FavoriteProductModel>(FavoriteProductErrors.AlreadyExists);
         }
 
         var favorite = FavoriteProduct.Create(userId, productId, command.Name, command.PreferredPortionAmount ?? product.DefaultPortionAmount);

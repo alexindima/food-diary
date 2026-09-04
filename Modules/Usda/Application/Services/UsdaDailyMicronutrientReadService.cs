@@ -5,7 +5,6 @@ using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Usda.Mappings;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
 namespace FoodDiary.Application.Usda.Services;
@@ -27,7 +26,7 @@ public sealed class UsdaDailyMicronutrientReadService(
 
         if (productItems.Count > MaximumProductItemsPerDay) {
             return Result.Failure<DailyMicronutrientSummaryModel>(
-                Errors.Usda.DailyMicronutrientItemLimitExceeded(MaximumProductItemsPerDay));
+                UsdaErrors.DailyMicronutrientItemLimitExceeded(MaximumProductItemsPerDay));
         }
 
         var linkedItems = productItems

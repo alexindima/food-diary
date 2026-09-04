@@ -49,6 +49,11 @@ public partial class NotificationsFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code),
+            () => Assert.Equal("Dietologist invitation was not found.", result.Error.Message),
+            () => Assert.Equal(ErrorKind.NotFound, result.Error.Kind),
+            () => Assert.Null(result.Error.Details));
     }
 
     [Fact]
@@ -62,6 +67,11 @@ public partial class NotificationsFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
+        Assert.Multiple(
+            () => Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code),
+            () => Assert.Equal("Dietologist invitation was not found.", result.Error.Message),
+            () => Assert.Equal(ErrorKind.NotFound, result.Error.Kind),
+            () => Assert.Null(result.Error.Details));
     }
 
     [Fact]

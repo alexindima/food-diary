@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Images.Common;
@@ -18,14 +17,14 @@ public sealed class ConfirmImageUploadCommandHandler(
     public async Task<Result<ConfirmImageUploadResult>> Handle(
         ConfirmImageUploadCommand request,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = UserIdParser.Parse(request.UserId, Errors.Image.InvalidData("UserId is required."));
+        Result<UserId> userIdResult = UserIdParser.Parse(request.UserId, ImageErrors.InvalidData("UserId is required."));
         if (userIdResult.IsFailure) {
             return UserIdParser.ToFailure<ConfirmImageUploadResult>(userIdResult);
         }
 
         Result<ImageAssetId> assetIdResult = ImageAssetIdParser.ParseRequired(
             request.AssetId,
-            Errors.Image.InvalidData("AssetId is required."));
+            ImageErrors.InvalidData("AssetId is required."));
         if (assetIdResult.IsFailure) {
             return Result.Failure<ConfirmImageUploadResult>(assetIdResult.Error);
         }
@@ -35,7 +34,7 @@ public sealed class ConfirmImageUploadCommandHandler(
             userIdResult.Value,
             cancellationToken).ConfigureAwait(false);
         if (asset is null) {
-            return Result.Failure<ConfirmImageUploadResult>(Errors.Image.NotFound(request.AssetId));
+            return Result.Failure<ConfirmImageUploadResult>(ImageErrors.NotFound(request.AssetId));
         }
 
         if (!asset.IsConfirmed) {
@@ -47,11 +46,11 @@ public sealed class ConfirmImageUploadCommandHandler(
             } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
                 throw;
             } catch (Exception) {
-                return Result.Failure<ConfirmImageUploadResult>(Errors.Image.StorageError());
+                return Result.Failure<ConfirmImageUploadResult>(ImageErrors.StorageError());
             }
 
             if (!validation.IsValid) {
-                return Result.Failure<ConfirmImageUploadResult>(Errors.Image.InvalidData(
+                return Result.Failure<ConfirmImageUploadResult>(ImageErrors.InvalidData(
                     validation.Message ?? "Image upload has not completed or is invalid."));
             }
 

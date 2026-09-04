@@ -34,7 +34,7 @@ public sealed class DisconnectDietologistCommandHandler(
             clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null) {
-            return Result.Failure(Errors.Dietologist.NoActiveRelationship);
+            return Result.Failure(DietologistErrors.NoActiveRelationship);
         }
 
         invitation.Revoke();

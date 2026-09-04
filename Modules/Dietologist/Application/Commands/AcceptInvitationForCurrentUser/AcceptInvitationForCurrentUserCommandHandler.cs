@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -52,15 +51,15 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
             asTracking: true,
             cancellationToken).ConfigureAwait(false);
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
-            return Result.Failure(Errors.Dietologist.InvitationNotFound);
+            return Result.Failure(DietologistErrors.InvitationNotFound);
         }
 
         if (!string.Equals(invitation.DietologistEmail, user.Email, StringComparison.OrdinalIgnoreCase)) {
-            return Result.Failure(Errors.Dietologist.AccessDenied);
+            return Result.Failure(DietologistErrors.AccessDenied);
         }
 
         if (invitation.IsExpired()) {
-            return Result.Failure(Errors.Dietologist.InvitationExpired);
+            return Result.Failure(DietologistErrors.InvitationExpired);
         }
 
         invitation.Accept(dietologistUserId);

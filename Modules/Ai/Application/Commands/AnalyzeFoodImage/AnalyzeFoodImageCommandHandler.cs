@@ -39,8 +39,8 @@ public sealed class AnalyzeFoodImageCommandHandler(
             .ConfigureAwait(false);
         if (assetResult.IsFailure) {
             Error error = assetResult.Error.Code switch {
-                "Image.NotFound" => Errors.Ai.ImageNotFound(query.ImageAssetId),
-                "Image.Forbidden" => Errors.Ai.Forbidden(),
+                "Image.NotFound" => AiErrors.ImageNotFound(query.ImageAssetId),
+                "Image.Forbidden" => AiErrors.Forbidden(),
                 _ => assetResult.Error,
             };
             return Result.Failure<FoodVisionModel>(error);

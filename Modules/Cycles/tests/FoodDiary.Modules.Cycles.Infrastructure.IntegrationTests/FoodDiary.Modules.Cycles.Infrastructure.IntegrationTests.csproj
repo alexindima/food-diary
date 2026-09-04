@@ -10,6 +10,7 @@
     <ProjectReference Include="..\..\..\..\FoodDiary.Initializer\FoodDiary.Initializer.csproj" />
     <ProjectReference Include="..\..\..\..\tests\FoodDiary.Testing\FoodDiary.Testing.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.collector" />

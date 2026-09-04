@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -39,7 +38,7 @@ public sealed class DeleteCycleProfileCommandHandler(
             asTracking: true,
             cancellationToken).ConfigureAwait(false);
         if (profile is null) {
-            return Result.Failure(Errors.Cycle.NotFound(command.CycleProfileId));
+            return Result.Failure(CycleErrors.NotFound(command.CycleProfileId));
         }
 
         await cycleRepository.DeleteAsync(profile, cancellationToken).ConfigureAwait(false);

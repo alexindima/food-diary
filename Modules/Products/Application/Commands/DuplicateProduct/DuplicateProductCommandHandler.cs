@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
@@ -45,7 +44,7 @@ public sealed class DuplicateProductCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (original is null) {
-            return Result.Failure<ProductModel>(Errors.Product.NotAccessible(command.ProductId));
+            return Result.Failure<ProductModel>(ProductErrors.NotAccessible(command.ProductId));
         }
 
         bool isOwnedByCurrentUser = original.UserId == userId;

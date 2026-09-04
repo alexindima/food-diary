@@ -17,6 +17,10 @@
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../../Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
     <ProjectReference Include="../../../Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
+    <ProjectReference Include="../../../Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="xunit" />

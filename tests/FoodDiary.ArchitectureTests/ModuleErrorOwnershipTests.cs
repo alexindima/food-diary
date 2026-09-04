@@ -17,10 +17,6 @@ public sealed class ModuleErrorOwnershipTests {
         Assert.Contains("FoodDiary.Results", references, StringComparer.Ordinal);
         Assert.DoesNotContain("FoodDiary.Application.Abstractions", references, StringComparer.Ordinal);
         string[] centralReferences = ProjectReferenceReader.ReadProjectReferences("FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj");
-        if (module is "Dietologist" or "Meals") {
-            Assert.Contains($"FoodDiary.Modules.{module}.Application.Abstractions", centralReferences, StringComparer.Ordinal);
-        } else {
-            Assert.DoesNotContain($"FoodDiary.Modules.{module}.Application.Abstractions", centralReferences, StringComparer.Ordinal);
-        }
+        Assert.DoesNotContain($"FoodDiary.Modules.{module}.Application.Abstractions", centralReferences, StringComparer.Ordinal);
     }
 }

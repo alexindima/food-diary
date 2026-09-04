@@ -853,7 +853,7 @@ public partial class UsersFeatureTests {
         IProfileDietologistReadService dietologistReadService = Substitute.For<IProfileDietologistReadService>();
         dietologistReadService
             .GetRelationshipAsync(user.Id, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<ProfileDietologistRelationshipModel?>(Errors.Dietologist.AccessDenied)));
+            .Returns(Task.FromResult(Result.Failure<ProfileDietologistRelationshipModel?>(DietologistErrors.AccessDenied)));
         var service = new ProfileOverviewReadService(
             userProfileReadService,
             new WebPushSubscriptionReadService(new FixedWebPushSubscriptionRepository([])),
@@ -862,7 +862,7 @@ public partial class UsersFeatureTests {
         Result<ProfileOverviewModel> result = await service.GetAsync(user.Id, CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal(Errors.Dietologist.AccessDenied.Code, result.Error.Code);
+        Assert.Equal(DietologistErrors.AccessDenied.Code, result.Error.Code);
     }
 
     [Fact]

@@ -15,3 +15,10 @@
 - `dotnet test Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/FoodDiary.Modules.Billing.Domain.Tests.csproj`
 - `dotnet test Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/FoodDiary.Modules.Billing.Infrastructure.Tests.csproj`
 - `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+
+## Error ownership
+
+Feature error factories belong to their existing owner contracts; call them directly.
+The corresponding central Errors facades are retired. Preserve exact codes, messages,
+kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
+repository or aggregate capability. See docs/ai/feature-error-retirement.md.

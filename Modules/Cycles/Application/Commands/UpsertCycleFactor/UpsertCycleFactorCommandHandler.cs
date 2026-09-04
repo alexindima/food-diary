@@ -50,7 +50,7 @@ public sealed class UpsertCycleFactorCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (profile is null) {
-            return Result.Failure<CycleModel>(Errors.Cycle.NotFound(command.CycleProfileId));
+            return Result.Failure<CycleModel>(CycleErrors.NotFound(command.CycleProfileId));
         }
 
         profile.UpsertFactor((CycleFactorType)command.Type, command.StartDate, command.EndDate, command.Notes, command.ClearNotes);

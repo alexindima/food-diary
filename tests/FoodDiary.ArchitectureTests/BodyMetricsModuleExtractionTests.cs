@@ -30,7 +30,7 @@ public sealed class BodyMetricsModuleExtractionTests {
     public void ExtractedBodyMetricsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj");
-        string[] expectedReferences = ["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Domain", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Users.Domain.Contracts"];
+        string[] expectedReferences = ["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Users.Domain.Contracts"];
 
         Assert.Equal(expectedReferences, references);
     }

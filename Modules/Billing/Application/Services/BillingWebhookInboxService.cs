@@ -1,7 +1,6 @@
 using System.Text.Json;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Models;
@@ -29,14 +28,14 @@ public sealed class BillingWebhookInboxService(
             webhookEvent = JsonSerializer.Deserialize<BillingWebhookEventModel>(inboxEvent.ParsedEventJson ?? string.Empty);
         } catch (JsonException ex) {
             webhookEvent = null;
-            deserializationError = Errors.Billing.WebhookValidationFailed(ex.Message);
+            deserializationError = BillingErrors.WebhookValidationFailed(ex.Message);
         }
 
         Result result;
         if (deserializationError is not null) {
             result = Result.Failure(deserializationError);
         } else if (webhookEvent is null) {
-            result = Result.Failure(Errors.Billing.WebhookValidationFailed("Stored webhook event is empty."));
+            result = Result.Failure(BillingErrors.WebhookValidationFailed("Stored webhook event is empty."));
         } else {
             result = await processor.ProcessAsync(
                 inboxEvent.Provider,

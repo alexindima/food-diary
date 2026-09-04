@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
@@ -39,11 +38,11 @@ public sealed class StartPremiumTrialCommandHandler(
         UserBillingProfileModel user = userResult.Value;
         BillingSubscription? subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user.HasPaidPremium || IsPaidPremiumActive(subscription)) {
-            return Result.Failure<BillingOverviewModel>(Errors.Billing.SubscriptionAlreadyActive);
+            return Result.Failure<BillingOverviewModel>(BillingErrors.SubscriptionAlreadyActive);
         }
 
         if (user.PremiumTrialStartedAtUtc is not null || user.PremiumTrialEndsAtUtc is not null) {
-            return Result.Failure<BillingOverviewModel>(Errors.Billing.TrialAlreadyUsed);
+            return Result.Failure<BillingOverviewModel>(BillingErrors.TrialAlreadyUsed);
         }
 
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;

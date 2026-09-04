@@ -3,6 +3,8 @@
   <ItemGroup>
     <ProjectReference Include="../../Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

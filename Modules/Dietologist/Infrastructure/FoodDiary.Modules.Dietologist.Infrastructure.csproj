@@ -7,5 +7,6 @@
     <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="Model\FoodDiary.Modules.Dietologist.PersistenceModel.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
   </ItemGroup>
 </Project>

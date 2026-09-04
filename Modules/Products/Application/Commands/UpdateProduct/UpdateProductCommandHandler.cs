@@ -45,7 +45,7 @@ public sealed class UpdateProductCommandHandler(
             includePublic: false,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (product is null) {
-            return Result.Failure<ProductModel>(Errors.Product.NotAccessible(command.ProductId));
+            return Result.Failure<ProductModel>(ProductErrors.NotAccessible(command.ProductId));
         }
 
         int usageCount = await productReadRepository.GetUsageCountAsync(

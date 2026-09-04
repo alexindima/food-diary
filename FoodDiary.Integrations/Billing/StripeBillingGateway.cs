@@ -33,14 +33,14 @@ public sealed class StripeBillingGateway(
         BillingCheckoutSessionRequestModel request,
         CancellationToken cancellationToken = default) {
         if (!IsConfiguredForCheckout()) {
-            return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
+            return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.ProviderNotConfigured(Provider));
         }
 
         try {
             return await CreateCheckoutSessionCoreAsync(request, cancellationToken).ConfigureAwait(false);
         } catch (Exception exception) when (IsProviderRequestFailure(exception, cancellationToken)) {
             return Result.Failure<BillingCheckoutSessionModel>(
-                Errors.Billing.ProviderOperationFailed(Provider, "Stripe request could not be completed."));
+                BillingErrors.ProviderOperationFailed(Provider, "Stripe request could not be completed."));
         }
     }
 
@@ -62,7 +62,7 @@ public sealed class StripeBillingGateway(
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(session.Id) || !BillingUrlValidator.IsAbsoluteHttps(session.Url)) {
             return Result.Failure<BillingCheckoutSessionModel>(
-                Errors.Billing.ProviderOperationFailed(Provider, "Stripe checkout session identifier or URL is invalid."));
+                BillingErrors.ProviderOperationFailed(Provider, "Stripe checkout session identifier or URL is invalid."));
         }
 
         return Result.Success(new BillingCheckoutSessionModel(session.Id, session.Url, customerId, priceId, request.Plan));
@@ -85,7 +85,7 @@ public sealed class StripeBillingGateway(
             new RequestOptions { IdempotencyKey = $"{idempotencyKey}:customer" },
             cancellationToken: cancellationToken).ConfigureAwait(false);
         return string.IsNullOrWhiteSpace(customer.Id)
-            ? Result.Failure<string>(Errors.Billing.ProviderOperationFailed(Provider, "Stripe customer identifier is missing."))
+            ? Result.Failure<string>(BillingErrors.ProviderOperationFailed(Provider, "Stripe customer identifier is missing."))
             : Result.Success(customer.Id);
     }
 
@@ -115,7 +115,7 @@ public sealed class StripeBillingGateway(
         BillingPortalSessionRequestModel request,
         CancellationToken cancellationToken = default) {
         if (!IsConfiguredForCheckout()) {
-            return Result.Failure<BillingPortalSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
+            return Result.Failure<BillingPortalSessionModel>(BillingErrors.ProviderNotConfigured(Provider));
         }
 
         try {
@@ -129,13 +129,13 @@ public sealed class StripeBillingGateway(
 
             if (!BillingUrlValidator.IsAbsoluteHttps(portalSession.Url)) {
                 return Result.Failure<BillingPortalSessionModel>(
-                    Errors.Billing.ProviderOperationFailed(Provider, "Stripe portal session URL is invalid."));
+                    BillingErrors.ProviderOperationFailed(Provider, "Stripe portal session URL is invalid."));
             }
 
             return Result.Success(new BillingPortalSessionModel(portalSession.Url));
         } catch (Exception exception) when (IsProviderRequestFailure(exception, cancellationToken)) {
             return Result.Failure<BillingPortalSessionModel>(
-                Errors.Billing.ProviderOperationFailed(Provider, "Stripe request could not be completed."));
+                BillingErrors.ProviderOperationFailed(Provider, "Stripe request could not be completed."));
         }
     }
 
@@ -144,7 +144,7 @@ public sealed class StripeBillingGateway(
         string signatureHeader,
         CancellationToken cancellationToken = default) {
         if (!IsConfiguredForWebhook()) {
-            return Result.Failure<BillingWebhookEventModel?>(Errors.Billing.ProviderNotConfigured(Provider));
+            return Result.Failure<BillingWebhookEventModel?>(BillingErrors.ProviderNotConfigured(Provider));
         }
 
         if (string.IsNullOrWhiteSpace(payload)) {
@@ -160,7 +160,7 @@ public sealed class StripeBillingGateway(
             stripeEvent = EventUtility.ConstructEvent(payload, signatureHeader, _options.WebhookSecret);
         } catch (Exception exception) when (exception is StripeException or JsonException or ArgumentException or FormatException or InvalidOperationException or NullReferenceException) {
             return Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed("Stripe webhook payload or signature is invalid."));
+                BillingErrors.WebhookValidationFailed("Stripe webhook payload or signature is invalid."));
         }
 
         try {
@@ -178,10 +178,10 @@ public sealed class StripeBillingGateway(
             };
         } catch (Exception exception) when (IsProviderRequestFailure(exception, cancellationToken)) {
             return Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.ProviderOperationFailed(Provider, "Stripe request could not be completed."));
+                BillingErrors.ProviderOperationFailed(Provider, "Stripe request could not be completed."));
         } catch (Exception exception) when (exception is InvalidCastException or InvalidOperationException or NullReferenceException) {
             return Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed("Stripe webhook price or structure is invalid."));
+                BillingErrors.WebhookValidationFailed("Stripe webhook price or structure is invalid."));
         }
     }
 

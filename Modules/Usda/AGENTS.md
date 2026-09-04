@@ -13,3 +13,10 @@
 - `dotnet test Modules/Usda/tests/FoodDiary.Modules.Usda.Application.Tests/FoodDiary.Modules.Usda.Application.Tests.csproj`
 - `dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --filter FullyQualifiedName~UsdaFoodSearchServiceTests`
 - `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+
+## Error ownership
+
+Feature error factories belong to their existing owner contracts; call them directly.
+The corresponding central Errors facades are retired. Preserve exact codes, messages,
+kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
+repository or aggregate capability. See docs/ai/feature-error-retirement.md.

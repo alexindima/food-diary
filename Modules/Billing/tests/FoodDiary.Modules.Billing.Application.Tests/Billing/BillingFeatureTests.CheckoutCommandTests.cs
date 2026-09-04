@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Billing.Models;
@@ -259,7 +260,7 @@ public partial class BillingFeatureTests {
             new FakeBillingProviderGatewayAccessor(
                 new FakeBillingProviderGateway(
                     BillingProviderNames.Paddle,
-                    checkoutError: Errors.Billing.ProviderOperationFailed(BillingProviderNames.Paddle, "declined"))),
+                    checkoutError: BillingErrors.ProviderOperationFailed(BillingProviderNames.Paddle, "declined"))),
             new FixedDateTimeProvider(Now),
             new NoopBillingCheckoutLock());
 

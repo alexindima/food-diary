@@ -46,7 +46,7 @@ public sealed class AttentionSignalTests {
         var user = User.Create("dietologist@example.com", "hash");
         IDietologistInvitationReadService invitations = Substitute.For<IDietologistInvitationReadService>();
         invitations.GetMyClientsAsync(user.Id, Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<IReadOnlyList<ClientSummaryModel>>(Errors.Dietologist.AccessDenied));
+            .Returns(Result.Failure<IReadOnlyList<ClientSummaryModel>>(DietologistErrors.AccessDenied));
         GetAttentionSignalsQueryHandler handler = CreateQueryHandler(invitations, userContext: CreateUserContext(user));
 
         Result<IReadOnlyList<AttentionSignalModel>> result = await handler.Handle(
@@ -54,7 +54,7 @@ public sealed class AttentionSignalTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal(Errors.Dietologist.AccessDenied.Code, result.Error.Code);
+        Assert.Equal(DietologistErrors.AccessDenied.Code, result.Error.Code);
     }
 
     [Fact]
@@ -183,7 +183,7 @@ public sealed class AttentionSignalTests {
                 Arg.Any<int>(),
                 Arg.Any<int>(),
                 Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<DashboardSnapshotModel>(Errors.Dietologist.AccessDenied));
+            .Returns(Result.Failure<DashboardSnapshotModel>(DietologistErrors.AccessDenied));
         dashboards.GetDashboardAsync(
                 Arg.Any<UserId>(),
                 second.UserId,

@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
@@ -73,7 +72,7 @@ public sealed class UpdateMealCommandHandler(
             cancellationToken).ConfigureAwait(false);
 
         return updated is null
-            ? Result.Failure<MealModel>(Errors.Meal.InvalidData("Failed to load updated meal."))
+            ? Result.Failure<MealModel>(MealErrors.InvalidData("Failed to load updated meal."))
             : Result.Success(updated.ToModel());
     }
 

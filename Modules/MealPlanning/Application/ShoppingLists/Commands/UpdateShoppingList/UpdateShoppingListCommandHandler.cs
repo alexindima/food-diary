@@ -46,7 +46,7 @@ public sealed class UpdateShoppingListCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (list is null) {
-            return Result.Failure<ShoppingListModel>(Errors.ShoppingList.NotFound(command.ShoppingListId));
+            return Result.Failure<ShoppingListModel>(ShoppingListErrors.NotFound(command.ShoppingListId));
         }
 
         if (!string.IsNullOrWhiteSpace(command.Name)) {

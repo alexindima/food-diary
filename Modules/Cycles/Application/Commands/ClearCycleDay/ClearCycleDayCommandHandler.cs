@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Cycles.Internal;
 using FoodDiary.Application.Abstractions.Cycles.Common;
@@ -45,7 +44,7 @@ public sealed class ClearCycleDayCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (profile is null) {
-            return Result.Failure(Errors.Cycle.NotFound(command.CycleProfileId));
+            return Result.Failure(CycleErrors.NotFound(command.CycleProfileId));
         }
 
         if (profile.ClearDay(command.Date)) {

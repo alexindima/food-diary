@@ -69,6 +69,7 @@ Source: `FoodDiary.Presentation.Api/Features/Lessons/LessonsController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Lessons/LessonsValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/Support/ResultAssert.cs`

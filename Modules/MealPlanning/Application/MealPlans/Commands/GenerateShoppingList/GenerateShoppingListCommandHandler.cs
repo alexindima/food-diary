@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.MealPlanning.Common.Validation;
@@ -44,7 +43,7 @@ public sealed class GenerateShoppingListCommandHandler(
             includeDays: true,
             cancellationToken).ConfigureAwait(false);
         if (plan is null) {
-            return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotFound(command.PlanId));
+            return Result.Failure<ShoppingListModel>(MealPlanErrors.NotFound(command.PlanId));
         }
 
         return await shoppingListCreationService.CreateAsync(

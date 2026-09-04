@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3544,
-    "symbols": 3510,
+    "sourceFiles": 3526,
+    "symbols": 3472,
     "interfaceImplementationLinks": 235,
     "dependencyInjectionRegistrations": 159,
     "kinds": {
-      "class": 1835,
+      "class": 1797,
       "enum": 62,
       "interface": 424,
       "record": 1069,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1373,
+      "Other": 1335,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -233,20 +233,6 @@
       "name": "Errors",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Ai.cs",
-      "line": 6
-    },
-    {
-      "name": "Ai",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Ai.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Authentication.cs",
       "line": 4
     },
@@ -261,260 +247,8 @@
       "name": "Errors",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Billing.cs",
-      "line": 4
-    },
-    {
-      "name": "Billing",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Billing.cs",
-      "line": 6
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.cs",
       "line": 2
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Cycle.cs",
-      "line": 6
-    },
-    {
-      "name": "Cycle",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Cycle.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.CycleDay.cs",
-      "line": 6
-    },
-    {
-      "name": "CycleDay",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.CycleDay.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Dietologist.cs",
-      "line": 6
-    },
-    {
-      "name": "Dietologist",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Dietologist.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.FavoriteMeal.cs",
-      "line": 6
-    },
-    {
-      "name": "FavoriteMeal",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.FavoriteMeal.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.FavoriteProduct.cs",
-      "line": 6
-    },
-    {
-      "name": "FavoriteProduct",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.FavoriteProduct.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.FavoriteRecipe.cs",
-      "line": 6
-    },
-    {
-      "name": "FavoriteRecipe",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.FavoriteRecipe.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Image.cs",
-      "line": 6
-    },
-    {
-      "name": "Image",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Image.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Lesson.cs",
-      "line": 4
-    },
-    {
-      "name": "Lesson",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Lesson.cs",
-      "line": 6
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.MailInbox.cs",
-      "line": 6
-    },
-    {
-      "name": "MailInbox",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.MailInbox.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Meal.cs",
-      "line": 6
-    },
-    {
-      "name": "Meal",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Meal.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.MealPlan.cs",
-      "line": 6
-    },
-    {
-      "name": "MealPlan",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.MealPlan.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Product.cs",
-      "line": 6
-    },
-    {
-      "name": "Product",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Product.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Recipe.cs",
-      "line": 6
-    },
-    {
-      "name": "Recipe",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Recipe.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.RecipeComment.cs",
-      "line": 6
-    },
-    {
-      "name": "RecipeComment",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.RecipeComment.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.ShoppingList.cs",
-      "line": 6
-    },
-    {
-      "name": "ShoppingList",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.ShoppingList.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Usda.cs",
-      "line": 6
-    },
-    {
-      "name": "Usda",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Usda.cs",
-      "line": 8
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.User.cs",
-      "line": 6
-    },
-    {
-      "name": "User",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.User.cs",
-      "line": 8
     },
     {
       "name": "Errors",
@@ -529,20 +263,6 @@
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Validation.cs",
       "line": 6
-    },
-    {
-      "name": "Errors",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Wearable.cs",
-      "line": 6
-    },
-    {
-      "name": "Wearable",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Wearable.cs",
-      "line": 8
     },
     {
       "name": "PagedResponse",
@@ -1452,7 +1172,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Billing/ConfigurableBillingProviderGatewayAccessor.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "PaddleApiClient",
@@ -1697,7 +1417,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 18
+      "line": 17
     },
     {
       "name": "OpenAiRequestFactory",
@@ -8291,7 +8011,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/MarkAdminMailInboxMessageRead/MarkAdminMailInboxMessageReadCommandHandler.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "MarkAdminMailInboxMessageReadCommandValidator",
@@ -8907,7 +8627,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessageDetails/GetAdminMailInboxMessageDetailsQueryHandler.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "GetAdminMailInboxMessageDetailsQueryValidator",
@@ -8949,7 +8669,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetAdminUserLoginEventsQuery",
@@ -9033,7 +8753,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Admin/Application/Services/AdminAuditReadService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "AdminBillingQueryFilters",
@@ -9474,7 +9194,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "AiUserContextService",
@@ -9495,7 +9215,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Ai/Application/Services/OpenAiFoodService.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "UserAiUsageSummaryReadService",
@@ -9622,6 +9342,13 @@
       "role": "Repository",
       "path": "Modules/Ai/Infrastructure/Persistence/Ai/AiUsageRepository.cs",
       "line": 8
+    },
+    {
+      "name": "BillingErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Application/Abstractions/Common/BillingErrors.cs",
+      "line": 4
     },
     {
       "name": "BillingInputLimits",
@@ -9838,7 +9565,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "CreateCheckoutSessionCommandValidator",
@@ -9859,14 +9586,14 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "BillingWebhookContextResolver",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookContextResolver.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "BillingWebhookEventProcessor",
@@ -9922,7 +9649,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/ProcessBillingWebhookCommandHandler.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "ProcessBillingWebhookCommandValidator",
@@ -9957,7 +9684,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Billing/Application/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "BillingCurrentUserAccessResolver",
@@ -10076,7 +9803,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "BillingDomainGuard",
@@ -11007,7 +10734,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "ClearCycleDayCommandValidator",
@@ -11028,7 +10755,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "ConfirmPeriodStartCommandValidator",
@@ -11070,7 +10797,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/DeleteCycleProfile/DeleteCycleProfileCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "DeleteCycleProfileCommandValidator",
@@ -11112,7 +10839,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpdateCycleConsent/UpdateCycleConsentCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "UpdateCycleConsentCommandValidator",
@@ -11133,7 +10860,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Cycles/Application/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "UpdateCycleSettingsCommandValidator",
@@ -12505,7 +12232,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
-      "line": 17
+      "line": 16
     },
     {
       "name": "AcceptInvitationCommandValidator",
@@ -12526,7 +12253,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommandHandler.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "ArchiveRecommendationTemplateCommand",
@@ -12540,7 +12267,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "BulkCreateRecommendationsCommand",
@@ -12575,7 +12302,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/CancelClientTask/CancelClientTaskCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "ChangeClientTaskStatusCommand",
@@ -12652,7 +12379,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
-      "line": 17
+      "line": 16
     },
     {
       "name": "CreateRecommendationCommentCommandValidator",
@@ -12694,7 +12421,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/DeclineInvitation/DeclineInvitationCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "DeclineInvitationCommandValidator",
@@ -12715,7 +12442,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommandHandler.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "DisconnectDietologistCommand",
@@ -12743,7 +12470,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
-      "line": 19
+      "line": 18
     },
     {
       "name": "InviteDietologistCommandValidator",
@@ -12764,7 +12491,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/MarkRecommendationRead/MarkRecommendationReadCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "RevokeInvitationCommand",
@@ -12778,7 +12505,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/RevokeInvitation/RevokeInvitationCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "SetAttentionSignalStateCommand",
@@ -12813,7 +12540,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "UpdateRecommendationTemplateCommand",
@@ -12827,7 +12554,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Dietologist/Application/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "UpdateRecommendationTemplateCommandValidator",
@@ -12848,7 +12575,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dietologist/Application/Common/DietologistAccessPolicy.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "DietologistInvitationClientNotifier",
@@ -13275,7 +13002,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Dietologist/Application/Services/DietologistDashboardAccessService.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "DietologistEmailSender",
@@ -13289,7 +13016,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Dietologist/Application/Services/DietologistInvitationReadService.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "DietologistRecommendationReadService",
@@ -13317,7 +13044,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Dietologist/Application/Services/RecommendationDiscussionReadService.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "RecommendationTemplateReadService",
@@ -13877,7 +13604,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "ExportCycleQueryValidator",
@@ -15200,7 +14927,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "FavoriteMealMappings",
@@ -15256,7 +14983,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "AddFavoriteProductCommandValidator",
@@ -15277,7 +15004,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "UpdateFavoriteProductCommand",
@@ -15291,7 +15018,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "UpdateFavoriteProductCommandValidator",
@@ -15354,7 +15081,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "AddFavoriteRecipeCommandValidator",
@@ -15375,7 +15102,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "FavoriteRecipeMappings",
@@ -17188,7 +16915,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "ConfirmImageUploadResult",
@@ -17209,7 +16936,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Images/Application/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "GetImageUploadUrlCommand",
@@ -17223,7 +16950,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Images/Application/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "GetImageUploadUrlResult",
@@ -17265,7 +16992,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Application/Services/ImageAssetAccessService.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ImageAssetCleanupService",
@@ -17380,6 +17107,13 @@
       "line": 5
     },
     {
+      "name": "LessonErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Lessons/Application/Abstractions/Common/LessonErrors.cs",
+      "line": 4
+    },
+    {
       "name": "LessonDetailReadModel",
       "kind": "record",
       "role": "Other",
@@ -17475,7 +17209,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Lessons/Application/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "GetLessonsQuery",
@@ -17993,7 +17727,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "AdoptMealPlanCommandValidator",
@@ -18014,7 +17748,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "GenerateShoppingListCommandValidator",
@@ -18147,7 +17881,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "DeleteShoppingListCommandValidator",
@@ -18644,7 +18378,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Meals/Application/Commands/DeleteMeal/DeleteMealCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "RepeatMealCommand",
@@ -18658,7 +18392,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
-      "line": 19
+      "line": 18
     },
     {
       "name": "RepeatMealCommandValidator",
@@ -18686,7 +18420,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "UpdateMealCommandValidator",
@@ -18980,7 +18714,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Meals/Application/Services/MealNutritionService.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "MealNutritionSummary",
@@ -20338,7 +20072,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Products/Application/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "DuplicateProductCommandValidator",
@@ -20513,7 +20247,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Products/Application/Queries/GetProductById/GetProductByIdQueryHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "GetProductByIdQueryValidator",
@@ -20996,7 +20730,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "CreateRecipeCommentCommandValidator",
@@ -21017,7 +20751,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommandHandler.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "UpdateRecipeCommentCommand",
@@ -21031,7 +20765,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/RecipeCommunity/Application/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "IRecipeCommentReadService",
@@ -21059,7 +20793,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/RecipeCommunity/Application/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQueryHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "RecipeCommentReadService",
@@ -21080,7 +20814,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/RecipeCommunity/Application/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "IRecipeLikeReadService",
@@ -21304,7 +21038,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "DuplicateRecipeCommandValidator",
@@ -21339,7 +21073,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "UpdateRecipeCommandValidator",
@@ -21514,7 +21248,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Recipes/Application/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "GetRecipeByIdQueryValidator",
@@ -22032,7 +21766,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Usda/Application/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "UnlinkProductFromUsdaFoodCommand",
@@ -22046,7 +21780,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Usda/Application/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "IUsdaFoodReadService",
@@ -22137,14 +21871,14 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Usda/Application/Services/UsdaDailyMicronutrientReadService.cs",
-      "line": 12
+      "line": 11
     },
     {
       "name": "UsdaFoodReadService",
       "kind": "class",
       "role": "Service",
       "path": "Modules/Usda/Application/Services/UsdaFoodReadService.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "UsdaProductSuggestionReadService",
@@ -22424,7 +22158,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/ChangePassword/ChangePasswordCommandHandler.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "ChangePasswordCommandValidator",
@@ -22480,7 +22214,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommandHandler.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "SetPasswordCommandValidator",
@@ -22851,7 +22585,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Application/Services/UserCredentialVerificationService.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "UserIdentityMutationService",
@@ -23894,7 +23628,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Wearables/Application/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
-      "line": 14
+      "line": 13
     },
     {
       "name": "ConnectWearableCommandValidator",
@@ -23915,7 +23649,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Wearables/Application/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "DisconnectWearableCommandValidator",
@@ -23936,7 +23670,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Wearables/Application/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "SyncWearableDataCommandValidator",
@@ -23985,7 +23719,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Wearables/Application/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "GetWearableAuthUrlQueryValidator",

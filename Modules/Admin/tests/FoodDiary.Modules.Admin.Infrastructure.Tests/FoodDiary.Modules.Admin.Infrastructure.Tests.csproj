@@ -2,6 +2,7 @@
   <PropertyGroup><IsPackable>false</IsPackable></PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" />
+    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

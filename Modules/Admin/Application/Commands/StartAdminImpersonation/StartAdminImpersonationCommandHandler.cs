@@ -102,7 +102,7 @@ public sealed class StartAdminImpersonationCommandHandler(
             .ConfigureAwait(false);
         if (result.IsFailure) {
             return string.Equals(result.Error.Code, "User.NotFound", StringComparison.Ordinal)
-                ? Result.Failure<UserAuthenticationPrincipalModel>(Errors.User.NotFound(targetId))
+                ? Result.Failure<UserAuthenticationPrincipalModel>(UserErrors.NotFound(targetId))
                 : Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.ImpersonationForbidden);
         }
 

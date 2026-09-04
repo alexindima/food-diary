@@ -55,7 +55,7 @@ public sealed class DeleteProductCommandHandler(
             includePublic: false,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (product is null) {
-            return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
+            return Result.Failure(ProductErrors.NotAccessible(command.ProductId));
         }
 
         int usageCount = await productReadRepository.GetUsageCountAsync(

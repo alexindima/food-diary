@@ -1,3 +1,7 @@
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Presentation.Api.Responses;
@@ -75,19 +79,19 @@ public sealed class PresentationErrorHttpMapperTests {
     private static Error CreateTelegramBotInvalidSecret() => Errors.Authentication.TelegramBotInvalidSecret;
     private static Error CreateAdminSsoForbidden() => Errors.Authentication.AdminSsoForbidden;
     private static Error CreateAccountNotDeleted() => Errors.Authentication.AccountNotDeleted;
-    private static Error CreateAiInvalidResponse() => Errors.Ai.InvalidResponse("bad response");
-    private static Error CreateAiImageNotFound() => Errors.Ai.ImageNotFound(Guid.Empty);
-    private static Error CreateAiEmptyItems() => Errors.Ai.EmptyItems();
-    private static Error CreateImageInvalidData() => Errors.Image.InvalidData("invalid");
-    private static Error CreateImageInUse() => Errors.Image.InUse();
-    private static Error CreateUserInvalidPassword() => Errors.User.InvalidPassword;
-    private static Error CreateUserInvalidCredentials() => Errors.User.InvalidCredentials;
-    private static Error CreateUserEmailAlreadyExists() => Errors.User.EmailAlreadyExists;
+    private static Error CreateAiInvalidResponse() => AiErrors.InvalidResponse("bad response");
+    private static Error CreateAiImageNotFound() => AiErrors.ImageNotFound(Guid.Empty);
+    private static Error CreateAiEmptyItems() => AiErrors.EmptyItems();
+    private static Error CreateImageInvalidData() => ImageErrors.InvalidData("invalid");
+    private static Error CreateImageInUse() => ImageErrors.InUse();
+    private static Error CreateUserInvalidPassword() => UserErrors.InvalidPassword;
+    private static Error CreateUserInvalidCredentials() => UserErrors.InvalidCredentials;
+    private static Error CreateUserEmailAlreadyExists() => UserErrors.EmailAlreadyExists;
     private static Error CreateValidationConflict() => new("Validation.Conflict", "Failure", Kind: ErrorKindResolver.Resolve("Validation.Conflict"));
     private static Error CreateAuthenticationInvalidToken() => Errors.Authentication.InvalidToken;
     private static Error CreateValidationRequired() => Errors.Validation.Required("field");
-    private static Error CreateProductNotAccessible() => Errors.Product.NotAccessible(Guid.Empty);
+    private static Error CreateProductNotAccessible() => ProductErrors.NotAccessible(Guid.Empty);
     private static Error CreateRecipeAlreadyExistsLegacy() => new("Recipe.AlreadyExists", "Failure", Kind: ErrorKindResolver.Resolve("Recipe.AlreadyExists"));
-    private static Error CreateUserNotFound() => Errors.User.NotFound();
+    private static Error CreateUserNotFound() => UserErrors.NotFound();
     private static Error CreateUnknownError() => new("Unknown.Error", "Failure");
 }

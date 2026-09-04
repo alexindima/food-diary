@@ -25,7 +25,7 @@ public sealed class ContentReportsModuleExtractionTests {
     public void ExtractedContentReportsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.ContentReports.Application.Abstractions", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.ContentReports.Application.Abstractions", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

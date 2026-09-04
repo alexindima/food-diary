@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
@@ -11,6 +10,6 @@ public sealed class MarkAdminMailInboxMessageReadCommandHandler(IAdminMailInboxR
         bool marked = await reader.MarkMessageReadAsync(command.Id, cancellationToken).ConfigureAwait(false);
         return marked
             ? Result.Success()
-            : Result.Failure(Errors.MailInbox.MessageNotFound(command.Id));
+            : Result.Failure(AdminMailInboxErrors.MessageNotFound(command.Id));
     }
 }

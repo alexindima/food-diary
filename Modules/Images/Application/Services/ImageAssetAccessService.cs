@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.Entities.Assets;
@@ -18,11 +17,11 @@ public sealed class ImageAssetAccessService(
 
         ImageAsset? asset = await imageAssetRepository.GetOwnedByIdAsync(assetId.Value, userId, cancellationToken).ConfigureAwait(false);
         if (asset is null) {
-            return Result.Failure<ImageAsset?>(Errors.Image.NotFound(assetId.Value.Value));
+            return Result.Failure<ImageAsset?>(ImageErrors.NotFound(assetId.Value.Value));
         }
 
         if (!asset.IsConfirmed) {
-            return Result.Failure<ImageAsset?>(Errors.Image.InvalidData(
+            return Result.Failure<ImageAsset?>(ImageErrors.InvalidData(
                 "Image upload has not been confirmed."));
         }
 

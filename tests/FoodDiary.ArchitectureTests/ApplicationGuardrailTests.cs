@@ -557,110 +557,41 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ApplicationAbstractionsErrorsRoot_ContainsOnlyCommonTaxonomyOrMigratedFacades() {
-        string root = GetRepositoryRoot();
-        string resultsRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Abstractions", "Results");
-        string[] commonTaxonomyFiles = [
-            "Errors.Authentication.cs",
-            "Errors.Billing.cs",
-            "Errors.Validation.cs",
-        ];
-        string[] migratedFacadeFiles = [
-            "Errors.Ai.cs",
-            "Errors.Meal.cs",
-            "Errors.Cycle.cs",
-            "Errors.CycleDay.cs",
-            "Errors.Dietologist.cs",
-            "Errors.FavoriteMeal.cs",
-            "Errors.FavoriteProduct.cs",
-            "Errors.FavoriteRecipe.cs",
-            "Errors.Image.cs",
-            "Errors.Lesson.cs",
-            "Errors.MailInbox.cs",
-            "Errors.MealPlan.cs",
-            "Errors.Product.cs",
-            "Errors.Recipe.cs",
-            "Errors.RecipeComment.cs",
-            "Errors.ShoppingList.cs",
-            "Errors.Usda.cs",
-            "Errors.User.cs",
-            "Errors.Wearable.cs",
-        ];
-        var allowedFiles = commonTaxonomyFiles
-            .Concat(migratedFacadeFiles)
-            .ToHashSet(StringComparer.Ordinal);
-
-        string[] violations = [.. Directory.GetFiles(resultsRoot, "Errors.*.cs", SearchOption.TopDirectoryOnly)
-            .Select(Path.GetFileName)
-            .Where(fileName => fileName is not null && !allowedFiles.Contains(fileName))
-            .Select(fileName => fileName!)
+    public void ApplicationAbstractionsErrorsRoot_ContainsOnlyUsedCommonTaxonomy() {
+        string resultsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions/Common/Abstractions/Results");
+        string[] files = [.. Directory.GetFiles(resultsRoot, "Errors.*.cs", SearchOption.TopDirectoryOnly)
+            .Select(path => Path.GetFileName(path))
             .Order(StringComparer.Ordinal)];
-
-        Assert.Empty(violations);
+        Assert.Equal(["Errors.Authentication.cs", "Errors.Validation.cs"], files);
     }
 
     [Theory]
-    [InlineData("Errors.Product.cs", "Products", "Common", "ProductErrors.cs", "ProductErrors.", "Product.")]
-    [InlineData("Errors.FavoriteProduct.cs", "FavoriteProducts", "Common", "FavoriteProductErrors.cs", "FavoriteProductErrors.", "FavoriteProduct.")]
-    [InlineData("Errors.FavoriteRecipe.cs", "FavoriteRecipes", "Common", "FavoriteRecipeErrors.cs", "FavoriteRecipeErrors.", "FavoriteRecipe.")]
-    [InlineData("Errors.RecipeComment.cs", "RecipeComments", "Common", "RecipeCommentErrors.cs", "RecipeCommentErrors.", "RecipeComment.")]
-    [InlineData("Errors.ShoppingList.cs", "ShoppingLists", "Common", "ShoppingListErrors.cs", "ShoppingListErrors.", "ShoppingList.")]
-    [InlineData("Errors.MealPlan.cs", "MealPlans", "Common", "MealPlanErrors.cs", "MealPlanErrors.", "MealPlan.")]
-    [InlineData("Errors.Cycle.cs", "Cycles", "Common", "CycleErrors.cs", "CycleErrors.", "Cycle.")]
-    [InlineData("Errors.CycleDay.cs", "Cycles", "Common", "CycleDayErrors.cs", "CycleDayErrors.", "CycleDay.")]
-    [InlineData("Errors.Image.cs", "Images", "Common", "ImageErrors.cs", "ImageErrors.", "Image.")]
-    [InlineData("Errors.Wearable.cs", "Wearables", "Common", "WearableErrors.cs", "WearableErrors.", "Wearable.")]
-    [InlineData("Errors.Usda.cs", "Usda", "Common", "UsdaErrors.cs", "UsdaErrors.", "Usda.")]
-    [InlineData("Errors.FavoriteMeal.cs", "FavoriteMeals", "Common", "FavoriteMealErrors.cs", "FavoriteMealErrors.", "FavoriteMeal.")]
-    [InlineData("Errors.Recipe.cs", "Recipes", "Common", "RecipeErrors.cs", "RecipeErrors.", "Recipe.")]
-    [InlineData("Errors.Ai.cs", "Ai", "Common", "AiErrors.cs", "AiErrors.", "Ai.")]
-    [InlineData("Errors.Dietologist.cs", "Dietologist", "Common", "DietologistErrors.cs", "DietologistErrors.", "Dietologist.")]
-    [InlineData("Errors.User.cs", "Users", "Common", "UserErrors.cs", "UserErrors.", "User.")]
-    [InlineData("Errors.Meal.cs", "Meals", "Common", "MealErrors.cs", "MealErrors.", "Meal.")]
-    [InlineData("Errors.MailInbox.cs", "Admin", "Common", "AdminMailInboxErrors.cs", "AdminMailInboxErrors.", "MailInbox.")]
-    public void MigratedErrorsFacades_DelegateToFeatureOwnedErrorFactories(
-        string facadeFileName,
-        string featureDirectory,
-        string featureCommonDirectory,
-        string featureErrorsFileName,
-        string delegationPattern,
-        string errorCodePrefix) {
-        string root = GetRepositoryRoot();
-        string facadePath = Path.Combine(
-            root,
-            "FoodDiary.Application.Abstractions",
-            "Common",
-            "Abstractions",
-            "Results",
-            facadeFileName);
-        string featureErrorsPath = featureDirectory switch {
-            "Users" => Path.Combine(root, "Modules", "Users", "Contracts", "Users", featureCommonDirectory, featureErrorsFileName),
-            "DailyAdvices" or "Fasting" or "Hydration" => Path.Combine(root, "Modules", featureDirectory, "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName),
-            "Dietologist" or "Meals" => Path.Combine(root, "Modules", featureDirectory, "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
-            "FavoriteMeals" or "FavoriteProducts" or "FavoriteRecipes" => Path.Combine(root, "Modules", "Favorites", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
-            "Admin" => Path.Combine(root, "Modules", "Admin", "Application", "Abstractions", "Admin", featureCommonDirectory, featureErrorsFileName),
-            "Ai" => Path.Combine(root, "Modules", "Ai", "Application", "Abstractions", "Ai", featureCommonDirectory, featureErrorsFileName),
-            "MealPlans" or "ShoppingLists" => Path.Combine(root, "Modules", "MealPlanning", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
-            "Exercises" => Path.Combine(root, "Modules", "Exercises", "Application", "Abstractions", "Exercises", featureCommonDirectory, featureErrorsFileName),
-            "Products" => Path.Combine(root, "Modules", "Products", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
-            "Recipes" => Path.Combine(root, "Modules", "Recipes", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
-            "RecipeComments" => Path.Combine(root, "Modules", "RecipeCommunity", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
-            "Images" => Path.Combine(root, "Modules", "Images", "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName),
-            "Cycles" => Path.Combine(root, "Modules", "Cycles", "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName),
-            "Wearables" => Path.Combine(root, "Modules", "Wearables", "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName),
-            "Usda" => Path.Combine(root, "Modules", "Usda", "Application", "Abstractions", featureCommonDirectory, featureErrorsFileName),
-            "WeightEntries" or "WaistEntries" => Path.Combine(root, "Modules", "BodyMetrics", "Application", "Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
-            _ => Path.Combine(root, "FoodDiary.Application.Abstractions", featureDirectory, featureCommonDirectory, featureErrorsFileName),
-        };
-
-        string facadeSource = File.ReadAllText(facadePath);
-        string featureErrorsSource = File.ReadAllText(featureErrorsPath);
-
-        Assert.Contains(delegationPattern, facadeSource, StringComparison.Ordinal);
-        string errorCodeLiteralPrefix = $"\"{errorCodePrefix}";
-
-        Assert.DoesNotContain(errorCodeLiteralPrefix, facadeSource, StringComparison.Ordinal);
-        Assert.Contains(errorCodeLiteralPrefix, featureErrorsSource, StringComparison.Ordinal);
+    [InlineData("Modules/Ai/Application/Abstractions/Ai/Common/AiErrors.cs", "AiErrors", "Ai")]
+    [InlineData("Modules/Billing/Application/Abstractions/Common/BillingErrors.cs", "BillingErrors", "Billing")]
+    [InlineData("Modules/Cycles/Application/Abstractions/Common/CycleErrors.cs", "CycleErrors", "Cycle")]
+    [InlineData("Modules/Cycles/Application/Abstractions/Common/CycleDayErrors.cs", "CycleDayErrors", "CycleDay")]
+    [InlineData("Modules/Dietologist/Application/Abstractions/Dietologist/Common/DietologistErrors.cs", "DietologistErrors", "Dietologist")]
+    [InlineData("Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/FavoriteMealErrors.cs", "FavoriteMealErrors", "FavoriteMeal")]
+    [InlineData("Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/FavoriteProductErrors.cs", "FavoriteProductErrors", "FavoriteProduct")]
+    [InlineData("Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/FavoriteRecipeErrors.cs", "FavoriteRecipeErrors", "FavoriteRecipe")]
+    [InlineData("Modules/Images/Application/Abstractions/Common/ImageErrors.cs", "ImageErrors", "Image")]
+    [InlineData("Modules/Lessons/Application/Abstractions/Common/LessonErrors.cs", "LessonErrors", "Lesson")]
+    [InlineData("Modules/Admin/Application/Abstractions/Admin/Common/AdminMailInboxErrors.cs", "AdminMailInboxErrors", "MailInbox")]
+    [InlineData("Modules/Meals/Application/Abstractions/Meals/Common/MealErrors.cs", "MealErrors", "Meal")]
+    [InlineData("Modules/MealPlanning/Application/Abstractions/MealPlans/Common/MealPlanErrors.cs", "MealPlanErrors", "MealPlan")]
+    [InlineData("Modules/Products/Application/Abstractions/Products/Common/ProductErrors.cs", "ProductErrors", "Product")]
+    [InlineData("Modules/Recipes/Application/Abstractions/Recipes/Common/RecipeErrors.cs", "RecipeErrors", "Recipe")]
+    [InlineData("Modules/RecipeCommunity/Application/Abstractions/RecipeComments/Common/RecipeCommentErrors.cs", "RecipeCommentErrors", "RecipeComment")]
+    [InlineData("Modules/MealPlanning/Application/Abstractions/ShoppingLists/Common/ShoppingListErrors.cs", "ShoppingListErrors", "ShoppingList")]
+    [InlineData("Modules/Usda/Application/Abstractions/Common/UsdaErrors.cs", "UsdaErrors", "Usda")]
+    [InlineData("Modules/Users/Contracts/Users/Common/UserErrors.cs", "UserErrors", "User")]
+    [InlineData("Modules/Wearables/Application/Abstractions/Common/WearableErrors.cs", "WearableErrors", "Wearable")]
+    public void FeatureErrors_AreOwnedAndNotDuplicatedCentrally(string path, string factory, string facade) {
+        string source = ArchitectureTestPaths.FromRoot(path);
+        IReadOnlyList<CSharpSyntaxReader.TypeDeclaration> declarations = CSharpSyntaxReader.ReadTypeDeclarations(source);
+        Assert.Contains(declarations, type => string.Equals(type.Name, factory, StringComparison.Ordinal));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot(
+            $"FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.{facade}.cs")));
     }
 
     [Fact]

@@ -34,6 +34,7 @@
     <ProjectReference Include="..\..\FoodDiary.Presentation.Api\FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Web.Api\FoodDiary.Web.Api.csproj" />
     <ProjectReference Include="../../Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

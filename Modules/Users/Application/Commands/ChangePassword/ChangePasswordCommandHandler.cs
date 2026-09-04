@@ -3,7 +3,6 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using static FoodDiary.Application.Abstractions.Common.Abstractions.Results.Errors;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Users.Commands.ChangePassword;
@@ -31,12 +30,12 @@ public sealed class ChangePasswordCommandHandler(
 
         Domain.Entities.Users.User currentUser = userResult.Value;
         if (!currentUser.HasPassword) {
-            return Result.Failure(User.PasswordNotSet);
+            return Result.Failure(UserErrors.PasswordNotSet);
         }
 
         bool isCurrentPasswordValid = passwordHasher.Verify(command.CurrentPassword, currentUser.Password);
         if (!isCurrentPasswordValid) {
-            return Result.Failure(User.InvalidPassword);
+            return Result.Failure(UserErrors.InvalidPassword);
         }
 
         string hashedPassword = passwordHasher.Hash(command.NewPassword);

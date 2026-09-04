@@ -10,6 +10,8 @@
     <ProjectReference Include="../../../Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../../Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
+    <ProjectReference Include="../../../Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.collector" />

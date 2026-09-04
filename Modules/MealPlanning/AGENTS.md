@@ -30,3 +30,10 @@ Focused tests live under tests in this module. Mixed HTTP, host, cleanup and
 cross-module tests remain central. Run focused tests and central ArchitectureTests;
 persistence changes additionally require actual PostgreSQL integration execution
 and EF pending-model verification. Do not invoke coverage collectors.
+
+## Error ownership
+
+Feature error factories belong to their existing owner contracts; call them directly.
+The corresponding central Errors facades are retired. Preserve exact codes, messages,
+kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
+repository or aggregate capability. See docs/ai/feature-error-retirement.md.

@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Meals.Common.Validation;
@@ -85,7 +84,7 @@ public sealed class RepeatMealCommandHandler(
             includeItems: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (sourceMeal is null) {
-            return Result.Failure<RepeatMealValues>(Errors.Meal.NotFound(command.MealId));
+            return Result.Failure<RepeatMealValues>(MealErrors.NotFound(command.MealId));
         }
 
         Result<MealType?> mealTypeResult = EnumValueParser.ParseOptional<MealType>(

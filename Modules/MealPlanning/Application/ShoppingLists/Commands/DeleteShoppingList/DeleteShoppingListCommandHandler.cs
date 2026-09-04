@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.MealPlanning.Common.Validation;
@@ -45,7 +44,7 @@ public sealed class DeleteShoppingListCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (list is null) {
-            return Result.Failure(Errors.ShoppingList.NotFound(command.ShoppingListId));
+            return Result.Failure(ShoppingListErrors.NotFound(command.ShoppingListId));
         }
 
         await shoppingListRepository.DeleteAsync(list, cancellationToken).ConfigureAwait(false);

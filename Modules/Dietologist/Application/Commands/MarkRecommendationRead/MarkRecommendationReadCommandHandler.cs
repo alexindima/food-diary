@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
@@ -37,7 +36,7 @@ public sealed class MarkRecommendationReadCommandHandler(
             recommendationId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recommendation is null || recommendation.ClientUserId != userId) {
-            return Result.Failure(Errors.Dietologist.InvitationNotFound);
+            return Result.Failure(DietologistErrors.InvitationNotFound);
         }
 
         recommendation.MarkAsRead();

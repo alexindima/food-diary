@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.RecipeLikes.Common;
@@ -32,7 +31,7 @@ public sealed class ToggleRecipeLikeCommandHandler(
             recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {
-            return Result.Failure<RecipeLikeStatusModel>(Errors.Recipe.NotFound(command.RecipeId));
+            return Result.Failure<RecipeLikeStatusModel>(RecipeErrors.NotFound(command.RecipeId));
         }
 
         RecipeLike? existingLike = await likeRepository.GetByUserAndRecipeAsync(

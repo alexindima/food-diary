@@ -67,6 +67,7 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/RecipeComments/RecipeCommentsValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/RecipeLikes/RecipeLikesFeatureTests.cs`

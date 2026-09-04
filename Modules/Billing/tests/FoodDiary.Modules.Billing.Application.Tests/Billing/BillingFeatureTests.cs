@@ -687,7 +687,7 @@ public partial class BillingFeatureTests {
             CancellationToken cancellationToken = default) {
             CreatePaymentCallCount++;
             return Task.FromResult(Result.Failure<BillingRecurringPaymentModel>(
-                Errors.Billing.ProviderOperationFailed(Provider, "declined")));
+                BillingErrors.ProviderOperationFailed(Provider, "declined")));
         }
     }
 

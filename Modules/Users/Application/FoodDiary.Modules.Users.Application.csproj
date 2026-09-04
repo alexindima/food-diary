@@ -13,6 +13,7 @@
     <ProjectReference Include="Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../../Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" />

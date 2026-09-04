@@ -3,7 +3,6 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using static FoodDiary.Application.Abstractions.Common.Abstractions.Results.Errors;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Users.Commands.SetPassword;
@@ -31,7 +30,7 @@ public sealed class SetPasswordCommandHandler(
 
         Domain.Entities.Users.User currentUser = userResult.Value;
         if (currentUser.HasPassword) {
-            return Result.Failure(User.PasswordAlreadySet);
+            return Result.Failure(UserErrors.PasswordAlreadySet);
         }
 
         string hashedPassword = passwordHasher.Hash(command.NewPassword);

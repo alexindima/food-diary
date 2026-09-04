@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Common;
@@ -155,7 +155,7 @@ public partial class RecipesFeatureTests {
     [Fact]
     public async Task CreateRecipeCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
         RecordingImageAssetAccessService imageAccess = new FoodDiary.Application.Tests.Support.RecordingImageAssetAccessService()
-            .WithFailure(Errors.Image.Forbidden());
+            .WithFailure(ImageErrors.Forbidden());
         var repository = new SingleRecipeRepositoryForCreate();
         CreateRecipeCommandHandler handler = CreateRecipeHandler(
             repository,
@@ -180,7 +180,7 @@ public partial class RecipesFeatureTests {
         CreateRecipeCommandHandler handler = CreateRecipeHandler(
             repository,
             new StubUserRepository(User.Create("step-image-fail@example.com", "hash")),
-            new FailingNonNullImageAssetAccessService(Errors.Image.Forbidden()),
+            new FailingNonNullImageAssetAccessService(ImageErrors.Forbidden()),
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 

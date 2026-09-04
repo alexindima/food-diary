@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Meals.Commands.UpdateMeal;
 using FoodDiary.Application.Meals.Common;
@@ -592,7 +592,7 @@ public partial class MealsFeatureTests {
         var user = User.Create("update-image-failure@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         RecordingImageAssetAccessService imageAccess = new RecordingImageAssetAccessService()
-            .WithFailure(Errors.Image.NotFound(Guid.NewGuid()));
+            .WithFailure(ImageErrors.NotFound(Guid.NewGuid()));
         var repository = new SingleMealRepository(meal);
         UpdateMealCommandHandler handler = CreateUpdateHandler(repository, user, imageAccess: imageAccess);
 

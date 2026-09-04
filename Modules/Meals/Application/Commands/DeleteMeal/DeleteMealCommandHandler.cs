@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
@@ -43,7 +42,7 @@ public sealed class DeleteMealCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (meal is null) {
-            return Result.Failure(Errors.Meal.NotFound(command.MealId));
+            return Result.Failure(MealErrors.NotFound(command.MealId));
         }
 
         await mealWriteRepository.DeleteAsync(meal, cancellationToken).ConfigureAwait(false);

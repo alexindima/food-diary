@@ -28,3 +28,10 @@ by AddUsersPersistence, sharing one scoped instance and DbContext. Identity uses
 Users' semantic capabilities, not these aggregate ports. Preserve tracked identity,
 query filters, role/goal loading and caller-owned SaveChanges/transactions. See
 `docs/ai/users-repository-ownership.md`.
+
+## Error ownership
+
+Feature error factories belong to their existing owner contracts; call them directly.
+The corresponding central Errors facades are retired. Preserve exact codes, messages,
+kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
+repository or aggregate capability. See docs/ai/feature-error-retirement.md.

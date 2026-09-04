@@ -33,7 +33,7 @@ public sealed class AdminSsoExchangeCommandHandler(
             .ConfigureAwait(false);
         if (principalResult.IsFailure) {
             Error error = string.Equals(principalResult.Error.Code, "Authentication.InvalidCredentials", StringComparison.Ordinal)
-                ? Errors.User.NotFound()
+                ? UserErrors.NotFound()
                 : principalResult.Error;
             return Result.Failure<AuthenticationModel>(error);
         }

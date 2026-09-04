@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using FoodDiary.Results;
@@ -42,7 +43,7 @@ public sealed class ExportCycleQueryHandler(
 
         CycleModel? cycle = await cycleReadService.GetCurrentAsync(userId, cancellationToken).ConfigureAwait(false);
         if (cycle is null) {
-            return Result.Failure<FileExportResult>(Errors.Cycle.NotFound(Guid.Empty));
+            return Result.Failure<FileExportResult>(CycleErrors.NotFound(Guid.Empty));
         }
 
         if (query.Scope == CycleExportScope.Sensitive) {

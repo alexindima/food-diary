@@ -52,7 +52,7 @@ public sealed class DeleteRecipeCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {
-            return Result.Failure(Errors.Recipe.NotAccessible(command.RecipeId));
+            return Result.Failure(RecipeErrors.NotAccessible(command.RecipeId));
         }
 
         int usageCount = await recipeReadRepository.GetUsageCountAsync(

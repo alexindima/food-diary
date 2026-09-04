@@ -90,6 +90,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/Favorites/FavoriteCommandValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/Favorites/FavoriteWriteContractTests.cs`
+- [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/TestProductOverview.cs`
 - [behavioral-or-text-match] `Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/TestRecipeOverview.cs`

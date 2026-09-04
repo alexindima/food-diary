@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
@@ -70,7 +70,7 @@ public partial class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
         RecordingImageAssetAccessService imageAccess = new FoodDiary.Application.Tests.Support.RecordingImageAssetAccessService()
-            .WithFailure(Errors.Image.Forbidden());
+            .WithFailure(ImageErrors.Forbidden());
         UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
@@ -97,7 +97,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("step-image-fail@example.com", "hash")),
-            new FailingNonNullImageAssetAccessService(Errors.Image.Forbidden()),
+            new FailingNonNullImageAssetAccessService(ImageErrors.Forbidden()),
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 

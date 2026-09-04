@@ -23,5 +23,6 @@
     <ProjectReference Include="../../../Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
     <ProjectReference Include="../../../BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Exercises/Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
   </ItemGroup>
 </Project>

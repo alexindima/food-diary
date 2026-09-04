@@ -41,7 +41,7 @@ public sealed class ChangeClientTaskStatusCommandHandler(
         ClientTask? task = await taskRepository.GetByIdAsync(
             taskIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (task is null || task.ClientUserId != userIdResult.Value) {
-            return Result.Failure<ClientTaskModel>(Errors.Dietologist.InvitationNotFound);
+            return Result.Failure<ClientTaskModel>(DietologistErrors.InvitationNotFound);
         }
 
         Result accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(

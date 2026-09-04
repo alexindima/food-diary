@@ -46,7 +46,7 @@ internal static class UpdateMealValuePreparer {
             asTracking: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (meal is null) {
-            return Result.Failure<UpdateMealValues>(Errors.Meal.NotFound(command.MealId));
+            return Result.Failure<UpdateMealValues>(MealErrors.NotFound(command.MealId));
         }
 
         Result<MealType?> mealTypeResult = EnumValueParser.ParseOptional<MealType>(

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Admin.Models;
@@ -23,7 +24,7 @@ public sealed class GetAdminUserQueryHandler(IAdminUserReadService userReadServi
         UserId userId = userIdResult.Value;
         AdminUserModel? user = await userReadService.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
         return user is null
-            ? Result.Failure<AdminUserModel>(Errors.User.NotFound(userId))
+            ? Result.Failure<AdminUserModel>(UserErrors.NotFound(userId))
             : Result.Success(user);
     }
 }

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -111,7 +112,7 @@ public sealed class OpenAiFoodServiceTests {
     [Fact]
     public async Task CalculateNutritionAsync_WhenTokenCountFails_DoesNotReserveOrGenerate() {
         var client = new RecordingOpenAiFoodClient {
-            CalculateNutritionBudgetResult = Result.Failure<AiProviderTokenBudget>(Errors.Ai.InvalidResponse("count failed")),
+            CalculateNutritionBudgetResult = Result.Failure<AiProviderTokenBudget>(AiErrors.InvalidResponse("count failed")),
         };
         var quotaRepository = new RecordingAiQuotaRepository();
         OpenAiFoodService service = CreateService(client, quotaRepository);
@@ -158,7 +159,7 @@ public sealed class OpenAiFoodServiceTests {
     public async Task CalculateNutritionAsync_WhenClientFailureCostIsUnknown_KeepsReservationPending() {
         var quotaRepository = new RecordingAiQuotaRepository();
         var client = new RecordingOpenAiFoodClient {
-            CalculateNutritionResult = Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(Errors.Ai.EmptyItems()),
+            CalculateNutritionResult = Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(AiErrors.EmptyItems()),
         };
         OpenAiFoodService service = CreateService(client, quotaRepository);
 
@@ -311,16 +312,16 @@ public sealed class OpenAiFoodServiceTests {
     public async Task VisionOperations_WhenDependencyFails_ReturnFailure(bool analyzeImage, string stage) {
         var client = new RecordingOpenAiFoodClient {
             AnalyzeFoodImageBudgetResult = string.Equals(stage, "budget", StringComparison.Ordinal)
-                ? Result.Failure<AiProviderTokenBudget>(Errors.Ai.InvalidResponse("budget failed"))
+                ? Result.Failure<AiProviderTokenBudget>(AiErrors.InvalidResponse("budget failed"))
                 : null,
             ParseFoodTextBudgetResult = string.Equals(stage, "budget", StringComparison.Ordinal)
-                ? Result.Failure<AiProviderTokenBudget>(Errors.Ai.InvalidResponse("budget failed"))
+                ? Result.Failure<AiProviderTokenBudget>(AiErrors.InvalidResponse("budget failed"))
                 : null,
             AnalyzeFoodImageResult = string.Equals(stage, "provider", StringComparison.Ordinal)
-                ? Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.InvalidResponse("provider failed"))
+                ? Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(AiErrors.InvalidResponse("provider failed"))
                 : null,
             ParseFoodTextResult = string.Equals(stage, "provider", StringComparison.Ordinal)
-                ? Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.InvalidResponse("provider failed"))
+                ? Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(AiErrors.InvalidResponse("provider failed"))
                 : null,
         };
         var quotaRepository = new RecordingAiQuotaRepository {
@@ -523,7 +524,7 @@ public sealed class OpenAiFoodServiceTests {
             .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(_ => {
                 if (returnNull) {
-                    return Task.FromResult(Result.Failure<AiUserContext>(Errors.User.NotFound()));
+                    return Task.FromResult(Result.Failure<AiUserContext>(UserErrors.NotFound()));
                 }
 
                 if (!resolvedUser.IsActive || resolvedUser.DeletedAt is not null) {

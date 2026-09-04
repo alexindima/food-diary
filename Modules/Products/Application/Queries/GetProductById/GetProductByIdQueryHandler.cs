@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
@@ -44,7 +43,7 @@ public sealed class GetProductByIdQueryHandler(
             cancellationToken).ConfigureAwait(false);
         ProductOverviewReadItem? product = productsById.GetValueOrDefault(productId);
         if (product is null) {
-            return Result.Failure<ProductModel>(Errors.Product.NotAccessible(query.ProductId));
+            return Result.Failure<ProductModel>(ProductErrors.NotAccessible(query.ProductId));
         }
 
         return Result.Success(product.ToModel());

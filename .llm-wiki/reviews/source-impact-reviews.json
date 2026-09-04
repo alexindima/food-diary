@@ -65,13 +65,13 @@
       "sources": [
         {
           "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "883aec2fa8100d88b93aa1eb1e4dfcd5c88b6bd44efd4540c05c17b93fc8eeff"
+          "sha256": "3c8a5cfa15d7813a60a6f5bd91f002e23be4512ef25d1bfe519249992344fa56"
         }
       ],
-      "reason": "Retire three public central CSharp facade types with coordinated source rebuild; no external repository consumers per user. Exact owner factories unchanged,10receiver substitutions in8files preserve predicates/arguments/returned errors. HTTP sources/snapshots unchanged and full unfiltered HTTP/Presentation tests pass. No old-binary compatibility promise.",
+      "reason": "Retire20public CSharp nested types with coordinated source rebuild; no outside repository consumers per user.110production caller token bodies unchanged except receiver/imports,18factories unchanged,2member bodies moved unchanged. Full HTTP/Presentation/catalog tests and actual API comparison preserve contracts; no old-binary promise.",
       "baseRef": "HEAD",
-      "gitHead": "f0c9f306e1e1b491a7c7b273a5e419eb7117318a",
-      "reviewedAtUtc": "2026-09-04T10:07:57.3022628Z"
+      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
+      "reviewedAtUtc": "2026-09-04T11:12:57.0535637Z"
     },
     {
       "pageId": "system.architecture",
@@ -80,13 +80,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "138213420809f2388aca54d093578e883c3782afa21a5061a022b6eb6f440361"
+          "sha256": "33d5a9edfe93bf67a621f09c89d11834b94ac3632a735ff1dac1dd1b3a7ed1a7"
         }
       ],
-      "reason": "Three central facades and two references removed; central20to18,22existing owner references explicit in18consumers (19project files). Exact matrix/current guides updated, factories unchanged. Shared taxonomy and other facades remain; no new project/package, schema, provider or DI change.",
+      "reason": "20central feature facades retired across16owners; central18to5references. Existing consumers declare actual owners directly, preserving reachability or documented factory moves. Exact matrix and standalone guards updated, no new project/package or runtime redesign. Only Authentication/Validation and central resolver/SSO seams remain.",
       "baseRef": "HEAD",
-      "gitHead": "f0c9f306e1e1b491a7c7b273a5e419eb7117318a",
-      "reviewedAtUtc": "2026-09-04T10:07:57.5316702Z"
+      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
+      "reviewedAtUtc": "2026-09-04T11:12:57.2317083Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -204,17 +204,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "da769425d89b3f63134f7eb94da46bfec71f240077604aa3454259b9118593a5"
+          "sha256": "4db5e3a905da4c6b050b3fa2b55075c16b099b86ade5dd1e75b09aa1dda28bfb"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "138213420809f2388aca54d093578e883c3782afa21a5061a022b6eb6f440361"
+          "sha256": "33d5a9edfe93bf67a621f09c89d11834b94ac3632a735ff1dac1dd1b3a7ed1a7"
         }
       ],
-      "reason": "17 final unfiltered suites,4244 passed,zero failed/skipped. Three retirement guards red before/pass after, nine exact owner factory cases added (including three culture cases), other mixed compatibility checks retained. Fullsolution and independentcentral build pass, EF unchanged, NuGet zero vulnerabilities; no collectors. Original red structural run retained.",
+      "reason": "50 final unfiltered suites,6286 passed,zero failed/skipped.75literal factory member contracts across16owner suites,owner assembly/namespace and culture cases; shared/presentation catalogs retain full enumeration. Initial two build errors retained/fixed before tests; metadata audits verify direct owners. Full solution/central build,EF unchanged,NuGet clean; no collectors.",
       "baseRef": "HEAD",
-      "gitHead": "f0c9f306e1e1b491a7c7b273a5e419eb7117318a",
-      "reviewedAtUtc": "2026-09-04T10:07:57.8191165Z"
+      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
+      "reviewedAtUtc": "2026-09-04T11:12:57.4288282Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -223,13 +223,13 @@
       "sources": [
         {
           "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "883aec2fa8100d88b93aa1eb1e4dfcd5c88b6bd44efd4540c05c17b93fc8eeff"
+          "sha256": "3c8a5cfa15d7813a60a6f5bd91f002e23be4512ef25d1bfe519249992344fa56"
         }
       ],
-      "reason": "Retire three public central CSharp facade types with coordinated source rebuild; no external repository consumers per user. Exact owner factories unchanged,10receiver substitutions in8files preserve predicates/arguments/returned errors. HTTP sources/snapshots unchanged and full unfiltered HTTP/Presentation tests pass. No old-binary compatibility promise.",
+      "reason": "Retire20public CSharp nested types with coordinated source rebuild; no outside repository consumers per user.110production caller token bodies unchanged except receiver/imports,18factories unchanged,2member bodies moved unchanged. Full HTTP/Presentation/catalog tests and actual API comparison preserve contracts; no old-binary promise.",
       "baseRef": "HEAD",
-      "gitHead": "f0c9f306e1e1b491a7c7b273a5e419eb7117318a",
-      "reviewedAtUtc": "2026-09-04T10:07:58.0941274Z"
+      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
+      "reviewedAtUtc": "2026-09-04T11:12:57.6213903Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -764,13 +764,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "bb8a0665c19603cccfe93689b1c822194ce8ee4e3876ba110e280718d878ead5"
+          "sha256": "aa60f355f938118bcdb62fe509708378795db04cb0d49b05d664cc8a0da75ed6"
         }
       ],
-      "reason": "No tenant/auth/lifecycle/dataflow edit. Hydration NotAccessible remains NotFound, IDs/timestamps and locale/error messages unchanged. Notifications Dietologist error and Favorites Meal error explicitly deferred. No provider or external security scan.",
+      "reason": "No auth/tenant/lifecycle/provider/dataflow edits. Preserve Notifications Dietologist.InvitationNotFound, Favorites Meal.NotFound, Export empty-GUID Cycle.NotFound and all identifiers/messages/kinds. Four existing cross-module cases assert literal values; no external security scan.",
       "baseRef": "HEAD",
-      "gitHead": "cca556d95d7034e6afd3d50ea36d4a4668bbd982",
-      "reviewedAtUtc": "2026-09-04T09:21:08.6914445Z"
+      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
+      "reviewedAtUtc": "2026-09-04T11:12:57.8882651Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -809,13 +809,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0dc0446a26219f8613941452eec6966a10331921b776232cd69468b4b183aa73"
+          "sha256": "c58985098b35dd6c18b9ac3fd784ac0740bef3952ba1c59d5998adaf86559f21"
         }
       ],
-      "reason": "17 final unfiltered suites,4244 passed,zero failed/skipped. Three retirement guards red before/pass after, nine exact owner factory cases added (including three culture cases), other mixed compatibility checks retained. Fullsolution and independentcentral build pass, EF unchanged, NuGet zero vulnerabilities; no collectors. Original red structural run retained.",
+      "reason": "50 final unfiltered suites,6286 passed,zero failed/skipped.75literal factory member contracts across16owner suites,owner assembly/namespace and culture cases; shared/presentation catalogs retain full enumeration. Initial two build errors retained/fixed before tests; metadata audits verify direct owners. Full solution/central build,EF unchanged,NuGet clean; no collectors.",
       "baseRef": "HEAD",
-      "gitHead": "f0c9f306e1e1b491a7c7b273a5e419eb7117318a",
-      "reviewedAtUtc": "2026-09-04T10:07:58.6159537Z"
+      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
+      "reviewedAtUtc": "2026-09-04T11:12:58.4133545Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -892,13 +892,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "95bd5830e692a2598da9292850f6eaf948e6e46cb754daadcc9d52bdc05927b6"
+          "sha256": "59a3ea5843c7770713dd467ebf2daec73fc7b8610d9e966318105ffc43c93122"
         }
       ],
-      "reason": "Three central facades and two references removed; central20to18,22existing owner references explicit in18consumers (19project files). Exact matrix/current guides updated, factories unchanged. Shared taxonomy and other facades remain; no new project/package, schema, provider or DI change.",
+      "reason": "20central feature facades retired across16owners; central18to5references. Existing consumers declare actual owners directly, preserving reachability or documented factory moves. Exact matrix and standalone guards updated, no new project/package or runtime redesign. Only Authentication/Validation and central resolver/SSO seams remain.",
       "baseRef": "HEAD",
-      "gitHead": "f0c9f306e1e1b491a7c7b273a5e419eb7117318a",
-      "reviewedAtUtc": "2026-09-04T10:07:59.2522549Z"
+      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
+      "reviewedAtUtc": "2026-09-04T11:12:58.9709726Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -907,17 +907,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0dc0446a26219f8613941452eec6966a10331921b776232cd69468b4b183aa73"
+          "sha256": "c58985098b35dd6c18b9ac3fd784ac0740bef3952ba1c59d5998adaf86559f21"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "95bd5830e692a2598da9292850f6eaf948e6e46cb754daadcc9d52bdc05927b6"
+          "sha256": "59a3ea5843c7770713dd467ebf2daec73fc7b8610d9e966318105ffc43c93122"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "aa60f355f938118bcdb62fe509708378795db04cb0d49b05d664cc8a0da75ed6"
         }
       ],
-      "reason": "No tenant/auth/lifecycle/dataflow edit. Measurement and exercise NotAccessible remains NotFound, IDs/timestamps and locale/error messages unchanged. Notifications Dietologist error and Favorites Meal error explicitly deferred. No provider or external security scan.",
+      "reason": "No auth/tenant/lifecycle/provider/dataflow edits. Preserve Notifications Dietologist.InvitationNotFound, Favorites Meal.NotFound, Export empty-GUID Cycle.NotFound and all identifiers/messages/kinds. Four existing cross-module cases assert literal values; no external security scan.",
       "baseRef": "HEAD",
-      "gitHead": "f0c9f306e1e1b491a7c7b273a5e419eb7117318a",
-      "reviewedAtUtc": "2026-09-04T10:07:59.7351046Z"
+      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
+      "reviewedAtUtc": "2026-09-04T11:12:59.3607805Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1155,13 +1159,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "dada5c89c395fb51eb9b73de30720ef6fd1ede1d272e7e3758c10b90cfd84cbe"
+          "sha256": "9a5cbf04458e13cee2c9caf767298477073c05c9f24b89db4add9e27d617dbd5"
         }
       ],
-      "reason": "Three central facades and two references removed; central20to18,22existing owner references explicit in18consumers (19project files). Exact matrix/current guides updated, factories unchanged. Shared taxonomy and other facades remain; no new project/package, schema, provider or DI change.",
+      "reason": "20central feature facades retired across16owners; central18to5references. Existing consumers declare actual owners directly, preserving reachability or documented factory moves. Exact matrix and standalone guards updated, no new project/package or runtime redesign. Only Authentication/Validation and central resolver/SSO seams remain.",
       "baseRef": "HEAD",
-      "gitHead": "f0c9f306e1e1b491a7c7b273a5e419eb7117318a",
-      "reviewedAtUtc": "2026-09-04T10:07:58.9278556Z"
+      "gitHead": "026f2f32c6a55f52ee3f146e8021158530b6f566",
+      "reviewedAtUtc": "2026-09-04T11:12:58.7126812Z"
     },
     {
       "pageId": "workflow.review-diff",

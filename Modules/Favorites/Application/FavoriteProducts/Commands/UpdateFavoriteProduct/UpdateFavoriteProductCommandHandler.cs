@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
@@ -43,7 +42,7 @@ public sealed class UpdateFavoriteProductCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (favorite is null) {
-            return Result.Failure<FavoriteProductModel>(Errors.FavoriteProduct.NotFound(command.FavoriteProductId));
+            return Result.Failure<FavoriteProductModel>(FavoriteProductErrors.NotFound(command.FavoriteProductId));
         }
 
         favorite.UpdateName(command.Name);

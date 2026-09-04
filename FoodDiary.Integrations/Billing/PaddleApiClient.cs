@@ -1,9 +1,9 @@
+using FoodDiary.Application.Abstractions.Billing.Common;
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Integrations.Http;
 using FoodDiary.Integrations.Options;
@@ -110,7 +110,7 @@ internal sealed class PaddleApiClient(HttpClient httpClient, PaddleOptions optio
         string.IsNullOrWhiteSpace(next) ? null : NormalizeRelativePath(next);
 
     private static Error CreateProviderFailure(string message) =>
-        Errors.Billing.ProviderOperationFailed(BillingProviderNames.Paddle, message);
+        BillingErrors.ProviderOperationFailed(BillingProviderNames.Paddle, message);
 
     private sealed record PaddleEnvelope<T>(
         [property: JsonPropertyName("data")] T? Data,

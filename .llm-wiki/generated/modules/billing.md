@@ -51,18 +51,19 @@ Source: `FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: BillingSubscription, BillingPayment, BillingWebhookEvent
-- Public contract files: 29
+- Public contract files: 30
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 29
+- Public contract types: 30
 - Interfaces: 17
 - DTO/read-model/projection types: 9
 - Enums: 0
 - Exported repository-shaped contracts: 10
 - Contracts referencing domain entities: 5
+- `class BillingErrors`
 - `class BillingInputLimits`
 - `class BillingPaymentAlreadyExistsException`
 - `class BillingWebhookEventAlreadyProcessedException`
@@ -105,6 +106,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/NoopBillingCheckoutLock.cs`
+- [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/Domain/BillingInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests/Domain/BillingPaymentGuardTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Integrations/BillingProviderGatewayAccessorTests.cs`

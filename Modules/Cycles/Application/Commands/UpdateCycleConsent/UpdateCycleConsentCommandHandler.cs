@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Cycles.Internal;
@@ -45,7 +44,7 @@ public sealed class UpdateCycleConsentCommandHandler(
             asTracking: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (profile is null) {
-            return Result.Failure<CycleModel>(Errors.Cycle.NotFound(command.CycleProfileId));
+            return Result.Failure<CycleModel>(CycleErrors.NotFound(command.CycleProfileId));
         }
 
         var purpose = (CycleConsentPurpose)command.Purpose;

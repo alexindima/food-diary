@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -27,7 +27,7 @@ public sealed class GetCurrentShoppingListQueryHandler(
         ShoppingListModel? list = await shoppingListReadService.GetCurrentAsync(userId, cancellationToken).ConfigureAwait(false);
 
         return list is null
-            ? Result.Failure<ShoppingListModel>(Errors.ShoppingList.CurrentNotFound())
+            ? Result.Failure<ShoppingListModel>(ShoppingListErrors.CurrentNotFound())
             : Result.Success(list);
     }
 }

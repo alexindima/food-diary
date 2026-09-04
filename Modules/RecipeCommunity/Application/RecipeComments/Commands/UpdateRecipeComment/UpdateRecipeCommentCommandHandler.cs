@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
@@ -29,11 +28,11 @@ public sealed class UpdateRecipeCommentCommandHandler(
         RecipeComment? comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
         if (comment is null || comment.RecipeId != recipeId) {
-            return Result.Failure<RecipeCommentModel>(Errors.RecipeComment.NotFound(command.CommentId));
+            return Result.Failure<RecipeCommentModel>(RecipeCommentErrors.NotFound(command.CommentId));
         }
 
         if (comment.UserId != userIdResult.Value) {
-            return Result.Failure<RecipeCommentModel>(Errors.RecipeComment.NotAuthor);
+            return Result.Failure<RecipeCommentModel>(RecipeCommentErrors.NotAuthor);
         }
 
         comment.UpdateText(command.Text);

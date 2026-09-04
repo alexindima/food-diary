@@ -33,7 +33,7 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
   contract features may use Common or Abstractions purpose folders; source-file
   placement remains independently enforced.
 
-- `ModuleErrorOwnershipTests` keeps DailyAdvices, Dietologist, Fasting, Hydration and Meals error factories in their existing owner Abstractions. `RetiredErrorFacadeTests` rejects central DailyAdvice/Fasting/HydrationEntry declarations and owner exports; their exact error contract tests live in their modules. Dietologist/Meals still have one-way central facades; do not restore Dietologist's obsolete reverse central abstraction reference.
+- `ModuleErrorOwnershipTests` keeps DailyAdvices, Dietologist, Fasting, Hydration and Meals error factories in their existing owner Abstractions. `RetiredErrorFacadeTests` rejects central DailyAdvice/Fasting/HydrationEntry declarations and owner exports; their exact error contract tests live in their modules. All feature facades, including Dietologist/Meals/Billing/Lesson, are retired. Positive owner guards and the exact five-reference central matrix prevent regression; literal contract tests live in owner suites. Do not restore reverse central references.
 
 - `FavoritesContractOwnershipTests` protects the 20 owner-port/error/read-model files and six public read-service/projection files in separate Favorites projects, rejects central duplicates and aggregate/repository types in consumer contracts, and keeps Meals' source-reader dependency one-way.
 

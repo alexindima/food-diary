@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -42,7 +42,7 @@ public sealed class GetShoppingListByIdQueryHandler(
             cancellationToken).ConfigureAwait(false);
 
         return list is null
-            ? Result.Failure<ShoppingListModel>(Errors.ShoppingList.NotFound(query.ShoppingListId))
+            ? Result.Failure<ShoppingListModel>(ShoppingListErrors.NotFound(query.ShoppingListId))
             : Result.Success(list);
     }
 }

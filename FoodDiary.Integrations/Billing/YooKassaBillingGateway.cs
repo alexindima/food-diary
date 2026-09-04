@@ -28,7 +28,7 @@ public sealed class YooKassaBillingGateway(
         BillingCheckoutSessionRequestModel request,
         CancellationToken cancellationToken = default) {
         if (!IsConfiguredForCheckout()) {
-            return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
+            return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.ProviderNotConfigured(Provider));
         }
 
         string amount = ResolveAmount(request.Plan);
@@ -56,7 +56,7 @@ public sealed class YooKassaBillingGateway(
         if (string.IsNullOrWhiteSpace(payment.Id) ||
             !BillingUrlValidator.IsAbsoluteHttps(confirmationUrl)) {
             return Result.Failure<BillingCheckoutSessionModel>(
-                Errors.Billing.ProviderOperationFailed(Provider, "YooKassa payment identifier or confirmation URL is invalid."));
+                BillingErrors.ProviderOperationFailed(Provider, "YooKassa payment identifier or confirmation URL is invalid."));
         }
 
         return Result.Success(new BillingCheckoutSessionModel(
@@ -71,13 +71,13 @@ public sealed class YooKassaBillingGateway(
         BillingPortalSessionRequestModel request,
         CancellationToken cancellationToken = default) =>
         Task.FromResult(Result.Failure<BillingPortalSessionModel>(
-            Errors.Billing.ProviderOperationFailed(Provider, "YooKassa does not provide a hosted customer portal.")));
+            BillingErrors.ProviderOperationFailed(Provider, "YooKassa does not provide a hosted customer portal.")));
 
     public async Task<Result<BillingRecurringPaymentModel>> CreateRecurringPaymentAsync(
         BillingRecurringPaymentRequestModel request,
         CancellationToken cancellationToken = default) {
         if (!IsConfiguredForCheckout()) {
-            return Result.Failure<BillingRecurringPaymentModel>(Errors.Billing.ProviderNotConfigured(Provider));
+            return Result.Failure<BillingRecurringPaymentModel>(BillingErrors.ProviderNotConfigured(Provider));
         }
 
         if (string.IsNullOrWhiteSpace(request.PaymentMethodId)) {
@@ -107,7 +107,7 @@ public sealed class YooKassaBillingGateway(
         YooKassaPayment payment = paymentResponse.Value;
         if (string.IsNullOrWhiteSpace(payment.Id)) {
             return Result.Failure<BillingRecurringPaymentModel>(
-                Errors.Billing.ProviderOperationFailed(Provider, "YooKassa payment identifier is missing."));
+                BillingErrors.ProviderOperationFailed(Provider, "YooKassa payment identifier is missing."));
         }
 
         string status = payment.Paid && string.Equals(payment.Status, "succeeded", StringComparison.OrdinalIgnoreCase)
@@ -140,7 +140,7 @@ public sealed class YooKassaBillingGateway(
         }
 
         if (!IsConfiguredForWebhook()) {
-            return Result.Failure<BillingWebhookEventModel?>(Errors.Billing.ProviderNotConfigured(Provider));
+            return Result.Failure<BillingWebhookEventModel?>(BillingErrors.ProviderNotConfigured(Provider));
         }
 
         YooKassaNotification? notification;
@@ -148,7 +148,7 @@ public sealed class YooKassaBillingGateway(
             notification = JsonSerializer.Deserialize<YooKassaNotification>(payload, JsonOptions);
         } catch (JsonException) {
             return Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed("YooKassa webhook payload is invalid."));
+                BillingErrors.WebhookValidationFailed("YooKassa webhook payload is invalid."));
         }
 
         if (notification?.Object?.Id is null ||
@@ -159,7 +159,7 @@ public sealed class YooKassaBillingGateway(
 
         if (!IsValidPaymentId(notification.Object.Id)) {
             return Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed("YooKassa payment id is invalid."));
+                BillingErrors.WebhookValidationFailed("YooKassa payment id is invalid."));
         }
 
         Result<YooKassaPayment> paymentResult = await FetchPaymentAsync(notification.Object.Id, cancellationToken).ConfigureAwait(false);
@@ -170,7 +170,7 @@ public sealed class YooKassaBillingGateway(
         YooKassaPayment payment = paymentResult.Value;
         if (!string.Equals(payment.Id, notification.Object.Id, StringComparison.Ordinal)) {
             return Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed("YooKassa payment verification returned a different payment."));
+                BillingErrors.WebhookValidationFailed("YooKassa payment verification returned a different payment."));
         }
 
         return Result.Success<BillingWebhookEventModel?>(CreateWebhookEvent(payment));

@@ -42,7 +42,7 @@ public static class ShoppingListItemBuilder {
         }
 
         ProductId missing = productIds.First(id => !products.ContainsKey(id));
-        return Result.Failure<IReadOnlyList<ShoppingListItemData>>(Errors.Product.NotAccessible(missing.Value));
+        return Result.Failure<IReadOnlyList<ShoppingListItemData>>(ProductErrors.NotAccessible(missing.Value));
     }
 
     private static Result<IReadOnlyList<ProductId>> ParseProductIds(IReadOnlyList<ShoppingListItemInput> items) {

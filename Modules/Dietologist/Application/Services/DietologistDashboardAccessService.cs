@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -17,7 +16,7 @@ public sealed class DietologistDashboardAccessService(
             .ConfigureAwait(false);
 
         if (invitation is null) {
-            return Result.Failure<DietologistPermissionsReadModel>(Errors.Dietologist.AccessDenied);
+            return Result.Failure<DietologistPermissionsReadModel>(DietologistErrors.AccessDenied);
         }
 
         DietologistPermissionsReadModel permissions = invitation.Permissions;
@@ -29,6 +28,6 @@ public sealed class DietologistDashboardAccessService(
                                       permissions.ShareFasting;
         return hasDashboardPermission
             ? Result.Success(permissions)
-            : Result.Failure<DietologistPermissionsReadModel>(Errors.Dietologist.PermissionDenied);
+            : Result.Failure<DietologistPermissionsReadModel>(DietologistErrors.PermissionDenied);
     }
 }

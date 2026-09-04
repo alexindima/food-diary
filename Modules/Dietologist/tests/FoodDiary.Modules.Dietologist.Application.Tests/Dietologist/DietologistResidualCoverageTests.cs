@@ -205,7 +205,7 @@ public sealed class DietologistResidualCoverageTests {
 
         Assert.Multiple(
             () => ResultAssert.Failure(email),
-            () => ResultAssert.Failure(model, Errors.Dietologist.AccessDenied.Code),
+            () => ResultAssert.Failure(model, DietologistErrors.AccessDenied.Code),
             () => ResultAssert.Failure(accessible),
             () => Assert.Equal(Errors.Authentication.InvalidToken, accessError),
             () => Assert.Null(byEmail));

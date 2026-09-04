@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
@@ -38,7 +37,7 @@ public sealed class RemoveFavoriteRecipeCommandHandler(
             favoriteRecipeId, userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (favorite is null) {
-            return Result.Failure(Errors.FavoriteRecipe.NotFound(command.FavoriteRecipeId));
+            return Result.Failure(FavoriteRecipeErrors.NotFound(command.FavoriteRecipeId));
         }
 
         await favoriteRecipeRepository.DeleteAsync(favorite, cancellationToken).ConfigureAwait(false);

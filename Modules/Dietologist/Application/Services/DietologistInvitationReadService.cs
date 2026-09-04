@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
@@ -38,11 +37,11 @@ public sealed class DietologistInvitationReadService(
             invitationIdResult.Value,
             cancellationToken).ConfigureAwait(false);
         if (invitation is null) {
-            return Result.Failure<DietologistInvitationForCurrentUserModel>(Errors.Dietologist.InvitationNotFound);
+            return Result.Failure<DietologistInvitationForCurrentUserModel>(DietologistErrors.InvitationNotFound);
         }
 
         if (!string.Equals(invitation.DietologistEmail, userEmailResult.Value, StringComparison.OrdinalIgnoreCase)) {
-            return Result.Failure<DietologistInvitationForCurrentUserModel>(Errors.Dietologist.AccessDenied);
+            return Result.Failure<DietologistInvitationForCurrentUserModel>(DietologistErrors.AccessDenied);
         }
 
         return Result.Success(ToCurrentUserInvitationModel(invitation, timeProvider));
@@ -60,17 +59,17 @@ public sealed class DietologistInvitationReadService(
         DietologistInvitationReadModel? invitation = await invitationRepository.GetByIdReadModelAsync(invitationIdResult.Value, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
-            return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationNotFound);
+            return Result.Failure<InvitationModel>(DietologistErrors.InvitationNotFound);
         }
 
         string? userEmail = await dietologistUserContextService.GetUserEmailByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userEmail is null ||
             !string.Equals(invitation.DietologistEmail, userEmail, StringComparison.OrdinalIgnoreCase)) {
-            return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationNotFound);
+            return Result.Failure<InvitationModel>(DietologistErrors.InvitationNotFound);
         }
 
         if (IsExpired(invitation)) {
-            return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationExpired);
+            return Result.Failure<InvitationModel>(DietologistErrors.InvitationExpired);
         }
 
         return Result.Success(ToInvitationModel(invitation));

@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
@@ -45,12 +44,12 @@ public sealed class AddFavoriteRecipeCommandHandler(
             includePublic: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (recipe is null) {
-            return Result.Failure<FavoriteRecipeModel>(Errors.Recipe.NotFound(command.RecipeId));
+            return Result.Failure<FavoriteRecipeModel>(RecipeErrors.NotFound(command.RecipeId));
         }
 
         FavoriteRecipe? existing = await favoriteRecipeRepository.GetByRecipeIdAsync(recipeId, userId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
-            return Result.Failure<FavoriteRecipeModel>(Errors.FavoriteRecipe.AlreadyExists);
+            return Result.Failure<FavoriteRecipeModel>(FavoriteRecipeErrors.AlreadyExists);
         }
 
         var favorite = FavoriteRecipe.Create(userId, recipeId, command.Name);

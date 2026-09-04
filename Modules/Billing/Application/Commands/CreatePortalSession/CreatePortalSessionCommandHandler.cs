@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
@@ -34,12 +33,12 @@ public sealed class CreatePortalSessionCommandHandler(
 
         BillingSubscription? subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (subscription is null || string.IsNullOrWhiteSpace(subscription.ExternalCustomerId)) {
-            return Result.Failure<BillingPortalSessionModel>(Errors.Billing.CustomerPortalUnavailable);
+            return Result.Failure<BillingPortalSessionModel>(BillingErrors.CustomerPortalUnavailable);
         }
 
         IBillingProviderGateway? billingProvider = billingProviderGatewayAccessor.GetProviderOrDefault(subscription.Provider);
         if (billingProvider is null) {
-            return Result.Failure<BillingPortalSessionModel>(Errors.Billing.CustomerPortalUnavailable);
+            return Result.Failure<BillingPortalSessionModel>(BillingErrors.CustomerPortalUnavailable);
         }
 
         Result<BillingPortalSessionModel> sessionResult = await billingProvider.CreatePortalSessionAsync(

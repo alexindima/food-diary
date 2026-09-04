@@ -34,7 +34,7 @@ internal sealed class UserAdministrationMutationService(
             .GetByEmailIncludingDeletedAsync(request.Email, cancellationToken)
             .ConfigureAwait(false);
         if (existingUser is not null) {
-            return Result.Failure<UserAdminReadModel>(Errors.User.EmailAlreadyExists);
+            return Result.Failure<UserAdminReadModel>(UserErrors.EmailAlreadyExists);
         }
 
         string[] requestedRoles = NormalizeRoles(request.Roles);
@@ -85,7 +85,7 @@ internal sealed class UserAdministrationMutationService(
             .GetByIdIncludingDeletedAsync(request.UserId, cancellationToken)
             .ConfigureAwait(false);
         if (user is null) {
-            return Result.Failure<UserAdminReadModel>(Errors.User.NotFound(request.UserId));
+            return Result.Failure<UserAdminReadModel>(UserErrors.NotFound(request.UserId));
         }
 
         Result<string?> languageResult = UserPreferenceCodeParser.ParseOptionalLanguage(
@@ -129,11 +129,11 @@ internal sealed class UserAdministrationMutationService(
             .GetByIdIncludingDeletedAsync(userId, cancellationToken)
             .ConfigureAwait(false);
         if (user is null) {
-            return Result.Failure(Errors.User.NotFound(userId));
+            return Result.Failure(UserErrors.NotFound(userId));
         }
 
         if (userId == actorUserId || user.HasRole(RoleNames.Owner) || user.HasRole(RoleNames.Admin)) {
-            return Result.Failure(Errors.User.AdminPasswordResetForbidden);
+            return Result.Failure(UserErrors.AdminPasswordResetForbidden);
         }
 
         user.UpdatePassword(passwordHasher.Hash(newPassword));

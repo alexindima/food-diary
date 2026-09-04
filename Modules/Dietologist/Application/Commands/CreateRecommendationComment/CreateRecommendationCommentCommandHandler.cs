@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -48,7 +47,7 @@ public sealed class CreateRecommendationCommentCommandHandler(
         UserId authorUserId = userIdResult.Value;
         if (recommendation is null ||
             (recommendation.ClientUserId != authorUserId && recommendation.DietologistUserId != authorUserId)) {
-            return Result.Failure<RecommendationCommentModel>(Errors.Dietologist.InvitationNotFound);
+            return Result.Failure<RecommendationCommentModel>(DietologistErrors.InvitationNotFound);
         }
 
         Result accessResult = await EnsureCanPostAsync(

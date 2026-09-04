@@ -20,5 +20,6 @@
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
   </ItemGroup>
 </Project>

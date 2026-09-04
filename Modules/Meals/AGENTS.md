@@ -11,3 +11,10 @@ See `docs/ai/meals-ownership-inventory.md` for source evidence and remaining sea
 
 Preserve the legacy FoodDiary.Application.Meals assembly identity. Hosts compose
 AddMealsModule; JobManager composes AddMealsPersistence only.
+
+## Error ownership
+
+Feature error factories belong to their existing owner contracts; call them directly.
+The corresponding central Errors facades are retired. Preserve exact codes, messages,
+kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
+repository or aggregate capability. See docs/ai/feature-error-retirement.md.

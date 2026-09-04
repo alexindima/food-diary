@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
@@ -46,18 +45,18 @@ public sealed class InviteDietologistCommandHandler(
         string normalizedEmail = command.DietologistEmail.Trim().ToLowerInvariant();
 
         if (string.Equals(user.Email, normalizedEmail, StringComparison.OrdinalIgnoreCase)) {
-            return Result.Failure(Errors.Dietologist.CannotInviteSelf);
+            return Result.Failure(DietologistErrors.CannotInviteSelf);
         }
 
         DietologistInvitation? activeInvitation = await invitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (activeInvitation is not null) {
-            return Result.Failure(Errors.Dietologist.AlreadyHasDietologist);
+            return Result.Failure(DietologistErrors.AlreadyHasDietologist);
         }
 
         DietologistInvitation? pendingInvitation = await invitationRepository.GetByClientAndStatusAsync(
             userId, DietologistInvitationStatus.Pending, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (pendingInvitation is not null) {
-            return Result.Failure(Errors.Dietologist.PendingInvitationExists);
+            return Result.Failure(DietologistErrors.PendingInvitationExists);
         }
 
         string rawToken = DietologistInvitationTokenGenerator.GenerateUrlSafeToken();

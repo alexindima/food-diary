@@ -132,21 +132,8 @@
         "dependencies": {
           "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Dietologist.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Favorites.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.MealPlanning.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Meals.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Products.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.RecipeCommunity.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Recipes.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Usda.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Wearables.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
@@ -160,6 +147,7 @@
           "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
@@ -173,6 +161,7 @@
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.DailyAdvices.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
@@ -199,6 +188,7 @@
           "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Products.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
@@ -215,6 +205,7 @@
           "FoodDiary.Modules.Dietologist.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
@@ -243,14 +234,18 @@
           "FoodDiary.Modules.Favorites.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Favorites.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Gamification.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Products.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Products.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.RecentItems.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Recipes.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )"
@@ -263,8 +258,10 @@
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Modules.Dietologist.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
@@ -278,6 +275,7 @@
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
@@ -292,6 +290,7 @@
           "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Exercises.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
         }
@@ -304,6 +303,7 @@
           "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Images.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Users.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
@@ -319,34 +319,6 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
-        }
-      },
-      "fooddiary.modules.admin.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Admin.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.admin.domain": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.ai.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Ai.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.ai.domain": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
       "fooddiary.modules.bodymetrics.application.abstractions": {
@@ -519,24 +491,6 @@
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
         }
       },
-      "fooddiary.modules.mealplanning.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.MealPlanning.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.mealplanning.domain": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Domain.Primitives": "[1.0.0, )",
-          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
-        }
-      },
       "fooddiary.modules.meals.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -621,21 +575,6 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
-      "fooddiary.modules.recipecommunity.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.RecipeCommunity.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.recipecommunity.domain": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
-        }
-      },
       "fooddiary.modules.recipes.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -668,18 +607,6 @@
         "dependencies": {
           "FoodDiary.Domain.Primitives": "[1.0.0, )"
         }
-      },
-      "fooddiary.modules.usda.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Usda.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Usda.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.usda.contracts": {
-        "type": "Project"
       },
       "fooddiary.modules.usda.domain": {
         "type": "Project",
@@ -715,21 +642,6 @@
         "type": "Project",
         "dependencies": {
           "FoodDiary.Domain.Primitives": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.wearables.application.abstractions": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )",
-          "FoodDiary.Results": "[1.0.0, )"
-        }
-      },
-      "fooddiary.modules.wearables.domain": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Domain.Primitives": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Domain": "[1.0.0, )"
         }
       },
       "fooddiary.results": {

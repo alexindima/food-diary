@@ -20,3 +20,10 @@ Do not acquire foreign write repositories or move authentication transport/provi
 The role-audit read projection and its DI/focused tests belong to Admin
 Infrastructure. UserRoleAuditEvent, role membership and their mappings still
 belong to Users. See `docs/ai/admin-role-audit-persistence.md`.
+
+## Error ownership
+
+Feature error factories belong to their existing owner contracts; call them directly.
+The corresponding central Errors facades are retired. Preserve exact codes, messages,
+kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
+repository or aggregate capability. See docs/ai/feature-error-retirement.md.

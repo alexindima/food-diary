@@ -140,7 +140,7 @@ public sealed class RecommendationTemplateHandlerTests {
             new UpdateRecommendationTemplateCommand(dietologist.Id.Value, Guid.NewGuid(), "New", "Text"),
             CancellationToken.None);
 
-        ResultAssert.Failure(result, Errors.Dietologist.InvitationNotFound.Code);
+        ResultAssert.Failure(result, DietologistErrors.InvitationNotFound.Code);
     }
 
     [Fact]
@@ -223,7 +223,7 @@ public sealed class RecommendationTemplateHandlerTests {
             new ArchiveRecommendationTemplateCommand(dietologist.Id.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        ResultAssert.Failure(result, Errors.Dietologist.InvitationNotFound.Code);
+        ResultAssert.Failure(result, DietologistErrors.InvitationNotFound.Code);
     }
 
     [Fact]

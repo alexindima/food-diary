@@ -36,7 +36,7 @@ public sealed class MarkLessonReadCommandHandler(
         var lessonId = new NutritionLessonId(command.LessonId);
         NutritionLesson? lesson = await readRepository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
-            return Result.Failure(Errors.Lesson.NotFound(command.LessonId));
+            return Result.Failure(LessonErrors.NotFound(command.LessonId));
         }
 
         UserLessonProgress? existing = await readRepository.GetUserProgressForLessonAsync(

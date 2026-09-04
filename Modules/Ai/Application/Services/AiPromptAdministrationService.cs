@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Results;
@@ -25,7 +24,7 @@ public sealed class AiPromptAdministrationService(IAiPromptTemplateWriteReposito
             .GetByIdAsync(existing.Id, asTracking: true, cancellationToken)
             .ConfigureAwait(false);
         if (tracked is null) {
-            return Result.Failure<AiPromptTemplate>(Errors.Ai.PromptTemplateNotFound());
+            return Result.Failure<AiPromptTemplate>(AiErrors.PromptTemplateNotFound());
         }
 
         tracked.Update(promptText, isActive);

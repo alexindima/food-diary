@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -61,16 +60,16 @@ public sealed class ConnectWearableCommandHandler(
 
         IWearableClient? client = wearableClients.FirstOrDefault(c => c.Provider == provider);
         if (client is null) {
-            return Result.Failure<WearableConnectionModel>(Errors.Wearable.ProviderNotConfigured(command.Provider));
+            return Result.Failure<WearableConnectionModel>(WearableErrors.ProviderNotConfigured(command.Provider));
         }
 
         if (!stateService.IsValidState(command.State, userId, provider)) {
-            return Result.Failure<WearableConnectionModel>(Errors.Wearable.InvalidState);
+            return Result.Failure<WearableConnectionModel>(WearableErrors.InvalidState);
         }
 
         WearableTokenResult? tokenResult = await client.ExchangeCodeAsync(command.Code, cancellationToken).ConfigureAwait(false);
         if (tokenResult is null) {
-            return Result.Failure<WearableConnectionModel>(Errors.Wearable.AuthFailed(command.Provider));
+            return Result.Failure<WearableConnectionModel>(WearableErrors.AuthFailed(command.Provider));
         }
 
         ProtectedWearableToken protectedAccessToken = tokenProtector.Protect(tokenResult.AccessToken);

@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
@@ -493,7 +492,7 @@ public partial class BillingFeatureTests {
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             new FakeBillingProviderGateway(
                 BillingProviderNames.YooKassa,
-                webhookError: Errors.Billing.WebhookValidationFailed("bad signature")),
+                webhookError: BillingErrors.WebhookValidationFailed("bad signature")),
             new FakeUserRepository(),
             new InMemoryBillingSubscriptionRepository(),
             new RecordingBillingPaymentRepository(),

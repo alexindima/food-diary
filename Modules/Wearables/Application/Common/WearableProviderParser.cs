@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Results;
 using FoodDiary.Domain.Enums;
 
@@ -12,6 +12,6 @@ internal static class WearableProviderParser {
 
         return provider.HasValue
             ? Result.Success(provider.Value)
-            : Result.Failure<WearableProvider>(Errors.Wearable.InvalidProvider(value));
+            : Result.Failure<WearableProvider>(WearableErrors.InvalidProvider(value));
     }
 }

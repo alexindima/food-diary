@@ -7,5 +7,6 @@
     <PackageReference Include="xunit.runner.visualstudio" />
   </ItemGroup>
   <ItemGroup><Using Include="Xunit" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.Cycles.Infrastructure.csproj" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.Cycles.Infrastructure.csproj" />
+    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj" /></ItemGroup>
 </Project>

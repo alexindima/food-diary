@@ -62,6 +62,8 @@
     <ProjectReference Include="../Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
   </ItemGroup>
 
 

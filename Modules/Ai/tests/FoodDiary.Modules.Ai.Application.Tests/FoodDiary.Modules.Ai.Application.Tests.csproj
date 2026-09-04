@@ -5,6 +5,9 @@
     <ProjectReference Include="../../Application/FoodDiary.Modules.Ai.Application.csproj" />
     <ProjectReference Include="../../../Images/Application/FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

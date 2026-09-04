@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
@@ -135,7 +136,7 @@ public partial class BillingFeatureTests {
             new FakeBillingProviderGatewayAccessor(
                 new FakeBillingProviderGateway(
                     BillingProviderNames.Paddle,
-                    portalError: Errors.Billing.ProviderOperationFailed(BillingProviderNames.Paddle, "portal failed"))));
+                    portalError: BillingErrors.ProviderOperationFailed(BillingProviderNames.Paddle, "portal failed"))));
 
         Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
 

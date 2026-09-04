@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Dietologist;
@@ -34,7 +33,7 @@ public sealed class ArchiveRecommendationTemplateCommandHandler(
         RecommendationTemplate? template = await repository.GetByIdAsync(
             templateIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (template is null || template.DietologistUserId != userIdResult.Value) {
-            return Result.Failure(Errors.Dietologist.InvitationNotFound);
+            return Result.Failure(DietologistErrors.InvitationNotFound);
         }
 
         template.Archive();

@@ -16,3 +16,10 @@ cache invalidation, snapshot nutrition and bounded legacy-row fallback, query or
 
 Run module tests, donor/consumer suites, full architecture, HTTP/Swagger and EF
 pending-model check; persistence changes require unfiltered PostgreSQL coverage.
+
+## Error ownership
+
+Feature error factories belong to their existing owner contracts; call them directly.
+The corresponding central Errors facades are retired. Preserve exact codes, messages,
+kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
+repository or aggregate capability. See docs/ai/feature-error-retirement.md.

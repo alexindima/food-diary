@@ -58,7 +58,7 @@ public sealed class CreateAdminUserCommandHandlerTests {
         IUserAdministrationMutationService userManagementService = Substitute.For<IUserAdministrationMutationService>();
         userManagementService
             .CreateAsync(Arg.Any<UserAdminCreateModel>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<UserAdminReadModel>(Errors.User.EmailAlreadyExists));
+            .Returns(Result.Failure<UserAdminReadModel>(UserErrors.EmailAlreadyExists));
         var handler = new CreateAdminUserCommandHandler(
             userManagementService,
             Substitute.For<IEmailSender>(),
@@ -70,7 +70,7 @@ public sealed class CreateAdminUserCommandHandlerTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal(Errors.User.EmailAlreadyExists, result.Error);
+        Assert.Equal(UserErrors.EmailAlreadyExists, result.Error);
     }
 
     [Fact]

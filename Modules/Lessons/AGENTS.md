@@ -17,3 +17,10 @@ Rules for `Modules/Lessons/`.
 
 - Keep Lessons-owned application, domain, and infrastructure adapter tests under `Modules/Lessons/tests`.
 - Keep shared DbContext, migrations, achievement composition, HTTP, host, architecture, and cross-module scenarios in central test projects.
+
+## Error ownership
+
+Feature error factories belong to their existing owner contracts; call them directly.
+The corresponding central Errors facades are retired. Preserve exact codes, messages,
+kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
+repository or aggregate capability. See docs/ai/feature-error-retirement.md.

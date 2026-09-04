@@ -84,6 +84,7 @@ Source: `FoodDiary.Presentation.Api/Features/Meals/MealsController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/CreateMealCommandValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealNutritionServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsAdditionalValidatorTests.cs`

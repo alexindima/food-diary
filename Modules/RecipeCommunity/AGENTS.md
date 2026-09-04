@@ -4,7 +4,7 @@ Own RecipeComments and RecipeLikes as separate feature groups. Application keeps
 
 Domain references the Users and Recipes owners one-way for User/Recipe and their IDs. Neither has an inverse CLR navigation to these entities. Preserve existing navigation properties, WithMany mappings, cascade behavior and the unique user/recipe like index. Recipes remains a separate Domain owner; do not transfer its ownership into RecipeCommunity or introduce provider behavior changes.
 
-Hosts compose AddRecipeCommunityModule; shared DbContext applies ApplyRecipeCommunityPersistenceModel explicitly. Shared migrations/snapshot, HTTP, cross-module PostgreSQL tests and ContentReports reportability stay with their current owner. Errors.RecipeComment remains a central compatibility facade over module-owned errors. No separate Contracts layer is justified by current consumers.
+Hosts compose AddRecipeCommunityModule; shared DbContext applies ApplyRecipeCommunityPersistenceModel explicitly. Shared migrations/snapshot, HTTP, cross-module PostgreSQL tests and ContentReports reportability stay with their current owner. RecipeCommentErrors is called directly; the central compatibility facade is retired. No separate Contracts layer is justified by current consumers.
 
 Preserve current-user and recipe access contracts, author/recipe-owner deletion rules, pagination, cancellation and transaction boundaries. Comment notification creation stays through Notifications INotificationWriter. Do not alter shared outbox or provider infrastructure.
 
@@ -18,3 +18,10 @@ reference the exact owner; shared guards and generic values belong to
 DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
+
+## Error ownership
+
+Feature error factories belong to their existing owner contracts; call them directly.
+The corresponding central Errors facades are retired. Preserve exact codes, messages,
+kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
+repository or aggregate capability. See docs/ai/feature-error-retirement.md.

@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
@@ -44,17 +43,17 @@ public sealed class CreateCheckoutSessionCommandHandler(
         UserBillingProfileModel user = userResult.Value;
         BillingSubscription? existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user.HasPaidPremium || IsPaidPremiumActive(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
-            return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.SubscriptionAlreadyActive);
+            return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.SubscriptionAlreadyActive);
         }
 
         if (IsCheckoutInProgress(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
-            return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.CheckoutAlreadyInProgress);
+            return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.CheckoutAlreadyInProgress);
         }
 
         IBillingProviderGateway? billingProvider = ResolveBillingProvider(request.Provider);
         if (billingProvider is null) {
             return Result.Failure<BillingCheckoutSessionModel>(
-                Errors.Billing.ProviderNotConfigured(request.Provider ?? string.Empty));
+                BillingErrors.ProviderNotConfigured(request.Provider ?? string.Empty));
         }
 
         string plan = request.Plan.Trim().ToLowerInvariant();

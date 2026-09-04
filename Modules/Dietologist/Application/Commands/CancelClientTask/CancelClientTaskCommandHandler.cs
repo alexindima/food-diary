@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -40,7 +39,7 @@ public sealed class CancelClientTaskCommandHandler(
         ClientTask? task = await taskRepository.GetByIdAsync(
             taskIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (task is null || task.DietologistUserId != userIdResult.Value) {
-            return Result.Failure<ClientTaskModel>(Errors.Dietologist.InvitationNotFound);
+            return Result.Failure<ClientTaskModel>(DietologistErrors.InvitationNotFound);
         }
 
         Result accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(

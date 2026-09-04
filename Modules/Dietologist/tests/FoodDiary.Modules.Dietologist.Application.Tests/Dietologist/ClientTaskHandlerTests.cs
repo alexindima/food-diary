@@ -106,7 +106,7 @@ public sealed class ClientTaskHandlerTests {
             new CreateClientTaskCommand(dietologist.Id.Value, Guid.NewGuid(), "Task", null, null),
             CancellationToken.None);
 
-        ResultAssert.Failure(result, Errors.Dietologist.AccessDenied.Code);
+        ResultAssert.Failure(result, DietologistErrors.AccessDenied.Code);
     }
 
     [Fact]
@@ -206,7 +206,7 @@ public sealed class ClientTaskHandlerTests {
             new CancelClientTaskCommand(dietologist.Id.Value, task.Id.Value),
             CancellationToken.None);
 
-        ResultAssert.Failure(result, Errors.Dietologist.AccessDenied.Code);
+        ResultAssert.Failure(result, DietologistErrors.AccessDenied.Code);
     }
 
     [Fact]
@@ -309,7 +309,7 @@ public sealed class ClientTaskHandlerTests {
         Assert.Multiple(
             () => ResultAssert.Failure(missing),
             () => ResultAssert.Failure(foreignResult),
-            () => ResultAssert.Failure(inaccessible, Errors.Dietologist.AccessDenied.Code));
+            () => ResultAssert.Failure(inaccessible, DietologistErrors.AccessDenied.Code));
     }
 
     [Fact]

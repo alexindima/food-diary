@@ -24,7 +24,7 @@ public sealed class CalculateFoodNutritionCommandHandler(
         }
 
         if (query.Items.Count == 0) {
-            return Result.Failure<FoodNutritionModel>(Errors.Ai.EmptyItems());
+            return Result.Failure<FoodNutritionModel>(AiErrors.EmptyItems());
         }
 
         UserId userId = userIdResult.Value;

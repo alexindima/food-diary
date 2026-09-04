@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.MealPlanning.Common.Validation;
@@ -38,7 +38,7 @@ public sealed class GetMealPlanByIdQueryHandler(
             .GetAccessibleByIdAsync(planId, userIdResult.Value, cancellationToken)
             .ConfigureAwait(false);
         if (plan is null) {
-            return Result.Failure<MealPlanModel>(Errors.MealPlan.NotFound(query.PlanId));
+            return Result.Failure<MealPlanModel>(MealPlanErrors.NotFound(query.PlanId));
         }
 
         return Result.Success(plan);

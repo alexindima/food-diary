@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Meals.Commands.CreateMeal;
 using FoodDiary.Application.Meals.Common;
@@ -141,7 +141,7 @@ public partial class MealsFeatureTests {
     public async Task CreateMealCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
         var user = User.Create("create-image-failure@example.com", "hash");
         RecordingImageAssetAccessService imageAccess = new RecordingImageAssetAccessService()
-            .WithFailure(Errors.Image.NotFound(Guid.NewGuid()));
+            .WithFailure(ImageErrors.NotFound(Guid.NewGuid()));
         var handler = new CreateMealCommandHandler(
             new CreatingMealRepository(),
             new NoopMealNutritionService(),

@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
@@ -51,7 +50,7 @@ public sealed class UsdaFoodReadService(
     private async Task<Result<UsdaFoodDetailModel>> BuildBrandedDetailAsync(int fdcId, CancellationToken cancellationToken) {
         UsdaFoodDetailModel? brandedDetail = await brandedSearchService.GetFoodDetailAsync(fdcId, cancellationToken).ConfigureAwait(false);
         if (brandedDetail is null) {
-            return Result.Failure<UsdaFoodDetailModel>(Errors.Usda.FoodNotFound(fdcId));
+            return Result.Failure<UsdaFoodDetailModel>(UsdaErrors.FoodNotFound(fdcId));
         }
 
         IReadOnlyDictionary<int, UsdaDailyReferenceValueReadModel> dailyValues = await repository.GetDailyReferenceValueReadModelsAsync(cancellationToken: cancellationToken).ConfigureAwait(false);

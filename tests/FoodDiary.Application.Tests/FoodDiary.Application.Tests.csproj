@@ -51,6 +51,20 @@
     <ProjectReference Include="../../Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Recipes/Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Usda/Application/Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../Modules/Cycles/Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/RecipeCommunity/Application/Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

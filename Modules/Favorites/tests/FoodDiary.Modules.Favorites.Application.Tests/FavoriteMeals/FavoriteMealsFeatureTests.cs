@@ -65,10 +65,14 @@ public class FavoriteMealsFeatureTests {
             CreateFavoriteMealRepository(), CreateMealReadService(meal: null), CreateCurrentUserAccessService(user));
 
         Result<FavoriteMealModel> result = await handler.Handle(
-            new AddFavoriteMealCommand(user.Id.Value, Guid.NewGuid(), Name: null), CancellationToken.None);
+            new AddFavoriteMealCommand(user.Id.Value, Guid.Parse("12345678-1234-1234-1234-123456789abc"), Name: null), CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
+        Assert.Multiple(
+            () => Assert.Equal("Meal.NotFound", result.Error.Code),
+            () => Assert.Equal("Meal with ID 12345678-1234-1234-1234-123456789abc was not found.", result.Error.Message),
+            () => Assert.Equal(ErrorKind.NotFound, result.Error.Kind),
+            () => Assert.Null(result.Error.Details));
     }
 
     [Fact]

@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
@@ -44,7 +43,7 @@ public sealed class GetRecipeByIdQueryHandler(
         RecipeOverviewReadItem? recipe = recipesById.GetValueOrDefault(recipeId);
 
         if (recipe is null) {
-            return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(query.RecipeId));
+            return Result.Failure<RecipeModel>(RecipeErrors.NotFound(query.RecipeId));
         }
 
         return Result.Success(recipe.ToModel());

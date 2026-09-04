@@ -664,7 +664,7 @@ public partial class DietologistFeatureTests {
             CancellationToken cancellationToken) {
             User? user = await GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
             return user is null
-                ? Result.Failure<UserModel>(Errors.Dietologist.AccessDenied)
+                ? Result.Failure<UserModel>(DietologistErrors.AccessDenied)
                 : Result.Success(user.ToModel());
         }
 
@@ -762,7 +762,7 @@ public partial class DietologistFeatureTests {
             CancellationToken cancellationToken) {
             User? user = await GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
             return user is null
-                ? Result.Failure<UserModel>(Errors.Dietologist.AccessDenied)
+                ? Result.Failure<UserModel>(DietologistErrors.AccessDenied)
                 : Result.Success(user.ToModel());
         }
 
@@ -1008,7 +1008,7 @@ public partial class DietologistFeatureTests {
         public Task<Result<DashboardSnapshotModel>> BuildAsync(
             DashboardSnapshotRequest request,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult(Result.Failure<DashboardSnapshotModel>(Errors.Dietologist.AccessDenied));
+            Task.FromResult(Result.Failure<DashboardSnapshotModel>(DietologistErrors.AccessDenied));
     }
 
     [ExcludeFromCodeCoverage]

@@ -19,6 +19,9 @@
     <ProjectReference Include="Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Products.Contracts.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Usda/Application/Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" />

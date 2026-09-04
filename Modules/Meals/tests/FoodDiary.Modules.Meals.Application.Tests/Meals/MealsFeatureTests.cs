@@ -280,7 +280,7 @@ public partial class MealsFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult(
                 assetId.HasValue
-                    ? Result.Failure<ImageAsset?>(Errors.Image.Forbidden())
+                    ? Result.Failure<ImageAsset?>(ImageErrors.Forbidden())
                     : Result.Success<ImageAsset?>(value: null));
     }
 
@@ -696,7 +696,7 @@ public partial class MealsFeatureTests {
             UserId userId,
             CancellationToken cancellationToken = default) =>
             Task.FromResult(Result.Failure<MealNutritionSummary>(
-                Errors.Meal.InvalidData("Nutrition calculation failed.")));
+                MealErrors.InvalidData("Nutrition calculation failed.")));
     }
 
     [ExcludeFromCodeCoverage]

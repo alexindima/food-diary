@@ -49,7 +49,7 @@ public sealed class UpsertCycleDayCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (profile is null) {
-            return Result.Failure<CycleLogDayModel>(Errors.Cycle.NotFound(command.CycleProfileId));
+            return Result.Failure<CycleLogDayModel>(CycleErrors.NotFound(command.CycleProfileId));
         }
 
         if (command.FertilitySignal is not null &&

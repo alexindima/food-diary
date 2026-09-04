@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
@@ -46,7 +45,7 @@ public sealed class BillingWebhookContextResolver(
             cancellationToken).ConfigureAwait(false);
         return user is null
             ? Result.Failure<BillingWebhookProcessingContext?>(
-                Errors.Billing.WebhookValidationFailed("Webhook user could not be resolved."))
+                BillingErrors.WebhookValidationFailed("Webhook user could not be resolved."))
             : Result.Success<BillingWebhookProcessingContext?>(new BillingWebhookProcessingContext(subscription, user));
     }
 

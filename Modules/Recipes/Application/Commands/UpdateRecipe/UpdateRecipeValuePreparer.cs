@@ -111,7 +111,7 @@ internal static class UpdateRecipeValuePreparer {
             includeSteps: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (recipe is null) {
-            return Result.Failure<Recipe>(Errors.Recipe.NotAccessible(command.RecipeId));
+            return Result.Failure<Recipe>(RecipeErrors.NotAccessible(command.RecipeId));
         }
 
         int usageCount = await recipeRepository.GetUsageCountAsync(

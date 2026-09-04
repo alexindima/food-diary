@@ -9,7 +9,7 @@ namespace FoodDiary.Presentation.Api.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class PresentationErrorCatalogTests {
     [Fact]
-    public void CentralErrorCatalog_HasExpectedHttpCoverage() {
+    public void SharedAndModuleErrorCatalog_HasExpectedHttpCoverage() {
         var internalOnlyCodes = new HashSet<string>(StringComparer.Ordinal) {
             "Authentication.GoogleNotConfigured",
             "Authentication.TelegramNotConfigured",
@@ -35,7 +35,7 @@ public sealed class PresentationErrorCatalogTests {
     }
 
     [Fact]
-    public void CentralErrorCatalog_DefinesErrorKind_ForAllPublishedErrors() {
+    public void SharedAndModuleErrorCatalog_DefinesErrorKind_ForAllPublishedErrors() {
         string[] missingKinds = [.. GetCatalogErrors()
             .Where(static error => error.Kind is null)
             .Select(static error => error.Code)
@@ -45,7 +45,7 @@ public sealed class PresentationErrorCatalogTests {
     }
 
     [Fact]
-    public void CentralErrorCatalog_CanBeEnumeratedWithoutDuplicatesOrMissingCodes() {
+    public void SharedAndModuleErrorCatalog_CanBeEnumeratedWithoutDuplicatesOrMissingCodes() {
         string[] duplicates = [.. GetCatalogErrors()
             .GroupBy(static error => error.Code, StringComparer.Ordinal)
             .Where(group => group.Count() > 1)
@@ -58,6 +58,28 @@ public sealed class PresentationErrorCatalogTests {
     private static IReadOnlyList<Error> GetCatalogErrors() {
         return typeof(Errors)
             .GetNestedTypes(BindingFlags.Public)
+            .Concat([
+                typeof(FoodDiary.Application.Abstractions.Ai.Common.AiErrors),
+                typeof(FoodDiary.Application.Abstractions.Billing.Common.BillingErrors),
+                typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleErrors),
+                typeof(FoodDiary.Application.Abstractions.Cycles.Common.CycleDayErrors),
+                typeof(FoodDiary.Application.Abstractions.Dietologist.Common.DietologistErrors),
+                typeof(FoodDiary.Application.Abstractions.FavoriteMeals.Common.FavoriteMealErrors),
+                typeof(FoodDiary.Application.Abstractions.FavoriteProducts.Common.FavoriteProductErrors),
+                typeof(FoodDiary.Application.Abstractions.FavoriteRecipes.Common.FavoriteRecipeErrors),
+                typeof(FoodDiary.Application.Abstractions.Images.Common.ImageErrors),
+                typeof(FoodDiary.Application.Abstractions.Lessons.Common.LessonErrors),
+                typeof(FoodDiary.Application.Abstractions.Admin.Common.AdminMailInboxErrors),
+                typeof(FoodDiary.Application.Abstractions.Meals.Common.MealErrors),
+                typeof(FoodDiary.Application.Abstractions.MealPlans.Common.MealPlanErrors),
+                typeof(FoodDiary.Application.Abstractions.Products.Common.ProductErrors),
+                typeof(FoodDiary.Application.Abstractions.Recipes.Common.RecipeErrors),
+                typeof(FoodDiary.Application.Abstractions.RecipeComments.Common.RecipeCommentErrors),
+                typeof(FoodDiary.Application.Abstractions.ShoppingLists.Common.ShoppingListErrors),
+                typeof(FoodDiary.Application.Abstractions.Usda.Common.UsdaErrors),
+                typeof(FoodDiary.Application.Abstractions.Users.Common.UserErrors),
+                typeof(FoodDiary.Application.Abstractions.Wearables.Common.WearableErrors),
+            ])
             .SelectMany(GetErrorsFromType)
             .OrderBy(static error => error.Code, StringComparer.Ordinal)
             .ToArray();

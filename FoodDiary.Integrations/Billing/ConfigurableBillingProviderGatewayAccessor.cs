@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Options;
@@ -17,7 +16,7 @@ public sealed class ConfigurableBillingProviderGatewayAccessor(
         string configuredProvider = billingOptions.Value.Provider.Trim();
         if (string.IsNullOrWhiteSpace(configuredProvider) ||
             !_providers.TryGetValue(configuredProvider, out IBillingProviderGateway? billingProvider)) {
-            throw new InvalidOperationException(Errors.Billing.ProviderNotConfigured(configuredProvider).Message);
+            throw new InvalidOperationException(BillingErrors.ProviderNotConfigured(configuredProvider).Message);
         }
 
         return billingProvider;

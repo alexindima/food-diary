@@ -1,5 +1,4 @@
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Mediator;
@@ -18,7 +17,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
     public async Task<Result> Handle(ProcessBillingWebhookCommand request, CancellationToken cancellationToken) {
         IBillingProviderGateway? billingProvider = billingProviderGatewayAccessor.GetProviderOrDefault(request.Provider);
         if (billingProvider is null) {
-            return Result.Failure(Errors.Billing.InvalidProvider(request.Provider));
+            return Result.Failure(BillingErrors.InvalidProvider(request.Provider));
         }
 
         Result<BillingWebhookEventModel?> webhookResult = await billingProvider.ParseWebhookEventAsync(

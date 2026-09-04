@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Admin.Common;
@@ -46,7 +47,7 @@ public sealed class AdminAuditReadService(
 
         bool userExists = await userReadService.ExistsIncludingDeletedAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
         if (!userExists) {
-            return Result.Failure<IReadOnlyList<AdminUserRoleAuditEventReadModel>>(Errors.User.NotFound(userId));
+            return Result.Failure<IReadOnlyList<AdminUserRoleAuditEventReadModel>>(UserErrors.NotFound(userId));
         }
 
         int normalizedLimit = Math.Clamp(limit, 1, 50);

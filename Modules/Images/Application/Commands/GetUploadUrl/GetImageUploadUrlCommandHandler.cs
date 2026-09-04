@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
@@ -28,7 +27,7 @@ public sealed class GetImageUploadUrlCommandHandler(
                 request.FileSizeBytes,
                 cancellationToken).ConfigureAwait(false);
         } catch (Exception ex) when (ex is ArgumentException or ArgumentOutOfRangeException or InvalidOperationException) {
-            return Result.Failure<GetImageUploadUrlResult>(Errors.Image.InvalidData(ex.Message));
+            return Result.Failure<GetImageUploadUrlResult>(ImageErrors.InvalidData(ex.Message));
         }
 
         var asset = ImageAsset.Create(userId, presign.ObjectKey, presign.FileUrl);
@@ -44,21 +43,21 @@ public sealed class GetImageUploadUrlCommandHandler(
     private static Result<UserId> ValidateRequest(GetImageUploadUrlCommand request) {
         Result<UserId> userIdResult = UserIdParser.Parse(
             request.UserId,
-            Errors.Image.InvalidData("UserId is required."));
+            ImageErrors.InvalidData("UserId is required."));
         if (userIdResult.IsFailure) {
             return userIdResult;
         }
 
         if (string.IsNullOrWhiteSpace(request.FileName)) {
-            return Result.Failure<UserId>(Errors.Image.InvalidData("File name is required."));
+            return Result.Failure<UserId>(ImageErrors.InvalidData("File name is required."));
         }
 
         if (string.IsNullOrWhiteSpace(request.ContentType)) {
-            return Result.Failure<UserId>(Errors.Image.InvalidData("Content type is required."));
+            return Result.Failure<UserId>(ImageErrors.InvalidData("Content type is required."));
         }
 
         if (request.FileSizeBytes <= 0) {
-            return Result.Failure<UserId>(Errors.Image.InvalidData("File size must be greater than zero."));
+            return Result.Failure<UserId>(ImageErrors.InvalidData("File size must be greater than zero."));
         }
 
         return userIdResult;

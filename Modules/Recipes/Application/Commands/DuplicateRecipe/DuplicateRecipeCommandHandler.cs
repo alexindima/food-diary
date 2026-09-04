@@ -1,6 +1,5 @@
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
@@ -55,7 +54,7 @@ public sealed class DuplicateRecipeCommandHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (original is null) {
-            return Result.Failure<RecipeModel>(Errors.Recipe.NotAccessible(command.RecipeId));
+            return Result.Failure<RecipeModel>(RecipeErrors.NotAccessible(command.RecipeId));
         }
 
         Recipe duplicate = CreateDuplicate(userId, original);

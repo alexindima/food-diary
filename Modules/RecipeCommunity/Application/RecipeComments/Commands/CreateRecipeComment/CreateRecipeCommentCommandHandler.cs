@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -35,7 +34,7 @@ public sealed class CreateRecipeCommentCommandHandler(
             recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {
-            return Result.Failure<RecipeCommentModel>(Errors.Recipe.NotFound(command.RecipeId));
+            return Result.Failure<RecipeCommentModel>(RecipeErrors.NotFound(command.RecipeId));
         }
 
         var comment = RecipeComment.Create(userIdResult.Value, recipeId, command.Text);

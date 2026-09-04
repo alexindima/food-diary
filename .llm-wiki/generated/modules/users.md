@@ -145,6 +145,7 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/AiConsentTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/CurrentUserAccessPolicyTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs`
@@ -174,7 +175,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/WaistGoalInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/Domain/WeightGoalInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/ValueObjects/AdditionalValueObjectsInvariantTestsDesiredTests.cs`
-- [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Domain.Tests/ValueObjects/AdditionalValueObjectsInvariantTestsLanguageCodeTests.cs`
 
 ## Working Rule
 

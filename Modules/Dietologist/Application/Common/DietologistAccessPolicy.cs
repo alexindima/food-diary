@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
@@ -19,7 +18,7 @@ public static class DietologistAccessPolicy {
             clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null) {
-            return Result.Failure<DietologistPermissionsModel>(Errors.Dietologist.AccessDenied);
+            return Result.Failure<DietologistPermissionsModel>(DietologistErrors.AccessDenied);
         }
 
         DietologistPermissions permissions = invitation.GetPermissions();
@@ -43,22 +42,22 @@ public static class DietologistAccessPolicy {
             clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);
 
         return invitation is null
-            ? Result.Failure<DietologistPermissionsModel>(Errors.Dietologist.AccessDenied)
+            ? Result.Failure<DietologistPermissionsModel>(DietologistErrors.AccessDenied)
             : Result.Success(invitation.Permissions.ToApplicationModel());
     }
 
     public static Error? EnsurePermission(DietologistPermissionsModel permissions, string category) {
         return category switch {
-            "Profile" when !permissions.ShareProfile => Errors.Dietologist.PermissionDenied,
-            "Meals" when !permissions.ShareMeals => Errors.Dietologist.PermissionDenied,
-            "Statistics" when !permissions.ShareStatistics => Errors.Dietologist.PermissionDenied,
-            "WeightKg" when !permissions.ShareWeight => Errors.Dietologist.PermissionDenied,
-            "WaistCm" when !permissions.ShareWaist => Errors.Dietologist.PermissionDenied,
-            "Goals" when !permissions.ShareGoals => Errors.Dietologist.PermissionDenied,
-            "Hydration" when !permissions.ShareHydration => Errors.Dietologist.PermissionDenied,
-            "Fasting" when !permissions.ShareFasting => Errors.Dietologist.PermissionDenied,
+            "Profile" when !permissions.ShareProfile => DietologistErrors.PermissionDenied,
+            "Meals" when !permissions.ShareMeals => DietologistErrors.PermissionDenied,
+            "Statistics" when !permissions.ShareStatistics => DietologistErrors.PermissionDenied,
+            "WeightKg" when !permissions.ShareWeight => DietologistErrors.PermissionDenied,
+            "WaistCm" when !permissions.ShareWaist => DietologistErrors.PermissionDenied,
+            "Goals" when !permissions.ShareGoals => DietologistErrors.PermissionDenied,
+            "Hydration" when !permissions.ShareHydration => DietologistErrors.PermissionDenied,
+            "Fasting" when !permissions.ShareFasting => DietologistErrors.PermissionDenied,
             "Profile" or "Meals" or "Statistics" or "WeightKg" or "WaistCm" or "Goals" or "Hydration" or "Fasting" => null,
-            _ => Errors.Dietologist.PermissionDenied,
+            _ => DietologistErrors.PermissionDenied,
         };
     }
 
@@ -74,7 +73,7 @@ public static class DietologistAccessPolicy {
     public static Error? EnsureAllPermissions(DietologistPermissionsModel permissions) {
         return permissions is { ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: true }
             ? null
-            : Errors.Dietologist.PermissionDenied;
+            : DietologistErrors.PermissionDenied;
     }
 
     public static DietologistPermissionsModel ToApplicationModel(this DietologistPermissionsReadModel permissions) =>

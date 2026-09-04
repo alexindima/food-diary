@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
@@ -44,7 +43,7 @@ public sealed class OpenAiFoodClient(
         string promptTemplate,
         CancellationToken cancellationToken) {
         if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
-            return Result.Failure<AiProviderTokenBudget>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
+            return Result.Failure<AiProviderTokenBudget>(AiErrors.OpenAiFailed("OpenAI API key is not configured."));
         }
 
         object primary = BuildVisionRequest(_options.VisionModel, imageUrl, userLanguage, description, promptTemplate, _options.MaxOutputTokens);
@@ -75,7 +74,7 @@ public sealed class OpenAiFoodClient(
         CancellationToken cancellationToken) {
         const string operation = "vision";
         if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
-            return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
+            return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(AiErrors.OpenAiFailed("OpenAI API key is not configured."));
         }
 
         string requestModel = _options.VisionModel;
@@ -117,7 +116,7 @@ public sealed class OpenAiFoodClient(
         string promptTemplate,
         CancellationToken cancellationToken) {
         if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
-            return Result.Failure<AiProviderTokenBudget>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
+            return Result.Failure<AiProviderTokenBudget>(AiErrors.OpenAiFailed("OpenAI API key is not configured."));
         }
 
         object request = BuildTextParseRequest(_options.TextModel, text, userLanguage, promptTemplate, _options.MaxOutputTokens);
@@ -134,7 +133,7 @@ public sealed class OpenAiFoodClient(
         CancellationToken cancellationToken) {
         const string operation = "text-parse";
         if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
-            return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
+            return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(AiErrors.OpenAiFailed("OpenAI API key is not configured."));
         }
 
         string requestModel = _options.TextModel;
@@ -162,7 +161,7 @@ public sealed class OpenAiFoodClient(
         string promptTemplate,
         CancellationToken cancellationToken) {
         if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
-            return Result.Failure<AiProviderTokenBudget>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
+            return Result.Failure<AiProviderTokenBudget>(AiErrors.OpenAiFailed("OpenAI API key is not configured."));
         }
 
         object request = BuildNutritionRequest(_options.TextModel, items, promptTemplate, _options.MaxOutputTokens);
@@ -178,7 +177,7 @@ public sealed class OpenAiFoodClient(
         CancellationToken cancellationToken) {
         const string operation = "nutrition";
         if (string.IsNullOrWhiteSpace(_options.ApiKey)) {
-            return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
+            return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(AiErrors.OpenAiFailed("OpenAI API key is not configured."));
         }
 
         string requestModel = _options.TextModel;
@@ -220,7 +219,7 @@ public sealed class OpenAiFoodClient(
             return HandleInputTokenTransportFailure(ex);
         } catch (TaskCanceledException) when (!cancellationToken.IsCancellationRequested) {
             logger.LogWarning("OpenAI input token count request timed out.");
-            return Result.Failure<long>(Errors.Ai.OpenAiFailed("OpenAI input token count request timed out."));
+            return Result.Failure<long>(AiErrors.OpenAiFailed("OpenAI input token count request timed out."));
         }
 
         using HttpResponseMessage _ = response;
@@ -233,14 +232,14 @@ public sealed class OpenAiFoodClient(
                 cancellationToken).ConfigureAwait(false);
         } catch (Exception exception) when (exception is InvalidDataException or TimeoutException) {
             logger.LogWarning("OpenAI input token count response body was oversized or exceeded its read deadline.");
-            return Result.Failure<long>(Errors.Ai.InvalidResponse("OpenAI input token count response was invalid."));
+            return Result.Failure<long>(AiErrors.InvalidResponse("OpenAI input token count response was invalid."));
         }
         if (!response.IsSuccessStatusCode) {
             logger.LogWarning(
                 "OpenAI input token count request failed. Status={Status} Summary={Summary}",
                 (int)response.StatusCode,
                 OpenAiErrorMetadata.Summarize(responseBody));
-            return Result.Failure<long>(Errors.Ai.OpenAiFailed("OpenAI input token count request was rejected."));
+            return Result.Failure<long>(AiErrors.OpenAiFailed("OpenAI input token count request was rejected."));
         }
 
         try {
@@ -258,17 +257,17 @@ public sealed class OpenAiFoodClient(
             logger.LogWarning(ex, "OpenAI input token count response was invalid JSON.");
         }
 
-        return Result.Failure<long>(Errors.Ai.InvalidResponse("OpenAI input token count response was invalid."));
+        return Result.Failure<long>(AiErrors.InvalidResponse("OpenAI input token count response was invalid."));
     }
 
     private Result<long> HandleInputTokenTransportFailure(Exception exception) {
         if (exception is BrokenCircuitException) {
             logger.LogWarning(exception, "OpenAI input token count circuit is open.");
-            return Result.Failure<long>(Errors.Ai.OpenAiFailed("OpenAI is temporarily unavailable."));
+            return Result.Failure<long>(AiErrors.OpenAiFailed("OpenAI is temporarily unavailable."));
         }
 
         logger.LogWarning(exception, "OpenAI input token count request failed due to transport error.");
-        return Result.Failure<long>(Errors.Ai.OpenAiFailed("OpenAI input token count request failed."));
+        return Result.Failure<long>(AiErrors.OpenAiFailed("OpenAI input token count request failed."));
     }
 
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
@@ -295,7 +294,7 @@ public sealed class OpenAiFoodClient(
             } catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested) {
                 logger.LogWarning(ex, "OpenAI request timed out.");
                 RecordAiRequest(operation, model, "timeout");
-                return (false, null, Errors.Ai.OpenAiFailed("OpenAI request timed out."), false);
+                return (false, null, AiErrors.OpenAiFailed("OpenAI request timed out."), false);
             }
 
             using HttpResponseMessage _ = response;
@@ -320,7 +319,7 @@ public sealed class OpenAiFoodClient(
                         overallDeadline.Token).ConfigureAwait(false);
                 } catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested) {
                     RecordAiRequest(operation, model, "timeout");
-                    return (false, null, Errors.Ai.OpenAiFailed("OpenAI request deadline expired."), false);
+                    return (false, null, AiErrors.OpenAiFailed("OpenAI request deadline expired."), false);
                 }
                 if (failedResponse.ShouldRetry) {
                     continue;
@@ -333,7 +332,7 @@ public sealed class OpenAiFoodClient(
         }
 
         RecordAiRequest(operation, model, "retry_exhausted");
-        return (false, null, Errors.Ai.OpenAiFailed("OpenAI request failed after retries."), true);
+        return (false, null, AiErrors.OpenAiFailed("OpenAI request failed after retries."), true);
     }
 
     private (bool IsSuccess, JsonDocument? Json, Error Error, bool CanFallback) HandleResponseTransportFailure(
@@ -343,12 +342,12 @@ public sealed class OpenAiFoodClient(
         if (exception is BrokenCircuitException) {
             logger.LogWarning(exception, "OpenAI request circuit is open.");
             RecordAiRequest(operation, model, "circuit_open");
-            return (false, null, Errors.Ai.OpenAiFailed("OpenAI is temporarily unavailable."), false);
+            return (false, null, AiErrors.OpenAiFailed("OpenAI is temporarily unavailable."), false);
         }
 
         logger.LogWarning(exception, "OpenAI request failed due to transport error.");
         RecordAiRequest(operation, model, "transport_error");
-        return (false, null, Errors.Ai.OpenAiFailed("OpenAI transport error."), false);
+        return (false, null, AiErrors.OpenAiFailed("OpenAI transport error."), false);
     }
 
     private HttpRequestMessage CreateResponseRequest(string requestBody) {
@@ -372,10 +371,10 @@ public sealed class OpenAiFoodClient(
             return (true, body, Error.None);
         } catch (InvalidDataException) {
             RecordAiRequest(operation, model, "oversized_response");
-            return (false, null, Errors.Ai.InvalidResponse("OpenAI response exceeded the configured size limit."));
+            return (false, null, AiErrors.InvalidResponse("OpenAI response exceeded the configured size limit."));
         } catch (TimeoutException) {
             RecordAiRequest(operation, model, "response_body_timeout");
-            return (false, null, Errors.Ai.InvalidResponse("OpenAI response body exceeded its read deadline."));
+            return (false, null, AiErrors.InvalidResponse("OpenAI response body exceeded its read deadline."));
         }
     }
 
@@ -389,7 +388,7 @@ public sealed class OpenAiFoodClient(
             return await ReadResponseBodyAsync(content, operation, model, deadlineToken).ConfigureAwait(false);
         } catch (OperationCanceledException) when (!callerToken.IsCancellationRequested) {
             RecordAiRequest(operation, model, "timeout");
-            return (false, null, Errors.Ai.OpenAiFailed("OpenAI request deadline expired."));
+            return (false, null, AiErrors.OpenAiFailed("OpenAI request deadline expired."));
         }
     }
 
@@ -405,7 +404,7 @@ public sealed class OpenAiFoodClient(
             return (true, json, Error.None, false);
         } catch (JsonException) {
             RecordAiRequest(operation, model, "invalid_json");
-            return (false, null, Errors.Ai.InvalidResponse("OpenAI returned an invalid JSON response."), true);
+            return (false, null, AiErrors.InvalidResponse("OpenAI returned an invalid JSON response."), true);
         }
     }
 
@@ -444,7 +443,7 @@ public sealed class OpenAiFoodClient(
             }
 
             RecordAiRequest(operation, model, "rate_limit_exhausted");
-            return (false, Errors.Ai.OpenAiFailed("OpenAI rate limit retries were exhausted."));
+            return (false, AiErrors.OpenAiFailed("OpenAI rate limit retries were exhausted."));
         }
 
         logger.LogWarning(
@@ -454,7 +453,7 @@ public sealed class OpenAiFoodClient(
             summary);
 
         RecordAiRequest(operation, model, string.Create(CultureInfo.InvariantCulture, $"http_{statusCode}"));
-        return (false, Errors.Ai.OpenAiFailed($"OpenAI error {response.StatusCode}: {summary}"));
+        return (false, AiErrors.OpenAiFailed($"OpenAI error {response.StatusCode}: {summary}"));
     }
 
     private static object BuildVisionRequest(
@@ -484,28 +483,28 @@ public sealed class OpenAiFoodClient(
     private static Result<FoodVisionModel> ParseVisionResponse(JsonDocument json) {
         string? text = ExtractOutputText(json);
         if (string.IsNullOrWhiteSpace(text)) {
-            return Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse("Missing output text."));
+            return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Missing output text."));
         }
 
         try {
             FoodVisionModel? parsed = JsonSerializer.Deserialize<FoodVisionModel>(text, JsonOptions());
-            return parsed is null ? Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse("Vision response is empty.")) : Result.Success(parsed);
+            return parsed is null ? Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Vision response is empty.")) : Result.Success(parsed);
         } catch (JsonException) {
-            return Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse("Vision JSON invalid."));
+            return Result.Failure<FoodVisionModel>(AiErrors.InvalidResponse("Vision JSON invalid."));
         }
     }
 
     private static Result<FoodNutritionModel> ParseNutritionResponse(JsonDocument json) {
         string? text = ExtractOutputText(json);
         if (string.IsNullOrWhiteSpace(text)) {
-            return Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse("Missing output text."));
+            return Result.Failure<FoodNutritionModel>(AiErrors.InvalidResponse("Missing output text."));
         }
 
         try {
             FoodNutritionModel? parsed = JsonSerializer.Deserialize<FoodNutritionModel>(text, JsonOptions());
-            return parsed is null ? Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse("Nutrition response is empty.")) : Result.Success(parsed);
+            return parsed is null ? Result.Failure<FoodNutritionModel>(AiErrors.InvalidResponse("Nutrition response is empty.")) : Result.Success(parsed);
         } catch (JsonException) {
-            return Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse("Nutrition JSON invalid."));
+            return Result.Failure<FoodNutritionModel>(AiErrors.InvalidResponse("Nutrition JSON invalid."));
         }
     }
 

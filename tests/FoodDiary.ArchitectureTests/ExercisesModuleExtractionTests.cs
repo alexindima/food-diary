@@ -45,7 +45,7 @@ public sealed class ExercisesModuleExtractionTests {
     public void ExtractedExercisesAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj");
-        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Exercises.Application.Abstractions", "FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Exercises.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Abstractions", "FoodDiary.Mediator", "FoodDiary.Modules.Exercises.Application.Abstractions", "FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Exercises.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

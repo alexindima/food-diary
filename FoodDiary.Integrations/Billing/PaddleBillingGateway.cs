@@ -32,7 +32,7 @@ public sealed class PaddleBillingGateway(
         BillingCheckoutSessionRequestModel request,
         CancellationToken cancellationToken = default) {
         if (!IsConfiguredForCheckout()) {
-            return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
+            return Result.Failure<BillingCheckoutSessionModel>(BillingErrors.ProviderNotConfigured(Provider));
         }
 
         try {
@@ -69,7 +69,7 @@ public sealed class PaddleBillingGateway(
             if (string.IsNullOrWhiteSpace(transaction.Id) ||
                 !BillingUrlValidator.IsAbsoluteHttps(checkoutUrl)) {
                 return Result.Failure<BillingCheckoutSessionModel>(
-                    Errors.Billing.ProviderOperationFailed(Provider, "Paddle transaction identifier or checkout URL is invalid."));
+                    BillingErrors.ProviderOperationFailed(Provider, "Paddle transaction identifier or checkout URL is invalid."));
             }
 
             return Result.Success(new BillingCheckoutSessionModel(
@@ -80,7 +80,7 @@ public sealed class PaddleBillingGateway(
                 request.Plan));
         } catch (Exception exception) when (IsAmbiguousNetworkFailure(exception, cancellationToken)) {
             return Result.Failure<BillingCheckoutSessionModel>(
-                Errors.Billing.ProviderOperationFailed(Provider, "Paddle request could not be completed."));
+                BillingErrors.ProviderOperationFailed(Provider, "Paddle request could not be completed."));
         }
     }
 
@@ -131,7 +131,7 @@ public sealed class PaddleBillingGateway(
                     cancellationToken).ConfigureAwait(false);
                 recoveredTransaction = recoveryResult.IsSuccess ? recoveryResult.Value : null;
                 transactionResponse = recoveryResult.IsFailure || recoveredTransaction is null
-                    ? Result.Failure<CreateTransactionResponse>(Errors.Billing.ProviderOperationFailed(
+                    ? Result.Failure<CreateTransactionResponse>(BillingErrors.ProviderOperationFailed(
                         Provider,
                         "Paddle transaction creation result is unknown; retry checkout to recover it safely."))
                     : Result.Success(recoveredTransaction);
@@ -144,7 +144,7 @@ public sealed class PaddleBillingGateway(
         BillingPortalSessionRequestModel request,
         CancellationToken cancellationToken = default) {
         if (!IsConfiguredForPortal()) {
-            return Result.Failure<BillingPortalSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
+            return Result.Failure<BillingPortalSessionModel>(BillingErrors.ProviderNotConfigured(Provider));
         }
 
         try {
@@ -160,13 +160,13 @@ public sealed class PaddleBillingGateway(
             string? url = sessionResponse.Value.Urls?.General?.Overview;
             if (!BillingUrlValidator.IsAbsoluteHttps(url)) {
                 return Result.Failure<BillingPortalSessionModel>(
-                    Errors.Billing.ProviderOperationFailed(Provider, "Paddle customer portal URL is invalid."));
+                    BillingErrors.ProviderOperationFailed(Provider, "Paddle customer portal URL is invalid."));
             }
 
             return Result.Success(new BillingPortalSessionModel(url!));
         } catch (Exception exception) when (IsAmbiguousNetworkFailure(exception, cancellationToken)) {
             return Result.Failure<BillingPortalSessionModel>(
-                Errors.Billing.ProviderOperationFailed(Provider, "Paddle request could not be completed."));
+                BillingErrors.ProviderOperationFailed(Provider, "Paddle request could not be completed."));
         }
     }
 
@@ -183,25 +183,25 @@ public sealed class PaddleBillingGateway(
         }
 
         if (!IsConfiguredForWebhook()) {
-            return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(Errors.Billing.ProviderNotConfigured(Provider)));
+            return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(BillingErrors.ProviderNotConfigured(Provider)));
         }
 
         if (!TryVerifySignature(payload, signatureHeader, out string signatureError)) {
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed(signatureError)));
+                BillingErrors.WebhookValidationFailed(signatureError)));
         }
 
         try {
             return Task.FromResult(ParseVerifiedWebhookEvent(payload));
         } catch (JsonException) {
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed("Paddle webhook payload is invalid.")));
+                BillingErrors.WebhookValidationFailed("Paddle webhook payload is invalid.")));
         } catch (InvalidOperationException) {
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed("Paddle webhook price or structure is invalid.")));
+                BillingErrors.WebhookValidationFailed("Paddle webhook price or structure is invalid.")));
         } catch (FormatException) {
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed("Paddle webhook numeric value is invalid.")));
+                BillingErrors.WebhookValidationFailed("Paddle webhook numeric value is invalid.")));
         }
     }
 
@@ -210,7 +210,7 @@ public sealed class PaddleBillingGateway(
         JsonElement root = document.RootElement;
         if (root.ValueKind != JsonValueKind.Object) {
             return Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed("Paddle webhook payload must be a JSON object."));
+                BillingErrors.WebhookValidationFailed("Paddle webhook payload must be a JSON object."));
         }
 
         string? eventType = GetString(root, "event_type");
@@ -227,12 +227,12 @@ public sealed class PaddleBillingGateway(
 
         if (string.IsNullOrWhiteSpace(GetString(root, "event_id"))) {
             return Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed("Paddle webhook event identifier is missing."));
+                BillingErrors.WebhookValidationFailed("Paddle webhook event identifier is missing."));
         }
 
         if (!root.TryGetProperty("data", out JsonElement data) || data.ValueKind != JsonValueKind.Object) {
             return Result.Failure<BillingWebhookEventModel?>(
-                Errors.Billing.WebhookValidationFailed("Paddle webhook data is missing or invalid."));
+                BillingErrors.WebhookValidationFailed("Paddle webhook data is missing or invalid."));
         }
 
         if (isTransactionEvent) {
@@ -413,7 +413,7 @@ public sealed class PaddleBillingGateway(
         }
 
         return string.IsNullOrWhiteSpace(customerResponse.Value.Id)
-            ? Result.Failure<string>(Errors.Billing.ProviderOperationFailed(Provider, "Paddle customer identifier is missing."))
+            ? Result.Failure<string>(BillingErrors.ProviderOperationFailed(Provider, "Paddle customer identifier is missing."))
             : Result.Success(customerResponse.Value.Id);
     }
 
@@ -436,7 +436,7 @@ public sealed class PaddleBillingGateway(
             if (customer is not null) {
                 return string.IsNullOrWhiteSpace(customer.Id)
                     ? Result.Failure<string?>(
-                        Errors.Billing.ProviderOperationFailed(Provider, "Paddle customer identifier is missing."))
+                        BillingErrors.ProviderOperationFailed(Provider, "Paddle customer identifier is missing."))
                     : Result.Success<string?>(customer.Id);
             }
 
@@ -445,7 +445,7 @@ public sealed class PaddleBillingGateway(
 
         return next is null
             ? Result.Success<string?>(value: null)
-            : Result.Failure<string?>(Errors.Billing.ProviderOperationFailed(
+            : Result.Failure<string?>(BillingErrors.ProviderOperationFailed(
                 Provider,
                 "Paddle customer recovery exceeded the safe pagination limit."));
     }
@@ -502,7 +502,7 @@ public sealed class PaddleBillingGateway(
         }
 
         return next is not null
-            ? Result.Failure<CreateTransactionResponse?>(Errors.Billing.ProviderOperationFailed(
+            ? Result.Failure<CreateTransactionResponse?>(BillingErrors.ProviderOperationFailed(
                 Provider,
                 "Paddle transaction recovery exceeded the safe pagination limit."))
             : Result.Success(recentFallback);
@@ -555,7 +555,7 @@ public sealed class PaddleBillingGateway(
     }
 
     private static Result<CreateTransactionResponse?> InvalidRecoverableTransaction() =>
-        Result.Failure<CreateTransactionResponse?>(Errors.Billing.ProviderOperationFailed(
+        Result.Failure<CreateTransactionResponse?>(BillingErrors.ProviderOperationFailed(
             BillingProviderNames.Paddle,
             "Paddle recoverable transaction response is invalid."));
 

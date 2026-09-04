@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Validation;
@@ -34,11 +33,11 @@ public sealed class DeclineInvitationCommandHandler(
         DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(invitationId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
-            return Result.Failure(Errors.Dietologist.InvitationNotFound);
+            return Result.Failure(DietologistErrors.InvitationNotFound);
         }
 
         if (!passwordHasher.Verify(command.Token, invitation.TokenHash)) {
-            return Result.Failure(Errors.Dietologist.InvitationInvalidToken);
+            return Result.Failure(DietologistErrors.InvitationInvalidToken);
         }
 
         invitation.Decline();

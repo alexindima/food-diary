@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Domain.Entities.Users;
@@ -250,7 +250,7 @@ public partial class ProductsFeatureTests {
         var user = User.Create("create-product-forbidden-image@example.com", "hash");
         var repository = new NoopProductRepository();
         RecordingImageAssetAccessService access = new FoodDiary.Application.Tests.Support.RecordingImageAssetAccessService()
-            .WithFailure(Errors.Image.Forbidden());
+            .WithFailure(ImageErrors.Forbidden());
         var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), access);
 
         Result<ProductModel> result = await handler.Handle(

@@ -14,6 +14,8 @@
     <ProjectReference Include="../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj" />
+    <ProjectReference Include="../../Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" />

@@ -51,7 +51,7 @@ public sealed class DeleteMenstrualEpisodeCommandHandler(
             asTracking: true,
             cancellationToken).ConfigureAwait(false);
         if (profile is null) {
-            return Result.Failure<CycleModel>(Errors.Cycle.NotFound(command.CycleProfileId));
+            return Result.Failure<CycleModel>(CycleErrors.NotFound(command.CycleProfileId));
         }
 
         if (!profile.MenstrualEpisodes.Any(episode => episode.Id == episodeIdResult.Value)) {
