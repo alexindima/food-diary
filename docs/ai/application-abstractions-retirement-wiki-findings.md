@@ -45,8 +45,8 @@ Current source, project files, architecture tests, accepted ADRs and the backend
 ## Verification record
 
 - Force-evaluate restore completed successfully. The final full `FoodDiary.slnx` build completed with zero warnings and zero errors.
-- Fourteen full, unfiltered unit/application/host suites completed with 3,027 passed tests and no final failures or skips. This includes ArchitectureTests 1,160/1,160 and the central Application suite 374/374 after correcting stale assembly-ownership expectations and the literal dependency matrix.
-- The full central PostgreSQL integration project completed 93/93 with no skips. The full Web API integration project completed 182/182 with no skips. Together with the preceding suites, the final test ledger contains 3,302 passed executions, zero failures and zero skips.
+- Fourteen full, unfiltered unit/application/host suites completed with 4,167 passed tests and no final failures or skips. This includes ArchitectureTests 1,160/1,160 and the central Application suite 374/374 after correcting stale assembly-ownership expectations and the literal dependency matrix.
+- The full central PostgreSQL integration project completed 93/93 with no skips. The full Web API integration project completed 182/182 with no skips. Together with the preceding suites, the final test ledger contains 4,442 passed executions, zero failures and zero skips.
 - EF `has-pending-model-changes` reported no model changes. The existing EF tools/runtime patch-version warning (10.0.10 versus 10.0.11) remains informational.
 - The full solution NuGet audit, including transitive packages, completed successfully and reported no vulnerable packages.
 - The final Wiki frozen-100 evaluation is green at 100/100 top-ten retrieval and 4/4 captured error cases. The complete Wiki facade remains non-green only because the later unseen `integrations-persistence` cohort is 6/16 top-one versus its committed threshold of 8/16. That unrelated holdout is not tuned in this task.
