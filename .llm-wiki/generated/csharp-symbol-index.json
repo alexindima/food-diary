@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3528,
-    "symbols": 3473,
+    "sourceFiles": 3527,
+    "symbols": 3472,
     "interfaceImplementationLinks": 235,
-    "dependencyInjectionRegistrations": 155,
+    "dependencyInjectionRegistrations": 152,
     "kinds": {
-      "class": 1798,
+      "class": 1797,
       "enum": 62,
       "interface": 424,
       "record": 1069,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1336,
+      "Other": 1335,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 29,
@@ -1516,13 +1516,6 @@
       "role": "Options",
       "path": "FoodDiary.JobManager/Services/NotificationCleanupOptions.cs",
       "line": 2
-    },
-    {
-      "name": "NotificationResourceServiceCollectionExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.JobManager/Services/NotificationResourceServiceCollectionExtensions.cs",
-      "line": 5
     },
     {
       "name": "NotificationWebPushOutboxJob",
@@ -5319,20 +5312,6 @@
       "line": 4
     },
     {
-      "name": "NotificationResourceRenderer",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Resources/Notifications/NotificationResourceRenderer.cs",
-      "line": 6
-    },
-    {
-      "name": "DiaryPdfReportResourceTextProvider",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Resources/Reports/DiaryPdfReportResourceTextProvider.cs",
-      "line": 6
-    },
-    {
       "name": "BotInputParser",
       "kind": "class",
       "role": "Other",
@@ -5435,7 +5414,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 48
+      "line": 45
     },
     {
       "name": "ApiTelemetry",
@@ -13499,7 +13478,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Export/Infrastructure/ModuleRegistration.cs",
-      "line": 9
+      "line": 10
+    },
+    {
+      "name": "DiaryPdfReportResourceTextProvider",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Export/Infrastructure/Resources/DiaryPdfReportResourceTextProvider.cs",
+      "line": 6
     },
     {
       "name": "DiaryPdfGenerator",
@@ -19673,7 +19659,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "WebPushOptions",
@@ -19723,6 +19709,13 @@
       "role": "Repository",
       "path": "Modules/Notifications/Infrastructure/Persistence/WebPushSubscriptionRepository.cs",
       "line": 8
+    },
+    {
+      "name": "NotificationResourceRenderer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Infrastructure/Resources/NotificationResourceRenderer.cs",
+      "line": 6
     },
     {
       "name": "IWebPushClientAdapter",
@@ -26169,13 +26162,6 @@
       "line": 123
     },
     {
-      "service": "INotificationTextRenderer",
-      "implementation": "NotificationResourceRenderer",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.JobManager/Services/NotificationResourceServiceCollectionExtensions.cs",
-      "line": 9
-    },
-    {
       "service": "IIdempotencyStore",
       "implementation": "InMemoryIdempotencyStore",
       "lifetime": "Singleton",
@@ -26211,25 +26197,11 @@
       "line": 39
     },
     {
-      "service": "INotificationTextRenderer",
-      "implementation": "NotificationResourceRenderer",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 106
-    },
-    {
-      "service": "IDiaryPdfReportTextProvider",
-      "implementation": "DiaryPdfReportResourceTextProvider",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 107
-    },
-    {
       "service": "IIdempotencyStore",
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 139
+      "line": 136
     },
     {
       "service": "IMailInboxReadinessChecker",

@@ -3,6 +3,7 @@ using FoodDiary.Infrastructure.Persistence.Notifications;
 using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
+using FoodDiary.Modules.Notifications.Infrastructure.Resources;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -10,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace FoodDiary.Modules.Notifications.Infrastructure;
 
 public static class ModuleRegistration {
+    public static IServiceCollection AddNotificationResources(this IServiceCollection services) =>
+        services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();
+
     public static IServiceCollection AddNotificationsInfrastructure(this IServiceCollection services, IConfiguration configuration) {
         services.AddNotificationsPersistence();
         return services.AddNotificationsProvider(configuration);

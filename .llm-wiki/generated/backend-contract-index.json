@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1071,
     "ambiguousContracts": 0,
-    "consumerEdges": 7730,
-    "productionConsumerEdges": 4570,
-    "testConsumerEdges": 3160,
+    "consumerEdges": 7731,
+    "productionConsumerEdges": 4569,
+    "testConsumerEdges": 3162,
     "consumedContracts": 1071,
     "unconsumedContracts": 0
   },
@@ -58208,7 +58208,7 @@
         "Modules/Export/Application/Abstractions/Common/IDiaryPdfReportTextProvider.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Resources/Reports/DiaryPdfReportResourceTextProvider.cs",
+      "consumerPath": "Modules/Export/Infrastructure/ModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -58221,7 +58221,7 @@
         "Modules/Export/Application/Abstractions/Common/IDiaryPdfReportTextProvider.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
+      "consumerPath": "Modules/Export/Infrastructure/Resources/DiaryPdfReportResourceTextProvider.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -58261,6 +58261,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/ModuleRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IDiaryPdfReportTextProvider",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Export/Application/Abstractions/Common/IDiaryPdfReportTextProvider.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Export/tests/FoodDiary.Modules.Export.Infrastructure.Tests/Resources/ResourceContractTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -73573,46 +73586,33 @@
         "Modules/Notifications/Application/Abstractions/Common/INotificationTextRenderer.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.JobManager/Services/NotificationResourceServiceCollectionExtensions.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "INotificationTextRenderer",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationTextRenderer.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Resources/Notifications/NotificationResourceRenderer.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "INotificationTextRenderer",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationTextRenderer.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "INotificationTextRenderer",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "Modules/Notifications/Application/Abstractions/Common/INotificationTextRenderer.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/Application/Services/NotificationFeedReadService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationTextRenderer",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/INotificationTextRenderer.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "INotificationTextRenderer",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/INotificationTextRenderer.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/Infrastructure/Resources/NotificationResourceRenderer.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -73639,6 +73639,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/Notifications/NotificationsFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "INotificationTextRenderer",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Notifications/Application/Abstractions/Common/INotificationTextRenderer.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Resources/ResourceContractTests.cs",
       "isTest": true,
       "referenceCount": 2
     },

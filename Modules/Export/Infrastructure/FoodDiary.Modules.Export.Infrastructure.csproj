@@ -1,4 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />

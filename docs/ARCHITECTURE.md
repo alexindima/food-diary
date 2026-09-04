@@ -12,7 +12,6 @@ The primary product backend is a modular monolith:
 - `FoodDiary.Integrations`
 - `FoodDiary.Presentation.Api`
 - `FoodDiary.Web.Api`
-- `FoodDiary.Resources`
 
 Mail delivery and inbound mail are split into dedicated bounded contexts with their own hosts and databases:
 - `FoodDiary.MailRelay.*`
@@ -46,7 +45,6 @@ flowchart LR
     WebApi --> Modules["FoodDiary.Application.Feature\nfeature use cases"]
     WebApi --> Infrastructure["FoodDiary.Infrastructure\npersistence + implementations"]
     WebApi --> Integrations["FoodDiary.Integrations\nexternal adapters"]
-    WebApi --> Resources["FoodDiary.Resources\nresource-backed text"]
     Presentation --> Modules
     Runtime --> Abstractions["FoodDiary.Application.Abstractions\nports + models"]
     Modules --> Abstractions
@@ -55,7 +53,6 @@ flowchart LR
     Infrastructure --> Domain
     Integrations --> Abstractions
     Integrations --> Domain
-    Resources --> Abstractions
 ```
 
 Core rules:
@@ -70,7 +67,7 @@ Core rules:
 - `Web.Api` is the executable HTTP host and composition root; it must not declare feature controllers or transport DTOs.
 - `JobManager` owns recurring/background execution such as cleanup tasks, due notification scheduling, and outbox processors; it must stay free of HTTP presentation concerns.
 - `Initializer` is a thin operational console host for database setup and seed/backfill operations.
-- `Resources` provides resource-backed text without depending on concrete application/domain/persistence; Russian resources must keep matching neutral resources and valid encoding.
+- Notifications and Export infrastructure own their resource-backed text providers. Russian resources must keep matching neutral resources, formatting placeholders and valid encoding.
 - Shared MSBuild settings prune non-target SkiaSharp native assets and native PDB files from build output; deployment publishes must use the destination runtime identifier.
 
 ## Application Read Boundaries

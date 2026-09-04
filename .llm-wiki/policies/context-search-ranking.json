@@ -3751,7 +3751,7 @@
       "identityScope": "file",
       "affinityDirectOnly": false,
       "recordTypes": ["code"],
-      "pathPrefixes": ["FoodDiary.Resources/Reports/"],
+      "pathPrefixes": ["Modules/Export/Infrastructure/Resources/"],
       "pathSuffixes": ["Provider.cs"],
       "excludeTests": true
     },

@@ -187,7 +187,6 @@ COPY MailRelay/FoodDiary.MailRelay.Client/*.csproj MailRelay/FoodDiary.MailRelay
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
 COPY FoodDiary.Integrations/*.csproj FoodDiary.Integrations/
 COPY FoodDiary.Presentation.Api/*.csproj FoodDiary.Presentation.Api/
-COPY FoodDiary.Resources/*.csproj FoodDiary.Resources/
 COPY FoodDiary.Web.Api/*.csproj FoodDiary.Web.Api/
 
 RUN dotnet restore FoodDiary.Web.Api/FoodDiary.Web.Api.csproj --locked-mode
@@ -383,7 +382,6 @@ COPY MailRelay/FoodDiary.MailRelay.Client/ MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/
 COPY FoodDiary.Integrations/ FoodDiary.Integrations/
 COPY FoodDiary.Presentation.Api/ FoodDiary.Presentation.Api/
-COPY FoodDiary.Resources/ FoodDiary.Resources/
 COPY FoodDiary.Web.Api/ FoodDiary.Web.Api/
 
 RUN dotnet publish FoodDiary.Web.Api/FoodDiary.Web.Api.csproj -c Release -o /app/publish --no-restore

@@ -380,41 +380,6 @@ public class LayeringTests {
     }
 
     [Fact]
-    public void ResourcesProject_ReferencesOnly_ApplicationAmongCoreProjects() {
-        HashSet<string> references = GetProjectReferences("FoodDiary.Resources/FoodDiary.Resources.csproj");
-
-        Assert.Contains("FoodDiary.Application.Abstractions", references);
-        Assert.DoesNotContain("FoodDiary.Application", references);
-        Assert.DoesNotContain("FoodDiary.Domain", references);
-        Assert.DoesNotContain("FoodDiary.Infrastructure", references);
-        Assert.DoesNotContain("FoodDiary.Presentation.Api", references);
-        Assert.DoesNotContain("FoodDiary.Web.Api", references);
-    }
-
-    [Fact]
-    public void ResourcesSource_DoesNotReferenceConcreteBackendOrTransportLayers() {
-        string resourcesRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Resources");
-
-        string[] violations = SourceScanner.FindLinePatternViolations(resourcesRoot, [
-            "FoodDiary.Application;",
-            "FoodDiary.Domain",
-            "FoodDiary.Infrastructure",
-            "FoodDiary.Presentation.Api",
-            "FoodDiary.Web.Api",
-            "Microsoft.AspNetCore",
-            "ControllerBase",
-            "IActionResult",
-            "HttpContext",
-            "DbContext",
-            "Npgsql",
-            "IConfiguration",
-            "IOptions<",
-        ]);
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
     public void PresentationApi_SourceFiles_DoNotUseDomainNamespaces() {
         string root = GetRepositoryRoot();
         string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
@@ -435,7 +400,7 @@ public class LayeringTests {
         Assert.Contains("FoodDiary.Infrastructure", references);
         Assert.Contains("FoodDiary.Integrations", references);
         Assert.Contains("FoodDiary.Presentation.Api", references);
-        Assert.Contains("FoodDiary.Resources", references);
+        Assert.DoesNotContain("FoodDiary.Resources", references);
         Assert.DoesNotContain("FoodDiary.Domain", references);
     }
 

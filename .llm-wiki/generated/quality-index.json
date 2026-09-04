@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4751,
+    "productionFiles": 4750,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -4143,14 +4143,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 4.84
-    },
-    {
-      "path": "FoodDiary.JobManager/Services/NotificationResourceServiceCollectionExtensions.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
     },
     {
       "path": "FoodDiary.JobManager/Services/NotificationWebPushOutboxJob.cs",
@@ -8497,22 +8489,6 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "FoodDiary.Resources/Notifications/NotificationResourceRenderer.cs",
-      "nonBlankLines": 71,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.92
-    },
-    {
-      "path": "FoodDiary.Resources/Reports/DiaryPdfReportResourceTextProvider.cs",
-      "nonBlankLines": 72,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.44
-    },
-    {
       "path": "FoodDiary.Telegram.Bot/BotInputParser.cs",
       "nonBlankLines": 19,
       "decisionPoints": 4,
@@ -8634,11 +8610,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 140,
+      "nonBlankLines": 137,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.8
+      "structuralRiskScore": 5.74
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -26114,11 +26090,19 @@
     },
     {
       "path": "Modules/Export/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 58,
+      "nonBlankLines": 61,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.16
+      "structuralRiskScore": 4.22
+    },
+    {
+      "path": "Modules/Export/Infrastructure/Resources/DiaryPdfReportResourceTextProvider.cs",
+      "nonBlankLines": 72,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.44
     },
     {
       "path": "Modules/Export/Infrastructure/Services/DiaryPdf/DiaryPdfGenerator.ChartSvgGeometry.cs",
@@ -33306,11 +33290,11 @@
     },
     {
       "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 44,
+      "nonBlankLines": 47,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.88
+      "structuralRiskScore": 0.94
     },
     {
       "path": "Modules/Notifications/Infrastructure/Options/WebPushOptions.cs",
@@ -33367,6 +33351,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 7.18
+    },
+    {
+      "path": "Modules/Notifications/Infrastructure/Resources/NotificationResourceRenderer.cs",
+      "nonBlankLines": 71,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.92
     },
     {
       "path": "Modules/Notifications/Infrastructure/Services/IWebPushClientAdapter.cs",

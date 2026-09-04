@@ -15,7 +15,7 @@
 | Provider | `WebPushNotificationSender`, client adapter/interface, validation handler, sockets factory, `WebPushOptions` | Move to module Infrastructure. Searches show this provider stack is exclusively web-push notification delivery. Central Integrations retains email/MailRelay and other provider stacks, not this one. Preserve provider namespaces and all options/configuration/timeout logic. |
 | Presentation | Notifications controllers, request/response mappings, hub/pusher, test scheduler | Remain central presentation adapters. Controllers and SignalR transport do not own aggregates; the scheduler dispatches the existing application capability. |
 | Background | Notification outbox/cleanup jobs and recurring registration | Remain JobManager adapters. Default push-outbox schedule is every minute; cleanup is 04:00. Fasting schedules remain Fasting-owned and call Notifications semantic capabilities. |
-| Localization | `FoodDiary.Resources/Notifications/NotificationResourceRenderer` and localized resources | Remain in the resource assembly; API/JobManager compose the same `INotificationTextRenderer`. Resource selection/text are not duplicated in a module provider or changed. |
+| Localization | `Modules/Notifications/Infrastructure/Resources/NotificationResourceRenderer` and localized resources | Owned by Notifications Infrastructure; API/JobManager compose the same `INotificationTextRenderer` through `AddNotificationResources`. Resource keys, selection, text and fallback behavior remain unchanged. |
 | Focused tests | Notifications application folder; NotificationInvariantTests; NotificationRepositoryTests; NotificationWebPushOutboxTests; three WebPush service test files | Move into module Application/Domain/Infrastructure test projects. Shared DbContext/Postgres, HTTP, host and mixed-provider DI tests remain central consumers. |
 
 ## Owned source inventory
@@ -29,7 +29,7 @@
 - Persistence model: NotificationConfiguration, WebPushSubscriptionConfiguration, NotificationWebPushOutboxMessageConfiguration, NotificationWebPushOutboxMessage, explicit NotificationsPersistenceModelRegistration.
 - Persistence adapters: NotificationRepository, WebPushSubscriptionRepository, NotificationWebPushOutbox, NotificationWebPushOutboxProcessor. Shared context/unit-of-work/lease engine remain dependencies.
 - Provider: WebPushNotificationSender, IWebPushClientAdapter, WebPushClientAdapter, WebPushEndpointValidationHandler, WebPushSocketsHttpHandlerFactory, WebPushOptions. The two VAPID/navigation validation methods were copied without behavioral edits from the mixed IntegrationUriValidator into owned WebPushUriValidator; the general URL validator stays central for Fitbit/S3/YooKassa/USDA/OpenFoodFacts. This avoids a new module-to-Integrations dependency.
-- Cross-module producers/consumers include Identity GoogleLogin and Fasting deduplication, Dietologist invitation/recommendation notifications, Users profile overview/preferences, Resources localization, central HTTP/SignalR and JobManager scheduling. They keep existing semantic ports and namespace-compatible references.
+- Cross-module producers/consumers include Identity GoogleLogin and Fasting deduplication, Dietologist invitation/recommendation notifications, Users profile overview/preferences, module-owned localization, central HTTP/SignalR and JobManager scheduling. They keep existing semantic ports and namespace-compatible references.
 
 ## Privacy and reliability invariants
 

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Resources.Notifications;
+using FoodDiary.Modules.Notifications.Infrastructure.Resources;
 
-namespace FoodDiary.Resources.Tests.Notifications;
+namespace FoodDiary.Infrastructure.Tests.Resources;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationResourceRendererTests {

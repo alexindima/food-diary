@@ -1352,7 +1352,6 @@
           "FoodDiary.Modules.Users.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.Wearables.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Infrastructure": "[1.0.0, )",
-          "FoodDiary.Resources": "[1.0.0, )",
           "Hangfire.AspNetCore": "[1.8.24, )",
           "Hangfire.Core": "[1.8.24, )",
           "Hangfire.PostgreSql": "[1.21.1, )",
@@ -2539,14 +2538,6 @@
       },
       "fooddiary.outbox.abstractions": {
         "type": "Project"
-      },
-      "fooddiary.resources": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Export.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )"
-        }
       },
       "fooddiary.results": {
         "type": "Project"

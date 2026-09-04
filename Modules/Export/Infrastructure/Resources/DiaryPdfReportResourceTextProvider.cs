@@ -2,11 +2,11 @@ using System.Globalization;
 using System.Resources;
 using FoodDiary.Application.Abstractions.Export.Common;
 
-namespace FoodDiary.Resources.Reports;
+namespace FoodDiary.Modules.Export.Infrastructure.Resources;
 
 public sealed class DiaryPdfReportResourceTextProvider : IDiaryPdfReportTextProvider {
     private static readonly ResourceManager ResourceManager =
-        new("FoodDiary.Resources.Reports.DiaryPdfReport", typeof(DiaryPdfReportResourceTextProvider).Assembly);
+        new("FoodDiary.Modules.Export.Infrastructure.Resources.DiaryPdfReport", typeof(DiaryPdfReportResourceTextProvider).Assembly);
 
     public DiaryPdfReportTexts GetTexts(string? locale) {
         CultureInfo culture = ResolveCulture(locale);

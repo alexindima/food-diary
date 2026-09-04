@@ -2,11 +2,11 @@ using System.Globalization;
 using System.Resources;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 
-namespace FoodDiary.Resources.Notifications;
+namespace FoodDiary.Modules.Notifications.Infrastructure.Resources;
 
 public sealed class NotificationResourceRenderer : INotificationTextRenderer {
     private static readonly ResourceManager ResourceManager =
-        new("FoodDiary.Resources.Notifications.NotificationTemplates", typeof(NotificationResourceRenderer).Assembly);
+        new("FoodDiary.Modules.Notifications.Infrastructure.Resources.NotificationTemplates", typeof(NotificationResourceRenderer).Assembly);
 
     public NotificationText Render(string type, string? locale = null, params object[] arguments) {
         if (string.IsNullOrWhiteSpace(type)) {

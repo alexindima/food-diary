@@ -2468,14 +2468,6 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "fooddiary.resources": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Export.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )"
-        }
-      },
       "fooddiary.results": {
         "type": "Project"
       },

@@ -12,7 +12,7 @@ Rules for `FoodDiary.Web.Api/`.
 - Do not add feature controllers or HTTP transport models directly to this project unless there is a deliberate architectural change.
 - Keep startup/composition in extensions where practical.
 - Keep host policies and defaults explicit so production behavior is easy to audit.
-- `FoodDiary.Web.Api` is allowed to reference `FoodDiary.Application`, `FoodDiary.Infrastructure`, `FoodDiary.Integrations`, `FoodDiary.Presentation.Api`, and `FoodDiary.Resources`.
+- `FoodDiary.Web.Api` may reference the runtime, module applications/infrastructure, central Infrastructure/Integrations, and Presentation.Api required for composition. Resource providers belong to their module Infrastructure projects.
 - Do not reference `FoodDiary.Domain` directly from this host; use the wired modules.
 - Application, presentation, and resource projects must not reference host options or host extension methods.
 

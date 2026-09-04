@@ -210,7 +210,6 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Development MCP: `FoodDiary.Development.Mcp/AGENTS.md`
 - Mobile shell: `FoodDiary.Mobile/AGENTS.md`
 - Technology radar: `FoodDiary.TechRadar/AGENTS.md`
-- Resources/localization/report text: `FoodDiary.Resources/AGENTS.md`
 - Shared mediator: `Shared/FoodDiary.Mediator/AGENTS.md`
 - Shared domain primitives: `Shared/FoodDiary.Domain.Primitives/AGENTS.md`
 - Tests: `tests/AGENTS.md`

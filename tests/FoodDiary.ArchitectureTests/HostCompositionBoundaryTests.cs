@@ -116,7 +116,6 @@ public sealed class HostCompositionBoundaryTests {
             ArchitectureTestPaths.FromRoot("FoodDiary.Application"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Presentation.Api"),
-            ArchitectureTestPaths.FromRoot("FoodDiary.Resources"),
         ];
         string[] forbiddenPatterns = [
             "FoodDiary.Web.Api.Options",

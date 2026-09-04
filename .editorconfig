@@ -250,7 +250,7 @@ dotnet_diagnostic.MA0051.severity = warning
 [FoodDiary.MailRelay.Client/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
-[FoodDiary.Resources/**/*.cs]
+[Modules/{Export,Notifications}/Infrastructure/Resources/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
 [Shared/FoodDiary.Mediator/**/*.cs]
@@ -338,7 +338,7 @@ dotnet_diagnostic.MA0051.severity = warning
 [Shared/tests/FoodDiary.Mediator.Tests/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
-[tests/FoodDiary.Resources.Tests/**/*.cs]
+[Modules/{Export,Notifications}/tests/**/Resources/**/*.cs]
 dotnet_diagnostic.MA0051.severity = warning
 
 [tests/FoodDiary.Telegram.Bot.Tests/**/*.cs]

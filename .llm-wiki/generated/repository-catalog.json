@@ -13,16 +13,16 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 326,
-    "testProjects": 124,
+    "dotnetProjects": 324,
+    "testProjects": 123,
     "frontendProjects": 4,
     "applicationModules": 1,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 34,
     "controllers": 89,
     "endpoints": 285,
-    "agentGuides": 229,
-    "documentationPages": 148
+    "agentGuides": 228,
+    "documentationPages": 149
   },
   "dotnet": {
     "projects": [
@@ -371,7 +371,6 @@
           "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj",
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
-          "FoodDiary.Resources/FoodDiary.Resources.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
           "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj",
@@ -541,23 +540,6 @@
         ]
       },
       {
-        "name": "FoodDiary.Resources",
-        "assemblyName": "FoodDiary.Resources",
-        "path": "FoodDiary.Resources/FoodDiary.Resources.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
-          "Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj"
-        ],
-        "packageReferences": []
-      },
-      {
         "name": "FoodDiary.Telegram.Bot",
         "assemblyName": "FoodDiary.Telegram.Bot",
         "path": "FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj",
@@ -598,7 +580,6 @@
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
-          "FoodDiary.Resources/FoodDiary.Resources.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
           "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj",
@@ -10334,40 +10315,6 @@
         ]
       },
       {
-        "name": "FoodDiary.Resources.Tests",
-        "assemblyName": "FoodDiary.Resources.Tests",
-        "path": "tests/FoodDiary.Resources.Tests/FoodDiary.Resources.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "FoodDiary.Resources/FoodDiary.Resources.csproj",
-          "Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
         "name": "FoodDiary.Telegram.Bot.Tests",
         "assemblyName": "FoodDiary.Telegram.Bot.Tests",
         "path": "tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj",
@@ -10737,7 +10684,6 @@
       "tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj",
       "tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj",
       "tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj",
-      "tests/FoodDiary.Resources.Tests/FoodDiary.Resources.Tests.csproj",
       "tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj",
       "tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj",
       "tests/FoodDiary.Web.Api.Tests/FoodDiary.Web.Api.Tests.csproj",
@@ -13001,7 +12947,6 @@
       "FoodDiary.JobManager/AGENTS.md",
       "FoodDiary.Mobile/AGENTS.md",
       "FoodDiary.Presentation.Api/AGENTS.md",
-      "FoodDiary.Resources/AGENTS.md",
       "FoodDiary.TechRadar/AGENTS.md",
       "FoodDiary.Telegram.Bot/AGENTS.md",
       "FoodDiary.Web.Api/AGENTS.md",
@@ -13318,6 +13263,7 @@
       "docs/ai/recipes-module-extraction-wiki-findings.md",
       "docs/ai/recipes-module-integration.md",
       "docs/ai/recipes-ownership-inventory.md",
+      "docs/ai/resource-ownership-extraction.md",
       "docs/ai/strongly-typed-id-converter-retirement.md",
       "docs/ai/users-administration-reader-ownership.md",
       "docs/ai/users-domain-extraction.md",

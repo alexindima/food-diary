@@ -534,9 +534,9 @@ Evidence: `FoodDiary.Analyzers/ProjectConventionAnalyzer.cs` and `Tooling/tests/
 
 ### 85. Localization provider abstraction
 
-Backend-generated notification, report and email text is supplied by a separate Resources adapter that depends only on application-facing contracts. Business workflows request semantic text without owning `.resx` lookup or locale fallback details.
+Backend-generated notification and report text is supplied by infrastructure adapters owned by the corresponding module. Business workflows request semantic text through application-facing contracts without owning `.resx` lookup or locale fallback details.
 
-Evidence: `FoodDiary.Resources/`, resource provider contracts and resource guardrail tests.
+Evidence: `Modules/Notifications/Infrastructure/Resources/`, `Modules/Export/Infrastructure/Resources/`, resource provider contracts and `ModuleResourceOwnershipTests`.
 
 ### 86. Thin operational initializer
 

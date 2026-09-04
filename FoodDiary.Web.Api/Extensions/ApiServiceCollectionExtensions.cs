@@ -29,15 +29,12 @@ using FoodDiary.Modules.ContentReports.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Modules.Gamification.Infrastructure;
 using FoodDiary.Application.Export;
-using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Infrastructure;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Filters;
-using FoodDiary.Resources.Notifications;
-using FoodDiary.Resources.Reports;
 using FoodDiary.Web.Api.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using StackExchange.Redis;
@@ -103,8 +100,8 @@ public static class ApiServiceCollectionExtensions {
                 .AddDashboardReadServices()
                 .AddImagesInfrastructure()
                 .AddIntegrations(configuration).AddIdentityProvider(configuration).AddImagesProvider(configuration).AddAiProvider(configuration).AddUsdaProvider(configuration).AddOpenFoodFactsProvider(configuration).AddWearablesProvider(configuration)
-                .AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>()
-                .AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>()
+                .AddNotificationResources()
+                .AddExportResources()
                 .AddNotificationTestScheduler()
                 .AddApiDistributedCache(configuration, environment)
                 .AddPresentationApi()

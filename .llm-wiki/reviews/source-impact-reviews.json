@@ -7,14 +7,22 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
+          "path": "AGENTS.md",
+          "sha256": "d4a1cdad8cc0a2480537d91d799bc27b5b80827467d9853a7b1f98c110fc7e41"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "5e5a02fd49b0fa3d46d24bf898829bf73d52c44c110da0723d4fe5f1a2d4765e"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7e104518434bd993e7b11ac10bfaeefe17a2ae085bb37893f9c0fdadfdf864b4"
+          "sha256": "184672c3c3b2f089d97f92e40a476d7f45081ee8717a41140db79e956afc0f80"
         }
       ],
-      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
+      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:23.9030319Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:10.9951395Z"
     },
     {
       "pageId": "module.frontend",
@@ -37,14 +45,18 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "5e5a02fd49b0fa3d46d24bf898829bf73d52c44c110da0723d4fe5f1a2d4765e"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7e104518434bd993e7b11ac10bfaeefe17a2ae085bb37893f9c0fdadfdf864b4"
+          "sha256": "184672c3c3b2f089d97f92e40a476d7f45081ee8717a41140db79e956afc0f80"
         }
       ],
-      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
+      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:24.6742476Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:11.2045697Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -52,22 +64,22 @@
       "pageSha256": "a12fef9a11365dd6a6c58228abc9447b6f005042e43ab58532b8250805df1709",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "d91d924875ebd2a45a5bf42046931fe159f4d503881dfecb2699e9f20e89eaa3"
-        },
-        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7e104518434bd993e7b11ac10bfaeefe17a2ae085bb37893f9c0fdadfdf864b4"
+          "sha256": "184672c3c3b2f089d97f92e40a476d7f45081ee8717a41140db79e956afc0f80"
         },
         {
-          "path": "FoodDiary.Integrations/AGENTS.md",
-          "sha256": "7517e71d5572e6446a588001b29ae7d269fddbbd909169dad9d739986774a032"
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "803a4d565fa8f90048b0492475f588a707c08a3ef38b2b9240f836f084a0ba10"
+        },
+        {
+          "path": "FoodDiary.Web.Api/AGENTS.md",
+          "sha256": "3d4801fc16f2ae88fc712cbb26ac03f3773cc31ff9cb19e41dcf9f2ab2ff49b0"
         }
       ],
-      "reason": "No route, payload, status, transport or Swagger snapshot changes. Google/Telegram and S3 implementation assemblies move with existing CLR names; coordinated rebuilt hosts required. No old binary compatibility promise. API and JobManager explicitly replace former central provider composition; Initializer acquires no external configuration.",
+      "reason": "Reviewed module/host ownership after relocating resource adapters; routes, payloads, Swagger surface, application contracts and localized values are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:25.3749723Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:11.4004097Z"
     },
     {
       "pageId": "system.architecture",
@@ -75,22 +87,22 @@
       "pageSha256": "ff07d39df89287cfe0cf92d528240917f4714332273044fc3194e24e933c796b",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "d91d924875ebd2a45a5bf42046931fe159f4d503881dfecb2699e9f20e89eaa3"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "5e5a02fd49b0fa3d46d24bf898829bf73d52c44c110da0723d4fe5f1a2d4765e"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "7e104518434bd993e7b11ac10bfaeefe17a2ae085bb37893f9c0fdadfdf864b4"
+          "sha256": "184672c3c3b2f089d97f92e40a476d7f45081ee8717a41140db79e956afc0f80"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "38a5f4e794a8c9f0292bae959da1334f7504daaa0f7223eedbde3da82ebb9502"
+          "sha256": "d71881ee6578343081bca2c23b0376ef21bf522ed54cd2b61b9c9c4dbb4a39c1"
         }
       ],
-      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
+      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:26.0249429Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:11.6184277Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -129,13 +141,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "43f437de3654023609053df7870090bb35da8dc6a2380b70e9747e731d45fc23"
+          "sha256": "d4a1cdad8cc0a2480537d91d799bc27b5b80827467d9853a7b1f98c110fc7e41"
         }
       ],
-      "reason": "Remove9unused central ProjectReferences, add131existing owner references across80consumers, exact81project inventory and matrix. Central32to23, all201production emitted reference sets identical. Preserve remaining Errors/shared types and DbContext ownership. Updated scoped guides and Dashboard direct-contract routing, no new project or runtime layer.",
+      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
       "baseRef": "HEAD",
-      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
-      "reviewedAtUtc": "2026-09-04T08:31:10.3196618Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:11.8301609Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -208,21 +220,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "058978f168321955e38d6b7cd006b281ecac28069b5bbb5fa074ea2f3a9292df"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "d91d924875ebd2a45a5bf42046931fe159f4d503881dfecb2699e9f20e89eaa3"
+          "sha256": "684e694aeebfdb91c5a5482fa69dc64d5d44ae5cbf72f5db58691ddf0e4b00b9"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "38a5f4e794a8c9f0292bae959da1334f7504daaa0f7223eedbde3da82ebb9502"
+          "sha256": "d71881ee6578343081bca2c23b0376ef21bf522ed54cd2b61b9c9c4dbb4a39c1"
         }
       ],
-      "reason": "Four full existing test files and ten option test methods preserved without duplicates; module-owned tests and new standalone registration tests run with unfiltered owner, donor, host, architecture and real PostgreSQL/HTTP suites. Exact outcomes and initial analyzer failures retained in auth-storage-evidence. No collectors. Twelve expected-path literals across eight corpora reverse to baseline. Independent Wiki suffix fix has fail-before/pass-after synthetic evidence and same-DB190-case comparison; no policy/threshold/query/ranking-weight changes. Strict quality failures are reported separately, not waived by runtime results.",
+      "reason": "Reviewed generated catalog, dependency, topology, quality and retrieval guidance against current projects; retired Resources entries are gone and the two source-proven retrieval paths/prefix follow their module owners.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:27.3343181Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:12.0669564Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -231,13 +239,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "6a0cf3b4208ef9632331283784a187c65d0b97ae97f485d67818dde7b5b423e2"
+          "sha256": "95d514059dd0fc4c25c03298c5c62aac5e480505dc7a0de6f8ab2edc9ede7cc6"
         }
       ],
-      "reason": "No route, payload, status, transport or Swagger snapshot changes. Google/Telegram and S3 implementation assemblies move with existing CLR names; coordinated rebuilt hosts required. No old binary compatibility promise. API and JobManager explicitly replace former central provider composition; Initializer acquires no external configuration.",
+      "reason": "Reviewed module/host ownership after relocating resource adapters; routes, payloads, Swagger surface, application contracts and localized values are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:28.3214993Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:12.6200561Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -275,38 +283,18 @@
       "pageSha256": "8125215f523313db4f5d24a8398ee62bcbe5d6e2533066a2a1b5f53b12bd3491",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-generalization.json",
-          "sha256": "0e533489d87370c7607e718a677cd6a4c392434aa0f35e3f12228e2b8d4a4829"
-        },
-        {
           "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "0f58b5a73972ee49949c007e75e3d68354c38f32ef5a31bcd0725cacbdfac645"
+          "sha256": "470b527694e7018cb9f0c9e93dcd112f462674a2dcb598151760429763e5b82d"
         },
         {
-          "path": ".llm-wiki/evals/context-search-probe-2.json",
-          "sha256": "3a1817f345fb358581b781a712fbb22085b2804d15d6acf6526cb2518cf83a99"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-probe.json",
-          "sha256": "30eec9ff04db533dd3a78ce206c1ac6b62f34eef7f3baf122ae111809e04cffb"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-validation.json",
-          "sha256": "7784cf3d4791181fca4536282238cf5563c06448de9257bb40a12885dec65617"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "570da67d3a623a893c3db04d593c9b4fc44f0deb675a52a63cc80f8b7bad90eb"
-        },
-        {
-          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-          "sha256": "11cfe46f9c8455f1ded851eaf5c12a2536f464ef23b6ad21b625634b15eaacd6"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "185dc40899cc26632ac6f847f2da7f707153b7db2b7282eff8c7eabe62a78e19"
         }
       ],
-      "reason": "Four full existing test files and ten option test methods preserved without duplicates; module-owned tests and new standalone registration tests run with unfiltered owner, donor, host, architecture and real PostgreSQL/HTTP suites. Exact outcomes and initial analyzer failures retained in auth-storage-evidence. No collectors. Twelve expected-path literals across eight corpora reverse to baseline. Independent Wiki suffix fix has fail-before/pass-after synthetic evidence and same-DB190-case comparison; no policy/threshold/query/ranking-weight changes. Strict quality failures are reported separately, not waived by runtime results.",
+      "reason": "Reviewed generated catalog, dependency, topology, quality and retrieval guidance against current projects; retired Resources entries are gone and the two source-proven retrieval paths/prefix follow their module owners.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:28.9125566Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:13.1568334Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -841,13 +829,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c5fb19af5d416a285c96149ee1de72d15ac5c7ecd8b5bcb9075472fca41d5821"
+          "sha256": "6273e8961d7ec15ef8bbaf77b858c6ec47848d28c8423580557a4923b545429d"
         }
       ],
-      "reason": "Four full existing test files and ten option test methods preserved without duplicates; module-owned tests and new standalone registration tests run with unfiltered owner, donor, host, architecture and real PostgreSQL/HTTP suites. Exact outcomes and initial analyzer failures retained in auth-storage-evidence. No collectors. Twelve expected-path literals across eight corpora reverse to baseline. Independent Wiki suffix fix has fail-before/pass-after synthetic evidence and same-DB190-case comparison; no policy/threshold/query/ranking-weight changes. Strict quality failures are reported separately, not waived by runtime results.",
+      "reason": "Reviewed generated catalog, dependency, topology, quality and retrieval guidance against current projects; retired Resources entries are gone and the two source-proven retrieval paths/prefix follow their module owners.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:31.2983627Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:13.7226868Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -924,13 +912,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0ab3a7e10fdbbe714664a0c10cdceaaa06133a961c6a95f1f4c979e71c61de27"
+          "sha256": "413b4a3620e32d8ec161802370b051e115ae7c64ed7249dffcda6983b77dbc12"
         }
       ],
-      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
+      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:32.7074120Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:14.9107643Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -939,21 +927,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c5fb19af5d416a285c96149ee1de72d15ac5c7ecd8b5bcb9075472fca41d5821"
+          "sha256": "6273e8961d7ec15ef8bbaf77b858c6ec47848d28c8423580557a4923b545429d"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0ab3a7e10fdbbe714664a0c10cdceaaa06133a961c6a95f1f4c979e71c61de27"
+          "sha256": "413b4a3620e32d8ec161802370b051e115ae7c64ed7249dffcda6983b77dbc12"
         },
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "80517abc7b2e9de42d9d0bf918c18a6694640d4b8a91f1068e03f0413c954b2b"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "185dc40899cc26632ac6f847f2da7f707153b7db2b7282eff8c7eabe62a78e19"
         }
       ],
-      "reason": "All twelve provider/options source bodies and option chains are source/token-equivalent. The user-approved sole runtime correction conditionally assigns S3 ServiceURL, fixing the pre-existing region-only constructor failure; offline null/whitespace/custom URL regressions pass. All other singleton tokens, Google issuer/audience/signing/verified-email/cancellation, Telegram HMAC/clock, S3 staged byte/dimension/public-policy/deletion behavior are unchanged. Shared URI and telemetry remain one implementation. No credentials read, real external provider call, new sharing/lifecycle or external security scan.",
+      "reason": "Reviewed resource and topology indexes; the move introduces no new data collection, logging, sharing, provider call, credential or retention path.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:33.4741690Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:15.4838323Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1131,13 +1119,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "43f437de3654023609053df7870090bb35da8dc6a2380b70e9747e731d45fc23"
+          "sha256": "d4a1cdad8cc0a2480537d91d799bc27b5b80827467d9853a7b1f98c110fc7e41"
         }
       ],
-      "reason": "Remove9unused central ProjectReferences, add131existing owner references across80consumers, exact81project inventory and matrix. Central32to23, all201production emitted reference sets identical. Preserve remaining Errors/shared types and DbContext ownership. Updated scoped guides and Dashboard direct-contract routing, no new project or runtime layer.",
+      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
       "baseRef": "HEAD",
-      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
-      "reviewedAtUtc": "2026-09-04T08:31:11.0070389Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:12.8613227Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1191,17 +1179,21 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "0f58b5a73972ee49949c007e75e3d68354c38f32ef5a31bcd0725cacbdfac645"
+          "sha256": "470b527694e7018cb9f0c9e93dcd112f462674a2dcb598151760429763e5b82d"
         },
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "7c4d211d9c0b6b8d7e84a5e0bfb31943a36864bba4243fa13ed1185553ee05d6"
+          "sha256": "329bf028feff6666e2a6324b47760e0d2e2b34f7002c241760fdc9ac8204995e"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "d4a1cdad8cc0a2480537d91d799bc27b5b80827467d9853a7b1f98c110fc7e41"
         }
       ],
-      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
+      "reason": "Reviewed repository/module/architecture navigation against current source, solution and module ownership guides; module-owned localization and retirement of the central project are represented consistently.",
       "baseRef": "HEAD",
-      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
-      "reviewedAtUtc": "2026-09-04T16:43:32.0592501Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:14.1863343Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1210,13 +1202,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "43f437de3654023609053df7870090bb35da8dc6a2380b70e9747e731d45fc23"
+          "sha256": "d4a1cdad8cc0a2480537d91d799bc27b5b80827467d9853a7b1f98c110fc7e41"
         }
       ],
-      "reason": "56 final unfiltered suites,6532 passed,0failed0skipped, including all module Application suites and fullArchitecture. New13guard assertions fail-before/pass-after;20exact existing expectations updated only after baseline-set equivalence audit. Fullsolution and independentcentral build0warnings/errors, EFunchanged, packageaudit no vulnerabilities. No collectors or weakened checks. Failed firstcompile/architecture retained.",
+      "reason": "Reviewed generated catalog, dependency, topology, quality and retrieval guidance against current projects; retired Resources entries are gone and the two source-proven retrieval paths/prefix follow their module owners.",
       "baseRef": "HEAD",
-      "gitHead": "3eb1dcb4229a74e6c11376cc3a4bb60379415035",
-      "reviewedAtUtc": "2026-09-04T08:31:11.6344165Z"
+      "gitHead": "c5fa438cde2cd1d84d11c7c383b2b06c7bb27cd6",
+      "reviewedAtUtc": "2026-09-04T18:30:14.5323570Z"
     }
   ]
 }

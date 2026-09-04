@@ -41,7 +41,6 @@
     <ProjectReference Include="..\Modules\Billing\Infrastructure\FoodDiary.Modules.Billing.Infrastructure.csproj" />
     <ProjectReference Include="..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="..\FoodDiary.Integrations\FoodDiary.Integrations.csproj" />
-    <ProjectReference Include="..\FoodDiary.Resources\FoodDiary.Resources.csproj" />
     <ProjectReference Include="..\Modules\Images\Application\FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="..\Modules\Images\Infrastructure\FoodDiary.Modules.Images.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />

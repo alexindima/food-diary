@@ -6,7 +6,7 @@ Rules for `Modules/Notifications/`.
 
 ## Ownership
 
-- Own notification feed, web-push subscriptions, delivery orchestration and notification cleanup.
+- Own notification feed, localized notification text, web-push subscriptions, delivery orchestration and notification cleanup.
 - Own notification aggregates/IDs, application ports and payload contracts, persistence models/repositories and web-push provider adapters in their corresponding module layers.
 - Use shared Outbox.Abstractions for the lifecycle contract; central Infrastructure retains only the multi-stream engine/claiming/replay responsibilities.
 - Preserve notification channels, payloads, text selection, delivery behavior and retry semantics during structural changes.

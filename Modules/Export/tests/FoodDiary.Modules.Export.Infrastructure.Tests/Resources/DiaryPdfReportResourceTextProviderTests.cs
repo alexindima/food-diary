@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Export.Common;
-using FoodDiary.Resources.Reports;
+using FoodDiary.Modules.Export.Infrastructure.Resources;
 
-namespace FoodDiary.Resources.Tests;
+namespace FoodDiary.Modules.Export.Infrastructure.Tests.Resources;
 
 [ExcludeFromCodeCoverage]
 public sealed class DiaryPdfReportResourceTextProviderTests {

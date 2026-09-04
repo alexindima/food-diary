@@ -2918,14 +2918,6 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
-      "fooddiary.resources": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Export.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )"
-        }
-      },
       "fooddiary.results": {
         "type": "Project"
       },
@@ -2992,7 +2984,6 @@
           "FoodDiary.Modules.Wearables.Infrastructure": "[1.0.0, )",
           "FoodDiary.Modules.WeeklyGoals.Infrastructure": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )",
-          "FoodDiary.Resources": "[1.0.0, )",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "[10.0.11, )",
           "Microsoft.AspNetCore.OpenApi": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",

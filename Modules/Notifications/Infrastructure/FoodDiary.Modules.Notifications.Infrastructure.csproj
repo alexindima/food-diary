@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>FoodDiary.Modules.Notifications.Infrastructure</RootNamespace>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Model/**/*.cs" />

@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Modules.Export.Infrastructure.Resources;
 using FoodDiary.Modules.Export.Infrastructure.Services.DiaryPdf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -8,6 +9,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace FoodDiary.Modules.Export.Infrastructure;
 
 public static class ModuleRegistration {
+    public static IServiceCollection AddExportResources(this IServiceCollection services) =>
+        services.AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>();
+
     internal static Func<string, CancellationToken, ValueTask<IPAddress[]>> ResolveRemoteImageHostAddressesAsync { get; set; } =
         static async (host, cancellationToken) => await Dns.GetHostAddressesAsync(host, cancellationToken).ConfigureAwait(false);
 

@@ -18,9 +18,10 @@ Rules for `FoodDiary.JobManager/`.
 
 ## Dependencies
 - Reuse Application abstractions/handlers instead of duplicating logic.
-- Allowed production references are `FoodDiary.Application.Runtime`, the explicitly scheduled `FoodDiary.Application.<Feature>` projects, `FoodDiary.Infrastructure`, `FoodDiary.Integrations`, and `FoodDiary.Resources`.
+- Allowed production references are `FoodDiary.Application.Runtime`, explicitly scheduled application/module projects, `FoodDiary.Infrastructure`, and `FoodDiary.Integrations`. Resource providers belong to their module Infrastructure projects.
 - Keep the concrete feature-project list synchronized with `FoodDiary.JobManager.csproj` and `JobManagerGuardrailTests`; do not introduce an aggregate `FoodDiary.Application` dependency.
 - Compose Notifications persistence and web-push provider through `AddNotificationsInfrastructure`; jobs and schedules remain host adapters.
+- Compose localized notification text through `AddNotificationResources`; do not restore a central Resources dependency.
 - Keep package versions aligned with central project conventions.
 
 ## Commands
