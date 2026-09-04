@@ -1,6 +1,13 @@
 # Identity infrastructure
 
-Own Identity persistence adapters, including `UserLoginEventRepository` and `EmailTemplateProvider`. Preserve login-event search/date/deletion semantics and the provider's singleton lifetime, one-minute cache and locale fallback. Keep `UserRepository` with Users Infrastructure, and external provider adapters, shared SSO/Redis storage, mail transport and cleanup with their established owners.
+Own Identity persistence adapters, including `UserLoginEventRepository` and `EmailTemplateProvider`. Preserve login-event search/date/deletion semantics and the provider's singleton lifetime, one-minute cache and locale fallback. Keep `UserRepository` with Users Infrastructure, and shared SSO/Redis storage, mail transport and cleanup with their established owners.
+
+Google and Telegram validators/options now belong to Providers, preserving legacy
+CLR names, signing/issuer/audience/lifetime rules and cancellation. API and JobManager
+explicitly compose AddIdentityProvider; Initializer does not acquire these options.
+Keep singleton lifetimes and supplied TimeProvider, and do not merge provider
+registration into persistence or JWT/password/SSO registration. See
+docs/ai/auth-storage-provider-ownership.md.
 
 Register adapters through `AddIdentityPersistence`. Do not make central Infrastructure reference this adapter assembly; composition roots reference it explicitly.
 

@@ -130,7 +130,7 @@ public sealed class DependencyInjectionTests {
         services.AddNotificationsModule().AddNotificationsInfrastructure(configuration);
         services.AddWeeklyGoalsModule();
         services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
-        services.AddIntegrations(configuration).AddAiProvider(configuration).AddUsdaProvider(configuration).AddOpenFoodFactsProvider(configuration).AddWearablesProvider(configuration);
+        services.AddIntegrations(configuration).AddIdentityProvider(configuration).AddImagesProvider(configuration).AddAiProvider(configuration).AddUsdaProvider(configuration).AddOpenFoodFactsProvider(configuration).AddWearablesProvider(configuration);
         services.AddDataProtection();
         services.AddNotificationResources();
         services.AddJobManagerServices(configuration);

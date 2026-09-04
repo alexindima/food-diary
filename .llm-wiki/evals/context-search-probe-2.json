@@ -30,7 +30,7 @@
       "id": "telegram-auth-validator-probe-2",
       "query": "validate Telegram authentication hash and signed fields",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Authentication/TelegramAuthValidator.cs"]
+      "expectedPaths": ["Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs"]
     },
     {
       "id": "notification-writer-probe-2",

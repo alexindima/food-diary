@@ -7,7 +7,11 @@ references Users Domain for User and Users Domain.Contracts for UserId.
 
 `MealAiSession` retains only `ImageAssetId`; Meals and Dashboard resolve image URLs
 through persistence read joins. Shared DbContext, migrations/snapshot, storage
-providers and generic deletion outbox processing keep their existing shared owners. UserCleanup belongs to Modules/Users/Infrastructure.
+provider composition and generic deletion outbox processing retain explicit owners.
+S3 implementation/options now belong to Images Infrastructure/Providers; API and
+JobManager call AddImagesProvider, while Initializer does not bind S3. Preserve
+staging/public buckets, byte/type validation, public-access opt-in, metadata limits,
+singleton lifetimes and shared telemetry. UserCleanup belongs to Modules/Users/Infrastructure.
 
 The image-deletion outbox record and mapping belong to Images PersistenceModel,
 using shared Outbox.Abstractions. Its enqueue/dispatch adapters remain in Images

@@ -92,7 +92,7 @@ Use this file when deciding where backend code belongs.
 | Images application ports | `Modules/Images/Application/Abstractions` | Image access, storage, cleanup, repository and deletion-outbox ports | Provider SDKs, EF implementations, HTTP transport |
 | Images use cases | `Modules/Images/Application` | Presign, confirm, delete, resolution, cleanup and legacy application assembly identity | Storage providers, EF, HTTP transport |
 | Images persistence model | `Modules/Images/Infrastructure/Model` | `ImageAsset` EF configuration and model-builder seam | Shared DbContext, migrations, outbox engine |
-| Images infrastructure | `Modules/Images/Infrastructure` | Image repository/outbox adapters and persistence registration | S3/provider details, HTTP transport, migrations |
+| Images infrastructure | `Modules/Images/Infrastructure` | Image repository/outbox adapters, S3 storage/options and explicit persistence/provider registration | Shared HTTP/URI/telemetry mechanisms, HTTP transport, migrations |
 | Dietologist domain | `Modules/Dietologist/Domain` | Invitations, permissions, recommendations, client tasks, identifiers, enums, and events | Application orchestration, EF, transport |
 | Dietologist application ports | `Modules/Dietologist/Application/Abstractions` | Repository ports, persistence projections, attention and dashboard-access capabilities | EF implementations and HTTP transport |
 | Dietologist use cases | `Modules/Dietologist/Application` | Commands, queries, policies, models, services, and application registration | Persistence implementations and HTTP transport |

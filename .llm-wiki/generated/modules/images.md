@@ -24,8 +24,15 @@ sources:
 
 ## Source Areas
 
+- `FoodDiary.Infrastructure/Persistence/Configurations/Images`
 - `FoodDiary.Presentation.Api/Features/Images`
+- `Modules/Images/Application`
 - `Modules/Images/Application/Abstractions`
+- `Modules/Images/Contracts`
+- `Modules/Images/Domain`
+- `Modules/Images/Infrastructure`
+- `Modules/Images/Infrastructure/Model`
+- `Modules/Images/Infrastructure/Providers`
 
 ## HTTP Surface
 
@@ -40,16 +47,16 @@ Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: project
+- Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
-- Public contract files: 12
+- Public contract files: 13
 - Observed external consumer groups: 8
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 12
+- Public contract types: 13
 - Interfaces: 8
 - DTO/read-model/projection types: 0
 - Enums: 0
@@ -67,6 +74,7 @@ Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
 - `record DeleteImageAssetResult`
 - `record ImageObjectValidationResult`
 - `record PresignedUpload`
+- `record struct ImageAssetId`
 
 ## Focused Tests
 
@@ -79,6 +87,10 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/Integration/ImageObjectDeletionOutboxMessageTests.cs`
 - [integration] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/Integration/ImageOutboxModelIntegrationTests.cs`
 - [integration] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/Integration/OutboxReplayStreamTests.cs`
+- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Integrations/ProviderOptionsTests.cs`
+- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs`
+- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/S3ImageStorageServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/S3ObjectStorageClientTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ImagesModuleExtractionTests.cs`
 
 ## Working Rule

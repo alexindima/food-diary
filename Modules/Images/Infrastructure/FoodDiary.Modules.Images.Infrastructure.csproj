@@ -2,6 +2,13 @@
   <PropertyGroup><RootNamespace>FoodDiary.Modules.Images.Infrastructure</RootNamespace><NoWarn>$(NoWarn);IDE0130</NoWarn></PropertyGroup>
   <ItemGroup><Compile Remove="Model/**/*.cs" /></ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" />
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../../FoodDiary.Integrations/FoodDiary.Integrations.csproj" />
     <ProjectReference Include="..\Application\FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="Model\FoodDiary.Modules.Images.PersistenceModel.csproj" />

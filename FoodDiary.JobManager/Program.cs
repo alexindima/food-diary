@@ -40,7 +40,7 @@ builder.Services.AddMealsPersistence();
 builder.Services.AddRecentItemsModule();
 builder.Services.AddInfrastructure(builder.Configuration).AddExportInfrastructure().AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
 builder.Services.AddImagesInfrastructure();
-builder.Services.AddIntegrations(builder.Configuration).AddAiProvider(builder.Configuration).AddUsdaProvider(builder.Configuration).AddOpenFoodFactsProvider(builder.Configuration).AddWearablesProvider(builder.Configuration);
+builder.Services.AddIntegrations(builder.Configuration).AddIdentityProvider(builder.Configuration).AddImagesProvider(builder.Configuration).AddAiProvider(builder.Configuration).AddUsdaProvider(builder.Configuration).AddOpenFoodFactsProvider(builder.Configuration).AddWearablesProvider(builder.Configuration);
 builder.Services.AddDataProtection();
 builder.Services.AddNotificationResources();
 builder.Services.AddJobManagerServices(builder.Configuration);

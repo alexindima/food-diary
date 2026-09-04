@@ -1193,11 +1193,11 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             string.Equals(parts[2], "tests", StringComparison.Ordinal)) {
             string[] testParts = parts[3].Split('/', 2);
             string prefix = $"fooddiary.modules.{parts[1]}.";
-            if (testParts.Length == 2 && testParts[0].StartsWith(prefix, StringComparison.Ordinal) &&
-                testParts[0].EndsWith(".tests", StringComparison.Ordinal)) {
-                string layer = testParts[0][prefix.Length..^".tests".Length];
-                if (layer is "application" or "domain" or "infrastructure" or "infrastructure.integration") {
-                    return [path, $"tests/fooddiary.{layer}.tests/{testParts[1]}"];
+            if (testParts.Length == 2 && testParts[1].Length > 0 && testParts[0].StartsWith(prefix, StringComparison.Ordinal)) {
+                string testProject = testParts[0][prefix.Length..];
+                if (testProject is "application.tests" or "domain.tests" or "infrastructure.tests" or
+                    "infrastructure.integration.tests" or "infrastructure.integrationtests") {
+                    return [path, $"tests/fooddiary.{testProject}/{testParts[1]}"];
                 }
             }
         }

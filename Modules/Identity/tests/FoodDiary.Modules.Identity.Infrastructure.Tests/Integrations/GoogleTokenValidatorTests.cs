@@ -11,7 +11,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Integrations;
+namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class GoogleTokenValidatorTests {

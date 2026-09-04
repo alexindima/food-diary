@@ -107,7 +107,8 @@
           "Modules/Identity/Application/Abstractions"
         ],
         "adapterAreas": [
-          "FoodDiary.Presentation.Api/Features/Auth"
+          "FoodDiary.Presentation.Api/Features/Auth",
+          "Modules/Identity/Infrastructure/Providers"
         ],
         "domainProjects": [
           "Modules/Identity/Domain"
@@ -405,22 +406,23 @@
     },
     "Images": {
       "role": "aggregate-owner",
-      "physicalIsolation": "project",
+      "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix",
       "ownedEntities": [
         "ImageAsset",
         "ImageObjectDeletionOutboxMessage"
       ],
       "sourceMappings": {
+        "logicalRoot": "Modules/Images",
         "applicationProjects": [
-          "FoodDiary.Application.Images"
+          "Modules/Images/Application"
         ],
         "abstractionAreas": ["Modules/Images/Application/Abstractions"],
-        "domainAreas": [
-          "Modules/Images/Contracts",
-          "Modules/Images/Domain"
-        ],
-        "persistenceAreas": ["Modules/Images/Infrastructure"]
+        "contractProjects": ["Modules/Images/Contracts"],
+        "domainProjects": ["Modules/Images/Domain"],
+        "infrastructureProjects": ["Modules/Images/Infrastructure"],
+        "persistenceModelProjects": ["Modules/Images/Infrastructure/Model"],
+        "adapterAreas": ["Modules/Images/Infrastructure/Providers"]
       }
     },
     "Lessons": {

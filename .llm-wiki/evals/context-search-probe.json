@@ -42,7 +42,7 @@
       "id": "telegram-auth-timestamp-validator-probe",
       "query": "reject stale Telegram authentication timestamps",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Authentication/TelegramAuthTimestampValidator.cs"]
+      "expectedPaths": ["Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthTimestampValidator.cs"]
     },
     {
       "id": "notification-feed-reader-probe",

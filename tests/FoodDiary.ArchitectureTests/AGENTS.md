@@ -10,7 +10,7 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 - Treat these tests as a source of truth for dependency direction, feature structure, source conventions, and service boundaries.
 
 ## Current Guardrails
-- ProviderAdapterOwnershipTests protects twelve moved provider sources, one-way shared helper dependencies and explicit API/JobManager composition without adding providers to Initializer. ExternalHttpClientGuardrailTests scans all four module provider roots; relocation must not remove response-bound/cancellation guard coverage.
+- ProviderAdapterOwnershipTests protects moved provider sources, one-way shared helper dependencies and explicit API/JobManager composition without adding providers to Initializer. Identity's Google/Telegram providers need no Integrations dependency; Images shares only existing URI/telemetry helpers. ExternalHttpClientGuardrailTests scans all six module provider roots; relocation must not remove response-bound/cancellation guard coverage.
 - `ProjectDependencyMatrixTests` owns the production project reference matrix. Add every new production `.csproj` there.
 - `LayeringTests` protects primary FoodDiary layer direction.
 - `MailRelayArchitectureTests` and `MailInboxArchitectureTests` protect service-specific layer direction and runtime database separation.

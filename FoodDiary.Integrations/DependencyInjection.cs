@@ -6,9 +6,7 @@ namespace FoodDiary.Integrations;
 public static partial class DependencyInjection {
     public static IServiceCollection AddIntegrations(this IServiceCollection services, IConfiguration configuration) {
         services.AddIntegrationOptions(configuration);
-        services.AddStorageIntegrations();
         services.AddMailIntegrations(configuration);
-        services.AddAuthenticationIntegrations();
         services.AddBillingIntegrations();
 
         return services;

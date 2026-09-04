@@ -51,6 +51,19 @@ for (const layer of ['Application', 'Domain', 'Infrastructure', 'Infrastructure.
 }
 const foreignTest = 'Modules/Inventory/tests/FoodDiary.Modules.Other.Application.Tests/Test.cs';
 assert.deepEqual(rankingPathIdentities(foreignTest), [foreignTest.toLowerCase()]);
+for (const module of ['Inventory', 'Shipping']) {
+  const path = `Modules/${module}/tests/FoodDiary.Modules.${module}.Infrastructure.IntegrationTests/Integration/StockStoreTests.cs`;
+  const legacy = 'tests/fooddiary.infrastructure.integrationtests/integration/stockstoretests.cs';
+  assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase(), legacy]);
+  assert.deepEqual(rankingPathIdentities(path.replaceAll('/', '\\')), [path.toLowerCase(), legacy]);
+}
+for (const path of [
+  'Modules/Inventory/tests/FoodDiary.Modules.Shipping.Infrastructure.IntegrationTests/StockTests.cs',
+  'Modules/Inventory/tests/FoodDiary.Modules.Inventory.Infrastructure.IntegrationTestsExtra/StockTests.cs',
+  'Modules/Inventory/tests/FoodDiary.Modules.Inventory.Infrastructure.IntegrationTests/',
+]) {
+  assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase()]);
+}
 assert.equal(directIdentifierTermMatchesMinimum('r7', 3), true);
 assert.equal(directIdentifierTermMatchesMinimum('r7probe', 3), true);
 assert.equal(directIdentifierTermMatchesMinimum('of', 3), false);

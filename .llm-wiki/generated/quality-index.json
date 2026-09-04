@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4750,
+    "productionFiles": 4751,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -3681,38 +3681,6 @@
       "structuralRiskScore": 72.16
     },
     {
-      "path": "FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs",
-      "nonBlankLines": 87,
-      "decisionPoints": 14,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.74
-    },
-    {
-      "path": "FoodDiary.Integrations/Authentication/TelegramAuthTimestampValidator.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.58
-    },
-    {
-      "path": "FoodDiary.Integrations/Authentication/TelegramAuthValidator.cs",
-      "nonBlankLines": 116,
-      "decisionPoints": 14,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.32
-    },
-    {
-      "path": "FoodDiary.Integrations/Authentication/TelegramLoginWidgetValidator.cs",
-      "nonBlankLines": 79,
-      "decisionPoints": 13,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.08
-    },
-    {
       "path": "FoodDiary.Integrations/Billing/BillingPublicConfigProvider.cs",
       "nonBlankLines": 82,
       "decisionPoints": 23,
@@ -3801,14 +3769,6 @@
       "structuralRiskScore": 70.3
     },
     {
-      "path": "FoodDiary.Integrations/DependencyInjection.Authentication.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
       "path": "FoodDiary.Integrations/DependencyInjection.Billing.cs",
       "nonBlankLines": 30,
       "decisionPoints": 0,
@@ -3826,27 +3786,19 @@
     },
     {
       "path": "FoodDiary.Integrations/DependencyInjection.Options.cs",
-      "nonBlankLines": 86,
-      "decisionPoints": 9,
+      "nonBlankLines": 58,
+      "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.22
-    },
-    {
-      "path": "FoodDiary.Integrations/DependencyInjection.Storage.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.28
+      "structuralRiskScore": 13.16
     },
     {
       "path": "FoodDiary.Integrations/DependencyInjection.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.22
     },
     {
       "path": "FoodDiary.Integrations/Http/BoundedHttpContentReader.cs",
@@ -3865,14 +3817,6 @@
       "structuralRiskScore": 0.14
     },
     {
-      "path": "FoodDiary.Integrations/Options/GoogleAuthOptions.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.76
-    },
-    {
       "path": "FoodDiary.Integrations/Options/IntegrationUriValidator.cs",
       "nonBlankLines": 26,
       "decisionPoints": 13,
@@ -3889,28 +3833,12 @@
       "structuralRiskScore": 32.6
     },
     {
-      "path": "FoodDiary.Integrations/Options/S3Options.cs",
-      "nonBlankLines": 80,
-      "decisionPoints": 23,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.1
-    },
-    {
       "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
       "nonBlankLines": 25,
       "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 14
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/TelegramAuthOptions.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
     },
     {
       "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
@@ -3922,19 +3850,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 7,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/IObjectStorageClient.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 0.16
     },
     {
       "path": "FoodDiary.Integrations/Services/IntegrationsTelemetry.cs",
@@ -3959,38 +3879,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.46
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/S3ImageStorageService.cs",
-      "nonBlankLines": 211,
-      "decisionPoints": 29,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 47.72
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/S3ObjectStorageClient.cs",
-      "nonBlankLines": 89,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.28
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/StoredObjectInfo.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/UnconfiguredImageStorageService.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.72
     },
     {
       "path": "FoodDiary.JobManager/Program.cs",
@@ -29785,6 +29673,14 @@
       "structuralRiskScore": 0.5
     },
     {
+      "path": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.52
+    },
+    {
       "path": "Modules/Identity/Infrastructure/Model/Authentication/ConsumedTelegramAssertion.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -29871,6 +29767,62 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 27.96
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Providers/AssemblyInfo.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/GoogleTokenValidator.cs",
+      "nonBlankLines": 87,
+      "decisionPoints": 14,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 24.74
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthTimestampValidator.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.58
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
+      "nonBlankLines": 116,
+      "decisionPoints": 14,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 25.32
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramLoginWidgetValidator.cs",
+      "nonBlankLines": 79,
+      "decisionPoints": 13,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 23.08
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Providers/Options/GoogleAuthOptions.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.76
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramAuthOptions.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
     },
     {
       "path": "Modules/Identity/Infrastructure/Services/PasswordHasher.cs",
@@ -30114,11 +30066,11 @@
     },
     {
       "path": "Modules/Images/Infrastructure/AssemblyInfo.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
@@ -30127,6 +30079,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.34
+    },
+    {
+      "path": "Modules/Images/Infrastructure/ImagesProviderRegistration.cs",
+      "nonBlankLines": 58,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.66
     },
     {
       "path": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs",
@@ -30191,6 +30151,54 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.52
+    },
+    {
+      "path": "Modules/Images/Infrastructure/Providers/Options/S3Options.cs",
+      "nonBlankLines": 80,
+      "decisionPoints": 23,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 36.1
+    },
+    {
+      "path": "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.44
+    },
+    {
+      "path": "Modules/Images/Infrastructure/Providers/Services/S3ImageStorageService.cs",
+      "nonBlankLines": 211,
+      "decisionPoints": 29,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 47.72
+    },
+    {
+      "path": "Modules/Images/Infrastructure/Providers/Services/S3ObjectStorageClient.cs",
+      "nonBlankLines": 89,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.28
+    },
+    {
+      "path": "Modules/Images/Infrastructure/Providers/Services/StoredObjectInfo.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Images/Infrastructure/Providers/Services/UnconfiguredImageStorageService.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.72
     },
     {
       "path": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs",
@@ -45036,15 +45044,17 @@
     {
       "name": "GoogleTokenValidator",
       "role": "Validator",
-      "path": "FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs",
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/GoogleTokenValidator.cs",
       "line": 14,
-      "testReferenceCount": 5,
+      "testReferenceCount": 7,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ExternalLogin.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/GoogleTokenValidatorTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
         "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs",
-        "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-        "tests/FoodDiary.Infrastructure.Tests/Integrations/GoogleTokenValidatorTests.cs"
+        "tests/FoodDiary.ArchitectureTests/ProviderAdapterOwnershipTests.cs",
+        "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45753,40 +45763,28 @@
     {
       "name": "TelegramAuthTimestampValidator",
       "role": "Validator",
-      "path": "FoodDiary.Integrations/Authentication/TelegramAuthTimestampValidator.cs",
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthTimestampValidator.cs",
       "line": 2,
-      "testReferenceCount": 6,
+      "testReferenceCount": 1,
       "testReferences": [
-        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
-        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Telegram.cs",
-        "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationValidatorsTests.cs",
-        "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
-        "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-        "tests/FoodDiary.Infrastructure.Tests/Integrations/TelegramAuthValidatorsTests.cs"
+        "tests/FoodDiary.ArchitectureTests/ProviderAdapterOwnershipTests.cs"
       ],
-      "coverageKind": "tested-consumer-reference",
-      "coveredThrough": [
-        {
-          "symbol": "TelegramAuthValidator",
-          "path": "FoodDiary.Integrations/Authentication/TelegramAuthValidator.cs"
-        },
-        {
-          "symbol": "TelegramLoginWidgetValidator",
-          "path": "FoodDiary.Integrations/Authentication/TelegramLoginWidgetValidator.cs"
-        }
-      ]
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
     },
     {
       "name": "TelegramAuthValidator",
       "role": "Validator",
-      "path": "FoodDiary.Integrations/Authentication/TelegramAuthValidator.cs",
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
       "line": 15,
-      "testReferenceCount": 4,
+      "testReferenceCount": 6,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Telegram.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
-        "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-        "tests/FoodDiary.Infrastructure.Tests/Integrations/TelegramAuthValidatorsTests.cs"
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramAuthValidatorsTests.cs",
+        "tests/FoodDiary.ArchitectureTests/ProviderAdapterOwnershipTests.cs",
+        "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45819,16 +45817,18 @@
     {
       "name": "TelegramLoginWidgetValidator",
       "role": "Validator",
-      "path": "FoodDiary.Integrations/Authentication/TelegramLoginWidgetValidator.cs",
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramLoginWidgetValidator.cs",
       "line": 11,
-      "testReferenceCount": 6,
+      "testReferenceCount": 8,
       "testReferences": [
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Telegram.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
         "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationValidatorsTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/TelegramAuthValidatorsTests.cs",
         "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs",
-        "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-        "tests/FoodDiary.Infrastructure.Tests/Integrations/TelegramAuthValidatorsTests.cs"
+        "tests/FoodDiary.ArchitectureTests/ProviderAdapterOwnershipTests.cs",
+        "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

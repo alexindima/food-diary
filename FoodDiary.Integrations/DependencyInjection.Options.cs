@@ -7,36 +7,7 @@ namespace FoodDiary.Integrations;
 
 public static partial class DependencyInjection {
     private static void AddIntegrationOptions(this IServiceCollection services, IConfiguration configuration) {
-        services.AddGeneralIntegrationOptions(configuration);
         services.AddBillingIntegrationOptions(configuration);
-    }
-
-    private static void AddGeneralIntegrationOptions(
-        this IServiceCollection services,
-        IConfiguration configuration) {
-        services.AddOptions<S3Options>()
-            .Bind(configuration.GetSection(S3Options.SectionName))
-            .Validate(S3Options.IsEmptyOrComplete,
-                "S3 configuration must be empty or include AccessKeyId, SecretAccessKey, distinct Bucket/StagingBucket values, and Region or ServiceUrl.")
-            .Validate(S3Options.HasValidMaxUploadSize,
-                "S3:MaxUploadSizeBytes must be greater than zero and no greater than 50 MiB.")
-            .Validate(S3Options.HasValidPublicBaseUrl,
-                "S3:PublicBaseUrl must be an absolute HTTP or HTTPS URL when provided.")
-            .Validate(S3Options.HasExplicitPublicImageAccessPolicy,
-                "S3:AllowPublicImageAccess must be true for configured storage because image URLs are shared with users and external AI providers.")
-            .Validate(S3Options.HasValidServiceUrl,
-                "S3:ServiceUrl must be an absolute HTTP or HTTPS URL when provided.")
-            .ValidateOnStart();
-        services.AddOptions<GoogleAuthOptions>()
-            .Bind(configuration.GetSection(GoogleAuthOptions.SectionName))
-            .Validate(GoogleAuthOptions.HasValidClientId,
-                "GoogleAuth:ClientId must be empty or contain at most 512 non-whitespace characters.")
-            .ValidateOnStart();
-        services.AddOptions<TelegramAuthOptions>()
-            .Bind(configuration.GetSection(TelegramAuthOptions.SectionName))
-            .Validate(TelegramAuthOptions.HasValidAuthTtl,
-                "TelegramAuth:AuthTtlSeconds must be greater than zero.")
-            .ValidateOnStart();
     }
 
     private static void AddBillingIntegrationOptions(

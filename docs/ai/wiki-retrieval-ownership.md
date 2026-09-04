@@ -122,7 +122,7 @@ fail, even though aggregate retrieval improves:
 - Probe6 remains exactly 28/30 Top-1 and MRR .9611, below .95/.97 floors. The
   Gamification read-service and Notifications factory targets are ranks 3 and 2.
 - Unseen100 now meets aggregate floors, but integrations-persistence remains
-  7/10 Top-10 against the minimum 8. Its two residual misses, a MailInbox test
+  7/16 Top-1 against the minimum count 8 (Top-10 is 14/16). Its two residual Top-10 misses, a MailInbox test
   requested as an implementation and Export registration, have the same ranks
   23 and 62 in the exact baseline. Other remaining unseen misses concern an AI
   DTO, a MailRelay test requested as implementation, and a queued command versus
@@ -143,3 +143,13 @@ failure-knowledge, change-policy, source-impact and architecture-health results
 are retained separately. The final documentation-only closure does not rerun or
 relabel this failed full verification. Governed `wiki-verify` remains failed;
 this patch is a verified improvement checkpoint, not all-green Wiki acceptance.
+
+## Subsequent bounded follow-up
+
+The [2026-09-04 follow-up](wiki-retrieval-followup.md) fixes an exact module
+integration-test suffix alias, without policy or corpus tuning. On the identical
+pre-relocation graph, Image30 reaches 30/30 Top-1; the other 189 cases in the
+four-corpus replay retain their expected ranks and the three other strict
+failures remain. The follow-up's full MCP rerun passes 266/266 after preserving
+an earlier concurrent graph-refresh failure. These later results do not rewrite
+the historical measurements or failed Wiki acceptance above.

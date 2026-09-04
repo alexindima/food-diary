@@ -102,7 +102,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddIdentityAuthenticationInfrastructure()
                 .AddDashboardReadServices()
                 .AddImagesInfrastructure()
-                .AddIntegrations(configuration).AddAiProvider(configuration).AddUsdaProvider(configuration).AddOpenFoodFactsProvider(configuration).AddWearablesProvider(configuration)
+                .AddIntegrations(configuration).AddIdentityProvider(configuration).AddImagesProvider(configuration).AddAiProvider(configuration).AddUsdaProvider(configuration).AddOpenFoodFactsProvider(configuration).AddWearablesProvider(configuration)
                 .AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>()
                 .AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>()
                 .AddNotificationTestScheduler()

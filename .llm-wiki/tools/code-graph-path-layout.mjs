@@ -8,8 +8,8 @@ export function rankingPathIdentities(value) {
     !/(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) {
     return [path, `fooddiary.domain/${path.slice('shared/fooddiary.domain.primitives/'.length)}`];
   }
-  const test = /^modules\/([^/]+)\/tests\/fooddiary\.modules\.([^/]+)\.(application|domain|infrastructure(?:\.integration)?)\.tests\/(.+)$/.exec(path);
-  if (test && test[1] === test[2]) return [path, `tests/fooddiary.${test[3]}.tests/${test[4]}`];
+  const test = /^modules\/([^/]+)\/tests\/fooddiary\.modules\.([^/]+)\.((?:application|domain|infrastructure(?:\.integration)?)\.tests|infrastructure\.integrationtests)\/(.+)$/.exec(path);
+  if (test && test[1] === test[2]) return [path, `tests/fooddiary.${test[3]}/${test[4]}`];
   const match = /^modules\/([^/]+)\/(application|domain|infrastructure)\/(.+)$/.exec(path);
   if (!match || /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) return [path];
   const [, module, layer, tail] = match;

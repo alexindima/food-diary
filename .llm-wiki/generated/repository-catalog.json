@@ -13,8 +13,8 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 325,
-    "testProjects": 123,
+    "dotnetProjects": 326,
+    "testProjects": 124,
     "frontendProjects": 4,
     "applicationModules": 1,
     "extractedApplicationModules": 33,
@@ -22,7 +22,7 @@
     "controllers": 89,
     "endpoints": 285,
     "agentGuides": 229,
-    "documentationPages": 146
+    "documentationPages": 148
   },
   "dotnet": {
     "projects": [
@@ -332,20 +332,9 @@
           "MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj",
           "MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj",
           "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
-          "Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
-          "Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
-          "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
-          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
+          "Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj"
         ],
         "packageReferences": [
-          {
-            "name": "AWSSDK.S3",
-            "version": null
-          },
-          {
-            "name": "Microsoft.AspNetCore.WebUtilities",
-            "version": null
-          },
           {
             "name": "Microsoft.Extensions.Configuration",
             "version": null
@@ -363,23 +352,7 @@
             "version": null
           },
           {
-            "name": "Microsoft.IdentityModel.Protocols.OpenIdConnect",
-            "version": null
-          },
-          {
-            "name": "SkiaSharp",
-            "version": null
-          },
-          {
-            "name": "SkiaSharp.NativeAssets.Linux.NoDependencies",
-            "version": null
-          },
-          {
             "name": "Stripe.net",
-            "version": null
-          },
-          {
-            "name": "System.IdentityModel.Tokens.Jwt",
             "version": null
           }
         ]
@@ -5263,11 +5236,23 @@
             "version": null
           },
           {
+            "name": "Microsoft.AspNetCore.WebUtilities",
+            "version": null
+          },
+          {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
           },
           {
             "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
+            "version": null
+          },
+          {
+            "name": "Microsoft.IdentityModel.Protocols.OpenIdConnect",
             "version": null
           },
           {
@@ -5548,12 +5533,17 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
+          "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
           "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
           "Modules/Images/Application/FoodDiary.Application.Images.csproj",
           "Modules/Images/Infrastructure/Model/FoodDiary.Modules.Images.PersistenceModel.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
         ],
         "packageReferences": [
+          {
+            "name": "AWSSDK.S3",
+            "version": null
+          },
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
@@ -5564,6 +5554,18 @@
           },
           {
             "name": "Microsoft.Extensions.Logging.Abstractions",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
+            "version": null
+          },
+          {
+            "name": "SkiaSharp",
+            "version": null
+          },
+          {
+            "name": "SkiaSharp.NativeAssets.Linux.NoDependencies",
             "version": null
           }
         ]
@@ -5705,6 +5707,36 @@
           },
           {
             "name": "Testcontainers.PostgreSql",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Images.Infrastructure.Tests",
+        "assemblyName": "FoodDiary.Modules.Images.Infrastructure.Tests",
+        "path": "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/FoodDiary.Modules.Images.Infrastructure.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
+          "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.NET.Test.Sdk",
             "version": null
           },
           {
@@ -10063,7 +10095,9 @@
           "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj",
           "Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
           "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
+          "Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj",
           "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
+          "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
           "Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj",
           "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
           "Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj",
@@ -10648,6 +10682,7 @@
       "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FoodDiary.Modules.Images.Application.Tests.csproj",
       "Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/FoodDiary.Modules.Images.Domain.Tests.csproj",
       "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests.csproj",
+      "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/FoodDiary.Modules.Images.Infrastructure.Tests.csproj",
       "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/FoodDiary.Modules.Lessons.Application.Tests.csproj",
       "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Domain.Tests/FoodDiary.Modules.Lessons.Domain.Tests.csproj",
       "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Infrastructure.Tests/FoodDiary.Modules.Lessons.Infrastructure.Tests.csproj",
@@ -13231,6 +13266,7 @@
       "docs/ai/ai-module-extraction-wiki-findings.md",
       "docs/ai/ai-module-integration.md",
       "docs/ai/ai-ownership-inventory.md",
+      "docs/ai/auth-storage-provider-ownership.md",
       "docs/ai/billing-module-extraction-wiki-findings.md",
       "docs/ai/bodymetrics-module-extraction-wiki-findings.md",
       "docs/ai/bodymetrics-module-extraction.md",
@@ -13289,6 +13325,7 @@
       "docs/ai/users-ownership-inventory.md",
       "docs/ai/users-repository-ownership.md",
       "docs/ai/users-security-reader-ownership.md",
+      "docs/ai/wiki-retrieval-followup.md",
       "docs/ai/wiki-retrieval-ownership.md",
       "docs/architecture/Exception-vs-Result.md",
       "docs/architecture/infrastructure-boundary-audit.md",

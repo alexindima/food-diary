@@ -108,13 +108,13 @@
       "id": "telegram-widget-validation",
       "query": "validate signed data returned by the Telegram login widget",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Authentication/TelegramLoginWidgetValidator.cs"]
+      "expectedPaths": ["Modules/Identity/Infrastructure/Providers/Authentication/TelegramLoginWidgetValidator.cs"]
     },
     {
       "id": "google-token-validation",
       "query": "verify a Google identity credential received during sign in",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs"]
+      "expectedPaths": ["Modules/Identity/Infrastructure/Providers/Authentication/GoogleTokenValidator.cs"]
     },
     {
       "id": "pdf-remote-image-policy",

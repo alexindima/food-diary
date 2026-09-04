@@ -6,11 +6,27 @@ using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace FoodDiary.Integrations;
+namespace FoodDiary.Modules.Images.Infrastructure;
 
-public static partial class DependencyInjection {
-    private static void AddStorageIntegrations(this IServiceCollection services) {
+public static class ImagesProviderRegistration {
+    public static IServiceCollection AddImagesProvider(this IServiceCollection services, IConfiguration configuration) {
+        services.AddOptions<S3Options>()
+            .Bind(configuration.GetSection(S3Options.SectionName))
+            .Validate(S3Options.IsEmptyOrComplete,
+                "S3 configuration must be empty or include AccessKeyId, SecretAccessKey, distinct Bucket/StagingBucket values, and Region or ServiceUrl.")
+            .Validate(S3Options.HasValidMaxUploadSize,
+                "S3:MaxUploadSizeBytes must be greater than zero and no greater than 50 MiB.")
+            .Validate(S3Options.HasValidPublicBaseUrl,
+                "S3:PublicBaseUrl must be an absolute HTTP or HTTPS URL when provided.")
+            .Validate(S3Options.HasExplicitPublicImageAccessPolicy,
+                "S3:AllowPublicImageAccess must be true for configured storage because image URLs are shared with users and external AI providers.")
+            .Validate(S3Options.HasValidServiceUrl,
+                "S3:ServiceUrl must be an absolute HTTP or HTTPS URL when provided.")
+            .ValidateOnStart();
+        services.TryAddSingleton(TimeProvider.System);
         services.AddSingleton<IAmazonS3>(sp => {
             S3Options s3Options = sp.GetRequiredService<IOptions<S3Options>>().Value;
             var credentials = new BasicAWSCredentials(s3Options.AccessKeyId, s3Options.SecretAccessKey);
@@ -21,9 +37,12 @@ public static partial class DependencyInjection {
             var config = new AmazonS3Config {
                 RegionEndpoint = regionEndpoint,
                 AuthenticationRegion = regionEndpoint.SystemName,
-                ServiceURL = string.IsNullOrWhiteSpace(s3Options.ServiceUrl) ? null : s3Options.ServiceUrl,
                 ForcePathStyle = !string.IsNullOrWhiteSpace(s3Options.ServiceUrl),
             };
+            if (!string.IsNullOrWhiteSpace(s3Options.ServiceUrl)) {
+                config.ServiceURL = s3Options.ServiceUrl;
+            }
+
             return new AmazonS3Client(credentials, config);
         });
         services.AddSingleton<IObjectStorageClient, S3ObjectStorageClient>();
@@ -38,5 +57,6 @@ public static partial class DependencyInjection {
                 options,
                 sp.GetRequiredService<TimeProvider>());
         });
+        return services;
     }
 }

@@ -1,5 +1,10 @@
 # Images tests
 
+Infrastructure.Tests owns S3 object/image storage and option tests. It imports
+central test build settings, keeps fake storage/AWS boundaries offline, and verifies
+owner singleton registration, safe unconfigured fallback and supplied clocks.
+Do not replace shared outbox or HTTP integration tests with these unit tests.
+
 Images-only domain invariants and repository PostgreSQL tests live here without
 duplicates. Mixed UserCleanup, shared outbox, HTTP and migration tests remain with
 their established owners. Do not run coverage collectors.

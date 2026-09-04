@@ -12,7 +12,7 @@
     "health": 660,
     "financial": 120,
     "privateContent": 300,
-    "boundaryFiles": 167,
+    "boundaryFiles": 166,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 0
   },
@@ -89,13 +89,6 @@
     },
     {
       "category": "credential",
-      "name": "SecretAccessKey",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/S3Options.cs",
-      "line": 15
-    },
-    {
-      "category": "credential",
       "name": "SecretKey",
       "type": "string",
       "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
@@ -107,13 +100,6 @@
       "type": "string",
       "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
       "line": 8
-    },
-    {
-      "category": "credential",
-      "name": "BotToken",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/TelegramAuthOptions.cs",
-      "line": 6
     },
     {
       "category": "credential",
@@ -765,6 +751,20 @@
       "type": "DateTime?",
       "path": "Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs",
       "line": 17
+    },
+    {
+      "category": "credential",
+      "name": "BotToken",
+      "type": "string",
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramAuthOptions.cs",
+      "line": 6
+    },
+    {
+      "category": "credential",
+      "name": "SecretAccessKey",
+      "type": "string",
+      "path": "Modules/Images/Infrastructure/Providers/Options/S3Options.cs",
+      "line": 15
     },
     {
       "category": "credential",
@@ -9696,26 +9696,12 @@
       "fieldCount": 7
     },
     {
-      "path": "FoodDiary.Integrations/Options/S3Options.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
       "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
       "categories": [
         "credential",
         "financial"
       ],
       "fieldCount": 4
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/TelegramAuthOptions.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
@@ -10879,6 +10865,13 @@
       "path": "Modules/Identity/Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
       "categories": [
         "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramAuthOptions.cs",
+      "categories": [
+        "credential"
       ],
       "fieldCount": 1
     }

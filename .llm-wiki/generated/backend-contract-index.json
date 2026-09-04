@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1071,
     "ambiguousContracts": 0,
-    "consumerEdges": 7724,
+    "consumerEdges": 7730,
     "productionConsumerEdges": 4570,
-    "testConsumerEdges": 3154,
+    "testConsumerEdges": 3160,
     "consumedContracts": 1071,
     "unconsumedContracts": 0
   },
@@ -11110,7 +11110,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "FoodDiary.Integrations/Services/IObjectStorageClient.cs"
+        "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -65956,32 +65956,6 @@
         "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IGoogleTokenValidator",
-      "roles": [
-        "Validator"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/DependencyInjection.Authentication.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IGoogleTokenValidator",
-      "roles": [
-        "Validator"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -66008,9 +65982,48 @@
         "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IGoogleTokenValidator",
+      "roles": [
+        "Validator"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Providers/Authentication/GoogleTokenValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IGoogleTokenValidator",
+      "roles": [
+        "Validator"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IGoogleTokenValidator",
+      "roles": [
+        "Validator"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IGoogleTokenValidator",
@@ -67633,45 +67646,6 @@
         "Modules/Images/Application/Abstractions/Common/IImageStorageService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/DependencyInjection.Storage.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IImageStorageService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Images/Application/Abstractions/Common/IImageStorageService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/Services/S3ImageStorageService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IImageStorageService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Images/Application/Abstractions/Common/IImageStorageService.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/Services/UnconfiguredImageStorageService.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IImageStorageService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Images/Application/Abstractions/Common/IImageStorageService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -67698,7 +67672,46 @@
         "Modules/Images/Application/Abstractions/Common/IImageStorageService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Infrastructure/ImagesProviderRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageStorageService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application/Abstractions/Common/IImageStorageService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageStorageService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application/Abstractions/Common/IImageStorageService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Infrastructure/Providers/Services/S3ImageStorageService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageStorageService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application/Abstractions/Common/IImageStorageService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Infrastructure/Providers/Services/UnconfiguredImageStorageService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -67714,6 +67727,19 @@
       "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/Images/ImagesFeatureTests.cs",
       "isTest": true,
       "referenceCount": 18
+    },
+    {
+      "contract": "IImageStorageService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Application/Abstractions/Common/IImageStorageService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IImageStorageService",
@@ -75013,10 +75039,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Integrations/Services/IObjectStorageClient.cs"
+        "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/DependencyInjection.Storage.cs",
+      "consumerPath": "Modules/Images/Infrastructure/ImagesProviderRegistration.cs",
       "isTest": false,
       "referenceCount": 2
     },
@@ -75026,10 +75052,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Integrations/Services/IObjectStorageClient.cs"
+        "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/Services/S3ImageStorageService.cs",
+      "consumerPath": "Modules/Images/Infrastructure/Providers/Services/S3ImageStorageService.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -75039,10 +75065,10 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Integrations/Services/IObjectStorageClient.cs"
+        "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/Services/S3ObjectStorageClient.cs",
+      "consumerPath": "Modules/Images/Infrastructure/Providers/Services/S3ObjectStorageClient.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -75052,25 +75078,51 @@
         "Other"
       ],
       "definitionPaths": [
-        "FoodDiary.Integrations/Services/IObjectStorageClient.cs"
+        "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IObjectStorageClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/S3ImageStorageServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 7
+    },
+    {
+      "contract": "IObjectStorageClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/ProviderAdapterOwnershipTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IObjectStorageClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
       "referenceCount": 1
-    },
-    {
-      "contract": "IObjectStorageClient",
-      "roles": [
-        "Other"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Integrations/Services/IObjectStorageClient.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/Services/S3ImageStorageServiceTests.cs",
-      "isTest": true,
-      "referenceCount": 7
     },
     {
       "contract": "IOpenAiFoodClient",
@@ -89927,32 +89979,6 @@
         "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/Authentication/TelegramAuthValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ITelegramAuthValidator",
-      "roles": [
-        "Validator"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/DependencyInjection.Authentication.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ITelegramAuthValidator",
-      "roles": [
-        "Validator"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -89979,6 +90005,32 @@
         "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramAuthValidator",
+      "roles": [
+        "Validator"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramAuthValidator",
+      "roles": [
+        "Validator"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -89992,34 +90044,21 @@
         "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ITelegramAuthValidator",
+      "roles": [
+        "Validator"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
       "isTest": true,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ITelegramLoginWidgetValidator",
-      "roles": [
-        "Validator"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/Authentication/TelegramLoginWidgetValidator.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ITelegramLoginWidgetValidator",
-      "roles": [
-        "Validator"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Integrations/DependencyInjection.Authentication.cs",
-      "isTest": false,
       "referenceCount": 1
     },
     {
@@ -90044,9 +90083,48 @@
         "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramLoginWidgetValidator",
+      "roles": [
+        "Validator"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramLoginWidgetValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramLoginWidgetValidator",
+      "roles": [
+        "Validator"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "ITelegramLoginWidgetValidator",
+      "roles": [
+        "Validator"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "ITelegramLoginWidgetValidator",

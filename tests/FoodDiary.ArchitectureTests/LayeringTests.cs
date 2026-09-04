@@ -89,17 +89,11 @@ public class LayeringTests {
     [Fact]
     public void IntegrationsProject_PackageReferencesStayLimitedToApprovedProvidersAndTransport() {
         string[] allowedPackages = [
-            "AWSSDK.S3",
-            "Microsoft.AspNetCore.WebUtilities",
             "Microsoft.Extensions.Configuration",
             "Microsoft.Extensions.Http",
             "Microsoft.Extensions.Http.Resilience",
             "Microsoft.Extensions.Options.ConfigurationExtensions",
-            "Microsoft.IdentityModel.Protocols.OpenIdConnect",
-            "SkiaSharp",
-            "SkiaSharp.NativeAssets.Linux.NoDependencies",
             "Stripe.net",
-            "System.IdentityModel.Tokens.Jwt",
         ];
 
         string[] packages = ProjectReferenceReader.ReadPackageReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
@@ -113,6 +107,8 @@ public class LayeringTests {
     [InlineData("Modules/Wearables/Infrastructure/Providers")]
     [InlineData("Modules/Usda/Infrastructure/Providers")]
     [InlineData("Modules/OpenFoodFacts/Infrastructure/Providers")]
+    [InlineData("Modules/Identity/Infrastructure/Providers")]
+    [InlineData("Modules/Images/Infrastructure/Providers")]
     public void IntegrationsProject_UsesTimeProviderInsteadOfDirectUtcNow(string providerPath) {
         string integrationsRoot = ArchitectureTestPaths.FromRoot(providerPath);
 
@@ -130,6 +126,8 @@ public class LayeringTests {
     [InlineData("Modules/Wearables/Infrastructure/Providers")]
     [InlineData("Modules/Usda/Infrastructure/Providers")]
     [InlineData("Modules/OpenFoodFacts/Infrastructure/Providers")]
+    [InlineData("Modules/Identity/Infrastructure/Providers")]
+    [InlineData("Modules/Images/Infrastructure/Providers")]
     public void IntegrationsSource_DoesNotReferenceConcreteApplicationHostPresentationOrServerMailLayers(string providerPath) {
         string integrationsRoot = ArchitectureTestPaths.FromRoot(providerPath);
         string root = ArchitectureTestPaths.RepositoryRoot;
@@ -204,6 +202,8 @@ public class LayeringTests {
     [InlineData("Modules/Wearables/Infrastructure/Providers")]
     [InlineData("Modules/Usda/Infrastructure/Providers")]
     [InlineData("Modules/OpenFoodFacts/Infrastructure/Providers")]
+    [InlineData("Modules/Identity/Infrastructure/Providers")]
+    [InlineData("Modules/Images/Infrastructure/Providers")]
     public void IntegrationsOptions_AreKeptInOptionsFolder(string providerPath) {
         string integrationsRoot = ArchitectureTestPaths.FromRoot(providerPath);
         string optionsRoot = Path.Combine(integrationsRoot, "Options");
@@ -230,9 +230,7 @@ public class LayeringTests {
         string dependencyInjectionPath = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations", "DependencyInjection.cs");
         string[] expectedRegistrations = [
             "services.AddIntegrationOptions(configuration);",
-            "services.AddStorageIntegrations();",
             "services.AddMailIntegrations(configuration);",
-            "services.AddAuthenticationIntegrations();",
             "services.AddBillingIntegrations();",
         ];
 

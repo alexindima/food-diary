@@ -8,7 +8,7 @@ using FoodDiary.Integrations.Authentication;
 using FoodDiary.Integrations.Options;
 using MsOptions = Microsoft.Extensions.Options.Options;
 
-namespace FoodDiary.Infrastructure.Tests.Integrations;
+namespace FoodDiary.Modules.Identity.Infrastructure.Tests.Integrations;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelegramAuthValidatorsTests {

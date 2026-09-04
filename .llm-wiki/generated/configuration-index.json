@@ -206,7 +206,7 @@
       "properties": [
         "ClientId"
       ],
-      "path": "FoodDiary.Integrations/Options/GoogleAuthOptions.cs"
+      "path": "Modules/Identity/Infrastructure/Providers/Options/GoogleAuthOptions.cs"
     },
     {
       "type": "IdempotencyFilterOptions",
@@ -586,7 +586,7 @@
         "ServiceUrl",
         "StagingBucket"
       ],
-      "path": "FoodDiary.Integrations/Options/S3Options.cs"
+      "path": "Modules/Images/Infrastructure/Providers/Options/S3Options.cs"
     },
     {
       "type": "StripeOptions",
@@ -610,7 +610,7 @@
         "AuthTtlSeconds",
         "BotToken"
       ],
-      "path": "FoodDiary.Integrations/Options/TelegramAuthOptions.cs"
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramAuthOptions.cs"
     },
     {
       "type": "TelegramBotAuthOptions",

@@ -30,6 +30,7 @@ sources:
 - `Modules/Identity/Domain`
 - `Modules/Identity/Infrastructure`
 - `Modules/Identity/Infrastructure/Model`
+- `Modules/Identity/Infrastructure/Providers`
 
 ## HTTP Surface
 

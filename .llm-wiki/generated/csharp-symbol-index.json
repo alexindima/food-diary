@@ -8,10 +8,10 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3527,
+    "sourceFiles": 3528,
     "symbols": 3473,
     "interfaceImplementationLinks": 235,
-    "dependencyInjectionRegistrations": 159,
+    "dependencyInjectionRegistrations": 155,
     "kinds": {
       "class": 1798,
       "enum": 62,
@@ -1119,41 +1119,6 @@
       "line": 10
     },
     {
-      "name": "GoogleTokenValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs",
-      "line": 14
-    },
-    {
-      "name": "TelegramAuthTimestampValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Integrations/Authentication/TelegramAuthTimestampValidator.cs",
-      "line": 2
-    },
-    {
-      "name": "Status",
-      "kind": "enum",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Authentication/TelegramAuthTimestampValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "TelegramAuthValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Integrations/Authentication/TelegramAuthValidator.cs",
-      "line": 15
-    },
-    {
-      "name": "TelegramLoginWidgetValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Integrations/Authentication/TelegramLoginWidgetValidator.cs",
-      "line": 11
-    },
-    {
       "name": "BillingPublicConfigProvider",
       "kind": "class",
       "role": "Other",
@@ -1234,13 +1199,6 @@
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
-      "path": "FoodDiary.Integrations/DependencyInjection.Authentication.cs",
-      "line": 6
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
       "path": "FoodDiary.Integrations/DependencyInjection.Billing.cs",
       "line": 9
     },
@@ -1266,13 +1224,6 @@
       "line": 7
     },
     {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/DependencyInjection.Storage.cs",
-      "line": 11
-    },
-    {
       "name": "BoundedHttpContentReader",
       "kind": "class",
       "role": "Other",
@@ -1285,13 +1236,6 @@
       "role": "Options",
       "path": "FoodDiary.Integrations/Options/BillingOptions.cs",
       "line": 4
-    },
-    {
-      "name": "GoogleAuthOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Integrations/Options/GoogleAuthOptions.cs",
-      "line": 2
     },
     {
       "name": "IntegrationUriValidator",
@@ -1308,24 +1252,10 @@
       "line": 2
     },
     {
-      "name": "S3Options",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Integrations/Options/S3Options.cs",
-      "line": 2
-    },
-    {
       "name": "StripeOptions",
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "TelegramAuthOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Integrations/Options/TelegramAuthOptions.cs",
       "line": 2
     },
     {
@@ -1343,13 +1273,6 @@
       "line": 4
     },
     {
-      "name": "IObjectStorageClient",
-      "kind": "interface",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Services/IObjectStorageClient.cs",
-      "line": 2
-    },
-    {
       "name": "MailInboxClientAdminMailInboxReader",
       "kind": "class",
       "role": "Other",
@@ -1362,34 +1285,6 @@
       "role": "Other",
       "path": "FoodDiary.Integrations/Services/RelayEmailTransport.cs",
       "line": 6
-    },
-    {
-      "name": "S3ImageStorageService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Integrations/Services/S3ImageStorageService.cs",
-      "line": 10
-    },
-    {
-      "name": "S3ObjectStorageClient",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Services/S3ObjectStorageClient.cs",
-      "line": 8
-    },
-    {
-      "name": "StoredObjectInfo",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Services/StoredObjectInfo.cs",
-      "line": 2
-    },
-    {
-      "name": "UnconfiguredImageStorageService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Integrations/Services/UnconfiguredImageStorageService.cs",
-      "line": 5
     },
     {
       "name": "Program",
@@ -16666,6 +16561,13 @@
       "line": 10
     },
     {
+      "name": "IdentityProviderRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
+      "line": 9
+    },
+    {
       "name": "ConsumedTelegramAssertion",
       "kind": "class",
       "role": "Other",
@@ -16741,6 +16643,55 @@
       "role": "Repository",
       "path": "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
       "line": 9
+    },
+    {
+      "name": "GoogleTokenValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/GoogleTokenValidator.cs",
+      "line": 14
+    },
+    {
+      "name": "TelegramAuthTimestampValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthTimestampValidator.cs",
+      "line": 2
+    },
+    {
+      "name": "Status",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthTimestampValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "TelegramAuthValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
+      "line": 15
+    },
+    {
+      "name": "TelegramLoginWidgetValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramLoginWidgetValidator.cs",
+      "line": 11
+    },
+    {
+      "name": "GoogleAuthOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Identity/Infrastructure/Providers/Options/GoogleAuthOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramAuthOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Identity/Infrastructure/Providers/Options/TelegramAuthOptions.cs",
+      "line": 2
     },
     {
       "name": "PasswordHasher",
@@ -16953,6 +16904,13 @@
       "line": 8
     },
     {
+      "name": "ImagesProviderRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/ImagesProviderRegistration.cs",
+      "line": 13
+    },
+    {
       "name": "ImageAssetConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -17007,6 +16965,48 @@
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
       "line": 8
+    },
+    {
+      "name": "S3Options",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Images/Infrastructure/Providers/Options/S3Options.cs",
+      "line": 2
+    },
+    {
+      "name": "IObjectStorageClient",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/Providers/Services/IObjectStorageClient.cs",
+      "line": 2
+    },
+    {
+      "name": "S3ImageStorageService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Images/Infrastructure/Providers/Services/S3ImageStorageService.cs",
+      "line": 10
+    },
+    {
+      "name": "S3ObjectStorageClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/Providers/Services/S3ObjectStorageClient.cs",
+      "line": 8
+    },
+    {
+      "name": "StoredObjectInfo",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/Providers/Services/StoredObjectInfo.cs",
+      "line": 2
+    },
+    {
+      "name": "UnconfiguredImageStorageService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Images/Infrastructure/Providers/Services/UnconfiguredImageStorageService.cs",
+      "line": 5
     },
     {
       "name": "INutritionLessonReadModelRepository",
@@ -25099,7 +25099,7 @@
       "interface": "IGoogleTokenValidator",
       "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/IGoogleTokenValidator.cs",
       "implementation": "GoogleTokenValidator",
-      "implementationPath": "FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs",
+      "implementationPath": "Modules/Identity/Infrastructure/Providers/Authentication/GoogleTokenValidator.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25694,14 +25694,14 @@
       "interface": "ITelegramAuthValidator",
       "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramAuthValidator.cs",
       "implementation": "TelegramAuthValidator",
-      "implementationPath": "FoodDiary.Integrations/Authentication/TelegramAuthValidator.cs",
+      "implementationPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramAuthValidator.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "ITelegramLoginWidgetValidator",
       "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Abstractions/ITelegramLoginWidgetValidator.cs",
       "implementation": "TelegramLoginWidgetValidator",
-      "implementationPath": "FoodDiary.Integrations/Authentication/TelegramLoginWidgetValidator.cs",
+      "implementationPath": "Modules/Identity/Infrastructure/Providers/Authentication/TelegramLoginWidgetValidator.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26106,27 +26106,6 @@
       "line": 126
     },
     {
-      "service": "IGoogleTokenValidator",
-      "implementation": "GoogleTokenValidator",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Integrations/DependencyInjection.Authentication.cs",
-      "line": 9
-    },
-    {
-      "service": "ITelegramAuthValidator",
-      "implementation": "TelegramAuthValidator",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Integrations/DependencyInjection.Authentication.cs",
-      "line": 10
-    },
-    {
-      "service": "ITelegramLoginWidgetValidator",
-      "implementation": "TelegramLoginWidgetValidator",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Integrations/DependencyInjection.Authentication.cs",
-      "line": 11
-    },
-    {
       "service": "IBillingPublicConfigProvider",
       "implementation": "BillingPublicConfigProvider",
       "lifetime": "Singleton",
@@ -26153,13 +26132,6 @@
       "lifetime": "Scoped",
       "path": "FoodDiary.Integrations/DependencyInjection.Mail.cs",
       "line": 42
-    },
-    {
-      "service": "IObjectStorageClient",
-      "implementation": "S3ObjectStorageClient",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Integrations/DependencyInjection.Storage.cs",
-      "line": 29
     },
     {
       "service": "IRecurringJobRegistrationVerifier",

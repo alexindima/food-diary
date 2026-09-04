@@ -167,6 +167,7 @@
     <Project Path="Modules/Images/Infrastructure/Model/FoodDiary.Modules.Images.PersistenceModel.csproj" />
   </Folder>
   <Folder Name="/Modules/Images/tests/">
+    <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/FoodDiary.Modules.Images.Infrastructure.Tests.csproj" />
     <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FoodDiary.Modules.Images.Application.Tests.csproj" />
     <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Domain.Tests/FoodDiary.Modules.Images.Domain.Tests.csproj" />
     <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests.csproj" />

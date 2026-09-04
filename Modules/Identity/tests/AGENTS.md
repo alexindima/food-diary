@@ -1,5 +1,10 @@
 # Identity tests
 
+Infrastructure.Tests/Integrations owns Google/Telegram provider and option tests,
+including offline signing/claim/timestamp cases and singleton/clock registration.
+No live Google or Telegram credentials/API calls are required. Mixed HTTP/host
+authentication and replay persistence tests retain their existing owners.
+
 Keep focused Identity application behavior in the nested application test project. The Domain test project owns EmailTemplate, UserRefreshTokenSession and UserLoginEvent invariant tests.
 Mixed Admin, Users, host, HTTP, provider, shared persistence, and cross-module tests
 remain with their established owners. Do not duplicate moved tests.

@@ -91,6 +91,45 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     }
 
     [Theory]
+    [InlineData("Modules/Inventory/tests/FoodDiary.Modules.Inventory.Infrastructure.IntegrationTests/StockStoreTests.cs", true)]
+    [InlineData("Modules\\Shipping\\tests\\FoodDiary.Modules.Shipping.Infrastructure.IntegrationTests\\StockStoreTests.cs", true)]
+    [InlineData("tests/FoodDiary.Infrastructure.IntegrationTests/StockStoreTests.cs", true)]
+    [InlineData("Modules/Inventory/tests/FoodDiary.Modules.Shipping.Infrastructure.IntegrationTests/StockStoreTests.cs", false)]
+    [InlineData("Modules/Inventory/tests/FoodDiary.Modules.Inventory.Infrastructure.IntegrationTestsExtra/StockStoreTests.cs", false)]
+    public async Task SearchAsync_PreservesIntegrationTestSelectorAfterModuleRelocation(string path, bool expectedMatch) {
+        string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
+        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        // A synthetic role tests selector equivalence without any benchmark vocabulary.
+        policy["structuralRoleBoosts"] = System.Text.Json.Nodes.JsonNode.Parse("""
+            [{"id":"synthetic-stock-integration-tests","queryTerms":["stock"],"minimumMatches":1,
+              "candidateTerms":["stock"],"minimumCandidateMatches":1,"minimumQueryIdentityMatches":1,
+              "score":300,"identityScope":"file","changeTypes":["Tests"],"recordTypes":["code"],
+              "pathPrefixes":["tests/FoodDiary.Infrastructure.IntegrationTests/"],"pathSuffixes":["Tests.cs"]}]
+            """);
+        await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            INSERT INTO context_search VALUES ('code', 'stock-fixture', $path, $path, 'csharp', 'Stock store tests', 'stock store integration tests');
+            """;
+        command.Parameters.AddWithValue("$path", path);
+        await command.ExecuteNonQueryAsync();
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "stock store integration tests", limit: 10, changeType: "Tests", module: null, scopePaths: null,
+            CancellationToken.None, expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.True(result.Ready, result.UnavailableReason);
+        WikiContextSearchCandidate candidate = Assert.Single(result.Candidates);
+        Assert.Equal(path, candidate.Path);
+        Assert.Equal(expectedMatch, candidate.Reasons.Any(reason =>
+            reason.StartsWith("structural role synthetic-stock-integration-tests (", StringComparison.Ordinal)));
+    }
+
+    [Theory]
     [InlineData("Acme", "Tests", true)]
     [InlineData("Zephyr", "Tests", true)]
     [InlineData("Acme", "Backend", false)]

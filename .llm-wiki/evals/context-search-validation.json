@@ -24,7 +24,7 @@
       "id": "s3-object-storage-client",
       "query": "client uploads and reads objects from S3 storage",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Services/S3ObjectStorageClient.cs"]
+      "expectedPaths": ["Modules/Images/Infrastructure/Providers/Services/S3ObjectStorageClient.cs"]
     },
     {
       "id": "bounded-http-content-reader",

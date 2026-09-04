@@ -8,13 +8,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "dc2292803642e41a32c7ce25882ea505255e6ca04c7b5eaddaaf5bcdead63a73"
+          "sha256": "7e104518434bd993e7b11ac10bfaeefe17a2ae085bb37893f9c0fdadfdf864b4"
         }
       ],
-      "reason": "OpenAI/Fitbit/USDA/OpenFoodFacts providers and options move to existing module Infrastructure/Providers. Explicit API/JobManager composition and one-way shared transport reference; seven central owner refs removed, one USDA test leaf added. Exact matrix and HTTP/clock/options/host guards updated. New project generated catalog current.",
+      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T12:30:17.8003300Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:23.9030319Z"
     },
     {
       "pageId": "module.frontend",
@@ -38,13 +38,13 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "dc2292803642e41a32c7ce25882ea505255e6ca04c7b5eaddaaf5bcdead63a73"
+          "sha256": "7e104518434bd993e7b11ac10bfaeefe17a2ae085bb37893f9c0fdadfdf864b4"
         }
       ],
-      "reason": "OpenAI/Fitbit/USDA/OpenFoodFacts providers and options move to existing module Infrastructure/Providers. Explicit API/JobManager composition and one-way shared transport reference; seven central owner refs removed, one USDA test leaf added. Exact matrix and HTTP/clock/options/host guards updated. New project generated catalog current.",
+      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T12:30:17.9674871Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:24.6742476Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -53,21 +53,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "55cce6b2daa225d27d709def50a9d5d3d7c525ff0b9e13dcbfd99673a5b7c9dc"
+          "sha256": "d91d924875ebd2a45a5bf42046931fe159f4d503881dfecb2699e9f20e89eaa3"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "dc2292803642e41a32c7ce25882ea505255e6ca04c7b5eaddaaf5bcdead63a73"
+          "sha256": "7e104518434bd993e7b11ac10bfaeefe17a2ae085bb37893f9c0fdadfdf864b4"
         },
         {
           "path": "FoodDiary.Integrations/AGENTS.md",
-          "sha256": "88d6599067be420ad5e458dfd19cd27a3d2c8a1e34e8de8981153c3540169cd7"
+          "sha256": "7517e71d5572e6446a588001b29ae7d269fddbbd909169dad9d739986774a032"
         }
       ],
-      "reason": "Twelve existing provider/options types preserve CLR names but move assemblies: coordinated rebuild of hosts required, not old-binary compatibility. API comparison reports zero changes; full HTTP/Presentation tests run. Initializer acquires only Docker copies for transitive Integrations, not provider registrations or validation.",
+      "reason": "No route, payload, status, transport or Swagger snapshot changes. Google/Telegram and S3 implementation assemblies move with existing CLR names; coordinated rebuilt hosts required. No old binary compatibility promise. API and JobManager explicitly replace former central provider composition; Initializer acquires no external configuration.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T12:30:18.1662638Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:25.3749723Z"
     },
     {
       "pageId": "system.architecture",
@@ -76,21 +76,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "55cce6b2daa225d27d709def50a9d5d3d7c525ff0b9e13dcbfd99673a5b7c9dc"
+          "sha256": "d91d924875ebd2a45a5bf42046931fe159f4d503881dfecb2699e9f20e89eaa3"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "dc2292803642e41a32c7ce25882ea505255e6ca04c7b5eaddaaf5bcdead63a73"
+          "sha256": "7e104518434bd993e7b11ac10bfaeefe17a2ae085bb37893f9c0fdadfdf864b4"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "e71f36e13e9fac9d08aa931db0dad48f19fc9d8d2cd777cee0a7ad8a22e727f2"
+          "sha256": "38a5f4e794a8c9f0292bae959da1334f7504daaa0f7223eedbde3da82ebb9502"
         }
       ],
-      "reason": "OpenAI/Fitbit/USDA/OpenFoodFacts providers and options move to existing module Infrastructure/Providers. Explicit API/JobManager composition and one-way shared transport reference; seven central owner refs removed, one USDA test leaf added. Exact matrix and HTTP/clock/options/host guards updated. New project generated catalog current.",
+      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T12:30:18.3671291Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:26.0249429Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -144,13 +144,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "55cce6b2daa225d27d709def50a9d5d3d7c525ff0b9e13dcbfd99673a5b7c9dc"
+          "sha256": "d91d924875ebd2a45a5bf42046931fe159f4d503881dfecb2699e9f20e89eaa3"
         }
       ],
-      "reason": "OpenAI/Fitbit/USDA/OpenFoodFacts providers and options move to existing module Infrastructure/Providers. Explicit API/JobManager composition and one-way shared transport reference; seven central owner refs removed, one USDA test leaf added. Exact matrix and HTTP/clock/options/host guards updated. New project generated catalog current.",
+      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T12:30:18.6291972Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:26.6744067Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -208,21 +208,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "119480e7a74f084a5af34456a82002551254b6cd8862d3b861813bd1e9c0f7c9"
+          "sha256": "058978f168321955e38d6b7cd006b281ecac28069b5bbb5fa074ea2f3a9292df"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "55cce6b2daa225d27d709def50a9d5d3d7c525ff0b9e13dcbfd99673a5b7c9dc"
+          "sha256": "d91d924875ebd2a45a5bf42046931fe159f4d503881dfecb2699e9f20e89eaa3"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "e71f36e13e9fac9d08aa931db0dad48f19fc9d8d2cd777cee0a7ad8a22e727f2"
+          "sha256": "38a5f4e794a8c9f0292bae959da1334f7504daaa0f7223eedbde3da82ebb9502"
         }
       ],
-      "reason": "18 final unfiltered suites,4138 passed,zero failed/skipped.169 existing method bodies/attributes preserved,8 new standalone registration tests; full HTTP/PostgreSQL, EF unchanged, NuGet audit clean. Initial Architecture catalog and Docker omissions retained and fixed; full rerun. No collectors.11 source-proven expectedPaths remapped in10 eval corpora with reverse equality; queries/thresholds/ranking/history unchanged.",
+      "reason": "Four full existing test files and ten option test methods preserved without duplicates; module-owned tests and new standalone registration tests run with unfiltered owner, donor, host, architecture and real PostgreSQL/HTTP suites. Exact outcomes and initial analyzer failures retained in auth-storage-evidence. No collectors. Twelve expected-path literals across eight corpora reverse to baseline. Independent Wiki suffix fix has fail-before/pass-after synthetic evidence and same-DB190-case comparison; no policy/threshold/query/ranking-weight changes. Strict quality failures are reported separately, not waived by runtime results.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T12:30:18.9274336Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:27.3343181Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -230,14 +230,14 @@
       "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "0ea63ac3d39dbb4accd78915f7925a6152e10e018f6d12dab8c7024a54fa9f7d"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "6a0cf3b4208ef9632331283784a187c65d0b97ae97f485d67818dde7b5b423e2"
         }
       ],
-      "reason": "Search result contracts and candidate recall limits unchanged; no application API or provider runtime changes.",
+      "reason": "No route, payload, status, transport or Swagger snapshot changes. Google/Telegram and S3 implementation assemblies move with existing CLR names; coordinated rebuilt hosts required. No old binary compatibility promise. API and JobManager explicitly replace former central provider composition; Initializer acquires no external configuration.",
       "baseRef": "HEAD",
-      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
-      "reviewedAtUtc": "2026-09-04T15:06:34.2024786Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:28.3214993Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -272,53 +272,41 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "8c9843eeb4fbb377b79e506bb7a2969dd0393e10cc6fc0a1ec924ccbd6ee22f9",
+      "pageSha256": "8125215f523313db4f5d24a8398ee62bcbe5d6e2533066a2a1b5f53b12bd3491",
       "sources": [
         {
           "path": ".llm-wiki/evals/context-search-generalization.json",
-          "sha256": "0f9622886aafed74c45a0ee300c89c60d272eae762a4fe5c8ca052bf0255b73e"
+          "sha256": "0e533489d87370c7607e718a677cd6a4c392434aa0f35e3f12228e2b8d4a4829"
         },
         {
-          "path": ".llm-wiki/evals/context-search-holdout.json",
-          "sha256": "ac5320c6d9ac31c5a45fce534ea259634de3d87c100fd9bda0562aaf267b091c"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-posttune-control-30.json",
-          "sha256": "c1e2fb98702944b139c141c99b4820d37d9fdd0fd949c3aed11b8741b5ae1057"
+          "path": ".llm-wiki/evals/context-search-holdout-100.json",
+          "sha256": "0f58b5a73972ee49949c007e75e3d68354c38f32ef5a31bcd0725cacbdfac645"
         },
         {
           "path": ".llm-wiki/evals/context-search-probe-2.json",
-          "sha256": "c68c3cd236b0c40b9cdc651489894c3fbacd8627fbd71a9c9ddea4ac2336b6d8"
+          "sha256": "3a1817f345fb358581b781a712fbb22085b2804d15d6acf6526cb2518cf83a99"
         },
         {
-          "path": ".llm-wiki/evals/context-search-probe-3.json",
-          "sha256": "b0b5f2de8a74b34e0c2d4484ce5f5011a3c97a062f56a335a87bea839cf4d841"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "7377f5962d9a2f06001db9c12bc1575cef0ead95aa82308ea5a7dca5d6ce3a1d"
+          "path": ".llm-wiki/evals/context-search-probe.json",
+          "sha256": "30eec9ff04db533dd3a78ce206c1ac6b62f34eef7f3baf122ae111809e04cffb"
         },
         {
           "path": ".llm-wiki/evals/context-search-validation.json",
-          "sha256": "9335565ce76c2b7366986c8ae8794934e513efc074200cc211a082c2933fd2ff"
+          "sha256": "7784cf3d4791181fca4536282238cf5563c06448de9257bb40a12885dec65617"
         },
         {
           "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "9d0a58d0624589da259b0136197c5f95af90531d62d4795ad612ba4196d80e00"
+          "sha256": "570da67d3a623a893c3db04d593c9b4fc44f0deb675a52a63cc80f8b7bad90eb"
         },
         {
-          "path": ".llm-wiki/evals/development-context-bundles.json",
-          "sha256": "0a91bbe4590fdc97bd40e3287f75fe01e40219521924a3090d225d8fccd827fe"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "ef15ee65f5503d2cf08c0f8cd6e788943e78a43483bc6df494c363df50a2a177"
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+          "sha256": "11cfe46f9c8455f1ded851eaf5c12a2536f464ef23b6ad21b625634b15eaacd6"
         }
       ],
-      "reason": "18unfiltered suites4138pass,EF/NuGet clean. Generic provider path identity regression FAIL-before/PASS-after restores USDA20/20 without ranking-policy/query/threshold changes.11one-to-one fixture moves plus one preserved5+5split; reverse corpus audit. FullWiki actualFAIL frozen100DomainGuard99/100 exactbase identical. Supplemental unseen62/83base to60/82current includes new YooKassa testcollision10to17, explicitly NOT baseline-waived. Raw results/limitations in committed report.",
+      "reason": "Four full existing test files and ten option test methods preserved without duplicates; module-owned tests and new standalone registration tests run with unfiltered owner, donor, host, architecture and real PostgreSQL/HTTP suites. Exact outcomes and initial analyzer failures retained in auth-storage-evidence. No collectors. Twelve expected-path literals across eight corpora reverse to baseline. Independent Wiki suffix fix has fail-before/pass-after synthetic evidence and same-DB190-case comparison; no policy/threshold/query/ranking-weight changes. Strict quality failures are reported separately, not waived by runtime results.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T13:07:53.5395438Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:28.9125566Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -496,13 +484,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "7111e50e9063842699ef560294d68b3dc5d4c9935387dd30b211beae9b17f5d4"
+          "sha256": "d85a7e2029fe5cc0cbc5665f9d70d83dbba6487e1e37e12d38dcc82f042f7aa9"
         }
       ],
-      "reason": "OpenAI/Fitbit/USDA/OpenFoodFacts providers and options move to existing module Infrastructure/Providers. Explicit API/JobManager composition and one-way shared transport reference; seven central owner refs removed, one USDA test leaf added. Exact matrix and HTTP/clock/options/host guards updated. New project generated catalog current.",
+      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
       "baseRef": "HEAD",
-      "gitHead": "9faaacd7cbc87ac4d467d8a497dafce292edd32c",
-      "reviewedAtUtc": "2026-09-04T12:30:20.0224976Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:29.5266873Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -807,14 +795,14 @@
       "pageSha256": "e01ff59cf70144c17231e65657507cbf611981c565cc6c4e6c0504ac567e6a77",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "0ea63ac3d39dbb4accd78915f7925a6152e10e018f6d12dab8c7024a54fa9f7d"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "80517abc7b2e9de42d9d0bf918c18a6694640d4b8a91f1068e03f0413c954b2b"
         }
       ],
-      "reason": "Only local read-only search ranking and fixtures changed. No credentials, provider calls, telemetry payloads or authorization changes; no external security scan.",
+      "reason": "All twelve provider/options source bodies and option chains are source/token-equivalent. The user-approved sole runtime correction conditionally assigns S3 ServiceURL, fixing the pre-existing region-only constructor failure; offline null/whitespace/custom URL regressions pass. All other singleton tokens, Google issuer/audience/signing/verified-email/cancellation, Telegram HMAC/clock, S3 staged byte/dimension/public-policy/deletion behavior are unchanged. Shared URI and telemetry remain one implementation. No credentials read, real external provider call, new sharing/lifecycle or external security scan.",
       "baseRef": "HEAD",
-      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
-      "reviewedAtUtc": "2026-09-04T15:06:34.7930853Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:30.2334523Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -853,13 +841,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e39972e0626127fdde0a34d6f83c6a186829e22f46e3710fbf911ca638b62972"
+          "sha256": "c5fb19af5d416a285c96149ee1de72d15ac5c7ecd8b5bcb9075472fca41d5821"
         }
       ],
-      "reason": "Structural module entry-point waiver, bounded test-subject specificity and Node/MCP layout parity; no file-specific boosts. Synthetic regressions, 18-corpus comparison and exact reader parity retained. Historical thresholds and query text unchanged; known strict quality gaps remain explicit.",
+      "reason": "Four full existing test files and ten option test methods preserved without duplicates; module-owned tests and new standalone registration tests run with unfiltered owner, donor, host, architecture and real PostgreSQL/HTTP suites. Exact outcomes and initial analyzer failures retained in auth-storage-evidence. No collectors. Twelve expected-path literals across eight corpora reverse to baseline. Independent Wiki suffix fix has fail-before/pass-after synthetic evidence and same-DB190-case comparison; no policy/threshold/query/ranking-weight changes. Strict quality failures are reported separately, not waived by runtime results.",
       "baseRef": "HEAD",
-      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
-      "reviewedAtUtc": "2026-09-04T15:06:35.2022658Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:31.2983627Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -936,13 +924,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0a6567ea2eb27a483a53883ada8910cdad1910f3e8440f656d487a20fa2965fd"
+          "sha256": "0ab3a7e10fdbbe714664a0c10cdceaaa06133a961c6a95f1f4c979e71c61de27"
         }
       ],
-      "reason": "16 path literals follow audited Git renames in four corpora; reverse mapping reproduces original files. Report separates full-run failures, focused correction, measured improvements and unresolved quality gates.",
+      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
       "baseRef": "HEAD",
-      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
-      "reviewedAtUtc": "2026-09-04T15:06:35.8657793Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:32.7074120Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -951,17 +939,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e39972e0626127fdde0a34d6f83c6a186829e22f46e3710fbf911ca638b62972"
+          "sha256": "c5fb19af5d416a285c96149ee1de72d15ac5c7ecd8b5bcb9075472fca41d5821"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "0a6567ea2eb27a483a53883ada8910cdad1910f3e8440f656d487a20fa2965fd"
+          "sha256": "0ab3a7e10fdbbe714664a0c10cdceaaa06133a961c6a95f1f4c979e71c61de27"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "80517abc7b2e9de42d9d0bf918c18a6694640d4b8a91f1068e03f0413c954b2b"
         }
       ],
-      "reason": "Only local read-only search ranking and fixtures changed. No credentials, provider calls, telemetry payloads or authorization changes; no external security scan.",
+      "reason": "All twelve provider/options source bodies and option chains are source/token-equivalent. The user-approved sole runtime correction conditionally assigns S3 ServiceURL, fixing the pre-existing region-only constructor failure; offline null/whitespace/custom URL regressions pass. All other singleton tokens, Google issuer/audience/signing/verified-email/cancellation, Telegram HMAC/clock, S3 staged byte/dimension/public-policy/deletion behavior are unchanged. Shared URI and telemetry remain one implementation. No credentials read, real external provider call, new sharing/lifecycle or external security scan.",
       "baseRef": "HEAD",
-      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
-      "reviewedAtUtc": "2026-09-04T15:06:36.2503997Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:33.4741690Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1198,22 +1190,18 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "2d1bc5b0ab6b9fa4aaf651d10da4ad9ec410b6657aaf8b951648b3d63c19b7ae"
+          "path": ".llm-wiki/evals/context-search-holdout-100.json",
+          "sha256": "0f58b5a73972ee49949c007e75e3d68354c38f32ef5a31bcd0725cacbdfac645"
         },
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "b823e60fc9745d22a01dc3063942ef1876e2afafce6c8ccb9370b896f0a8cfdb"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "0ea63ac3d39dbb4accd78915f7925a6152e10e018f6d12dab8c7024a54fa9f7d"
+          "sha256": "7c4d211d9c0b6b8d7e84a5e0bfb31943a36864bba4243fa13ed1185553ee05d6"
         }
       ],
-      "reason": "16 path literals follow audited Git renames in four corpora; reverse mapping reproduces original files. Report separates full-run failures, focused correction, measured improvements and unresolved quality gates.",
+      "reason": "Identity owns Google/Telegram; Images owns S3 storage. Existing Infrastructure assemblies and one Images test leaf, exact matrix/ref/host guards updated. Images stale physical manifest mappings corrected to actual module paths. Narrow Images-to-Integrations helper reference; Identity needs none. Parallel Node/MCP Infrastructure.IntegrationTests alias fix has separate file ownership and evidence.",
       "baseRef": "HEAD",
-      "gitHead": "cf6c6e7c5593d2a9833d61bf6ee6497cdd4b8607",
-      "reviewedAtUtc": "2026-09-04T15:06:35.5654087Z"
+      "gitHead": "ee6564652427375bc30e73a0ebbcc05c5ff7189f",
+      "reviewedAtUtc": "2026-09-04T16:43:32.0592501Z"
     },
     {
       "pageId": "workflow.review-diff",
