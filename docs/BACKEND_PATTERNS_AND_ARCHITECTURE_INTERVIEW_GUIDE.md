@@ -254,7 +254,7 @@ Evidence: `FoodDiary.JobManager/`, `JobManagerGuardrailTests.cs`, Hangfire regis
 
 Controllers, binding models, HTTP responses and mappings live in Presentation.Api. Application requests are transport-neutral and do not know about route, claims, status codes or OpenAPI.
 
-Evidence: `FoodDiary.Presentation.Api/Features/`, ADR 0003.
+Evidence: `Modules/*/Presentation/Features/`, `FoodDiary.Presentation.Api`, ADR 0003.
 
 ### 41. Exception Handler / Problem translation
 

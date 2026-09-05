@@ -13,6 +13,7 @@ public sealed class BaseApiControllerFeaturesRootNamespaceTests {
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddPresentationApi();
+        services.AddIdentityPresentation();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         MvcOptions options = provider.GetRequiredService<IOptions<MvcOptions>>().Value;

@@ -2,8 +2,6 @@ using Asp.Versioning;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Presentation.Api.Filters;
-using FoodDiary.Presentation.Api.Features.Billing;
-using FoodDiary.Presentation.Api.Features.Logs;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Presentation.Api.Services;
@@ -11,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Reflection;
 
 namespace FoodDiary.Presentation.Api.Extensions;
 
@@ -19,10 +18,7 @@ public static class PresentationServiceCollectionExtensions {
         public IServiceCollection AddPresentationApi() {
             services.AddScoped<TelemetryActionFilter>();
             services.AddScoped<IdempotencyFilter>();
-            services.AddScoped<AuthenticationCookieResultFilter>();
             services.AddScoped<RefreshTokenCookieService>();
-            services.AddScoped<BillingWebhookHttpProcessor>();
-            services.AddScoped<ClientTelemetryHttpProcessor>();
             services.TryAddSingleton(TimeProvider.System);
             services.TryAddSingleton<IIdempotencyStore, InMemoryIdempotencyStore>();
             services.AddApiVersioning(options => {
@@ -33,7 +29,6 @@ public static class PresentationServiceCollectionExtensions {
                 .AddControllers(options => {
                     options.Filters.AddService<TelemetryActionFilter>();
                     options.Filters.AddService<IdempotencyFilter>();
-                    options.Filters.AddService<AuthenticationCookieResultFilter>();
                 })
                 .ConfigureApiBehaviorOptions(options => {
                     options.InvalidModelStateResponseFactory = context => {
@@ -60,6 +55,11 @@ public static class PresentationServiceCollectionExtensions {
             services.AddSingleton<IUserIdProvider, UserIdProvider>();
             services.AddScoped<IEmailVerificationNotifier, EmailVerificationNotifier>();
             services.AddScoped<INotificationPusher, NotificationPusher>();
+            return services;
+        }
+
+        public IServiceCollection AddPresentationAssembly(Assembly assembly) {
+            services.AddControllers().AddApplicationPart(assembly);
             return services;
         }
     }

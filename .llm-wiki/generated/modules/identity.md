@@ -19,18 +19,19 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Admin, Authentication, Email, Notifications, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Auth`
 - `Modules/Identity/Application`
 - `Modules/Identity/Application/Abstractions`
 - `Modules/Identity/Domain`
 - `Modules/Identity/Infrastructure`
 - `Modules/Identity/Infrastructure/Model`
 - `Modules/Identity/Infrastructure/Providers`
+- `Modules/Identity/Presentation`
+- `Modules/Identity/Presentation/Features/Auth`
 
 ## HTTP Surface
 
@@ -42,7 +43,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: EmailTemplate, UserRefreshTokenSession, UserLoginEvent
 - Public contract files: 47
-- Observed external consumer groups: 4
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

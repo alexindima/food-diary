@@ -19,12 +19,11 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Meals.Application, FoodDiary.Modules.Products.Application, FoodDiary.Modules.Recipes.Application, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Meals.Application, FoodDiary.Modules.Products.Application, FoodDiary.Modules.Recipes.Application, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Images`
 - `Modules/Images/Application`
 - `Modules/Images/Application/Abstractions`
 - `Modules/Images/Contracts`
@@ -32,17 +31,11 @@ sources:
 - `Modules/Images/Infrastructure`
 - `Modules/Images/Infrastructure/Model`
 - `Modules/Images/Infrastructure/Providers`
+- `Modules/Images/Presentation`
 
 ## HTTP Surface
 
-### ImagesController
-
-Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
-
-- `POST /api/v{version:apiVersion}/images/upload-url`
-- `POST /api/v{version:apiVersion}/images/{assetId:guid}/confirm`
-- `DELETE /api/v{version:apiVersion}/images/{assetId:guid}`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -50,7 +43,7 @@ Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
 - Public contract files: 13
-- Observed external consumer groups: 7
+- Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

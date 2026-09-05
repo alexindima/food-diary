@@ -2,6 +2,41 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProjectDependencyMatrixTests {
+    private static readonly string[] ModulePresentationProjectNames = [
+        "FoodDiary.Modules.Admin.Presentation",
+        "FoodDiary.Modules.Ai.Presentation",
+        "FoodDiary.Modules.Billing.Presentation",
+        "FoodDiary.Modules.BodyMetrics.Presentation",
+        "FoodDiary.Modules.ContentReports.Presentation",
+        "FoodDiary.Modules.Cycles.Presentation",
+        "FoodDiary.Modules.Dashboard.Presentation",
+        "FoodDiary.Modules.Dietologist.Presentation",
+        "FoodDiary.Modules.Exercises.Presentation",
+        "FoodDiary.Modules.Export.Presentation",
+        "FoodDiary.Modules.Fasting.Presentation",
+        "FoodDiary.Modules.Favorites.Presentation",
+        "FoodDiary.Modules.Gamification.Presentation",
+        "FoodDiary.Modules.Hydration.Presentation",
+        "FoodDiary.Modules.Identity.Presentation",
+        "FoodDiary.Modules.Images.Presentation",
+        "FoodDiary.Modules.Lessons.Presentation",
+        "FoodDiary.Modules.Marketing.Presentation",
+        "FoodDiary.Modules.MealPlanning.Presentation",
+        "FoodDiary.Modules.Meals.Presentation",
+        "FoodDiary.Modules.Notifications.Presentation",
+        "FoodDiary.Modules.OpenFoodFacts.Presentation",
+        "FoodDiary.Modules.Products.Presentation",
+        "FoodDiary.Modules.RecipeCommunity.Presentation",
+        "FoodDiary.Modules.Recipes.Presentation",
+        "FoodDiary.Modules.Statistics.Presentation",
+        "FoodDiary.Modules.Tdee.Presentation",
+        "FoodDiary.Modules.Usda.Presentation",
+        "FoodDiary.Modules.Users.Presentation",
+        "FoodDiary.Modules.Wearables.Presentation",
+        "FoodDiary.Modules.WeeklyCheckIn.Presentation",
+        "FoodDiary.Modules.WeeklyGoals.Presentation",
+    ];
+
     private static readonly IReadOnlyDictionary<string, string[]> AllowedProductionProjectReferences =
         new Dictionary<string, string[]>(StringComparer.Ordinal) {
             ["FoodDiary.Analyzers"] = [],
@@ -52,6 +87,39 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.MailRelay.Presentation"] = ["FoodDiary.MailRelay.Application", "FoodDiary.MailRelay.Client"],
             ["FoodDiary.MailRelay.WebApi"] = ["FoodDiary.MailRelay.Application", "FoodDiary.MailRelay.Infrastructure", "FoodDiary.MailRelay.Presentation"],
             ["FoodDiary.Mediator"] = [],
+            ["FoodDiary.Modules.Admin.Presentation"] = ["FoodDiary.Application.Marketing", "FoodDiary.Modules.Admin.Application", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Admin.Domain", "FoodDiary.Modules.Fasting.Application", "FoodDiary.Modules.Fasting.Application.Abstractions", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Ai.Presentation"] = ["FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Ai.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Billing.Presentation"] = ["FoodDiary.Application.Billing", "FoodDiary.Modules.Billing.Application.Abstractions", "FoodDiary.Modules.Billing.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.BodyMetrics.Presentation"] = ["FoodDiary.Application.BodyMetrics", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Domain", "FoodDiary.Modules.Users.Presentation", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.ContentReports.Presentation"] = ["FoodDiary.Modules.ContentReports.Application", "FoodDiary.Modules.ContentReports.Application.Abstractions", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Cycles.Presentation"] = ["FoodDiary.Application.Cycles", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Dashboard.Presentation"] = ["FoodDiary.Modules.BodyMetrics.Presentation", "FoodDiary.Modules.Cycles.Presentation", "FoodDiary.Modules.Dashboard.Application", "FoodDiary.Modules.Dashboard.Application.Abstractions", "FoodDiary.Modules.Dashboard.Contracts", "FoodDiary.Modules.Fasting.Presentation", "FoodDiary.Modules.Hydration.Presentation", "FoodDiary.Modules.Meals.Presentation", "FoodDiary.Modules.Tdee.Presentation", "FoodDiary.Modules.Users.Presentation", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Dietologist.Presentation"] = ["FoodDiary.Modules.Dashboard.Presentation", "FoodDiary.Modules.Dietologist.Application", "FoodDiary.Modules.Dietologist.Application.Abstractions", "FoodDiary.Modules.Dietologist.Domain", "FoodDiary.Modules.Dietologist.Presentation.Contracts", "FoodDiary.Modules.Users.Presentation", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Dietologist.Presentation.Contracts"] = [],
+            ["FoodDiary.Modules.Exercises.Presentation"] = ["FoodDiary.Application.Exercises", "FoodDiary.Modules.Exercises.Application.Abstractions", "FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Exercises.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Export.Presentation"] = ["FoodDiary.Modules.Export.Application", "FoodDiary.Modules.Export.Application.Abstractions", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Fasting.Presentation"] = ["FoodDiary.Modules.Fasting.Application", "FoodDiary.Modules.Fasting.Application.Abstractions", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Fasting.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Favorites.Presentation"] = ["FoodDiary.Application.Favorites", "FoodDiary.Modules.Favorites.Application.Abstractions", "FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Gamification.Presentation"] = ["FoodDiary.Modules.Gamification.Application", "FoodDiary.Modules.Gamification.Application.Abstractions", "FoodDiary.Modules.Gamification.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Hydration.Presentation"] = ["FoodDiary.Modules.Hydration.Application", "FoodDiary.Modules.Hydration.Application.Abstractions", "FoodDiary.Modules.Hydration.Contracts", "FoodDiary.Modules.Hydration.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Identity.Presentation"] = ["FoodDiary.Modules.Admin.Application", "FoodDiary.Modules.Identity.Application", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Identity.Domain", "FoodDiary.Modules.Users.Presentation", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Images.Presentation"] = ["FoodDiary.Application.Images", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Images.Contracts", "FoodDiary.Modules.Images.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Lessons.Presentation"] = ["FoodDiary.Modules.Lessons.Application", "FoodDiary.Modules.Lessons.Application.Abstractions", "FoodDiary.Modules.Lessons.Contracts", "FoodDiary.Modules.Lessons.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Marketing.Presentation"] = ["FoodDiary.Application.Marketing", "FoodDiary.Modules.Marketing.Application.Abstractions", "FoodDiary.Modules.Marketing.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.MealPlanning.Presentation"] = ["FoodDiary.Application.MealPlanning", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Meals.Presentation"] = ["FoodDiary.Modules.Favorites.Presentation", "FoodDiary.Modules.Meals.Application", "FoodDiary.Modules.Meals.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Notifications.Presentation"] = ["FoodDiary.Application.Notifications", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Notifications.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.OpenFoodFacts.Presentation"] = ["FoodDiary.Modules.OpenFoodFacts.Application", "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions", "FoodDiary.Modules.OpenFoodFacts.Contracts", "FoodDiary.Modules.OpenFoodFacts.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Products.Presentation"] = ["FoodDiary.Modules.Favorites.Presentation", "FoodDiary.Modules.Products.Application", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.RecipeCommunity.Presentation"] = ["FoodDiary.Application.RecipeCommunity", "FoodDiary.Modules.RecipeCommunity.Application.Abstractions", "FoodDiary.Modules.RecipeCommunity.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Recipes.Presentation"] = ["FoodDiary.Modules.Favorites.Presentation", "FoodDiary.Modules.Recipes.Application", "FoodDiary.Modules.Recipes.Application.Abstractions", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Recipes.Domain", "FoodDiary.Modules.Recipes.Domain.Contracts", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Statistics.Presentation"] = ["FoodDiary.Modules.BodyMetrics.Presentation", "FoodDiary.Modules.Statistics.Application", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Tdee.Presentation"] = ["FoodDiary.Modules.Tdee.Application", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Usda.Presentation"] = ["FoodDiary.Application.Usda", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Usda.Contracts", "FoodDiary.Modules.Usda.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Users.Presentation"] = ["FoodDiary.Modules.Dietologist.Presentation.Contracts", "FoodDiary.Modules.Notifications.Presentation", "FoodDiary.Modules.Users.Application", "FoodDiary.Modules.Users.Application.Abstractions", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.Wearables.Presentation"] = ["FoodDiary.Application.Wearables", "FoodDiary.Modules.Wearables.Application.Abstractions", "FoodDiary.Modules.Wearables.Domain", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.WeeklyCheckIn.Presentation"] = ["FoodDiary.Modules.WeeklyCheckIn.Application", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Modules.WeeklyGoals.Presentation"] = ["FoodDiary.Modules.WeeklyGoals.Application", "FoodDiary.Modules.WeeklyGoals.Application.Abstractions", "FoodDiary.Modules.WeeklyGoals.Contracts", "FoodDiary.Modules.WeeklyGoals.Domain", "FoodDiary.Presentation.Api"],
             ["FoodDiary.Modules.Admin.Application.Abstractions"] = ["FoodDiary.Modules.Admin.Domain", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Results"],
             ["FoodDiary.Modules.Admin.Application"] = ["FoodDiary.Application.Contracts", "FoodDiary.Audit.Contracts", "FoodDiary.Authentication.Contracts", "FoodDiary.Email.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Billing.Domain", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.Gamification.Application", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Lessons.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Users.Domain.Contracts"],
             ["FoodDiary.Modules.Admin.Domain"] = ["FoodDiary.Modules.Users.Domain.Contracts"],
@@ -214,7 +282,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Nutrition.Contracts"] = [],
             ["FoodDiary.Outbox.Abstractions"] = [],
             ["FoodDiary.Outbox.Management.Contracts"] = [],
-            ["FoodDiary.Presentation.Api"] = ["FoodDiary.Application.Billing", "FoodDiary.Application.BodyMetrics", "FoodDiary.Application.Contracts", "FoodDiary.Application.Cycles", "FoodDiary.Application.Exercises", "FoodDiary.Application.Favorites", "FoodDiary.Application.Images", "FoodDiary.Application.Marketing", "FoodDiary.Application.MealPlanning", "FoodDiary.Application.Notifications", "FoodDiary.Application.RecipeCommunity", "FoodDiary.Application.Usda", "FoodDiary.Application.Wearables", "FoodDiary.Domain.Primitives", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.Application", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Billing.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.ContentReports.Application", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.DailyAdvices.Application", "FoodDiary.Modules.Dashboard.Application", "FoodDiary.Modules.Dietologist.Application", "FoodDiary.Modules.Export.Application", "FoodDiary.Modules.Fasting.Application", "FoodDiary.Modules.Fasting.Application.Abstractions", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Gamification.Application", "FoodDiary.Modules.Hydration.Application", "FoodDiary.Modules.Identity.Application", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Lessons.Application", "FoodDiary.Modules.Meals.Application", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.OpenFoodFacts.Application", "FoodDiary.Modules.Products.Application", "FoodDiary.Modules.RecentItems.Application.Abstractions", "FoodDiary.Modules.Recipes.Application", "FoodDiary.Modules.Statistics.Application", "FoodDiary.Modules.Tdee.Application", "FoodDiary.Modules.Usda.Contracts", "FoodDiary.Modules.Users.Application", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Wearables.Application.Abstractions", "FoodDiary.Modules.WeeklyCheckIn.Application", "FoodDiary.Modules.WeeklyGoals.Application", "FoodDiary.Results"],
+            ["FoodDiary.Presentation.Api"] = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Export.Application", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Results"],
             ["FoodDiary.Results"] = [],
             ["FoodDiary.Telegram.Bot"] = [],
             ["FoodDiary.Web.Api"] = ["FoodDiary.Application.BodyMetrics", "FoodDiary.Application.Contracts", "FoodDiary.Application.Exercises", "FoodDiary.Application.Images", "FoodDiary.Application.MealPlanning", "FoodDiary.Application.Notifications", "FoodDiary.Application.RecipeCommunity", "FoodDiary.Application.Runtime", "FoodDiary.Application.Usda", "FoodDiary.Authentication.Contracts", "FoodDiary.Infrastructure", "FoodDiary.Integrations", "FoodDiary.Modules.Admin.Application", "FoodDiary.Modules.Admin.Infrastructure", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.Ai.Infrastructure", "FoodDiary.Modules.Billing.Infrastructure", "FoodDiary.Modules.BodyMetrics.Infrastructure", "FoodDiary.Modules.ContentReports.Infrastructure", "FoodDiary.Modules.Cycles.Infrastructure", "FoodDiary.Modules.DailyAdvices.Infrastructure", "FoodDiary.Modules.Dashboard.Application", "FoodDiary.Modules.Dashboard.Infrastructure", "FoodDiary.Modules.Dietologist.Infrastructure", "FoodDiary.Modules.Exercises.Infrastructure", "FoodDiary.Modules.Export.Application", "FoodDiary.Modules.Export.Infrastructure", "FoodDiary.Modules.Fasting.Infrastructure", "FoodDiary.Modules.Favorites.Infrastructure", "FoodDiary.Modules.Gamification.Infrastructure", "FoodDiary.Modules.Hydration.Infrastructure", "FoodDiary.Modules.Identity.Application", "FoodDiary.Modules.Identity.Infrastructure", "FoodDiary.Modules.Images.Infrastructure", "FoodDiary.Modules.Lessons.Infrastructure", "FoodDiary.Modules.Marketing.Infrastructure", "FoodDiary.Modules.MealPlanning.Infrastructure", "FoodDiary.Modules.Meals.Infrastructure", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Notifications.Infrastructure", "FoodDiary.Modules.OpenFoodFacts.Infrastructure", "FoodDiary.Modules.Products.Application", "FoodDiary.Modules.Products.Infrastructure", "FoodDiary.Modules.RecentItems.Infrastructure", "FoodDiary.Modules.RecipeCommunity.Infrastructure", "FoodDiary.Modules.Recipes.Application", "FoodDiary.Modules.Recipes.Infrastructure", "FoodDiary.Modules.Statistics.Application", "FoodDiary.Modules.Tdee.Application", "FoodDiary.Modules.Usda.Infrastructure", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Infrastructure", "FoodDiary.Modules.Wearables.Infrastructure", "FoodDiary.Modules.WeeklyCheckIn.Application", "FoodDiary.Modules.WeeklyGoals.Infrastructure", "FoodDiary.Presentation.Api"],
@@ -400,7 +468,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Modules.WeeklyGoals.Application.Tests"] = ["FoodDiary.Application.Contracts", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Users.Application", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Modules.WeeklyGoals.Application"],
             ["FoodDiary.Modules.WeeklyGoals.Domain.Tests"] = ["FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Modules.WeeklyGoals.Domain"],
             ["FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests"] = ["FoodDiary.Application.Contracts", "FoodDiary.Initializer", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.WeeklyGoals.Infrastructure", "FoodDiary.Testing"],
-            ["FoodDiary.Presentation.Api.Tests"] = ["FoodDiary.Application.Billing", "FoodDiary.Application.BodyMetrics", "FoodDiary.Application.Contracts", "FoodDiary.Application.Cycles", "FoodDiary.Application.Exercises", "FoodDiary.Application.Favorites", "FoodDiary.Application.Images", "FoodDiary.Application.MealPlanning", "FoodDiary.Application.Notifications", "FoodDiary.Application.RecipeCommunity", "FoodDiary.Application.Usda", "FoodDiary.Application.Wearables", "FoodDiary.Domain.Primitives", "FoodDiary.Modules.Admin.Application", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Billing.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.ContentReports.Application", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.DailyAdvices.Application", "FoodDiary.Modules.Dashboard.Application", "FoodDiary.Modules.Dietologist.Application", "FoodDiary.Modules.Export.Application", "FoodDiary.Modules.Fasting.Application", "FoodDiary.Modules.Fasting.Application.Abstractions", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Gamification.Application", "FoodDiary.Modules.Hydration.Application", "FoodDiary.Modules.Identity.Application", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Lessons.Application", "FoodDiary.Modules.Marketing.Application.Abstractions", "FoodDiary.Modules.Meals.Application", "FoodDiary.Modules.OpenFoodFacts.Application", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Statistics.Application", "FoodDiary.Modules.Tdee.Application", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.WeeklyCheckIn.Application", "FoodDiary.Modules.WeeklyGoals.Application", "FoodDiary.Presentation.Api"],
+            ["FoodDiary.Presentation.Api.Tests"] = ["FoodDiary.Application.Billing", "FoodDiary.Application.BodyMetrics", "FoodDiary.Application.Contracts", "FoodDiary.Application.Cycles", "FoodDiary.Application.Exercises", "FoodDiary.Application.Favorites", "FoodDiary.Application.Images", "FoodDiary.Application.MealPlanning", "FoodDiary.Application.Notifications", "FoodDiary.Application.RecipeCommunity", "FoodDiary.Application.Usda", "FoodDiary.Application.Wearables", "FoodDiary.Domain.Primitives", "FoodDiary.Modules.Admin.Application", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Billing.Application.Abstractions", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.ContentReports.Application", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.DailyAdvices.Application", "FoodDiary.Modules.Dashboard.Application", "FoodDiary.Modules.Dietologist.Application", "FoodDiary.Modules.Dietologist.Presentation.Contracts", "FoodDiary.Modules.Export.Application", "FoodDiary.Modules.Fasting.Application", "FoodDiary.Modules.Fasting.Application.Abstractions", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Gamification.Application", "FoodDiary.Modules.Hydration.Application", "FoodDiary.Modules.Identity.Application", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Lessons.Application", "FoodDiary.Modules.Marketing.Application.Abstractions", "FoodDiary.Modules.Meals.Application", "FoodDiary.Modules.OpenFoodFacts.Application", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Statistics.Application", "FoodDiary.Modules.Tdee.Application", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.WeeklyCheckIn.Application", "FoodDiary.Modules.WeeklyGoals.Application", "FoodDiary.Presentation.Api"],
             ["FoodDiary.Results.Tests"] = ["FoodDiary.Results"],
             ["FoodDiary.Telegram.Bot.Tests"] = ["FoodDiary.Telegram.Bot"],
             ["FoodDiary.Testing"] = [],
@@ -410,7 +478,7 @@ public sealed class ProjectDependencyMatrixTests {
 
     [Fact]
     public void AllProductionProjects_AreCoveredByDependencyMatrix() {
-        IReadOnlyList<string> actualProjects = ProjectReferenceReader.ReadProductionProjectNames();
+        string[] actualProjects = [.. ProjectReferenceReader.ReadProductionProjectNames()];
         string[] expectedProjects = [.. AllowedProductionProjectReferences.Keys.Order(StringComparer.Ordinal)];
 
         Assert.Equal(expectedProjects, actualProjects);
@@ -426,7 +494,7 @@ public sealed class ProjectDependencyMatrixTests {
                 $"Project '{projectName}' is missing from discovered production projects.");
 
             Assert.Equal(
-                expectedReferences.Order(StringComparer.Ordinal).ToArray(),
+                WithExpectedModulePresentationReferences(projectName, expectedReferences),
                 actualReferences);
         }
     }
@@ -449,7 +517,7 @@ public sealed class ProjectDependencyMatrixTests {
                 $"Test project '{projectName}' is missing from discovered test projects.");
 
             Assert.Equal(
-                expectedReferences.Order(StringComparer.Ordinal).ToArray(),
+                WithExpectedModulePresentationReferences(projectName, expectedReferences),
                 actualReferences);
         }
     }
@@ -501,4 +569,16 @@ public sealed class ProjectDependencyMatrixTests {
             "FoodDiary.Domain.Primitives" => Path.Combine("Shared", "FoodDiary.Domain.Primitives"),
             _ => projectName,
         };
+
+    private static string[] WithExpectedModulePresentationReferences(string projectName, IEnumerable<string> references) {
+        IEnumerable<string> expected = projectName is
+            "FoodDiary.Web.Api" or
+            "FoodDiary.Presentation.Api.Tests" or
+            "FoodDiary.Web.Api.Tests" or
+            "FoodDiary.Web.Api.IntegrationTests"
+                ? references.Concat(ModulePresentationProjectNames)
+                : references;
+
+        return [.. expected.Order(StringComparer.Ordinal)];
+    }
 }

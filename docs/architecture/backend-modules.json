@@ -48,7 +48,7 @@
           "Modules/Admin/Infrastructure"
         ],
         "adapterAreas": [
-          "FoodDiary.Presentation.Api/Features/Admin",
+          "Modules/Admin/Presentation/Features/Admin",
           "FoodDiary.Integrations/Services/MailInbox"
         ]
       }
@@ -80,7 +80,7 @@
           "Modules/Ai/Infrastructure"
         ],
         "adapterAreas": [
-          "FoodDiary.Presentation.Api/Features/Ai",
+          "Modules/Ai/Presentation/Features/Ai",
           "Modules/Ai/Infrastructure/Providers"
         ]
       }
@@ -107,7 +107,7 @@
           "Modules/Identity/Application/Abstractions"
         ],
         "adapterAreas": [
-          "FoodDiary.Presentation.Api/Features/Auth",
+          "Modules/Identity/Presentation/Features/Auth",
           "Modules/Identity/Infrastructure/Providers"
         ],
         "domainProjects": [
@@ -213,7 +213,7 @@
           "Modules/Meals/Infrastructure/Model"
         ],
         "adapterAreas": [
-          "FoodDiary.Presentation.Api/Features/Meals"
+          "Modules/Meals/Presentation/Features/Meals"
         ],
         "testAreas": [
           "Modules/Meals/tests",
@@ -596,7 +596,7 @@
           "Modules/Products/Infrastructure"
         ],
         "adapterAreas": [
-          "FoodDiary.Presentation.Api/Features/Products"
+          "Modules/Products/Presentation/Features/Products"
         ],
         "testAreas": [
           "Modules/Products/tests",
@@ -631,7 +631,7 @@
       "sourceMappings": {
         "logicalRoot": "Modules/RecipeCommunity",
         "persistenceModelProjects": ["Modules/RecipeCommunity/Infrastructure/Model"],
-        "adapterAreas": ["FoodDiary.Presentation.Api/Features/RecipeComments", "FoodDiary.Presentation.Api/Features/RecipeLikes"],
+        "adapterAreas": ["Modules/RecipeCommunity/Presentation/Features/RecipeComments", "Modules/RecipeCommunity/Presentation/Features/RecipeLikes"],
         "applicationProjects": [
           "Modules/RecipeCommunity/Application"
         ],
@@ -671,7 +671,7 @@
           "Modules/Recipes/Infrastructure"
         ],
         "adapterAreas": [
-          "FoodDiary.Presentation.Api/Features/Recipes"
+          "Modules/Recipes/Presentation/Features/Recipes"
         ],
         "testAreas": [
           "Modules/Recipes/tests",

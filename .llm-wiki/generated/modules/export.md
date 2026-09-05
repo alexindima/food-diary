@@ -24,21 +24,14 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Export`
 - `Modules/Export/Application`
 - `Modules/Export/Application/Abstractions`
 - `Modules/Export/Infrastructure`
+- `Modules/Export/Presentation`
 
 ## HTTP Surface
 
-### ExportController
-
-Source: `FoodDiary.Presentation.Api/Features/Export/ExportController.cs`
-
-- `GET /api/v{version:apiVersion}/export/diary`
-- `GET /api/v{version:apiVersion}/export/cycle`
-- `POST /api/v{version:apiVersion}/export/cycle/sensitive`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: read-composer

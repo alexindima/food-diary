@@ -19,37 +19,20 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: FavoriteRecipes, Images, Nutrition, Products, RecentItems, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Recipes`
 - `Modules/Recipes/Application`
 - `Modules/Recipes/Application/Abstractions`
 - `Modules/Recipes/Contracts`
+- `Modules/Recipes/Presentation`
+- `Modules/Recipes/Presentation/Features/Recipes`
 
 ## HTTP Surface
 
-### RecipeExploreController
-
-Source: `FoodDiary.Presentation.Api/Features/Recipes/RecipeExploreController.cs`
-
-- `GET /api/v{version:apiVersion}/recipes/explore`
-
-### RecipesController
-
-Source: `FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs`
-
-- `GET /api/v{version:apiVersion}/recipes`
-- `GET /api/v{version:apiVersion}/recipes/overview`
-- `GET /api/v{version:apiVersion}/recipes/recent`
-- `GET /api/v{version:apiVersion}/recipes/{id:guid}`
-- `POST /api/v{version:apiVersion}/recipes`
-- `PATCH /api/v{version:apiVersion}/recipes/{id:guid}`
-- `DELETE /api/v{version:apiVersion}/recipes/{id:guid}`
-- `POST /api/v{version:apiVersion}/recipes/{id:guid}/duplicate`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -57,7 +40,7 @@ Source: `FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs`
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Recipe, RecipeIngredient, RecipeStep
 - Public contract files: 13
-- Observed external consumer groups: 4
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

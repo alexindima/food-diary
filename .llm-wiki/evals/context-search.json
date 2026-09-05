@@ -42,7 +42,7 @@
       "id": "usda-limits",
       "query": "limit USDA API request query size",
       "changeType": "Api",
-      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Usda/UsdaRequestLimits.cs"]
+      "expectedPaths": ["Modules/Usda/Presentation/Features/Usda/UsdaRequestLimits.cs"]
     },
     {
       "id": "daily-advice",
@@ -189,7 +189,7 @@
       "id": "open-food-facts-http-endpoint",
       "query": "HTTP endpoint searches Open Food Facts products by barcode",
       "changeType": "Api",
-      "expectedPaths": ["FoodDiary.Presentation.Api/Features/OpenFoodFacts/OpenFoodFactsController.cs"]
+      "expectedPaths": ["Modules/OpenFoodFacts/Presentation/Features/OpenFoodFacts/OpenFoodFactsController.cs"]
     },
     {
       "id": "weekly-goal-repository",
@@ -255,7 +255,7 @@
       "id": "billing-webhook-controller",
       "query": "HTTP endpoint receives billing provider webhooks",
       "changeType": "Api",
-      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs"]
+      "expectedPaths": ["Modules/Billing/Presentation/Features/Billing/BillingWebhookController.cs"]
     },
     {
       "id": "telegram-bot-worker",

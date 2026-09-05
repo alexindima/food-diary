@@ -19,48 +19,22 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Notifications, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Admin.Presentation, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Fasting`
 - `Modules/Fasting/Application`
 - `Modules/Fasting/Application/Abstractions`
 - `Modules/Fasting/Contracts`
 - `Modules/Fasting/Domain`
 - `Modules/Fasting/Infrastructure`
 - `Modules/Fasting/Infrastructure/Model`
+- `Modules/Fasting/Presentation`
 
 ## HTTP Surface
 
-### FastingController
-
-Source: `FoodDiary.Presentation.Api/Features/Fasting/FastingController.cs`
-
-- `POST /api/v{version:apiVersion}/fasting/start`
-- `PUT /api/v{version:apiVersion}/fasting/end`
-- `PUT /api/v{version:apiVersion}/fasting/current/duration`
-- `PUT /api/v{version:apiVersion}/fasting/current/duration/reduce`
-- `PUT /api/v{version:apiVersion}/fasting/current/check-in`
-- `PUT /api/v{version:apiVersion}/fasting/current/skip-day`
-- `PUT /api/v{version:apiVersion}/fasting/current/postpone-day`
-
-### FastingInsightsController
-
-Source: `FoodDiary.Presentation.Api/Features/Fasting/FastingInsightsController.cs`
-
-- `GET /api/v{version:apiVersion}/fasting/stats`
-- `GET /api/v{version:apiVersion}/fasting/insights`
-
-### FastingReadController
-
-Source: `FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs`
-
-- `GET /api/v{version:apiVersion}/fasting/current`
-- `GET /api/v{version:apiVersion}/fasting/overview`
-- `GET /api/v{version:apiVersion}/fasting/history`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner

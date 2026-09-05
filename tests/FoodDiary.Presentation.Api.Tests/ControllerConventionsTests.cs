@@ -14,8 +14,6 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ControllerConventionsTests {
-    private static readonly Assembly PresentationAssembly = typeof(Controllers.BaseApiController).Assembly;
-
     [Fact]
     public void FeatureControllers_HaveApiControllerAttribute() {
         string?[] violations = [.. GetFeatureControllerTypes()
@@ -260,7 +258,7 @@ public sealed class ControllerConventionsTests {
             .SelectMany(tree => GetHandleCreatedMethods(tree)
                 .Select(methodName => (tree, methodName)))
             .Where(tuple => {
-                Type? controllerType = PresentationAssembly.GetTypes()
+                Type? controllerType = PresentationTestDiscovery.GetTypes()
                     .FirstOrDefault(type => string.Equals(Path.GetFileName(tuple.tree.FilePath), $"{type.Name}.cs", StringComparison.Ordinal));
 
                 if (controllerType is null) {
@@ -308,10 +306,10 @@ public sealed class ControllerConventionsTests {
     [InlineData("*HttpQueryMappings.cs", "Mappings")]
     [InlineData("*HttpResponseMappings.cs", "Mappings")]
     public void FeatureTransportFiles_LiveInExpectedFolders(string filePattern, string expectedFolderName) {
-        string presentationRoot = GetPresentationRoot();
-        string[] violations = [.. Directory.GetFiles(Path.Combine(presentationRoot, "Features"), filePattern, SearchOption.AllDirectories)
+        string[] violations = [.. PresentationTestDiscovery.GetPresentationRoots()
+            .SelectMany(presentationRoot => Directory.GetFiles(Path.Combine(presentationRoot, "Features"), filePattern, SearchOption.AllDirectories))
             .Where(path => !string.Equals(Path.GetFileName(Path.GetDirectoryName(path)), expectedFolderName, StringComparison.Ordinal))
-            .Select(static path => Path.GetRelativePath(GetPresentationRoot(), path))
+            .Select(static path => Path.GetRelativePath(Directory.GetCurrentDirectory(), path))
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -319,7 +317,6 @@ public sealed class ControllerConventionsTests {
 
     [Fact]
     public void FeatureTransportFiles_DoNotLiveOutsideFeaturesFolder() {
-        string presentationRoot = GetPresentationRoot();
         string[] patterns = [
             "*HttpRequest.cs",
             "*HttpQuery.cs",
@@ -330,7 +327,8 @@ public sealed class ControllerConventionsTests {
         ];
 
         string[] violations = [.. patterns
-            .SelectMany(pattern => Directory.GetFiles(presentationRoot, pattern, SearchOption.AllDirectories))
+            .SelectMany(pattern => PresentationTestDiscovery.GetPresentationRoots()
+                .SelectMany(presentationRoot => Directory.GetFiles(presentationRoot, pattern, SearchOption.AllDirectories)))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
@@ -338,30 +336,16 @@ public sealed class ControllerConventionsTests {
                 and not "PagedHttpResponse.cs"
                 and not "PagedHttpResponseMappings.cs"
                 and not "EnumerableHttpResponseMappings.cs")
-            .Select(path => Path.GetRelativePath(presentationRoot, path))
+            .Select(static path => Path.GetRelativePath(Directory.GetCurrentDirectory(), path))
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
 
     private static IEnumerable<SyntaxTree> GetControllerSyntaxTrees() {
-        string presentationRoot = GetPresentationRoot();
-        return Directory.GetFiles(Path.Combine(presentationRoot, "Features"), "*Controller.cs", SearchOption.AllDirectories)
+        return PresentationTestDiscovery.GetPresentationRoots()
+            .SelectMany(static presentationRoot => Directory.GetFiles(Path.Combine(presentationRoot, "Features"), "*Controller.cs", SearchOption.AllDirectories))
             .Select(static path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path));
-    }
-
-    private static string GetPresentationRoot() {
-        DirectoryInfo? directory = new(AppContext.BaseDirectory);
-        while (directory is not null) {
-            string solutionPath = Path.Combine(directory.FullName, "FoodDiary.slnx");
-            if (File.Exists(solutionPath)) {
-                return Path.Combine(directory.FullName, "FoodDiary.Presentation.Api");
-            }
-
-            directory = directory.Parent;
-        }
-
-        throw new InvalidOperationException("Repository root was not found from the test output directory.");
     }
 
     private static bool ReferencesApplicationTypes(SyntaxTree tree) {
@@ -391,7 +375,7 @@ public sealed class ControllerConventionsTests {
             .Select(static method => method.Identifier.ValueText);
 
     private static Type[] GetFeatureControllerTypes() =>
-        [.. PresentationAssembly.GetTypes()
+        [.. PresentationTestDiscovery.GetTypes()
             .Where(type => type is { IsAbstract: false, IsClass: true })
             .Where(type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true)
             .Where(type => type.Name.EndsWith("Controller", StringComparison.Ordinal))];
@@ -404,11 +388,11 @@ public sealed class ControllerConventionsTests {
             .Any(attribute => attribute.StatusCode is 401 or 403);
 
     private static bool IsPresentationHttpRequestType(Type type) =>
-        type.Assembly == PresentationAssembly &&
+        PresentationTestDiscovery.IsPresentationAssembly(type.Assembly) &&
         type.Name.EndsWith("HttpRequest", StringComparison.Ordinal);
 
     private static bool IsPresentationHttpQueryType(Type type) =>
-        type.Assembly == PresentationAssembly &&
+        PresentationTestDiscovery.IsPresentationAssembly(type.Assembly) &&
         type.Name.EndsWith("HttpQuery", StringComparison.Ordinal);
 
     private static bool IsSimpleTransportScalar(Type type) {

@@ -7,6 +7,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 
 ## Project Guides
 
+- Logical modules: `Modules/AGENTS.md`
 - Build-time analyzers: `FoodDiary.Analyzers/AGENTS.md`
 - Shared application contracts: `Shared/FoodDiary.Application.Contracts/AGENTS.md`
 - Shared audit contracts: `Shared/FoodDiary.Audit.Contracts/AGENTS.md`

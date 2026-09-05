@@ -19,22 +19,17 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Dashboard, Meals, Users, WaistEntries, WeightEntries
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/WeeklyCheckIn`
 - `Modules/WeeklyCheckIn/Application`
+- `Modules/WeeklyCheckIn/Presentation`
 
 ## HTTP Surface
 
-### WeeklyCheckInController
-
-Source: `FoodDiary.Presentation.Api/Features/WeeklyCheckIn/WeeklyCheckInController.cs`
-
-- `GET /api/v{version:apiVersion}/weekly-check-in`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: read-composer
@@ -42,7 +37,7 @@ Source: `FoodDiary.Presentation.Api/Features/WeeklyCheckIn/WeeklyCheckInControll
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 0
-- Observed external consumer groups: 3
+- Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

@@ -7,13 +7,13 @@ The repository already has the core pieces needed for an Adaptive Coach MVP:
 - existing TDEE insight query and calculator:
   - `FoodDiary.Application/Tdee/Queries/GetTdeeInsight/`
   - `FoodDiary.Application/Tdee/Services/TdeeCalculator.cs`
-  - `FoodDiary.Presentation.Api/Features/Tdee/`
+  - `Modules/Tdee/Presentation/Features/Tdee/`
   - `FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/`
 - existing weekly review surface:
   - `FoodDiary.Web.Client/src/app/features/weekly-check-in/`
-  - `FoodDiary.Presentation.Api/Features/WeeklyCheckIn/`
+  - `Modules/WeeklyCheckIn/Presentation/Features/WeeklyCheckIn/`
 - existing goals editing flow:
-  - `FoodDiary.Presentation.Api/Features/Goals/`
+  - `Modules/Users/Presentation/Features/Goals/`
   - `FoodDiary.Web.Client/src/app/features/goals/`
 - existing weight and meal data sources:
   - `FoodDiary.Application/WeightEntries/`
@@ -216,8 +216,8 @@ Update:
 - `FoodDiary.Application/Tdee/Models/TdeeInsightModel.cs`
 - `FoodDiary.Application/Tdee/Services/TdeeCalculator.cs`
 - `FoodDiary.Application/Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs`
-- `FoodDiary.Presentation.Api/Features/Tdee/Responses/TdeeInsightHttpResponse.cs`
-- `FoodDiary.Presentation.Api/Features/Tdee/Mappings/TdeeHttpMappings.cs`
+- `Modules/Tdee/Presentation/Features/Tdee/Responses/TdeeInsightHttpResponse.cs`
+- `Modules/Tdee/Presentation/Features/Tdee/Mappings/TdeeHttpMappings.cs`
 
 Add:
 
@@ -367,7 +367,7 @@ Preferred short-term approach:
 
 Existing path:
 
-- `FoodDiary.Presentation.Api/Features/Tdee/TdeeController.cs`
+- `Modules/Tdee/Presentation/Features/Tdee/TdeeController.cs`
 
 Why:
 

@@ -19,7 +19,7 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: FavoriteMeals, FavoriteProducts, FavoriteRecipes, Meals, Products, Recipes, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
@@ -30,6 +30,7 @@ sources:
 - `Modules/Favorites/Domain`
 - `Modules/Favorites/Infrastructure`
 - `Modules/Favorites/Infrastructure/Model`
+- `Modules/Favorites/Presentation`
 
 ## HTTP Surface
 
@@ -41,7 +42,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FavoriteMeal, FavoriteProduct, FavoriteRecipe
 - Public contract files: 26
-- Observed external consumer groups: 4
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

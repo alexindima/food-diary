@@ -19,28 +19,22 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/OpenFoodFacts`
 - `Modules/OpenFoodFacts/Application`
 - `Modules/OpenFoodFacts/Application/Abstractions`
 - `Modules/OpenFoodFacts/Domain`
 - `Modules/OpenFoodFacts/Infrastructure`
 - `Modules/OpenFoodFacts/Infrastructure/Model`
 - `Modules/OpenFoodFacts/Infrastructure/Providers`
+- `Modules/OpenFoodFacts/Presentation`
 
 ## HTTP Surface
 
-### OpenFoodFactsController
-
-Source: `FoodDiary.Presentation.Api/Features/OpenFoodFacts/OpenFoodFactsController.cs`
-
-- `GET /api/v{version:apiVersion}/open-food-facts/products/{barcode}`
-- `GET /api/v{version:apiVersion}/open-food-facts/products`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -48,7 +42,7 @@ Source: `FoodDiary.Presentation.Api/Features/OpenFoodFacts/OpenFoodFactsControll
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: OpenFoodFactsProduct
 - Public contract files: 4
-- Observed external consumer groups: 4
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

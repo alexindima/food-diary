@@ -996,7 +996,7 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
                 tokenize = 'unicode61 remove_diacritics 2'
             );
             INSERT INTO context_search VALUES
-                ('code', 'logs', 'FoodDiary.Presentation.Api/Features/Logs/LogsController.cs', 'logs', 'csharp', 'LogsController', 'web API telemetry logs'),
+                ('code', 'logs', 'Modules/Fasting/Presentation/Features/Logs/LogsController.cs', 'logs', 'csharp', 'LogsController', 'web API telemetry logs'),
                 ('code', 'privacy', 'FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs', 'privacy', 'csharp', 'TelemetryPrivacyProcessor', 'Sanitize SensitiveTags privacy'),
                 ('code', 'usda-query', 'FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs', 'usda-query', 'csharp', 'SearchUsdaFoodsQueryHandler', 'USDA foods search'),
                 ('code', 'usda-provider', 'FoodDiary.Integrations/Services/UsdaFoodSearchService.cs', 'usda-provider', 'csharp', 'UsdaFoodSearchService', 'HttpClient external provider'),

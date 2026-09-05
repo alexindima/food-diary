@@ -24,36 +24,16 @@ sources:
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Notifications`
 - `Modules/Notifications/Application`
 - `Modules/Notifications/Application/Abstractions`
 - `Modules/Notifications/Domain`
 - `Modules/Notifications/Infrastructure`
 - `Modules/Notifications/Infrastructure/Model`
+- `Modules/Notifications/Presentation`
 
 ## HTTP Surface
 
-### NotificationPushController
-
-Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationPushController.cs`
-
-- `GET /api/v{version:apiVersion}/notifications/push/config`
-- `GET /api/v{version:apiVersion}/notifications/push/subscriptions`
-- `PUT /api/v{version:apiVersion}/notifications/push/subscription`
-- `DELETE /api/v{version:apiVersion}/notifications/push/subscription`
-
-### NotificationsController
-
-Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationsController.cs`
-
-- `GET /api/v{version:apiVersion}/notifications`
-- `GET /api/v{version:apiVersion}/notifications/unread-count`
-- `PUT /api/v{version:apiVersion}/notifications/{notificationId:guid}/read`
-- `PUT /api/v{version:apiVersion}/notifications/read-all`
-- `POST /api/v{version:apiVersion}/notifications/test/schedule`
-- `GET /api/v{version:apiVersion}/notifications/preferences`
-- `PUT /api/v{version:apiVersion}/notifications/preferences`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner

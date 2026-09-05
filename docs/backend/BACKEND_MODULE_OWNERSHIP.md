@@ -320,7 +320,7 @@ central. No central-to-module-adapter reference is introduced. See
 
 Dietologist Relationships owns invitations, relationship permissions and recommendations. Users profile composition consumes `IDietologistInvitationReadService`; it no longer queries the Dietologist read-model repository directly. Notification production uses Notifications writer/refresh capabilities, while role changes use the Users role-membership capability.
 
-Its owned Domain, Application, Application Abstractions, EF configuration model, persistence adapters, and focused tests are physically isolated under `Modules/Dietologist`. The shared `FoodDiaryDbContext`, historical migrations, model snapshot, HTTP transport, and genuine cross-module integration tests remain central. Relationship authorization continues to flow through current-user access plus explicit relationship permissions; extraction does not expose repository implementations or broaden client-health-data access.
+Its owned Domain, Application, Application Abstractions, EF configuration model, persistence adapters, HTTP transport, and focused tests are physically isolated under `Modules/Dietologist`. The shared `FoodDiaryDbContext`, historical migrations, model snapshot, shared Presentation kernel, and genuine cross-module integration tests remain central. Relationship authorization continues to flow through current-user access plus explicit relationship permissions; extraction does not expose repository implementations or broaden client-health-data access.
 
 RecipeCommunity is the physical application module for the separate RecipeComments and RecipeLikes logical feature areas. Both may use `IRecipeAccessService` to validate the target recipe, but neither owns or loads the Recipe repository directly. Other modules consume their read services and commands rather than comment/like repositories.
 
@@ -402,7 +402,7 @@ Infrastructure. It is a read composer with no Domain or PersistenceModel. Stable
 statistics contracts retain their CLR namespaces and are referenced one-way by
 central Abstractions for Statistics/Cycles/WeeklyCheckIn/Tdee/Gamification consumers.
 Optimized projection readers own no contributing aggregates. Shared DbContext,
-migrations/model snapshot and HTTP transport remain central. Hosts explicitly call
+migrations/model snapshot and shared Presentation kernel remain central; Dashboard HTTP transport lives under its module Presentation project. Hosts explicitly call
 `AddDashboardReadServices` after infrastructure registration; Application fallback
 registration remains `AddDashboardModule`. Scoped concrete/interface aliases and
 query behavior are preserved. Owned application/adapter tests live under module

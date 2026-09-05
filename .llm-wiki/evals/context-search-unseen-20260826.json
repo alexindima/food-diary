@@ -434,7 +434,7 @@
       "query": "implementation contract for responses user desired weight http response",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Presentation.Api/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
+        "Modules/Users/Presentation/Features/Users/Responses/UserDesiredWeightHttpResponse.cs"
       ]
     },
     {
@@ -812,7 +812,7 @@
       "query": "implementation contract for favorite meal http mappings",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Presentation.Api/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs"
+        "Modules/Favorites/Presentation/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs"
       ]
     },
     {

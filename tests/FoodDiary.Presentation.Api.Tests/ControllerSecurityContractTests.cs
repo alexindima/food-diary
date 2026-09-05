@@ -147,8 +147,7 @@ public sealed class ControllerSecurityContractTests {
 
     [Fact]
     public void PresentationActions_HaveExplicitAuthorizationClassification() {
-        string[] unclassifiedActions = [.. typeof(BaseApiController).Assembly
-            .GetTypes()
+        string[] unclassifiedActions = [.. PresentationTestDiscovery.GetTypes()
             .Where(static type => !type.IsAbstract && typeof(ControllerBase).IsAssignableFrom(type))
             .SelectMany(static type => type
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
@@ -212,8 +211,7 @@ public sealed class ControllerSecurityContractTests {
     [Fact]
     public void PresentationQueryStrings_HaveExplicitTransportLengthConstraints() {
         var nullability = new NullabilityInfoContext();
-        Type[] queryTypes = [.. typeof(BaseApiController).Assembly
-            .GetTypes()
+        Type[] queryTypes = [.. PresentationTestDiscovery.GetTypes()
             .Where(static type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true)
             .Where(static type => type.Name.EndsWith("HttpQuery", StringComparison.Ordinal))];
 
@@ -233,8 +231,7 @@ public sealed class ControllerSecurityContractTests {
     [Fact]
     public void PresentationQueryNumbers_HaveExplicitOpenApiRanges() {
         Type[] numericTypes = [typeof(byte), typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal)];
-        Type[] queryTypes = [.. typeof(BaseApiController).Assembly
-            .GetTypes()
+        Type[] queryTypes = [.. PresentationTestDiscovery.GetTypes()
             .Where(static type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true)
             .Where(static type => type.Name.EndsWith("HttpQuery", StringComparison.Ordinal))];
         ParameterInfo[] numericParameters = [.. queryTypes
@@ -596,8 +593,7 @@ public sealed class ControllerSecurityContractTests {
         MethodInfo sensitiveAdminUserCreation = GetAction(
             typeof(AdminUserCreationController),
             nameof(AdminUserCreationController.CreateUser));
-        string[] missingActions = [.. typeof(BaseApiController).Assembly
-            .GetTypes()
+        string[] missingActions = [.. PresentationTestDiscovery.GetTypes()
             .Where(static type => !type.IsAbstract && typeof(ControllerBase).IsAssignableFrom(type))
             .SelectMany(static type => type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly))
             .Where(static method => method.GetCustomAttributes<HttpPostAttribute>(inherit: true).Any())

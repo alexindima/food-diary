@@ -19,37 +19,20 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: FavoriteProducts, Images, OpenFoodFacts, RecentItems, Usda, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Products`
 - `Modules/Products/Application`
 - `Modules/Products/Application/Abstractions`
 - `Modules/Products/Contracts`
+- `Modules/Products/Presentation`
+- `Modules/Products/Presentation/Features/Products`
 
 ## HTTP Surface
 
-### ProductSuggestionsController
-
-Source: `FoodDiary.Presentation.Api/Features/Products/ProductSuggestionsController.cs`
-
-- `GET /api/v{version:apiVersion}/products/suggestions`
-
-### ProductsController
-
-Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
-
-- `GET /api/v{version:apiVersion}/products`
-- `GET /api/v{version:apiVersion}/products/overview`
-- `GET /api/v{version:apiVersion}/products/recent`
-- `GET /api/v{version:apiVersion}/products/{id:guid}`
-- `POST /api/v{version:apiVersion}/products`
-- `PATCH /api/v{version:apiVersion}/products/{id:guid}`
-- `DELETE /api/v{version:apiVersion}/products/{id:guid}`
-- `POST /api/v{version:apiVersion}/products/{id:guid}/duplicate`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -57,7 +40,7 @@ Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Product
 - Public contract files: 10
-- Observed external consumer groups: 4
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

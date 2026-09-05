@@ -168,6 +168,9 @@ function Get-SourceAreaPaths {
     param([string]$ModuleName, [object]$Boundary)
 
     $candidatePaths = [Collections.Generic.List[string]]::new()
+    foreach ($logicalRoot in @(Get-BoundaryMappingValues $Boundary 'logicalRoot' @("Modules/$ModuleName"))) {
+        $candidatePaths.Add("$([string]$logicalRoot)/Presentation")
+    }
     foreach ($projectName in @(Get-BoundaryMappingValues $Boundary 'applicationProjects' @("FoodDiary.Application/$ModuleName"))) {
         $candidatePaths.Add([string]$projectName)
     }
@@ -199,6 +202,7 @@ function Get-SourceAreaPaths {
     foreach ($area in @(Get-BoundaryMappingValues $Boundary 'adapterAreas' @())) {
         $candidatePaths.Add([string]$area)
     }
+    # Keep the legacy fallback while modules are migrated incrementally.
     $candidatePaths.Add("FoodDiary.Presentation.Api/Features/$ModuleName")
 
     return @($candidatePaths | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique | Where-Object {

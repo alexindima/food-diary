@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "59f109ef55d37238c6d4114ab917dc9c3231371a6528d8df2f4553d656517519",
-    "sourceFileCount": 3530
+    "sourceFingerprint": "6b5d291af9f325eb6f4269cf0bf95c86f56c4b1a821d4529ba8300bb8d09391e",
+    "sourceFileCount": 3562
   },
   "summary": {
     "composeServices": 17,
@@ -704,7 +704,7 @@
     },
     {
       "name": "BillingWebhookController",
-      "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs",
+      "path": "Modules/Billing/Presentation/Features/Billing/BillingWebhookController.cs",
       "securitySignals": [
         "request-authentication"
       ],
@@ -770,7 +770,7 @@
     },
     {
       "name": "BillingWebhookHttpProcessor",
-      "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookHttpProcessor.cs",
+      "path": "Modules/Billing/Presentation/Features/Billing/BillingWebhookHttpProcessor.cs",
       "securitySignals": [
         "signature-validation"
       ],
@@ -817,7 +817,7 @@
     },
     {
       "name": "BillingWebhookRequestLimits",
-      "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookRequestLimits.cs",
+      "path": "Modules/Billing/Presentation/Features/Billing/BillingWebhookRequestLimits.cs",
       "securitySignals": [],
       "behaviorSignals": null,
       "behaviorSignalScope": "class-window",

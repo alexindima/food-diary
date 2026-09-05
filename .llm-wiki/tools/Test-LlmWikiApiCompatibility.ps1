@@ -654,23 +654,109 @@ if ($compareHttpDtos) {
         Compare-HttpDtoContent $BaseHttpDtoContent $CurrentHttpDtoContent $HttpDtoPath $changes
         $httpDtoPaths.Add($HttpDtoPath)
     } else {
-        $changedDtoPaths = @(
-            git -C $repositoryRoot diff --name-only --diff-filter=ACMRD $BaseRef -- 'FoodDiary.Presentation.Api/**/*.cs' |
-                Where-Object { $_ -match 'Http(?:Model|Request|Response)\.cs$' } |
-                Sort-Object -Unique
+        $changedDtoPairs = [System.Collections.Generic.List[object]]::new()
+        $nameStatusLines = @(
+            git -C $repositoryRoot diff --name-status --find-renames --diff-filter=ACMRD $BaseRef -- `
+                'FoodDiary.Presentation.Api/**/*.cs' `
+                'Modules/*/Presentation/**/*.cs' `
+                'Modules/*/Presentation.Contracts/**/*.cs'
         )
         if ($LASTEXITCODE -ne 0) { throw "Unable to collect changed HTTP DTO paths from '$BaseRef'." }
-        foreach ($path in $changedDtoPaths) {
-            $baseDtoLines = @(git -C $repositoryRoot show "${BaseRef}:$path" 2>$null)
+        foreach ($line in $nameStatusLines) {
+            $parts = @([string]$line -split "`t")
+            if ($parts.Count -lt 2) { continue }
+            $status = [string]$parts[0]
+            $beforePath = if ($status -match '^[RC]' -and $parts.Count -ge 3) {
+                [string]$parts[1]
+            } elseif ($status -eq 'A') {
+                ''
+            } else {
+                [string]$parts[1]
+            }
+            $currentPath = if ($status -match '^[RC]' -and $parts.Count -ge 3) {
+                [string]$parts[2]
+            } elseif ($status -eq 'D') {
+                ''
+            } else {
+                [string]$parts[1]
+            }
+            if ($beforePath -notmatch 'Http(?:Model|Request|Response)\.cs$' -and
+                $currentPath -notmatch 'Http(?:Model|Request|Response)\.cs$') {
+                continue
+            }
+            $changedDtoPairs.Add([pscustomobject]@{
+                beforePath = $beforePath
+                currentPath = $currentPath
+            })
+        }
+        $moduleRoot = Join-Path $repositoryRoot 'Modules'
+        $currentModuleDtoPaths = @(
+            Get-ChildItem -LiteralPath $moduleRoot -Directory |
+                ForEach-Object {
+                    $moduleDirectory = $_.FullName
+                    @('Presentation', 'Presentation.Contracts') |
+                        ForEach-Object { Join-Path $moduleDirectory $_ } |
+                        Where-Object { Test-Path -LiteralPath $_ -PathType Container } |
+                        ForEach-Object { Get-ChildItem -LiteralPath $_ -Recurse -File -Filter '*.cs' }
+                } |
+                Where-Object {
+                    $_.Name -match 'Http(?:Model|Request|Response)\.cs$' -and
+                    $_.FullName -notmatch '[\\/](?:bin|obj)[\\/]'
+                } |
+                ForEach-Object { $_.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/') } |
+                Sort-Object -Unique
+        )
+        foreach ($path in $currentModuleDtoPaths) {
+            if (@($changedDtoPairs | Where-Object currentPath -eq $path).Count -eq 0) {
+                $changedDtoPairs.Add([pscustomobject]@{ beforePath = ''; currentPath = $path })
+            }
+        }
+
+        # Git cannot identify a rename when the destination has not been staged yet
+        # or when an ignored directory name (for example, a feature named Logs) hides
+        # the destination in a temporary read-only snapshot.
+        # Pair only exact-content delete/add candidates so an edited DTO remains a
+        # conservative removal/addition until its compatibility is reviewed.
+        foreach ($deletedPair in @($changedDtoPairs | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.currentPath) })) {
+            $baseLines = @(git -C $repositoryRoot show "${BaseRef}:$($deletedPair.beforePath)" 2>$null)
+            if ($LASTEXITCODE -ne 0) { continue }
+            $baseNormalized = (($baseLines -join "`n") -replace "`r`n", "`n").TrimEnd()
+            $matchingAdds = @($changedDtoPairs | Where-Object {
+                if (-not [string]::IsNullOrWhiteSpace([string]$_.beforePath)) { return $false }
+                $candidatePath = Join-Path $repositoryRoot $_.currentPath
+                if (-not (Test-Path -LiteralPath $candidatePath -PathType Leaf)) { return $false }
+                $candidateNormalized = ((Get-Content -LiteralPath $candidatePath -Raw) -replace "`r`n", "`n").TrimEnd()
+                return $candidateNormalized -ceq $baseNormalized
+            })
+            if ($matchingAdds.Count -eq 1) {
+                $deletedPair.currentPath = [string]$matchingAdds[0].currentPath
+                [void]$changedDtoPairs.Remove($matchingAdds[0])
+            }
+        }
+        foreach ($pair in @($changedDtoPairs | Sort-Object beforePath, currentPath -Unique)) {
+            $baseDtoLines = if ([string]::IsNullOrWhiteSpace([string]$pair.beforePath)) {
+                @()
+            } else {
+                @(git -C $repositoryRoot show "${BaseRef}:$($pair.beforePath)" 2>$null)
+            }
             $baseDtoText = if ($LASTEXITCODE -eq 0) { $baseDtoLines -join [Environment]::NewLine } else { '' }
-            $absoluteDtoPath = Join-Path $repositoryRoot $path
-            $currentDtoText = if (Test-Path -LiteralPath $absoluteDtoPath) {
+            $absoluteDtoPath = if ([string]::IsNullOrWhiteSpace([string]$pair.currentPath)) {
+                $null
+            } else {
+                Join-Path $repositoryRoot $pair.currentPath
+            }
+            $currentDtoText = if ($null -ne $absoluteDtoPath -and (Test-Path -LiteralPath $absoluteDtoPath)) {
                 Get-Content -LiteralPath $absoluteDtoPath -Raw
             } else {
                 ''
             }
-            Compare-HttpDtoContent $baseDtoText $currentDtoText $path $changes
-            $httpDtoPaths.Add($path)
+            $displayPath = if (-not [string]::IsNullOrWhiteSpace([string]$pair.currentPath)) {
+                [string]$pair.currentPath
+            } else {
+                [string]$pair.beforePath
+            }
+            Compare-HttpDtoContent $baseDtoText $currentDtoText $displayPath $changes
+            $httpDtoPaths.Add($displayPath)
         }
     }
 }

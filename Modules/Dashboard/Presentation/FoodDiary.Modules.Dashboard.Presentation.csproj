@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Presentation.Api</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj" />
+    <ProjectReference Include="../../Fasting/Presentation/FoodDiary.Modules.Fasting.Presentation.csproj" />
+    <ProjectReference Include="../../Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj" />
+    <ProjectReference Include="../../Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj" />
+    <ProjectReference Include="../../Tdee/Presentation/FoodDiary.Modules.Tdee.Presentation.csproj" />
+    <ProjectReference Include="../../Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj" />
+    <ProjectReference Include="../../BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Asp.Versioning.Mvc" />
+    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.Dashboard.Application.csproj" />
+    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

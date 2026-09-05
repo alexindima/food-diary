@@ -36,7 +36,7 @@
       "id": "ru-billing-webhook-controller",
       "query": "какой HTTP контроллер принимает уведомления от платежного провайдера",
       "changeType": "Api",
-      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs"]
+      "expectedPaths": ["Modules/Billing/Presentation/Features/Billing/BillingWebhookController.cs"]
     },
     {
       "id": "ru-recipe-nutrition-recalculation",

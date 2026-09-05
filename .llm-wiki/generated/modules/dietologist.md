@@ -19,98 +19,21 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Audit, Authentication, Email, Notifications, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Dietologist`
 - `Modules/Dietologist/Application`
 - `Modules/Dietologist/Application/Abstractions`
 - `Modules/Dietologist/Domain`
 - `Modules/Dietologist/Infrastructure`
 - `Modules/Dietologist/Infrastructure/Model`
+- `Modules/Dietologist/Presentation`
 
 ## HTTP Surface
 
-### BulkRecommendationsController
-
-Source: `FoodDiary.Presentation.Api/Features/Dietologist/BulkRecommendationsController.cs`
-
-- `POST /api/v{version:apiVersion}/dietologist/recommendations/bulk`
-
-### ClientTasksController
-
-Source: `FoodDiary.Presentation.Api/Features/Dietologist/ClientTasksController.cs`
-
-- `GET /api/v{version:apiVersion}/client-tasks`
-- `PUT /api/v{version:apiVersion}/client-tasks/{taskId:guid}/status`
-
-### DietologistAttentionController
-
-Source: `FoodDiary.Presentation.Api/Features/Dietologist/DietologistAttentionController.cs`
-
-- `GET /api/v{version:apiVersion}/dietologist/clients/attention`
-- `PUT /api/v{version:apiVersion}/dietologist/clients/attention/{signalId}/state`
-
-### DietologistClientTasksController
-
-Source: `FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientTasksController.cs`
-
-- `GET /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks`
-- `POST /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks`
-- `PUT /api/v{version:apiVersion}/dietologist/clients/tasks/{taskId:guid}/cancel`
-
-### DietologistClientsController
-
-Source: `FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientsController.cs`
-
-- `GET /api/v{version:apiVersion}/dietologist/clients`
-- `DELETE /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}`
-- `GET /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/dashboard`
-- `GET /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/goals`
-- `POST /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations`
-- `GET /api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations`
-
-### DietologistController
-
-Source: `FoodDiary.Presentation.Api/Features/Dietologist/DietologistController.cs`
-
-- `POST /api/v{version:apiVersion}/dietologist/invite`
-- `DELETE /api/v{version:apiVersion}/dietologist/relationship`
-- `PUT /api/v{version:apiVersion}/dietologist/permissions`
-- `GET /api/v{version:apiVersion}/dietologist/my-dietologist`
-- `GET /api/v{version:apiVersion}/dietologist/relationship`
-
-### DietologistInvitationsController
-
-Source: `FoodDiary.Presentation.Api/Features/Dietologist/DietologistInvitationsController.cs`
-
-- `POST /api/v{version:apiVersion}/dietologist/accept`
-- `POST /api/v{version:apiVersion}/dietologist/decline`
-- `GET /api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/current-user`
-- `POST /api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/accept-current-user`
-- `POST /api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/decline-current-user`
-- `GET /api/v{version:apiVersion}/dietologist/invitation/{invitationId:guid}`
-
-### RecommendationTemplatesController
-
-Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationTemplatesController.cs`
-
-- `GET /api/v{version:apiVersion}/dietologist/recommendation-templates`
-- `POST /api/v{version:apiVersion}/dietologist/recommendation-templates`
-- `PUT /api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}`
-- `DELETE /api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}`
-
-### RecommendationsController
-
-Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsController.cs`
-
-- `GET /api/v{version:apiVersion}/recommendations`
-- `PUT /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/read`
-- `GET /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments`
-- `POST /api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -118,7 +41,7 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsControll
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ClientTask, DietologistInvitation, Recommendation, RecommendationBulkDispatch, RecommendationComment, RecommendationTemplate
 - Public contract files: 35
-- Observed external consumer groups: 4
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

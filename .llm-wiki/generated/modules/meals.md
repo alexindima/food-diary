@@ -19,33 +19,23 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Achievements, FavoriteMeals, Images, Nutrition, Products, RecentItems, Recipes, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Modules.Dashboard.Application, FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Modules.Dashboard.Application
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Meals`
 - `Modules/Meals/Application`
 - `Modules/Meals/Application/Abstractions`
 - `Modules/Meals/Contracts`
 - `Modules/Meals/Domain`
 - `Modules/Meals/Infrastructure`
 - `Modules/Meals/Infrastructure/Model`
+- `Modules/Meals/Presentation`
+- `Modules/Meals/Presentation/Features/Meals`
 
 ## HTTP Surface
 
-### MealsController
-
-Source: `FoodDiary.Presentation.Api/Features/Meals/MealsController.cs`
-
-- `GET /api/v{version:apiVersion}/meals/overview`
-- `GET /api/v{version:apiVersion}/meals`
-- `GET /api/v{version:apiVersion}/meals/{id:guid}`
-- `POST /api/v{version:apiVersion}/meals`
-- `PATCH /api/v{version:apiVersion}/meals/{id:guid}`
-- `POST /api/v{version:apiVersion}/meals/{id:guid}/repeat`
-- `DELETE /api/v{version:apiVersion}/meals/{id:guid}`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -53,7 +43,7 @@ Source: `FoodDiary.Presentation.Api/Features/Meals/MealsController.cs`
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Meal, MealItem, MealAiSession, MealAiItem
 - Public contract files: 18
-- Observed external consumer groups: 2
+- Observed external consumer groups: 1
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

@@ -19,27 +19,20 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Audit, Authentication, Dietologist, Fasting, Users, WaistEntries, WeightEntries
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Dashboard`
 - `Modules/Dashboard/Application`
 - `Modules/Dashboard/Application/Abstractions`
 - `Modules/Dashboard/Contracts`
 - `Modules/Dashboard/Infrastructure`
+- `Modules/Dashboard/Presentation`
 
 ## HTTP Surface
 
-### DashboardController
-
-Source: `FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs`
-
-- `GET /api/v{version:apiVersion}/dashboard`
-- `GET /api/v{version:apiVersion}/dashboard/advice`
-- `POST /api/v{version:apiVersion}/dashboard/test-email`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: read-composer
@@ -47,7 +40,7 @@ Source: `FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs`
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 17
-- Observed external consumer groups: 4
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

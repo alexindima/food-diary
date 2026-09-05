@@ -37,6 +37,38 @@
     <ProjectReference Include="..\..\FoodDiary.Web.Api\FoodDiary.Web.Api.csproj" />
     <ProjectReference Include="..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="..\..\Shared\FoodDiary.Authentication.Contracts\FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="../../Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Ai/Presentation/FoodDiary.Modules.Ai.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Identity/Presentation/FoodDiary.Modules.Identity.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Billing/Presentation/FoodDiary.Modules.Billing.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/ContentReports/Presentation/FoodDiary.Modules.ContentReports.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Dashboard/Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Dietologist/Presentation/FoodDiary.Modules.Dietologist.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Exercises/Presentation/FoodDiary.Modules.Exercises.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Export/Presentation/FoodDiary.Modules.Export.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Fasting/Presentation/FoodDiary.Modules.Fasting.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Favorites/Presentation/FoodDiary.Modules.Favorites.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Gamification/Presentation/FoodDiary.Modules.Gamification.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Images/Presentation/FoodDiary.Modules.Images.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Lessons/Presentation/FoodDiary.Modules.Lessons.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Notifications/Presentation/FoodDiary.Modules.Notifications.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/OpenFoodFacts/Presentation/FoodDiary.Modules.OpenFoodFacts.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Products/Presentation/FoodDiary.Modules.Products.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/RecipeCommunity/Presentation/FoodDiary.Modules.RecipeCommunity.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Recipes/Presentation/FoodDiary.Modules.Recipes.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Statistics/Presentation/FoodDiary.Modules.Statistics.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Tdee/Presentation/FoodDiary.Modules.Tdee.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Usda/Presentation/FoodDiary.Modules.Usda.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/Wearables/Presentation/FoodDiary.Modules.Wearables.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/WeeklyCheckIn/Presentation/FoodDiary.Modules.WeeklyCheckIn.Presentation.csproj" />
+    <ProjectReference Include="../../Modules/WeeklyGoals/Presentation/FoodDiary.Modules.WeeklyGoals.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

@@ -15,6 +15,6 @@ Infrastructure references the shared central DbContext one-way. Central Infrastr
 must not reference this adapter project. Hosts call AddDashboardModule for Application
 and AddDashboardReadServices after AddInfrastructure for optimized reads. The latter
 preserves concrete/interface scoped aliases and replaces fallback read registrations.
-HTTP transport, shared PostgreSQL fixtures, migrations and snapshot remain central.
+HTTP transport lives in `Modules/Dashboard/Presentation`; shared PostgreSQL fixtures, migrations, snapshot and the Presentation kernel remain central.
 
 See docs/ai/dashboard-ownership-inventory.md for retained seams and tests.

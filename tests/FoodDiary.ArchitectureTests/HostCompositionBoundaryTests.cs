@@ -116,6 +116,8 @@ public sealed class HostCompositionBoundaryTests {
             ArchitectureTestPaths.FromRoot("FoodDiary.Application"),
             ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Application.Contracts"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Presentation.Api"),
+            .. Directory.GetDirectories(ArchitectureTestPaths.FromRoot("Modules"), "Presentation", SearchOption.AllDirectories)
+                .Where(path => Directory.GetFiles(path, "*.csproj", SearchOption.TopDirectoryOnly).Length == 1),
         ];
         string[] forbiddenPatterns = [
             "FoodDiary.Web.Api.Options",
@@ -173,9 +175,13 @@ public sealed class HostCompositionBoundaryTests {
 
     [Fact]
     public void PresentationApi_UsesTimeProviderInsteadOfDirectUtcNow() {
-        string presentationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Presentation.Api");
+        string[] presentationRoots = [
+            ArchitectureTestPaths.FromRoot("FoodDiary.Presentation.Api"),
+            .. Directory.GetDirectories(ArchitectureTestPaths.FromRoot("Modules"), "Presentation", SearchOption.AllDirectories)
+                .Where(path => Directory.GetFiles(path, "*.csproj", SearchOption.TopDirectoryOnly).Length == 1),
+        ];
 
-        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, [
+        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoots, [
             "DateTime.UtcNow",
             "DateTimeOffset.UtcNow",
         ]);

@@ -13,16 +13,16 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 330,
+    "dotnetProjects": 363,
     "testProjects": 123,
     "frontendProjects": 4,
     "applicationModules": 1,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 34,
-    "controllers": 89,
-    "endpoints": 285,
-    "agentGuides": 234,
-    "documentationPages": 155
+    "controllers": 9,
+    "endpoints": 19,
+    "agentGuides": 235,
+    "documentationPages": 157
   },
   "dotnet": {
     "projects": [
@@ -471,55 +471,10 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
-          "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
-          "Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
-          "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj",
-          "Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
-          "Modules/Billing/Application/FoodDiary.Application.Billing.csproj",
-          "Modules/BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj",
-          "Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj",
-          "Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj",
-          "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj",
-          "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
-          "Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj",
-          "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj",
-          "Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj",
-          "Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj",
           "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj",
-          "Modules/Fasting/Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj",
-          "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj",
-          "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
-          "Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj",
-          "Modules/Favorites/Contracts/FoodDiary.Modules.Favorites.Contracts.csproj",
-          "Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj",
-          "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj",
           "Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
-          "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
-          "Modules/Images/Application/FoodDiary.Application.Images.csproj",
-          "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj",
-          "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj",
-          "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
-          "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
           "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
-          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
-          "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
-          "Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj",
-          "Modules/RecentItems/Application/Abstractions/FoodDiary.Modules.RecentItems.Application.Abstractions.csproj",
-          "Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj",
-          "Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj",
-          "Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj",
-          "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
-          "Modules/Usda/Application/FoodDiary.Application.Usda.csproj",
-          "Modules/Usda/Contracts/FoodDiary.Modules.Usda.Contracts.csproj",
-          "Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj",
-          "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
-          "Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj",
-          "Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj",
-          "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj",
-          "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
-          "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
           "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
@@ -573,54 +528,86 @@
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
+          "Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj",
           "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj",
           "Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj",
+          "Modules/Ai/Presentation/FoodDiary.Modules.Ai.Presentation.csproj",
           "Modules/Billing/Infrastructure/FoodDiary.Modules.Billing.Infrastructure.csproj",
+          "Modules/Billing/Presentation/FoodDiary.Modules.Billing.Presentation.csproj",
           "Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj",
           "Modules/BodyMetrics/Infrastructure/FoodDiary.Modules.BodyMetrics.Infrastructure.csproj",
+          "Modules/BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj",
           "Modules/ContentReports/Infrastructure/FoodDiary.Modules.ContentReports.Infrastructure.csproj",
+          "Modules/ContentReports/Presentation/FoodDiary.Modules.ContentReports.Presentation.csproj",
           "Modules/Cycles/Infrastructure/FoodDiary.Modules.Cycles.Infrastructure.csproj",
+          "Modules/Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj",
           "Modules/DailyAdvices/Infrastructure/FoodDiary.Modules.DailyAdvices.Infrastructure.csproj",
           "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj",
           "Modules/Dashboard/Infrastructure/FoodDiary.Modules.Dashboard.Infrastructure.csproj",
+          "Modules/Dashboard/Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj",
           "Modules/Dietologist/Infrastructure/FoodDiary.Modules.Dietologist.Infrastructure.csproj",
+          "Modules/Dietologist/Presentation/FoodDiary.Modules.Dietologist.Presentation.csproj",
           "Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj",
           "Modules/Exercises/Infrastructure/FoodDiary.Modules.Exercises.Infrastructure.csproj",
+          "Modules/Exercises/Presentation/FoodDiary.Modules.Exercises.Presentation.csproj",
           "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj",
           "Modules/Export/Infrastructure/FoodDiary.Modules.Export.Infrastructure.csproj",
+          "Modules/Export/Presentation/FoodDiary.Modules.Export.Presentation.csproj",
           "Modules/Fasting/Infrastructure/FoodDiary.Modules.Fasting.Infrastructure.csproj",
+          "Modules/Fasting/Presentation/FoodDiary.Modules.Fasting.Presentation.csproj",
           "Modules/Favorites/Infrastructure/FoodDiary.Modules.Favorites.Infrastructure.csproj",
+          "Modules/Favorites/Presentation/FoodDiary.Modules.Favorites.Presentation.csproj",
           "Modules/Gamification/Infrastructure/FoodDiary.Modules.Gamification.Infrastructure.csproj",
+          "Modules/Gamification/Presentation/FoodDiary.Modules.Gamification.Presentation.csproj",
           "Modules/Hydration/Infrastructure/FoodDiary.Modules.Hydration.Infrastructure.csproj",
+          "Modules/Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj",
           "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj",
+          "Modules/Identity/Presentation/FoodDiary.Modules.Identity.Presentation.csproj",
           "Modules/Images/Application/FoodDiary.Application.Images.csproj",
           "Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj",
+          "Modules/Images/Presentation/FoodDiary.Modules.Images.Presentation.csproj",
           "Modules/Lessons/Infrastructure/FoodDiary.Modules.Lessons.Infrastructure.csproj",
+          "Modules/Lessons/Presentation/FoodDiary.Modules.Lessons.Presentation.csproj",
           "Modules/Marketing/Infrastructure/FoodDiary.Modules.Marketing.Infrastructure.csproj",
+          "Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj",
           "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
           "Modules/MealPlanning/Infrastructure/FoodDiary.Modules.MealPlanning.Infrastructure.csproj",
+          "Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj",
           "Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj",
+          "Modules/Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj",
           "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
           "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
           "Modules/Notifications/Infrastructure/FoodDiary.Modules.Notifications.Infrastructure.csproj",
+          "Modules/Notifications/Presentation/FoodDiary.Modules.Notifications.Presentation.csproj",
           "Modules/OpenFoodFacts/Infrastructure/FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj",
+          "Modules/OpenFoodFacts/Presentation/FoodDiary.Modules.OpenFoodFacts.Presentation.csproj",
           "Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj",
           "Modules/Products/Infrastructure/FoodDiary.Modules.Products.Infrastructure.csproj",
+          "Modules/Products/Presentation/FoodDiary.Modules.Products.Presentation.csproj",
           "Modules/RecentItems/Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj",
           "Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj",
           "Modules/RecipeCommunity/Infrastructure/FoodDiary.Modules.RecipeCommunity.Infrastructure.csproj",
+          "Modules/RecipeCommunity/Presentation/FoodDiary.Modules.RecipeCommunity.Presentation.csproj",
           "Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj",
           "Modules/Recipes/Infrastructure/FoodDiary.Modules.Recipes.Infrastructure.csproj",
+          "Modules/Recipes/Presentation/FoodDiary.Modules.Recipes.Presentation.csproj",
           "Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj",
+          "Modules/Statistics/Presentation/FoodDiary.Modules.Statistics.Presentation.csproj",
           "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
+          "Modules/Tdee/Presentation/FoodDiary.Modules.Tdee.Presentation.csproj",
           "Modules/Usda/Application/FoodDiary.Application.Usda.csproj",
           "Modules/Usda/Infrastructure/FoodDiary.Modules.Usda.Infrastructure.csproj",
+          "Modules/Usda/Presentation/FoodDiary.Modules.Usda.Presentation.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj",
+          "Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj",
           "Modules/Wearables/Infrastructure/FoodDiary.Modules.Wearables.Infrastructure.csproj",
+          "Modules/Wearables/Presentation/FoodDiary.Modules.Wearables.Presentation.csproj",
           "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj",
+          "Modules/WeeklyCheckIn/Presentation/FoodDiary.Modules.WeeklyCheckIn.Presentation.csproj",
           "Modules/WeeklyGoals/Infrastructure/FoodDiary.Modules.WeeklyGoals.Infrastructure.csproj",
+          "Modules/WeeklyGoals/Presentation/FoodDiary.Modules.WeeklyGoals.Presentation.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj"
         ],
@@ -1720,6 +1707,32 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Admin.Presentation",
+        "assemblyName": "FoodDiary.Modules.Admin.Presentation",
+        "path": "Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
+          "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
+          "Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj",
+          "Modules/Fasting/Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj",
+          "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj",
+          "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Admin.Application.Tests",
         "assemblyName": "FoodDiary.Modules.Admin.Application.Tests",
         "path": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FoodDiary.Modules.Admin.Application.Tests.csproj",
@@ -2008,6 +2021,29 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Ai.Presentation",
+        "assemblyName": "FoodDiary.Modules.Ai.Presentation",
+        "path": "Modules/Ai/Presentation/FoodDiary.Modules.Ai.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
+          "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj",
+          "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Ai.Application.Tests",
         "assemblyName": "FoodDiary.Modules.Ai.Application.Tests",
         "path": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/FoodDiary.Modules.Ai.Application.Tests.csproj",
@@ -2237,6 +2273,29 @@
           },
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Billing.Presentation",
+        "assemblyName": "FoodDiary.Modules.Billing.Presentation",
+        "path": "Modules/Billing/Presentation/FoodDiary.Modules.Billing.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
+          "Modules/Billing/Application/FoodDiary.Application.Billing.csproj",
+          "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -2480,6 +2539,30 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.BodyMetrics.Presentation",
+        "assemblyName": "FoodDiary.Modules.BodyMetrics.Presentation",
+        "path": "Modules/BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj",
+          "Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj",
+          "Modules/BodyMetrics/Domain/FoodDiary.Modules.BodyMetrics.Domain.csproj",
+          "Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.BodyMetrics.Application.Tests",
         "assemblyName": "FoodDiary.Application.Tests",
         "path": "Modules/BodyMetrics/tests/FoodDiary.Modules.BodyMetrics.Application.Tests/FoodDiary.Modules.BodyMetrics.Application.Tests.csproj",
@@ -2687,6 +2770,30 @@
           },
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.ContentReports.Presentation",
+        "assemblyName": "FoodDiary.Modules.ContentReports.Presentation",
+        "path": "Modules/ContentReports/Presentation/FoodDiary.Modules.ContentReports.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/ContentReports/Application/Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj",
+          "Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj",
+          "Modules/ContentReports/Contracts/FoodDiary.Modules.ContentReports.Contracts.csproj",
+          "Modules/ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -2918,6 +3025,29 @@
           },
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Cycles.Presentation",
+        "assemblyName": "FoodDiary.Modules.Cycles.Presentation",
+        "path": "Modules/Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Cycles/Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj",
+          "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj",
+          "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -3427,6 +3557,36 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Dashboard.Presentation",
+        "assemblyName": "FoodDiary.Modules.Dashboard.Presentation",
+        "path": "Modules/Dashboard/Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj",
+          "Modules/Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj",
+          "Modules/Dashboard/Application/Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj",
+          "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj",
+          "Modules/Dashboard/Contracts/FoodDiary.Modules.Dashboard.Contracts.csproj",
+          "Modules/Fasting/Presentation/FoodDiary.Modules.Fasting.Presentation.csproj",
+          "Modules/Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj",
+          "Modules/Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj",
+          "Modules/Tdee/Presentation/FoodDiary.Modules.Tdee.Presentation.csproj",
+          "Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Dashboard.Application.Tests",
         "assemblyName": "FoodDiary.Application.Tests",
         "path": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/FoodDiary.Modules.Dashboard.Application.Tests.csproj",
@@ -3643,6 +3803,45 @@
           },
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Dietologist.Presentation.Contracts",
+        "assemblyName": "FoodDiary.Modules.Dietologist.Presentation.Contracts",
+        "path": "Modules/Dietologist/Presentation.Contracts/FoodDiary.Modules.Dietologist.Presentation.Contracts.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.Modules.Dietologist.Presentation",
+        "assemblyName": "FoodDiary.Modules.Dietologist.Presentation",
+        "path": "Modules/Dietologist/Presentation/FoodDiary.Modules.Dietologist.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Dashboard/Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj",
+          "Modules/Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj",
+          "Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj",
+          "Modules/Dietologist/Domain/FoodDiary.Modules.Dietologist.Domain.csproj",
+          "Modules/Dietologist/Presentation.Contracts/FoodDiary.Modules.Dietologist.Presentation.Contracts.csproj",
+          "Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -3912,6 +4111,30 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Exercises.Presentation",
+        "assemblyName": "FoodDiary.Modules.Exercises.Presentation",
+        "path": "Modules/Exercises/Presentation/FoodDiary.Modules.Exercises.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Exercises/Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj",
+          "Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj",
+          "Modules/Exercises/Contracts/FoodDiary.Modules.Exercises.Contracts.csproj",
+          "Modules/Exercises/Domain/FoodDiary.Modules.Exercises.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Exercises.Application.Tests",
         "assemblyName": "FoodDiary.Modules.Exercises.Application.Tests",
         "path": "Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/FoodDiary.Modules.Exercises.Application.Tests.csproj",
@@ -4061,6 +4284,28 @@
           },
           {
             "name": "SkiaSharp.NativeAssets.Linux.NoDependencies",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Export.Presentation",
+        "assemblyName": "FoodDiary.Modules.Export.Presentation",
+        "path": "Modules/Export/Presentation/FoodDiary.Modules.Export.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Export/Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj",
+          "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -4280,6 +4525,30 @@
           },
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Fasting.Presentation",
+        "assemblyName": "FoodDiary.Modules.Fasting.Presentation",
+        "path": "Modules/Fasting/Presentation/FoodDiary.Modules.Fasting.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Fasting/Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj",
+          "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj",
+          "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
+          "Modules/Fasting/Domain/FoodDiary.Modules.Fasting.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -4565,6 +4834,30 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Favorites.Presentation",
+        "assemblyName": "FoodDiary.Modules.Favorites.Presentation",
+        "path": "Modules/Favorites/Presentation/FoodDiary.Modules.Favorites.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj",
+          "Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj",
+          "Modules/Favorites/Contracts/FoodDiary.Modules.Favorites.Contracts.csproj",
+          "Modules/Favorites/Domain/FoodDiary.Modules.Favorites.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Favorites.Application.Tests",
         "assemblyName": "FoodDiary.Modules.Favorites.Application.Tests",
         "path": "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Application.Tests/FoodDiary.Modules.Favorites.Application.Tests.csproj",
@@ -4770,6 +5063,29 @@
           },
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Gamification.Presentation",
+        "assemblyName": "FoodDiary.Modules.Gamification.Presentation",
+        "path": "Modules/Gamification/Presentation/FoodDiary.Modules.Gamification.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Gamification/Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj",
+          "Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj",
+          "Modules/Gamification/Domain/FoodDiary.Modules.Gamification.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -5027,6 +5343,30 @@
           },
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Hydration.Presentation",
+        "assemblyName": "FoodDiary.Modules.Hydration.Presentation",
+        "path": "Modules/Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Hydration/Application/Abstractions/FoodDiary.Modules.Hydration.Application.Abstractions.csproj",
+          "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj",
+          "Modules/Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj",
+          "Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -5293,6 +5633,31 @@
           },
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Identity.Presentation",
+        "assemblyName": "FoodDiary.Modules.Identity.Presentation",
+        "path": "Modules/Identity/Presentation/FoodDiary.Modules.Identity.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
+          "Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
+          "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
+          "Modules/Identity/Domain/FoodDiary.Modules.Identity.Domain.csproj",
+          "Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -5617,6 +5982,30 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Images.Presentation",
+        "assemblyName": "FoodDiary.Modules.Images.Presentation",
+        "path": "Modules/Images/Presentation/FoodDiary.Modules.Images.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
+          "Modules/Images/Application/FoodDiary.Application.Images.csproj",
+          "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj",
+          "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Images.Application.Tests",
         "assemblyName": "FoodDiary.Modules.Images.Application.Tests",
         "path": "Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FoodDiary.Modules.Images.Application.Tests.csproj",
@@ -5914,6 +6303,30 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Lessons.Presentation",
+        "assemblyName": "FoodDiary.Modules.Lessons.Presentation",
+        "path": "Modules/Lessons/Presentation/FoodDiary.Modules.Lessons.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Lessons/Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj",
+          "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj",
+          "Modules/Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj",
+          "Modules/Lessons/Domain/FoodDiary.Modules.Lessons.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Lessons.Application.Tests",
         "assemblyName": "FoodDiary.Modules.Lessons.Application.Tests",
         "path": "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Application.Tests/FoodDiary.Modules.Lessons.Application.Tests.csproj",
@@ -6119,6 +6532,29 @@
           },
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Marketing.Presentation",
+        "assemblyName": "FoodDiary.Modules.Marketing.Presentation",
+        "path": "Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+          "Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj",
+          "Modules/Marketing/Domain/FoodDiary.Modules.Marketing.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -6385,6 +6821,29 @@
           },
           {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.MealPlanning.Presentation",
+        "assemblyName": "FoodDiary.Modules.MealPlanning.Presentation",
+        "path": "Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/MealPlanning/Application/Abstractions/FoodDiary.Modules.MealPlanning.Application.Abstractions.csproj",
+          "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
+          "Modules/MealPlanning/Domain/FoodDiary.Modules.MealPlanning.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -6675,6 +7134,31 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Meals.Presentation",
+        "assemblyName": "FoodDiary.Modules.Meals.Presentation",
+        "path": "Modules/Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Favorites/Presentation/FoodDiary.Modules.Favorites.Presentation.csproj",
+          "Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj",
+          "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
+          "Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj",
+          "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Meals.Application.Tests",
         "assemblyName": "FoodDiary.Application.Tests",
         "path": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/FoodDiary.Modules.Meals.Application.Tests.csproj",
@@ -6949,6 +7433,29 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Notifications.Presentation",
+        "assemblyName": "FoodDiary.Modules.Notifications.Presentation",
+        "path": "Modules/Notifications/Presentation/FoodDiary.Modules.Notifications.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Domain/FoodDiary.Modules.Notifications.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Notifications.Application.Tests",
         "assemblyName": "FoodDiary.Modules.Notifications.Application.Tests",
         "path": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Application.Tests/FoodDiary.Modules.Notifications.Application.Tests.csproj",
@@ -7217,6 +7724,30 @@
           },
           {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.OpenFoodFacts.Presentation",
+        "assemblyName": "FoodDiary.Modules.OpenFoodFacts.Presentation",
+        "path": "Modules/OpenFoodFacts/Presentation/FoodDiary.Modules.OpenFoodFacts.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/OpenFoodFacts/Application/Abstractions/FoodDiary.Modules.OpenFoodFacts.Application.Abstractions.csproj",
+          "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
+          "Modules/OpenFoodFacts/Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj",
+          "Modules/OpenFoodFacts/Domain/FoodDiary.Modules.OpenFoodFacts.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -7503,6 +8034,32 @@
           },
           {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Products.Presentation",
+        "assemblyName": "FoodDiary.Modules.Products.Presentation",
+        "path": "Modules/Products/Presentation/FoodDiary.Modules.Products.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Favorites/Presentation/FoodDiary.Modules.Favorites.Presentation.csproj",
+          "Modules/Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj",
+          "Modules/Products/Application/FoodDiary.Modules.Products.Application.csproj",
+          "Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj",
+          "Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj",
+          "Modules/Products/Domain/FoodDiary.Modules.Products.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -7968,6 +8525,29 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.RecipeCommunity.Presentation",
+        "assemblyName": "FoodDiary.Modules.RecipeCommunity.Presentation",
+        "path": "Modules/RecipeCommunity/Presentation/FoodDiary.Modules.RecipeCommunity.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/RecipeCommunity/Application/Abstractions/FoodDiary.Modules.RecipeCommunity.Application.Abstractions.csproj",
+          "Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj",
+          "Modules/RecipeCommunity/Domain/FoodDiary.Modules.RecipeCommunity.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.RecipeCommunity.Application.Tests",
         "assemblyName": "FoodDiary.Modules.RecipeCommunity.Application.Tests",
         "path": "Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Application.Tests/FoodDiary.Modules.RecipeCommunity.Application.Tests.csproj",
@@ -8218,6 +8798,32 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Recipes.Presentation",
+        "assemblyName": "FoodDiary.Modules.Recipes.Presentation",
+        "path": "Modules/Recipes/Presentation/FoodDiary.Modules.Recipes.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Favorites/Presentation/FoodDiary.Modules.Favorites.Presentation.csproj",
+          "Modules/Recipes/Application/Abstractions/FoodDiary.Modules.Recipes.Application.Abstractions.csproj",
+          "Modules/Recipes/Application/FoodDiary.Modules.Recipes.Application.csproj",
+          "Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj",
+          "Modules/Recipes/Domain.Contracts/FoodDiary.Modules.Recipes.Domain.Contracts.csproj",
+          "Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Recipes.Application.Tests",
         "assemblyName": "FoodDiary.Modules.Recipes.Application.Tests",
         "path": "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/FoodDiary.Modules.Recipes.Application.Tests.csproj",
@@ -8325,6 +8931,28 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Statistics.Presentation",
+        "assemblyName": "FoodDiary.Modules.Statistics.Presentation",
+        "path": "Modules/Statistics/Presentation/FoodDiary.Modules.Statistics.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj",
+          "Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Statistics.Application.Tests",
         "assemblyName": "FoodDiary.Application.Tests",
         "path": "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/FoodDiary.Modules.Statistics.Application.Tests.csproj",
@@ -8395,6 +9023,27 @@
           },
           {
             "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Tdee.Presentation",
+        "assemblyName": "FoodDiary.Modules.Tdee.Presentation",
+        "path": "Modules/Tdee/Presentation/FoodDiary.Modules.Tdee.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -8592,6 +9241,30 @@
           },
           {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Usda.Presentation",
+        "assemblyName": "FoodDiary.Modules.Usda.Presentation",
+        "path": "Modules/Usda/Presentation/FoodDiary.Modules.Usda.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Usda/Application/Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj",
+          "Modules/Usda/Application/FoodDiary.Application.Usda.csproj",
+          "Modules/Usda/Contracts/FoodDiary.Modules.Usda.Contracts.csproj",
+          "Modules/Usda/Domain/FoodDiary.Modules.Usda.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -8856,6 +9529,33 @@
           },
           {
             "name": "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.Users.Presentation",
+        "assemblyName": "FoodDiary.Modules.Users.Presentation",
+        "path": "Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Dietologist/Presentation.Contracts/FoodDiary.Modules.Dietologist.Presentation.Contracts.csproj",
+          "Modules/Notifications/Presentation/FoodDiary.Modules.Notifications.Presentation.csproj",
+          "Modules/Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj",
+          "Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj",
+          "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
+          "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
+          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -9149,6 +9849,29 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.Wearables.Presentation",
+        "assemblyName": "FoodDiary.Modules.Wearables.Presentation",
+        "path": "Modules/Wearables/Presentation/FoodDiary.Modules.Wearables.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj",
+          "Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj",
+          "Modules/Wearables/Domain/FoodDiary.Modules.Wearables.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.Wearables.Application.Tests",
         "assemblyName": "FoodDiary.Modules.Wearables.Application.Tests",
         "path": "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Application.Tests/FoodDiary.Modules.Wearables.Application.Tests.csproj",
@@ -9348,6 +10071,27 @@
         ]
       },
       {
+        "name": "FoodDiary.Modules.WeeklyCheckIn.Presentation",
+        "assemblyName": "FoodDiary.Modules.WeeklyCheckIn.Presentation",
+        "path": "Modules/WeeklyCheckIn/Presentation/FoodDiary.Modules.WeeklyCheckIn.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Modules.WeeklyCheckIn.Application.Tests",
         "assemblyName": "FoodDiary.Modules.WeeklyCheckIn.Application.Tests",
         "path": "Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests.csproj",
@@ -9525,6 +10269,30 @@
           },
           {
             "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.Modules.WeeklyGoals.Presentation",
+        "assemblyName": "FoodDiary.Modules.WeeklyGoals.Presentation",
+        "path": "Modules/WeeklyGoals/Presentation/FoodDiary.Modules.WeeklyGoals.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
+          "Modules/WeeklyGoals/Application/Abstractions/FoodDiary.Modules.WeeklyGoals.Application.Abstractions.csproj",
+          "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj",
+          "Modules/WeeklyGoals/Contracts/FoodDiary.Modules.WeeklyGoals.Contracts.csproj",
+          "Modules/WeeklyGoals/Domain/FoodDiary.Modules.WeeklyGoals.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Asp.Versioning.Mvc",
             "version": null
           }
         ]
@@ -10432,47 +11200,80 @@
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
           "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
+          "Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj",
           "Modules/Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj",
           "Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj",
+          "Modules/Ai/Presentation/FoodDiary.Modules.Ai.Presentation.csproj",
           "Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj",
           "Modules/Billing/Application/FoodDiary.Application.Billing.csproj",
+          "Modules/Billing/Presentation/FoodDiary.Modules.Billing.Presentation.csproj",
           "Modules/BodyMetrics/Application/Abstractions/FoodDiary.Modules.BodyMetrics.Application.Abstractions.csproj",
           "Modules/BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj",
+          "Modules/BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj",
           "Modules/ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj",
+          "Modules/ContentReports/Presentation/FoodDiary.Modules.ContentReports.Presentation.csproj",
           "Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj",
           "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
+          "Modules/Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj",
           "Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj",
           "Modules/Dashboard/Application/FoodDiary.Modules.Dashboard.Application.csproj",
+          "Modules/Dashboard/Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj",
           "Modules/Dietologist/Application/FoodDiary.Modules.Dietologist.Application.csproj",
+          "Modules/Dietologist/Presentation.Contracts/FoodDiary.Modules.Dietologist.Presentation.Contracts.csproj",
+          "Modules/Dietologist/Presentation/FoodDiary.Modules.Dietologist.Presentation.csproj",
           "Modules/Exercises/Application/FoodDiary.Application.Exercises.csproj",
+          "Modules/Exercises/Presentation/FoodDiary.Modules.Exercises.Presentation.csproj",
           "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj",
+          "Modules/Export/Presentation/FoodDiary.Modules.Export.Presentation.csproj",
           "Modules/Fasting/Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj",
           "Modules/Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj",
           "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
+          "Modules/Fasting/Presentation/FoodDiary.Modules.Fasting.Presentation.csproj",
           "Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj",
+          "Modules/Favorites/Presentation/FoodDiary.Modules.Favorites.Presentation.csproj",
           "Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj",
+          "Modules/Gamification/Presentation/FoodDiary.Modules.Gamification.Presentation.csproj",
           "Modules/Hydration/Application/FoodDiary.Modules.Hydration.Application.csproj",
+          "Modules/Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj",
           "Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
           "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
+          "Modules/Identity/Presentation/FoodDiary.Modules.Identity.Presentation.csproj",
           "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
           "Modules/Images/Application/FoodDiary.Application.Images.csproj",
+          "Modules/Images/Presentation/FoodDiary.Modules.Images.Presentation.csproj",
           "Modules/Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj",
+          "Modules/Lessons/Presentation/FoodDiary.Modules.Lessons.Presentation.csproj",
           "Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj",
+          "Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj",
           "Modules/MealPlanning/Application/FoodDiary.Application.MealPlanning.csproj",
+          "Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj",
           "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj",
+          "Modules/Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj",
           "Modules/Notifications/Application/FoodDiary.Application.Notifications.csproj",
+          "Modules/Notifications/Presentation/FoodDiary.Modules.Notifications.Presentation.csproj",
           "Modules/OpenFoodFacts/Application/FoodDiary.Modules.OpenFoodFacts.Application.csproj",
+          "Modules/OpenFoodFacts/Presentation/FoodDiary.Modules.OpenFoodFacts.Presentation.csproj",
           "Modules/Products/Application/Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj",
+          "Modules/Products/Presentation/FoodDiary.Modules.Products.Presentation.csproj",
           "Modules/RecipeCommunity/Application/FoodDiary.Application.RecipeCommunity.csproj",
+          "Modules/RecipeCommunity/Presentation/FoodDiary.Modules.RecipeCommunity.Presentation.csproj",
+          "Modules/Recipes/Presentation/FoodDiary.Modules.Recipes.Presentation.csproj",
           "Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj",
+          "Modules/Statistics/Presentation/FoodDiary.Modules.Statistics.Presentation.csproj",
           "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj",
+          "Modules/Tdee/Presentation/FoodDiary.Modules.Tdee.Presentation.csproj",
           "Modules/Usda/Application/Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj",
           "Modules/Usda/Application/FoodDiary.Application.Usda.csproj",
+          "Modules/Usda/Presentation/FoodDiary.Modules.Usda.Presentation.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj",
           "Modules/Wearables/Application/FoodDiary.Application.Wearables.csproj",
+          "Modules/Wearables/Presentation/FoodDiary.Modules.Wearables.Presentation.csproj",
           "Modules/WeeklyCheckIn/Application/FoodDiary.Modules.WeeklyCheckIn.Application.csproj",
+          "Modules/WeeklyCheckIn/Presentation/FoodDiary.Modules.WeeklyCheckIn.Presentation.csproj",
           "Modules/WeeklyGoals/Application/FoodDiary.Modules.WeeklyGoals.Application.csproj",
+          "Modules/WeeklyGoals/Presentation/FoodDiary.Modules.WeeklyGoals.Presentation.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
         ],
@@ -10567,14 +11368,46 @@
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
           "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
+          "Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj",
+          "Modules/Ai/Presentation/FoodDiary.Modules.Ai.Presentation.csproj",
+          "Modules/Billing/Presentation/FoodDiary.Modules.Billing.Presentation.csproj",
+          "Modules/BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj",
+          "Modules/ContentReports/Presentation/FoodDiary.Modules.ContentReports.Presentation.csproj",
           "Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj",
+          "Modules/Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj",
+          "Modules/Dashboard/Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj",
+          "Modules/Dietologist/Presentation/FoodDiary.Modules.Dietologist.Presentation.csproj",
+          "Modules/Exercises/Presentation/FoodDiary.Modules.Exercises.Presentation.csproj",
+          "Modules/Export/Presentation/FoodDiary.Modules.Export.Presentation.csproj",
+          "Modules/Fasting/Presentation/FoodDiary.Modules.Fasting.Presentation.csproj",
+          "Modules/Favorites/Presentation/FoodDiary.Modules.Favorites.Presentation.csproj",
+          "Modules/Gamification/Presentation/FoodDiary.Modules.Gamification.Presentation.csproj",
+          "Modules/Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj",
           "Modules/Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj",
+          "Modules/Identity/Presentation/FoodDiary.Modules.Identity.Presentation.csproj",
           "Modules/Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj",
+          "Modules/Images/Presentation/FoodDiary.Modules.Images.Presentation.csproj",
+          "Modules/Lessons/Presentation/FoodDiary.Modules.Lessons.Presentation.csproj",
+          "Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj",
+          "Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj",
           "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
+          "Modules/Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj",
+          "Modules/Notifications/Presentation/FoodDiary.Modules.Notifications.Presentation.csproj",
+          "Modules/OpenFoodFacts/Presentation/FoodDiary.Modules.OpenFoodFacts.Presentation.csproj",
           "Modules/Products/Contracts/FoodDiary.Modules.Products.Contracts.csproj",
           "Modules/Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj",
+          "Modules/Products/Presentation/FoodDiary.Modules.Products.Presentation.csproj",
+          "Modules/RecipeCommunity/Presentation/FoodDiary.Modules.RecipeCommunity.Presentation.csproj",
           "Modules/Recipes/Contracts/FoodDiary.Modules.Recipes.Contracts.csproj",
+          "Modules/Recipes/Presentation/FoodDiary.Modules.Recipes.Presentation.csproj",
+          "Modules/Statistics/Presentation/FoodDiary.Modules.Statistics.Presentation.csproj",
+          "Modules/Tdee/Presentation/FoodDiary.Modules.Tdee.Presentation.csproj",
+          "Modules/Usda/Presentation/FoodDiary.Modules.Usda.Presentation.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
+          "Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj",
+          "Modules/Wearables/Presentation/FoodDiary.Modules.Wearables.Presentation.csproj",
+          "Modules/WeeklyCheckIn/Presentation/FoodDiary.Modules.WeeklyCheckIn.Presentation.csproj",
+          "Modules/WeeklyGoals/Presentation/FoodDiary.Modules.WeeklyGoals.Presentation.csproj",
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
           "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
@@ -10640,8 +11473,40 @@
           "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
           "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj",
           "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
+          "Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj",
+          "Modules/Ai/Presentation/FoodDiary.Modules.Ai.Presentation.csproj",
+          "Modules/Billing/Presentation/FoodDiary.Modules.Billing.Presentation.csproj",
+          "Modules/BodyMetrics/Presentation/FoodDiary.Modules.BodyMetrics.Presentation.csproj",
+          "Modules/ContentReports/Presentation/FoodDiary.Modules.ContentReports.Presentation.csproj",
+          "Modules/Cycles/Presentation/FoodDiary.Modules.Cycles.Presentation.csproj",
+          "Modules/Dashboard/Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj",
+          "Modules/Dietologist/Presentation/FoodDiary.Modules.Dietologist.Presentation.csproj",
+          "Modules/Exercises/Presentation/FoodDiary.Modules.Exercises.Presentation.csproj",
+          "Modules/Export/Presentation/FoodDiary.Modules.Export.Presentation.csproj",
+          "Modules/Fasting/Presentation/FoodDiary.Modules.Fasting.Presentation.csproj",
+          "Modules/Favorites/Presentation/FoodDiary.Modules.Favorites.Presentation.csproj",
+          "Modules/Gamification/Presentation/FoodDiary.Modules.Gamification.Presentation.csproj",
+          "Modules/Hydration/Presentation/FoodDiary.Modules.Hydration.Presentation.csproj",
+          "Modules/Identity/Presentation/FoodDiary.Modules.Identity.Presentation.csproj",
+          "Modules/Images/Presentation/FoodDiary.Modules.Images.Presentation.csproj",
+          "Modules/Lessons/Presentation/FoodDiary.Modules.Lessons.Presentation.csproj",
+          "Modules/Marketing/Presentation/FoodDiary.Modules.Marketing.Presentation.csproj",
+          "Modules/MealPlanning/Presentation/FoodDiary.Modules.MealPlanning.Presentation.csproj",
+          "Modules/Meals/Presentation/FoodDiary.Modules.Meals.Presentation.csproj",
           "Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj",
+          "Modules/Notifications/Presentation/FoodDiary.Modules.Notifications.Presentation.csproj",
+          "Modules/OpenFoodFacts/Presentation/FoodDiary.Modules.OpenFoodFacts.Presentation.csproj",
+          "Modules/Products/Presentation/FoodDiary.Modules.Products.Presentation.csproj",
+          "Modules/RecipeCommunity/Presentation/FoodDiary.Modules.RecipeCommunity.Presentation.csproj",
+          "Modules/Recipes/Presentation/FoodDiary.Modules.Recipes.Presentation.csproj",
+          "Modules/Statistics/Presentation/FoodDiary.Modules.Statistics.Presentation.csproj",
+          "Modules/Tdee/Presentation/FoodDiary.Modules.Tdee.Presentation.csproj",
+          "Modules/Usda/Presentation/FoodDiary.Modules.Usda.Presentation.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
+          "Modules/Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj",
+          "Modules/Wearables/Presentation/FoodDiary.Modules.Wearables.Presentation.csproj",
+          "Modules/WeeklyCheckIn/Presentation/FoodDiary.Modules.WeeklyCheckIn.Presentation.csproj",
+          "Modules/WeeklyGoals/Presentation/FoodDiary.Modules.WeeklyGoals.Presentation.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj"
         ],
@@ -11077,1746 +11942,6 @@
     "extraction": "Literal ASP.NET Core Http* and controller Route attributes",
     "controllers": [
       {
-        "name": "AdminAchievementDefinitionsController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminAchievementDefinitionsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/achievement-definitions",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/achievement-definitions",
-            "line": 19
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/admin/achievement-definitions",
-            "line": 25
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/admin/achievement-definitions/{id:guid}",
-            "line": 33
-          }
-        ]
-      },
-      {
-        "name": "AdminAcquisitionController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminAcquisitionController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/acquisition",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/acquisition/summary",
-            "line": 17
-          }
-        ]
-      },
-      {
-        "name": "AdminAiPromptsController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminAiPromptsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/ai-prompts",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/ai-prompts",
-            "line": 18
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/admin/ai-prompts/{key:maxlength(64)}/{locale:maxlength(10)}",
-            "line": 23
-          }
-        ]
-      },
-      {
-        "name": "AdminAiUsageController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminAiUsageController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/ai-usage",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/ai-usage/summary",
-            "line": 19
-          }
-        ]
-      },
-      {
-        "name": "AdminBillingController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminBillingController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/billing",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/billing/revenue-summary",
-            "line": 18
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/billing/subscriptions",
-            "line": 24
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/billing/payments",
-            "line": 30
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/billing/webhook-events",
-            "line": 36
-          }
-        ]
-      },
-      {
-        "name": "AdminCollaborationAuditController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminCollaborationAuditController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/users/collaboration-audit",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/users/collaboration-audit",
-            "line": 18
-          }
-        ]
-      },
-      {
-        "name": "AdminDashboardController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminDashboardController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/dashboard",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/dashboard",
-            "line": 17
-          }
-        ]
-      },
-      {
-        "name": "AdminEmailTemplatesController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminEmailTemplatesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/email-templates",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/email-templates",
-            "line": 21
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/admin/email-templates/{key:maxlength(64)}/{locale:maxlength(10)}",
-            "line": 26
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/admin/email-templates/test",
-            "line": 35
-          }
-        ]
-      },
-      {
-        "name": "AdminLessonsController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminLessonsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/lessons",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/lessons",
-            "line": 20
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/admin/lessons",
-            "line": 26
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/admin/lessons/import",
-            "line": 33
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/admin/lessons/{id:guid}",
-            "line": 44
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/admin/lessons/{id:guid}",
-            "line": 51
-          }
-        ]
-      },
-      {
-        "name": "AdminMailInboxController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminMailInboxController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/mail-inbox/messages",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/mail-inbox/messages",
-            "line": 18
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/mail-inbox/messages/{id:guid}",
-            "line": 24
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/admin/mail-inbox/messages/{id:guid}/read",
-            "line": 30
-          }
-        ]
-      },
-      {
-        "name": "AdminModerationController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminModerationController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/moderation",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/moderation",
-            "line": 18
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/admin/moderation/{id:guid}/review",
-            "line": 24
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/admin/moderation/{id:guid}/dismiss",
-            "line": 33
-          }
-        ]
-      },
-      {
-        "name": "AdminTelemetryController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminTelemetryController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/telemetry",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/telemetry/fasting",
-            "line": 17
-          }
-        ]
-      },
-      {
-        "name": "AdminUserCreationController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminUserCreationController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/users",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/admin/users",
-            "line": 18
-          }
-        ]
-      },
-      {
-        "name": "AdminUserPasswordController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminUserPasswordController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/users/{id:guid}/password",
-        "endpoints": [
-          {
-            "verb": "PATCH",
-            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/password",
-            "line": 17
-          }
-        ]
-      },
-      {
-        "name": "AdminUsersController",
-        "path": "FoodDiary.Presentation.Api/Features/Admin/AdminUsersController.cs",
-        "routePrefix": "api/v{version:apiVersion}/admin/users",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/users",
-            "line": 18
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}",
-            "line": 24
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/role-audit",
-            "line": 31
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/users/impersonation-sessions",
-            "line": 38
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/users/login-events",
-            "line": 44
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/admin/users/login-summary",
-            "line": 50
-          },
-          {
-            "verb": "PATCH",
-            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}",
-            "line": 56
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/admin/users/{id:guid}/impersonation",
-            "line": 66
-          }
-        ]
-      },
-      {
-        "name": "AiFoodController",
-        "path": "FoodDiary.Presentation.Api/Features/Ai/AiFoodController.cs",
-        "routePrefix": "api/v{version:apiVersion}/ai/food",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/ai/food/vision",
-            "line": 25
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/ai/food/text",
-            "line": 34
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/ai/food/nutrition",
-            "line": 43
-          }
-        ]
-      },
-      {
-        "name": "AiUsageController",
-        "path": "FoodDiary.Presentation.Api/Features/Ai/AiUsageController.cs",
-        "routePrefix": "api/v{version:apiVersion}/ai/usage",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/ai/usage/me",
-            "line": 15
-          }
-        ]
-      },
-      {
-        "name": "AdminSsoController",
-        "path": "FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs",
-        "routePrefix": "api/v{version:apiVersion}/auth/admin-sso",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/admin-sso/start",
-            "line": 22
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/admin-sso/exchange",
-            "line": 28
-          }
-        ]
-      },
-      {
-        "name": "AuthImpersonationController",
-        "path": "FoodDiary.Presentation.Api/Features/Auth/AuthImpersonationController.cs",
-        "routePrefix": "api/v{version:apiVersion}/auth/impersonation",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/impersonation/exchange",
-            "line": 24
-          }
-        ]
-      },
-      {
-        "name": "AuthPasswordController",
-        "path": "FoodDiary.Presentation.Api/Features/Auth/AuthPasswordController.cs",
-        "routePrefix": "api/v{version:apiVersion}/auth/password-reset",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/password-reset/request",
-            "line": 25
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/password-reset/confirm",
-            "line": 32
-          }
-        ]
-      },
-      {
-        "name": "AuthSessionController",
-        "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
-        "routePrefix": "api/v{version:apiVersion}/auth",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/register",
-            "line": 28
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/login",
-            "line": 38
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/google",
-            "line": 47
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/google/link",
-            "line": 58
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/refresh",
-            "line": 70
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/restore",
-            "line": 79
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/verify-email",
-            "line": 89
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/verify-email/resend",
-            "line": 101
-          }
-        ]
-      },
-      {
-        "name": "AuthSessionLifecycleController",
-        "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs",
-        "routePrefix": "api/v{version:apiVersion}/auth",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/auth/sessions",
-            "line": 26
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/auth/sessions/{sessionId:guid}",
-            "line": 38
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/auth/sessions",
-            "line": 49
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/logout",
-            "line": 58
-          }
-        ]
-      },
-      {
-        "name": "AuthTelegramController",
-        "path": "FoodDiary.Presentation.Api/Features/Auth/AuthTelegramController.cs",
-        "routePrefix": "api/v{version:apiVersion}/auth/telegram",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/telegram/verify",
-            "line": 26
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/telegram/login-widget",
-            "line": 37
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/telegram/link",
-            "line": 48
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/auth/telegram/bot/auth",
-            "line": 60
-          }
-        ]
-      },
-      {
-        "name": "BillingController",
-        "path": "FoodDiary.Presentation.Api/Features/Billing/BillingController.cs",
-        "routePrefix": "api/v{version:apiVersion}/billing",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/billing/overview",
-            "line": 21
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/billing/trial",
-            "line": 27
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/billing/checkout-session",
-            "line": 35
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/billing/portal-session",
-            "line": 49
-          }
-        ]
-      },
-      {
-        "name": "BillingWebhookController",
-        "path": "FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs",
-        "routePrefix": "api/v{version:apiVersion}/billing/webhooks/{provider}",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/billing/webhooks/{provider}",
-            "line": 18
-          }
-        ]
-      },
-      {
-        "name": "ContentReportsController",
-        "path": "FoodDiary.Presentation.Api/Features/ContentReports/ContentReportsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/reports",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/reports",
-            "line": 16
-          }
-        ]
-      },
-      {
-        "name": "CycleLogsController",
-        "path": "FoodDiary.Presentation.Api/Features/Cycles/CycleLogsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/cycles",
-        "endpoints": [
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
-            "line": 15
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
-            "line": 22
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors",
-            "line": 29
-          }
-        ]
-      },
-      {
-        "name": "CyclesController",
-        "path": "FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/cycles",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/cycles/current",
-            "line": 16
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/cycles/current/nutrition-summary",
-            "line": 22
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/cycles",
-            "line": 32
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}",
-            "line": 39
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/settings",
-            "line": 46
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/consents/{purpose:int}",
-            "line": 56
-          }
-        ]
-      },
-      {
-        "name": "MenstrualEpisodesController",
-        "path": "FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/cycles",
-        "endpoints": [
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/period-start",
-            "line": 15
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}",
-            "line": 25
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}",
-            "line": 36
-          }
-        ]
-      },
-      {
-        "name": "DashboardController",
-        "path": "FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs",
-        "routePrefix": "api/v{version:apiVersion}/dashboard",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dashboard",
-            "line": 19
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dashboard/advice",
-            "line": 26
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/dashboard/test-email",
-            "line": 32
-          }
-        ]
-      },
-      {
-        "name": "BulkRecommendationsController",
-        "path": "FoodDiary.Presentation.Api/Features/Dietologist/BulkRecommendationsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/dietologist/recommendations/bulk",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/dietologist/recommendations/bulk",
-            "line": 20
-          }
-        ]
-      },
-      {
-        "name": "ClientTasksController",
-        "path": "FoodDiary.Presentation.Api/Features/Dietologist/ClientTasksController.cs",
-        "routePrefix": "api/v{version:apiVersion}/client-tasks",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/client-tasks",
-            "line": 15
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/client-tasks/{taskId:guid}/status",
-            "line": 20
-          }
-        ]
-      },
-      {
-        "name": "DietologistAttentionController",
-        "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistAttentionController.cs",
-        "routePrefix": "api/v{version:apiVersion}/dietologist/clients/attention",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dietologist/clients/attention",
-            "line": 19
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/dietologist/clients/attention/{signalId}/state",
-            "line": 26
-          }
-        ]
-      },
-      {
-        "name": "DietologistClientsController",
-        "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/dietologist/clients",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dietologist/clients",
-            "line": 23
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}",
-            "line": 28
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/dashboard",
-            "line": 34
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/goals",
-            "line": 46
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations",
-            "line": 52
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/recommendations",
-            "line": 64
-          }
-        ]
-      },
-      {
-        "name": "DietologistClientTasksController",
-        "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistClientTasksController.cs",
-        "routePrefix": "api/v{version:apiVersion}/dietologist/clients",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks",
-            "line": 19
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/dietologist/clients/{clientUserId:guid}/tasks",
-            "line": 24
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/dietologist/clients/tasks/{taskId:guid}/cancel",
-            "line": 37
-          }
-        ]
-      },
-      {
-        "name": "DietologistController",
-        "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistController.cs",
-        "routePrefix": "api/v{version:apiVersion}/dietologist",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/dietologist/invite",
-            "line": 17
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/dietologist/relationship",
-            "line": 26
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/dietologist/permissions",
-            "line": 33
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dietologist/my-dietologist",
-            "line": 40
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dietologist/relationship",
-            "line": 46
-          }
-        ]
-      },
-      {
-        "name": "DietologistInvitationsController",
-        "path": "FoodDiary.Presentation.Api/Features/Dietologist/DietologistInvitationsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/dietologist",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/dietologist/accept",
-            "line": 18
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/dietologist/decline",
-            "line": 28
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/current-user",
-            "line": 37
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/accept-current-user",
-            "line": 43
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/dietologist/invitations/{invitationId:guid}/decline-current-user",
-            "line": 51
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dietologist/invitation/{invitationId:guid}",
-            "line": 59
-          }
-        ]
-      },
-      {
-        "name": "RecommendationsController",
-        "path": "FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/recommendations",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/recommendations",
-            "line": 16
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/recommendations/{recommendationId:guid}/read",
-            "line": 21
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments",
-            "line": 27
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/recommendations/{recommendationId:guid}/comments",
-            "line": 35
-          }
-        ]
-      },
-      {
-        "name": "RecommendationTemplatesController",
-        "path": "FoodDiary.Presentation.Api/Features/Dietologist/RecommendationTemplatesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/dietologist/recommendation-templates",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates",
-            "line": 20
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates",
-            "line": 31
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}",
-            "line": 40
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/dietologist/recommendation-templates/{templateId:guid}",
-            "line": 49
-          }
-        ]
-      },
-      {
-        "name": "ExercisesController",
-        "path": "FoodDiary.Presentation.Api/Features/Exercises/ExercisesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/exercises",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/exercises",
-            "line": 16
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/exercises",
-            "line": 25
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/exercises/{id:guid}",
-            "line": 34
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/exercises/{id:guid}",
-            "line": 44
-          }
-        ]
-      },
-      {
-        "name": "ExportController",
-        "path": "FoodDiary.Presentation.Api/Features/Export/ExportController.cs",
-        "routePrefix": "api/v{version:apiVersion}/export",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/export/diary",
-            "line": 18
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/export/cycle",
-            "line": 34
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/export/cycle/sensitive",
-            "line": 47
-          }
-        ]
-      },
-      {
-        "name": "FastingController",
-        "path": "FoodDiary.Presentation.Api/Features/Fasting/FastingController.cs",
-        "routePrefix": "api/v{version:apiVersion}/fasting",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/fasting/start",
-            "line": 15
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/fasting/end",
-            "line": 22
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/fasting/current/duration",
-            "line": 28
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/fasting/current/duration/reduce",
-            "line": 35
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/fasting/current/check-in",
-            "line": 42
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/fasting/current/skip-day",
-            "line": 49
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/fasting/current/postpone-day",
-            "line": 56
-          }
-        ]
-      },
-      {
-        "name": "FastingInsightsController",
-        "path": "FoodDiary.Presentation.Api/Features/Fasting/FastingInsightsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/fasting",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/fasting/stats",
-            "line": 13
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/fasting/insights",
-            "line": 18
-          }
-        ]
-      },
-      {
-        "name": "FastingReadController",
-        "path": "FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs",
-        "routePrefix": "api/v{version:apiVersion}/fasting",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/fasting/current",
-            "line": 15
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/fasting/overview",
-            "line": 21
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/fasting/history",
-            "line": 26
-          }
-        ]
-      },
-      {
-        "name": "FavoriteMealsController",
-        "path": "FoodDiary.Presentation.Api/Features/FavoriteMeals/FavoriteMealsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/favorite-meals",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/favorite-meals",
-            "line": 15
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/favorite-meals/check/{mealId:guid}",
-            "line": 20
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/favorite-meals",
-            "line": 25
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/favorite-meals/{id:guid}",
-            "line": 32
-          }
-        ]
-      },
-      {
-        "name": "FavoriteProductsController",
-        "path": "FoodDiary.Presentation.Api/Features/FavoriteProducts/FavoriteProductsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/favorite-products",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/favorite-products",
-            "line": 15
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/favorite-products/check/{productId:guid}",
-            "line": 20
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/favorite-products",
-            "line": 25
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/favorite-products/{id:guid}",
-            "line": 32
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/favorite-products/{id:guid}",
-            "line": 39
-          }
-        ]
-      },
-      {
-        "name": "FavoriteRecipesController",
-        "path": "FoodDiary.Presentation.Api/Features/FavoriteRecipes/FavoriteRecipesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/favorite-recipes",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/favorite-recipes",
-            "line": 15
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/favorite-recipes/check/{recipeId:guid}",
-            "line": 20
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/favorite-recipes",
-            "line": 25
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/favorite-recipes/{id:guid}",
-            "line": 32
-          }
-        ]
-      },
-      {
-        "name": "GamificationController",
-        "path": "FoodDiary.Presentation.Api/Features/Gamification/GamificationController.cs",
-        "routePrefix": "api/v{version:apiVersion}/gamification",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/gamification",
-            "line": 13
-          }
-        ]
-      },
-      {
-        "name": "GoalsController",
-        "path": "FoodDiary.Presentation.Api/Features/Goals/GoalsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/goals",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/goals",
-            "line": 15
-          },
-          {
-            "verb": "PATCH",
-            "route": "/api/v{version:apiVersion}/goals",
-            "line": 21
-          }
-        ]
-      },
-      {
-        "name": "HydrationEntriesController",
-        "path": "FoodDiary.Presentation.Api/Features/Hydration/HydrationEntriesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/hydrations",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/hydrations",
-            "line": 16
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/hydrations/daily",
-            "line": 22
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/hydrations",
-            "line": 28
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/hydrations/{id:guid}",
-            "line": 36
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/hydrations/{id:guid}",
-            "line": 44
-          }
-        ]
-      },
-      {
-        "name": "ImagesController",
-        "path": "FoodDiary.Presentation.Api/Features/Images/ImagesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/images",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/images/upload-url",
-            "line": 18
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/images/{assetId:guid}/confirm",
-            "line": 28
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/images/{assetId:guid}",
-            "line": 39
-          }
-        ]
-      },
-      {
-        "name": "LessonsController",
-        "path": "FoodDiary.Presentation.Api/Features/Lessons/LessonsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/lessons",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/lessons",
-            "line": 15
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/lessons/{id:guid}",
-            "line": 23
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/lessons/{id:guid}/read",
-            "line": 30
-          }
-        ]
-      },
-      {
-        "name": "LogsController",
-        "path": "FoodDiary.Presentation.Api/Features/Logs/LogsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/logs",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/logs",
-            "line": 25
-          }
-        ]
-      },
-      {
-        "name": "MarketingAttributionController",
-        "path": "FoodDiary.Presentation.Api/Features/Marketing/MarketingAttributionController.cs",
-        "routePrefix": "api/v{version:apiVersion}/marketing/attribution-events",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/marketing/attribution-events",
-            "line": 25
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/marketing/attribution-events/signup",
-            "line": 39
-          }
-        ]
-      },
-      {
-        "name": "MealPlansController",
-        "path": "FoodDiary.Presentation.Api/Features/MealPlans/MealPlansController.cs",
-        "routePrefix": "api/v{version:apiVersion}/meal-plans",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/meal-plans",
-            "line": 20
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}",
-            "line": 28
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}/adopt",
-            "line": 35
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/meal-plans/{id:guid}/shopping-list",
-            "line": 43
-          }
-        ]
-      },
-      {
-        "name": "MealsController",
-        "path": "FoodDiary.Presentation.Api/Features/Meals/MealsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/meals",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/meals/overview",
-            "line": 17
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/meals",
-            "line": 23
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/meals/{id:guid}",
-            "line": 29
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/meals",
-            "line": 35
-          },
-          {
-            "verb": "PATCH",
-            "route": "/api/v{version:apiVersion}/meals/{id:guid}",
-            "line": 49
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/meals/{id:guid}/repeat",
-            "line": 59
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/meals/{id:guid}",
-            "line": 70
-          }
-        ]
-      },
-      {
-        "name": "NotificationPushController",
-        "path": "FoodDiary.Presentation.Api/Features/Notifications/NotificationPushController.cs",
-        "routePrefix": "api/v{version:apiVersion}/notifications/push",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/notifications/push/config",
-            "line": 16
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/notifications/push/subscriptions",
-            "line": 21
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/notifications/push/subscription",
-            "line": 26
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/notifications/push/subscription",
-            "line": 35
-          }
-        ]
-      },
-      {
-        "name": "NotificationsController",
-        "path": "FoodDiary.Presentation.Api/Features/Notifications/NotificationsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/notifications",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/notifications",
-            "line": 18
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/notifications/unread-count",
-            "line": 23
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/notifications/{notificationId:guid}/read",
-            "line": 28
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/notifications/read-all",
-            "line": 34
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/notifications/test/schedule",
-            "line": 39
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/notifications/preferences",
-            "line": 49
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/notifications/preferences",
-            "line": 55
-          }
-        ]
-      },
-      {
-        "name": "OpenFoodFactsController",
-        "path": "FoodDiary.Presentation.Api/Features/OpenFoodFacts/OpenFoodFactsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/open-food-facts",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/open-food-facts/products/{barcode}",
-            "line": 18
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/open-food-facts/products",
-            "line": 25
-          }
-        ]
-      },
-      {
-        "name": "ProductsController",
-        "path": "FoodDiary.Presentation.Api/Features/Products/ProductsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/products",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/products",
-            "line": 16
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/products/overview",
-            "line": 22
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/products/recent",
-            "line": 28
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/products/{id:guid}",
-            "line": 34
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/products",
-            "line": 40
-          },
-          {
-            "verb": "PATCH",
-            "route": "/api/v{version:apiVersion}/products/{id:guid}",
-            "line": 52
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/products/{id:guid}",
-            "line": 60
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/products/{id:guid}/duplicate",
-            "line": 66
-          }
-        ]
-      },
-      {
-        "name": "ProductSuggestionsController",
-        "path": "FoodDiary.Presentation.Api/Features/Products/ProductSuggestionsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/products/suggestions",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/products/suggestions",
-            "line": 18
-          }
-        ]
-      },
-      {
-        "name": "RecipeCommentsController",
-        "path": "FoodDiary.Presentation.Api/Features/RecipeComments/RecipeCommentsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/recipes/{recipeId:guid}/comments",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/comments",
-            "line": 17
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/comments",
-            "line": 27
-          },
-          {
-            "verb": "PATCH",
-            "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/comments/{commentId:guid}",
-            "line": 36
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/comments/{commentId:guid}",
-            "line": 46
-          }
-        ]
-      },
-      {
-        "name": "RecipeLikesController",
-        "path": "FoodDiary.Presentation.Api/Features/RecipeLikes/RecipeLikesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/recipes/{recipeId:guid}/likes",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/likes/toggle",
-            "line": 15
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/recipes/{recipeId:guid}/likes",
-            "line": 25
-          }
-        ]
-      },
-      {
-        "name": "RecipeExploreController",
-        "path": "FoodDiary.Presentation.Api/Features/Recipes/RecipeExploreController.cs",
-        "routePrefix": "api/v{version:apiVersion}/recipes/explore",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/recipes/explore",
-            "line": 15
-          }
-        ]
-      },
-      {
-        "name": "RecipesController",
-        "path": "FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/recipes",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/recipes",
-            "line": 17
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/recipes/overview",
-            "line": 23
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/recipes/recent",
-            "line": 29
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/recipes/{id:guid}",
-            "line": 35
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/recipes",
-            "line": 41
-          },
-          {
-            "verb": "PATCH",
-            "route": "/api/v{version:apiVersion}/recipes/{id:guid}",
-            "line": 56
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/recipes/{id:guid}",
-            "line": 67
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/recipes/{id:guid}/duplicate",
-            "line": 73
-          }
-        ]
-      },
-      {
-        "name": "ShoppingListsController",
-        "path": "FoodDiary.Presentation.Api/Features/ShoppingLists/ShoppingListsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/shopping-lists",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/shopping-lists/current",
-            "line": 17
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/shopping-lists",
-            "line": 22
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/shopping-lists/{id:guid}",
-            "line": 27
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/shopping-lists",
-            "line": 33
-          },
-          {
-            "verb": "PATCH",
-            "route": "/api/v{version:apiVersion}/shopping-lists/{id:guid}",
-            "line": 47
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/shopping-lists/{id:guid}",
-            "line": 57
-          }
-        ]
-      },
-      {
-        "name": "StatisticsController",
-        "path": "FoodDiary.Presentation.Api/Features/Statistics/StatisticsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/statistics",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/statistics",
-            "line": 17
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/statistics/summary",
-            "line": 24
-          }
-        ]
-      },
-      {
-        "name": "TdeeController",
-        "path": "FoodDiary.Presentation.Api/Features/Tdee/TdeeController.cs",
-        "routePrefix": "api/v{version:apiVersion}/tdee",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/tdee",
-            "line": 13
-          }
-        ]
-      },
-      {
-        "name": "UsdaController",
-        "path": "FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs",
-        "routePrefix": "api/v{version:apiVersion}/usda",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/usda/foods",
-            "line": 18
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/usda/foods/{fdcId:int}",
-            "line": 27
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/usda/products/{productId:guid}/link",
-            "line": 33
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/usda/products/{productId:guid}/link",
-            "line": 41
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/usda/daily-micronutrients",
-            "line": 48
-          }
-        ]
-      },
-      {
-        "name": "UserAiConsentController",
-        "path": "FoodDiary.Presentation.Api/Features/Users/UserAiConsentController.cs",
-        "routePrefix": "api/v{version:apiVersion}/users/ai-consent",
-        "endpoints": [
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/users/ai-consent",
-            "line": 14
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/users/ai-consent",
-            "line": 21
-          }
-        ]
-      },
-      {
-        "name": "UserOverviewController",
-        "path": "FoodDiary.Presentation.Api/Features/Users/UserOverviewController.cs",
-        "routePrefix": "api/v{version:apiVersion}/users",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/users/overview",
-            "line": 14
-          }
-        ]
-      },
-      {
-        "name": "UsersController",
-        "path": "FoodDiary.Presentation.Api/Features/Users/UsersController.cs",
-        "routePrefix": "api/v{version:apiVersion}/users",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/users/info",
-            "line": 16
-          },
-          {
-            "verb": "PATCH",
-            "route": "/api/v{version:apiVersion}/users/info",
-            "line": 22
-          },
-          {
-            "verb": "PATCH",
-            "route": "/api/v{version:apiVersion}/users/preferences/appearance",
-            "line": 29
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/users/desired-weight",
-            "line": 38
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/users/desired-weight",
-            "line": 44
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/users/desired-waist",
-            "line": 51
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/users/desired-waist",
-            "line": 57
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/users",
-            "line": 64
-          }
-        ]
-      },
-      {
-        "name": "UsersPasswordController",
-        "path": "FoodDiary.Presentation.Api/Features/Users/UsersPasswordController.cs",
-        "routePrefix": "api/v{version:apiVersion}/users/password",
-        "endpoints": [
-          {
-            "verb": "PATCH",
-            "route": "/api/v{version:apiVersion}/users/password",
-            "line": 17
-          },
-          {
-            "verb": "PATCH",
-            "route": "/api/v{version:apiVersion}/users/password/set",
-            "line": 27
-          }
-        ]
-      },
-      {
-        "name": "WaistGoalsController",
-        "path": "FoodDiary.Presentation.Api/Features/Users/WaistGoalsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/users/waist-goals",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/users/waist-goals",
-            "line": 14
-          }
-        ]
-      },
-      {
-        "name": "WeightGoalsController",
-        "path": "FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/users/weight-goals",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/users/weight-goals",
-            "line": 14
-          }
-        ]
-      },
-      {
         "name": "VersionController",
         "path": "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
         "routePrefix": "api",
@@ -12830,156 +11955,6 @@
             "verb": "GET",
             "route": "/api/v1/version",
             "line": 20
-          }
-        ]
-      },
-      {
-        "name": "WaistEntriesController",
-        "path": "FoodDiary.Presentation.Api/Features/WaistEntries/WaistEntriesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/waist-entries",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/waist-entries",
-            "line": 16
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/waist-entries/latest",
-            "line": 22
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/waist-entries/summary",
-            "line": 28
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/waist-entries/page-summary",
-            "line": 34
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/waist-entries",
-            "line": 42
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/waist-entries/{id:guid}",
-            "line": 50
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/waist-entries/{id:guid}",
-            "line": 58
-          }
-        ]
-      },
-      {
-        "name": "WearablesController",
-        "path": "FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/wearables",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/wearables/connections",
-            "line": 20
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/wearables/{provider}/auth-url",
-            "line": 25
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/wearables/{provider}/connect",
-            "line": 38
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/wearables/{provider}/disconnect",
-            "line": 52
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/wearables/{provider}/sync",
-            "line": 62
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/wearables/daily-summary",
-            "line": 75
-          }
-        ]
-      },
-      {
-        "name": "WeeklyCheckInController",
-        "path": "FoodDiary.Presentation.Api/Features/WeeklyCheckIn/WeeklyCheckInController.cs",
-        "routePrefix": "api/v{version:apiVersion}/weekly-check-in",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/weekly-check-in",
-            "line": 17
-          }
-        ]
-      },
-      {
-        "name": "WeeklyGoalsController",
-        "path": "FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.cs",
-        "routePrefix": "api/v{version:apiVersion}/weekly-goals",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/weekly-goals",
-            "line": 15
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/weekly-goals",
-            "line": 22
-          }
-        ]
-      },
-      {
-        "name": "WeightEntriesController",
-        "path": "FoodDiary.Presentation.Api/Features/WeightEntries/WeightEntriesController.cs",
-        "routePrefix": "api/v{version:apiVersion}/weight-entries",
-        "endpoints": [
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/weight-entries",
-            "line": 16
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/weight-entries/latest",
-            "line": 22
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/weight-entries/summary",
-            "line": 28
-          },
-          {
-            "verb": "GET",
-            "route": "/api/v{version:apiVersion}/weight-entries/page-summary",
-            "line": 34
-          },
-          {
-            "verb": "POST",
-            "route": "/api/v{version:apiVersion}/weight-entries",
-            "line": 42
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/weight-entries/{id:guid}",
-            "line": 50
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/weight-entries/{id:guid}",
-            "line": 58
           }
         ]
       },
@@ -13163,6 +12138,7 @@
       "MailRelay/FoodDiary.MailRelay.Presentation/AGENTS.md",
       "MailRelay/FoodDiary.MailRelay.WebApi/AGENTS.md",
       "MailRelay/tests/AGENTS.md",
+      "Modules/AGENTS.md",
       "Modules/Admin/AGENTS.md",
       "Modules/Admin/Application/AGENTS.md",
       "Modules/Admin/Application/Abstractions/AGENTS.md",
@@ -13456,6 +12432,8 @@
       "docs/ai/notifications-ownership-inventory.md",
       "docs/ai/nutrition-domain-extraction.md",
       "docs/ai/outbox-replay-stream-boundary.md",
+      "docs/ai/presentation-module-extraction.md",
+      "docs/ai/presentation-module-inventory.md",
       "docs/ai/products-module-extraction-wiki-findings.md",
       "docs/ai/products-ownership-inventory.md",
       "docs/ai/provider-adapter-ownership.md",

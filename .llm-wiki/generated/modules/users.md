@@ -19,63 +19,19 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Authentication, Images
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Users`
 - `Modules/Users/Application`
 - `Modules/Users/Application/Abstractions`
 - `Modules/Users/Contracts`
+- `Modules/Users/Presentation`
 
 ## HTTP Surface
 
-### UserAiConsentController
-
-Source: `FoodDiary.Presentation.Api/Features/Users/UserAiConsentController.cs`
-
-- `POST /api/v{version:apiVersion}/users/ai-consent`
-- `DELETE /api/v{version:apiVersion}/users/ai-consent`
-
-### UserOverviewController
-
-Source: `FoodDiary.Presentation.Api/Features/Users/UserOverviewController.cs`
-
-- `GET /api/v{version:apiVersion}/users/overview`
-
-### UsersController
-
-Source: `FoodDiary.Presentation.Api/Features/Users/UsersController.cs`
-
-- `GET /api/v{version:apiVersion}/users/info`
-- `PATCH /api/v{version:apiVersion}/users/info`
-- `PATCH /api/v{version:apiVersion}/users/preferences/appearance`
-- `GET /api/v{version:apiVersion}/users/desired-weight`
-- `PUT /api/v{version:apiVersion}/users/desired-weight`
-- `GET /api/v{version:apiVersion}/users/desired-waist`
-- `PUT /api/v{version:apiVersion}/users/desired-waist`
-- `DELETE /api/v{version:apiVersion}/users`
-
-### UsersPasswordController
-
-Source: `FoodDiary.Presentation.Api/Features/Users/UsersPasswordController.cs`
-
-- `PATCH /api/v{version:apiVersion}/users/password`
-- `PATCH /api/v{version:apiVersion}/users/password/set`
-
-### WaistGoalsController
-
-Source: `FoodDiary.Presentation.Api/Features/Users/WaistGoalsController.cs`
-
-- `GET /api/v{version:apiVersion}/users/waist-goals`
-
-### WeightGoalsController
-
-Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
-
-- `GET /api/v{version:apiVersion}/users/weight-goals`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -83,7 +39,7 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
 - Public contract files: 68
-- Observed external consumer groups: 3
+- Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

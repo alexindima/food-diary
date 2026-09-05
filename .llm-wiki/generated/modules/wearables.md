@@ -19,29 +19,19 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Wearables`
 - `Modules/Wearables/Application`
 - `Modules/Wearables/Application/Abstractions`
 - `Modules/Wearables/Infrastructure/Providers`
+- `Modules/Wearables/Presentation`
 
 ## HTTP Surface
 
-### WearablesController
-
-Source: `FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs`
-
-- `GET /api/v{version:apiVersion}/wearables/connections`
-- `GET /api/v{version:apiVersion}/wearables/{provider}/auth-url`
-- `POST /api/v{version:apiVersion}/wearables/{provider}/connect`
-- `DELETE /api/v{version:apiVersion}/wearables/{provider}/disconnect`
-- `POST /api/v{version:apiVersion}/wearables/{provider}/sync`
-- `GET /api/v{version:apiVersion}/wearables/daily-summary`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -49,7 +39,7 @@ Source: `FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs`
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: WearableConnection, WearableSyncEntry
 - Public contract files: 18
-- Observed external consumer groups: 3
+- Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

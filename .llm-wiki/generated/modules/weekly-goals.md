@@ -19,24 +19,18 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Meals, Notifications, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/WeeklyGoals`
 - `Modules/WeeklyGoals/Application`
 - `Modules/WeeklyGoals/Application/Abstractions`
+- `Modules/WeeklyGoals/Presentation`
 
 ## HTTP Surface
 
-### WeeklyGoalsController
-
-Source: `FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.cs`
-
-- `GET /api/v{version:apiVersion}/weekly-goals`
-- `PUT /api/v{version:apiVersion}/weekly-goals`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -44,7 +38,7 @@ Source: `FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.c
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: WeeklyGoal
 - Public contract files: 2
-- Observed external consumer groups: 4
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

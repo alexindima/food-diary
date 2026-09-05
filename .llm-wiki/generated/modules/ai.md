@@ -19,35 +19,23 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Admin, Images, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Admin.Application, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Admin.Application, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Ai`
 - `Modules/Ai/Application`
 - `Modules/Ai/Application/Abstractions`
 - `Modules/Ai/Domain`
 - `Modules/Ai/Infrastructure`
 - `Modules/Ai/Infrastructure/Model`
 - `Modules/Ai/Infrastructure/Providers`
+- `Modules/Ai/Presentation`
+- `Modules/Ai/Presentation/Features/Ai`
 
 ## HTTP Surface
 
-### AiFoodController
-
-Source: `FoodDiary.Presentation.Api/Features/Ai/AiFoodController.cs`
-
-- `POST /api/v{version:apiVersion}/ai/food/vision`
-- `POST /api/v{version:apiVersion}/ai/food/text`
-- `POST /api/v{version:apiVersion}/ai/food/nutrition`
-
-### AiUsageController
-
-Source: `FoodDiary.Presentation.Api/Features/Ai/AiUsageController.cs`
-
-- `GET /api/v{version:apiVersion}/ai/usage/me`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -55,7 +43,7 @@ Source: `FoodDiary.Presentation.Api/Features/Ai/AiUsageController.cs`
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AiUsage, AiPromptTemplate, AiQuotaPeriod, AiQuotaReservation
 - Public contract files: 29
-- Observed external consumer groups: 5
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

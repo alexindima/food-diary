@@ -19,33 +19,19 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Integrations/Billing`
-- `FoodDiary.Presentation.Api/Features/Billing`
 - `Modules/Billing/Application`
 - `Modules/Billing/Application/Abstractions`
+- `Modules/Billing/Presentation`
 
 ## HTTP Surface
 
-### BillingController
-
-Source: `FoodDiary.Presentation.Api/Features/Billing/BillingController.cs`
-
-- `GET /api/v{version:apiVersion}/billing/overview`
-- `POST /api/v{version:apiVersion}/billing/trial`
-- `POST /api/v{version:apiVersion}/billing/checkout-session`
-- `POST /api/v{version:apiVersion}/billing/portal-session`
-
-### BillingWebhookController
-
-Source: `FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs`
-
-- `POST /api/v{version:apiVersion}/billing/webhooks/{provider}`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -53,7 +39,7 @@ Source: `FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: BillingSubscription, BillingPayment, BillingWebhookEvent
 - Public contract files: 30
-- Observed external consumer groups: 5
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

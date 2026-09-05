@@ -132,13 +132,13 @@
       "id": "weekly-goals-controller-validation",
       "query": "HTTP endpoints get and update weekly goals",
       "changeType": "Api",
-      "expectedPaths": ["FoodDiary.Presentation.Api/Features/WeeklyGoals/WeeklyGoalsController.cs"]
+      "expectedPaths": ["Modules/WeeklyGoals/Presentation/Features/WeeklyGoals/WeeklyGoalsController.cs"]
     },
     {
       "id": "weight-entries-controller-validation",
       "query": "API endpoint creates and lists weight entries",
       "changeType": "Api",
-      "expectedPaths": ["FoodDiary.Presentation.Api/Features/WeightEntries/WeightEntriesController.cs"]
+      "expectedPaths": ["Modules/BodyMetrics/Presentation/Features/WeightEntries/WeightEntriesController.cs"]
     },
     {
       "id": "update-user-appearance-command",

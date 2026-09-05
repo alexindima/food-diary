@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Presentation.Api</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Dashboard/Presentation/FoodDiary.Modules.Dashboard.Presentation.csproj" />
+    <ProjectReference Include="../../Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Asp.Versioning.Mvc" />
+    <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
+    <ProjectReference Include="../Application/FoodDiary.Modules.Dietologist.Application.csproj" />
+    <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
+    <ProjectReference Include="../Domain/FoodDiary.Modules.Dietologist.Domain.csproj" />
+    <ProjectReference Include="../Presentation.Contracts/FoodDiary.Modules.Dietologist.Presentation.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

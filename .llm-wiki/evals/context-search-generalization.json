@@ -246,7 +246,7 @@
       "id": "wearables-controller",
       "query": "HTTP endpoints connect and synchronize wearable devices",
       "changeType": "Api",
-      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs"]
+      "expectedPaths": ["Modules/Wearables/Presentation/Features/Wearables/WearablesController.cs"]
     },
     {
       "id": "version-controller",
@@ -258,13 +258,13 @@
       "id": "user-ai-consent-controller",
       "query": "HTTP API lets a user grant or withdraw AI processing consent",
       "changeType": "Api",
-      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Users/UserAiConsentController.cs"]
+      "expectedPaths": ["Modules/Users/Presentation/Features/Users/UserAiConsentController.cs"]
     },
     {
       "id": "notifications-controller",
       "query": "HTTP endpoints list and mark user notifications",
       "changeType": "Api",
-      "expectedPaths": ["FoodDiary.Presentation.Api/Features/Notifications/NotificationsController.cs"]
+      "expectedPaths": ["Modules/Notifications/Presentation/Features/Notifications/NotificationsController.cs"]
     },
     {
       "id": "mail-inbox-messages-controller",

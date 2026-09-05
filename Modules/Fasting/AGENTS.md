@@ -15,7 +15,7 @@ Rules for `Modules/Fasting/`.
 
 - Do not reference the core `FoodDiary.Application` project.
 - Register application behavior through `AddFastingApplication`; executable composition roots use Infrastructure's `AddFastingModule` facade.
-- Keep HTTP transport, Hangfire orchestration, host configuration, the shared `FoodDiaryDbContext`, and the central EF migration history outside this module.
+- Keep HTTP transport in this module's Presentation project. Hangfire orchestration, host configuration, the shared `FoodDiaryDbContext`, and the central EF migration history remain outside this module.
 - Align implementation namespaces with `FoodDiary.Modules.Fasting.Application.*` and paths under `Application/`.
 - Do not place repository ports or domain aggregates in `Contracts/`.
 - Consumers outside composition roots must reference `FoodDiary.Modules.Fasting.Contracts`, not implementation services.

@@ -19,22 +19,17 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Dashboard, Users, WeightEntries
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Dashboard.Application, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Dashboard.Application, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Tdee`
 - `Modules/Tdee/Application`
+- `Modules/Tdee/Presentation`
 
 ## HTTP Surface
 
-### TdeeController
-
-Source: `FoodDiary.Presentation.Api/Features/Tdee/TdeeController.cs`
-
-- `GET /api/v{version:apiVersion}/tdee`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: read-composer
@@ -42,7 +37,7 @@ Source: `FoodDiary.Presentation.Api/Features/Tdee/TdeeController.cs`
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 0
-- Observed external consumer groups: 5
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

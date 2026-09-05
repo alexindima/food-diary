@@ -6,7 +6,7 @@ generated_by: .llm-wiki/tools/Build-LlmWikiRuntimeTopology.ps1
 sources:
   - .llm-wiki/generated/runtime-topology.json
   - docker-compose.yml
-  - FoodDiary.Presentation.Api/Features/Billing/BillingWebhookController.cs
+  - Modules/Billing/Presentation/Features/Billing/BillingWebhookController.cs
   - Modules/Billing/Application/Services/BillingWebhookInboxService.cs
   - Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs
   - Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs

@@ -59,7 +59,7 @@ public class PresentationConventionsTests {
     [Fact]
     public void PresentationFeatureFolders_StayLimitedToTransportPurposeFolders() {
         string root = GetRepositoryRoot();
-        string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
+        string[] featurePaths = GetFeatureRoots(root);
         var allowedPurposeFolders = new HashSet<string>(StringComparer.Ordinal) {
             "Mappings",
             "Models",
@@ -67,7 +67,7 @@ public class PresentationConventionsTests {
             "Responses",
         };
 
-        string[] violations = [.. Directory.GetDirectories(featuresPath)
+        string[] violations = [.. featurePaths.SelectMany(Directory.GetDirectories)
             .SelectMany(featurePath => Directory.GetDirectories(featurePath))
             .Where(path => !allowedPurposeFolders.Contains(Path.GetFileName(path)))
             .Select(path => Path.GetRelativePath(root, path))
@@ -79,9 +79,9 @@ public class PresentationConventionsTests {
     [Fact]
     public void PresentationHttpRequestsAndQueries_LiveUnderFeatureRequestsFolders() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
+        string[] presentationRoots = GetPresentationRoots(root);
 
-        string[] violations = [.. SourceScanner.SourceFiles(presentationRoot)
+        string[] violations = [.. SourceScanner.SourceFiles(presentationRoots)
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line = line.Trim() }))
             .Where(static entry =>
@@ -100,9 +100,9 @@ public class PresentationConventionsTests {
     [Fact]
     public void PresentationHttpResponses_LiveUnderResponseFolders() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
+        string[] presentationRoots = GetPresentationRoots(root);
 
-        string[] violations = [.. SourceScanner.SourceFiles(presentationRoot)
+        string[] violations = [.. SourceScanner.SourceFiles(presentationRoots)
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line = line.Trim() }))
             .Where(static entry =>
@@ -120,9 +120,9 @@ public class PresentationConventionsTests {
     [Fact]
     public void PresentationControllers_DoNotCallMediatorSendDirectly() {
         string root = GetRepositoryRoot();
-        string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
+        string[] featurePaths = GetFeatureRoots(root);
 
-        string[] violations = SourceScanner.FindLinePatternViolations(featuresPath, ["Mediator.Send("]);
+        string[] violations = SourceScanner.FindLinePatternViolations(featurePaths, ["Mediator.Send("]);
 
         Assert.Empty(violations);
     }
@@ -152,9 +152,9 @@ public class PresentationConventionsTests {
     [Fact]
     public void PresentationControllers_InjectOnlyPresentationSafeDependencies() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
+        string[] presentationRoots = GetPresentationRoots(root);
 
-        string[] violations = [.. Directory.GetFiles(presentationRoot, "*Controller.cs", SearchOption.AllDirectories)
+        string[] violations = [.. presentationRoots.SelectMany(path => Directory.GetFiles(path, "*Controller.cs", SearchOption.AllDirectories))
             .SelectMany(path => CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path).GetRoot()
                 .DescendantNodes().OfType<ClassDeclarationSyntax>()
                 .Where(static declaration => declaration.Identifier.ValueText.EndsWith("Controller", StringComparison.Ordinal))
@@ -172,9 +172,9 @@ public class PresentationConventionsTests {
     [Fact]
     public void PresentationApi_SourceFiles_DoNotUseContractsNamespaces() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
+        string[] presentationRoots = GetPresentationRoots(root);
 
-        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, ["using FoodDiary.Contracts"]);
+        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoots, ["using FoodDiary.Contracts"]);
 
         Assert.Empty(violations);
     }
@@ -182,12 +182,10 @@ public class PresentationConventionsTests {
     [Fact]
     public void PresentationControllersAndHubs_DoNotParseClaimsDirectly() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
-        string[] scopedDirectories = [
-            Path.Combine(presentationRoot, "Features"),
-            Path.Combine(presentationRoot, "Hubs"),
-            Path.Combine(presentationRoot, "Controllers"),
-        ];
+        string[] scopedDirectories = [.. GetPresentationRoots(root)
+            .SelectMany(path => new[] { "Features", "Hubs", "Controllers" }
+                .Select(folder => Path.Combine(path, folder)))
+            .Where(Directory.Exists)];
 
         string[] violations = SourceScanner.FindLinePatternViolations(
             scopedDirectories,
@@ -199,7 +197,7 @@ public class PresentationConventionsTests {
     [Fact]
     public void PresentationControllers_DoNotReturnAdHocHttpResults() {
         string root = GetRepositoryRoot();
-        string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
+        string[] featurePaths = GetFeatureRoots(root);
         string[] bannedPatterns = [
             "BadRequest(",
             "Unauthorized(",
@@ -209,7 +207,7 @@ public class PresentationConventionsTests {
             "StatusCode(",
         ];
 
-        string[] violations = SourceScanner.FindLinePatternViolations(featuresPath, bannedPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(featurePaths, bannedPatterns);
 
         Assert.Empty(violations);
     }
@@ -217,13 +215,13 @@ public class PresentationConventionsTests {
     [Fact]
     public void PresentationFeatureControllers_UseBaseControllerExceptDocumentedPresentationOnlyEndpoints() {
         string root = GetRepositoryRoot();
-        string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
+        string[] featurePaths = GetFeatureRoots(root);
         string[] allowedFiles = [
-            Path.Combine(featuresPath, "Admin", "AdminTelemetryController.cs"),
-            Path.Combine(featuresPath, "Logs", "LogsController.cs"),
+            Path.Combine(root, "Modules", "Admin", "Presentation", "Features", "Admin", "AdminTelemetryController.cs"),
+            Path.Combine(root, "Modules", "Fasting", "Presentation", "Features", "Logs", "LogsController.cs"),
         ];
 
-        string[] violations = [.. SourceScanner.SourceFiles(featuresPath)
+        string[] violations = [.. SourceScanner.SourceFiles(featurePaths)
             .Where(path => !allowedFiles.Contains(path, StringComparer.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
@@ -265,6 +263,16 @@ public class PresentationConventionsTests {
                parameterType.EndsWith("HttpProcessor", StringComparison.Ordinal) ||
                parameterType.StartsWith("ILogger<", StringComparison.Ordinal);
     }
+
+    private static string[] GetPresentationRoots(string root) => [
+        Path.Combine(root, "FoodDiary.Presentation.Api"),
+        .. Directory.GetDirectories(Path.Combine(root, "Modules"), "Presentation", SearchOption.AllDirectories)
+            .Where(path => Directory.GetFiles(path, "*.csproj", SearchOption.TopDirectoryOnly).Length == 1),
+    ];
+
+    private static string[] GetFeatureRoots(string root) => [.. GetPresentationRoots(root)
+        .Select(path => Path.Combine(path, "Features"))
+        .Where(Directory.Exists)];
 
     private static string[] FindFilesContaining(string root, string scopedPath, string pattern) =>
         [.. SourceScanner.SourceFiles(scopedPath)

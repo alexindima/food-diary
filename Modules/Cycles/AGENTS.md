@@ -7,7 +7,7 @@
 - Keep `User` in Users Domain and `UserId` in Users Domain.Contracts; the Cycles relationship is unidirectional from `CycleProfile`.
 - Register application behavior through `AddCyclesApplication`; composition roots use Infrastructure's `AddCyclesModule` facade.
 - Keep `FoodDiaryDbContext`, historical migrations, and the model snapshot in central Infrastructure.
-- Keep HTTP transport in central Presentation and do not introduce an unproven Contracts project.
+- Keep HTTP transport in `Modules/Cycles/Presentation`; do not introduce an unproven Contracts project.
 
 ## Verification
 

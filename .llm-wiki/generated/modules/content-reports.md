@@ -19,23 +19,18 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/ContentReports`
 - `Modules/ContentReports/Application`
 - `Modules/ContentReports/Application/Abstractions`
+- `Modules/ContentReports/Presentation`
 
 ## HTTP Surface
 
-### ContentReportsController
-
-Source: `FoodDiary.Presentation.Api/Features/ContentReports/ContentReportsController.cs`
-
-- `POST /api/v{version:apiVersion}/reports`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -43,7 +38,7 @@ Source: `FoodDiary.Presentation.Api/Features/ContentReports/ContentReportsContro
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ContentReport
 - Public contract files: 4
-- Observed external consumer groups: 3
+- Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

@@ -19,29 +19,22 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Achievements, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Lessons`
 - `Modules/Lessons/Application`
 - `Modules/Lessons/Application/Abstractions`
 - `Modules/Lessons/Contracts`
 - `Modules/Lessons/Domain`
 - `Modules/Lessons/Infrastructure`
 - `Modules/Lessons/Infrastructure/Model`
+- `Modules/Lessons/Presentation`
 
 ## HTTP Surface
 
-### LessonsController
-
-Source: `FoodDiary.Presentation.Api/Features/Lessons/LessonsController.cs`
-
-- `GET /api/v{version:apiVersion}/lessons`
-- `GET /api/v{version:apiVersion}/lessons/{id:guid}`
-- `POST /api/v{version:apiVersion}/lessons/{id:guid}/read`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
@@ -49,7 +42,7 @@ Source: `FoodDiary.Presentation.Api/Features/Lessons/LessonsController.cs`
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: NutritionLesson, UserLessonProgress
 - Public contract files: 13
-- Observed external consumer groups: 3
+- Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

@@ -368,23 +368,95 @@ public class LayeringTests {
     }
 
     [Fact]
-    public void PresentationApiProject_ReferencesFeatureApplications_ButNotRuntimeOrInfrastructure() {
+    public void PresentationKernel_ReferencesOnlySharedTransportDependencies() {
         HashSet<string> references = GetProjectReferences("FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application.Runtime", references);
-        Assert.Contains("FoodDiary.Modules.Users.Application", references);
+        Assert.DoesNotContain("FoodDiary.Modules.Users.Application", references);
         Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Resources", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
         Assert.DoesNotContain("FoodDiary.Infrastructure", references);
+        Assert.DoesNotContain(references, reference => reference.EndsWith(".Presentation", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ModulePresentationProjects_ReferenceTheKernelButNotInfrastructureOrHosts() {
+        string root = GetRepositoryRoot();
+        string[] projectFiles = Directory.GetFiles(Path.Combine(root, "Modules"), "*.Presentation.csproj", SearchOption.AllDirectories);
+        var allowedCrossModuleApplicationReferences = new HashSet<string>(StringComparer.Ordinal) {
+            "Admin -> FoodDiary.Application.Fasting",
+            "Admin -> FoodDiary.Modules.Fasting.Application",
+            "Admin -> FoodDiary.Modules.Fasting.Application.Abstractions",
+            "Admin -> FoodDiary.Application.Marketing",
+            "Identity -> FoodDiary.Application.Admin",
+            "Identity -> FoodDiary.Modules.Admin.Application",
+            "Users -> FoodDiary.Modules.Dietologist.Presentation.Contracts",
+        };
+
+        Assert.Equal(32, projectFiles.Length);
+
+        string[] violations = [.. projectFiles.SelectMany(projectFile => {
+            string relativePath = Path.GetRelativePath(root, projectFile).Replace('\\', '/');
+            string module = new DirectoryInfo(Path.GetDirectoryName(projectFile)!).Parent!.Name;
+            HashSet<string> references = GetProjectReferences(relativePath);
+            var errors = new List<string>();
+            if (!references.Contains("FoodDiary.Presentation.Api")) {
+                errors.Add($"{relativePath} does not reference FoodDiary.Presentation.Api");
+            }
+
+            errors.AddRange(references
+                .Where(reference => reference.Contains(".Infrastructure", StringComparison.Ordinal) ||
+                                    reference.EndsWith(".Web.Api", StringComparison.Ordinal) ||
+                                    reference.EndsWith(".WebApi", StringComparison.Ordinal) ||
+                                    reference.EndsWith(".JobManager", StringComparison.Ordinal) ||
+                                    reference.EndsWith(".Initializer", StringComparison.Ordinal))
+                .Select(reference => $"{relativePath} references forbidden {reference}"));
+            errors.AddRange(references
+                .Where(reference => reference.StartsWith("FoodDiary.Application.", StringComparison.Ordinal) ||
+                                    reference.StartsWith("FoodDiary.Modules.", StringComparison.Ordinal))
+                .Where(reference => !reference.StartsWith($"FoodDiary.Application.{module}", StringComparison.Ordinal))
+                .Where(reference => !reference.StartsWith($"FoodDiary.Modules.{module}.", StringComparison.Ordinal))
+                .Where(reference => !reference.EndsWith(".Presentation", StringComparison.Ordinal))
+                .Where(reference => !allowedCrossModuleApplicationReferences.Contains($"{module} -> {reference}"))
+                .Select(reference => $"{relativePath} crosses ownership through {reference}"));
+            return errors;
+        }).Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void WebApiHost_ReferencesEveryModulePresentationProject() {
+        string root = GetRepositoryRoot();
+        string[] expected = [.. Directory.GetFiles(Path.Combine(root, "Modules"), "*.Presentation.csproj", SearchOption.AllDirectories)
+            .Select(path => Path.GetFileNameWithoutExtension(path)!)
+            .Order(StringComparer.Ordinal)];
+        string[] actual = [.. GetProjectReferences("FoodDiary.Web.Api/FoodDiary.Web.Api.csproj")
+            .Where(reference => reference.StartsWith("FoodDiary.Modules.", StringComparison.Ordinal) &&
+                                reference.EndsWith(".Presentation", StringComparison.Ordinal))
+            .Order(StringComparer.Ordinal)];
+
+        string compositionSource = File.ReadAllText(Path.Combine(root, "FoodDiary.Web.Api", "Extensions", "ApiServiceCollectionExtensions.cs"));
+
+        Assert.Multiple(
+            () => Assert.Equal(expected, actual),
+            () => Assert.All(expected, projectName => {
+                string module = projectName["FoodDiary.Modules.".Length..^".Presentation".Length];
+                Assert.Contains($".Add{module}Presentation()", compositionSource, StringComparison.Ordinal);
+            }));
     }
 
     [Fact]
     public void PresentationApi_SourceFiles_DoNotUseDomainNamespaces() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
+        string[] presentationRoots = [
+            Path.Combine(root, "FoodDiary.Presentation.Api"),
+            .. Directory.GetDirectories(Path.Combine(root, "Modules"), "Presentation", SearchOption.AllDirectories)
+                .Where(path => Directory.GetFiles(path, "*.csproj", SearchOption.TopDirectoryOnly).Length == 1),
+        ];
 
-        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, [
+        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoots, [
             "using FoodDiary.Domain",
             "FoodDiary.Domain.",
         ]);
@@ -440,8 +512,13 @@ public class LayeringTests {
         string root = GetRepositoryRoot();
         string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
         string controllersRoot = Path.Combine(presentationRoot, "Controllers");
+        string[] presentationRoots = [
+            presentationRoot,
+            .. Directory.GetDirectories(Path.Combine(root, "Modules"), "Presentation", SearchOption.AllDirectories)
+                .Where(path => Directory.GetFiles(path, "*.csproj", SearchOption.TopDirectoryOnly).Length == 1),
+        ];
 
-        string[] violations = [.. Directory.GetFiles(presentationRoot, "*Controller.cs", SearchOption.AllDirectories)
+        string[] violations = [.. presentationRoots.SelectMany(path => Directory.GetFiles(path, "*Controller.cs", SearchOption.AllDirectories))
             .Where(path => !path.StartsWith(controllersRoot, StringComparison.OrdinalIgnoreCase))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Select(path => Path.GetRelativePath(root, path))

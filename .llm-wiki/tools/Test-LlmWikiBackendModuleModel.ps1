@@ -76,6 +76,16 @@ foreach ($property in @($manifest.modules.PSObject.Properties)) {
 foreach ($contract in @('Business-module dependencies:', 'Abstraction-contract dependencies:', 'Host/adapter consumers:', '## Boundary Health', '## Public Surface', 'Exported repository-shaped contracts:', 'none observed', 'discovery evidence, not proof')) {
     if (-not $generatorText.Contains($contract)) { throw "Generated module pages omit '$contract'." }
 }
+if (-not $generatorText.Contains('$candidatePaths.Add("$([string]$logicalRoot)/Presentation")')) {
+    throw 'Module-page generation must discover each extracted module presentation root from logicalRoot.'
+}
+
+$architectureHealthGenerator = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1') -Raw
+if (-not $architectureHealthGenerator.Contains('function Test-IsAllowedModulePresentationEdge') -or
+    -not $architectureHealthGenerator.Contains("[string]`$Edge.source -eq 'FoodDiary.Web.Api'") -or
+    -not $architectureHealthGenerator.Contains("`$ProjectName.EndsWith('.Presentation'")) {
+    throw 'Architecture-health generation must recognize the generic module Presentation boundary and its Web API composition edge.'
+}
 if ($generatorText -match 'Get-ChildItem[^\r\n]+-Recurse' -or
     -not $generatorText.Contains('[IO.File]::ReadAllText') -or
     -not $generatorText.Contains('$sourceFilesByArea')) {

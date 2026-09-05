@@ -61,12 +61,25 @@ foreach ($match in [regex]::Matches($productionSection, '(?s)\["(?<project>[^"]+
             ForEach-Object { $_.Groups['name'].Value }
     )
 }
+
+function Test-IsModulePresentationProject([string]$ProjectName) {
+    return $ProjectName.StartsWith('FoodDiary.Modules.', [System.StringComparison]::Ordinal) -and
+        $ProjectName.EndsWith('.Presentation', [System.StringComparison]::Ordinal)
+}
+
+function Test-IsAllowedModulePresentationEdge([object]$Edge) {
+    return [string]$Edge.source -eq 'FoodDiary.Web.Api' -and
+        (Test-IsModulePresentationProject ([string]$Edge.target))
+}
+
 $violations = @(
     $actualEdges |
         Where-Object {
             -not $_.isTest -and (
-                -not $allowed.ContainsKey($_.source) -or
-                $_.target -notin @($allowed[$_.source])
+                -not (Test-IsAllowedModulePresentationEdge $_) -and (
+                    -not $allowed.ContainsKey($_.source) -or
+                    $_.target -notin @($allowed[$_.source])
+                )
             )
         }
 )

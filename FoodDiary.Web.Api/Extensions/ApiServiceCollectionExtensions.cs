@@ -93,6 +93,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddUsersModule()
                 .AddBillingModule()
                 .AddMarketingModule()
+                .AddModulePresentations()
                 .AddInfrastructure(configuration)
                 .AddExportInfrastructure()
                 .AddIdentityPersistence()
@@ -106,6 +107,41 @@ public static class ApiServiceCollectionExtensions {
                 .AddApiDistributedCache(configuration, environment)
                 .AddPresentationApi()
                 .AddEndpointsApiExplorer();
+        }
+        private IServiceCollection AddModulePresentations() {
+            return services
+                .AddAdminPresentation()
+                .AddAiPresentation()
+                .AddIdentityPresentation()
+                .AddBillingPresentation()
+                .AddContentReportsPresentation()
+                .AddCyclesPresentation()
+                .AddDashboardPresentation()
+                .AddDietologistPresentation()
+                .AddExercisesPresentation()
+                .AddExportPresentation()
+                .AddFastingPresentation()
+                .AddFavoritesPresentation()
+                .AddGamificationPresentation()
+                .AddUsersPresentation()
+                .AddHydrationPresentation()
+                .AddImagesPresentation()
+                .AddLessonsPresentation()
+                .AddMarketingPresentation()
+                .AddMealPlanningPresentation()
+                .AddMealsPresentation()
+                .AddNotificationsPresentation()
+                .AddOpenFoodFactsPresentation()
+                .AddProductsPresentation()
+                .AddRecipeCommunityPresentation()
+                .AddRecipesPresentation()
+                .AddStatisticsPresentation()
+                .AddTdeePresentation()
+                .AddUsdaPresentation()
+                .AddBodyMetricsPresentation()
+                .AddWearablesPresentation()
+                .AddWeeklyCheckInPresentation()
+                .AddWeeklyGoalsPresentation();
         }
         private IServiceCollection AddNotificationTestScheduler() {
             services.AddSingleton<NotificationTestScheduler>();

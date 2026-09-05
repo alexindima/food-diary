@@ -3,10 +3,14 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public class FeatureStructureTests {
     [Fact]
-    public void PresentationApi_FeatureFolders_ContainControllers() {
+    public void Presentation_FeatureFolders_ContainControllers() {
         string root = GetRepositoryRoot();
-        string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
-        string[] featureDirectories = Directory.GetDirectories(featuresPath);
+        string[] featureDirectories = [
+            .. Directory.GetDirectories(Path.Combine(root, "FoodDiary.Presentation.Api", "Features")),
+            .. Directory.GetDirectories(Path.Combine(root, "Modules"), "Features", SearchOption.AllDirectories)
+                .Where(path => string.Equals(Path.GetFileName(Path.GetDirectoryName(path)), "Presentation", StringComparison.Ordinal))
+                .SelectMany(Directory.GetDirectories),
+        ];
 
         Assert.NotEmpty(featureDirectories);
 

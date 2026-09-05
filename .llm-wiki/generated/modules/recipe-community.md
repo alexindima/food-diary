@@ -19,18 +19,19 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Notifications, RecipeComments, RecipeLikes, Recipes, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/RecipeComments`
-- `FoodDiary.Presentation.Api/Features/RecipeLikes`
 - `Modules/RecipeCommunity/Application`
 - `Modules/RecipeCommunity/Application/Abstractions`
 - `Modules/RecipeCommunity/Domain`
 - `Modules/RecipeCommunity/Infrastructure`
 - `Modules/RecipeCommunity/Infrastructure/Model`
+- `Modules/RecipeCommunity/Presentation`
+- `Modules/RecipeCommunity/Presentation/Features/RecipeComments`
+- `Modules/RecipeCommunity/Presentation/Features/RecipeLikes`
 
 ## HTTP Surface
 
@@ -42,7 +43,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: RecipeComment, RecipeLike
 - Public contract files: 9
-- Observed external consumer groups: 4
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

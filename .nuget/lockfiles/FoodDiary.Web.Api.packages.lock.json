@@ -1240,6 +1240,19 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.admin.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Admin": "[1.0.0, )",
+          "FoodDiary.Application.Fasting": "[1.0.0, )",
+          "FoodDiary.Application.Marketing": "[1.0.0, )",
+          "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Admin.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Fasting.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.ai.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -1275,6 +1288,16 @@
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.ai.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Ai": "[1.0.0, )",
+          "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Ai.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.billing.application.abstractions": {
@@ -1314,6 +1337,16 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.billing.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Billing": "[1.0.0, )",
+          "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Billing.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.bodymetrics.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -1346,6 +1379,17 @@
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.bodymetrics.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.BodyMetrics": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Presentation": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.contentreports.application.abstractions": {
@@ -1393,6 +1437,17 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.contentreports.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.ContentReports": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.ContentReports.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.cycles.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -1426,6 +1481,16 @@
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.cycles.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Cycles": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.dailyadvices.application.abstractions": {
@@ -1487,6 +1552,23 @@
           "Microsoft.EntityFrameworkCore": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.dashboard.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Dashboard": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.Dashboard.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Dashboard.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Fasting.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.Tdee.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Presentation": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.dietologist.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -1521,6 +1603,22 @@
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
+      },
+      "fooddiary.modules.dietologist.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Dietologist": "[1.0.0, )",
+          "FoodDiary.Modules.Dashboard.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.Dietologist.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Dietologist.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Dietologist.Presentation.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Presentation": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.dietologist.presentation.contracts": {
+        "type": "Project"
       },
       "fooddiary.modules.exercises.application.abstractions": {
         "type": "Project",
@@ -1563,6 +1661,17 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.exercises.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Exercises": "[1.0.0, )",
+          "FoodDiary.Modules.Exercises.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Exercises.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Exercises.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.export.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -1580,6 +1689,15 @@
           "QuestPDF": "[2026.7.3, )",
           "SkiaSharp": "[4.151.1, )",
           "SkiaSharp.NativeAssets.Linux.NoDependencies": "[4.151.1, )"
+        }
+      },
+      "fooddiary.modules.export.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Export": "[1.0.0, )",
+          "FoodDiary.Modules.Export.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.fasting.application.abstractions": {
@@ -1622,6 +1740,17 @@
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.fasting.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Fasting": "[1.0.0, )",
+          "FoodDiary.Modules.Fasting.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Fasting.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Fasting.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.favorites.application.abstractions": {
@@ -1679,6 +1808,17 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.favorites.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Favorites": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.gamification.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -1716,6 +1856,16 @@
           "FoodDiary.Outbox.Abstractions": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.gamification.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Gamification": "[1.0.0, )",
+          "FoodDiary.Modules.Gamification.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Gamification.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.hydration.application.abstractions": {
@@ -1760,6 +1910,17 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.hydration.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Hydration": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Hydration.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.identity.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -1799,6 +1960,18 @@
           "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.identity.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Admin": "[1.0.0, )",
+          "FoodDiary.Application.Identity": "[1.0.0, )",
+          "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Identity.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Presentation": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.images.application.abstractions": {
@@ -1850,6 +2023,17 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.images.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Images": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Images.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.lessons.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -1893,6 +2077,17 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.lessons.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Lessons": "[1.0.0, )",
+          "FoodDiary.Modules.Lessons.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Lessons.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Lessons.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.marketing.application.abstractions": {
         "type": "Project"
       },
@@ -1921,6 +2116,16 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.marketing.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Marketing": "[1.0.0, )",
+          "FoodDiary.Modules.Marketing.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Marketing.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.mealplanning.application.abstractions": {
@@ -1967,6 +2172,16 @@
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
+        }
+      },
+      "fooddiary.modules.mealplanning.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.MealPlanning": "[1.0.0, )",
+          "FoodDiary.Modules.MealPlanning.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.MealPlanning.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.meals.application.abstractions": {
@@ -2023,6 +2238,18 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
+      "fooddiary.modules.meals.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Meals": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.notifications.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -2062,6 +2289,16 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.notifications.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Notifications": "[1.0.0, )",
+          "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Notifications.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.openfoodfacts.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -2095,6 +2332,17 @@
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
+        }
+      },
+      "fooddiary.modules.openfoodfacts.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.OpenFoodFacts": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.OpenFoodFacts.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.products.application.abstractions": {
@@ -2158,6 +2406,19 @@
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
+        }
+      },
+      "fooddiary.modules.products.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Products": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.recentitems.application.abstractions": {
@@ -2232,6 +2493,16 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.recipecommunity.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.RecipeCommunity": "[1.0.0, )",
+          "FoodDiary.Modules.RecipeCommunity.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.RecipeCommunity.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.recipes.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -2294,6 +2565,36 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
+      "fooddiary.modules.recipes.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Recipes": "[1.0.0, )",
+          "FoodDiary.Modules.Favorites.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Recipes.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.statistics.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Statistics": "[1.0.0, )",
+          "FoodDiary.Modules.BodyMetrics.Presentation": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.tdee.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Tdee": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.usda.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -2331,6 +2632,17 @@
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
+        }
+      },
+      "fooddiary.modules.usda.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Usda": "[1.0.0, )",
+          "FoodDiary.Modules.Usda.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Usda.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Usda.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.users.application.abstractions": {
@@ -2389,6 +2701,20 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
+      "fooddiary.modules.users.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Users": "[1.0.0, )",
+          "FoodDiary.Modules.Dietologist.Presentation.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Notifications.Presentation": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.wearables.application.abstractions": {
         "type": "Project",
         "dependencies": {
@@ -2426,6 +2752,24 @@
           "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
+      "fooddiary.modules.wearables.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Wearables": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Wearables.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
+      "fooddiary.modules.weeklycheckin.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.WeeklyCheckIn": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
         }
       },
       "fooddiary.modules.weeklygoals.application.abstractions": {
@@ -2468,6 +2812,17 @@
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
         }
       },
+      "fooddiary.modules.weeklygoals.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.WeeklyGoals": "[1.0.0, )",
+          "FoodDiary.Modules.WeeklyGoals.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.WeeklyGoals.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.WeeklyGoals.Domain": "[1.0.0, )",
+          "FoodDiary.Presentation.Api": "[1.0.0, )"
+        }
+      },
       "fooddiary.nutrition.contracts": {
         "type": "Project"
       },
@@ -2481,56 +2836,11 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
-          "FoodDiary.Application.Admin": "[1.0.0, )",
-          "FoodDiary.Application.Ai": "[1.0.0, )",
-          "FoodDiary.Application.Billing": "[1.0.0, )",
-          "FoodDiary.Application.BodyMetrics": "[1.0.0, )",
-          "FoodDiary.Application.ContentReports": "[1.0.0, )",
           "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Application.Cycles": "[1.0.0, )",
-          "FoodDiary.Application.DailyAdvices": "[1.0.0, )",
-          "FoodDiary.Application.Dashboard": "[1.0.0, )",
-          "FoodDiary.Application.Dietologist": "[1.0.0, )",
-          "FoodDiary.Application.Exercises": "[1.0.0, )",
           "FoodDiary.Application.Export": "[1.0.0, )",
-          "FoodDiary.Application.Fasting": "[1.0.0, )",
-          "FoodDiary.Application.Favorites": "[1.0.0, )",
-          "FoodDiary.Application.Gamification": "[1.0.0, )",
-          "FoodDiary.Application.Hydration": "[1.0.0, )",
-          "FoodDiary.Application.Identity": "[1.0.0, )",
-          "FoodDiary.Application.Images": "[1.0.0, )",
-          "FoodDiary.Application.Lessons": "[1.0.0, )",
-          "FoodDiary.Application.Marketing": "[1.0.0, )",
-          "FoodDiary.Application.MealPlanning": "[1.0.0, )",
-          "FoodDiary.Application.Meals": "[1.0.0, )",
-          "FoodDiary.Application.Notifications": "[1.0.0, )",
-          "FoodDiary.Application.OpenFoodFacts": "[1.0.0, )",
-          "FoodDiary.Application.Products": "[1.0.0, )",
-          "FoodDiary.Application.RecipeCommunity": "[1.0.0, )",
-          "FoodDiary.Application.Recipes": "[1.0.0, )",
-          "FoodDiary.Application.Statistics": "[1.0.0, )",
-          "FoodDiary.Application.Tdee": "[1.0.0, )",
-          "FoodDiary.Application.Usda": "[1.0.0, )",
-          "FoodDiary.Application.Users": "[1.0.0, )",
-          "FoodDiary.Application.Wearables": "[1.0.0, )",
-          "FoodDiary.Application.WeeklyCheckIn": "[1.0.0, )",
-          "FoodDiary.Application.WeeklyGoals": "[1.0.0, )",
-          "FoodDiary.Domain.Primitives": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Ai.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.BodyMetrics.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Fasting.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Fasting.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Favorites.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.RecentItems.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Usda.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Wearables.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },

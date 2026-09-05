@@ -4,23 +4,22 @@
 Rules for `FoodDiary.Presentation.Api/`.
 
 ## Role
-- Treat this project as the HTTP/SignalR presentation layer, not as the executable host.
-- Keep ASP.NET transport concerns here.
+- Treat this project as the shared HTTP/SignalR presentation kernel, not as the executable host or a feature container.
+- Keep reusable ASP.NET transport primitives here; feature controllers, DTOs and mappings belong in `Modules/<Feature>/Presentation`.
 - Keep composition root, environment wiring, and middleware orchestration in `FoodDiary.Web.Api`.
 
 ## Architecture
-- Organize code feature-first under `Features/<FeatureName>/`.
+- Keep only genuinely shared or version-neutral endpoints under `Features/`; organize business endpoints feature-first inside their owning module Presentation project.
 - Keep controllers thin: accept transport model, resolve route/query/current-user context, map to application request, call MediatR, map result to HTTP response.
 - Do not put business logic in controllers.
-- Keep HTTP request/response mapping in `FoodDiary.Presentation.Api`, not in `FoodDiary.Application`.
+- Keep feature HTTP request/response mapping in `Modules/<Feature>/Presentation`, not in Application or this shared kernel.
 - Do not reference `FoodDiary.Infrastructure` or `FoodDiary.Web.Api` from this project.
 - Do not reference `FoodDiary.Domain` directly; map through application requests/models.
-- Cycles Domain is a direct reference for cycle enums already exposed by application and HTTP models. Preserve their existing HTTP representation; do not acquire aggregate behavior.
 - Do not introduce or revive `FoodDiary.Contracts` namespaces/projects.
 
 ## Structure
 - Base controllers and binders: `Controllers/`
-- Feature controllers, requests, responses, mappings: `Features/`
+- Shared/version-neutral controllers: `Features/`; module feature controllers, requests, responses and mappings: `Modules/<Feature>/Presentation/Features/`
 - Reusable HTTP responses/wrappers: `Responses/`
 - Presentation-only services: `Services/`
 - Auth/presentation policies: `Authorization/`, `Policies/`, `Security/`
@@ -28,7 +27,7 @@ Rules for `FoodDiary.Presentation.Api/`.
 - SignalR hubs and hub method constants: `Hubs/`
 - Presentation option records: `Options/`
 - Presentation telemetry attributes/helpers: `Telemetry/`
-- Registration and endpoint mapping: `Extensions/`
+- Shared registration and endpoint mapping: `Extensions/`; every module exposes an explicit `Add<Feature>Presentation` registration.
 
 ## Naming
 - Use `*HttpRequest` for request bodies.

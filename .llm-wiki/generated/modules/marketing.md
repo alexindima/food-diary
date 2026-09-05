@@ -19,24 +19,18 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Billing
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Admin.Presentation, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Presentation.Api/Features/Marketing`
 - `Modules/Marketing/Application`
 - `Modules/Marketing/Application/Abstractions`
+- `Modules/Marketing/Presentation`
 
 ## HTTP Surface
 
-### MarketingAttributionController
-
-Source: `FoodDiary.Presentation.Api/Features/Marketing/MarketingAttributionController.cs`
-
-- `POST /api/v{version:apiVersion}/marketing/attribution-events`
-- `POST /api/v{version:apiVersion}/marketing/attribution-events/signup`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner

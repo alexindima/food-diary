@@ -138,4 +138,9 @@ Assert-ApiCompatibility (@($dto.changes.location | Where-Object { $_ -match '\.f
 
 $toolText = Get-Content -LiteralPath $tool -Raw
 Assert-ApiCompatibility ($toolText -notmatch '\[regex\]::Matches') 'API compatibility still parses C# DTO declarations with regular expressions.'
-Write-Host 'LLM Wiki API compatibility regression passed: request, response, parameter, DTO, and behavioral contracts are compared.'
+Assert-ApiCompatibility ($toolText -match '--name-status --find-renames') 'API compatibility does not preserve DTO identity across physical file moves.'
+Assert-ApiCompatibility ($toolText -match "'Modules/\*/Presentation/\*\*/\*\.cs'") 'API compatibility does not discover module-owned Presentation DTOs.'
+Assert-ApiCompatibility ($toolText -match "@\('Presentation', 'Presentation\.Contracts'\)") 'API compatibility does not discover unstaged module-owned Presentation DTOs from physical module roots.'
+Assert-ApiCompatibility ($toolText -match "notmatch '\[\\\\/\]\(\?:bin\|obj\)\[\\\\/\]'") 'API compatibility does not exclude generated module Presentation sources.'
+Assert-ApiCompatibility ($toolText -match 'Pair only exact-content delete/add candidates') 'API compatibility does not conservatively pair exact unstaged DTO moves.'
+Write-Host 'LLM Wiki API compatibility regression passed: request, response, parameter, moved DTO, and behavioral contracts are compared.'
