@@ -12,6 +12,7 @@ COPY Shared/FoodDiary.Application.Contracts/*.csproj Shared/FoodDiary.Applicatio
 COPY Shared/FoodDiary.Audit.Contracts/*.csproj Shared/FoodDiary.Audit.Contracts/
 COPY Shared/FoodDiary.Authentication.Contracts/*.csproj Shared/FoodDiary.Authentication.Contracts/
 COPY Shared/FoodDiary.Email.Contracts/*.csproj Shared/FoodDiary.Email.Contracts/
+COPY Shared/FoodDiary.Integrations.Http/*.csproj Shared/FoodDiary.Integrations.Http/
 COPY Shared/FoodDiary.Nutrition.Contracts/*.csproj Shared/FoodDiary.Nutrition.Contracts/
 COPY Shared/FoodDiary.Outbox.Management.Contracts/*.csproj Shared/FoodDiary.Outbox.Management.Contracts/
 COPY Modules/Export/Application/Abstractions/*.csproj Modules/Export/Application/Abstractions/
@@ -203,6 +204,7 @@ COPY Shared/FoodDiary.Application.Contracts/ Shared/FoodDiary.Application.Contra
 COPY Shared/FoodDiary.Audit.Contracts/ Shared/FoodDiary.Audit.Contracts/
 COPY Shared/FoodDiary.Authentication.Contracts/ Shared/FoodDiary.Authentication.Contracts/
 COPY Shared/FoodDiary.Email.Contracts/ Shared/FoodDiary.Email.Contracts/
+COPY Shared/FoodDiary.Integrations.Http/ Shared/FoodDiary.Integrations.Http/
 COPY Shared/FoodDiary.Nutrition.Contracts/ Shared/FoodDiary.Nutrition.Contracts/
 COPY Shared/FoodDiary.Outbox.Management.Contracts/ Shared/FoodDiary.Outbox.Management.Contracts/
 COPY Modules/Export/Application/Abstractions/ Modules/Export/Application/Abstractions/

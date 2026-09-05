@@ -3,15 +3,14 @@ using FoodDiary.Application.Abstractions.Hydration.Models;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 
-public sealed class HydrationEntryRepository(FoodDiaryDbContext context)
+public sealed class HydrationEntryRepository(DbSet<HydrationEntry> entries)
     : IHydrationEntryReadModelRepository, IHydrationEntryWriteRepository {
     public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
-        context.HydrationEntries.Add(entry);
+        entries.Add(entry);
         return Task.FromResult(entry);
     }
 
@@ -19,14 +18,14 @@ public sealed class HydrationEntryRepository(FoodDiaryDbContext context)
         Task.CompletedTask;
 
     public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
-        context.HydrationEntries.Remove(entry);
+        entries.Remove(entry);
         return Task.CompletedTask;
     }
 
     public Task<HydrationEntry?> GetByIdForUpdateAsync(
         HydrationEntryId id,
         CancellationToken cancellationToken = default) =>
-        context.HydrationEntries.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        entries.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public async Task<IReadOnlyList<HydrationEntry>> GetByDateAsync(
         UserId userId,
@@ -35,7 +34,7 @@ public sealed class HydrationEntryRepository(FoodDiaryDbContext context)
         DateTime dayStart = dateUtc.Date;
         DateTime dayEnd = TemporalRangePolicy.GetInclusiveDayEnd(dateUtc);
 
-        return await context.HydrationEntries
+        return await entries
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.Timestamp >= dayStart && x.Timestamp <= dayEnd)
             .OrderBy(x => x.Timestamp)
@@ -49,7 +48,7 @@ public sealed class HydrationEntryRepository(FoodDiaryDbContext context)
         DateTime dayStart = dateUtc.Date;
         DateTime dayEnd = TemporalRangePolicy.GetInclusiveDayEnd(dateUtc);
 
-        return await context.HydrationEntries
+        return await entries
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.Timestamp >= dayStart && x.Timestamp <= dayEnd)
             .OrderBy(x => x.Timestamp)
@@ -61,7 +60,7 @@ public sealed class HydrationEntryRepository(FoodDiaryDbContext context)
         DateTime dayStart = dateUtc.Date;
         DateTime dayEnd = TemporalRangePolicy.GetInclusiveDayEnd(dateUtc);
 
-        return await context.HydrationEntries
+        return await entries
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.Timestamp >= dayStart && x.Timestamp <= dayEnd)
             .SumAsync(x => x.AmountMl, cancellationToken).ConfigureAwait(false);
@@ -75,7 +74,7 @@ public sealed class HydrationEntryRepository(FoodDiaryDbContext context)
         DateTime from = dateFrom.Date;
         DateTime to = TemporalRangePolicy.GetInclusiveDayEnd(dateTo);
 
-        var results = await context.HydrationEntries
+        var results = await entries
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.Timestamp >= from && x.Timestamp <= to)
             .GroupBy(x => x.Timestamp.Date)

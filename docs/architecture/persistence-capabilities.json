@@ -1,0 +1,987 @@
+{
+  "schemaVersion": 1,
+  "description": "Reviewed source-level persistence capability inventory. entity = acquisition/read; tracked = query path without explicit AsNoTracking (potential tracking, not proof of materialization); write = collection/bulk/property mutation; call = exact domain operation; context = technical escape API. SQL semantics require source review. Fingerprints are SHA256 of LF-normalized trimmed source.",
+  "adapters": {
+    "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs": {
+      "module": "Admin",
+      "capabilities": [
+        "entity:BillingPayment",
+        "entity:BillingSubscription",
+        "entity:BillingWebhookEvent",
+        "entity:User",
+        "tracked:BillingWebhookEvent"
+      ],
+      "reason": "Admin billing reporting joins Billing subscriptions/payments/webhook events and Users display data; no aggregate writes."
+    },
+    "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs": {
+      "module": "Admin",
+      "capabilities": [
+        "entity:AdminImpersonationSession",
+        "entity:User",
+        "tracked:AdminImpersonationSession",
+        "write:AdminImpersonationSession"
+      ],
+      "reason": "Admin owns impersonation sessions; Users is an existence/status projection for session validation."
+    },
+    "Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs": {
+      "module": "Admin",
+      "capabilities": [
+        "entity:User",
+        "entity:UserRoleAuditEvent"
+      ],
+      "reason": "Admin role-audit reporting projects Users-owned audit records and actor display data."
+    },
+    "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptProvider.cs": {
+      "module": "Ai",
+      "capabilities": [
+        "entity:AiPromptTemplate"
+      ],
+      "reason": "Ai-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptTemplateRepository.cs": {
+      "module": "Ai",
+      "capabilities": [
+        "entity:AiPromptTemplate",
+        "tracked:AiPromptTemplate",
+        "write:AiPromptTemplate"
+      ],
+      "reason": "Ai-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Ai/Infrastructure/Persistence/Ai/AiQuotaRepository.cs": {
+      "module": "Ai",
+      "capabilities": [
+        "call:AiQuotaPeriod.CanReserve",
+        "call:AiQuotaPeriod.ConsumeReserved",
+        "call:AiQuotaPeriod.ReconcileOrphan",
+        "call:AiQuotaPeriod.Release",
+        "call:AiQuotaPeriod.Reserve",
+        "call:AiQuotaReservation.BelongsTo",
+        "call:AiQuotaReservation.Complete",
+        "call:AiQuotaReservation.Create",
+        "call:AiQuotaReservation.MarkOrphaned",
+        "call:AiQuotaReservation.Reacquire",
+        "call:AiQuotaReservation.Release",
+        "call:AiUsage.Create",
+        "context:ConfigureAwait",
+        "context:Database",
+        "context:SaveChangesAsync",
+        "entity:AiQuotaPeriod",
+        "entity:AiQuotaReservation",
+        "entity:AiUsage",
+        "tracked:AiQuotaPeriod",
+        "tracked:AiQuotaReservation",
+        "tracked:AiUsage",
+        "write:AiQuotaReservation",
+        "write:AiUsage"
+      ],
+      "reason": "AI quota reservation/reconciliation owns its isolated short context and transaction; row locks and upsert protect quota periods/reservations and usage accounting.",
+      "technicalSourceSha256": "9aff053abc9a20c6a120fd011f97f62c8ce786532d67a9f3ca508a7030a4b24a"
+    },
+    "Modules/Ai/Infrastructure/Persistence/Ai/AiUsageRepository.cs": {
+      "module": "Ai",
+      "capabilities": [
+        "entity:AiUsage",
+        "entity:User",
+        "tracked:AiUsage",
+        "write:AiUsage"
+      ],
+      "reason": "AI owns usage records; Users is a reporting projection only."
+    },
+    "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs": {
+      "module": "Billing",
+      "capabilities": [
+        "entity:BillingPayment",
+        "tracked:BillingPayment",
+        "write:BillingPayment"
+      ],
+      "reason": "Billing-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs": {
+      "module": "Billing",
+      "capabilities": [
+        "entity:BillingSubscription",
+        "tracked:BillingSubscription",
+        "write:BillingSubscription"
+      ],
+      "reason": "Billing-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs": {
+      "module": "Billing",
+      "capabilities": [
+        "entity:BillingWebhookEvent",
+        "tracked:BillingWebhookEvent",
+        "write:BillingWebhookEvent"
+      ],
+      "reason": "Billing-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs": {
+      "module": "Billing",
+      "capabilities": [
+        "context:ChangeTracker",
+        "context:Database",
+        "context:SaveChangesAsync",
+        "entity:BillingPayment",
+        "entity:BillingWebhookEvent"
+      ],
+      "reason": "Billing owns serialized payment/webhook operations, save/commit and retry tracker reset; advisory locks serialize billing updates.",
+      "technicalSourceSha256": "e7597df94cc3dcc3788aa1cc883657aa9dddcce6dae4ce8dff376c93dfda3d18"
+    },
+    "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs": {
+      "module": "Billing",
+      "capabilities": [
+        "context:Database"
+      ],
+      "reason": "Billing serializes checkout creation with the existing PostgreSQL lock; context connection access is explicitly reviewed.",
+      "technicalSourceSha256": "6f2aa0a0865edd0ef5297f2233d81d81ca295bba3ac6cf0c254ededceb156d2c"
+    },
+    "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs": {
+      "module": "BodyMetrics",
+      "capabilities": [
+        "entity:WaistEntry",
+        "tracked:WaistEntry",
+        "write:WaistEntry"
+      ],
+      "reason": "BodyMetrics-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/BodyMetrics/Infrastructure/Persistence/WeightEntryRepository.cs": {
+      "module": "BodyMetrics",
+      "capabilities": [
+        "entity:WeightEntry",
+        "tracked:WeightEntry",
+        "write:WeightEntry"
+      ],
+      "reason": "BodyMetrics-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/ContentReports/Infrastructure/Persistence/ContentReportRepository.cs": {
+      "module": "ContentReports",
+      "capabilities": [
+        "entity:ContentReport",
+        "entity:Recipe",
+        "entity:RecipeComment",
+        "tracked:ContentReport",
+        "write:ContentReport"
+      ],
+      "reason": "ContentReports owns report writes; Recipe and RecipeComment supply moderation target projections."
+    },
+    "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs": {
+      "module": "Cycles",
+      "capabilities": [
+        "entity:CycleProfile",
+        "tracked:CycleProfile",
+        "write:CycleProfile"
+      ],
+      "reason": "Cycles-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs": {
+      "module": "DailyAdvices",
+      "capabilities": [
+        "entity:DailyAdvice"
+      ],
+      "reason": "DailyAdvices-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardBodyReadService.cs": {
+      "module": "Dashboard",
+      "capabilities": [
+        "entity:HydrationEntry",
+        "entity:WaistEntry",
+        "entity:WeightEntry"
+      ],
+      "reason": "Dashboard composes Hydration and BodyMetrics into a no-tracking body summary."
+    },
+    "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealAiSessionsLoader.cs": {
+      "module": "Dashboard",
+      "capabilities": [
+        "entity:ImageAsset",
+        "entity:MealAiItem",
+        "entity:MealAiSession"
+      ],
+      "reason": "Dashboard projects meal AI sessions/items and image metadata for the snapshot."
+    },
+    "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealFavoritesLoader.cs": {
+      "module": "Dashboard",
+      "capabilities": [
+        "entity:FavoriteMeal"
+      ],
+      "reason": "Dashboard reads Favorites flags for visible meals."
+    },
+    "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemsLoader.cs": {
+      "module": "Dashboard",
+      "capabilities": [
+        "entity:MealItem",
+        "entity:Product",
+        "tracked:Product"
+      ],
+      "reason": "Dashboard projects meal items and Product nutrition; retained query acquisition does not authorize Product mutation."
+    },
+    "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs": {
+      "module": "Dashboard",
+      "capabilities": [
+        "entity:Meal"
+      ],
+      "reason": "Dashboard reads Meals for the snapshot; no diary mutation."
+    },
+    "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs": {
+      "module": "Dashboard",
+      "capabilities": [
+        "entity:Meal"
+      ],
+      "reason": "Shared source for Dashboard and Statistics meal aggregates; no mediator call back into Statistics."
+    },
+    "Modules/Dietologist/Infrastructure/Persistence/Dietologist/AttentionSignalMetricsReadService.cs": {
+      "module": "Dietologist",
+      "capabilities": [
+        "entity:Meal",
+        "entity:User",
+        "entity:WeightEntry"
+      ],
+      "reason": "Dietologist relationship-authorized attention metrics project Users, Meals and BodyMetrics; no foreign mutation."
+    },
+    "Modules/Dietologist/Infrastructure/Persistence/Dietologist/DietologistInvitationRepository.cs": {
+      "module": "Dietologist",
+      "capabilities": [
+        "context:Entry",
+        "entity:DietologistInvitation",
+        "entity:User",
+        "tracked:DietologistInvitation",
+        "write:DietologistInvitation"
+      ],
+      "reason": "Dietologist owns invitations; Entry/CurrentValues handles existing detached-instance reconciliation in the caller transaction.",
+      "technicalSourceSha256": "3c8752d64e690f5fccca740ccfba84586d23a179861a91b8daa34998672f0af1"
+    },
+    "Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs": {
+      "module": "Dietologist",
+      "capabilities": [
+        "context:ChangeTracker",
+        "entity:AuditEntry",
+        "tracked:AuditEntry",
+        "write:AuditEntry"
+      ],
+      "reason": "Dietologist inspects tracked collaboration changes and appends central AuditEntry records to the same SaveChanges transaction; audit storage is an explicit shared exception.",
+      "technicalSourceSha256": "5c4780fa1a43de308516fd7b7357c72bb40ef232ee6ceb8a94d80952a57f6c66"
+    },
+    "Modules/Dietologist/Infrastructure/Persistence/Recommendations/ClientTaskRepository.cs": {
+      "module": "Dietologist",
+      "capabilities": [
+        "entity:ClientTask",
+        "tracked:ClientTask",
+        "write:ClientTask"
+      ],
+      "reason": "Dietologist-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationBulkDispatchRepository.cs": {
+      "module": "Dietologist",
+      "capabilities": [
+        "entity:RecommendationBulkDispatch",
+        "tracked:RecommendationBulkDispatch",
+        "write:RecommendationBulkDispatch"
+      ],
+      "reason": "Dietologist-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationCommentRepository.cs": {
+      "module": "Dietologist",
+      "capabilities": [
+        "entity:RecommendationComment",
+        "entity:User",
+        "tracked:RecommendationComment",
+        "write:RecommendationComment"
+      ],
+      "reason": "Dietologist-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationRepository.cs": {
+      "module": "Dietologist",
+      "capabilities": [
+        "entity:Recommendation",
+        "entity:User",
+        "tracked:Recommendation",
+        "write:Recommendation"
+      ],
+      "reason": "Dietologist-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Dietologist/Infrastructure/Persistence/Recommendations/RecommendationTemplateRepository.cs": {
+      "module": "Dietologist",
+      "capabilities": [
+        "entity:RecommendationTemplate",
+        "tracked:RecommendationTemplate",
+        "write:RecommendationTemplate"
+      ],
+      "reason": "Dietologist-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Exercises/Infrastructure/Persistence/ExerciseEntryRepository.cs": {
+      "module": "Exercises",
+      "capabilities": [
+        "entity:ExerciseEntry",
+        "tracked:ExerciseEntry",
+        "write:ExerciseEntry"
+      ],
+      "reason": "Exercises-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Fasting/Infrastructure/Persistence/FastingCheckInRepository.cs": {
+      "module": "Fasting",
+      "capabilities": [
+        "entity:FastingCheckIn",
+        "tracked:FastingCheckIn",
+        "write:FastingCheckIn"
+      ],
+      "reason": "Fasting-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Fasting/Infrastructure/Persistence/FastingOccurrenceRepository.cs": {
+      "module": "Fasting",
+      "capabilities": [
+        "entity:FastingOccurrence",
+        "entity:FastingPlan",
+        "entity:User",
+        "tracked:FastingOccurrence",
+        "write:FastingOccurrence"
+      ],
+      "reason": "Fasting-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Fasting/Infrastructure/Persistence/FastingPlanRepository.cs": {
+      "module": "Fasting",
+      "capabilities": [
+        "entity:FastingPlan",
+        "tracked:FastingPlan",
+        "write:FastingPlan"
+      ],
+      "reason": "Fasting-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Fasting/Infrastructure/Persistence/FastingSessionRepository.cs": {
+      "module": "Fasting",
+      "capabilities": [
+        "context:Entry",
+        "entity:FastingSession",
+        "tracked:FastingSession",
+        "write:FastingSession"
+      ],
+      "reason": "Fasting owns sessions; Entry checks detached state before attaching the owner aggregate.",
+      "technicalSourceSha256": "6a5a1e6a40d6e769f08f6d288c5f6fa0e82a37a50742ad7381adb1ea4f34b5ab"
+    },
+    "Modules/Fasting/Infrastructure/Persistence/FastingTelemetryEventRepository.cs": {
+      "module": "Fasting",
+      "capabilities": [
+        "call:FastingTelemetryEvent.Create",
+        "entity:FastingTelemetryEvent",
+        "tracked:FastingTelemetryEvent",
+        "write:FastingTelemetryEvent"
+      ],
+      "reason": "Fasting-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Favorites/Infrastructure/Persistence/FavoriteMeals/FavoriteMealRepository.cs": {
+      "module": "Favorites",
+      "capabilities": [
+        "entity:FavoriteMeal",
+        "entity:Meal",
+        "tracked:FavoriteMeal",
+        "write:FavoriteMeal"
+      ],
+      "reason": "Favorites-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Favorites/Infrastructure/Persistence/FavoriteProducts/FavoriteProductRepository.cs": {
+      "module": "Favorites",
+      "capabilities": [
+        "entity:FavoriteProduct",
+        "entity:Product",
+        "tracked:FavoriteProduct",
+        "write:FavoriteProduct"
+      ],
+      "reason": "Favorites-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs": {
+      "module": "Favorites",
+      "capabilities": [
+        "entity:FavoriteRecipe",
+        "entity:Recipe",
+        "tracked:FavoriteRecipe",
+        "write:FavoriteRecipe"
+      ],
+      "reason": "Favorites-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Gamification/Infrastructure/Persistence/AchievementDefinitionStore.cs": {
+      "module": "Gamification",
+      "capabilities": [
+        "context:Database",
+        "entity:AchievementDefinition",
+        "tracked:AchievementDefinition",
+        "write:AchievementDefinition"
+      ],
+      "reason": "Gamification owns achievement definitions; conflict-safe SQL insertion and owner updates preserve key uniqueness.",
+      "technicalSourceSha256": "91e874cc55fe5e1ac92a2ea86563a74db9dafa71414fa4d892bbfb66175d13b4"
+    },
+    "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs": {
+      "module": "Gamification",
+      "capabilities": [
+        "call:AchievementEvaluationOutboxMessage.Create",
+        "call:AchievementEvaluationOutboxMessage.RequestEvaluation",
+        "context:Database",
+        "entity:AchievementEvaluationOutboxMessage",
+        "tracked:AchievementEvaluationOutboxMessage",
+        "write:AchievementEvaluationOutboxMessage"
+      ],
+      "reason": "Gamification owns evaluation outbox rows; conflict upsert coalesces requests and preserves revisions.",
+      "technicalSourceSha256": "4501aa427e2a0cb7f8906af327c516539e4d267f2a9c3270ff3f042ff844a8fe"
+    },
+    "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs": {
+      "module": "Gamification",
+      "capabilities": [
+        "call:AchievementEvaluationOutboxMessage.MarkProcessed",
+        "call:AchievementEvaluationOutboxMessage.ReleaseForUpdatedRevision",
+        "context:Database",
+        "context:Entry",
+        "entity:AchievementEvaluationOutboxMessage",
+        "tracked:AchievementEvaluationOutboxMessage"
+      ],
+      "reason": "Gamification processes its outbox with revision-aware SQL and reloads; the shared engine retains claiming/save boundaries.",
+      "technicalSourceSha256": "9b49314edbf23c54570cc0d73086028730a5fa5c70326f610477360cad237303"
+    },
+    "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxReplayStream.cs": {
+      "module": "Gamification",
+      "capabilities": [
+        "entity:AchievementEvaluationOutboxMessage",
+        "tracked:AchievementEvaluationOutboxMessage"
+      ],
+      "reason": "Gamification-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Gamification/Infrastructure/Persistence/AchievementMetricReader.cs": {
+      "module": "Gamification",
+      "capabilities": [
+        "entity:UserLessonProgress"
+      ],
+      "reason": "Gamification reads Lessons progress for achievement metrics; no Lessons writes."
+    },
+    "Modules/Gamification/Infrastructure/Persistence/UserAchievementStore.cs": {
+      "module": "Gamification",
+      "capabilities": [
+        "call:UserAchievement.Create",
+        "context:Database",
+        "entity:UserAchievement"
+      ],
+      "reason": "Gamification grants user achievements with conflict-safe SQL; no Users aggregate access.",
+      "technicalSourceSha256": "4586f3e25298f966a7b3d03b72fdcd532df202be080da3986c873eb70f431971"
+    },
+    "Modules/Hydration/Infrastructure/ModuleRegistration.cs": {
+      "module": "Hydration",
+      "capabilities": [
+        "entity:HydrationEntry",
+        "tracked:HydrationEntry"
+      ],
+      "reason": "Hydration composition obtains only the owner set from the shared scoped context and passes it to the repository."
+    },
+    "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs": {
+      "module": "Hydration",
+      "capabilities": [
+        "entity:HydrationEntry",
+        "tracked:HydrationEntry",
+        "write:HydrationEntry"
+      ],
+      "reason": "Hydration repository accepts only DbSet<HydrationEntry>; shared caller retains context, SaveChanges and transaction. PostgreSQL regression verifies rollback, user cascade and no-tracking date reads."
+    },
+    "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs": {
+      "module": "Identity",
+      "capabilities": [
+        "call:EmailTemplate.Create",
+        "call:EmailTemplate.Update",
+        "entity:EmailTemplate",
+        "tracked:EmailTemplate",
+        "write:EmailTemplate"
+      ],
+      "reason": "Identity-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs": {
+      "module": "Identity",
+      "capabilities": [
+        "context:Database"
+      ],
+      "reason": "Identity replay prevention atomically inserts assertion fingerprints and deletes expired fingerprints in ConsumedTelegramAssertions.",
+      "technicalSourceSha256": "99cd483e0d95d2876a49bf0335890b966f16395e142be11f7af384bca192d4aa"
+    },
+    "Modules/Identity/Infrastructure/Persistence/Email/EmailTemplateProvider.cs": {
+      "module": "Identity",
+      "capabilities": [
+        "entity:EmailTemplate"
+      ],
+      "reason": "Identity-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs": {
+      "module": "Identity",
+      "capabilities": [
+        "call:UserRefreshTokenSession.Revoke",
+        "call:UserRefreshTokenSession.Rotate",
+        "context:Database",
+        "entity:UserRefreshTokenSession",
+        "tracked:UserRefreshTokenSession",
+        "write:UserRefreshTokenSession"
+      ],
+      "reason": "Identity owns session rotation/revocation, including atomic bulk updates. Active-session listing uses a minimized no-tracking projection. No User aggregate writes.",
+      "technicalSourceSha256": "6328c5a13bd093d121720a6170281479dbc2e9f9f210fc19dcd434fafaa5ee95"
+    },
+    "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
+      "module": "Identity",
+      "capabilities": [
+        "entity:User",
+        "entity:UserLoginEvent",
+        "tracked:UserLoginEvent",
+        "write:UserLoginEvent"
+      ],
+      "reason": "Identity owns login-event reporting/retention; Users supplies reporting display data only."
+    },
+    "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs": {
+      "module": "Images",
+      "capabilities": [
+        "entity:ImageAsset",
+        "entity:Meal",
+        "entity:MealAiSession",
+        "entity:Product",
+        "entity:Recipe",
+        "entity:RecipeStep",
+        "entity:User",
+        "tracked:ImageAsset",
+        "tracked:Meal",
+        "tracked:MealAiSession",
+        "tracked:Product",
+        "tracked:Recipe",
+        "tracked:RecipeStep",
+        "tracked:User",
+        "write:ImageAsset"
+      ],
+      "reason": "Images owns asset lifecycle; references in Users, Meals, Products, Recipes and recipe steps are usage checks for safe deletion, not foreign aggregate mutation."
+    },
+    "Modules/Images/Infrastructure/Persistence/Images/ImageDeletionOutboxReplayStream.cs": {
+      "module": "Images",
+      "capabilities": [
+        "entity:ImageObjectDeletionOutboxMessage",
+        "tracked:ImageObjectDeletionOutboxMessage"
+      ],
+      "reason": "Images-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutbox.cs": {
+      "module": "Images",
+      "capabilities": [
+        "call:ImageObjectDeletionOutboxMessage.Create",
+        "entity:ImageObjectDeletionOutboxMessage",
+        "tracked:ImageObjectDeletionOutboxMessage",
+        "write:ImageObjectDeletionOutboxMessage"
+      ],
+      "reason": "Images-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs": {
+      "module": "Images",
+      "capabilities": [
+        "entity:ImageObjectDeletionOutboxMessage",
+        "tracked:ImageObjectDeletionOutboxMessage"
+      ],
+      "reason": "Images-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs": {
+      "module": "Lessons",
+      "capabilities": [
+        "entity:NutritionLesson",
+        "entity:UserLessonProgress",
+        "tracked:NutritionLesson",
+        "tracked:UserLessonProgress",
+        "write:NutritionLesson",
+        "write:UserLessonProgress"
+      ],
+      "reason": "Lessons-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs": {
+      "module": "Marketing",
+      "capabilities": [
+        "call:MarketingAttributionEvent.Create",
+        "entity:MarketingAttributionEvent",
+        "tracked:MarketingAttributionEvent",
+        "write:MarketingAttributionEvent"
+      ],
+      "reason": "Marketing-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs": {
+      "module": "MealPlanning",
+      "capabilities": [
+        "entity:MealPlan",
+        "entity:Product",
+        "entity:Recipe",
+        "tracked:MealPlan",
+        "write:MealPlan"
+      ],
+      "reason": "MealPlanning-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs": {
+      "module": "MealPlanning",
+      "capabilities": [
+        "entity:ShoppingList",
+        "tracked:ShoppingList",
+        "write:ShoppingList"
+      ],
+      "reason": "MealPlanning-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs": {
+      "module": "Meals",
+      "capabilities": [
+        "entity:ImageAsset",
+        "entity:Meal",
+        "entity:MealItem",
+        "entity:Product",
+        "entity:Recipe",
+        "tracked:Meal",
+        "tracked:Product",
+        "write:Meal"
+      ],
+      "reason": "Meals owns diary writes; Products, Recipes and Images are source/nutrition/usage projections. Foreign tracked-query acquisition is retained pending narrower projections, not permission for foreign mutation."
+    },
+    "Modules/Notifications/Infrastructure/Persistence/NotificationRepository.cs": {
+      "module": "Notifications",
+      "capabilities": [
+        "entity:Notification",
+        "tracked:Notification",
+        "write:Notification"
+      ],
+      "reason": "Notifications-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutbox.cs": {
+      "module": "Notifications",
+      "capabilities": [
+        "call:NotificationWebPushOutboxMessage.Create",
+        "entity:NotificationWebPushOutboxMessage",
+        "tracked:NotificationWebPushOutboxMessage",
+        "write:NotificationWebPushOutboxMessage"
+      ],
+      "reason": "Notifications-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Notifications/Infrastructure/Persistence/NotificationWebPushOutboxProcessor.cs": {
+      "module": "Notifications",
+      "capabilities": [
+        "entity:Notification",
+        "entity:NotificationWebPushOutboxMessage",
+        "tracked:NotificationWebPushOutboxMessage"
+      ],
+      "reason": "Notifications-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Notifications/Infrastructure/Persistence/WebPushOutboxReplayStream.cs": {
+      "module": "Notifications",
+      "capabilities": [
+        "entity:NotificationWebPushOutboxMessage",
+        "tracked:NotificationWebPushOutboxMessage"
+      ],
+      "reason": "Notifications-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Notifications/Infrastructure/Persistence/WebPushSubscriptionRepository.cs": {
+      "module": "Notifications",
+      "capabilities": [
+        "entity:WebPushSubscription",
+        "tracked:WebPushSubscription",
+        "write:WebPushSubscription"
+      ],
+      "reason": "Notifications-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/OpenFoodFacts/Infrastructure/Persistence/OpenFoodFactsProductCacheRepository.cs": {
+      "module": "OpenFoodFacts",
+      "capabilities": [
+        "call:OpenFoodFactsProduct.Create",
+        "context:Database",
+        "entity:OpenFoodFactsProduct"
+      ],
+      "reason": "OpenFoodFacts owns its cache; PostgreSQL upsert refreshes only OpenFoodFactsProducts.",
+      "technicalSourceSha256": "00bb1e90280edbb3ac6381937c07818d7aeb04c6101ff26c6d0bc0462154f4d0"
+    },
+    "Modules/Products/Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs": {
+      "module": "Products",
+      "capabilities": [
+        "context:Database"
+      ],
+      "reason": "Products serializes its approved mutations with the shared context/unit of work and caller operation; retains existing save/commit ownership.",
+      "technicalSourceSha256": "75c4d6b37f06535bd1f33e9e8af0b8c07ca49b277ff2ae5448d74970771ef0e7"
+    },
+    "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs": {
+      "module": "Products",
+      "capabilities": [
+        "entity:MealItem",
+        "entity:Product",
+        "entity:RecipeIngredient",
+        "tracked:MealItem",
+        "tracked:Product",
+        "tracked:RecipeIngredient"
+      ],
+      "reason": "Products overview joins MealItem and RecipeIngredient usage counters; no foreign writes."
+    },
+    "Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs": {
+      "module": "Products",
+      "capabilities": [
+        "context:Database",
+        "entity:MealItem",
+        "entity:Product",
+        "entity:RecipeIngredient",
+        "tracked:MealItem",
+        "tracked:Product",
+        "tracked:RecipeIngredient",
+        "write:Product"
+      ],
+      "reason": "Products owns catalog writes and row locking; MealItem and RecipeIngredient are usage reads only.",
+      "technicalSourceSha256": "2ba08ce1ec21963d9e563257c00decb257e3a0b9a8bc23f026594275f5db2942"
+    },
+    "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs": {
+      "module": "RecentItems",
+      "capabilities": [
+        "call:RecentItem.Create",
+        "call:RecentItem.Touch",
+        "context:ChangeTracker",
+        "context:Database",
+        "entity:RecentItem",
+        "tracked:RecentItem",
+        "write:RecentItem"
+      ],
+      "reason": "RecentItems owns recency upsert/pruning. Tracker inspection merges pending own records; SQL handles conflict-safe usage and bounded retention.",
+      "technicalSourceSha256": "0e1ea87f47aefd60e53da5c3ca4b73f219ce970b0b3ecb21af118c0a43057de4"
+    },
+    "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs": {
+      "module": "RecipeCommunity",
+      "capabilities": [
+        "entity:RecipeComment",
+        "entity:User",
+        "tracked:RecipeComment",
+        "write:RecipeComment"
+      ],
+      "reason": "RecipeCommunity-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeLikes/RecipeLikeRepository.cs": {
+      "module": "RecipeCommunity",
+      "capabilities": [
+        "entity:RecipeLike",
+        "tracked:RecipeLike",
+        "write:RecipeLike"
+      ],
+      "reason": "RecipeCommunity-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Recipes/Infrastructure/Persistence/Recipes/EfRecipeMutationTransactionRunner.cs": {
+      "module": "Recipes",
+      "capabilities": [
+        "context:Database"
+      ],
+      "reason": "Recipes serializes approved mutations with the shared context/unit of work and caller operation; retains existing save/commit ownership.",
+      "technicalSourceSha256": "d30a4eb5a1353b7b6b7963543c761a9366c062b36711ed2fb59c121bdf006349"
+    },
+    "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs": {
+      "module": "Recipes",
+      "capabilities": [
+        "entity:MealItem",
+        "entity:Product",
+        "entity:Recipe",
+        "tracked:MealItem",
+        "tracked:Recipe"
+      ],
+      "reason": "Recipes overview projects MealItem usage counters; no Meals writes."
+    },
+    "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeRepository.cs": {
+      "module": "Recipes",
+      "capabilities": [
+        "context:Database",
+        "context:Entry",
+        "entity:MealItem",
+        "entity:Product",
+        "entity:Recipe",
+        "tracked:MealItem",
+        "tracked:Recipe",
+        "write:Recipe"
+      ],
+      "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation; MealItem is a usage read only.",
+      "technicalSourceSha256": "ce5a2b37e8d5484ab48446cf56b33a1766ceb99c1d83d21fe50bef1d79d7d1ae"
+    },
+    "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs": {
+      "module": "Usda",
+      "capabilities": [
+        "entity:DailyReferenceValue",
+        "entity:UsdaFood",
+        "entity:UsdaFoodNutrient",
+        "entity:UsdaFoodPortion",
+        "entity:UsdaNutrient",
+        "tracked:UsdaFood"
+      ],
+      "reason": "Usda-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserAccessTokenSecurityReader.cs": {
+      "module": "Users",
+      "capabilities": [
+        "entity:User"
+      ],
+      "reason": "Users-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserAdministrationReadRepository.cs": {
+      "module": "Users",
+      "capabilities": [
+        "call:User.GetRoleNames",
+        "entity:Role",
+        "entity:User",
+        "entity:UserRole",
+        "tracked:User",
+        "tracked:UserRole"
+      ],
+      "reason": "Users-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs": {
+      "module": "Users",
+      "capabilities": [
+        "context:Database",
+        "context:SaveChangesAsync",
+        "entity:AdminImpersonationSession",
+        "entity:AiUsage",
+        "entity:BleedingEntry",
+        "entity:ClientTask",
+        "entity:CycleFactor",
+        "entity:CycleProfile",
+        "entity:CycleSymptomEntry",
+        "entity:FertilitySignal",
+        "entity:HydrationEntry",
+        "entity:ImageAsset",
+        "entity:Meal",
+        "entity:MealItem",
+        "entity:Product",
+        "entity:RecentItem",
+        "entity:Recipe",
+        "entity:RecipeStep",
+        "entity:ShoppingList",
+        "entity:User",
+        "entity:UserRole",
+        "entity:WaistEntry",
+        "entity:WeightEntry",
+        "tracked:AdminImpersonationSession",
+        "tracked:AiUsage",
+        "tracked:BleedingEntry",
+        "tracked:ClientTask",
+        "tracked:CycleFactor",
+        "tracked:CycleProfile",
+        "tracked:CycleSymptomEntry",
+        "tracked:FertilitySignal",
+        "tracked:HydrationEntry",
+        "tracked:ImageAsset",
+        "tracked:Meal",
+        "tracked:MealItem",
+        "tracked:Product",
+        "tracked:RecentItem",
+        "tracked:Recipe",
+        "tracked:RecipeStep",
+        "tracked:ShoppingList",
+        "tracked:User",
+        "tracked:UserRole",
+        "tracked:WaistEntry",
+        "tracked:WeightEntry",
+        "write:AdminImpersonationSession",
+        "write:AiUsage",
+        "write:BleedingEntry",
+        "write:ClientTask",
+        "write:CycleFactor",
+        "write:CycleProfile",
+        "write:CycleSymptomEntry",
+        "write:FertilitySignal",
+        "write:HydrationEntry",
+        "write:ImageAsset",
+        "write:Meal",
+        "write:MealItem",
+        "write:Product",
+        "write:RecentItem",
+        "write:Recipe",
+        "write:ShoppingList",
+        "write:User",
+        "write:UserRole",
+        "write:WaistEntry",
+        "write:WeightEntry"
+      ],
+      "reason": "Explicit Users lifecycle coordinator: locks eligibility, removes/reassigns dependent module data and queues image deletion in one per-user transaction. Governed by UserDataLifecycleGuardrailTests and cleanup PostgreSQL tests; this exception is not available to ordinary Users services.",
+      "technicalSourceSha256": "2b69e47b85ef95d6633f24d0f2da4c7bcb7fa89cff6beaae234a3afdcb3dc8f3"
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs": {
+      "module": "Users",
+      "capabilities": [
+        "entity:WaistEntry"
+      ],
+      "reason": "Users reads the latest BodyMetrics waist value for profile projection; no BodyMetrics mutation."
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs": {
+      "module": "Users",
+      "capabilities": [
+        "entity:WeightEntry"
+      ],
+      "reason": "Users reads the latest BodyMetrics weight value for profile projection; no BodyMetrics mutation."
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs": {
+      "module": "Users",
+      "capabilities": [
+        "context:Entry",
+        "entity:Role",
+        "entity:User",
+        "entity:UserRoleAuditEvent",
+        "tracked:User",
+        "tracked:UserRoleAuditEvent",
+        "write:User",
+        "write:UserRoleAuditEvent"
+      ],
+      "reason": "Users owns user/security/role-audit writes and tracked attachment; request unit of work owns commit.",
+      "technicalSourceSha256": "5ce820648bcdc22360c7204122f348bdf4a7ad1c3297da9719f9491751831db8"
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserRoleCatalogService.cs": {
+      "module": "Users",
+      "capabilities": [
+        "call:Role.Create",
+        "entity:Role",
+        "tracked:Role",
+        "write:Role"
+      ],
+      "reason": "Users-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserRoleMembershipService.cs": {
+      "module": "Users",
+      "capabilities": [
+        "context:Database",
+        "entity:Role",
+        "entity:User",
+        "entity:UserRole",
+        "tracked:Role",
+        "tracked:User",
+        "tracked:UserRole",
+        "write:UserRole"
+      ],
+      "reason": "Users owns atomic role changes and security-version updates; SQL is restricted to UserRoles/Roles/Users.",
+      "technicalSourceSha256": "05ed0ca91646c685f911b5ceea56b03f876bfd10cb9372ce997b83e2b8d3419d"
+    },
+    "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs": {
+      "module": "Wearables",
+      "capabilities": [
+        "context:Database",
+        "context:SaveChangesAsync"
+      ],
+      "reason": "Wearables owns its existing serialized sync transaction and save/commit boundary.",
+      "technicalSourceSha256": "cda195f04e971c9e1895c4edd262173979829638828e9de5c1ab7512290433b0"
+    },
+    "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs": {
+      "module": "Wearables",
+      "capabilities": [
+        "entity:WearableConnection",
+        "tracked:WearableConnection",
+        "write:WearableConnection"
+      ],
+      "reason": "Wearables-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Wearables/Infrastructure/Persistence/WearableSyncRepository.cs": {
+      "module": "Wearables",
+      "capabilities": [
+        "entity:WearableSyncEntry",
+        "tracked:WearableSyncEntry",
+        "write:WearableSyncEntry"
+      ],
+      "reason": "Wearables-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs": {
+      "module": "WeeklyGoals",
+      "capabilities": [
+        "context:Database"
+      ],
+      "reason": "WeeklyGoals serializes a user/week with an advisory lock and shared unit of work; no foreign aggregate mutation.",
+      "technicalSourceSha256": "f2a0c41cbaccbbfd5fea11fd3374d52e7639a3020051cbe062e200de090ddcd4"
+    },
+    "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs": {
+      "module": "WeeklyGoals",
+      "capabilities": [
+        "entity:WeeklyGoal",
+        "tracked:WeeklyGoal",
+        "write:WeeklyGoal"
+      ],
+      "reason": "WeeklyGoals-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    }
+  }
+}

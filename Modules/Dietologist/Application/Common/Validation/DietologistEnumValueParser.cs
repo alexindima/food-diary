@@ -6,7 +6,7 @@ namespace FoodDiary.Application.Abstractions.Common.Validation;
 public static class DietologistEnumValueParser {
     public static bool TryParse<TEnum>(string? value, out TEnum parsed)
         where TEnum : struct, Enum =>
-        Enum.TryParse(value, ignoreCase: true, out parsed);
+        SharedEnumValueParser.TryParse(value, out parsed);
 
     public static bool CanParse<TEnum>(string? value) where TEnum : struct, Enum => TryParse<TEnum>(value, out _);
 

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { submit } from '@angular/forms/signals';
-import { of, throwError } from 'rxjs';
+import { finalize, of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ExportService } from '../../../shared/api/export.service';
@@ -821,3 +821,18 @@ function setValidDayForm(): void {
         notes: 'note',
     });
 }
+
+it('cancels initial loading when the facade scope is destroyed and ignores a late response', () => {
+    const pending = new Subject<CycleResponse | null>();
+    const cancelled = vi.fn();
+    cyclesService.getCurrent.mockReturnValue(pending.pipe(finalize(cancelled)));
+    facade.initialize();
+    expect(facade.isLoading()).toBe(true);
+
+    TestBed.resetTestingModule();
+    pending.next(createCycleResponse());
+
+    expect(cancelled).toHaveBeenCalledOnce();
+    expect(facade.isLoading()).toBe(false);
+    expect(facade.cycle()).toBeNull();
+});

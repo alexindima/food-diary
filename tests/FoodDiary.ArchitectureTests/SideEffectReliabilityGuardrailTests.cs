@@ -70,9 +70,8 @@ public sealed class SideEffectReliabilityGuardrailTests {
     [Fact]
     public void ApplicationPostCommitActions_AreNamedForOperationalLogs() {
         string root = ArchitectureTestPaths.RepositoryRoot;
-        string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line = line.Trim() }))
             .Where(static entry => entry.line.Contains("postCommitActionQueue.Enqueue(", StringComparison.Ordinal))
@@ -88,7 +87,6 @@ public sealed class SideEffectReliabilityGuardrailTests {
     [Fact]
     public void PostCommitActionCallSites_DoNotDependOnCriticalDurableSideEffectServices() {
         string root = ArchitectureTestPaths.RepositoryRoot;
-        string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
         string[] forbiddenPatterns = [
             "IEmailOutbox",
             "IEmailSender",
@@ -100,7 +98,7 @@ public sealed class SideEffectReliabilityGuardrailTests {
             "INotificationWebPushOutboxProcessor",
         ];
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => File.ReadAllText(path).Contains("postCommitActionQueue.Enqueue(", StringComparison.Ordinal))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
@@ -282,9 +280,8 @@ public sealed class SideEffectReliabilityGuardrailTests {
     [Fact]
     public void ApplicationLayer_DoesNotDeclareDomainEvents() {
         string root = ArchitectureTestPaths.RepositoryRoot;
-        string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(static entry => entry.line.Contains(": IDomainEvent", StringComparison.Ordinal) ||

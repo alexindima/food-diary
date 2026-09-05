@@ -38,10 +38,10 @@ Source: `FoodDiary.Presentation.Api/Features/Gamification/GamificationController
 
 ## Boundary Health
 
-- Role: read-composer
+- Role: aggregate-owner
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
-- Declared owned entities: not yet enumerated
+- Declared owned entities: AchievementDefinition, UserAchievement, AchievementEvaluationOutboxMessage
 - Public contract files: 8
 - Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page

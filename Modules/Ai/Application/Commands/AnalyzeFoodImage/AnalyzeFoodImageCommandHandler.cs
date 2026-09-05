@@ -33,7 +33,7 @@ public sealed class AnalyzeFoodImageCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        var imageAssetId = new ImageAssetId(query.ImageAssetId);
+        var imageAssetId = (ImageAssetId)query.ImageAssetId;
         Result<ImageAsset?> assetResult = await imageAssetAccessService
             .ResolveOptionalAsync(imageAssetId, userId, cancellationToken)
             .ConfigureAwait(false);

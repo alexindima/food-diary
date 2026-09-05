@@ -37,3 +37,5 @@ Feature error factories belong to their existing owner contracts; call them dire
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
+
+Shared URI validation and integration telemetry are owned by `Shared/FoodDiary.Integrations.Http`. Reference it directly; the S3 provider must not acquire Billing/mail bridge dependencies through FoodDiary.Integrations.

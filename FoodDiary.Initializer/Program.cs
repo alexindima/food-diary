@@ -84,62 +84,18 @@ if (string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("Default
     return 1;
 }
 
-builder.Services.AddApplicationRuntime();
-builder.Services.AddAdminModule();
-builder.Services.AddAiModule();
-builder.Services.AddBodyMetricsModule();
-builder.Services.AddCyclesModule();
-builder.Services.AddDashboardModule();
-builder.Services.AddHydrationModule();
-builder.Services.AddDietologistModule();
-builder.Services.AddExercisesModule();
-builder.Services.AddFastingModule();
-builder.Services.AddFavoritesModule();
-builder.Services.AddIdentityModule();
-builder.Services.AddImagesModule();
-builder.Services.AddImagesInfrastructure();
-builder.Services.AddLessonsModule();
-builder.Services.AddStatisticsModule();
-builder.Services.AddMealsModule();
-builder.Services.AddMealPlanningModule();
-builder.Services.AddRecipeCommunityModule();
-builder.Services.AddTdeeModule();
-builder.Services.AddWearablesModule();
-builder.Services.AddWeeklyGoalsModule();
-builder.Services.AddUsdaModule();
-builder.Services.AddWeeklyCheckInModule();
-builder.Services.AddDailyAdvicesModule();
-builder.Services.AddContentReportsModule();
-builder.Services.AddGamificationModule();
-builder.Services.AddExportModule();
-builder.Services.AddNotificationsModule().AddNotificationsPersistence();
-builder.Services.AddOpenFoodFactsModule();
-builder.Services.AddProductsModule();
-builder.Services.AddRecipesModule();
-builder.Services.AddRecentItemsModule();
-builder.Services.AddUsersModule();
-builder.Services.AddBillingModule();
-builder.Services.AddMarketingModule();
-builder.Services.AddInfrastructure(builder.Configuration).AddExportInfrastructure().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddDashboardReadServices();
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddScoped<IEmailVerificationNotifier, NoOpEmailVerificationNotifier>();
-builder.Services.AddScoped<INotificationPusher, NoOpNotificationPusher>();
+Program.ConfigureServices(builder.Services, builder.Configuration, command);
 
 using IHost host = builder.Build();
 AsyncServiceScope scope = host.Services.CreateAsyncScope();
 await using (scope.ConfigureAwait(false)) {
     FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-    IInitialAdminBootstrapService initialAdminBootstrapService =
-        scope.ServiceProvider.GetRequiredService<IInitialAdminBootstrapService>();
-    IOutboxDeadLetterReplayService outboxReplayService =
-        scope.ServiceProvider.GetRequiredService<IOutboxDeadLetterReplayService>();
 
     try {
         await ExecuteAsync(
             command,
             dbContext,
-            initialAdminBootstrapService,
-            outboxReplayService,
+            scope.ServiceProvider,
             builder.Configuration).ConfigureAwait(false);
         return 0;
     } catch (Exception exception) {
@@ -151,8 +107,7 @@ await using (scope.ConfigureAwait(false)) {
 static async Task ExecuteAsync(
     InitializerCommand command,
     FoodDiaryDbContext dbContext,
-    IInitialAdminBootstrapService initialAdminBootstrapService,
-    IOutboxDeadLetterReplayService outboxReplayService,
+    IServiceProvider services,
     IConfiguration configuration) {
     switch (command.Name) {
         case "list":
@@ -165,7 +120,7 @@ static async Task ExecuteAsync(
             await UpdateDatabaseAsync(dbContext, command.TargetMigration).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(command.TargetMigration)) {
                 await InitialAdminBootstrapper.BootstrapAsync(
-                    initialAdminBootstrapService,
+                    services.GetRequiredService<IInitialAdminBootstrapService>(),
                     InitialAdminBootstrapOptions.FromConfiguration(configuration)).ConfigureAwait(false);
             }
             break;
@@ -186,16 +141,16 @@ static async Task ExecuteAsync(
             }
             break;
         case "replay-outbox":
-            await ReplayOutboxAsync(command, outboxReplayService).ConfigureAwait(false);
+            await ReplayOutboxAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>()).ConfigureAwait(false);
             break;
         case "list-dead-letters":
-            await ListDeadLettersAsync(command, outboxReplayService).ConfigureAwait(false);
+            await ListDeadLettersAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>()).ConfigureAwait(false);
             break;
         case "show-dead-letter":
-            await ShowDeadLetterAsync(command, outboxReplayService).ConfigureAwait(false);
+            await ShowDeadLetterAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>()).ConfigureAwait(false);
             break;
         case "list-outbox-replays":
-            await ListOutboxReplaysAsync(command, outboxReplayService).ConfigureAwait(false);
+            await ListOutboxReplaysAsync(command, services.GetRequiredService<IOutboxDeadLetterReplayService>()).ConfigureAwait(false);
             break;
         default:
             throw new InvalidOperationException($"Unknown command '{command.Name}'.");
@@ -393,4 +348,54 @@ Examples:
 }
 
 [ExcludeFromCodeCoverage]
-public partial class Program;
+public partial class Program {
+    internal static void ConfigureServices(IServiceCollection services, IConfiguration configuration, InitializerCommand command) {
+        services.AddApplicationRuntime();
+        services.AddInfrastructure(configuration);
+        services.AddDietologistModule();
+        services.AddDistributedMemoryCache();
+        if (command.Name.Equals("update", StringComparison.Ordinal) && string.IsNullOrWhiteSpace(command.TargetMigration)) {
+            services.AddAdminModule();
+            services.AddAiModule();
+            services.AddBodyMetricsModule();
+            services.AddCyclesModule();
+            services.AddDashboardModule();
+            services.AddHydrationModule();
+            services.AddExercisesModule();
+            services.AddFastingModule();
+            services.AddFavoritesModule();
+            services.AddIdentityModule();
+            services.AddImagesModule();
+            services.AddImagesInfrastructure();
+            services.AddLessonsModule();
+            services.AddStatisticsModule();
+            services.AddMealsModule();
+            services.AddMealPlanningModule();
+            services.AddRecipeCommunityModule();
+            services.AddTdeeModule();
+            services.AddWearablesModule();
+            services.AddWeeklyGoalsModule();
+            services.AddUsdaModule();
+            services.AddWeeklyCheckInModule();
+            services.AddDailyAdvicesModule();
+            services.AddContentReportsModule();
+            services.AddGamificationModule();
+            services.AddExportModule();
+            services.AddNotificationsModule().AddNotificationsPersistence();
+            services.AddOpenFoodFactsModule();
+            services.AddProductsModule();
+            services.AddRecipesModule();
+            services.AddRecentItemsModule();
+            services.AddUsersModule();
+            services.AddBillingModule();
+            services.AddMarketingModule();
+            services.AddExportInfrastructure().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddDashboardReadServices();
+            services.AddScoped<IEmailVerificationNotifier, NoOpEmailVerificationNotifier>();
+            services.AddScoped<INotificationPusher, NoOpNotificationPusher>();
+        } else if (command.Name is "replay-outbox" or "list-dead-letters" or "show-dead-letter" or "list-outbox-replays") {
+            services.AddGamificationModule();
+            services.AddImagesInfrastructure();
+            services.AddNotificationsPersistence();
+        }
+    }
+}

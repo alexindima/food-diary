@@ -2,6 +2,18 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ProviderAdapterOwnershipTests {
+    [Fact]
+    public void SharedTransportHelpers_HaveNoRuntimeProjectOrPackageDependencies() {
+        string path = ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Integrations.Http", "FoodDiary.Integrations.Http.csproj");
+        var project = System.Xml.Linq.XDocument.Load(path);
+        Assert.Empty(project.Descendants("ProjectReference"));
+        Assert.Empty(project.Descendants("PackageReference"));
+        foreach (string source in new[] { "Http/BoundedHttpContentReader.cs", "Options/IntegrationUriValidator.cs", "Services/IntegrationsTelemetry.cs" }) {
+            Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Integrations.Http", source)));
+            Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Integrations", source)));
+        }
+    }
+
     [Theory]
     [InlineData("FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs", "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs", "FoodDiary.Integrations.Services.OpenAi")]
     [InlineData("FoodDiary.Integrations/Services/OpenAi/OpenAiRequestFactory.cs", "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiRequestFactory.cs", "FoodDiary.Integrations.Services.OpenAi")]
@@ -43,7 +55,8 @@ public sealed class ProviderAdapterOwnershipTests {
     [InlineData("Images")]
     public void ProviderOwner_DependsOnSharedIntegrationHelpersWithoutReverseExports(string module) {
         string[] references = ProjectReferenceReader.ReadProjectReferences($"Modules/{module}/Infrastructure/FoodDiary.Modules.{module}.Infrastructure.csproj");
-        Assert.Contains("FoodDiary.Integrations", references, StringComparer.Ordinal);
+        Assert.Contains("FoodDiary.Integrations.Http", references, StringComparer.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Integrations", references, StringComparer.Ordinal);
         string[] central = ProjectReferenceReader.ReadProjectReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
         Assert.DoesNotContain(central, reference => reference.StartsWith($"FoodDiary.Modules.{module}.", StringComparison.Ordinal));
         string centralComposition = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Integrations/DependencyInjection.cs"));

@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />
     <ProjectReference Include="../Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
     <ProjectReference Include="../Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
     <ProjectReference Include="..\MailInbox\FoodDiary.MailInbox.Client\FoodDiary.MailInbox.Client.csproj" />

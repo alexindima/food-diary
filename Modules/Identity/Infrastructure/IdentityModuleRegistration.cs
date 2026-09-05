@@ -16,6 +16,7 @@ public static class IdentityModuleRegistration {
         services.AddScoped<IUserLoginEventWriteRepository>(static provider => provider.GetRequiredService<IUserLoginEventRepository>());
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
         services.AddScoped<IRefreshTokenSessionRepository, RefreshTokenSessionRepository>();
+        services.AddScoped<IRefreshTokenSessionReadModelRepository>(static provider => (RefreshTokenSessionRepository)provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionReadRepository>(static provider => provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionWriteRepository>(static provider => provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();

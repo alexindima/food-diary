@@ -9,7 +9,9 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Application.Lessons.Services;
 
-public sealed class LessonAdministrationService(INutritionLessonRepository repository)
+public sealed class LessonAdministrationService(
+    INutritionLessonReadRepository readRepository,
+    INutritionLessonWriteRepository repository)
     : ILessonAdministrationService {
     public async Task<Result<NutritionLesson>> CreateAsync(
         string title,
@@ -88,7 +90,7 @@ public sealed class LessonAdministrationService(INutritionLessonRepository repos
             }
         }
 
-        IReadOnlyList<NutritionLesson> existingLessons = await repository
+        IReadOnlyList<NutritionLesson> existingLessons = await readRepository
             .GetAllAsync(cancellationToken)
             .ConfigureAwait(false);
         var lessonsByContent = new Dictionary<LessonContentIdentity, NutritionLesson>();

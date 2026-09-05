@@ -4,11 +4,67 @@ using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdm
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Results;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Persistence.Outbox;
+using Microsoft.EntityFrameworkCore;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 
 namespace FoodDiary.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class InitializerTests {
+    [Theory]
+    [InlineData("list")]
+    [InlineData("status")]
+    [InlineData("rollback-last")]
+    [InlineData("seed-usda")]
+    public void DatabaseCommands_ResolvePersistenceWithoutBootstrapOrDashboard(string name) {
+        var services = new ServiceCollection();
+        IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(
+            new Dictionary<string, string?>(StringComparer.Ordinal) { ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=initializer_model;Username=model" }).Build();
+        global::Program.ConfigureServices(services, configuration, new InitializerCommand(name, TargetMigration: null, ConnectionString: null));
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+
+        FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+
+        Assert.NotEmpty(context.Database.GetMigrations());
+        Assert.Null(scope.ServiceProvider.GetService<IInitialAdminBootstrapService>());
+        Assert.DoesNotContain(services, descriptor => descriptor.ImplementationType?.Namespace?.StartsWith(
+            "FoodDiary.Application.Dashboard", StringComparison.Ordinal) == true);
+    }
+
+    [Fact]
+    public void OutboxCommands_ComposeEveryReplayStreamWithoutBootstrap() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(
+            new Dictionary<string, string?>(StringComparer.Ordinal) { ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=initializer_model;Username=model" }).Build();
+        global::Program.ConfigureServices(services, configuration, new InitializerCommand("list-dead-letters", TargetMigration: null, ConnectionString: null));
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+
+        Assert.NotNull(scope.ServiceProvider.GetRequiredService<IOutboxDeadLetterReplayService>());
+        Assert.Equal(["achievement_evaluation", "email", "image_object_deletion", "notification_web_push"],
+            scope.ServiceProvider.GetServices<IOutboxReplayStream>().Select(stream => stream.Name).Order(StringComparer.Ordinal), StringComparer.Ordinal);
+        Assert.Null(scope.ServiceProvider.GetService<IInitialAdminBootstrapService>());
+    }
+
+    [Theory]
+    [InlineData(null, true)]
+    [InlineData("20260209005246_AddShoppingLists", false)]
+    public void UpdateCommand_ComposesBootstrapOnlyForLatest(string? target, bool expectsBootstrap) {
+        var services = new ServiceCollection();
+        IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection(
+            new Dictionary<string, string?>(StringComparer.Ordinal) { ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=initializer_model;Username=model" }).Build();
+        global::Program.ConfigureServices(services, configuration, new InitializerCommand("update", target, ConnectionString: null));
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+
+        Assert.Equal(expectsBootstrap, scope.ServiceProvider.GetService<IInitialAdminBootstrapService>() is not null);
+        Assert.NotEmpty(scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>().Database.GetMigrations());
+    }
+
     [Fact]
     public void InitialAdminBootstrapOptions_FromConfiguration_UsesDefaults() {
         IConfiguration configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();

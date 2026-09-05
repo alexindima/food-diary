@@ -1,10 +1,8 @@
 using System.Text.Json;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Exercises.Common;
-using FoodDiary.Application.Hydration.Common;
-using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.Dashboard.Common;
@@ -36,23 +34,12 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
     public DashboardSnapshotBuilder(
         ISender sender,
         IDashboardUserContextService dashboardUserContextService,
-        IWeightEntryReadService weightEntryReadService,
-        IWaistEntryReadService waistEntryReadService,
-        IHydrationEntryReadService hydrationEntryReadService,
         IFastingReadService fastingReadService,
         IExerciseEntryReadService exerciseEntryReadService,
+        IDashboardReadService dashboardReadService,
         ILogger<DashboardSnapshotBuilder> logger)
-        : this(
-            new DashboardSectionDataLoader(
-                sender,
-                dashboardUserContextService,
-                fastingReadService,
-                exerciseEntryReadService,
-                new ComposedDashboardReadService(
-                    new MediatorDashboardStatisticsReadService(sender),
-                    new RepositoryDashboardBodyReadService(weightEntryReadService, waistEntryReadService, hydrationEntryReadService),
-                    new MediatorDashboardMealsReadService(sender))),
-            logger) {
+        : this(new DashboardSectionDataLoader(
+            sender, dashboardUserContextService, fastingReadService, exerciseEntryReadService, dashboardReadService), logger) {
     }
 
     public async Task<Result<DashboardSnapshotModel>> BuildAsync(

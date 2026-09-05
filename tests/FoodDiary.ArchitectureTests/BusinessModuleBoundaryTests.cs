@@ -75,7 +75,7 @@ public sealed class BusinessModuleBoundaryTests {
         Assert.True(File.Exists(abstractionContractPath));
 
         string[] productionRoots = [
-            ArchitectureTestPaths.FromRoot("FoodDiary.Application"),
+            .. ModuleSourceCatalog.ApplicationRoots.Values,
             ArchitectureTestPaths.FromRoot("FoodDiary.Presentation.Api"),
         ];
         string[] violations = [.. productionRoots
@@ -94,7 +94,7 @@ public sealed class BusinessModuleBoundaryTests {
         string[] migratedModules = ["Ai", "Dashboard", "Dietologist", "Gamification", "Hydration", "Tdee", "WeeklyCheckIn"];
 
         string[] violations = [.. migratedModules
-            .Select(module => Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application", module))
+            .Select(ModuleSourceCatalog.ApplicationRoot)
             .SelectMany(SourceScanner.SourceFiles)
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, line, index }))
@@ -207,7 +207,7 @@ public sealed class BusinessModuleBoundaryTests {
 
     [Fact]
     public void BillingModule_DoesNotDependOnUsersAggregateAccess() {
-        string billingRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Billing");
+        string billingRoot = ModuleSourceCatalog.ApplicationRoot("Billing");
         string[] forbiddenReferences = [
             "FoodDiary.Domain.Entities.Users",
             "IBillingUserLookupService",
@@ -225,8 +225,8 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void OtherApplicationModules_DoNotReferenceInternalUsersNamespace() {
         string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
-        string usersRoot = Path.Combine(applicationRoot, "Users");
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string usersRoot = ModuleSourceCatalog.ApplicationRoot("Users");
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => !path.StartsWith(usersRoot, StringComparison.OrdinalIgnoreCase))
             .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
@@ -357,6 +357,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Abstractions.Users.Common",
         "FoodDiary.Application.Abstractions.Users.Models",
         "FoodDiary.Application.Authentication",
+        "FoodDiary.Application.Identity.Authentication",
         "FoodDiary.Application.Common",
         "FoodDiary.Application.Abstractions.Admin.Common",
         "FoodDiary.Application.Notifications.Common",
@@ -371,7 +372,7 @@ public sealed class BusinessModuleBoundaryTests {
             "Fasting",
             "Application");
 
-        string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
+        string[] violations = [.. ModuleSourceCatalog.RequiredFiles(moduleRoot)
             .SelectMany(ReadApplicationNamespaceDependencies)
             .Where(dependency => !ApprovedFastingApplicationDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
@@ -384,12 +385,9 @@ public sealed class BusinessModuleBoundaryTests {
 
     [Fact]
     public void FastingApplicationAbstractions_DoNotDependOnOtherFeatureContracts() {
-        string moduleRoot = Path.Combine(
-            ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Application.Abstractions",
-            "Fasting");
+        string moduleRoot = Path.Combine(ModuleSourceCatalog.ApplicationRoot("Fasting"), "Abstractions");
 
-        string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
+        string[] violations = [.. ModuleSourceCatalog.RequiredFiles(moduleRoot)
             .SelectMany(ReadApplicationAbstractionsNamespaceDependencies)
             .Where(dependency => !dependency.Namespace.Equals("FoodDiary.Application.Abstractions.Fasting", StringComparison.Ordinal) &&
                                  !dependency.Namespace.StartsWith("FoodDiary.Application.Abstractions.Fasting.", StringComparison.Ordinal) &&
@@ -407,7 +405,7 @@ public sealed class BusinessModuleBoundaryTests {
             ArchitectureTestPaths.RepositoryRoot,
             "Modules", "Notifications", "Application");
 
-        string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
+        string[] violations = [.. ModuleSourceCatalog.RequiredFiles(moduleRoot)
             .SelectMany(ReadApplicationNamespaceDependencies)
             .Where(dependency => !ApprovedNotificationsApplicationDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
@@ -424,7 +422,7 @@ public sealed class BusinessModuleBoundaryTests {
             ArchitectureTestPaths.RepositoryRoot,
             "Modules", "Notifications", "Application", "Abstractions");
 
-        string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
+        string[] violations = [.. ModuleSourceCatalog.RequiredFiles(moduleRoot)
             .SelectMany(ReadApplicationAbstractionsNamespaceDependencies)
             .Where(dependency => !dependency.Namespace.Equals("FoodDiary.Application.Abstractions.Notifications", StringComparison.Ordinal) &&
                                  !dependency.Namespace.StartsWith("FoodDiary.Application.Abstractions.Notifications.", StringComparison.Ordinal) &&
@@ -453,7 +451,7 @@ public sealed class BusinessModuleBoundaryTests {
             "IWebPushSubscriptionWriteRepository",
         ];
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => !path.StartsWith(notificationsRoot, StringComparison.OrdinalIgnoreCase))
             .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
@@ -484,10 +482,7 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("Dietologist")]
     [InlineData("Users")]
     public void MigratedApplicationModules_DoNotAcquireNotificationReadModelRepositories(string moduleName) {
-        string moduleRoot = Path.Combine(
-            ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Application",
-            moduleName);
+        string moduleRoot = ModuleSourceCatalog.ApplicationRoot(moduleName);
 
         string[] violations = SourceScanner.FindLinePatternViolations(
             moduleRoot,
@@ -524,7 +519,7 @@ public sealed class BusinessModuleBoundaryTests {
             "IFastingTelemetryEventWriteRepository",
         ];
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => !path.StartsWith(fastingRoot, StringComparison.OrdinalIgnoreCase))
             .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
@@ -557,11 +552,9 @@ public sealed class BusinessModuleBoundaryTests {
 
     [Fact]
     public void BillingApplication_DoesNotDependOnUnapprovedApplicationFeatures() {
-        string moduleRoot = Path.Combine(
-            ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Application.Billing");
+        string moduleRoot = ModuleSourceCatalog.ApplicationRoot("Billing");
 
-        string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
+        string[] violations = [.. ModuleSourceCatalog.RequiredFiles(moduleRoot)
             .SelectMany(ReadApplicationNamespaceDependencies)
             .Where(dependency => !ApprovedBillingApplicationDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
@@ -575,7 +568,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void OtherApplicationModules_DoNotAcquireBillingRepositories() {
         string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
-        string billingRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Billing");
+        string billingRoot = ModuleSourceCatalog.ApplicationRoot("Billing");
         string compositionRoot = Path.Combine(applicationRoot, "DependencyInjection.cs");
         string[] forbiddenContracts = [
             "IBillingSubscriptionRepository",
@@ -590,7 +583,7 @@ public sealed class BusinessModuleBoundaryTests {
             "IBillingWebhookEventWriteRepository",
         ];
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => !path.StartsWith(billingRoot, StringComparison.OrdinalIgnoreCase))
             .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
@@ -644,12 +637,11 @@ public sealed class BusinessModuleBoundaryTests {
     public void CatalogModules_DoNotDependOnUnapprovedApplicationFeatures(
         string moduleName,
         IReadOnlySet<string> approvedDependencies) {
-        string moduleRoot = Path.Combine(
-            ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Application",
-            moduleName);
+        string moduleRoot = moduleName.Equals("Authentication", StringComparison.Ordinal)
+            ? Path.Combine(ModuleSourceCatalog.ApplicationRoot(moduleName), "Authentication")
+            : ModuleSourceCatalog.ApplicationRoot(moduleName);
 
-        string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles(moduleRoot)
             .SelectMany(ReadApplicationNamespaceDependencies)
             .Where(dependency => !approvedDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
@@ -672,10 +664,10 @@ public sealed class BusinessModuleBoundaryTests {
         string ownerModule,
         params string[] forbiddenContracts) {
         string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
-        string ownerRoot = Path.Combine(applicationRoot, ownerModule);
+        string ownerRoot = ModuleSourceCatalog.ApplicationRoot(ownerModule);
         string compositionRoot = Path.Combine(applicationRoot, "DependencyInjection.cs");
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => !path.StartsWith(ownerRoot, StringComparison.OrdinalIgnoreCase))
             .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
@@ -724,7 +716,7 @@ public sealed class BusinessModuleBoundaryTests {
             "Meals",
             "Application");
 
-        string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
+        string[] violations = [.. ModuleSourceCatalog.RequiredFiles(moduleRoot)
             .SelectMany(ReadApplicationNamespaceDependencies)
             .Where(dependency => !ApprovedMealsApplicationDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
@@ -738,7 +730,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void OtherApplicationModules_DoNotAcquireMealPersistenceRepositories() {
         string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
-        string ownerRoot = Path.Combine(applicationRoot, "Meals");
+        string ownerRoot = ModuleSourceCatalog.ApplicationRoot("Meals");
         string compositionRoot = Path.Combine(applicationRoot, "DependencyInjection.cs");
         string[] forbiddenContracts = [
             "IMealRepository",
@@ -749,7 +741,7 @@ public sealed class BusinessModuleBoundaryTests {
             "IMealProductNutritionReadRepository",
         ];
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => !path.StartsWith(ownerRoot, StringComparison.OrdinalIgnoreCase))
             .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
@@ -771,7 +763,8 @@ public sealed class BusinessModuleBoundaryTests {
             "IRecentItemWriteRepository",
         ];
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
+            .Where(path => !path.StartsWith(ModuleSourceCatalog.ApplicationRoot("RecentItems"), StringComparison.OrdinalIgnoreCase))
             .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
@@ -804,12 +797,11 @@ public sealed class BusinessModuleBoundaryTests {
     public void IdentityModules_DoNotDependOnUnapprovedApplicationFeatures(
         string moduleName,
         IReadOnlySet<string> approvedDependencies) {
-        string moduleRoot = Path.Combine(
-            ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Application",
-            moduleName);
+        string moduleRoot = moduleName.Equals("Authentication", StringComparison.Ordinal)
+            ? Path.Combine(ModuleSourceCatalog.ApplicationRoot(moduleName), "Authentication")
+            : ModuleSourceCatalog.ApplicationRoot(moduleName);
 
-        string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles(moduleRoot)
             .SelectMany(ReadApplicationNamespaceDependencies)
             .Where(dependency => !approvedDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
@@ -828,7 +820,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void OtherApplicationModules_DoNotAcquireCoreUserRepositories() {
         string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
-        string usersRoot = Path.Combine(applicationRoot, "Users");
+        string usersRoot = ModuleSourceCatalog.ApplicationRoot("Users");
         string compositionRoot = Path.Combine(applicationRoot, "DependencyInjection.cs");
         string[] forbiddenContracts = [
             "IUserRepository",
@@ -836,7 +828,7 @@ public sealed class BusinessModuleBoundaryTests {
             "IUserWriteRepository",
         ];
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => !path.StartsWith(usersRoot, StringComparison.OrdinalIgnoreCase))
             .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
@@ -1131,10 +1123,10 @@ public sealed class BusinessModuleBoundaryTests {
         IReadOnlyCollection<string> forbiddenContracts,
         string guidance) {
         string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
-        string ownerRoot = Path.Combine(applicationRoot, ownerModule);
+        string ownerRoot = ModuleSourceCatalog.ApplicationRoot(ownerModule);
         string compositionRoot = Path.Combine(applicationRoot, "DependencyInjection.cs");
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => !path.StartsWith(ownerRoot, StringComparison.OrdinalIgnoreCase))
             .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)

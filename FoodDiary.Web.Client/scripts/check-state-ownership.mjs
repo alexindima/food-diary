@@ -5,7 +5,8 @@ import { pathToFileURL } from 'node:url';
 import ts from 'typescript';
 
 const SOURCE_ROOTS = ['src/app', 'projects/fooddiary-admin/src/app'];
-const FEATURE_FACADE_PATH = /(?:^|\/)(?:src\/app\/(?:components\/shared|features)|projects\/fooddiary-admin\/src\/app\/features)\/.+\.facade\.ts$/u;
+const FEATURE_FACADE_PATH =
+    /(?:^|\/)(?:src\/app\/(?:components\/shared|features)|projects\/fooddiary-admin\/src\/app\/features)\/.+\.facade\.ts$/u;
 
 export function findStateOwnershipViolations(files) {
     const sources = files.map(file => ({
@@ -31,6 +32,11 @@ export function findStateOwnershipViolations(files) {
             if (!decorators.has('Injectable')) {
                 violations.push(`${normalizedPath}: stateful feature facade ${className} must use @Injectable(), not a root @Service().`);
             }
+            if (hasProvidedInFallback(declaration)) {
+                violations.push(
+                    `${normalizedPath}: stateful feature facade ${className} must not declare a providedIn fallback; use its explicit owner provider.`,
+                );
+            }
             if (!providerNames.has(className)) {
                 violations.push(
                     `${normalizedPath}: stateful feature facade ${className} needs an explicit route/page/dialog/component provider.`,
@@ -49,7 +55,11 @@ function collectExplicitProviderNames(sources) {
             continue;
         }
         visit(source, node => {
-            if (!ts.isPropertyAssignment(node) || node.name.getText(source) !== 'providers' || !ts.isArrayLiteralExpression(node.initializer)) {
+            if (
+                !ts.isPropertyAssignment(node) ||
+                node.name.getText(source) !== 'providers' ||
+                !ts.isArrayLiteralExpression(node.initializer)
+            ) {
                 return;
             }
             for (const provider of node.initializer.elements) {
@@ -59,7 +69,11 @@ function collectExplicitProviderNames(sources) {
                     const provideProperty = provider.properties.find(
                         property => ts.isPropertyAssignment(property) && property.name.getText(source) === 'provide',
                     );
-                    if (provideProperty !== undefined && ts.isPropertyAssignment(provideProperty) && ts.isIdentifier(provideProperty.initializer)) {
+                    if (
+                        provideProperty !== undefined &&
+                        ts.isPropertyAssignment(provideProperty) &&
+                        ts.isIdentifier(provideProperty.initializer)
+                    ) {
                         names.add(provideProperty.initializer.text);
                     }
                 }
@@ -91,6 +105,32 @@ function getDecoratorNames(declaration) {
         }
     }
     return names;
+}
+
+function hasProvidedInFallback(declaration) {
+    return (declaration.modifiers ?? []).some(modifier => {
+        if (!ts.isDecorator(modifier) || !ts.isCallExpression(modifier.expression)) {
+            return false;
+        }
+        const call = modifier.expression;
+        if (!ts.isIdentifier(call.expression) || call.expression.text !== 'Injectable') {
+            return false;
+        }
+        return call.arguments.some(
+            argument =>
+                !ts.isObjectLiteralExpression(argument) ||
+                argument.properties.some(property => {
+                    if (ts.isSpreadAssignment(property)) {
+                        return true;
+                    }
+                    return (
+                        ts.isPropertyAssignment(property) &&
+                        property.name.getText().replaceAll(/['"]/gu, '') === 'providedIn' &&
+                        property.initializer.kind !== ts.SyntaxKind.NullKeyword
+                    );
+                }),
+        );
+    });
 }
 
 function visit(root, callback) {

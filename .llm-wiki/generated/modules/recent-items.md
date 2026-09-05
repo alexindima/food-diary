@@ -23,6 +23,7 @@ sources:
 
 ## Source Areas
 
+- `Modules/RecentItems/Application`
 - `Modules/RecentItems/Application/Abstractions`
 
 ## HTTP Surface

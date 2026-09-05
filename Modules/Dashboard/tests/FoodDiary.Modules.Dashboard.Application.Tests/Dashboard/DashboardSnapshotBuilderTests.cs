@@ -575,11 +575,15 @@ public sealed class DashboardSnapshotBuilderTests {
         new(
             sender,
             dashboardUserContextService,
-            new WeightEntryReadService(weightEntryRepository),
-            new WaistEntryReadService(waistEntryRepository),
-            new HydrationEntryReadService(hydrationEntryRepository),
             fastingReadService,
             new ExerciseEntryReadService(exerciseEntryRepository, exerciseEntryRepository),
+            new ComposedDashboardReadService(
+                new SenderStatisticsFixture(sender),
+                new RepositoryDashboardBodyReadService(
+                    new WeightEntryReadService(weightEntryRepository),
+                    new WaistEntryReadService(waistEntryRepository),
+                    new HydrationEntryReadService(hydrationEntryRepository)),
+                new MediatorDashboardMealsReadService(sender)),
             logger);
 
     private static DashboardSnapshotRequest CreateRequest(

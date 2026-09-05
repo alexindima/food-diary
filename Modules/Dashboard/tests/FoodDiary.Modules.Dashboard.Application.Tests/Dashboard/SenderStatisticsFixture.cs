@@ -6,9 +6,10 @@ using FoodDiary.Application.Statistics.Queries.GetStatistics;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Dashboard.Services;
+namespace FoodDiary.Application.Tests.Dashboard;
 
-internal sealed class MediatorDashboardStatisticsReadService(ISender sender) : IDashboardStatisticsReadService {
+[ExcludeFromCodeCoverage]
+internal sealed class SenderStatisticsFixture(ISender sender) : IDashboardStatisticsReadService {
     public async Task<Result<IReadOnlyList<DashboardStatisticsBucketReadModel>>> GetStatisticsAsync(
         UserId userId,
         DateTime dateFrom,

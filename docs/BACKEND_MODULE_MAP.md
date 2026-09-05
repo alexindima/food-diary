@@ -221,8 +221,8 @@ statistics contracts retain their CLR namespaces and are referenced directly by
 Statistics/Cycles/WeeklyCheckIn/Tdee/Gamification consumers, not re-exported by central Abstractions.
 Optimized projection readers own no contributing aggregates. Shared DbContext,
 migrations/model snapshot and HTTP transport remain central. Hosts explicitly call
-`AddDashboardReadServices` after infrastructure registration; Application fallback
-registration remains `AddDashboardModule`. Scoped concrete/interface aliases and
+`AddDashboardReadServices` after infrastructure registration; `AddDashboardModule`
+requires an independent reader and registers no recursive mediator fallback. Scoped concrete/interface aliases and
 query behavior are preserved. Owned application/adapter tests live under module
 tests; mixed DI/date, shared PostgreSQL and HTTP suites remain central.
 

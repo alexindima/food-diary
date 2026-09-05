@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3527,
-    "symbols": 3472,
+    "sourceFiles": 3529,
+    "symbols": 3473,
     "interfaceImplementationLinks": 235,
-    "dependencyInjectionRegistrations": 152,
+    "dependencyInjectionRegistrations": 151,
     "kinds": {
-      "class": 1797,
+      "class": 1796,
       "enum": 62,
-      "interface": 424,
-      "record": 1069,
+      "interface": 425,
+      "record": 1070,
       "record struct": 120
     },
     "roles": {
@@ -32,15 +32,15 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1335,
+      "Other": 1336,
       "Query": 162,
       "QueryHandler": 124,
-      "ReadModelRepository": 29,
+      "ReadModelRepository": 30,
       "ReadRepository": 47,
       "Repository": 103,
       "Request": 135,
       "Response": 181,
-      "Service": 279,
+      "Service": 278,
       "Validator": 206,
       "ValueObject": 114,
       "WriteRepository": 46
@@ -843,7 +843,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 396
+      "line": 351
     },
     {
       "name": "UsdaCsvReader",
@@ -965,25 +965,11 @@
       "line": 7
     },
     {
-      "name": "BoundedHttpContentReader",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Http/BoundedHttpContentReader.cs",
-      "line": 6
-    },
-    {
       "name": "BillingOptions",
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Integrations/Options/BillingOptions.cs",
       "line": 4
-    },
-    {
-      "name": "IntegrationUriValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Integrations/Options/IntegrationUriValidator.cs",
-      "line": 2
     },
     {
       "name": "PaddleOptions",
@@ -1005,13 +991,6 @@
       "role": "Options",
       "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
       "line": 2
-    },
-    {
-      "name": "IntegrationsTelemetry",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Services/IntegrationsTelemetry.cs",
-      "line": 4
     },
     {
       "name": "MailInboxClientAdminMailInboxReader",
@@ -7787,7 +7766,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Application/Internal/Validation/EnumValueParser.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "OptionalEntityIdValidator",
@@ -10055,7 +10034,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/ContentReports/Application/Common/ContentReportTargetTypeParser.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "DependencyInjection",
@@ -11336,7 +11315,7 @@
       "kind": "class",
       "role": "Mapping",
       "path": "Modules/Dashboard/Application/Services/DashboardMapping.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "DashboardMealsMapper",
@@ -11357,7 +11336,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dashboard/Application/Services/DashboardSnapshotBuilder.cs",
-      "line": 24
+      "line": 22
     },
     {
       "name": "DashboardSnapshotRequest",
@@ -11378,7 +11357,7 @@
       "kind": "class",
       "role": "Mapper",
       "path": "Modules/Dashboard/Application/Services/DashboardStatisticsMapper.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "DashboardUserContextService",
@@ -11407,13 +11386,6 @@
       "role": "Service",
       "path": "Modules/Dashboard/Application/Services/MediatorDashboardMealsReadService.cs",
       "line": 11
-    },
-    {
-      "name": "MediatorDashboardStatisticsReadService",
-      "kind": "class",
-      "role": "Service",
-      "path": "Modules/Dashboard/Application/Services/MediatorDashboardStatisticsReadService.cs",
-      "line": 10
     },
     {
       "name": "RepositoryDashboardBodyReadService",
@@ -12953,7 +12925,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Exercises/Application/Internal/EnumValueParser.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "RequiredIdParser",
@@ -13688,7 +13660,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Fasting/Application/Common/EnumValueParser.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "FastingCurrentUserResolver",
@@ -15004,7 +14976,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "AchievementReconciliationHandler",
@@ -15368,7 +15340,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationEntry.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "HydrationEntryId",
@@ -15382,7 +15354,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationEntryConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "HydrationPersistenceModelRegistration",
@@ -15396,14 +15368,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Hydration/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "HydrationEntryRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "IEmailTemplateAdministrationReadService",
@@ -15609,6 +15581,13 @@
       "line": 2
     },
     {
+      "name": "IRefreshTokenSessionReadModelRepository",
+      "kind": "interface",
+      "role": "ReadModelRepository",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionReadModelRepository.cs",
+      "line": 5
+    },
+    {
       "name": "IRefreshTokenSessionReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
@@ -15690,6 +15669,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Identity/Application/Abstractions/Authentication/Models/AuthenticationClientContext.cs",
+      "line": 2
+    },
+    {
+      "name": "RefreshTokenSessionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
       "line": 2
     },
     {
@@ -16362,7 +16348,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "UserLoginEventRepository",
@@ -17342,14 +17328,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/MealPlanning/Application/Common/Validation/EnumFilterParser.cs",
-      "line": 2
+      "line": 3
     },
     {
       "name": "EnumValueParser",
       "kind": "class",
       "role": "Other",
       "path": "Modules/MealPlanning/Application/Common/Validation/EnumValueParser.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "OptionalEntityIdValidator",
@@ -18168,7 +18154,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Application/Common/Validation/EnumValueParser.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "OptionalEntityIdValidator",
@@ -22102,7 +22088,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Users/Application/Common/UserInputParser.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "UserPreferenceCodeParser",
@@ -24177,6 +24163,27 @@
       "line": 2
     },
     {
+      "name": "BoundedHttpContentReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Integrations.Http/Http/BoundedHttpContentReader.cs",
+      "line": 6
+    },
+    {
+      "name": "IntegrationUriValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Shared/FoodDiary.Integrations.Http/Options/IntegrationUriValidator.cs",
+      "line": 2
+    },
+    {
+      "name": "IntegrationsTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Integrations.Http/Services/IntegrationsTelemetry.cs",
+      "line": 4
+    },
+    {
       "name": "DefaultMediator",
       "kind": "class",
       "role": "Other",
@@ -26089,14 +26096,14 @@
       "implementation": "NoOpEmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 125
+      "line": 393
     },
     {
       "service": "INotificationPusher",
       "implementation": "NoOpNotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Initializer/Program.cs",
-      "line": 126
+      "line": 394
     },
     {
       "service": "IBillingPublicConfigProvider",
@@ -26414,46 +26421,39 @@
       "line": 14
     },
     {
-      "service": "IDashboardStatisticsReadService",
-      "implementation": "MediatorDashboardStatisticsReadService",
-      "lifetime": "Scoped",
-      "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 16
-    },
-    {
       "service": "IDashboardBodyReadService",
       "implementation": "RepositoryDashboardBodyReadService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 17
+      "line": 16
     },
     {
       "service": "IDashboardMealsReadService",
       "implementation": "MediatorDashboardMealsReadService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 18
+      "line": 17
     },
     {
       "service": "IDashboardReadService",
       "implementation": "ComposedDashboardReadService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 19
+      "line": 18
     },
     {
       "service": "IDashboardUserContextService",
       "implementation": "DashboardUserContextService",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 20
+      "line": 19
     },
     {
       "service": "IDashboardSectionDataLoader",
       "implementation": "DashboardSectionDataLoader",
       "lifetime": "Scoped",
       "path": "Modules/Dashboard/Application/DependencyInjection.cs",
-      "line": 21
+      "line": 20
     },
     {
       "service": "IDashboardReadService",

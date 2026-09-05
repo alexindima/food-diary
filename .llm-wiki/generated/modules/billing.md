@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Billing/Application/FoodDiary.Application.Billing.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: none observed
+- Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -26,6 +26,7 @@ sources:
 
 - `FoodDiary.Integrations/Billing`
 - `FoodDiary.Presentation.Api/Features/Billing`
+- `Modules/Billing/Application`
 - `Modules/Billing/Application/Abstractions`
 
 ## HTTP Surface

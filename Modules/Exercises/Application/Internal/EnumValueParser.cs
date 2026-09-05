@@ -1,7 +1,8 @@
+using FoodDiary.Application.Abstractions.Common.Validation;
 namespace FoodDiary.Application.Exercises.Internal;
 
 internal static class EnumValueParser {
     public static bool TryParse<TEnum>(string? value, out TEnum parsed)
         where TEnum : struct, Enum =>
-        Enum.TryParse(value, ignoreCase: true, out parsed);
+        SharedEnumValueParser.TryParse(value, out parsed);
 }

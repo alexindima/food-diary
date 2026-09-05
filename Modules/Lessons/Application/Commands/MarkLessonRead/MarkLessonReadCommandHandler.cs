@@ -33,7 +33,7 @@ public sealed class MarkLessonReadCommandHandler(
                 "Lesson id must not be empty."));
         }
 
-        var lessonId = new NutritionLessonId(command.LessonId);
+        var lessonId = (NutritionLessonId)command.LessonId;
         NutritionLesson? lesson = await readRepository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return Result.Failure(LessonErrors.NotFound(command.LessonId));

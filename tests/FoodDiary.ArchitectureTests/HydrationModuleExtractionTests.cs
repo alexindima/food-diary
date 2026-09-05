@@ -3,6 +3,17 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class HydrationModuleExtractionTests {
     [Fact]
+    public void HydrationRepository_ReceivesOnlyItsOwnedSet() {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+            "Modules", "Hydration", "Infrastructure", "Persistence", "HydrationEntryRepository.cs"));
+        Assert.Contains("HydrationEntryRepository(DbSet<HydrationEntry> entries)", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiaryDbContext", source, StringComparison.Ordinal);
+        string[] references = ProjectReferenceReader.ReadProjectReferences(
+            "Modules/Hydration/Domain/FoodDiary.Modules.Hydration.Domain.csproj");
+        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Modules.Users.Domain.Contracts"], references, StringComparer.Ordinal);
+    }
+
+    [Fact]
     public void HydrationApplicationSource_LivesOnlyInExtractedAssembly() {
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Hydration");
         string extractedRoot = ArchitectureTestPaths.FromRoot("Modules", "Hydration", "Application");

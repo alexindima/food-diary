@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
@@ -10,7 +11,7 @@ internal static class EnumValueParser {
             return Result.Success<TEnum?>(value: null);
         }
 
-        return Enum.TryParse(value, ignoreCase: true, out TEnum parsed)
+        return SharedEnumValueParser.TryParse(value, out TEnum parsed)
             ? Result.Success<TEnum?>(parsed)
             : Result.Failure<TEnum?>(Errors.Validation.Invalid(fieldName, message));
     }

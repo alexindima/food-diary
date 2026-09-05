@@ -8,17 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "ca44a54386242d2fcb3f1d5d4a36558f2d62ce4840b535e59fd5d1a4f0caedf9"
+          "sha256": "93c8604822d2ac685f012cd0d72b87e0f68ff45857a48723c992d618a545a381"
         },
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "f511419852ddcf9ec44fe36ef982e3f9391a1873c69c845f24f82df939aaf8ee"
+          "sha256": "f3bfe589a3272aeb7625e1ddad49f12eaa7db5b79fad6188af81007d70308c5a"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "3a6e8fd3798279482cafe08ee321f4adab294cd829b5855e54b418f9fcab5c49"
         }
       ],
-      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
+      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:33:06.5519964Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:36.2998538Z"
     },
     {
       "pageId": "module.frontend",
@@ -42,13 +46,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "f511419852ddcf9ec44fe36ef982e3f9391a1873c69c845f24f82df939aaf8ee"
+          "sha256": "f3bfe589a3272aeb7625e1ddad49f12eaa7db5b79fad6188af81007d70308c5a"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "3a6e8fd3798279482cafe08ee321f4adab294cd829b5855e54b418f9fcab5c49"
         }
       ],
-      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
+      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:33:07.4597983Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:37.1509415Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -137,17 +145,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "ca44a54386242d2fcb3f1d5d4a36558f2d62ce4840b535e59fd5d1a4f0caedf9"
+          "sha256": "93c8604822d2ac685f012cd0d72b87e0f68ff45857a48723c992d618a545a381"
         },
         {
           "path": "docs/adr/README.md",
-          "sha256": "0179f56aac38827e6681230401562642fd68d60bb23858315c282b49918ce6a6"
+          "sha256": "0f1655c63f67bf6d0e484d9d0bfed27925598abd27e84275a64d7a18d00b68a7"
         }
       ],
-      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
+      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:33:09.2544224Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:38.0505957Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -155,18 +163,18 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-          "sha256": "0641baab5ef0c3199fa437ab6cf285078353800bf562b539fe3d7fb2f73b8b8b"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "853ef55a07ebcb0804ed0f687204fe3510265aca70f410be54fa7a1ec6a1b6b9"
         },
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "e7aa21146919a05002431dcf0749785735fd54ff65112596d1168f238190afaf"
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "e62e8257c00ca90b636e598d364e56728305d43cab9622203dc953b6c880f70b"
         }
       ],
-      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
+      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:33:10.2107568Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:39.0794823Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -224,40 +232,36 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "f6822bcc32e35f1eaa7949a6cb7e53384b9f3985ad7ed403bbba981e32c83df5"
+          "sha256": "740aee1a5fbf61dd5ca86ac3526132af6e6a09763ec94111387fdf7eea20a22b"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "e7aa21146919a05002431dcf0749785735fd54ff65112596d1168f238190afaf"
+          "sha256": "853ef55a07ebcb0804ed0f687204fe3510265aca70f410be54fa7a1ec6a1b6b9"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "35f19fbe9704a8e935020e99b956571d57ba82331f9909f72d6bdf48ab65e91b"
+          "sha256": "220e28095533da7f398f9716e5b36ef774bd4294fa364f5f56d33dd039e7b0f5"
         }
       ],
-      "reason": "Reviewed generic Wiki path resolution, module inference, semantic ranking regression, frozen holdout relocation, architecture guardrails, test ledger, EF comparison, and NuGet audit against current source.",
+      "reason": "Current guards inspect all 34 modules and reviewed persistence capabilities. Architecture tests pass 1173, MCP passes 267 including identity-scope ranking, frontend verify passes, and full-run failures were resolved or passed isolated retries. Static index references remain distinct from execution coverage; workflow mechanics and authority are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T22:41:14.6162138Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:39.9812379Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
       "pagePath": ".llm-wiki/workflows/backend-contract-review.md",
-      "pageSha256": "ab1e4ba6f832f69547b9b819096039b1837170c84a9a84ce5c47c7f28a485568",
+      "pageSha256": "c89b4c5cb13fefe0a1c6171804cc91b5f6c9ce69753e8d4de9fda0bb2514b052",
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "346db818da04c931bb8c5f2975027953f7c46b14b1b775d2f1b77cd720a44a24"
-        },
-        {
-          "path": "FoodDiary.Application.Abstractions/AGENTS.md",
-          "sha256": "<missing>"
+          "sha256": "6094eeab297b0e8b87cb6766bd848c4e834b8fcf178fa4e1f9bcbba0c59a9094"
         }
       ],
-      "reason": "Reviewed the shared-contract split against current source, direct project references, public CLR namespaces, and unchanged HTTP/Swagger surface; generated contract navigation now reflects the six narrow owners.",
+      "reason": "Reviewed regenerated consumer records against the full solution build and API integration results. Identity adds an internal minimal read projection; HTTP routes and serialized payloads do not change. Module API edges remain explicit, and the primary backend summary now locates owner adapters and narrow transport helpers correctly.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:33:13.3581432Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:41.2795783Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -295,34 +299,14 @@
       "pageSha256": "8125215f523313db4f5d24a8398ee62bcbe5d6e2533066a2a1b5f53b12bd3491",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "ca4df132747e83d083c475cc7daebd55d637308a4156aa093692df5beeb1eb03"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "32e4fb5f8f85a05007e534bad5d1e6a98b055e30dec4d93c6c297f9b2c986e75"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "5cec974cc9f3f942985a0f1212a2ce9c2aeec8fa8832ade1573ade859d001bd5"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4e78ee04548f64e6aed709d9d887de3eb36625522fa453d9365687c03f479f33"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "229b107140848b762408ba5062b63475fc97d6a0b509a23915bc4a0050fab3fe"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "66f3851493648beb8668bb00c5bd9db867c2a309c86185480237fd875e2e61cf"
+          "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
+          "sha256": "1a1d85920295d1b18856235c75b0cf11b454ee9281346249a1c2f5bf1fd8a76f"
         }
       ],
-      "reason": "Reviewed generic Wiki path resolution, module inference, semantic ranking regression, frozen holdout relocation, architecture guardrails, test ledger, EF comparison, and NuGet audit against current source.",
+      "reason": "Current guards inspect all 34 modules and reviewed persistence capabilities. Architecture tests pass 1173, MCP passes 267 including identity-scope ranking, frontend verify passes, and full-run failures were resolved or passed isolated retries. Static index references remain distinct from execution coverage; workflow mechanics and authority are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T22:41:15.5741422Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:43.0689008Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -485,13 +469,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "0179f56aac38827e6681230401562642fd68d60bb23858315c282b49918ce6a6"
+          "sha256": "0f1655c63f67bf6d0e484d9d0bfed27925598abd27e84275a64d7a18d00b68a7"
         }
       ],
-      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
+      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:33:17.0986521Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:43.9134740Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -533,14 +517,14 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "98170e65e804c34ebc5a6700395aad3415a1d7cfedb00d4b4cc3a2e8dbec8218"
+          "path": ".llm-wiki/generated/domain-data-index.json",
+          "sha256": "7b3d7dcc34173838a03ff8a3746895fc3de6bb47606fa18987d6e76438bef498"
         }
       ],
-      "reason": "Owner DI and adapter tests plus shared PostgreSQL rollback/concurrency/cancellation/audit tests protect the boundary. Existing engine/claim/retry and provider behavior unchanged. Actual full suites/EF/NuGet with durable logs, no collectors. No evaluation corpus/ranking/threshold edits.",
+      "reason": "Current guards inspect all 34 modules and reviewed persistence capabilities. Architecture tests pass 1173, MCP passes 267 including identity-scope ranking, frontend verify passes, and full-run failures were resolved or passed isolated retries. Static index references remain distinct from execution coverage; workflow mechanics and authority are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "6638a5aa5fe64d2bbd6b6ecf03619f2429e31080",
-      "reviewedAtUtc": "2026-09-03T12:08:05.0335170Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:44.7793727Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -752,13 +736,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "fc9d34919fc39aa4a548d283336a21800ad5a7868c8a1f0a910bc0ff3c90e038"
+          "sha256": "e62e8257c00ca90b636e598d364e56728305d43cab9622203dc953b6c880f70b"
         }
       ],
-      "reason": "RecentItems extraction updates physical ownership, dependency manifests, solution catalog, architecture guardrails, and generated indexes; reviewed against the completed implementation and green architecture/provider/HTTP verification.",
+      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "2fe2a223c2eca0d5f278c2b94377f5a41d4021ac",
-      "reviewedAtUtc": "2026-09-01T17:19:48.2007398Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:45.5753082Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -812,17 +796,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "f89c9f1465c682cb1df13ca9d0a4795db25cc8b3dfd44eb1d431bb0b6baefc67"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4e78ee04548f64e6aed709d9d887de3eb36625522fa453d9365687c03f479f33"
+          "sha256": "93f93ad0c59fadb965aec6252b086376d40486c599b9e652f5c2da94ce654862"
         }
       ],
-      "reason": "Reviewed sensitive-data and security navigation; contract relocation changes no collection, storage, logging, provider sharing, authorization, credentials or retention behavior.",
+      "reason": "Reviewed session projection user/revocation filtering and absence of token hashes, Hydration FK cascade and existing lifecycle matrix, unchanged export password/consent payloads and unchanged provider bodies. Privacy and security workflows remain navigation guidance, not claims of production or scanner coverage.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:53:01.9070023Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:46.4351959Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -861,13 +841,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "01544b2405f909f5550513bf7997ae25b580bb04e380bc79d4df8fcc94953b3a"
+          "sha256": "db8ccec88f0034eaf43507b9dcee3f97d7be16bccbaa394a7617c244532a8e77"
         }
       ],
-      "reason": "Reviewed generic Wiki path resolution, module inference, semantic ranking regression, frozen holdout relocation, architecture guardrails, test ledger, EF comparison, and NuGet audit against current source.",
+      "reason": "Current guards inspect all 34 modules and reviewed persistence capabilities. Architecture tests pass 1173, MCP passes 267 including identity-scope ranking, frontend verify passes, and full-run failures were resolved or passed isolated retries. Static index references remain distinct from execution coverage; workflow mechanics and authority are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T22:41:16.8242733Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:47.4303551Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -944,13 +924,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "c36ace783f6586c28678db755ba5a2b6514ed5da2cdc1eab0576e5b65725bbb2"
+          "sha256": "ba4c11b7022372c58adcf345aceed9a5c129d3e3907b2415a24252f76c4ae754"
         }
       ],
-      "reason": "Updated the current architecture, ownership inventory, ADRs, module guides, backend manifest, and generated navigation to describe the six narrow shared contract owners and Users-owned helpers.",
+      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T22:41:18.9090594Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:50.0784741Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -959,25 +939,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "01544b2405f909f5550513bf7997ae25b580bb04e380bc79d4df8fcc94953b3a"
+          "sha256": "db8ccec88f0034eaf43507b9dcee3f97d7be16bccbaa394a7617c244532a8e77"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "c36ace783f6586c28678db755ba5a2b6514ed5da2cdc1eab0576e5b65725bbb2"
+          "sha256": "ba4c11b7022372c58adcf345aceed9a5c129d3e3907b2415a24252f76c4ae754"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "f89c9f1465c682cb1df13ca9d0a4795db25cc8b3dfd44eb1d431bb0b6baefc67"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "5cec974cc9f3f942985a0f1212a2ce9c2aeec8fa8832ade1573ade859d001bd5"
+          "sha256": "93f93ad0c59fadb965aec6252b086376d40486c599b9e652f5c2da94ce654862"
         }
       ],
-      "reason": "Contract relocation adds no collection, disclosure, credential, logging, cache, queue, or retention behavior; authentication and user access interfaces retain their existing namespaces and implementations.",
+      "reason": "Reviewed session projection user/revocation filtering and absence of token hashes, Hydration FK cascade and existing lifecycle matrix, unchanged export password/consent payloads and unchanged provider bodies. Privacy and security workflows remain navigation guidance, not claims of production or scanner coverage.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T22:41:20.0577471Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:51.1054650Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1102,21 +1078,17 @@
     {
       "pageId": "workflow-trace-feature",
       "pagePath": ".llm-wiki/workflows/trace-feature.md",
-      "pageSha256": "0dc23a14a2f598d67f9e84a22147eb0c2a64bbbb2ad9105dee754ee053a8abda",
+      "pageSha256": "d7293e263ab1875a26b0f5a9d91ec9d835ce3c5a912a3aae0accc1c8a197a8f2",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "dae7de23fd9830821c335c964ad1b59e379e3fc5d80aa1667f1e7689de572b18"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "8d2ed183069b8f3d5658b92d7894369e5db0bdc0f4888441de09c399af4cbde7"
+          "sha256": "3363acc71df1dd04904099a9d50d03913540e1582cf62db306a6e05af05ef25d"
         }
       ],
-      "reason": "Reviewed the regenerated frontend trace indexes from security-card UI through facade, HTTP service, controller, application handlers, and repository mutations; current trace guidance remains accurate.",
+      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
-      "reviewedAtUtc": "2026-08-29T04:18:43.1480157Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:52.0947651Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1155,13 +1127,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "ca44a54386242d2fcb3f1d5d4a36558f2d62ce4840b535e59fd5d1a4f0caedf9"
+          "sha256": "93c8604822d2ac685f012cd0d72b87e0f68ff45857a48723c992d618a545a381"
         }
       ],
-      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
+      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:33:14.2830080Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:42.1047472Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1214,38 +1186,18 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "ca4df132747e83d083c475cc7daebd55d637308a4156aa093692df5beeb1eb03"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "32e4fb5f8f85a05007e534bad5d1e6a98b055e30dec4d93c6c297f9b2c986e75"
-        },
-        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "cb4c14ed4c375ac596353f7f00dc982ef596991c59d943cb1d912547944e4fac"
-        },
-        {
-          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-          "sha256": "0641baab5ef0c3199fa437ab6cf285078353800bf562b539fe3d7fb2f73b8b8b"
-        },
-        {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4e78ee04548f64e6aed709d9d887de3eb36625522fa453d9365687c03f479f33"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "229b107140848b762408ba5062b63475fc97d6a0b509a23915bc4a0050fab3fe"
+          "sha256": "982dc6847bf2c7758ac82a91f591f1f35163ec79886294bc475c0ff5c200611f"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "ca44a54386242d2fcb3f1d5d4a36558f2d62ce4840b535e59fd5d1a4f0caedf9"
+          "sha256": "93c8604822d2ac685f012cd0d72b87e0f68ff45857a48723c992d618a545a381"
         }
       ],
-      "reason": "Updated the current architecture, ownership inventory, ADRs, module guides, backend manifest, and generated navigation to describe the six narrow shared contract owners and Users-owned helpers.",
+      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T22:41:17.9068962Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:48.3828325Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1254,13 +1206,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "ca44a54386242d2fcb3f1d5d4a36558f2d62ce4840b535e59fd5d1a4f0caedf9"
+          "sha256": "93c8604822d2ac685f012cd0d72b87e0f68ff45857a48723c992d618a545a381"
         }
       ],
-      "reason": "Reviewed Wiki tooling, architecture matrix, quality indexes and workflow pages against the generic catalog, path resolver, deduplication and extraction-readiness regressions; no ranking, query, threshold or frozen evaluation target changed.",
+      "reason": "Current guards inspect all 34 modules and reviewed persistence capabilities. Architecture tests pass 1173, MCP passes 267 including identity-scope ranking, frontend verify passes, and full-run failures were resolved or passed isolated retries. Static index references remain distinct from execution coverage; workflow mechanics and authority are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:33:21.9755209Z"
+      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
+      "reviewedAtUtc": "2026-09-05T11:25:49.2094895Z"
     }
   ]
 }

@@ -10,7 +10,7 @@ public sealed class RevokeOtherSessionsCommandHandler(
     TimeProvider timeProvider) : ICommandHandler<RevokeOtherSessionsCommand, Result> {
     public async Task<Result> Handle(RevokeOtherSessionsCommand command, CancellationToken cancellationToken) {
         await repository.RevokeAllOtherAsync(
-            new UserId(command.UserId),
+            (UserId)command.UserId,
             command.CurrentSessionId,
             timeProvider.GetUtcNow().UtcDateTime,
             cancellationToken).ConfigureAwait(false);

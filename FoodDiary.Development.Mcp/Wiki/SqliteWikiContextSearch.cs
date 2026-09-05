@@ -649,12 +649,11 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                     eligibleQueryTerms.Contains(term.ToLowerInvariant())) == true) {
                     continue;
                 }
-                string eligibleIdentity = string.Equals(
-                    boost.IdentityScope,
-                    "file",
-                    StringComparison.OrdinalIgnoreCase)
-                    ? searchableFileIdentity
-                    : searchablePath;
+                string eligibleIdentity = boost.IdentityScope?.ToLowerInvariant() switch {
+                    "file" => searchableFileIdentity,
+                    "identity" => searchableIdentity,
+                    _ => searchablePath,
+                };
                 int queryMatches = boost.QueryTerms.Count(term =>
                     eligibleQueryTerms.Contains(term.ToLowerInvariant()));
                 int identityMatchesBoost = boost.IdentityTerms.Count(term =>
@@ -1138,7 +1137,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             policy.IdentityBoosts?.Any(boost =>
                 !string.IsNullOrWhiteSpace(boost.IdentityScope) &&
                 !string.Equals(boost.IdentityScope, "path", StringComparison.OrdinalIgnoreCase) &&
-                !string.Equals(boost.IdentityScope, "file", StringComparison.OrdinalIgnoreCase)) == true ||
+                !string.Equals(boost.IdentityScope, "file", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(boost.IdentityScope, "identity", StringComparison.OrdinalIgnoreCase)) == true ||
             policy.StructuralRoleBoosts?.Any(boost =>
                 !string.IsNullOrWhiteSpace(boost.IdentityScope) &&
                 !string.Equals(boost.IdentityScope, "path", StringComparison.OrdinalIgnoreCase) &&

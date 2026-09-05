@@ -132,7 +132,7 @@
       ],
       "sourceMappings": {
         "applicationProjects": [
-          "FoodDiary.Application.Billing"
+          "Modules/Billing/Application"
         ],
         "abstractionAreas": [
           "Modules/Billing/Application/Abstractions"
@@ -317,7 +317,7 @@
       "ownedEntities": [],
       "sourceMappings": {
         "logicalRoot": "Modules/Export",
-        "applicationProjects": ["FoodDiary.Modules.Export.Application"],
+        "applicationProjects": ["Modules/Export/Application"],
         "applicationAbstractionProjects": ["Modules/Export/Application/Abstractions"],
         "infrastructureProjects": ["Modules/Export/Infrastructure"]
       }
@@ -388,10 +388,10 @@
       }
     },
     "Gamification": {
-      "role": "read-composer",
+      "role": "aggregate-owner",
       "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": [],
+      "ownedEntities": ["AchievementDefinition", "UserAchievement", "AchievementEvaluationOutboxMessage"],
       "sourceMappings": {
         "applicationProjects": ["Modules/Gamification/Application"],
         "abstractionAreas": ["Modules/Gamification/Application/Abstractions"],
@@ -479,7 +479,7 @@
       ],
       "sourceMappings": {
         "applicationProjects": [
-          "FoodDiary.Application.Marketing"
+          "Modules/Marketing/Application"
         ],
         "abstractionAreas": [
           "Modules/Marketing/Application/Abstractions"
@@ -558,14 +558,14 @@
       ],
       "sourceMappings": {
         "applicationProjects": [
-          "FoodDiary.Modules.OpenFoodFacts.Application"
+          "Modules/OpenFoodFacts/Application"
         ],
         "domainProjects": [
-          "FoodDiary.Modules.OpenFoodFacts.Domain"
+          "Modules/OpenFoodFacts/Domain"
         ],
         "infrastructureProjects": [
-          "FoodDiary.Modules.OpenFoodFacts.Infrastructure",
-          "FoodDiary.Modules.OpenFoodFacts.PersistenceModel"
+          "Modules/OpenFoodFacts/Infrastructure",
+          "Modules/OpenFoodFacts/Infrastructure/Model"
         ],
         "adapterAreas": [
           "Modules/OpenFoodFacts/Infrastructure/Providers"
@@ -612,6 +612,9 @@
       "ownedEntities": ["RecentItem"],
       "sourceMappings": {
         "logicalRoot": "Modules/RecentItems",
+        "applicationProjects": [
+          "Modules/RecentItems/Application"
+        ],
         "abstractionAreas": ["Modules/RecentItems/Application/Abstractions"],
         "domainAreas": ["Modules/RecentItems/Domain"],
         "persistenceAreas": ["Modules/RecentItems/Infrastructure"]
@@ -685,7 +688,7 @@
       "ownedEntities": [],
       "sourceMappings": {
         "applicationProjects": [
-          "FoodDiary.Application.Statistics"
+          "Modules/Statistics/Application"
         ],
         "abstractionAreas": [
           "Dashboard",

@@ -14,7 +14,6 @@
     <ProjectReference Include="../../DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />
     <ProjectReference Include="../../Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj" />
     <ProjectReference Include="../../Meals/Application/FoodDiary.Modules.Meals.Application.csproj" />
-    <ProjectReference Include="../../Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj" />
     <ProjectReference Include="../../Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../Exercises/Contracts/FoodDiary.Modules.Exercises.Contracts.csproj" />

@@ -323,7 +323,7 @@
       "name": "HydrationEntry",
       "role": "entity",
       "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationEntry.cs",
-      "line": 7
+      "line": 6
     },
     {
       "area": "FoodDiary",
@@ -3328,7 +3328,7 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"UserId is required.\", nameof(userId))",
       "path": "Modules/Hydration/Domain/Entities/Tracking/HydrationEntry.cs",
-      "line": 69
+      "line": 66
     },
     {
       "area": "FoodDiary",
@@ -5897,8 +5897,8 @@
       "relationships": [
         {
           "kind": "HasOne",
-          "target": "",
-          "expression": "e => e.User)"
+          "target": "User",
+          "expression": ")"
         }
       ],
       "path": "Modules/Hydration/Infrastructure/Model/Configurations/HydrationEntryConfiguration.cs"

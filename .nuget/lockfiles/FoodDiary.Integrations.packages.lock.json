@@ -304,6 +304,9 @@
       "fooddiary.email.contracts": {
         "type": "Project"
       },
+      "fooddiary.integrations.http": {
+        "type": "Project"
+      },
       "fooddiary.mailinbox.client": {
         "type": "Project",
         "dependencies": {

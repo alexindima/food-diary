@@ -80,9 +80,11 @@ Source: `FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardCompositionTests.cs`
 - [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs`
 - [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/SenderStatisticsFixture.cs`
 - [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/FastingContractsGlobalUsings.cs`
 - [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs`

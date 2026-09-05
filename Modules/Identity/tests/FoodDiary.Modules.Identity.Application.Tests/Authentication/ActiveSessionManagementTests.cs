@@ -5,6 +5,7 @@ using FoodDiary.Application.Identity.Authentication.Commands.Logout;
 using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Application.Identity.Authentication.Queries.GetActiveSessions;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
@@ -52,9 +53,10 @@ public sealed class ActiveSessionManagementTests {
     public async Task GetActiveSessions_WhenClaimedCurrentSessionIsNotActive_RejectsStaleAccessToken() {
         var userId = new UserId(Guid.NewGuid());
         UserRefreshTokenSession activeSession = CreateSession(userId, Guid.NewGuid());
-        IRefreshTokenSessionReadRepository repository = Substitute.For<IRefreshTokenSessionReadRepository>();
-        repository.GetActiveByUserIdAsync(userId, CancellationToken.None)
-            .Returns(Task.FromResult<IReadOnlyList<UserRefreshTokenSession>>([activeSession]));
+        IRefreshTokenSessionReadModelRepository repository = Substitute.For<IRefreshTokenSessionReadModelRepository>();
+        repository.GetActiveReadModelsAsync(userId, CancellationToken.None)
+            .Returns(Task.FromResult<IReadOnlyList<RefreshTokenSessionReadModel>>([new(
+                activeSession.Id, activeSession.AuthProvider, activeSession.UserAgent, activeSession.CreatedAtUtc, activeSession.LastRotatedAtUtc)]));
         var handler = new GetActiveSessionsQueryHandler(repository);
 
         Result<IReadOnlyList<ActiveSessionModel>> result = await handler.Handle(
@@ -68,9 +70,10 @@ public sealed class ActiveSessionManagementTests {
     public async Task GetActiveSessions_WithActiveCurrentSession_MapsMinimizedDeviceMetadata() {
         var userId = new UserId(Guid.NewGuid());
         UserRefreshTokenSession activeSession = CreateSession(userId, Guid.NewGuid());
-        IRefreshTokenSessionReadRepository repository = Substitute.For<IRefreshTokenSessionReadRepository>();
-        repository.GetActiveByUserIdAsync(userId, CancellationToken.None)
-            .Returns(Task.FromResult<IReadOnlyList<UserRefreshTokenSession>>([activeSession]));
+        IRefreshTokenSessionReadModelRepository repository = Substitute.For<IRefreshTokenSessionReadModelRepository>();
+        repository.GetActiveReadModelsAsync(userId, CancellationToken.None)
+            .Returns(Task.FromResult<IReadOnlyList<RefreshTokenSessionReadModel>>([new(
+                activeSession.Id, activeSession.AuthProvider, activeSession.UserAgent, activeSession.CreatedAtUtc, activeSession.LastRotatedAtUtc)]));
         var handler = new GetActiveSessionsQueryHandler(repository);
 
         Result<IReadOnlyList<ActiveSessionModel>> result = await handler.Handle(

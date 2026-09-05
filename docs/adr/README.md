@@ -40,6 +40,7 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 
 | [0027](0027-retire-shared-domain-assemblies.md) | Retire residual central and Nutrition domain assemblies | Accepted | 2026-09-02 |
 | [0028](0028-retire-central-application-abstractions.md) | Retire the central application abstractions aggregator | Accepted | 2026-09-05 |
+| [0029](0029-reviewed-persistence-capabilities-and-narrow-adapters.md) | Review persistence capabilities and narrow module adapters | Accepted | 2026-09-05 |
 
 ## Creating A Record
 

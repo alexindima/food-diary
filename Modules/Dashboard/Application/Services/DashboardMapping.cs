@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Models;
-using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Application.Abstractions.WeightEntries.Models;
 
@@ -9,12 +8,6 @@ namespace FoodDiary.Application.Dashboard.Services;
 public static class DashboardMapping {
     public static DashboardStatisticsModel ToStatisticsModel(DashboardStatisticsBucketReadModel? response, DashboardUserContextModel? user) =>
         DashboardStatisticsMapper.ToModel(response, user);
-
-    public static DashboardStatisticsModel ToStatisticsModel(AggregatedStatisticsModel? response, DashboardUserContextModel? user) =>
-        DashboardStatisticsMapper.ToModel(response, user);
-
-    public static IReadOnlyList<DailyCaloriesModel> ToWeeklyCalories(IReadOnlyList<AggregatedStatisticsModel> responses) =>
-        DashboardStatisticsMapper.ToWeeklyCalories(responses);
 
     public static IReadOnlyList<DailyCaloriesModel> ToWeeklyCalories(IReadOnlyList<DashboardStatisticsBucketReadModel> responses) =>
         DashboardStatisticsMapper.ToWeeklyCalories(responses);

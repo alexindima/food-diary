@@ -7,7 +7,7 @@
     <ProjectReference Include="Model/FoodDiary.Modules.Ai.PersistenceModel.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../../FoodDiary.Integrations/FoodDiary.Integrations.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" />

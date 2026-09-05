@@ -11,7 +11,7 @@ public sealed class RevokeSessionCommandHandler(
     public async Task<Result> Handle(RevokeSessionCommand command, CancellationToken cancellationToken) {
         await repository.RevokeOtherByIdAsync(
             command.SessionId,
-            new UserId(command.UserId),
+            (UserId)command.UserId,
             command.CurrentSessionId,
             timeProvider.GetUtcNow().UtcDateTime,
             cancellationToken).ConfigureAwait(false);

@@ -43,7 +43,7 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 | Product catalog and mutation ownership | `Modules/Products` Domain, application, ports/contracts, persistence model, adapters and focused tests; accepted Users/USDA dependencies and the shared Recipe composition lock remain explicit |
 | Meal diary aggregate ownership | `Modules/Meals/Domain` owns Meal, items, AI sessions/items, IDs and meal-only value types; one-way Meal.User references Users-owned User/UserId; shared context and migrations remain central |
 | EF Core and technical implementations | `FoodDiary.Infrastructure` |
-| External providers and service clients | `FoodDiary.Integrations` |
+| External providers and service clients | Owner module Infrastructure; cross-service mail clients and shared integrations in `FoodDiary.Integrations` |
 | HTTP and SignalR transport | `FoodDiary.Presentation.Api` |
 | Composition, middleware, and hosting | `FoodDiary.Web.Api` |
 
@@ -61,6 +61,12 @@ The machine-readable inventory and cross-layer vocabulary mappings are defined
 in [`backend-modules.json`](../../docs/architecture/backend-modules.json). Use
 the generated module page to distinguish business API dependencies,
 abstraction-contract dependencies, host consumers and boundary enforceability.
+
+Adapter capabilities are reviewed in `docs/architecture/persistence-capabilities.json`.
+Hydration receives its scoped entity set while preserving the central transaction
+and migration model. BCL-only transport helpers live in
+`Shared/FoodDiary.Integrations.Http`; consult the canonical architecture document
+and ADR 0029 for the remaining isolation limits.
 
 Prefer the narrowest repository contract suitable for a use case:
 

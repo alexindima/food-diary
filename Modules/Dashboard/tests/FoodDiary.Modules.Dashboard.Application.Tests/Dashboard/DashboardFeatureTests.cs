@@ -21,7 +21,6 @@ using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Hydration.Services;
 using FoodDiary.Application.BodyMetrics.WaistEntries.Services;
 using FoodDiary.Application.BodyMetrics.WeightEntries.Services;
-using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -77,16 +76,6 @@ public class DashboardFeatureTests {
     }
 
     [Fact]
-    public void DashboardMapping_ToStatisticsModel_WhenResponseIsNull_ReturnsEmptyModel() {
-        DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel((AggregatedStatisticsModel?)null, user: null);
-
-        Assert.Equal(0, dto.TotalCalories);
-        Assert.Equal(0, dto.AverageProteins);
-        Assert.Null(dto.ProteinGoal);
-        Assert.Null(dto.FiberGoal);
-    }
-
-    [Fact]
     public void DashboardMapping_ToStatisticsModel_WhenReadModelResponseIsNull_ReturnsEmptyModel() {
         DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel((DashboardStatisticsBucketReadModel?)null, user: null);
 
@@ -101,7 +90,7 @@ public class DashboardFeatureTests {
     public void DashboardMapping_ToStatisticsModel_MapsMacroTargetsFromUser() {
         var user = User.Create("dashboard-stats@example.com", "hash");
         user.UpdateGoals(proteinTarget: 120, fatTarget: 70, carbTarget: 210, fiberTarget: 30);
-        var response = new AggregatedStatisticsModel(
+        var response = new DashboardStatisticsBucketReadModel(
             DateTime.UtcNow.Date,
             DateTime.UtcNow.Date,
             1900,
@@ -124,7 +113,7 @@ public class DashboardFeatureTests {
     public void DashboardMapping_ToWeeklyCalories_OrdersByDateAscending() {
         var day1 = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime day2 = day1.AddDays(1);
-        var responses = new List<AggregatedStatisticsModel> {
+        var responses = new List<DashboardStatisticsBucketReadModel> {
             new(day2, day2, 2000, 100, 70, 250, 30, TotalProteins: 100, TotalFats: 70, TotalCarbs: 250, TotalFiber: 30),
             new(day1, day1, 1800, 90, 60, 220, 25, TotalProteins: 90, TotalFats: 60, TotalCarbs: 220, TotalFiber: 25),
         };

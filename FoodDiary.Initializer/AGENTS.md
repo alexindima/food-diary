@@ -27,3 +27,11 @@ Rules for `FoodDiary.Initializer/`.
 - Prefer additive corrective migrations over rollback/reapply in shared or production environments.
 - Keep destructive operations explicit and parameterized.
 - When adding seed or backfill flows, make them idempotent where practical.
+
+`Program.ConfigureServices` selects operational composition before resolving a scope.
+Status/list/targeted migrations/rollback/seeding need runtime, shared persistence and
+Dietologist's existing audit interceptor, without Dashboard/export/bootstrap services.
+Outbox commands additionally compose the three owner replay streams; email remains
+central. An update to the latest migration retains the full bootstrap composition.
+Resolve bootstrap and replay services only inside commands that use them. Keep
+bootstrap behavior and all four replay streams covered before narrowing further.

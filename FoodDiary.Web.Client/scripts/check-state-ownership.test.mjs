@@ -46,6 +46,29 @@ test('rejects a stateful feature facade without an explicit owner provider', () 
     assert.match(violations[0], /needs an explicit/u);
 });
 
+for (const metadata of [
+    "{ providedIn: 'root' }",
+    "{ providedIn: 'platform' }",
+    '{ providedIn: environmentScope }',
+    '{ ...defaults }',
+    'defaults',
+]) {
+    test(`rejects Injectable fallback metadata ${metadata} even with an explicit provider`, () => {
+        const violations = findStateOwnershipViolations([
+            {
+                path: 'src/app/features/meals/lib/meal-list.facade.ts',
+                content: `@Injectable(${metadata}) export class MealListFacade { readonly items = signal([]); }`,
+            },
+            {
+                path: 'src/app/features/meals/pages/meal-list.ts',
+                content: `@Component({ providers: [MealListFacade] }) export class MealList {}`,
+            },
+        ]);
+        assert.equal(violations.length, 1);
+        assert.match(violations[0], /must not declare a providedIn fallback/u);
+    });
+}
+
 test('does not require component-local or root app services to be feature facade providers', () => {
     const violations = findStateOwnershipViolations([
         {

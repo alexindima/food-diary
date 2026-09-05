@@ -668,7 +668,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         DateTime today = DateTime.UtcNow.Date;
-        var hydrationRepository = new HydrationEntryRepository(context);
+        var hydrationRepository = new HydrationEntryRepository(context.HydrationEntries);
         HydrationEntry hydration = await hydrationRepository.AddAsync(HydrationEntry.Create(user.Id, today.AddHours(8), 250));
         await hydrationRepository.AddAsync(HydrationEntry.Create(user.Id, today.AddHours(10), 500));
         await context.SaveChangesAsync();

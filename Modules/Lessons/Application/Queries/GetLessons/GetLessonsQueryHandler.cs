@@ -49,7 +49,7 @@ public sealed class GetLessonsQueryHandler(
 
     private static TEnum? ParseOptional<TEnum>(string? value)
         where TEnum : struct, Enum =>
-        !string.IsNullOrWhiteSpace(value) && Enum.TryParse(value, ignoreCase: true, out TEnum parsed)
+        !string.IsNullOrWhiteSpace(value) && SharedEnumValueParser.TryParse(value, out TEnum parsed)
             ? parsed
             : null;
 }

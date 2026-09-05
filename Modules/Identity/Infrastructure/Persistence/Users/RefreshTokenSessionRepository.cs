@@ -1,11 +1,22 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Users;
 
-public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : IRefreshTokenSessionRepository {
+public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository {
+    public async Task<IReadOnlyList<RefreshTokenSessionReadModel>> GetActiveReadModelsAsync(
+        UserId userId, CancellationToken cancellationToken = default) =>
+        await context.UserRefreshTokenSessions
+            .AsNoTracking()
+            .Where(session => session.UserId == userId && session.RevokedAtUtc == null)
+            .OrderByDescending(session => session.LastRotatedAtUtc)
+            .Select(session => new RefreshTokenSessionReadModel(
+                session.Id, session.AuthProvider, session.UserAgent, session.CreatedAtUtc, session.LastRotatedAtUtc))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
     public Task<UserRefreshTokenSession?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
         context.UserRefreshTokenSessions
             .FirstOrDefaultAsync(session => session.Id == id, cancellationToken);

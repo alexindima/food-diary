@@ -49,7 +49,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, [
+        string[] violations = SourceScanner.FindLinePatternViolations(ModuleSourceCatalog.ApplicationRoots.Values, [
             "Enum.Parse(",
             "Enum.Parse<",
         ]);
@@ -61,7 +61,7 @@ public sealed class ApplicationGuardrailTests {
     public void ApplicationQueryHandlers_DoNotUseReadRepositoriesOrDomainEntities() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] queryHandlers = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] queryHandlers = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => path.EndsWith("QueryHandler.cs", StringComparison.Ordinal))];
 
         string[] violations = [
@@ -76,7 +76,7 @@ public sealed class ApplicationGuardrailTests {
     public void ApplicationValidators_AreStatelessRequestShapeValidators() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] validators = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] validators = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => path.EndsWith("Validator.cs", StringComparison.Ordinal))];
         string[] forbiddenPatterns = [
             "CustomAsync",
@@ -130,9 +130,7 @@ public sealed class ApplicationGuardrailTests {
     public void ApplicationFeatures_DoNotUseLegacyCommandsCommonFolders() {
         string root = GetRepositoryRoot();
 
-        string[] violations = [.. Directory.GetDirectories(root, "FoodDiary.Application.*", SearchOption.TopDirectoryOnly)
-            .Where(path => !path.EndsWith(".Abstractions", StringComparison.Ordinal))
-            .Where(path => !path.EndsWith(".Runtime", StringComparison.Ordinal))
+        string[] violations = [.. ModuleSourceCatalog.ApplicationRoots.Values
             .SelectMany(path => Directory.GetDirectories(path, "Common", SearchOption.AllDirectories))
             .Where(path => path.EndsWith(
                 $"{Path.DirectorySeparatorChar}Commands{Path.DirectorySeparatorChar}Common",
@@ -216,8 +214,9 @@ public sealed class ApplicationGuardrailTests {
         ];
 
         string[] violations = [.. migratedSlices
-            .Select(slice => Path.Combine(applicationRoot, slice))
-            .SelectMany(SourceScanner.SourceFiles)
+            .Select(ModuleSourceCatalog.ApplicationRoot)
+            .Distinct(StringComparer.Ordinal)
+            .SelectMany(ModuleSourceCatalog.ApplicationFiles)
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}EventHandlers{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Where(path =>
                 path.EndsWith("Handler.cs", StringComparison.Ordinal) ||
@@ -240,7 +239,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => path.Contains($"{Path.DirectorySeparatorChar}EventHandlers{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Where(path => path.EndsWith("Handler.cs", StringComparison.Ordinal))
             .SelectMany(path => File.ReadLines(path)
@@ -259,7 +258,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path =>
                 path.EndsWith("Service.cs", StringComparison.Ordinal) ||
                 path.EndsWith("Builder.cs", StringComparison.Ordinal) ||
@@ -283,7 +282,7 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string allowedRoot = Path.Combine(applicationRoot, "Common", "Validation");
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(path => !path.StartsWith(allowedRoot, StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line })
@@ -306,7 +305,7 @@ public sealed class ApplicationGuardrailTests {
             "request",
         };
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .SelectMany(path => FindDirectTypedIdConstructionFromRequestObjects(root, path, requestVariableNames))
             .Order(StringComparer.Ordinal)];
 
@@ -383,7 +382,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["DateTime.UtcNow"]);
+        string[] violations = SourceScanner.FindLinePatternViolations(ModuleSourceCatalog.ApplicationRoots.Values, ["DateTime.UtcNow"]);
 
         Assert.Empty(violations);
     }
@@ -393,7 +392,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .SelectMany(path => CSharpSyntaxReader.ReadMethods(path)
                 .Where(static method => method.IsAsyncLike)
                 .Where(static method => !method.Name.EndsWith("Async", StringComparison.Ordinal))
@@ -408,8 +407,10 @@ public sealed class ApplicationGuardrailTests {
     public void ApplicationSourceFiles_DoNotSuppressCancellationTokens() {
         string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
         string[] allowedFiles = [
-            Path.Combine(applicationRoot, "Common", "Behaviors", "CommandTransactionBehavior.cs"),
+            ArchitectureTestPaths.FromRoot("FoodDiary.Application.Runtime", "Common", "Behaviors", "CommandTransactionBehavior.cs"),
             Path.Combine(ArchitectureTestPaths.RepositoryRoot, "Modules", "Fasting", "Application", "Services", "FastingNotificationScheduler.cs"),
+            // Compensating object deletion must run even if the upload request was cancelled.
+            ArchitectureTestPaths.FromRoot("Modules", "Images", "Application", "Commands", "ConfirmUpload", "ConfirmImageUploadCommandHandler.cs"),
         ];
         string[] forbiddenPatterns = [
             "CancellationToken.None",
@@ -421,7 +422,7 @@ public sealed class ApplicationGuardrailTests {
             .Select(path => Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path))
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        string[] violations = [.. SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns)
+        string[] violations = [.. SourceScanner.FindLinePatternViolations(ModuleSourceCatalog.ApplicationRoots.Values, forbiddenPatterns)
             .Where(violation => !allowed.Contains(violation.Split(':')[0]))
             .Order(StringComparer.Ordinal)];
 
@@ -519,7 +520,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IUserRepository",
             []);
 
@@ -533,7 +533,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IUserReadRepository",
             []);
 
@@ -603,7 +602,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IProductRepository",
             []);
 
@@ -756,7 +754,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IRecipeRepository",
             []);
 
@@ -1083,7 +1080,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IMealRepository",
             []);
 
@@ -2020,7 +2016,7 @@ public sealed class ApplicationGuardrailTests {
     public void NotificationApplicationCode_UsesLookupOrReadModelsInsteadOfNotificationReadRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] applicationFiles = [.. SourceScanner.SourceFiles(applicationRoot)];
+        string[] applicationFiles = [.. ModuleSourceCatalog.ApplicationFiles()];
 
         string[] violations = [
             .. FindReferencesInFiles(root, applicationFiles, "INotificationReadRepository"),
@@ -2473,7 +2469,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "INutritionLessonRepository",
             []);
 
@@ -2487,7 +2482,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "INotificationRepository",
             []);
 
@@ -2500,11 +2494,11 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
         string[] violations = [
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IFastingPlanRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IFastingOccurrenceRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IFastingCheckInRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IFastingSessionRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IFastingTelemetryEventRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IFastingPlanRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IFastingOccurrenceRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IFastingCheckInRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IFastingSessionRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IFastingTelemetryEventRepository", []),
         ];
 
         Assert.Empty(violations);
@@ -2517,7 +2511,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IBillingSubscriptionRepository",
             []);
 
@@ -2530,12 +2523,12 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
         string[] violations = [
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IUserLoginEventRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IRefreshTokenSessionRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IBillingPaymentRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IBillingWebhookEventRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IWearableConnectionRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IWearableSyncRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IUserLoginEventRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IRefreshTokenSessionRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IBillingPaymentRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IBillingWebhookEventRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IWearableConnectionRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IWearableSyncRepository", []),
         ];
 
         Assert.Empty(violations);
@@ -2548,7 +2541,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IExerciseEntryRepository",
             []);
 
@@ -2562,7 +2554,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IWeightEntryRepository",
             []);
 
@@ -2576,7 +2567,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IWaistEntryRepository",
             []);
 
@@ -2590,7 +2580,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IHydrationEntryRepository",
             []);
 
@@ -2604,7 +2593,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IShoppingListRepository",
             []);
 
@@ -2618,7 +2606,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IMealPlanRepository",
             []);
 
@@ -2632,7 +2619,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IRecipeCommentRepository",
             []);
 
@@ -2646,7 +2632,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IRecipeLikeRepository",
             []);
 
@@ -2660,7 +2645,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IFavoriteProductRepository",
             []);
 
@@ -2674,7 +2658,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IFavoriteRecipeRepository",
             []);
 
@@ -2688,7 +2671,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IFavoriteMealRepository",
             []);
 
@@ -2702,7 +2684,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IRecentItemRepository",
             []);
 
@@ -2716,7 +2697,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IDietologistInvitationRepository",
             []);
 
@@ -2730,7 +2710,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IRecommendationRepository",
             []);
 
@@ -2748,7 +2727,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             repositoryName,
             []);
 
@@ -2780,7 +2758,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IImageAssetRepository",
             []);
 
@@ -2794,7 +2771,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "IWebPushSubscriptionRepository",
             []);
 
@@ -2807,11 +2783,11 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
         string[] violations = [
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IAiUsageRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IAiPromptTemplateRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IEmailTemplateRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IContentReportRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IDailyAdviceRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IAiUsageRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IAiPromptTemplateRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IEmailTemplateRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IContentReportRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IDailyAdviceRepository", []),
         ];
 
         Assert.Empty(violations);
@@ -2823,11 +2799,11 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
         string[] violations = [
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IAdminBillingRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IAdminImpersonationSessionRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IAdminUserRoleAuditRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IUsdaFoodRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IOpenFoodFactsProductCacheRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IAdminBillingRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IAdminImpersonationSessionRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IAdminUserRoleAuditRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IUsdaFoodRepository", []),
+            .. FindRepositoryReferenceViolations(root, "IOpenFoodFactsProductCacheRepository", []),
         ];
 
         Assert.Empty(violations);
@@ -2840,7 +2816,6 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
-            applicationRoot,
             "ICycleRepository",
             []);
 
@@ -2872,7 +2847,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["CurrentUserAccessLoader"]);
+        string[] violations = SourceScanner.FindLinePatternViolations(ModuleSourceCatalog.ApplicationRoots.Values, ["CurrentUserAccessLoader"]);
 
         Assert.Empty(violations);
     }
@@ -2910,7 +2885,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void BillingSlice_DoesNotUseCurrentUserAccessPolicyDirectly() {
         string root = GetRepositoryRoot();
-        string billingRoot = Path.Combine(root, "FoodDiary.Application.Billing");
+        string billingRoot = ModuleSourceCatalog.ApplicationRoot("Billing");
         string[] billingFiles = [.. SourceScanner.SourceFiles(billingRoot)];
 
         string[] violations = FindReferencesInFiles(root, billingFiles, "CurrentUserAccessPolicy");
@@ -3072,7 +3047,7 @@ public sealed class ApplicationGuardrailTests {
             "HttpResponse",
         ];
 
-        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(ModuleSourceCatalog.ApplicationRoots.Values, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
@@ -3088,7 +3063,7 @@ public sealed class ApplicationGuardrailTests {
             "IWebPushNotificationSender",
         ];
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .SelectMany(path => ReadDomainEventHandlerConstructorParameters(path)
                 .Where(parameter => forbiddenParameterTypes.Contains(parameter.TypeName, StringComparer.Ordinal))
                 .Select(parameter => string.Create(
@@ -3114,7 +3089,7 @@ public sealed class ApplicationGuardrailTests {
             ".CreateCustomerPortal",
         ];
 
-        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+        string[] violations = [.. ModuleSourceCatalog.ApplicationFiles()
             .Where(IsDomainEventHandlerSourceFile)
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line })
@@ -3159,7 +3134,7 @@ public sealed class ApplicationGuardrailTests {
             "using Microsoft.Extensions.Configuration",
         ];
 
-        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(ModuleSourceCatalog.ApplicationRoots.Values, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
@@ -3205,16 +3180,23 @@ public sealed class ApplicationGuardrailTests {
         Directory.Exists(path) ? Directory.GetFiles(path, searchPattern, searchOption) : [];
 
     private static string[] FindRepositoryReferenceViolations(
-        string repositoryRoot,
-        string applicationRoot,
+        string root,
         string typeName,
-        IReadOnlyCollection<string> allowedDirectories) {
-        return [.. SourceScanner.SourceFiles(applicationRoot)
+        IReadOnlyCollection<string> allowedDirectories) =>
+        FindRepositoryReferenceViolations(root, ModuleSourceCatalog.ApplicationFiles(), typeName, allowedDirectories);
+
+    private static string[] FindRepositoryReferenceViolations(
+        string root, string sourceRoot, string typeName, IReadOnlyCollection<string> allowedDirectories) =>
+        FindRepositoryReferenceViolations(root, ModuleSourceCatalog.RequiredFiles(sourceRoot), typeName, allowedDirectories);
+
+    private static string[] FindRepositoryReferenceViolations(
+        string root, IEnumerable<string> sourceFiles, string typeName, IReadOnlyCollection<string> allowedDirectories) {
+        return [.. sourceFiles
             .Where(path => !allowedDirectories.Any(directory => path.StartsWith(directory, StringComparison.OrdinalIgnoreCase)))
             .SelectMany(path => File.ReadAllLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => entry.line.Contains(typeName, StringComparison.Ordinal))
-            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(repositoryRoot, entry.path)}:{entry.index + 1}"))];
+            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))];
     }
 
     private static string[] FindReferencesInFiles(string repositoryRoot, IReadOnlyCollection<string> files, string typeName) {

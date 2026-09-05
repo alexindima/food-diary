@@ -13,7 +13,6 @@ public static class DependencyInjection {
         services.AddFoodDiaryMediator(configuration =>
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
-        services.TryAddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();
         services.TryAddScoped<IDashboardBodyReadService, RepositoryDashboardBodyReadService>();
         services.TryAddScoped<IDashboardMealsReadService, MediatorDashboardMealsReadService>();
         services.TryAddScoped<IDashboardReadService, ComposedDashboardReadService>();

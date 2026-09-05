@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 
@@ -6,7 +7,7 @@ namespace FoodDiary.Application.Admin.Internal.Validation;
 internal static class EnumValueParser {
     public static bool TryParse<TEnum>(string? value, out TEnum parsed)
         where TEnum : struct, Enum =>
-        Enum.TryParse(value, ignoreCase: true, out parsed);
+        SharedEnumValueParser.TryParse(value, out parsed);
 
     public static bool CanParseDefined<TEnum>(string? value)
         where TEnum : struct, Enum =>

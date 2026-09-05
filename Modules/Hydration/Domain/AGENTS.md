@@ -1,7 +1,5 @@
 # Hydration Domain
 
-Keep `HydrationEntry` and `HydrationEntryId` here with their existing `FoodDiary.Domain` CLR namespaces. Reference Users Domain for `User`, Users Domain.Contracts for `UserId`, and shared Primitives for `DomainGuard`. Preserve the forward EF navigation, validation, UTC normalization, and audit timestamp behavior. Do not add a reverse `User.HydrationEntries` navigation.
+Keep `HydrationEntry` and `HydrationEntryId` here with their existing `FoodDiary.Domain` CLR namespaces. Depend on Users Domain.Contracts for scalar `UserId` and shared Primitives for `DomainGuard`. Hydration Domain must not reference Users Domain or expose the User aggregate.
 
-User ownership: use Users Domain for aggregate navigations, Users Domain.Contracts for ID-only dependencies, and the exact module or Primitives owner for shared values. Preserve all existing relationships.
-
-Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly. Central Domain grants no friend access. This domain has no central Domain dependency.
+Preserve validation, UTC normalization, audit timestamps and the user-id invariant. PersistenceModel owns the navigation-free User FK and cascade mapping. Do not restore either `HydrationEntry.User` or `User.HydrationEntries`; see ADR 0029.

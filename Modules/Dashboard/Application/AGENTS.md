@@ -18,3 +18,5 @@ Rules for `Modules/Dashboard/Application/`.
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
 
 Reference Products Domain directly for the existing shared food-quality calculation. The approved dependency on this aggregate-bearing assembly grants no foreign aggregate mutation capability.
+
+`IDashboardStatisticsReadService` must be supplied by composition (normally Dashboard Infrastructure). Never register a mediator fallback that sends GetStatisticsQuery back to the handler using the same reader. Dashboard consumes its own statistics read models and does not reference Statistics.Application.

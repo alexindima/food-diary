@@ -6,9 +6,9 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1379,
+    "candidateFields": 1380,
     "credential": 146,
-    "identity": 153,
+    "identity": 154,
     "health": 660,
     "financial": 120,
     "privateContent": 300,
@@ -7183,6 +7183,13 @@
       "name": "UserAgent",
       "type": "string?",
       "path": "Modules/Identity/Application/Abstractions/Authentication/Models/AuthenticationClientContext.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "UserAgent",
+      "type": "string?",
+      "path": "Modules/Identity/Application/Abstractions/Authentication/Models/RefreshTokenSessionReadModel.cs",
       "line": 6
     },
     {

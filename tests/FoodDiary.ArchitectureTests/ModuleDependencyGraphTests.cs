@@ -52,41 +52,21 @@ public sealed class ModuleDependencyGraphTests {
     }
 
     private static IReadOnlyDictionary<string, string[]> ReadActualGraph() {
-        var declaredModules = LoadManifest().Modules.Keys.ToHashSet(StringComparer.Ordinal);
-        var moduleRoots = Directory.GetDirectories(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application.*", SearchOption.TopDirectoryOnly)
-            .SelectMany(directory => Directory.GetFiles(directory, "FoodDiary.Application.*.csproj", SearchOption.TopDirectoryOnly))
-            .Select(path => new {
-                Name = Path.GetFileNameWithoutExtension(path)["FoodDiary.Application.".Length..],
-                Root = Path.GetDirectoryName(path)!,
-            })
-            .Concat(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules"))
-                ? Directory.GetDirectories(ArchitectureTestPaths.FromRoot("Modules"), "*", SearchOption.TopDirectoryOnly)
-                    .Where(HasApplicationBoundary)
-                    .Select(directory => new { Name = Path.GetFileName(directory), Root = Path.Combine(directory, "Application") })
-                : [])
-            .Where(module => declaredModules.Contains(module.Name))
+        var moduleRoots = ModuleSourceCatalog.ApplicationRoots
+            .Select(module => new { Name = module.Key, Root = module.Value })
             .OrderBy(module => module.Name, StringComparer.Ordinal)
             .ToArray();
         var moduleSet = moduleRoots.Select(module => module.Name).ToHashSet(StringComparer.Ordinal);
 
         return moduleRoots.ToDictionary(
             static module => module.Name,
-            module => SourceScanner.SourceFiles(module.Root)
+            module => ModuleSourceCatalog.ApplicationFiles(module.Root)
                 .SelectMany(ReadReferencedApplicationModules)
                 .Where(dependency => moduleSet.Contains(dependency) && !dependency.Equals(module.Name, StringComparison.Ordinal))
                 .Distinct(StringComparer.Ordinal)
                 .Order(StringComparer.Ordinal)
                 .ToArray(),
             StringComparer.Ordinal);
-    }
-
-    private static bool HasApplicationBoundary(string moduleDirectory) {
-        string applicationDirectory = Path.Combine(moduleDirectory, "Application");
-        string abstractionsDirectory = Path.Combine(applicationDirectory, "Abstractions");
-        return Directory.Exists(applicationDirectory) &&
-               (Directory.GetFiles(applicationDirectory, "*Application*.csproj", SearchOption.TopDirectoryOnly).Length == 1 ||
-                (Directory.Exists(abstractionsDirectory) &&
-                 Directory.GetFiles(abstractionsDirectory, "*Application.Abstractions.csproj", SearchOption.TopDirectoryOnly).Length == 1));
     }
 
     private static IEnumerable<string> ReadReferencedApplicationModules(string path) {

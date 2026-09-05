@@ -41,17 +41,17 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: EmailTemplate, UserRefreshTokenSession, UserLoginEvent
-- Public contract files: 45
+- Public contract files: 47
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 45
-- Interfaces: 25
-- DTO/read-model/projection types: 3
+- Public contract types: 47
+- Interfaces: 26
+- DTO/read-model/projection types: 4
 - Enums: 0
-- Exported repository-shaped contracts: 10
+- Exported repository-shaped contracts: 11
 - Contracts referencing domain entities: 6
 - `class AuthenticationInputLimits`
 - `class JwtImpersonationClaimNames`
@@ -74,6 +74,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IGoogleTokenValidator`
 - `interface IJwtTokenGenerator`
 - `interface IPasswordHasher`
+- `interface IRefreshTokenSessionReadModelRepository`
 - `interface IRefreshTokenSessionReadRepository`
 - `interface IRefreshTokenSessionRepository`
 - `interface IRefreshTokenSessionWriteRepository`
@@ -82,8 +83,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface ITelegramLoginWidgetValidator`
 - `interface IUserLoginEventReadRepository`
 - `interface IUserLoginEventRepository`
-- `interface IUserLoginEventWriteRepository`
-- ... 15 more type(s)
+- ... 17 more type(s)
 
 ## Focused Tests
 
@@ -111,6 +111,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/EmailTemplateInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/UserAuditEventInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Domain.Tests/UserRefreshTokenSessionInvariantTests.cs`
+- [integration] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/ActiveSessionProjectionIntegrationTests.cs`
 - [integration] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/TelegramAssertionReplayGuardIntegrationTests.cs`
 - [integration] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.IntegrationTests/Integration/UserLoginEventRepositoryIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoProtocolTests.cs`
@@ -118,7 +119,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/IdentityAuthenticationRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/JwtTokenGeneratorTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/PasswordHasherTests.cs`
-- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/EmailTemplateProviderTests.cs`
 
 ## Working Rule
 

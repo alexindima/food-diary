@@ -19,12 +19,11 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Modules.Meals.Application, FoodDiary.Modules.Products.Application, FoodDiary.Modules.Recipes.Application, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Meals.Application, FoodDiary.Modules.Products.Application, FoodDiary.Modules.Recipes.Application, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Infrastructure/Persistence/Configurations/Images`
 - `FoodDiary.Presentation.Api/Features/Images`
 - `Modules/Images/Application`
 - `Modules/Images/Application/Abstractions`
@@ -51,7 +50,7 @@ Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
 - Public contract files: 13
-- Observed external consumer groups: 8
+- Observed external consumer groups: 7
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

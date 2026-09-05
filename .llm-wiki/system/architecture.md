@@ -37,6 +37,12 @@ Application modules -> Abstractions / Domain
 Infrastructure and Integrations -> Abstractions / Domain
 ```
 
+This is a layer overview. Approved in-process application APIs and module
+persistence-model composition add explicit edges in the matrix below. ADR 0029
+records the persistence capability checks, narrow Hydration adapter, mandatory
+Dashboard reader and command-specific Initializer composition. A shared context
+does not grant foreign aggregate write ownership.
+
 The executable project-reference allowlist is enforced by
 [`ProjectDependencyMatrixTests`](../../tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs).
 The folder-module API graph is stored in

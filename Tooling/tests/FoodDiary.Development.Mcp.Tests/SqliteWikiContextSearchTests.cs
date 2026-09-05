@@ -32,6 +32,29 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         CreateDatabase();
     }
 
+    [Fact]
+    public async Task SearchAsync_IdentityScopedBoost_MatchesSymbolTitleOutsideFileName() {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            INSERT INTO context_search VALUES
+                ('code', 'registration', 'Modules/Notifications/Infrastructure/Composition.cs', 'registration',
+                 'csharp', 'NotificationResourceRegistration', 'notification resource registration renderer');
+            """;
+        await command.ExecuteNonQueryAsync();
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+
+        WikiContextSearchResult result = await search.SearchAsync(
+            "notification resource registration", limit: 10, changeType: "Backend", module: null,
+            scopePaths: null, CancellationToken.None, expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.True(result.Ready, result.UnavailableReason);
+        WikiContextSearchCandidate candidate = Assert.Single(result.Candidates);
+        Assert.Contains("ranking policy notification-resource-registration-role", candidate.Reasons, StringComparer.Ordinal);
+    }
+
     [Theory]
     [InlineData("FoodDiary.Domain/Entities/Stock.cs", "domain entity stock", "structural role domain-entity-layer-role", true)]
     [InlineData("Modules/Inventory/Domain/Entities/Stock.cs", "domain entity stock", "structural role domain-entity-layer-role", true)]

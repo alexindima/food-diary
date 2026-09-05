@@ -8,7 +8,7 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../../../FoodDiary.Integrations/FoodDiary.Integrations.csproj" />
+    <ProjectReference Include="../../../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />
     <ProjectReference Include="..\Application\FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="..\..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="Model\FoodDiary.Modules.Images.PersistenceModel.csproj" />

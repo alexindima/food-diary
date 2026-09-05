@@ -1,3 +1,14 @@
+import { buildDayEditModel, buildFertilitySignalPayload, buildSymptomClearCategories, buildSymptomPayload } from './cycle-day.mapper';
+import { runCycleExport } from './cycle-export.workflow';
+import {
+    createDefaultCycleDayFormModel,
+    type CycleDayFormModel,
+    type CycleFactorFormModel,
+    type CycleSettingsFormModel,
+    type MenstrualEpisodeFormModel,
+    type StartCycleFormModel,
+} from './cycle-tracking.form-models';
+export type { CycleDayFormModel, CycleSettingsFormModel } from './cycle-tracking.form-models';
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, max, min, required } from '@angular/forms/signals';
@@ -9,39 +20,28 @@ import { CyclesService } from '../api/cycles.service';
 import {
     BLEEDING_TYPE_BLEEDING,
     type BleedingEntry,
-    type BleedingType,
     type CreateCyclePayload,
     CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS,
     CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS,
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
     CYCLE_FLOW_LIGHT,
-    CYCLE_FLOW_MEDIUM,
     CYCLE_REPRODUCTIVE_STATE_CYCLING,
     CYCLE_TRACKING_GOAL_PERIOD_AWARENESS,
     CYCLE_TRACKING_MODE_PERIOD_TRACKING,
     type CycleConsentPurpose,
     type CycleFactor,
-    type CycleFactorType,
-    type CycleFlowLevel,
     type CycleLogDay,
     type CycleNutritionSummary,
     type CyclePredictions,
-    type CycleReproductiveState,
     type CycleResponse,
     type CycleSymptomEntry,
-    type CycleTrackingGoal,
-    type CycleTrackingMode,
     type FertilitySignal,
     type FertilitySignalPayload,
     type MenstrualEpisode,
-    OVULATION_TEST_RESULT_UNKNOWN,
-    type OvulationTestResult,
-    type SymptomLogPayload,
     type UpdateCycleSettingsPayload,
     type UpsertCycleFactorPayload,
 } from '../models/cycle.data';
 import {
-    CYCLE_SYMPTOM_FIELDS,
     DEFAULT_AVERAGE_CYCLE_LENGTH,
     DEFAULT_AVERAGE_PERIOD_LENGTH,
     DEFAULT_LUTEAL_LENGTH,
@@ -51,90 +51,8 @@ import {
     MIN_AVERAGE_CYCLE_LENGTH,
     MIN_AVERAGE_PERIOD_LENGTH,
     MIN_LUTEAL_LENGTH,
-    MIN_SYMPTOM_VALUE,
 } from './cycle-tracking.config';
-import { clampCycleSymptom, toCycleDateKey, toNullableCycleNumber, toOptionalCycleText } from './cycle-tracking.mapper';
-
-type StartCycleFormModel = {
-    trackingStartDate: string | null;
-    mode: CycleTrackingMode | null;
-    averageCycleLength: number | null;
-    averagePeriodLength: number | null;
-    lutealLength: number | null;
-    isRegular: boolean;
-    showFertilityEstimates: boolean;
-    discreetNotifications: boolean;
-    goal: CycleTrackingGoal | null;
-    reproductiveState: CycleReproductiveState | null;
-    hideFromDashboard: boolean;
-    cycleTrackingConsentGranted: boolean;
-    nutritionInsightsConsentGranted: boolean;
-    fertilitySignalsConsentGranted: boolean;
-};
-
-export type CycleSettingsFormModel = Omit<StartCycleFormModel, 'trackingStartDate'>;
-
-export type CycleDayFormModel = {
-    date: string | null;
-    isBleeding: boolean;
-    bleedingType: BleedingType | null;
-    flow: CycleFlowLevel | null;
-    pain: number;
-    mood: number;
-    energy: number;
-    sleepQuality: number;
-    appetite: number;
-    craving: number;
-    bloating: number;
-    headache: number;
-    skin: number;
-    stool: number;
-    nausea: number;
-    libido: number;
-    basalBodyTemperatureCelsius: number | null;
-    ovulationTestResult: OvulationTestResult | null;
-    cervicalFluid: string | null;
-    hadSex: boolean;
-    notes: string | null;
-};
-
-function createDefaultCycleDayFormModel(): CycleDayFormModel {
-    return {
-        date: formatDateInputValue(new Date()),
-        isBleeding: false,
-        bleedingType: BLEEDING_TYPE_BLEEDING,
-        flow: CYCLE_FLOW_MEDIUM,
-        pain: 0,
-        mood: 0,
-        energy: 0,
-        sleepQuality: 0,
-        appetite: 0,
-        craving: 0,
-        bloating: 0,
-        headache: 0,
-        skin: 0,
-        stool: 0,
-        nausea: 0,
-        libido: 0,
-        basalBodyTemperatureCelsius: null,
-        ovulationTestResult: null,
-        cervicalFluid: null,
-        hadSex: false,
-        notes: null,
-    };
-}
-
-type CycleFactorFormModel = {
-    type: CycleFactorType | null;
-    startDate: string | null;
-    endDate: string | null;
-    notes: string | null;
-};
-
-type MenstrualEpisodeFormModel = {
-    startDate: string | null;
-    endDate: string | null;
-};
+import { clampCycleSymptom, toCycleDateKey, toOptionalCycleText } from './cycle-tracking.mapper';
 
 @Injectable()
 export class CycleTrackingFacade {
@@ -465,9 +383,9 @@ export class CycleTrackingFacade {
             return;
         }
 
-        const symptoms = this.buildSymptomPayload(formValue);
-        const clearSymptomCategories = this.buildSymptomClearCategories(formValue);
-        const fertilitySignal = this.buildFertilitySignalPayload(formValue);
+        const symptoms = buildSymptomPayload(formValue);
+        const clearSymptomCategories = buildSymptomClearCategories(formValue, this.editingDayDate(), this.symptoms());
+        const fertilitySignal = buildFertilitySignalPayload(formValue);
         const clearFertilitySignal = this.shouldClearFertilitySignal(fertilitySignal);
 
         this.isSavingDay.set(true);
@@ -584,7 +502,7 @@ export class CycleTrackingFacade {
         const fertilitySignal = currentCycle.fertilitySignals.find(item => toCycleDateKey(item.date) === dateKey);
         const bleeding = dayBleeding.find(entry => entry.type === BLEEDING_TYPE_BLEEDING) ?? dayBleeding[0];
 
-        this.dayModel.set(this.buildDayEditModel(date, daySymptoms, bleeding, fertilitySignal));
+        this.dayModel.set(buildDayEditModel(date, daySymptoms, bleeding, fertilitySignal));
         this.editingDayDate.set(date);
     }
 
@@ -826,100 +744,11 @@ export class CycleTrackingFacade {
     }
 
     public exportCycle(): void {
-        const currentCycle = this.cycle();
-        if (currentCycle === null || this.isExportingCycle()) {
-            return;
-        }
-
-        this.isExportingCycle.set(true);
-        this.exportService
-            .exportCycle({
-                dateFrom: toCycleDateKey(currentCycle.trackingStartDate),
-                dateTo: formatDateInputValue(new Date()),
-                timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
-            })
-            .pipe(
-                finalize(() => {
-                    this.isExportingCycle.set(false);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe();
+        runCycleExport({ cycle: this.cycle(), exporting: this.isExportingCycle }, this.exportService, this.destroyRef);
     }
 
     public exportSensitiveCycle(currentPassword: string): void {
-        const currentCycle = this.cycle();
-        if (currentCycle === null || this.isExportingCycle() || currentPassword.length === 0) {
-            return;
-        }
-
-        this.isExportingCycle.set(true);
-        this.exportService
-            .exportSensitiveCycle({
-                dateFrom: toCycleDateKey(currentCycle.trackingStartDate),
-                dateTo: formatDateInputValue(new Date()),
-                timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
-                currentPassword,
-            })
-            .pipe(
-                finalize(() => {
-                    this.isExportingCycle.set(false);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe();
-    }
-
-    private buildSymptomPayload(formValue: CycleDayFormModel): SymptomLogPayload[] {
-        return CYCLE_SYMPTOM_FIELDS.map(field => ({ field, intensity: clampCycleSymptom(formValue[field.key]) }))
-            .filter(item => item.intensity > MIN_SYMPTOM_VALUE)
-            .map(item => ({
-                category: item.field.category,
-                intensity: item.intensity,
-                tags: [],
-                note: null,
-                clearNote: false,
-            }));
-    }
-
-    private buildSymptomClearCategories(formValue: CycleDayFormModel): Array<CycleSymptomEntry['category']> {
-        const editingDate = this.editingDayDate();
-        if (editingDate === null) {
-            return [];
-        }
-
-        const existingCategories = new Set(
-            this.symptoms()
-                .filter(symptom => toCycleDateKey(symptom.date) === toCycleDateKey(editingDate))
-                .map(symptom => symptom.category),
-        );
-
-        return CYCLE_SYMPTOM_FIELDS.filter(
-            field => existingCategories.has(field.category) && clampCycleSymptom(formValue[field.key]) === MIN_SYMPTOM_VALUE,
-        ).map(field => field.category);
-    }
-
-    private buildFertilitySignalPayload(formValue: CycleDayFormModel): FertilitySignalPayload | null {
-        const basalBodyTemperatureCelsius = toNullableCycleNumber(formValue.basalBodyTemperatureCelsius);
-        const cervicalFluid = toOptionalCycleText(formValue.cervicalFluid);
-        const hasSignal =
-            basalBodyTemperatureCelsius !== null ||
-            formValue.ovulationTestResult !== null ||
-            cervicalFluid !== undefined ||
-            formValue.hadSex;
-
-        if (!hasSignal) {
-            return null;
-        }
-
-        return {
-            basalBodyTemperatureCelsius,
-            ovulationTestResult: formValue.ovulationTestResult ?? OVULATION_TEST_RESULT_UNKNOWN,
-            cervicalFluid,
-            hadSex: formValue.hadSex,
-            notes: undefined,
-            clearNotes: false,
-        };
+        runCycleExport({ cycle: this.cycle(), exporting: this.isExportingCycle }, this.exportService, this.destroyRef, currentPassword);
     }
 
     private loadCycle(): void {
@@ -930,6 +759,7 @@ export class CycleTrackingFacade {
                 finalize(() => {
                     this.isLoading.set(false);
                 }),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(cycle => {
                 this.cycle.set(cycle);
@@ -968,77 +798,5 @@ export class CycleTrackingFacade {
 
     private hasActiveConsent(cycle: CycleResponse | null, purpose: CycleConsentPurpose): boolean {
         return cycle?.consents?.some(consent => consent.purpose === purpose && consent.isActive) ?? false;
-    }
-
-    private buildDayEditModel(
-        date: string,
-        symptoms: CycleSymptomEntry[],
-        bleeding: BleedingEntry | undefined,
-        fertilitySignal: FertilitySignal | undefined,
-    ): CycleDayFormModel {
-        return {
-            date: toCycleDateKey(date),
-            ...this.buildBleedingEditFields(symptoms, bleeding),
-            ...this.buildSymptomEditFields(symptoms),
-            ...this.buildFertilityEditFields(fertilitySignal),
-            notes: this.findDayNotes(bleeding, fertilitySignal),
-        };
-    }
-
-    private buildBleedingEditFields(
-        symptoms: CycleSymptomEntry[],
-        bleeding: BleedingEntry | undefined,
-    ): Pick<CycleDayFormModel, 'isBleeding' | 'bleedingType' | 'flow' | 'pain'> {
-        return {
-            isBleeding: bleeding !== undefined,
-            bleedingType: bleeding?.type ?? BLEEDING_TYPE_BLEEDING,
-            flow: bleeding?.flow ?? CYCLE_FLOW_MEDIUM,
-            pain: bleeding?.painImpact ?? this.findSymptomIntensity(symptoms, 'pain'),
-        };
-    }
-
-    private buildSymptomEditFields(
-        symptoms: CycleSymptomEntry[],
-    ): Pick<
-        CycleDayFormModel,
-        'mood' | 'energy' | 'sleepQuality' | 'appetite' | 'craving' | 'bloating' | 'headache' | 'skin' | 'stool' | 'nausea' | 'libido'
-    > {
-        return {
-            mood: this.findSymptomIntensity(symptoms, 'mood'),
-            energy: this.findSymptomIntensity(symptoms, 'energy'),
-            sleepQuality: this.findSymptomIntensity(symptoms, 'sleepQuality'),
-            appetite: this.findSymptomIntensity(symptoms, 'appetite'),
-            craving: this.findSymptomIntensity(symptoms, 'craving'),
-            bloating: this.findSymptomIntensity(symptoms, 'bloating'),
-            headache: this.findSymptomIntensity(symptoms, 'headache'),
-            skin: this.findSymptomIntensity(symptoms, 'skin'),
-            stool: this.findSymptomIntensity(symptoms, 'stool'),
-            nausea: this.findSymptomIntensity(symptoms, 'nausea'),
-            libido: this.findSymptomIntensity(symptoms, 'libido'),
-        };
-    }
-
-    private buildFertilityEditFields(
-        fertilitySignal: FertilitySignal | undefined,
-    ): Pick<CycleDayFormModel, 'basalBodyTemperatureCelsius' | 'ovulationTestResult' | 'cervicalFluid' | 'hadSex'> {
-        return {
-            basalBodyTemperatureCelsius: fertilitySignal?.basalBodyTemperatureCelsius ?? null,
-            ovulationTestResult: fertilitySignal?.ovulationTestResult ?? null,
-            cervicalFluid: fertilitySignal?.cervicalFluid ?? null,
-            hadSex: fertilitySignal?.hadSex ?? false,
-        };
-    }
-
-    private findDayNotes(bleeding: BleedingEntry | undefined, fertilitySignal: FertilitySignal | undefined): string | null {
-        return bleeding?.notes ?? fertilitySignal?.notes ?? null;
-    }
-
-    private findSymptomIntensity(symptoms: CycleSymptomEntry[], key: (typeof CYCLE_SYMPTOM_FIELDS)[number]['key']): number {
-        const symptomField = CYCLE_SYMPTOM_FIELDS.find(item => item.key === key);
-        if (symptomField === undefined) {
-            return MIN_SYMPTOM_VALUE;
-        }
-
-        return symptoms.find(symptom => symptom.category === symptomField.category)?.intensity ?? MIN_SYMPTOM_VALUE;
     }
 }

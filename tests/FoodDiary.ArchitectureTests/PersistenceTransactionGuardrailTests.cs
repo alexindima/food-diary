@@ -21,25 +21,23 @@ public sealed class PersistenceTransactionGuardrailTests {
         string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
         string[] allowedFiles = [
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "Ai", "AiQuotaRepository.cs"),
-            Path.Combine(persistenceRoot, "Billing", "EfBillingTransactionRunner.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Billing", "Infrastructure", "Persistence", "EfBillingTransactionRunner.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
-            Path.Combine(persistenceRoot, "Email", "EmailOutbox.cs"),
             Path.Combine(persistenceRoot, "Outbox", "OutboxProcessingEngine.cs"),
             Path.Combine(persistenceRoot, "Outbox", "OutboxDeadLetterReplayService.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Products", "Infrastructure", "Persistence", "Products", "EfProductMutationTransactionRunner.cs"),
-            Path.Combine(persistenceRoot, "RecentItems", "PostCommitRecentItemUsageRecorder.cs"),
-            Path.Combine(persistenceRoot, "Users", "UserCleanupService.cs"),
-            Path.Combine(persistenceRoot, "Wearables", "EfWearableTransactionRunner.cs"),
-            Path.Combine(persistenceRoot, "WeeklyGoals", "EfWeeklyGoalTransactionRunner.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Infrastructure", "Persistence", "Recipes", "EfRecipeMutationTransactionRunner.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "RecentItems", "Infrastructure", "Persistence", "RecentItems", "PostCommitRecentItemUsageRecorder.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Users", "Infrastructure", "Persistence", "Users", "UserCleanupService.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Wearables", "Infrastructure", "Persistence", "EfWearableTransactionRunner.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "WeeklyGoals", "Infrastructure", "Persistence", "EfWeeklyGoalTransactionRunner.cs"),
         ];
 
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        string[] violations = [.. SourceScanner.SourceFiles(persistenceRoot)
-            .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence")))
-            .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Products", "Infrastructure", "Persistence")))
+        string[] violations = [.. ModuleSourceCatalog.InfrastructureFiles()
             .Where(path => !allowed.Contains(path))
-            .SelectMany(path => File.ReadLines(path)
+            .SelectMany(path => SourceScanner.ReadCodeLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => entry.line.Contains("SaveChangesAsync(", StringComparison.Ordinal))
             .Select(entry => string.Create(
@@ -55,13 +53,14 @@ public sealed class PersistenceTransactionGuardrailTests {
         string infrastructureRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure");
         string[] allowedFiles = [
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "Ai", "AiQuotaRepository.cs"),
-            Path.Combine(infrastructureRoot, "Persistence", "Billing", "EfBillingTransactionRunner.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Billing", "Infrastructure", "Persistence", "EfBillingTransactionRunner.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxDeadLetterReplayService.cs"),
             Path.Combine(infrastructureRoot, "Persistence", "Outbox", "OutboxMessageClaimer.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Products", "Infrastructure", "Persistence", "Products", "EfProductMutationTransactionRunner.cs"),
-            Path.Combine(infrastructureRoot, "Persistence", "Users", "UserCleanupService.cs"),
-            Path.Combine(infrastructureRoot, "Persistence", "Wearables", "EfWearableTransactionRunner.cs"),
-            Path.Combine(infrastructureRoot, "Persistence", "WeeklyGoals", "EfWeeklyGoalTransactionRunner.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Infrastructure", "Persistence", "Recipes", "EfRecipeMutationTransactionRunner.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Users", "Infrastructure", "Persistence", "Users", "UserCleanupService.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Wearables", "Infrastructure", "Persistence", "EfWearableTransactionRunner.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "WeeklyGoals", "Infrastructure", "Persistence", "EfWeeklyGoalTransactionRunner.cs"),
         ];
         string[] forbiddenPatterns = [
             "BeginTransaction(",
@@ -72,11 +71,9 @@ public sealed class PersistenceTransactionGuardrailTests {
 
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        string[] violations = [.. SourceScanner.SourceFiles(infrastructureRoot)
-            .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence")))
-            .Concat(SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot("Modules", "Products", "Infrastructure", "Persistence")))
+        string[] violations = [.. ModuleSourceCatalog.InfrastructureFiles()
             .Where(path => !allowed.Contains(path))
-            .SelectMany(path => File.ReadLines(path)
+            .SelectMany(path => SourceScanner.ReadCodeLines(path)
                 .Select((line, index) => new { path, index, line })
                 .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
                 .Select(entry => string.Create(
@@ -93,12 +90,11 @@ public sealed class PersistenceTransactionGuardrailTests {
         string identityLoginEvents = ArchitectureTestPaths.FromRoot("Modules", "Identity", "Infrastructure", "Persistence", "Users", "UserLoginEventRepository.cs");
         string[] allowedFiles = [
             ArchitectureTestPaths.FromRoot("Modules", "Notifications", "Infrastructure", "Persistence", "NotificationRepository.cs"),
-            Path.Combine(infrastructureRoot, "Persistence", "Tracking", "FastingTelemetryEventRepository.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Fasting", "Infrastructure", "Persistence", "FastingTelemetryEventRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Marketing", "Infrastructure", "Persistence", "MarketingAttributionEventRepository.cs"),
             identityLoginEvents,
-            Path.Combine(infrastructureRoot, "Persistence", "Users", "RefreshTokenSessionRepository.cs"),
-            Path.Combine(infrastructureRoot, "Persistence", "Users", "UserRoleMembershipService.cs"),
-            Path.Combine(infrastructureRoot, "Persistence", "Users", "UserCleanupService.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Identity", "Infrastructure", "Persistence", "Users", "RefreshTokenSessionRepository.cs"),
+            ArchitectureTestPaths.FromRoot("Modules", "Users", "Infrastructure", "Persistence", "Users", "UserCleanupService.cs"),
         ];
         string[] forbiddenPatterns = [
             "ExecuteDeleteAsync(",
@@ -107,9 +103,9 @@ public sealed class PersistenceTransactionGuardrailTests {
 
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        string[] violations = [.. SourceScanner.SourceFiles(infrastructureRoot).Append(identityLoginEvents)
+        string[] violations = [.. ModuleSourceCatalog.InfrastructureFiles()
             .Where(path => !allowed.Contains(path))
-            .SelectMany(path => File.ReadLines(path)
+            .SelectMany(path => SourceScanner.ReadCodeLines(path)
                 .Select((line, index) => new { path, index, line })
                 .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
                 .Select(entry => string.Create(

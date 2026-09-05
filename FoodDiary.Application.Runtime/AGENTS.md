@@ -11,7 +11,7 @@ Rules for `FoodDiary.Application.Runtime/`.
 
 ## Boundaries
 
-- Depend only on `FoodDiary.Application.Abstractions` and `Shared/FoodDiary.Mediator`.
+- Depend only on `Shared/FoodDiary.Application.Contracts` and `Shared/FoodDiary.Mediator`.
 - Do not reference feature application modules, domain, infrastructure, presentation, resources, or executable hosts.
 - Keep external provider SDKs, HTTP clients, EF Core, and host configuration outside this project.
 

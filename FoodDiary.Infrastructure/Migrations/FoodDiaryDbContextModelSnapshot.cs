@@ -5069,13 +5069,12 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.HydrationEntry", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
-                    .WithMany("HydrationEntries")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
+                    .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.MenstrualEpisode", b => {
@@ -5343,7 +5342,6 @@ namespace FoodDiary.Infrastructure.Migrations {
             modelBuilder.Entity("FoodDiary.Domain.Entities.Users.User", b => {
                 b.Navigation("Cycles");
 
-                b.Navigation("HydrationEntries");
 
                 b.Navigation("Meals");
 

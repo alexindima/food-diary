@@ -48,7 +48,7 @@ public sealed class TemporalRepositoryBoundaryTests {
         var entry = HydrationEntry.Create(user.Id, maximumUtc, 250);
         context.AddRange(user, entry);
         await context.SaveChangesAsync();
-        var repository = new HydrationEntryRepository(context);
+        var repository = new HydrationEntryRepository(context.HydrationEntries);
 
         IReadOnlyList<HydrationEntry> entries = await repository.GetByDateAsync(
             user.Id,

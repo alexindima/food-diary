@@ -3,19 +3,19 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Application.Identity.Authentication.Services.UserAgents;
-using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Application.Identity.Authentication.Queries.GetActiveSessions;
 
-public sealed class GetActiveSessionsQueryHandler(IRefreshTokenSessionReadRepository repository)
+public sealed class GetActiveSessionsQueryHandler(IRefreshTokenSessionReadModelRepository repository)
     : IQueryHandler<GetActiveSessionsQuery, Result<IReadOnlyList<ActiveSessionModel>>> {
     public async Task<Result<IReadOnlyList<ActiveSessionModel>>> Handle(
         GetActiveSessionsQuery query,
         CancellationToken cancellationToken) {
-        IReadOnlyList<UserRefreshTokenSession> sessions = await repository
-            .GetActiveByUserIdAsync(new UserId(query.UserId), cancellationToken)
+        IReadOnlyList<RefreshTokenSessionReadModel> sessions = await repository
+            .GetActiveReadModelsAsync((UserId)query.UserId, cancellationToken)
             .ConfigureAwait(false);
         if (!sessions.Any(session => session.Id == query.CurrentSessionId)) {
             return Result.Failure<IReadOnlyList<ActiveSessionModel>>(Errors.Authentication.InvalidToken);

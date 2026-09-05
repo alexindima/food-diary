@@ -17,15 +17,16 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Dashboard
+- Abstraction-contract dependencies: Dashboard, Users, WaistEntries, WeightEntries
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Dashboard.Application, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Presentation.Api/Features/Statistics`
 - `Modules/Dashboard/Application/Abstractions`
+- `Modules/Statistics/Application`
 
 ## HTTP Surface
 
@@ -43,7 +44,7 @@ Source: `FoodDiary.Presentation.Api/Features/Statistics/StatisticsController.cs`
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 15
-- Observed external consumer groups: 5
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

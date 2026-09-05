@@ -30,7 +30,7 @@ public sealed class GetLessonByIdQueryHandler(
                 "Lesson id must not be empty."));
         }
 
-        var lessonId = new NutritionLessonId(query.LessonId);
+        var lessonId = (NutritionLessonId)query.LessonId;
         LessonDetailModel? lesson = await lessonReadService.GetByIdAsync(userIdResult.Value, lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return Result.Failure<LessonDetailModel>(LessonErrors.NotFound(query.LessonId));

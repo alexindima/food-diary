@@ -8,7 +8,7 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1581,
+    "typescriptFiles": 1584,
     "symbols": 617,
     "routes": 86,
     "features": 37,
@@ -2667,7 +2667,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "line": 140
+      "line": 58
     },
     {
       "name": "CycleCalendarCardComponent",
