@@ -89,9 +89,10 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/LegacyTokenUpgradeTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/ModuleRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Services/WearableTokenProtectorTests.cs`
+- [presentation] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Presentation.Tests/WearableHttpMappingsTests.cs`
+- [presentation] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Presentation.Tests/WearablesControllerTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleExtractionTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs`
 
 ## Working Rule
 

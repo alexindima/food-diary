@@ -13,6 +13,7 @@ Rules for all logical modules under `Modules/`. A module-specific `AGENTS.md` ma
 - Keep middleware, environment configuration, authentication setup, Swagger configuration, telemetry exporters, and executable composition in `FoodDiary.Web.Api`.
 - Every module Presentation assembly must be registered explicitly by the Web API composition root so MVC controller discovery cannot depend on accidental transitive references.
 - Presentation projects must not reference Infrastructure or executable host projects.
+- Module-owned controller and HTTP-mapping tests belong under `Modules/<Module>/tests/` in a Presentation test project that references only the owning module Presentation assembly. Keep shared filters, binders, conventions, composite endpoints, and cross-module HTTP tests in the central Presentation test project.
 
 ## Verification
 

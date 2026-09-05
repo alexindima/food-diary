@@ -72,9 +72,9 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/ModuleRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/OpenFoodFactsTestCollection.cs`
 - [behavioral-or-text-match] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests/Services/OpenFoodFactsServiceTests.cs`
+- [presentation] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Presentation.Tests/OpenFoodFactsControllerTests.cs`
+- [presentation] `Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Presentation.Tests/OpenFoodFactsHttpMappingsTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/OpenFoodFactsModuleExtractionTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/OpenFoodFactsControllerTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/OpenFoodFactsHttpMappingsTests.cs`
 
 ## Working Rule
 

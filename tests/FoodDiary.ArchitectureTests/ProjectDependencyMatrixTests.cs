@@ -37,6 +37,10 @@ public sealed class ProjectDependencyMatrixTests {
         "FoodDiary.Modules.WeeklyGoals.Presentation",
     ];
 
+    private static readonly string[] ModulePresentationTestProjectNames = [.. ModulePresentationProjectNames
+        .Where(static projectName => !string.Equals(projectName, "FoodDiary.Modules.Marketing.Presentation", StringComparison.Ordinal))
+        .Select(static projectName => $"{projectName}.Tests")];
+
     private static readonly IReadOnlyDictionary<string, string[]> AllowedProductionProjectReferences =
         new Dictionary<string, string[]>(StringComparer.Ordinal) {
             ["FoodDiary.Analyzers"] = [],
@@ -55,11 +59,13 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Application.Usda"] = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Usda.Contracts", "FoodDiary.Modules.Usda.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"],
             ["FoodDiary.Application.Wearables"] = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Modules.Wearables.Application.Abstractions", "FoodDiary.Modules.Wearables.Domain"],
             ["FoodDiary.Audit.Contracts"] = ["FoodDiary.Modules.Users.Domain.Contracts"],
+            ["FoodDiary.Audit.PersistenceModel"] = [],
             ["FoodDiary.Authentication.Contracts"] = [],
             ["FoodDiary.Development.Mcp"] = [],
             ["FoodDiary.Domain.Primitives"] = [],
             ["FoodDiary.Email.Contracts"] = [],
-            ["FoodDiary.Infrastructure"] = ["FoodDiary.Application.Contracts", "FoodDiary.Audit.Contracts", "FoodDiary.Authentication.Contracts", "FoodDiary.Email.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.PersistenceModel", "FoodDiary.Modules.Ai.PersistenceModel", "FoodDiary.Modules.Billing.Domain", "FoodDiary.Modules.Billing.PersistenceModel", "FoodDiary.Modules.BodyMetrics.Domain", "FoodDiary.Modules.BodyMetrics.PersistenceModel", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.ContentReports.PersistenceModel", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.Cycles.PersistenceModel", "FoodDiary.Modules.DailyAdvices.Domain", "FoodDiary.Modules.DailyAdvices.PersistenceModel", "FoodDiary.Modules.Dietologist.Domain", "FoodDiary.Modules.Dietologist.PersistenceModel", "FoodDiary.Modules.Exercises.Domain", "FoodDiary.Modules.Exercises.PersistenceModel", "FoodDiary.Modules.Fasting.Domain", "FoodDiary.Modules.Fasting.PersistenceModel", "FoodDiary.Modules.Favorites.Domain", "FoodDiary.Modules.Favorites.PersistenceModel", "FoodDiary.Modules.Gamification.Application.Abstractions", "FoodDiary.Modules.Gamification.Domain", "FoodDiary.Modules.Gamification.PersistenceModel", "FoodDiary.Modules.Hydration.Domain", "FoodDiary.Modules.Hydration.PersistenceModel", "FoodDiary.Modules.Identity.Domain", "FoodDiary.Modules.Identity.PersistenceModel", "FoodDiary.Modules.Images.Domain", "FoodDiary.Modules.Images.PersistenceModel", "FoodDiary.Modules.Lessons.Domain", "FoodDiary.Modules.Lessons.PersistenceModel", "FoodDiary.Modules.Marketing.Domain", "FoodDiary.Modules.Marketing.PersistenceModel", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.MealPlanning.PersistenceModel", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Meals.PersistenceModel", "FoodDiary.Modules.Notifications.Domain", "FoodDiary.Modules.Notifications.PersistenceModel", "FoodDiary.Modules.OpenFoodFacts.Domain", "FoodDiary.Modules.OpenFoodFacts.PersistenceModel", "FoodDiary.Modules.Products.PersistenceModel", "FoodDiary.Modules.RecentItems.Domain", "FoodDiary.Modules.RecentItems.PersistenceModel", "FoodDiary.Modules.RecipeCommunity.PersistenceModel", "FoodDiary.Modules.Recipes.Domain", "FoodDiary.Modules.Recipes.PersistenceModel", "FoodDiary.Modules.Usda.PersistenceModel", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Modules.Users.PersistenceModel", "FoodDiary.Modules.Wearables.PersistenceModel", "FoodDiary.Modules.WeeklyGoals.Domain", "FoodDiary.Modules.WeeklyGoals.PersistenceModel", "FoodDiary.Outbox.Abstractions", "FoodDiary.Outbox.Management.Contracts"],
+            ["FoodDiary.Email.PersistenceModel"] = ["FoodDiary.Email.Contracts", "FoodDiary.Outbox.Abstractions"],
+            ["FoodDiary.Infrastructure"] = ["FoodDiary.Application.Contracts", "FoodDiary.Audit.Contracts", "FoodDiary.Audit.PersistenceModel", "FoodDiary.Authentication.Contracts", "FoodDiary.Email.Contracts", "FoodDiary.Email.PersistenceModel", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.PersistenceModel", "FoodDiary.Modules.Ai.PersistenceModel", "FoodDiary.Modules.Billing.Domain", "FoodDiary.Modules.Billing.PersistenceModel", "FoodDiary.Modules.BodyMetrics.Domain", "FoodDiary.Modules.BodyMetrics.PersistenceModel", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.ContentReports.PersistenceModel", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.Cycles.PersistenceModel", "FoodDiary.Modules.DailyAdvices.Domain", "FoodDiary.Modules.DailyAdvices.PersistenceModel", "FoodDiary.Modules.Dietologist.Domain", "FoodDiary.Modules.Dietologist.PersistenceModel", "FoodDiary.Modules.Exercises.Domain", "FoodDiary.Modules.Exercises.PersistenceModel", "FoodDiary.Modules.Fasting.Domain", "FoodDiary.Modules.Fasting.PersistenceModel", "FoodDiary.Modules.Favorites.Domain", "FoodDiary.Modules.Favorites.PersistenceModel", "FoodDiary.Modules.Gamification.Application.Abstractions", "FoodDiary.Modules.Gamification.Domain", "FoodDiary.Modules.Gamification.PersistenceModel", "FoodDiary.Modules.Hydration.Domain", "FoodDiary.Modules.Hydration.PersistenceModel", "FoodDiary.Modules.Identity.Domain", "FoodDiary.Modules.Identity.PersistenceModel", "FoodDiary.Modules.Images.Domain", "FoodDiary.Modules.Images.PersistenceModel", "FoodDiary.Modules.Lessons.Domain", "FoodDiary.Modules.Lessons.PersistenceModel", "FoodDiary.Modules.Marketing.Domain", "FoodDiary.Modules.Marketing.PersistenceModel", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.MealPlanning.PersistenceModel", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Meals.PersistenceModel", "FoodDiary.Modules.Notifications.Domain", "FoodDiary.Modules.Notifications.PersistenceModel", "FoodDiary.Modules.OpenFoodFacts.Domain", "FoodDiary.Modules.OpenFoodFacts.PersistenceModel", "FoodDiary.Modules.Products.PersistenceModel", "FoodDiary.Modules.RecentItems.Domain", "FoodDiary.Modules.RecentItems.PersistenceModel", "FoodDiary.Modules.RecipeCommunity.PersistenceModel", "FoodDiary.Modules.Recipes.Domain", "FoodDiary.Modules.Recipes.PersistenceModel", "FoodDiary.Modules.Usda.PersistenceModel", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Modules.Users.PersistenceModel", "FoodDiary.Modules.Wearables.PersistenceModel", "FoodDiary.Modules.WeeklyGoals.Domain", "FoodDiary.Modules.WeeklyGoals.PersistenceModel", "FoodDiary.Outbox.Abstractions", "FoodDiary.Outbox.Management.Contracts", "FoodDiary.Outbox.PersistenceModel"],
             ["FoodDiary.Initializer"] = ["FoodDiary.Application.BodyMetrics", "FoodDiary.Application.Contracts", "FoodDiary.Application.Exercises", "FoodDiary.Application.Images", "FoodDiary.Application.MealPlanning", "FoodDiary.Application.Notifications", "FoodDiary.Application.RecipeCommunity", "FoodDiary.Application.Runtime", "FoodDiary.Application.Usda", "FoodDiary.Infrastructure", "FoodDiary.Modules.Admin.Application", "FoodDiary.Modules.Admin.Infrastructure", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.Ai.Infrastructure", "FoodDiary.Modules.Billing.Infrastructure", "FoodDiary.Modules.BodyMetrics.Infrastructure", "FoodDiary.Modules.ContentReports.Infrastructure", "FoodDiary.Modules.Cycles.Infrastructure", "FoodDiary.Modules.DailyAdvices.Infrastructure", "FoodDiary.Modules.Dashboard.Application", "FoodDiary.Modules.Dashboard.Infrastructure", "FoodDiary.Modules.Dietologist.Infrastructure", "FoodDiary.Modules.Exercises.Infrastructure", "FoodDiary.Modules.Export.Application", "FoodDiary.Modules.Export.Infrastructure", "FoodDiary.Modules.Fasting.Infrastructure", "FoodDiary.Modules.Favorites.Infrastructure", "FoodDiary.Modules.Gamification.Infrastructure", "FoodDiary.Modules.Hydration.Infrastructure", "FoodDiary.Modules.Identity.Application", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Identity.Infrastructure", "FoodDiary.Modules.Images.Infrastructure", "FoodDiary.Modules.Lessons.Infrastructure", "FoodDiary.Modules.Marketing.Infrastructure", "FoodDiary.Modules.MealPlanning.Infrastructure", "FoodDiary.Modules.Meals.Infrastructure", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.Notifications.Infrastructure", "FoodDiary.Modules.OpenFoodFacts.Infrastructure", "FoodDiary.Modules.Products.Application", "FoodDiary.Modules.Products.Infrastructure", "FoodDiary.Modules.RecentItems.Infrastructure", "FoodDiary.Modules.RecipeCommunity.Infrastructure", "FoodDiary.Modules.Recipes.Application", "FoodDiary.Modules.Recipes.Infrastructure", "FoodDiary.Modules.Statistics.Application", "FoodDiary.Modules.Tdee.Application", "FoodDiary.Modules.Usda.Infrastructure", "FoodDiary.Modules.Users.Infrastructure", "FoodDiary.Modules.Wearables.Infrastructure", "FoodDiary.Modules.WeeklyCheckIn.Application", "FoodDiary.Modules.WeeklyGoals.Infrastructure", "FoodDiary.Outbox.Abstractions", "FoodDiary.Outbox.Management.Contracts"],
             ["FoodDiary.Integrations.Http"] = [],
             ["FoodDiary.Integrations"] = [
@@ -281,6 +287,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Modules.WeeklyGoals.PersistenceModel"] = ["FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.WeeklyGoals.Domain"],
             ["FoodDiary.Nutrition.Contracts"] = [],
             ["FoodDiary.Outbox.Abstractions"] = [],
+            ["FoodDiary.Outbox.PersistenceModel"] = [],
             ["FoodDiary.Outbox.Management.Contracts"] = [],
             ["FoodDiary.Presentation.Api"] = ["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Export.Application", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Results"],
             ["FoodDiary.Results"] = [],
@@ -502,9 +509,25 @@ public sealed class ProjectDependencyMatrixTests {
     [Fact]
     public void AllTestProjects_AreCoveredByDependencyMatrix() {
         IReadOnlyList<string> actualProjects = ProjectReferenceReader.ReadTestProjectNames();
-        string[] expectedProjects = [.. AllowedTestProjectReferences.Keys.Order(StringComparer.Ordinal)];
+        string[] expectedProjects = [.. AllowedTestProjectReferences.Keys
+            .Concat(ModulePresentationTestProjectNames)
+            .Order(StringComparer.Ordinal)];
 
         Assert.Equal(expectedProjects, actualProjects);
+    }
+
+    [Fact]
+    public void ModulePresentationTestProjects_ReferenceOnlyTheirOwnedPresentationAssembly() {
+        IReadOnlyDictionary<string, string[]> actualReferencesByProject = ProjectReferenceReader.ReadTestProjectReferences();
+
+        foreach (string testProjectName in ModulePresentationTestProjectNames) {
+            Assert.True(
+                actualReferencesByProject.TryGetValue(testProjectName, out string[]? actualReferences),
+                $"Test project '{testProjectName}' is missing from discovered test projects.");
+
+            string expectedPresentationProject = testProjectName[..^".Tests".Length];
+            Assert.Equal([expectedPresentationProject], actualReferences);
+        }
     }
 
     [Fact]

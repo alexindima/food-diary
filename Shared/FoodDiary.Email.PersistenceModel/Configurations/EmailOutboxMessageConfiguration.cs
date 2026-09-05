@@ -1,8 +1,7 @@
-using FoodDiary.Infrastructure.Persistence.Email;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.Email;
+namespace FoodDiary.Infrastructure.Persistence.Email.Configurations;
 
 internal sealed class EmailOutboxMessageConfiguration : IEntityTypeConfiguration<EmailOutboxMessage> {
     public void Configure(EntityTypeBuilder<EmailOutboxMessage> builder) {

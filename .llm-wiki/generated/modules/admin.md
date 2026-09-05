@@ -91,8 +91,12 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Domain.Tests/Domain/AdminInvariantTests.cs`
 - [integration] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminUserRoleAuditRepositoryIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/AdminPersistenceRegistrationTests.cs`
+- [presentation] `Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminAchievementDefinitionsControllerTests.cs`
+- [presentation] `Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs`
+- [presentation] `Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminHttpMappingsTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoProtocolTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs`
+- [presentation] `Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AdminSsoControllerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.LessonCommandTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.MappingTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs`
@@ -104,10 +108,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/UserLoginActivityFeatureTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AdminModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Authentication/AdminImpersonationHandoffServiceTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/AdminHttpMappingsTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/AdminSsoControllerTests.cs`
 
 ## Working Rule
 

@@ -320,6 +320,13 @@
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )"
         }
       },
+      "fooddiary.audit.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
       "fooddiary.authentication.contracts": {
         "type": "Project"
       },
@@ -329,13 +336,24 @@
       "fooddiary.email.contracts": {
         "type": "Project"
       },
+      "fooddiary.email.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Email.Contracts": "[1.0.0, )",
+          "FoodDiary.Outbox.Abstractions": "[1.0.0, )",
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
+      },
       "fooddiary.infrastructure": {
         "type": "Project",
         "dependencies": {
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Audit.Contracts": "[1.0.0, )",
+          "FoodDiary.Audit.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Authentication.Contracts": "[1.0.0, )",
           "FoodDiary.Email.Contracts": "[1.0.0, )",
+          "FoodDiary.Email.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Admin.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Ai.PersistenceModel": "[1.0.0, )",
@@ -393,6 +411,7 @@
           "FoodDiary.Modules.WeeklyGoals.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Outbox.Abstractions": "[1.0.0, )",
           "FoodDiary.Outbox.Management.Contracts": "[1.0.0, )",
+          "FoodDiary.Outbox.PersistenceModel": "[1.0.0, )",
           "Microsoft.AspNetCore.DataProtection": "[10.0.11, )",
           "Microsoft.CodeAnalysis.CSharp.Workspaces": "[5.9.0, )",
           "Microsoft.CodeAnalysis.Common": "[5.9.0, )",
@@ -991,6 +1010,13 @@
       },
       "fooddiary.outbox.management.contracts": {
         "type": "Project"
+      },
+      "fooddiary.outbox.persistencemodel": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.EntityFrameworkCore.Relational": "[10.0.11, )"
+        }
       },
       "fooddiary.results": {
         "type": "Project"

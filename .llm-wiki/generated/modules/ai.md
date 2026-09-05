@@ -100,12 +100,12 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Persistence/AiQuotaRepositoryTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/AiPromptProviderTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Infrastructure.Tests/Services/OpenAiFoodServiceTests.cs`
+- [presentation] `Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiFoodControllerTests.cs`
+- [presentation] `Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiHttpMappingsTests.cs`
 - [behavioral-or-text-match] `Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/Users/AiConsentTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiUsageRepositoryIntegrationTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs`
 
 ## Working Rule
 

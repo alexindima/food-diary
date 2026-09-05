@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4787,
+    "productionFiles": 4792,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -3009,44 +3009,12 @@
       "structuralRiskScore": 4.76
     },
     {
-      "path": "FoodDiary.Infrastructure/Persistence/Audit/AuditEntry.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
       "path": "FoodDiary.Infrastructure/Persistence/Audit/AuditEntryService.cs",
       "nonBlankLines": 52,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.54
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Audit/AuditEntryConfiguration.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Email/EmailOutboxMessageConfiguration.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Outbox/OutboxReplayAuditConfiguration.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/EfUnitOfWork.cs",
@@ -3063,14 +3031,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.24
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxMessage.cs",
-      "nonBlankLines": 108,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.16
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxProcessor.cs",
@@ -3186,11 +3146,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "nonBlankLines": 54,
+      "nonBlankLines": 59,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.08
+      "structuralRiskScore": 1.18
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContextFactory.cs",
@@ -3271,14 +3231,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.3
-    },
-    {
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxReplayAudit.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxReplayEntry.cs",
@@ -38753,6 +38705,38 @@
       "structuralRiskScore": 0.1
     },
     {
+      "path": "Shared/FoodDiary.Audit.PersistenceModel/AuditEntry.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Shared/FoodDiary.Audit.PersistenceModel/AuditPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Shared/FoodDiary.Audit.PersistenceModel/Configurations/AuditEntryConfiguration.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Shared/FoodDiary.Audit.PersistenceModel/Properties/AssemblyInfo.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
       "path": "Shared/FoodDiary.Authentication.Contracts/Authentication/Abstractions/IAdminSsoCodeStore.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
@@ -38887,6 +38871,30 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Shared/FoodDiary.Email.PersistenceModel/Configurations/EmailOutboxMessageConfiguration.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.42
+    },
+    {
+      "path": "Shared/FoodDiary.Email.PersistenceModel/EmailOutboxMessage.cs",
+      "nonBlankLines": 108,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.16
+    },
+    {
+      "path": "Shared/FoodDiary.Email.PersistenceModel/EmailPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Shared/FoodDiary.Integrations.Http/Http/BoundedHttpContentReader.cs",
@@ -39087,6 +39095,38 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.PersistenceModel/Configurations/OutboxReplayAuditConfiguration.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.PersistenceModel/OutboxPersistenceModelRegistration.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.PersistenceModel/OutboxReplayAudit.cs",
+      "nonBlankLines": 31,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.62
+    },
+    {
+      "path": "Shared/FoodDiary.Outbox.PersistenceModel/Properties/AssemblyInfo.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Shared/FoodDiary.Results/Error.cs",
@@ -40272,7 +40312,7 @@
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/FastingTelemetrySummaryServiceTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/FastingTelemetrySummaryServiceTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41121,7 +41161,7 @@
       "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminAchievementDefinitionsControllerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41145,7 +41185,7 @@
       "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41157,7 +41197,7 @@
       "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41169,7 +41209,7 @@
       "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41181,7 +41221,7 @@
       "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41206,7 +41246,7 @@
       "line": 20,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41219,7 +41259,7 @@
       "line": 19,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41232,7 +41272,7 @@
       "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41244,7 +41284,7 @@
       "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41256,7 +41296,7 @@
       "line": 20,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminSsoControllerTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AdminSsoControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
@@ -41270,8 +41310,8 @@
       "line": 16,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.ArchitectureTests/PresentationConventionsTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
+        "tests/FoodDiary.ArchitectureTests/PresentationConventionsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41283,7 +41323,7 @@
       "line": 17,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41296,7 +41336,7 @@
       "line": 16,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41308,7 +41348,7 @@
       "line": 17,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41320,7 +41360,7 @@
       "line": 24,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs",
+        "Modules/Ai/tests/FoodDiary.Modules.Ai.Presentation.Tests/AiFoodControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41333,7 +41373,7 @@
       "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41372,7 +41412,7 @@
       "line": 26,
       "testReferenceCount": 4,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AuthSessionControllerTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/PresentationHardeningContractTests.cs"
@@ -41387,7 +41427,7 @@
       "line": 23,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AuthSessionLifecycleControllerTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionLifecycleControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41400,7 +41440,7 @@
       "line": 24,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AuthTelegramControllerTests.cs",
+        "Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthTelegramControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
@@ -41455,8 +41495,8 @@
       "line": 20,
       "testReferenceCount": 4,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/BillingControllerTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/SensitiveMutationAndBillingContractTests.cs"
       ],
@@ -41470,7 +41510,7 @@
       "line": 17,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/BillingWebhookControllerTests.cs",
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingWebhookControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/SensitiveMutationAndBillingContractTests.cs"
       ],
@@ -41484,8 +41524,8 @@
       "line": 19,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/DietologistNewEndpointsCoverageTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41497,7 +41537,7 @@
       "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/DietologistNewEndpointsCoverageTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41521,7 +41561,7 @@
       "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs"
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41533,7 +41573,7 @@
       "line": 15,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/SensitiveMutationAndBillingContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ],
@@ -41547,9 +41587,9 @@
       "line": 18,
       "testReferenceCount": 4,
       "testReferences": [
+        "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Presentation.Tests/DashboardControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/DashboardControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41562,7 +41602,7 @@
       "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/DietologistNewEndpointsCoverageTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41574,7 +41614,7 @@
       "line": 18,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/DietologistNewEndpointsCoverageTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41586,8 +41626,8 @@
       "line": 22,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/DietologistClientsControllerTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistClientsControllerTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41599,8 +41639,8 @@
       "line": 16,
       "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/DietologistControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/SensitiveMutationAndBillingContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41613,8 +41653,8 @@
       "line": 17,
       "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistInvitationsControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/DietologistInvitationsControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/SensitiveMutationAndBillingContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41627,7 +41667,7 @@
       "line": 15,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/ExercisesControllerTests.cs"
+        "Modules/Exercises/tests/FoodDiary.Modules.Exercises.Presentation.Tests/ExercisesControllerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41639,8 +41679,8 @@
       "line": 17,
       "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Export/tests/FoodDiary.Modules.Export.Presentation.Tests/ExportControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/ExportControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41677,8 +41717,8 @@
       "line": 14,
       "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/FastingReadControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/FastingReadControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41703,7 +41743,7 @@
       "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductsControllerTests.cs"
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41715,7 +41755,7 @@
       "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipesControllerTests.cs"
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41739,10 +41779,10 @@
       "line": 14,
       "testReferenceCount": 4,
       "testReferences": [
+        "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/GoalsControllerTests.cs",
+        "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Presentation.Tests/WeeklyGoalsControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/GoalsControllerTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs"
+        "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41780,7 +41820,7 @@
       "line": 14,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs"
       ],
@@ -41794,12 +41834,12 @@
       "line": 22,
       "testReferenceCount": 7,
       "testReferences": [
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/LogsControllerTests.cs",
         "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs",
         "tests/FoodDiary.ArchitectureTests/PresentationConventionsTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/LogsControllerTests.cs",
         "tests/FoodDiary.Web.Api.IntegrationTests/FrontendObservabilityIntegrationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41955,7 +41995,7 @@
       "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
+        "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41968,8 +42008,8 @@
       "line": 15,
       "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPushControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/NotificationPushControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/PresentationHardeningContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41982,9 +42022,9 @@
       "line": 17,
       "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationsControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/NotificationsControllerTests.cs"
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41996,8 +42036,8 @@
       "line": 17,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/OpenFoodFactsControllerTests.cs"
+        "Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Presentation.Tests/OpenFoodFactsControllerTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42009,8 +42049,8 @@
       "line": 17,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/ProductSuggestionsControllerTests.cs"
+        "Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/ProductSuggestionsControllerTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42022,9 +42062,9 @@
       "line": 15,
       "testReferenceCount": 4,
       "testReferences": [
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteProductsControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductsControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42037,7 +42077,7 @@
       "line": 16,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/RecipeCommentsControllerTests.cs"
+        "Modules/RecipeCommunity/tests/FoodDiary.Modules.RecipeCommunity.Presentation.Tests/RecipeCommentsControllerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42049,7 +42089,7 @@
       "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/RecipeExploreControllerTests.cs"
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Presentation.Tests/RecipeExploreControllerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42074,9 +42114,9 @@
       "line": 16,
       "testReferenceCount": 5,
       "testReferences": [
+        "Modules/Favorites/tests/FoodDiary.Modules.Favorites.Presentation.Tests/FavoriteRecipesControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/CreatedControllerRouteValueTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipesControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs",
         "tests/FoodDiary.Web.Api.IntegrationTests/AuthAndRecipesFlowTests.cs"
       ],
@@ -42090,7 +42130,7 @@
       "line": 19,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/DietologistNewEndpointsCoverageTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42102,8 +42142,8 @@
       "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/DietologistNewEndpointsCoverageTests.cs"
+        "Modules/Dietologist/tests/FoodDiary.Modules.Dietologist.Presentation.Tests/DietologistNewEndpointsCoverageTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42128,7 +42168,7 @@
       "line": 16,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/StatisticsControllerTests.cs",
+        "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Presentation.Tests/StatisticsControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42141,7 +42181,7 @@
       "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/TdeeControllerTests.cs"
+        "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Presentation.Tests/TdeeControllerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42166,7 +42206,7 @@
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/UserAiConsentControllerTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UserAiConsentControllerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42191,9 +42231,9 @@
       "line": 15,
       "testReferenceCount": 3,
       "testReferences": [
-        "Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/AdminControllersCoverageTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/UsersControllerTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
+        "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UsersControllerTests.cs",
+        "Tooling/tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42205,8 +42245,8 @@
       "line": 16,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/UsersPasswordControllerTests.cs"
+        "Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UsersPasswordControllerTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42258,8 +42298,8 @@
       "line": 19,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs"
+        "Modules/Wearables/tests/FoodDiary.Modules.Wearables.Presentation.Tests/WearablesControllerTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42284,7 +42324,7 @@
       "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs"
+        "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Presentation.Tests/WeeklyGoalsControllerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42944,7 +42984,7 @@
       "line": 5,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Presentation.Api.Tests/FastingTelemetrySummaryServiceTests.cs"
+        "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/FastingTelemetrySummaryServiceTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

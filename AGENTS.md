@@ -11,10 +11,13 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Build-time analyzers: `FoodDiary.Analyzers/AGENTS.md`
 - Shared application contracts: `Shared/FoodDiary.Application.Contracts/AGENTS.md`
 - Shared audit contracts: `Shared/FoodDiary.Audit.Contracts/AGENTS.md`
+- Shared audit persistence model: `Shared/FoodDiary.Audit.PersistenceModel/AGENTS.md`
 - Shared authentication contracts: `Shared/FoodDiary.Authentication.Contracts/AGENTS.md`
 - Shared email contracts: `Shared/FoodDiary.Email.Contracts/AGENTS.md`
+- Shared email persistence model: `Shared/FoodDiary.Email.PersistenceModel/AGENTS.md`
 - Shared nutrition contracts: `Shared/FoodDiary.Nutrition.Contracts/AGENTS.md`
 - Shared outbox management contracts: `Shared/FoodDiary.Outbox.Management.Contracts/AGENTS.md`
+- Shared outbox persistence model: `Shared/FoodDiary.Outbox.PersistenceModel/AGENTS.md`
 - Admin logical module: `Modules/Admin/AGENTS.md`
 - Admin application: `Modules/Admin/Application/AGENTS.md`
 - Admin ports: `Modules/Admin/Application/Abstractions/AGENTS.md`

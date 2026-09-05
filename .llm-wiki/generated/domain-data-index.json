@@ -5433,7 +5433,7 @@
         "entry => new { entry.SubjectClientUserId, entry.CreatedAtUtc })"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Audit/AuditEntryConfiguration.cs"
+      "path": "Shared/FoodDiary.Audit.PersistenceModel/Configurations/AuditEntryConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5700,7 +5700,7 @@
         "message => new { message.ProcessedOnUtc, message.DeadLetteredOnUtc, message.NextAttemptOnUtc, message.LockedUntilUtc })"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Email/EmailOutboxMessageConfiguration.cs"
+      "path": "Shared/FoodDiary.Email.PersistenceModel/Configurations/EmailOutboxMessageConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -6146,7 +6146,7 @@
         "entry => new { entry.OutboxName, entry.MessageId, entry.RequestedOnUtc })"
       ],
       "relationships": [],
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Outbox/OutboxReplayAuditConfiguration.cs"
+      "path": "Shared/FoodDiary.Outbox.PersistenceModel/Configurations/OutboxReplayAuditConfiguration.cs"
     },
     {
       "area": "FoodDiary",

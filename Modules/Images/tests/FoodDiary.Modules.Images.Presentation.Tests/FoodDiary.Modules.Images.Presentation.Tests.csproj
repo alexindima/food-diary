@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>FoodDiary.Presentation.Api.Tests</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../../Presentation/FoodDiary.Modules.Images.Presentation.csproj" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <Using Include="NSubstitute" />
+    <Using Include="Xunit" />
+    <Compile Include="../../../../tests/FoodDiary.Presentation.Api.Tests/CapturedSender.cs" Link="Support/CapturedSender.cs" />
+    <Compile Include="../../../../tests/FoodDiary.Presentation.Api.Tests/SubstituteSender.cs" Link="Support/SubstituteSender.cs" />
+  </ItemGroup>
+</Project>

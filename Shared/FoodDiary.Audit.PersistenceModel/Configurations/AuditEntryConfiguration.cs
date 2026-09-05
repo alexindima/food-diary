@@ -1,8 +1,7 @@
-using FoodDiary.Infrastructure.Persistence.Audit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FoodDiary.Infrastructure.Persistence.Configurations.Audit;
+namespace FoodDiary.Infrastructure.Persistence.Audit.Configurations;
 
 internal sealed class AuditEntryConfiguration : IEntityTypeConfiguration<AuditEntry> {
     public void Configure(EntityTypeBuilder<AuditEntry> builder) {

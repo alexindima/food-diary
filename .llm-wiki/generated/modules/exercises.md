@@ -73,8 +73,9 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Application.Tests/Exercises/ExercisesValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Domain.Tests/Domain/ExerciseEntryInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Domain.Tests/Domain/ExerciseTrackingInvariantTests.cs`
+- [presentation] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Presentation.Tests/ExerciseHttpMappingsTests.cs`
+- [presentation] `Modules/Exercises/tests/FoodDiary.Modules.Exercises.Presentation.Tests/ExercisesControllerTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ExercisesModuleExtractionTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/ExercisesControllerTests.cs`
 
 ## Working Rule
 

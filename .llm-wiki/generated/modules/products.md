@@ -84,11 +84,12 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ValueObjects/FoodQualityScoreTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Domain.Tests/ValueObjects/NutritionContractTests.cs`
 - [integration] `Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/Integration/ProductRepositoryIntegrationTests.cs`
+- [presentation] `Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/ProductHttpMappingsTests.cs`
+- [presentation] `Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/ProductSuggestionsControllerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ProductsModuleExtractionTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/ProductSuggestionsControllerTests.cs`
 
 ## Working Rule
 

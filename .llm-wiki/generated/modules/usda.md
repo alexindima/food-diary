@@ -86,8 +86,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Integrations/UsdaExternalFoodServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Usda/tests/FoodDiary.Modules.Usda.Infrastructure.Tests/Services/UsdaFoodSearchServiceTests.cs`
+- [presentation] `Modules/Usda/tests/FoodDiary.Modules.Usda.Presentation.Tests/UsdaHttpMappingsTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsdaModuleExtractionTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs`
 
 ## Working Rule
 

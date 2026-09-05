@@ -65,8 +65,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/PostgresDatabaseCollection.cs`
 - [behavioral-or-text-match] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/PostgresDatabaseFixture.cs`
 - [integration] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/WeeklyGoalRepositoryIntegrationTests.cs`
+- [presentation] `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Presentation.Tests/WeeklyGoalsControllerTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WeeklyGoalsModuleExtractionTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs`
 
 ## Working Rule
 

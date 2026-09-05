@@ -8,21 +8,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "62447260bbbf83406d5d7a08e80ad6bf60b0241f16635f0f94a5e1a087a654cb"
-        },
-        {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "250604e886b5f6167b17b55e8b7655c914419c5444e741d1cef66169ccb3623c"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "85ee658643d0cd60867a7381a2b13f5c69a2b742e2385c088fa8ff334a98c3de"
+          "sha256": "dbcfe9346add5370b6dd8fec081392a7c7172c3246838f936ba31e88a1608269"
         }
       ],
-      "reason": "Reviewed current architecture, module-map, ownership and scoped-guide text against the final 32 module Presentation projects, one Presentation.Contracts project and the central Version-only kernel.",
+      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:40.9779165Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T15:47:56.9624972Z"
     },
     {
       "pageId": "module.frontend",
@@ -64,26 +56,14 @@
       "pageSha256": "23e3cd05fa0382f84b46d35c6c360c6b17310cbd9db4e4ca83fd676bec75c635",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "e35778591e983de75462749dec4e139a829723068c9364eeb18cf43af64066ce"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "85ee658643d0cd60867a7381a2b13f5c69a2b742e2385c088fa8ff334a98c3de"
-        },
-        {
-          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "5c1eaf580f28dca029c705546faa9cdaa175f6bbd0d0c036283e5029dab8f762"
-        },
-        {
-          "path": "FoodDiary.Presentation.Api/AGENTS.md",
-          "sha256": "a51779c6f74cee77f0dcd2c1f3288ab7789f5be624678c737bdb2255e4984782"
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "1dcd2b12aa82aa2c8450735ef2fc8d04f27d034a9a25ba8ddc258e5d3d2fcd36"
         }
       ],
-      "reason": "Reviewed the module Presentation ownership split against the unchanged HTTP routes, payload types, status metadata and final 182/182 Swagger and HTTP integration result; Dietologist shared DTOs preserve their original names.",
+      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:42.6473914Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T15:47:57.2427587Z"
     },
     {
       "pageId": "system.architecture",
@@ -91,26 +71,14 @@
       "pageSha256": "aecbc40ebd932d3500222bca6a84cbdaefaa0a2adf07b24580e0557a329ca8f7",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "250604e886b5f6167b17b55e8b7655c914419c5444e741d1cef66169ccb3623c"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "e35778591e983de75462749dec4e139a829723068c9364eeb18cf43af64066ce"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "85ee658643d0cd60867a7381a2b13f5c69a2b742e2385c088fa8ff334a98c3de"
-        },
-        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "0dae7b90d4a9d28a1c1a1f6af79eb4b94a1507b3a668642688f76a6b847c76ec"
+          "sha256": "c49ff9f25cb742827c8cff9966be3608b894bfa7e957e4115f49a6d82e7a28bf"
         }
       ],
-      "reason": "Reviewed current architecture, module-map, ownership and scoped-guide text against the final 32 module Presentation projects, one Presentation.Contracts project and the central Version-only kernel.",
+      "reason": "Reviewed the final explicit project-reference matrix and regenerated architecture-health index; the three Shared PersistenceModel dependencies and 31 owner-only Presentation test references match the implemented solution graph.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:43.5506104Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T16:01:07.9233900Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -149,13 +117,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "62447260bbbf83406d5d7a08e80ad6bf60b0241f16635f0f94a5e1a087a654cb"
+          "sha256": "dbcfe9346add5370b6dd8fec081392a7c7172c3246838f936ba31e88a1608269"
         }
       ],
-      "reason": "Reviewed current architecture, module-map, ownership and scoped-guide text against the final 32 module Presentation projects, one Presentation.Contracts project and the central Version-only kernel.",
+      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:44.2591580Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T15:47:57.4601238Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -228,21 +196,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "865b212b77525404c71efcc34e72302d6e938e2e43434f999070941c77758d37"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "e35778591e983de75462749dec4e139a829723068c9364eeb18cf43af64066ce"
+          "sha256": "c60200a545c13b17b37754e4b78715cfdb1178f590b94c7d56af4ec9f97cda0f"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "0dae7b90d4a9d28a1c1a1f6af79eb4b94a1507b3a668642688f76a6b847c76ec"
+          "sha256": "c49ff9f25cb742827c8cff9966be3608b894bfa7e957e4115f49a6d82e7a28bf"
         }
       ],
-      "reason": "Reviewed exact project-matrix coverage, controller discovery, module-page and architecture-health generator changes; 825 Presentation, 247 host unit and 1175 architecture tests pass, while the independent frozen retrieval holdout remains explicitly non-green at 99/100 top-ten.",
+      "reason": "Reviewed the final explicit project-reference matrix and regenerated architecture-health index; the three Shared PersistenceModel dependencies and 31 owner-only Presentation test references match the implemented solution graph.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:45.7521709Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T16:01:08.2133585Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -251,13 +215,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "aadc650f14cefa3c69cc3443d77e87447ebf2a2ce4c5655fb2556edeae0dd106"
+          "sha256": "75ae2fafba7a7960662c73248313ef2d4f6fb587018cc5ccdff8b2768acdc7ac"
         }
       ],
-      "reason": "Reviewed the module Presentation ownership split against the unchanged HTTP routes, payload types, status metadata and final 182/182 Swagger and HTTP integration result; Dietologist shared DTOs preserve their original names.",
+      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:46.7108045Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T15:47:58.2538394Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -538,13 +502,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "7b3d7dcc34173838a03ff8a3746895fc3de6bb47606fa18987d6e76438bef498"
+          "sha256": "364d001b110b21e9a8324595a3861891435f3a5f4dd9b9aa7e55bf5ae809244c"
+        },
+        {
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "1dcd2b12aa82aa2c8450735ef2fc8d04f27d034a9a25ba8ddc258e5d3d2fcd36"
         }
       ],
-      "reason": "Current guards inspect all 34 modules and reviewed persistence capabilities. Architecture tests pass 1173, MCP passes 267 including identity-scope ranking, frontend verify passes, and full-run failures were resolved or passed isolated retries. Static index references remain distinct from execution coverage; workflow mechanics and authority are unchanged.",
+      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
-      "reviewedAtUtc": "2026-09-05T11:25:44.7793727Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T15:47:58.8648814Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -861,13 +829,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c4dbd87ee14f5b11766049922ba269946f9294b2f6154b284839ec3bc99a8788"
+          "sha256": "9612b06326547d67d07a0380300f0616d23e1537efc7ccf48fba740a2e83a0ac"
         }
       ],
-      "reason": "Reviewed exact project-matrix coverage, controller discovery, module-page and architecture-health generator changes; 825 Presentation, 247 host unit and 1175 architecture tests pass, while the independent frozen retrieval holdout remains explicitly non-green at 99/100 top-ten.",
+      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:51.2485317Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T15:47:59.3041701Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -944,13 +912,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "76a094095ee40aedcfd232046cff4c64f550145463820a8ad1e08c4a02ef6d15"
+          "sha256": "e248417a8579f89c623fa065cc3c0e8a156953ac1bd0331bc6330f6102647b0c"
         }
       ],
-      "reason": "Reviewed current architecture, module-map, ownership and scoped-guide text against the final 32 module Presentation projects, one Presentation.Contracts project and the central Version-only kernel.",
+      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:53.5042568Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T15:48:00.5037018Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -959,21 +927,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "c4dbd87ee14f5b11766049922ba269946f9294b2f6154b284839ec3bc99a8788"
+          "sha256": "9612b06326547d67d07a0380300f0616d23e1537efc7ccf48fba740a2e83a0ac"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "76a094095ee40aedcfd232046cff4c64f550145463820a8ad1e08c4a02ef6d15"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "2e2fbcc8ecfbd514bca783910995784b906ce156e4112ae60c873a75c60b3dc5"
+          "sha256": "e248417a8579f89c623fa065cc3c0e8a156953ac1bd0331bc6330f6102647b0c"
         }
       ],
-      "reason": "Reviewed the moved request and response sources plus the regenerated sensitive-data index; this physical relocation adds no collection, logging, authorization, retention or external-transfer behavior.",
+      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:54.3814735Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T15:48:01.1057428Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1147,13 +1111,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "62447260bbbf83406d5d7a08e80ad6bf60b0241f16635f0f94a5e1a087a654cb"
+          "sha256": "dbcfe9346add5370b6dd8fec081392a7c7172c3246838f936ba31e88a1608269"
         }
       ],
-      "reason": "Reviewed current architecture, module-map, ownership and scoped-guide text against the final 32 module Presentation projects, one Presentation.Contracts project and the central Version-only kernel.",
+      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:47.4251584Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T15:47:58.5412891Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1206,26 +1170,18 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "f1d9c1fbd6bae310193c5a921e2fccbdab9d0dab39b012440c46109fcf431495"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "f4a5d39ee169f988d2edbaa87711710ee00f29714773fc94b78daf225508bf49"
-        },
-        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "3f9b92c049a32c855bba6e3f22fc44db979d95b42cdf4672bf3f50dd10ad431b"
+          "sha256": "8f36fe10b3591f07d7d4bcef41e92d27f1011fbe32bcbf15f1a00ecbaabd172a"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "62447260bbbf83406d5d7a08e80ad6bf60b0241f16635f0f94a5e1a087a654cb"
+          "sha256": "dbcfe9346add5370b6dd8fec081392a7c7172c3246838f936ba31e88a1608269"
         }
       ],
-      "reason": "Reviewed current architecture, module-map, ownership and scoped-guide text against the final 32 module Presentation projects, one Presentation.Contracts project and the central Version-only kernel.",
+      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:52.1036046Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T15:47:59.7225522Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1234,13 +1190,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "62447260bbbf83406d5d7a08e80ad6bf60b0241f16635f0f94a5e1a087a654cb"
+          "sha256": "dbcfe9346add5370b6dd8fec081392a7c7172c3246838f936ba31e88a1608269"
         }
       ],
-      "reason": "Reviewed exact project-matrix coverage, controller discovery, module-page and architecture-health generator changes; 825 Presentation, 247 host unit and 1175 architecture tests pass, while the independent frozen retrieval holdout remains explicitly non-green at 99/100 top-ten.",
+      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:52.8497169Z"
+      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
+      "reviewedAtUtc": "2026-09-05T15:48:00.1036494Z"
     }
   ]
 }

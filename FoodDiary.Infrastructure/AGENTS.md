@@ -8,7 +8,7 @@ Rules for `FoodDiary.Infrastructure/`.
 - Implement abstractions declared in upper layers.
 
 ## Data Access
-- Keep the shared `DbContext`, migrations and model snapshot here. Module-owned entity configurations live in their PersistenceModel projects and are applied explicitly by the shared context; only shared technical mappings remain here.
+- Keep the shared `DbContext`, migrations and model snapshot here. Module-owned entity configurations live in their PersistenceModel projects and are applied explicitly by the shared context. Shared audit, email-outbox, and replay-audit records/configurations live in their narrow Shared PersistenceModel projects; the central context applies them explicitly while the generic processing engines remain here.
 - Use Fluent API for mapping and constraints.
 - Keep migrations in this project.
 
@@ -24,6 +24,7 @@ Rules for `FoodDiary.Infrastructure/`.
 - Export PDF rendering and its safe image HTTP client belong to `Modules/Export/Infrastructure`; executable hosts register AddExportInfrastructure explicitly. Do not reintroduce QuestPDF or a central PDF implementation.
 - Notifications configurations are registered explicitly from its PersistenceModel assembly; generic outbox processing/claiming/replay remain central and use the shared Outbox.Abstractions contract.
 - Images and Gamification outbox records/configurations likewise belong to their existing PersistenceModel assemblies. Keep their DbSets and generic engine/claiming/replay here, but do not reintroduce duplicate central mappings or record classes.
+- Generic audit interception, email dispatch/claiming, and multi-stream outbox replay coordination remain central. Their dependency-light EF records and configurations are owned by `FoodDiary.Audit.PersistenceModel`, `FoodDiary.Email.PersistenceModel`, and `FoodDiary.Outbox.PersistenceModel`; do not move the runtime engines into those model-only assemblies.
 - Dead-letter replay uses scoped `IOutboxReplayStream` extensions in this existing Infrastructure assembly. Images, Notifications and Gamification own their list/find SQL and metadata; only the purged, non-replayable email adapter remains central. The coordinator owns validation, audit/reset/SaveChanges/transaction and knows no concrete stream types. Adapters must share its scoped DbContext and must not save or commit. Preserve explicit stream ordering and replay eligibility; see `docs/ai/outbox-replay-stream-boundary.md`.
 - Keep repository-owned `SaveChangesAsync` and manual transactions inside the architecture-test allowlist. `AiQuotaRepository` is an explicit exception: its short PostgreSQL transactions atomically reserve or reconcile quota independently of the request transaction, and must never contain an external provider call.
 - `EfWeeklyGoalTransactionRunner` is an explicit exception: it uses a short advisory-lock transaction to serialize creation for one `(UserId, WeekStartUtc)` key and prevent unique-constraint races; keep notification delivery and other external calls outside that transaction.

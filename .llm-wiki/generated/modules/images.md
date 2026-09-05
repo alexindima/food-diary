@@ -83,6 +83,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/S3ImageStorageServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/S3ObjectStorageClientTests.cs`
+- [presentation] `Modules/Images/tests/FoodDiary.Modules.Images.Presentation.Tests/ImageHttpMappingsTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ImagesModuleExtractionTests.cs`
 
 ## Working Rule

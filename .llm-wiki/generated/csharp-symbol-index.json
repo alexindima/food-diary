@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3561,
-    "symbols": 3505,
+    "sourceFiles": 3566,
+    "symbols": 3508,
     "interfaceImplementationLinks": 235,
     "dependencyInjectionRegistrations": 151,
     "kinds": {
-      "class": 1828,
+      "class": 1831,
       "enum": 62,
       "interface": 425,
       "record": 1070,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1368,
+      "Other": 1371,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 30,
@@ -531,39 +531,11 @@
       "line": 2
     },
     {
-      "name": "AuditEntry",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Audit/AuditEntry.cs",
-      "line": 2
-    },
-    {
       "name": "AuditEntryService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Persistence/Audit/AuditEntryService.cs",
       "line": 7
-    },
-    {
-      "name": "AuditEntryConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Audit/AuditEntryConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "EmailOutboxMessageConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Email/EmailOutboxMessageConfiguration.cs",
-      "line": 6
-    },
-    {
-      "name": "OutboxReplayAuditConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Outbox/OutboxReplayAuditConfiguration.cs",
-      "line": 6
     },
     {
       "name": "EfUnitOfWork",
@@ -578,13 +550,6 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutbox.cs",
       "line": 4
-    },
-    {
-      "name": "EmailOutboxMessage",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxMessage.cs",
-      "line": 6
     },
     {
       "name": "EmailOutboxProcessor",
@@ -640,7 +605,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.cs",
-      "line": 20
+      "line": 22
     },
     {
       "name": "FoodDiaryDbContext",
@@ -759,13 +724,6 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingPolicy.cs",
-      "line": 2
-    },
-    {
-      "name": "OutboxReplayAudit",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxReplayAudit.cs",
       "line": 2
     },
     {
@@ -24268,6 +24226,27 @@
       "line": 4
     },
     {
+      "name": "AuditEntry",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Audit.PersistenceModel/AuditEntry.cs",
+      "line": 2
+    },
+    {
+      "name": "AuditPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Audit.PersistenceModel/AuditPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "AuditEntryConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Shared/FoodDiary.Audit.PersistenceModel/Configurations/AuditEntryConfiguration.cs",
+      "line": 5
+    },
+    {
       "name": "IAdminSsoCodeStore",
       "kind": "interface",
       "role": "Other",
@@ -24385,6 +24364,27 @@
       "role": "Other",
       "path": "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailTransport.cs",
       "line": 2
+    },
+    {
+      "name": "EmailOutboxMessageConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Shared/FoodDiary.Email.PersistenceModel/Configurations/EmailOutboxMessageConfiguration.cs",
+      "line": 5
+    },
+    {
+      "name": "EmailOutboxMessage",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.PersistenceModel/EmailOutboxMessage.cs",
+      "line": 6
+    },
+    {
+      "name": "EmailPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.PersistenceModel/EmailPersistenceModelRegistration.cs",
+      "line": 4
     },
     {
       "name": "BoundedHttpContentReader",
@@ -24552,6 +24552,27 @@
       "kind": "record",
       "role": "Other",
       "path": "Shared/FoodDiary.Outbox.Management.Contracts/Common/Abstractions/Outbox/OutboxReplayAuditModel.cs",
+      "line": 2
+    },
+    {
+      "name": "OutboxReplayAuditConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Shared/FoodDiary.Outbox.PersistenceModel/Configurations/OutboxReplayAuditConfiguration.cs",
+      "line": 5
+    },
+    {
+      "name": "OutboxPersistenceModelRegistration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.PersistenceModel/OutboxPersistenceModelRegistration.cs",
+      "line": 4
+    },
+    {
+      "name": "OutboxReplayAudit",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Outbox.PersistenceModel/OutboxReplayAudit.cs",
       "line": 2
     },
     {

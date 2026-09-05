@@ -100,11 +100,11 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Integrations/BillingPublicConfigProviderTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayResilienceTests.cs`
 - [behavioral-or-text-match] `Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.cs`
+- [presentation] `Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingControllerTests.cs`
+- [presentation] `Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingHttpMappingsTests.cs`
+- [presentation] `Modules/Billing/tests/FoodDiary.Modules.Billing.Presentation.Tests/BillingWebhookControllerTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/BillingModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/BillingControllerTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/BillingHttpMappingsTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/BillingWebhookControllerTests.cs`
 - [integration] `tests/FoodDiary.Web.Api.IntegrationTests/BillingSecurityIntegrationTests.cs`
 
 ## Working Rule

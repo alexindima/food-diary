@@ -90,8 +90,9 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Domain.Tests/Domain/CycleProfileInvariantTests.cs`
 - [integration] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Infrastructure.IntegrationTests/CycleRepositoryIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Infrastructure.Tests/CyclesModuleRegistrationTests.cs`
+- [presentation] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs`
+- [presentation] `Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/CyclesModuleExtractionTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs`
 
 ## Working Rule
 

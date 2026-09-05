@@ -12,13 +12,13 @@ Rules for `tests/`.
 - `FoodDiary.ArchitectureTests`: dependency, structure, naming, async, and boundary guardrails.
 - `FoodDiary.Web.Api.IntegrationTests`: HTTP contract, OpenAPI, and end-to-end API host behavior.
 - `FoodDiary.Web.Api.Tests`: Web.Api host options, middleware, health check, and service unit behavior.
-- `FoodDiary.Presentation.Api.Tests`: controller/presentation mapping and error response behavior.
+- `FoodDiary.Presentation.Api.Tests`: shared presentation-kernel, conventions, filters, binders, composite endpoints, and cross-module HTTP behavior. Module-owned controller and mapping tests live in each module's nested Presentation test project.
 - `FoodDiary.Application.Tests`: use case and application service behavior.
 - `FoodDiary.Domain.Tests`: core domain entity, value object, domain event, and invariant behavior.
 - `FoodDiary.Domain.Primitives.Tests`: shared domain primitive behavior.
 - `FoodDiary.Infrastructure.Tests`: infrastructure unit behavior that does not require external services.
 - `FoodDiary.Infrastructure.IntegrationTests`: PostgreSQL/Testcontainers infrastructure behavior.
-- Extracted-module tests: module-owned Application, Domain (when owned), and Infrastructure adapter behavior lives under `Modules/<Module>/tests/`; central projects retain HTTP, host, shared DbContext/migration, architecture, orchestration, and cross-module coverage.
+- Extracted-module tests: module-owned Application, Domain, Presentation, and Infrastructure adapter behavior lives under `Modules/<Module>/tests/`; central projects retain shared HTTP-kernel, host, shared DbContext/migration, architecture, orchestration, and cross-module coverage.
 - WeeklyGoals aggregate/id/enum invariants live in `Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests`; the central donor project must not retain duplicate WeeklyGoals-only tests.
 - WeeklyCheckIn query, calculation, and application-service tests live in `Modules/WeeklyCheckIn/tests/FoodDiary.Modules.WeeklyCheckIn.Application.Tests`; central test projects retain HTTP, host, architecture, and cross-module coverage.
 - `FoodDiary.Testing`: shared test-only helpers reused by multiple test projects, such as Docker availability attributes.

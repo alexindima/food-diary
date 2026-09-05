@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Modules.MealPlanning.Infrastructure.Model;
 using FoodDiary.Infrastructure.Persistence.Audit;
+using FoodDiary.Infrastructure.Persistence.Email;
+using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Modules.Fasting.Infrastructure.Persistence;
 using FoodDiary.Modules.Hydration.Infrastructure.Persistence;
 using FoodDiary.Modules.DailyAdvices.Infrastructure.Persistence;
@@ -27,6 +29,9 @@ public sealed partial class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbConte
         modelBuilder.ApplyAiPersistenceModel();
         modelBuilder.ApplyUsersPersistenceModel();
         modelBuilder.ApplyIdentityPersistenceModel();
+        modelBuilder.ApplyAuditPersistenceModel();
+        modelBuilder.ApplyEmailPersistenceModel();
+        modelBuilder.ApplyOutboxPersistenceModel();
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(FoodDiaryDbContext).Assembly);
         modelBuilder.ApplyWearablesPersistenceModel();
         modelBuilder.ApplyFastingPersistenceModel();
