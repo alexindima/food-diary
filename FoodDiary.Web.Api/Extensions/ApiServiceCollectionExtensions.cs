@@ -33,6 +33,7 @@ using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Infrastructure;
+using FoodDiary.Infrastructure.Integrations;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Web.Api.Services;
@@ -100,7 +101,10 @@ public static class ApiServiceCollectionExtensions {
                 .AddIdentityAuthenticationInfrastructure()
                 .AddDashboardReadServices()
                 .AddImagesInfrastructure()
-                .AddIntegrations(configuration).AddIdentityProvider(configuration).AddImagesProvider(configuration).AddAiProvider(configuration).AddUsdaProvider(configuration).AddOpenFoodFactsProvider(configuration).AddWearablesProvider(configuration)
+                .AddBillingIntegrations(configuration)
+                .AddAdminMailInboxIntegration(configuration)
+                .AddMailRelayIntegration(configuration)
+                .AddIdentityProvider(configuration).AddImagesProvider(configuration).AddAiProvider(configuration).AddUsdaProvider(configuration).AddOpenFoodFactsProvider(configuration).AddWearablesProvider(configuration)
                 .AddNotificationResources()
                 .AddExportResources()
                 .AddNotificationTestScheduler()

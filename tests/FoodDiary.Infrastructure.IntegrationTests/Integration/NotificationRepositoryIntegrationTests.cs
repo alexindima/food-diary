@@ -31,7 +31,7 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
                 .SetProperty(n => n.IsRead, valueExpression: true)
                 .SetProperty(n => n.ReadAtUtc, readAfterRetentionCutoff));
 
-        var repository = new NotificationRepository(context, FixedTime);
+        var repository = new NotificationRepository(context.Notifications, FixedTime);
         int deleted = await repository.DeleteExpiredBatchAsync(
             [],
             transientReadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -64,7 +64,7 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
                 .SetProperty(n => n.IsRead, valueExpression: true)
                 .SetProperty(n => n.ReadAtUtc, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc)));
 
-        var repository = new NotificationRepository(context, FixedTime);
+        var repository = new NotificationRepository(context.Notifications, FixedTime);
         int deleted = await repository.DeleteExpiredBatchAsync(
             [],
             transientReadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),

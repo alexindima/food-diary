@@ -5,14 +5,14 @@ Rules for `FoodDiary.Web.Api/`.
 
 ## Role
 - Treat this project as the executable host and composition root for the HTTP API.
-- Keep ASP.NET transport endpoints, request/response DTOs, presentation mappings, authorization attributes, and hubs in `FoodDiary.Presentation.Api`.
+- Keep feature ASP.NET transport endpoints, DTOs, mappings, authorization adapters and hubs in the owning module Presentation project; keep only shared transport primitives in `FoodDiary.Presentation.Api`.
 - Keep host concerns here: configuration binding, DI wiring, authentication setup, middleware pipeline, Swagger/OpenAPI setup, rate limiting, output caching, telemetry/exporters, and environment-specific behavior.
 
 ## Architecture
 - Do not add feature controllers or HTTP transport models directly to this project unless there is a deliberate architectural change.
 - Keep startup/composition in extensions where practical.
 - Keep host policies and defaults explicit so production behavior is easy to audit.
-- `FoodDiary.Web.Api` may reference the runtime, module applications/infrastructure, central Infrastructure/Integrations, and Presentation.Api required for composition. Resource providers belong to their module Infrastructure projects.
+- `FoodDiary.Web.Api` may reference the runtime, module applications/infrastructure/presentation, central Infrastructure, shared transport adapters, and Presentation.Api required for composition. Resource providers belong to their module Infrastructure projects.
 - Do not reference `FoodDiary.Domain` directly from this host; use the wired modules.
 - Application, presentation, and resource projects must not reference host options or host extension methods.
 

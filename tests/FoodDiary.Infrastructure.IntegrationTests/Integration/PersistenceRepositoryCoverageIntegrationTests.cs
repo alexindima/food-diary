@@ -1302,7 +1302,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverNotificationRepositoryAsync(FoodDiaryDbContext context, UserId userId) {
-        var repository = new NotificationRepository(context, FixedTime);
+        var repository = new NotificationRepository(context.Notifications, FixedTime);
         Notification transient = await repository.AddAsync(Notification.Create(userId, "transient", "{}", "one"));
         Notification standard = await repository.AddAsync(Notification.Create(userId, "standard", "{}", "two"));
         await repository.AddAsync(Notification.Create(userId, "standard", "{}", "three"));
@@ -1347,7 +1347,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverWebPushSubscriptionRepositoryAsync(FoodDiaryDbContext context, UserId userId) {
-        var repository = new WebPushSubscriptionRepository(context);
+        var repository = new WebPushSubscriptionRepository(context.WebPushSubscriptions);
         await repository.DeleteRangeAsync([]);
 
         WebPushSubscription subscription = await repository.AddAsync(WebPushSubscription.Create(
@@ -1384,7 +1384,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
     private static async Task CoverBillingRepositoriesAsync(FoodDiaryDbContext context, UserId userId) {
         DateTime now = DateTime.UtcNow;
-        var subscriptionRepository = new BillingSubscriptionRepository(context);
+        var subscriptionRepository = new BillingSubscriptionRepository(context.BillingSubscriptions);
         var subscription = BillingSubscription.CreatePending(userId, BillingProviderNames.Stripe, "cus_test", "price_test", "premium");
         subscription.ApplyProviderSnapshot(
             BillingProviderNames.Stripe,
@@ -1423,12 +1423,12 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         UserId userId,
         Guid subscriptionId,
         DateTime now) {
-        var paymentRepository = new BillingPaymentRepository(context);
+        var paymentRepository = new BillingPaymentRepository(context.BillingPayments);
         BillingPayment payment = CreateBillingPayment(userId, subscriptionId, "pay_test", "evt_pay", now);
         await paymentRepository.AddAsync(payment);
         await context.SaveChangesAsync();
         Assert.NotNull(await paymentRepository.GetByExternalPaymentIdAsync(BillingProviderNames.Stripe, "pay_test"));
-        var webhookRepository = new BillingWebhookEventRepository(context);
+        var webhookRepository = new BillingWebhookEventRepository(context.BillingWebhookEvents);
         var inboxEvent = BillingWebhookEvent.CreateReceived(
             BillingProviderNames.Stripe,
             "evt_pay_duplicate_inbox",
@@ -1464,7 +1464,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverBillingWebhookEventRepositoryAsync(FoodDiaryDbContext context, DateTime now) {
-        var webhookRepository = new BillingWebhookEventRepository(context);
+        var webhookRepository = new BillingWebhookEventRepository(context.BillingWebhookEvents);
         var webhookEvent = BillingWebhookEvent.CreateProcessed(
             BillingProviderNames.Stripe,
             "evt_test",

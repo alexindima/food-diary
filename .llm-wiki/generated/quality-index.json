@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4792,
+    "productionFiles": 4796,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -71,7 +71,7 @@
       "structuralRiskScore": 212.14
     },
     {
-      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
       "nonBlankLines": 696,
       "decisionPoints": 122,
       "criticalSymbols": 0,
@@ -3250,11 +3250,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 13,
+      "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
+      "structuralRiskScore": 0.28
     },
     {
       "path": "FoodDiary.Infrastructure/Services/DatabaseCommandTelemetryInterceptor.cs",
@@ -3353,188 +3353,12 @@
       "structuralRiskScore": 72.16
     },
     {
-      "path": "FoodDiary.Integrations/Billing/BillingPublicConfigProvider.cs",
-      "nonBlankLines": 82,
-      "decisionPoints": 23,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 36.14
-    },
-    {
-      "path": "FoodDiary.Integrations/Billing/BillingUrlValidator.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.14
-    },
-    {
-      "path": "FoodDiary.Integrations/Billing/ConfigurableBillingProviderGatewayAccessor.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.46
-    },
-    {
-      "path": "FoodDiary.Integrations/Billing/PaddleApiClient.cs",
-      "nonBlankLines": 108,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.66
-    },
-    {
-      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "nonBlankLines": 696,
-      "decisionPoints": 122,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 196.92
-    },
-    {
-      "path": "FoodDiary.Integrations/Billing/PaddleNotificationRecoveryResult.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Integrations/Billing/PaddleNotificationRecoveryService.cs",
-      "nonBlankLines": 115,
-      "decisionPoints": 17,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.8
-    },
-    {
-      "path": "FoodDiary.Integrations/Billing/PaddlePage.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Integrations/Billing/StripeBillingGateway.cs",
-      "nonBlankLines": 266,
-      "decisionPoints": 35,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 57.82
-    },
-    {
-      "path": "FoodDiary.Integrations/Billing/YooKassaApiClient.cs",
-      "nonBlankLines": 74,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.48
-    },
-    {
-      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "nonBlankLines": 290,
-      "decisionPoints": 43,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 70.3
-    },
-    {
-      "path": "FoodDiary.Integrations/DependencyInjection.Billing.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.6
-    },
-    {
-      "path": "FoodDiary.Integrations/DependencyInjection.Mail.cs",
-      "nonBlankLines": 43,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.36
-    },
-    {
-      "path": "FoodDiary.Integrations/DependencyInjection.Options.cs",
-      "nonBlankLines": 58,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.16
-    },
-    {
-      "path": "FoodDiary.Integrations/DependencyInjection.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/BillingOptions.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
-      "nonBlankLines": 55,
-      "decisionPoints": 21,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 32.6
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
-      "nonBlankLines": 30,
-      "decisionPoints": 10,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.6
-    },
-    {
-      "path": "FoodDiary.Integrations/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/MailInbox/MailInboxClientAdminMailInboxReader.cs",
-      "nonBlankLines": 79,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.58
-    },
-    {
-      "path": "FoodDiary.Integrations/Services/RelayEmailTransport.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.46
-    },
-    {
       "path": "FoodDiary.JobManager/Program.cs",
-      "nonBlankLines": 62,
+      "nonBlankLines": 66,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.74
+      "structuralRiskScore": 2.82
     },
     {
       "path": "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -3986,19 +3810,19 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationApplicationBuilderExtensions.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
+      "structuralRiskScore": 0.2
     },
     {
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 62,
+      "nonBlankLines": 55,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.24
+      "structuralRiskScore": 1.1
     },
     {
       "path": "FoodDiary.Presentation.Api/Extensions/ResultExtensions.cs",
@@ -4119,46 +3943,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 41.72
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Hubs/EmailVerificationHub.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Hubs/EmailVerificationHubMethods.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Hubs/NotificationHub.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Hubs/NotificationHubMethods.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Options/TelegramBotAuthOptions.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.66
     },
     {
       "path": "FoodDiary.Presentation.Api/Policies/AllowedQueryValuesAttribute.cs",
@@ -4289,52 +4073,12 @@
       "structuralRiskScore": 0.06
     },
     {
-      "path": "FoodDiary.Presentation.Api/Security/RefreshTokenCookieService.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Security/RequireTelegramBotSecretAttribute.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
       "path": "FoodDiary.Presentation.Api/Security/SecretComparison.cs",
       "nonBlankLines": 13,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 3.26
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Security/TelegramBotSecretAuthorizationFilter.cs",
-      "nonBlankLines": 62,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.24
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Services/EmailVerificationNotifier.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Services/NotificationPusher.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
     },
     {
       "path": "FoodDiary.Presentation.Api/Services/UserIdProvider.cs",
@@ -4418,11 +4162,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiApplicationBuilderExtensions.cs",
-      "nonBlankLines": 53,
+      "nonBlankLines": 56,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.06
+      "structuralRiskScore": 4.12
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiAuthenticationServiceCollectionExtensions.cs",
@@ -4474,11 +4218,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "nonBlankLines": 173,
+      "nonBlankLines": 177,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.46
+      "structuralRiskScore": 6.54
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -16273,6 +16017,22 @@
       "structuralRiskScore": 3.64
     },
     {
+      "path": "Modules/Admin/Infrastructure/Integrations/AdminMailInboxIntegration.cs",
+      "nonBlankLines": 33,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.16
+    },
+    {
+      "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/MailInboxClientAdminMailInboxReader.cs",
+      "nonBlankLines": 79,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.58
+    },
+    {
       "path": "Modules/Admin/Infrastructure/Model/AdminPersistenceModelRegistration.cs",
       "nonBlankLines": 9,
       "decisionPoints": 0,
@@ -16311,6 +16071,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.62
+    },
+    {
+      "path": "Modules/Admin/Infrastructure/Properties/AssemblyInfo.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/Admin/Presentation/Extensions/AdminPresentationServiceCollectionExtensions.cs",
@@ -18354,35 +18122,35 @@
     },
     {
       "path": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 23,
+      "nonBlankLines": 29,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
+      "structuralRiskScore": 0.58
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 23,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.98
+      "structuralRiskScore": 1.96
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs",
-      "nonBlankLines": 88,
+      "nonBlankLines": 87,
       "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.76
+      "structuralRiskScore": 16.74
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
-      "nonBlankLines": 42,
+      "nonBlankLines": 41,
       "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.84
+      "structuralRiskScore": 9.82
     },
     {
       "path": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
@@ -18399,6 +18167,150 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.8
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Properties/AssemblyInfo.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/BillingPublicConfigProvider.cs",
+      "nonBlankLines": 82,
+      "decisionPoints": 23,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 36.14
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/BillingUrlValidator.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.14
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/ConfigurableBillingProviderGatewayAccessor.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.46
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs",
+      "nonBlankLines": 108,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.66
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
+      "nonBlankLines": 696,
+      "decisionPoints": 122,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 196.92
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryResult.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryService.cs",
+      "nonBlankLines": 115,
+      "decisionPoints": 17,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 27.8
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddlePage.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/StripeBillingGateway.cs",
+      "nonBlankLines": 266,
+      "decisionPoints": 35,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 57.82
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaApiClient.cs",
+      "nonBlankLines": 74,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.48
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
+      "nonBlankLines": 290,
+      "decisionPoints": 43,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 70.3
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.7
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Options.cs",
+      "nonBlankLines": 55,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.1
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Options/BillingOptions.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
+      "nonBlankLines": 55,
+      "decisionPoints": 21,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 32.6
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14
+    },
+    {
+      "path": "Modules/Billing/Infrastructure/Providers/Options/YooKassaOptions.cs",
+      "nonBlankLines": 30,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.6
     },
     {
       "path": "Modules/Billing/Presentation/Extensions/BillingPresentationServiceCollectionExtensions.cs",
@@ -27834,11 +27746,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.56
     },
     {
       "path": "Modules/Identity/Infrastructure/IdentityProviderRegistration.cs",
@@ -27938,11 +27850,11 @@
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/AssemblyInfo.cs",
-      "nonBlankLines": 2,
+      "nonBlankLines": 3,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/Identity/Infrastructure/Providers/Authentication/GoogleTokenValidator.cs",
@@ -28001,12 +27913,20 @@
       "structuralRiskScore": 6.54
     },
     {
-      "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 11,
+      "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationApplicationBuilderExtensions.cs",
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.34
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/AdminSsoController.cs",
@@ -28231,6 +28151,62 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.76
+    },
+    {
+      "path": "Modules/Identity/Presentation/Hubs/EmailVerificationHub.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Identity/Presentation/Hubs/EmailVerificationHubMethods.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Identity/Presentation/Options/TelegramBotAuthOptions.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.66
+    },
+    {
+      "path": "Modules/Identity/Presentation/Security/RefreshTokenCookieService.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Identity/Presentation/Security/RequireTelegramBotSecretAttribute.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Modules/Identity/Presentation/Security/TelegramBotSecretAuthorizationFilter.cs",
+      "nonBlankLines": 62,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.24
+    },
+    {
+      "path": "Modules/Identity/Presentation/Services/EmailVerificationNotifier.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
     },
     {
       "path": "Modules/Images/Application/Abstractions/Common/DeleteImageAssetResult.cs",
@@ -32146,11 +32122,11 @@
     },
     {
       "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
-      "nonBlankLines": 47,
+      "nonBlankLines": 52,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.94
+      "structuralRiskScore": 1.04
     },
     {
       "path": "Modules/Notifications/Infrastructure/Options/WebPushOptions.cs",
@@ -32257,12 +32233,20 @@
       "structuralRiskScore": 93.82
     },
     {
-      "path": "Modules/Notifications/Presentation/Extensions/NotificationsPresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 7,
+      "path": "Modules/Notifications/Presentation/Extensions/NotificationsPresentationApplicationBuilderExtensions.cs",
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/Notifications/Presentation/Extensions/NotificationsPresentationServiceCollectionExtensions.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Modules/Notifications/Presentation/Features/Notifications/Mappings/NotificationHttpMappings.cs",
@@ -32377,6 +32361,30 @@
       "structuralRiskScore": 0.18
     },
     {
+      "path": "Modules/Notifications/Presentation/Hubs/NotificationHub.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Notifications/Presentation/Hubs/NotificationHubMethods.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Modules/Notifications/Presentation/Services/NotificationPusher.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
       "path": "Modules/OpenFoodFacts/Application/Abstractions/Common/IOpenFoodFactsProductCacheReadRepository.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -32410,11 +32418,11 @@
     },
     {
       "path": "Modules/OpenFoodFacts/Application/AssemblyInfo.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/OpenFoodFacts/Application/DependencyInjection.cs",
@@ -35754,11 +35762,11 @@
     },
     {
       "path": "Modules/Users/Application/AssemblyInfo.cs",
-      "nonBlankLines": 3,
+      "nonBlankLines": 4,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
+      "structuralRiskScore": 0.08
     },
     {
       "path": "Modules/Users/Application/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs",
@@ -38873,6 +38881,30 @@
       "structuralRiskScore": 0.08
     },
     {
+      "path": "Shared/FoodDiary.Email.MailRelay/MailRelayDependencyInjection.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.46
+    },
+    {
+      "path": "Shared/FoodDiary.Email.MailRelay/Properties/AssemblyInfo.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Shared/FoodDiary.Email.MailRelay/RelayEmailTransport.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.46
+    },
+    {
       "path": "Shared/FoodDiary.Email.PersistenceModel/Configurations/EmailOutboxMessageConfiguration.cs",
       "nonBlankLines": 21,
       "decisionPoints": 0,
@@ -38914,11 +38946,11 @@
     },
     {
       "path": "Shared/FoodDiary.Integrations.Http/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 9,
+      "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
+      "structuralRiskScore": 0.2
     },
     {
       "path": "Shared/FoodDiary.Integrations.Http/Services/IntegrationsTelemetry.cs",
@@ -39451,7 +39483,7 @@
       "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39463,7 +39495,7 @@
       "line": 14,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/CreateAdminUserCommandHandlerTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/CreateAdminUserCommandHandlerTests.cs",
         "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -39599,8 +39631,8 @@
       "line": 15,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.CreateCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.CreateCommandTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -39729,8 +39761,8 @@
       "line": 8,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.LessonCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.LessonCommandTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39832,8 +39864,8 @@
       "line": 13,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DeleteCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DeleteCommandTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -39947,7 +39979,7 @@
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -39972,8 +40004,8 @@
       "line": 15,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DuplicateCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DuplicateCommandTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40071,7 +40103,7 @@
       "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40189,7 +40221,7 @@
       "line": 6,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40491,7 +40523,7 @@
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40560,7 +40592,7 @@
       "line": 6,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40584,7 +40616,7 @@
       "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
         "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40634,7 +40666,7 @@
       "line": 16,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40762,8 +40794,8 @@
       "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.LessonCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.LessonCommandTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40775,8 +40807,8 @@
       "line": 14,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -40967,13 +40999,13 @@
       "line": 14,
       "testReferenceCount": 8,
       "testReferences": [
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.UpdateCommandTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Media.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.NestedIngredients.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.UpdateFlow.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Validation.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.UpdateCommandTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -41075,7 +41107,7 @@
       "line": 10,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41087,7 +41119,7 @@
       "line": 10,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42450,7 +42482,7 @@
       "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.ReadQueryTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -42511,7 +42543,7 @@
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42523,7 +42555,7 @@
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42535,7 +42567,7 @@
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42547,7 +42579,7 @@
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42559,7 +42591,7 @@
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42571,7 +42603,7 @@
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42583,7 +42615,7 @@
       "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42595,7 +42627,7 @@
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42607,7 +42639,7 @@
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42619,7 +42651,7 @@
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42631,7 +42663,7 @@
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42643,7 +42675,7 @@
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42655,7 +42687,7 @@
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42667,7 +42699,7 @@
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/UserLoginActivityFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserLoginActivityFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42679,7 +42711,7 @@
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/UserLoginActivityFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserLoginActivityFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42691,7 +42723,7 @@
       "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42703,7 +42735,7 @@
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43417,8 +43449,8 @@
       "line": 17,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.ReadQueryTests.cs",
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43457,9 +43489,9 @@
       "line": 9,
       "testReferenceCount": 4,
       "testReferences": [
+        "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.cs",
         "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
         "Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductsFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43472,8 +43504,8 @@
       "line": 9,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.ReadQueryTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43486,7 +43518,7 @@
       "line": 12,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.ReadQueryTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43525,8 +43557,8 @@
       "line": 16,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.ReadQueryTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43539,7 +43571,7 @@
       "line": 13,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.ReadQueryTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -44089,7 +44121,7 @@
     {
       "name": "BillingUrlValidator",
       "role": "Validator",
-      "path": "FoodDiary.Integrations/Billing/BillingUrlValidator.cs",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/BillingUrlValidator.cs",
       "line": 2,
       "testReferenceCount": 1,
       "testReferences": [
@@ -44234,8 +44266,8 @@
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs",
-        "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs",
+        "Tooling/tests/FoodDiary.Development.Mcp.Tests/SqliteWikiContextSearchTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44530,7 +44562,7 @@
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DeleteCommandTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DeleteCommandTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -44720,8 +44752,8 @@
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminValidatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44794,7 +44826,7 @@
       "testReferenceCount": 2,
       "testReferences": [
         "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Dashboard/DashboardValidatorTests.cs"
+        "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/Queries/GetDailyAdviceQueryValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45127,8 +45159,8 @@
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs"
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.ReadQueryTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45152,8 +45184,8 @@
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs"
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.ReadQueryTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45201,8 +45233,8 @@
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/StatisticsFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Dashboard/DashboardValidatorTests.cs"
+        "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Queries/GetStatisticsQueryValidatorTests.cs",
+        "Modules/Statistics/tests/FoodDiary.Modules.Statistics.Application.Tests/Statistics/StatisticsFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45505,7 +45537,7 @@
       "testReferences": [
         "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsAdditionalValidatorTests.cs",
         "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.ValidatorAndCalculatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.NutritionAndIngredientTests.cs"
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.NutritionAndIngredientTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45599,8 +45631,8 @@
       "line": 5,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
         "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs"
       ],
       "coverageKind": "tested-consumer-reference",
@@ -45618,8 +45650,8 @@
       "line": 5,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
         "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs"
       ],
       "coverageKind": "tested-consumer-reference",
@@ -45641,8 +45673,8 @@
       "line": 5,
       "testReferenceCount": 3,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs",
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
         "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs"
       ],
       "coverageKind": "tested-consumer-reference",
@@ -45721,7 +45753,7 @@
       "line": 11,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.NutritionAndIngredientTests.cs",
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.NutritionAndIngredientTests.cs",
         "tests/FoodDiary.Web.Api.IntegrationTests/RecipePostgresApiFlowTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -45744,7 +45776,7 @@
       "line": 6,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.NutritionAndIngredientTests.cs"
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.NutritionAndIngredientTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45756,9 +45788,9 @@
       "line": 5,
       "testReferenceCount": 4,
       "testReferences": [
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.UpdateCommandTests.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/CreateRecipeCommandValidatorTests.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.UpdateCommandTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "tested-consumer-reference",
@@ -45988,7 +46020,7 @@
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
         "tests/FoodDiary.Application.Tests/Authentication/SecretInputLimitValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -46194,7 +46226,7 @@
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "tests/FoodDiary.Application.Tests/Admin/AdminLessonFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46206,8 +46238,8 @@
       "line": 6,
       "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminValidatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46374,8 +46406,8 @@
       "line": 10,
       "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.UpdateCommandTests.cs",
         "Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.UpdateCommandTests.cs",
         "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -46460,8 +46492,8 @@
       "line": 5,
       "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminValidatorTests.cs",
-        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminValidatorTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

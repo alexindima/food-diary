@@ -49,7 +49,7 @@
         ],
         "adapterAreas": [
           "Modules/Admin/Presentation/Features/Admin",
-          "FoodDiary.Integrations/Services/MailInbox"
+          "Modules/Admin/Infrastructure/Integrations/MailInbox"
         ]
       }
     },
@@ -144,7 +144,7 @@
           "Modules/Billing/Infrastructure"
         ],
         "adapterAreas": [
-          "FoodDiary.Integrations/Billing"
+          "Modules/Billing/Infrastructure/Providers"
         ]
       }
     },

@@ -24,7 +24,7 @@ Rules for `FoodDiary.Presentation.Api/`.
 - Presentation-only services: `Services/`
 - Auth/presentation policies: `Authorization/`, `Policies/`, `Security/`
 - ASP.NET filters and filter attributes: `Filters/`
-- SignalR hubs and hub method constants: `Hubs/`
+- Reusable SignalR identity plumbing may stay here; feature hubs and hub method constants belong in their module Presentation projects.
 - Presentation option records: `Options/`
 - Presentation telemetry attributes/helpers: `Telemetry/`
 - Shared registration and endpoint mapping: `Extensions/`; every module exposes an explicit `Add<Feature>Presentation` registration.
@@ -59,8 +59,8 @@ Target shape:
 - Expensive or abuse-prone endpoints may use presentation policy names from `Policies/PresentationPolicyNames.cs`.
 
 ## SignalR
-- Keep hub transport/auth concerns here.
-- `EmailVerificationHub` is part of the presentation boundary and should stay thin.
+- Keep shared hub identity plumbing here; keep feature hub transport/auth concerns in the owning module Presentation project.
+- `EmailVerificationHub` belongs to Identity Presentation and `NotificationHub` belongs to Notifications Presentation; both should stay thin.
 - User identity for hubs should continue to flow through presentation `IUserIdProvider`.
 
 ## Testing Expectations

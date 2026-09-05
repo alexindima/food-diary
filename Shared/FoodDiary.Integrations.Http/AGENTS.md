@@ -5,7 +5,7 @@ meter. Keep provider-neutral runtime code free of ProjectReference and PackageRe
 dependencies; root build-time analyzers are separate. Preserve legacy namespaces,
 metric names/tags, byte/depth/time limits, URI rules and cancellation behavior.
 
-Providers and FoodDiary.Integrations reference this assembly directly. Do not add
+Module provider adapters reference this assembly directly. Do not add
 Billing, MailRelay/MailInbox clients, provider SDKs, application contracts or EF.
 Internal friend access is limited to the existing consumers and focused tests.
-Cross-provider helper tests stay in the existing Infrastructure.Tests suite.
+Focused helper tests live in `Shared/tests/FoodDiary.Integrations.Http.Tests`.

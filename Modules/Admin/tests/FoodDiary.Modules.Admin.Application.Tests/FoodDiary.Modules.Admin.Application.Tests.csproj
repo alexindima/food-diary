@@ -4,9 +4,24 @@
     <ProjectReference Include="../../Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
+    <ProjectReference Include="../../../Users/Application/FoodDiary.Modules.Users.Application.csproj" />
+    <ProjectReference Include="../../../Users/Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Identity/Application/FoodDiary.Modules.Identity.Application.csproj" />
+    <ProjectReference Include="../../../Identity/Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />
+    <ProjectReference Include="../../../Ai/Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj" />
+    <ProjectReference Include="../../../ContentReports/Application/FoodDiary.Modules.ContentReports.Application.csproj" />
+    <ProjectReference Include="../../../ContentReports/Application/Abstractions/FoodDiary.Modules.ContentReports.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../ContentReports/Domain/FoodDiary.Modules.ContentReports.Domain.csproj" />
+    <ProjectReference Include="../../../Lessons/Application/FoodDiary.Modules.Lessons.Application.csproj" />
+    <ProjectReference Include="../../../Lessons/Application/Abstractions/FoodDiary.Modules.Lessons.Application.Abstractions.csproj" />
+    <ProjectReference Include="../../../Lessons/Contracts/FoodDiary.Modules.Lessons.Contracts.csproj" />
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Audit.Contracts\FoodDiary.Audit.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Authentication.Contracts\FoodDiary.Authentication.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Email.Contracts\FoodDiary.Email.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

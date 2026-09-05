@@ -32,7 +32,7 @@
   <ItemGroup>
     <ProjectReference Include="../../Modules/Notifications/Application/Abstractions/FoodDiary.Modules.Notifications.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Integrations\FoodDiary.Integrations.csproj" />
+    <ProjectReference Include="../../Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Presentation.Api\FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Web.Api\FoodDiary.Web.Api.csproj" />
     <ProjectReference Include="..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />

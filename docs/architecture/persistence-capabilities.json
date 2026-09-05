@@ -87,6 +87,18 @@
       ],
       "reason": "AI owns usage records; Users is a reporting projection only."
     },
+    "Modules/Billing/Infrastructure/ModuleRegistration.cs": {
+      "module": "Billing",
+      "capabilities": [
+        "entity:BillingPayment",
+        "entity:BillingSubscription",
+        "entity:BillingWebhookEvent",
+        "tracked:BillingPayment",
+        "tracked:BillingSubscription",
+        "tracked:BillingWebhookEvent"
+      ],
+      "reason": "Billing composition resolves only the three owner DbSet instances from the shared scoped context; transaction and SaveChanges ownership remain with the shared unit of work."
+    },
     "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs": {
       "module": "Billing",
       "capabilities": [
@@ -133,6 +145,21 @@
       ],
       "reason": "Billing serializes checkout creation with the existing PostgreSQL lock; context connection access is explicitly reviewed.",
       "technicalSourceSha256": "6f2aa0a0865edd0ef5297f2233d81d81ca295bba3ac6cf0c254ededceb156d2c"
+    },
+    "Modules/Billing/Infrastructure/Providers/Billing/StripeBillingGateway.cs": {
+      "module": "Billing",
+      "capabilities": [
+        "entity:BillingProviderNames"
+      ],
+      "reason": "Provider selection reads the Billing-owned provider-name catalog; it does not access persistence despite the scanner classifying the domain catalog as an entity namespace type."
+    },
+    "Modules/Billing/Infrastructure/Providers/DependencyInjection.Options.cs": {
+      "module": "Billing",
+      "capabilities": [
+        "call:BillingProviderNames.IsSupported",
+        "entity:BillingProviderNames"
+      ],
+      "reason": "Options validation calls the Billing-owned provider-name catalog and has no database access."
     },
     "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs": {
       "module": "BodyMetrics",
@@ -474,6 +501,14 @@
       ],
       "reason": "Hydration repository accepts only DbSet<HydrationEntry>; shared caller retains context, SaveChanges and transaction. PostgreSQL regression verifies rollback, user cascade and no-tracking date reads."
     },
+    "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs": {
+      "module": "Identity",
+      "capabilities": [
+        "entity:EmailTemplate",
+        "tracked:EmailTemplate"
+      ],
+      "reason": "Identity composition resolves only the EmailTemplate set for the narrowed repository constructor; the shared caller retains SaveChanges and transaction ownership."
+    },
     "Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs": {
       "module": "Identity",
       "capabilities": [
@@ -625,6 +660,16 @@
         "write:Meal"
       ],
       "reason": "Meals owns diary writes; Products, Recipes and Images are source/nutrition/usage projections. Foreign tracked-query acquisition is retained pending narrower projections, not permission for foreign mutation."
+    },
+    "Modules/Notifications/Infrastructure/ModuleRegistration.cs": {
+      "module": "Notifications",
+      "capabilities": [
+        "entity:Notification",
+        "entity:WebPushSubscription",
+        "tracked:Notification",
+        "tracked:WebPushSubscription"
+      ],
+      "reason": "Notifications composition resolves only its two owner DbSet instances for narrowed repositories; the shared unit of work retains SaveChanges and transaction ownership."
     },
     "Modules/Notifications/Infrastructure/Persistence/NotificationRepository.cs": {
       "module": "Notifications",

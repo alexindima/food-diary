@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "f8c6ee539c31673eba0b7f6992fe909acc3d9aa6dc5e9d467f205e4b0348ee9e",
-    "sourceFileCount": 3567
+    "sourceFingerprint": "8bb4c0df1020f53e41f8d54184342325e2682e1e4cefad3f37e786cf42c976f5",
+    "sourceFileCount": 3571
   },
   "summary": {
     "composeServices": 17,
@@ -631,7 +631,7 @@
     {
       "contract": null,
       "implementation": "PaddleApiClient",
-      "registrationPath": "FoodDiary.Integrations/Billing/PaddleApiClient.cs",
+      "registrationPath": "Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate"
       ],
@@ -640,7 +640,7 @@
     {
       "contract": null,
       "implementation": "PaddleBillingGateway",
-      "registrationPath": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
+      "registrationPath": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "timeout-or-delay"
@@ -668,7 +668,7 @@
     {
       "contract": null,
       "implementation": "YooKassaApiClient",
-      "registrationPath": "FoodDiary.Integrations/Billing/YooKassaApiClient.cs",
+      "registrationPath": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaApiClient.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "idempotency"
@@ -678,7 +678,7 @@
     {
       "contract": null,
       "implementation": "YooKassaBillingGateway",
-      "registrationPath": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
+      "registrationPath": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate"
       ],
@@ -1276,7 +1276,7 @@
     },
     {
       "name": "PaddleApiClient",
-      "path": "FoodDiary.Integrations/Billing/PaddleApiClient.cs",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs",
       "securitySignals": [
         "ip-address-policy",
         "response-size-policy",
@@ -1296,7 +1296,7 @@
     },
     {
       "name": "PaddleBillingGateway",
-      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
       "securitySignals": [
         "ip-address-policy",
         "timeout-policy",
@@ -1317,7 +1317,7 @@
     },
     {
       "name": "PaddleNotificationRecoveryService",
-      "path": "FoodDiary.Integrations/Billing/PaddleNotificationRecoveryService.cs",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryService.cs",
       "securitySignals": [
         "ip-address-policy",
         "response-size-policy",
@@ -1356,7 +1356,7 @@
     },
     {
       "name": "RelayEmailTransport",
-      "path": "FoodDiary.Integrations/Services/RelayEmailTransport.cs",
+      "path": "Shared/FoodDiary.Email.MailRelay/RelayEmailTransport.cs",
       "securitySignals": [
         "ip-address-policy"
       ],
@@ -1521,7 +1521,7 @@
     },
     {
       "name": "YooKassaApiClient",
-      "path": "FoodDiary.Integrations/Billing/YooKassaApiClient.cs",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaApiClient.cs",
       "securitySignals": [
         "ip-address-policy",
         "response-size-policy",
@@ -1542,7 +1542,7 @@
     },
     {
       "name": "YooKassaBillingGateway",
-      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
       "securitySignals": [
         "ip-address-policy",
         "response-size-policy",

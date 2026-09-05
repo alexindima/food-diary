@@ -25,7 +25,7 @@ public sealed class NotificationRepositoryTests {
         context.Notifications.Add(notification);
         await context.SaveChangesAsync();
 
-        var repository = new NotificationRepository(context, FixedTime);
+        var repository = new NotificationRepository(context.Notifications, FixedTime);
 
         int deleted = await repository.DeleteExpiredBatchAsync(
             [],
@@ -55,7 +55,7 @@ public sealed class NotificationRepositoryTests {
         context.Notifications.Add(notification);
         await context.SaveChangesAsync();
 
-        var repository = new NotificationRepository(context, FixedTime);
+        var repository = new NotificationRepository(context.Notifications, FixedTime);
 
         int deleted = await repository.DeleteExpiredBatchAsync(
             [],

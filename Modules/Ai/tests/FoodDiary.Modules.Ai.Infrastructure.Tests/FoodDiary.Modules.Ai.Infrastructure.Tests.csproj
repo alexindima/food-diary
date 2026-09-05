@@ -3,7 +3,6 @@
   <ItemGroup><Using Include="Xunit" /><Using Include="NSubstitute" /></ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
-    <ProjectReference Include="../../../../FoodDiary.Integrations/FoodDiary.Integrations.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Ai.Application.Abstractions.csproj" />
   </ItemGroup>

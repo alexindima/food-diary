@@ -13,6 +13,7 @@ COPY Shared/FoodDiary.Audit.Contracts/*.csproj Shared/FoodDiary.Audit.Contracts/
 COPY Shared/FoodDiary.Audit.PersistenceModel/*.csproj Shared/FoodDiary.Audit.PersistenceModel/
 COPY Shared/FoodDiary.Authentication.Contracts/*.csproj Shared/FoodDiary.Authentication.Contracts/
 COPY Shared/FoodDiary.Email.Contracts/*.csproj Shared/FoodDiary.Email.Contracts/
+COPY Shared/FoodDiary.Email.MailRelay/*.csproj Shared/FoodDiary.Email.MailRelay/
 COPY Shared/FoodDiary.Integrations.Http/*.csproj Shared/FoodDiary.Integrations.Http/
 COPY Shared/FoodDiary.Nutrition.Contracts/*.csproj Shared/FoodDiary.Nutrition.Contracts/
 COPY Shared/FoodDiary.Outbox.Management.Contracts/*.csproj Shared/FoodDiary.Outbox.Management.Contracts/
@@ -186,7 +187,6 @@ COPY Modules/Export/Infrastructure/*.csproj Modules/Export/Infrastructure/
 COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/*.csproj MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
-COPY FoodDiary.Integrations/*.csproj FoodDiary.Integrations/
 COPY FoodDiary.JobManager/*.csproj FoodDiary.JobManager/
 
 RUN dotnet restore FoodDiary.JobManager/FoodDiary.JobManager.csproj --locked-mode
@@ -200,6 +200,7 @@ COPY Shared/FoodDiary.Audit.Contracts/ Shared/FoodDiary.Audit.Contracts/
 COPY Shared/FoodDiary.Audit.PersistenceModel/ Shared/FoodDiary.Audit.PersistenceModel/
 COPY Shared/FoodDiary.Authentication.Contracts/ Shared/FoodDiary.Authentication.Contracts/
 COPY Shared/FoodDiary.Email.Contracts/ Shared/FoodDiary.Email.Contracts/
+COPY Shared/FoodDiary.Email.MailRelay/ Shared/FoodDiary.Email.MailRelay/
 COPY Shared/FoodDiary.Integrations.Http/ Shared/FoodDiary.Integrations.Http/
 COPY Shared/FoodDiary.Nutrition.Contracts/ Shared/FoodDiary.Nutrition.Contracts/
 COPY Shared/FoodDiary.Outbox.Management.Contracts/ Shared/FoodDiary.Outbox.Management.Contracts/
@@ -379,7 +380,6 @@ COPY Modules/Export/Infrastructure/ Modules/Export/Infrastructure/
 COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/ MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/
-COPY FoodDiary.Integrations/ FoodDiary.Integrations/
 COPY FoodDiary.JobManager/ FoodDiary.JobManager/
 
 RUN dotnet publish FoodDiary.JobManager/FoodDiary.JobManager.csproj -c Release -o /app/publish --no-restore

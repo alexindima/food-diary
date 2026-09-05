@@ -9,7 +9,7 @@ The primary product backend is a modular monolith:
 - `FoodDiary.Application.Runtime`
 - independently compiled `FoodDiary.Application.<Feature>` modules
 - `FoodDiary.Infrastructure`
-- `FoodDiary.Integrations`
+- owner-module provider adapters plus `Shared/FoodDiary.Integrations.Http` and `Shared/FoodDiary.Email.MailRelay`
 - `FoodDiary.Presentation.Api`
 - `FoodDiary.Web.Api`
 
@@ -44,15 +44,15 @@ flowchart LR
     WebApi --> Runtime["FoodDiary.Application.Runtime\nmediator + transactions"]
     WebApi --> Modules["FoodDiary.Application.Feature\nfeature use cases"]
     WebApi --> Infrastructure["FoodDiary.Infrastructure\npersistence + implementations"]
-    WebApi --> Integrations["FoodDiary.Integrations\nexternal adapters"]
+    WebApi --> Adapters["Owner Infrastructure + narrow Shared adapters\nexternal providers and service clients"]
     Presentation --> Modules
     Runtime --> Contracts["Narrow shared contracts\napplication + technical seams"]
     Modules --> Contracts
     Modules --> Domain["Module-owned Domain\ndomain model"]
     Infrastructure --> Contracts
     Infrastructure --> Domain
-    Integrations --> Contracts
-    Integrations --> Domain
+    Adapters --> Contracts
+    Adapters --> Domain
 ```
 
 Core rules:
@@ -62,9 +62,9 @@ Core rules:
 - Module-specific ports and models belong to their owning module. Cross-cutting contracts are split by concern into dependency-light projects under `Shared/`; there is no central feature-contract aggregator.
 - Consumers reference the owning module or narrow shared contract project directly. `FoodDiary.Application.Contracts` contains only generic request, event, transaction, result-taxonomy, pagination, temporal, and enum-validation contracts; Audit, Authentication, Email, Nutrition, and Outbox Management have separate packages.
 - `Infrastructure` implements abstractions and owns EF Core/persistence; its composition root delegates to explicit technical modules.
-- `Integrations` owns external provider adapters and typed client bridges to supporting services; provider options and registrations stay in provider-specific modules.
-- `FoodDiary.Presentation.Api` is the shared HTTP/SignalR kernel: base controllers, common filters, error mapping, hubs and the version endpoint.
-- `Modules/<Feature>/Presentation` owns feature controllers, request/response DTOs, mappings and module-specific transport processors; the Web API host explicitly registers every module Presentation assembly.
+- Owning module Infrastructure owns external provider adapters/options. MailRelay transport and provider-neutral HTTP primitives are narrow shared adapters; Admin owns the MailInbox bridge. There is no central integration umbrella assembly.
+- `FoodDiary.Presentation.Api` is the shared HTTP/SignalR kernel: base controllers, common filters, error mapping, hub identity plumbing and the version endpoint.
+- `Modules/<Feature>/Presentation` owns feature controllers, request/response DTOs, mappings, hubs and module-specific transport processors; the Web API host explicitly registers and maps every module Presentation assembly.
 - `Web.Api` is the executable HTTP host and composition root; it must not declare feature controllers or transport DTOs.
 - `JobManager` owns recurring/background execution such as cleanup tasks, due notification scheduling, and outbox processors; it must stay free of HTTP presentation concerns.
 - `Initializer` is a thin operational console host for database setup and seed/backfill operations.
@@ -118,7 +118,7 @@ flowchart LR
 
 Rules:
 - Client packages must not reference service application/domain/infrastructure/presentation/host projects.
-- Primary FoodDiary core may interact with MailRelay/MailInbox through client packages only, currently from `FoodDiary.Integrations`; other core source must not reference MailRelay/MailInbox namespaces.
+- Primary FoodDiary may interact with MailRelay/MailInbox through client packages only: `Shared/FoodDiary.Email.MailRelay` owns the MailRelay transport and Admin Infrastructure owns the MailInbox reader bridge. Other primary source must not reference MailRelay/MailInbox namespaces.
 - MailRelay uses its own database and owns outbound delivery runtime configuration.
 - MailInbox uses its own database and owns inbound SMTP/MIME runtime concerns.
 - Supporting-service production projects have layer-specific package allowlists and root-folder guardrails.

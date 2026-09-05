@@ -1,22 +1,21 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
-public sealed class BillingSubscriptionRepository(FoodDiaryDbContext context) : IBillingSubscriptionRepository {
+public sealed class BillingSubscriptionRepository(DbSet<BillingSubscription> subscriptions) : IBillingSubscriptionRepository {
     public Task<BillingSubscription?> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken = default) {
-        return context.BillingSubscriptions
+        return subscriptions
             .FirstOrDefaultAsync(subscription => subscription.UserId == userId, cancellationToken);
     }
 
     public Task<BillingSubscriptionOverviewReadModel?> GetOverviewReadModelByUserIdAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
-        return context.BillingSubscriptions
+        return subscriptions
             .AsNoTracking()
             .Where(subscription => subscription.UserId == userId)
             .Select(subscription => new BillingSubscriptionOverviewReadModel(
@@ -37,7 +36,7 @@ public sealed class BillingSubscriptionRepository(FoodDiaryDbContext context) : 
         string provider,
         string externalCustomerId,
         CancellationToken cancellationToken = default) {
-        return context.BillingSubscriptions
+        return subscriptions
             .FirstOrDefaultAsync(
                 subscription => subscription.Provider == provider && subscription.ExternalCustomerId == externalCustomerId,
                 cancellationToken);
@@ -47,7 +46,7 @@ public sealed class BillingSubscriptionRepository(FoodDiaryDbContext context) : 
         string provider,
         string externalSubscriptionId,
         CancellationToken cancellationToken = default) {
-        return context.BillingSubscriptions
+        return subscriptions
             .FirstOrDefaultAsync(
                 subscription => subscription.Provider == provider && subscription.ExternalSubscriptionId == externalSubscriptionId,
                 cancellationToken);
@@ -57,7 +56,7 @@ public sealed class BillingSubscriptionRepository(FoodDiaryDbContext context) : 
         string provider,
         string externalPaymentMethodId,
         CancellationToken cancellationToken = default) {
-        return context.BillingSubscriptions
+        return subscriptions
             .FirstOrDefaultAsync(
                 subscription => subscription.Provider == provider && subscription.ExternalPaymentMethodId == externalPaymentMethodId,
                 cancellationToken);
@@ -68,7 +67,7 @@ public sealed class BillingSubscriptionRepository(FoodDiaryDbContext context) : 
         DateTime dueAtUtc,
         int limit,
         CancellationToken cancellationToken = default) {
-        return await context.BillingSubscriptions
+        return await subscriptions
             .Where(subscription =>
                 subscription.Provider == provider &&
                 !subscription.CancelAtPeriodEnd &&
@@ -86,12 +85,12 @@ public sealed class BillingSubscriptionRepository(FoodDiaryDbContext context) : 
     public Task<BillingSubscription> AddAsync(
         BillingSubscription subscription,
         CancellationToken cancellationToken = default) {
-        context.BillingSubscriptions.Add(subscription);
+        subscriptions.Add(subscription);
         return Task.FromResult(subscription);
     }
 
     public Task UpdateAsync(BillingSubscription subscription, CancellationToken cancellationToken = default) {
-        context.BillingSubscriptions.Update(subscription);
+        subscriptions.Update(subscription);
         return Task.CompletedTask;
     }
 }

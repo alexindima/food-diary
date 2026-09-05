@@ -35,13 +35,13 @@ production-enabled/disabled decision and, when enabled, matching policy text:
 
 | Integration | Repository evidence | Privacy review question |
 | --- | --- | --- |
-| OpenAI | `FoodDiary.Integrations/Services/OpenAi` | Which inputs are sent, which models/region are used, and what provider retention setting is active? |
-| S3-compatible object storage | `FoodDiary.Integrations/Services/S3*` | Where is the bucket hosted, who operates it, and how are deleted objects/backups expired? |
-| MailRelay and downstream SMTP/MX delivery | `FoodDiary.Integrations/Services/RelayEmailTransport.cs` and `MailRelay/` | Which delivery operators receive addresses/content and what logs are retained? |
-| Web Push | `FoodDiary.Integrations/Services/WebPush*` | Which browser push services receive subscription endpoints and payload metadata? |
-| Google identity | `FoodDiary.Integrations/Authentication/GoogleTokenValidator.cs` | Is Google login enabled and which identity claims are stored? |
-| Fitbit | `FoodDiary.Integrations/Wearables/FitbitClient.cs` | Is wearable import enabled, which scopes are requested, and how can access be revoked? |
-| Telegram | `FoodDiary.Integrations/Authentication/Telegram*` and `FoodDiary.Telegram.Bot/` | Which Telegram identifiers/messages are stored and for how long? |
+| OpenAI | `Modules/Ai/Infrastructure/Providers/Services/OpenAi` | Which inputs are sent, which models/region are used, and what provider retention setting is active? |
+| S3-compatible object storage | `Modules/Images/Infrastructure/Providers/Services/S3*` | Where is the bucket hosted, who operates it, and how are deleted objects/backups expired? |
+| MailRelay and downstream SMTP/MX delivery | `Shared/FoodDiary.Email.MailRelay/RelayEmailTransport.cs` and `MailRelay/` | Which delivery operators receive addresses/content and what logs are retained? |
+| Web Push | `Modules/Notifications/Infrastructure/Services/WebPush*` | Which browser push services receive subscription endpoints and payload metadata? |
+| Google identity | `Modules/Identity/Infrastructure/Providers/Authentication/GoogleTokenValidator.cs` | Is Google login enabled and which identity claims are stored? |
+| Fitbit | `Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs` | Is wearable import enabled, which scopes are requested, and how can access be revoked? |
+| Telegram | `Modules/Identity/Infrastructure/Providers/Authentication/Telegram*` and `FoodDiary.Telegram.Bot/` | Which Telegram identifiers/messages are stored and for how long? |
 | PostgreSQL, Redis, RabbitMQ | deployment composition and infrastructure projects | Record operator, region, encryption, backup, access, and retention configuration for each environment. |
 
 Source presence does not prove that an integration is enabled in production.

@@ -69,6 +69,13 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.CreateCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DeleteCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.DuplicateCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.NutritionAndIngredientTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.ReadQueryTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.UpdateCommandTests.cs`
+- [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/CentralRelocated/RecipesFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/CreateRecipeCommandValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Application.Tests/Recipes/ExploreRecipesQueryValidatorTests.cs`
@@ -88,13 +95,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Domain.Tests/Domain/RecipeInvariantAndEventsTests.cs`
 - [presentation] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Presentation.Tests/RecipeExploreControllerTests.cs`
 - [presentation] `Modules/Recipes/tests/FoodDiary.Modules.Recipes.Presentation.Tests/RecipeHttpMappingsTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.CreateCommandTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DeleteCommandTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DuplicateCommandTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.NutritionAndIngredientTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.UpdateCommandTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/RecipesModuleExtractionTests.cs`
 
 ## Working Rule

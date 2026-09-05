@@ -14,7 +14,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\FoodDiary.Modules.Billing.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\..\..\FoodDiary.Integrations\FoodDiary.Integrations.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
   </ItemGroup>

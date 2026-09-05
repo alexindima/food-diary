@@ -104,7 +104,7 @@
         "Provider",
         "RequireConfiguredProvider"
       ],
-      "path": "FoodDiary.Integrations/Options/BillingOptions.cs"
+      "path": "Modules/Billing/Infrastructure/Providers/Options/BillingOptions.cs"
     },
     {
       "type": "BillingRenewalOptions",
@@ -569,7 +569,7 @@
         "WebhookSecretKey",
         "WebhookTimestampToleranceSeconds"
       ],
-      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs"
+      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs"
     },
     {
       "type": "S3Options",
@@ -601,7 +601,7 @@
         "SuccessUrl",
         "WebhookSecret"
       ],
-      "path": "FoodDiary.Integrations/Options/StripeOptions.cs"
+      "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs"
     },
     {
       "type": "TelegramAuthOptions",
@@ -618,7 +618,7 @@
       "properties": [
         "ApiSecret"
       ],
-      "path": "FoodDiary.Presentation.Api/Options/TelegramBotAuthOptions.cs"
+      "path": "Modules/Identity/Presentation/Options/TelegramBotAuthOptions.cs"
     },
     {
       "type": "TelegramBotOptions",
@@ -696,7 +696,7 @@
         "SecretKey",
         "ShopId"
       ],
-      "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs"
+      "path": "Modules/Billing/Infrastructure/Providers/Options/YooKassaOptions.cs"
     }
   ],
   "configurationFiles": [

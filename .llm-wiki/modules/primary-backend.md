@@ -13,7 +13,10 @@ sources:
   - Shared/FoodDiary.Domain.Primitives/AGENTS.md
   - docs/adr/0027-retire-shared-domain-assemblies.md
   - FoodDiary.Infrastructure/AGENTS.md
-  - FoodDiary.Integrations/AGENTS.md
+  - Shared/FoodDiary.Integrations.Http/AGENTS.md
+  - Shared/FoodDiary.Email.MailRelay/AGENTS.md
+  - Modules/Admin/Infrastructure/AGENTS.md
+  - Modules/Billing/Infrastructure/AGENTS.md
   - FoodDiary.Presentation.Api/AGENTS.md
   - FoodDiary.Web.Api/AGENTS.md
   - docs/BACKEND_MODULE_MAP.md
@@ -37,14 +40,14 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 | Billing use cases | `Modules/Billing/Application` |
 | Marketing use cases | `Modules/Marketing/Application` |
 | Body measurements | `Modules/BodyMetrics` application, Domain, ports, repositories and mappings; Users-owned identity seam |
-| AI use cases, usage and prompt ownership | `Modules/Ai` application, ports, Domain, persistence model and adapters; Users profile contracts, shared context and external Integrations provider seams |
+| AI use cases, usage and prompt ownership | `Modules/Ai` application, ports, Domain, persistence model and provider adapters; Users profile contracts and shared context seams |
 | Admin orchestration and impersonation | `Modules/Admin`: application, ports, independent impersonation domain, adapters and explicit persistence model; Identity-owned email templates, Users-owned roles/audit and shared SSO seams retain their owners |
 
 | Product catalog and mutation ownership | `Modules/Products` Domain, application, ports/contracts, persistence model, adapters and focused tests; accepted Users/USDA dependencies and the shared Recipe composition lock remain explicit |
 | Meal diary aggregate ownership | `Modules/Meals/Domain` owns Meal, items, AI sessions/items, IDs and meal-only value types; one-way Meal.User references Users-owned User/UserId; shared context and migrations remain central |
 | EF Core and technical implementations | `FoodDiary.Infrastructure` |
-| External providers and service clients | Owner module Infrastructure; cross-service mail clients and shared integrations in `FoodDiary.Integrations` |
-| HTTP and SignalR transport | `FoodDiary.Presentation.Api` |
+| External providers and service clients | Owner module Infrastructure; MailRelay transport in `Shared/FoodDiary.Email.MailRelay`; provider-neutral HTTP primitives in `Shared/FoodDiary.Integrations.Http` |
+| HTTP and SignalR transport | Owning module Presentation projects; reusable transport primitives in `FoodDiary.Presentation.Api` |
 | Composition, middleware, and hosting | `FoodDiary.Web.Api` |
 
 The detailed placement table is canonical in the

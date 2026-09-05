@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><RootNamespace>FoodDiary.Infrastructure.Tests</RootNamespace><IsTestProject>true</IsTestProject><IsPackable>false</IsPackable></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../FoodDiary.Email.MailRelay/FoodDiary.Email.MailRelay.csproj" />
+    <ProjectReference Include="../../FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
+    <ProjectReference Include="../../../MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup><Using Include="NSubstitute" /><Using Include="System.Diagnostics.CodeAnalysis" /><Using Include="Xunit" /></ItemGroup>
+</Project>

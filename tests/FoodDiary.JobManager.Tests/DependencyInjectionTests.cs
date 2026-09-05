@@ -15,6 +15,7 @@ using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Infrastructure;
+using FoodDiary.Infrastructure.Integrations;
 using FoodDiary.Integrations;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Configuration;
@@ -130,7 +131,15 @@ public sealed class DependencyInjectionTests {
         services.AddNotificationsModule().AddNotificationsInfrastructure(configuration);
         services.AddWeeklyGoalsModule();
         services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
-        services.AddIntegrations(configuration).AddIdentityProvider(configuration).AddImagesProvider(configuration).AddAiProvider(configuration).AddUsdaProvider(configuration).AddOpenFoodFactsProvider(configuration).AddWearablesProvider(configuration);
+        services.AddBillingIntegrations(configuration)
+            .AddAdminMailInboxIntegration(configuration)
+            .AddMailRelayIntegration(configuration)
+            .AddIdentityProvider(configuration)
+            .AddImagesProvider(configuration)
+            .AddAiProvider(configuration)
+            .AddUsdaProvider(configuration)
+            .AddOpenFoodFactsProvider(configuration)
+            .AddWearablesProvider(configuration);
         services.AddDataProtection();
         services.AddNotificationResources();
         services.AddJobManagerServices(configuration);

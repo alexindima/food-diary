@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Admin;
 
-public sealed class EmailTemplateRepository(FoodDiaryDbContext context) : IEmailTemplateRepository {
+public sealed class EmailTemplateRepository(DbSet<EmailTemplate> emailTemplates) : IEmailTemplateRepository {
     public async Task<IReadOnlyList<EmailTemplate>> GetAllAsync(CancellationToken cancellationToken = default) {
-        return await context.EmailTemplates
+        return await emailTemplates
             .AsNoTracking()
             .OrderBy(t => t.Key)
             .ThenBy(t => t.Locale)
@@ -15,7 +15,7 @@ public sealed class EmailTemplateRepository(FoodDiaryDbContext context) : IEmail
     }
 
     public async Task<IReadOnlyList<EmailTemplateReadModel>> GetAllReadModelsAsync(CancellationToken cancellationToken = default) {
-        return await context.EmailTemplates
+        return await emailTemplates
             .AsNoTracking()
             .OrderBy(t => t.Key)
             .ThenBy(t => t.Locale)
@@ -33,7 +33,7 @@ public sealed class EmailTemplateRepository(FoodDiaryDbContext context) : IEmail
     }
 
     public async Task<EmailTemplate?> GetByKeyAsync(string key, string locale, CancellationToken cancellationToken = default) {
-        return await context.EmailTemplates
+        return await emailTemplates
             .AsNoTracking()
             .FirstOrDefaultAsync(t => t.Key == key && t.Locale == locale, cancellationToken).ConfigureAwait(false);
     }
@@ -46,12 +46,12 @@ public sealed class EmailTemplateRepository(FoodDiaryDbContext context) : IEmail
         string textBody,
         bool isActive,
         CancellationToken cancellationToken = default) {
-        EmailTemplate? existing = await context.EmailTemplates
+        EmailTemplate? existing = await emailTemplates
             .FirstOrDefaultAsync(t => t.Key == key && t.Locale == locale, cancellationToken).ConfigureAwait(false);
 
         if (existing is null) {
             var template = EmailTemplate.Create(key, locale, subject, htmlBody, textBody, isActive);
-            await context.EmailTemplates.AddAsync(template, cancellationToken).ConfigureAwait(false);
+            await emailTemplates.AddAsync(template, cancellationToken).ConfigureAwait(false);
             return template;
         }
 

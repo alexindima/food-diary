@@ -213,13 +213,13 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Dashboard infrastructure: `Modules/Dashboard/Infrastructure/AGENTS.md`
 - Dashboard tests: `Modules/Dashboard/tests/AGENTS.md`
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`
-- Integrations layer: `FoodDiary.Integrations/AGENTS.md`
 - Initializer: `FoodDiary.Initializer/AGENTS.md`
 - Job manager: `FoodDiary.JobManager/AGENTS.md`
 - Development MCP: `FoodDiary.Development.Mcp/AGENTS.md`
 - Mobile shell: `FoodDiary.Mobile/AGENTS.md`
 - Technology radar: `FoodDiary.TechRadar/AGENTS.md`
 - Shared integration HTTP primitives: `Shared/FoodDiary.Integrations.Http/AGENTS.md`
+- Shared MailRelay email adapter: `Shared/FoodDiary.Email.MailRelay/AGENTS.md`
 - Shared mediator: `Shared/FoodDiary.Mediator/AGENTS.md`
 - Shared domain primitives: `Shared/FoodDiary.Domain.Primitives/AGENTS.md`
 - Tests: `tests/AGENTS.md`
@@ -256,7 +256,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Prefer C# primary constructors where applicable.
 - Respect the dependency matrix enforced in `tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs`.
 - Reference the owning module or narrow shared contract project directly when consuming its types; do not add unused references to `FoodDiary.Application.Contracts` or another shared package merely to make types transitively available. Explicit references document existing use, not permission to acquire foreign aggregate writes.
-- Primary FoodDiary core projects may interact with MailRelay/MailInbox only through approved client packages. Today that cross-service access belongs in `FoodDiary.Integrations`.
+- Primary FoodDiary projects may interact with MailRelay/MailInbox only through approved client packages. MailRelay email transport belongs to `Shared/FoodDiary.Email.MailRelay`; Admin MailInbox access belongs to `Modules/Admin/Infrastructure`.
 - Keep executable hosts as composition roots. Put HTTP transport in presentation projects, use cases in application projects, persistence/provider implementations in infrastructure projects, and domain rules in domain projects.
 - Async backend methods should use the `Async` suffix and accept `CancellationToken` unless they are framework entrypoints covered by architecture-test exceptions.
 - If backend HTTP routes, payloads, status codes, or Swagger-visible API surface change, update the relevant contract snapshots under `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/` and commit them with the feature.

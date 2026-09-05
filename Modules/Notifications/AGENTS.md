@@ -11,5 +11,5 @@ Rules for `Modules/Notifications/`.
 - Use shared Outbox.Abstractions for the lifecycle contract; central Infrastructure retains only the multi-stream engine/claiming/replay responsibilities.
 - Preserve notification channels, payloads, text selection, delivery behavior and retry semantics during structural changes.
 - User profile preference fields remain owned by Users and are accessed through the existing profile contracts.
-- Notification HTTP transport lives in `Modules/Notifications/Presentation`; shared SignalR primitives remain in `FoodDiary.Presentation.Api`, while scheduling and consumers remain in `FoodDiary.JobManager`.
+- Notification HTTP and SignalR transport lives in `Modules/Notifications/Presentation`; only reusable SignalR identity plumbing remains in `FoodDiary.Presentation.Api`, while scheduling and consumers remain in `FoodDiary.JobManager`.
 - The shared `FoodDiaryDbContext`, migrations and model snapshot remain central.

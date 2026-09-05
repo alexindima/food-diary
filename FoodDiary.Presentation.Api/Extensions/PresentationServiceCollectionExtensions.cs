@@ -1,9 +1,6 @@
 using Asp.Versioning;
-using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Responses;
-using FoodDiary.Presentation.Api.Security;
 using FoodDiary.Presentation.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -18,7 +15,6 @@ public static class PresentationServiceCollectionExtensions {
         public IServiceCollection AddPresentationApi() {
             services.AddScoped<TelemetryActionFilter>();
             services.AddScoped<IdempotencyFilter>();
-            services.AddScoped<RefreshTokenCookieService>();
             services.TryAddSingleton(TimeProvider.System);
             services.TryAddSingleton<IIdempotencyStore, InMemoryIdempotencyStore>();
             services.AddApiVersioning(options => {
@@ -51,10 +47,7 @@ public static class PresentationServiceCollectionExtensions {
                     };
                 });
             services.AddSignalR();
-            services.AddScoped<TelegramBotSecretAuthorizationFilter>();
             services.AddSingleton<IUserIdProvider, UserIdProvider>();
-            services.AddScoped<IEmailVerificationNotifier, EmailVerificationNotifier>();
-            services.AddScoped<INotificationPusher, NotificationPusher>();
             return services;
         }
 

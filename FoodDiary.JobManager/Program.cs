@@ -16,6 +16,7 @@ using FoodDiary.Modules.Marketing.Infrastructure;
 using FoodDiary.Modules.WeeklyGoals.Infrastructure;
 using FoodDiary.Modules.Images.Infrastructure;
 using FoodDiary.Infrastructure;
+using FoodDiary.Infrastructure.Integrations;
 using FoodDiary.Integrations;
 using FoodDiary.JobManager.Services;
 using Hangfire;
@@ -40,7 +41,10 @@ builder.Services.AddMealsPersistence();
 builder.Services.AddRecentItemsModule();
 builder.Services.AddInfrastructure(builder.Configuration).AddExportInfrastructure().AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
 builder.Services.AddImagesInfrastructure();
-builder.Services.AddIntegrations(builder.Configuration).AddIdentityProvider(builder.Configuration).AddImagesProvider(builder.Configuration).AddAiProvider(builder.Configuration).AddUsdaProvider(builder.Configuration).AddOpenFoodFactsProvider(builder.Configuration).AddWearablesProvider(builder.Configuration);
+builder.Services.AddBillingIntegrations(builder.Configuration)
+    .AddAdminMailInboxIntegration(builder.Configuration)
+    .AddMailRelayIntegration(builder.Configuration)
+    .AddIdentityProvider(builder.Configuration).AddImagesProvider(builder.Configuration).AddAiProvider(builder.Configuration).AddUsdaProvider(builder.Configuration).AddOpenFoodFactsProvider(builder.Configuration).AddWearablesProvider(builder.Configuration);
 builder.Services.AddDataProtection();
 builder.Services.AddNotificationResources();
 builder.Services.AddJobManagerServices(builder.Configuration);

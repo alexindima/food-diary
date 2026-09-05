@@ -85,8 +85,8 @@ Use this file when deciding where backend code belongs.
 | Daily Advices persistence model | `Modules/DailyAdvices/Infrastructure/Model` | EF configuration and model-builder seam | Shared `DbContext`, migrations, repository behavior |
 | Daily Advices infrastructure | `Modules/DailyAdvices/Infrastructure` | Repository and complete module registration | HTTP transport and central migrations |
 | Content Reports module | `Modules/ContentReports` | Creation, moderation contracts, aggregate, persistence model/adapter, and module tests | Central `DbContext`, migrations, HTTP transport, Admin orchestration |
-| OpenFoodFacts module | `Modules/OpenFoodFacts` | Public catalog queries, cached-search contract and lifecycle, provider/cache ports, durable cache entity, persistence adapter/model, and focused tests | Provider HTTP transport in Integrations; central `DbContext`, migrations, snapshot, and HTTP presentation |
-| USDA module | `Modules/Usda` | USDA reference-data entities, catalog use cases, ports/contracts, EF mappings, repository adapter, and focused tests | Provider HTTP/cache in Integrations; central Product navigation, `DbContext`, migrations, snapshot, and HTTP presentation |
+| OpenFoodFacts module | `Modules/OpenFoodFacts` | Public catalog queries, cached-search contract and lifecycle, provider/cache ports, durable cache entity, persistence/provider adapters, model, and focused tests | Central `DbContext`, migrations, snapshot, and HTTP presentation |
+| USDA module | `Modules/Usda` | USDA reference-data entities, catalog use cases, ports/contracts, EF mappings, repository/provider adapters, and focused tests | Central Product navigation, `DbContext`, migrations, snapshot, and HTTP presentation |
 | Images ID contracts | `Modules/Images/Contracts` | Dependency-free `ImageAssetId` with stable CLR namespace | Image aggregate behavior, EF, storage providers |
 | Images domain | `Modules/Images/Domain` | `ImageAsset` lifecycle and stable CLR namespace | EF, storage providers, HTTP transport |
 | Images application ports | `Modules/Images/Application/Abstractions` | Image access, storage, cleanup, repository and deletion-outbox ports | Provider SDKs, EF implementations, HTTP transport |
@@ -112,7 +112,7 @@ Use this file when deciding where backend code belongs.
 | Users | `Modules/Users` | Complete User Domain, UserId contracts, application, role/goal mappings, tracked UserRepository and separate read adapters, focused tests | Shared application contracts, DbContext/migrations/snapshot and Identity authentication flows/providers |
 | Identity | `Modules/Identity` | Authentication and Email application slices/services; EmailTemplate, UserRefreshTokenSession and UserLoginEvent Domain types, their EF model, template/session/login-event adapters, cached template provider and focused tests; legacy application assembly and CLR namespaces preserved | Shared Authentication/Email abstractions, Users-owned User/security state and repository, central DbContext/migrations/snapshot, external provider adapters, HTTP transport and hosts |
 | Persistence/technical implementations | `FoodDiary.Infrastructure` | Shared DbContext/migrations/snapshot, shared technical mappings, mixed repositories and technical service implementations; module mappings are registered explicitly | HTTP controllers, host startup, external provider orchestration |
-| External adapters | `FoodDiary.Integrations` | Provider clients, provider options, MailRelay/MailInbox client bridges | EF migrations, core domain workflows |
+| External adapters | owning module Infrastructure plus `Shared/FoodDiary.Email.MailRelay` and `Shared/FoodDiary.Integrations.Http` | Provider clients/options, MailRelay transport, MailInbox Admin bridge, shared bounded HTTP primitives | EF migrations, core domain workflows, generic provider umbrella composition |
 | Shared HTTP/SignalR kernel | `FoodDiary.Presentation.Api` | Base controllers, shared filters, error mapping, version endpoint, hubs and transport primitives | Feature controllers, module request/response DTOs, business logic, infrastructure, host middleware |
 | Module HTTP transport | `Modules/<Feature>/Presentation` | Feature controllers, HTTP request/response DTOs, mappings and module-owned transport processors | Infrastructure adapters, host middleware, foreign aggregate writes |
 | Host/composition | `FoodDiary.Web.Api` | Program, DI wiring, auth, middleware, Swagger, rate limiting, telemetry exporters | Feature controllers, request DTOs, domain rules |
@@ -163,7 +163,7 @@ Before adding a file:
 - Is it EF/provider/worker implementation? Put it in infrastructure or integrations.
 - Is it HTTP transport shape or mapping? Put it in presentation.
 - Is it startup/DI/middleware/configuration? Put it in the host.
-- Is it service-to-service MailRelay/MailInbox access from core FoodDiary? Put it in `FoodDiary.Integrations` and use the client package.
+- Is it service-to-service MailRelay/MailInbox access from core FoodDiary? Put the adapter beside its semantic owner (Admin for MailInbox, shared Email transport for MailRelay) and use only the approved client package.
 - Is it reusable UI? Put it in the frontend UI kit.
 - Is it feature UI? Put it in the frontend feature folder.
 
@@ -212,7 +212,7 @@ Exercises ownership: `Modules/Exercises/Application` owns slices and read-servic
 
 ## Ai physical ownership
 
-Ai owns Application, Application/Abstractions, Domain, Infrastructure/Model and Infrastructure under `Modules/Ai`. Application keeps its legacy assembly/CLR identity. AiUsage/AiPromptTemplate and quota ledger ownership, provider/cache/consent semantics, Users-owned User and DbContext seams and consumers are source-audited in `docs/ai/ai-ownership-inventory.md`. Admin invokes semantic administration capabilities; Meals AI entities remain Meals-owned. Provider HTTP/options remain Integrations. Focused tests live under Modules/Ai/tests; central PostgreSQL/HTTP/mixed suites remain with their owners.
+Ai owns Application, Application/Abstractions, Domain, Infrastructure/Model and Infrastructure under `Modules/Ai`. Application keeps its legacy assembly/CLR identity. AiUsage/AiPromptTemplate and quota ledger ownership, provider/cache/consent semantics, Users-owned User and DbContext seams and consumers are source-audited in `docs/ai/ai-ownership-inventory.md`. Admin invokes semantic administration capabilities; Meals AI entities remain Meals-owned. Provider HTTP/options live in Ai Infrastructure. Focused tests live under Modules/Ai/tests; central PostgreSQL/HTTP/mixed suites remain with their owners.
 
 ## Dashboard logical extraction
 

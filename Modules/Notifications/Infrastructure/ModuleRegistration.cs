@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Infrastructure.Persistence.Notifications;
 using FoodDiary.Infrastructure.Persistence.Outbox;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
 using FoodDiary.Modules.Notifications.Infrastructure.Resources;
@@ -21,14 +22,18 @@ public static class ModuleRegistration {
 
     public static IServiceCollection AddNotificationsPersistence(this IServiceCollection services) {
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, WebPushOutboxReplayStream>());
-        services.AddScoped<INotificationRepository, NotificationRepository>();
+        services.AddScoped<INotificationRepository>(static provider =>
+            new NotificationRepository(
+                provider.GetRequiredService<FoodDiaryDbContext>().Notifications,
+                provider.GetRequiredService<TimeProvider>()));
         services.AddScoped<INotificationReadRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationLookupRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationReadModelRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationWriteRepository>(static provider => provider.GetRequiredService<INotificationRepository>());
         services.AddScoped<INotificationWebPushOutbox, NotificationWebPushOutbox>();
         services.AddScoped<INotificationWebPushOutboxProcessor, NotificationWebPushOutboxProcessor>();
-        services.AddScoped<IWebPushSubscriptionRepository, WebPushSubscriptionRepository>();
+        services.AddScoped<IWebPushSubscriptionRepository>(static provider =>
+            new WebPushSubscriptionRepository(provider.GetRequiredService<FoodDiaryDbContext>().WebPushSubscriptions));
         services.AddScoped<IWebPushSubscriptionReadRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
         services.AddScoped<IWebPushSubscriptionReadModelRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
         services.AddScoped<IWebPushSubscriptionWriteRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());

@@ -4,6 +4,7 @@ using FoodDiary.Infrastructure.Persistence.Admin;
 using FoodDiary.Infrastructure.Persistence.Authentication;
 using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Users;
+using FoodDiary.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Infrastructure;
@@ -19,7 +20,8 @@ public static class IdentityModuleRegistration {
         services.AddScoped<IRefreshTokenSessionReadModelRepository>(static provider => (RefreshTokenSessionRepository)provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionReadRepository>(static provider => provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionWriteRepository>(static provider => provider.GetRequiredService<IRefreshTokenSessionRepository>());
-        services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
+        services.AddScoped<IEmailTemplateRepository>(static provider =>
+            new EmailTemplateRepository(provider.GetRequiredService<FoodDiaryDbContext>().EmailTemplates));
         services.AddScoped<IEmailTemplateReadRepository>(static provider => provider.GetRequiredService<IEmailTemplateRepository>());
         services.AddScoped<IEmailTemplateReadModelRepository>(static provider => provider.GetRequiredService<IEmailTemplateRepository>());
         services.AddScoped<IEmailTemplateWriteRepository>(static provider => provider.GetRequiredService<IEmailTemplateRepository>());

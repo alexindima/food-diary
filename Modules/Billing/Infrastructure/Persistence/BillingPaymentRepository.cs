@@ -1,28 +1,27 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
-public sealed class BillingPaymentRepository(FoodDiaryDbContext context) : IBillingPaymentRepository {
+public sealed class BillingPaymentRepository(DbSet<BillingPayment> payments) : IBillingPaymentRepository {
     public Task<BillingPayment?> GetByExternalPaymentIdAsync(
         string provider,
         string externalPaymentId,
         CancellationToken cancellationToken = default) {
-        return context.BillingPayments
+        return payments
             .FirstOrDefaultAsync(
                 payment => payment.Provider == provider && payment.ExternalPaymentId == externalPaymentId,
                 cancellationToken);
     }
 
     public Task<BillingPayment> AddAsync(BillingPayment payment, CancellationToken cancellationToken = default) {
-        context.BillingPayments.Add(payment);
+        payments.Add(payment);
         return Task.FromResult(payment);
     }
 
     public Task UpdateAsync(BillingPayment payment, CancellationToken cancellationToken = default) {
-        context.BillingPayments.Update(payment);
+        payments.Update(payment);
         return Task.CompletedTask;
     }
 }

@@ -73,36 +73,16 @@ public class LayeringTests {
     }
 
     [Fact]
-    public void IntegrationsProject_ReferencesApplicationAbstractionsAndExternalClients_ButNotInfrastructure() {
-        HashSet<string> references = GetProjectReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
+    public void MailRelayAdapter_ReferencesOnlyItsContractAndClientBoundaries() {
+        HashSet<string> references = GetProjectReferences("Shared/FoodDiary.Email.MailRelay/FoodDiary.Email.MailRelay.csproj");
 
-        Assert.Contains("FoodDiary.Application.Contracts", references);
-        Assert.DoesNotContain("FoodDiary.Domain", references);
-        Assert.Contains("FoodDiary.MailInbox.Client", references);
-        Assert.Contains("FoodDiary.MailRelay.Client", references);
-        Assert.DoesNotContain("FoodDiary.Application", references);
+        Assert.Equal(["FoodDiary.Email.Contracts", "FoodDiary.MailRelay.Client"], references, StringComparer.Ordinal);
         Assert.DoesNotContain("FoodDiary.Infrastructure", references);
-        Assert.DoesNotContain("FoodDiary.Web.Api", references);
         Assert.DoesNotContain("FoodDiary.Presentation.Api", references);
     }
 
-    [Fact]
-    public void IntegrationsProject_PackageReferencesStayLimitedToApprovedProvidersAndTransport() {
-        string[] allowedPackages = [
-            "Microsoft.Extensions.Configuration",
-            "Microsoft.Extensions.Http",
-            "Microsoft.Extensions.Http.Resilience",
-            "Microsoft.Extensions.Options.ConfigurationExtensions",
-            "Stripe.net",
-        ];
-
-        string[] packages = ProjectReferenceReader.ReadPackageReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
-
-        Assert.Equal(allowedPackages, packages);
-    }
-
     [Theory]
-    [InlineData("FoodDiary.Integrations")]
+    [InlineData("Modules/Billing/Infrastructure/Providers")]
     [InlineData("Modules/Ai/Infrastructure/Providers")]
     [InlineData("Modules/Wearables/Infrastructure/Providers")]
     [InlineData("Modules/Usda/Infrastructure/Providers")]
@@ -121,7 +101,7 @@ public class LayeringTests {
     }
 
     [Theory]
-    [InlineData("FoodDiary.Integrations")]
+    [InlineData("Modules/Billing/Infrastructure/Providers")]
     [InlineData("Modules/Ai/Infrastructure/Providers")]
     [InlineData("Modules/Wearables/Infrastructure/Providers")]
     [InlineData("Modules/Usda/Infrastructure/Providers")]
@@ -171,33 +151,8 @@ public class LayeringTests {
         Assert.Empty(violations);
     }
 
-    [Fact]
-    public void IntegrationsRootFolders_StayLimitedToProviderAdapterAreas() {
-        string integrationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations");
-        string[] allowedDirectories = [
-            "Authentication",
-            "Billing",
-            "Http",
-            "Options",
-            "Properties",
-            "Services",
-            "Wearables",
-        ];
-
-        string[] unexpectedDirectories = [.. Directory.GetDirectories(integrationsRoot)
-            .Select(Path.GetFileName)
-            .Where(name => name is not null)
-            .Select(name => name!)
-            .Where(name => !name.Equals("bin", StringComparison.OrdinalIgnoreCase))
-            .Where(name => !name.Equals("obj", StringComparison.OrdinalIgnoreCase))
-            .Where(name => !allowedDirectories.Contains(name, StringComparer.Ordinal))
-            .Order(StringComparer.Ordinal)];
-
-        Assert.Empty(unexpectedDirectories);
-    }
-
     [Theory]
-    [InlineData("FoodDiary.Integrations")]
+    [InlineData("Modules/Billing/Infrastructure/Providers")]
     [InlineData("Modules/Ai/Infrastructure/Providers")]
     [InlineData("Modules/Wearables/Infrastructure/Providers")]
     [InlineData("Modules/Usda/Infrastructure/Providers")]
@@ -223,22 +178,6 @@ public class LayeringTests {
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void IntegrationsCompositionRoot_StaysLimitedToApprovedProviderModules() {
-        string dependencyInjectionPath = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations", "DependencyInjection.cs");
-        string[] expectedRegistrations = [
-            "services.AddIntegrationOptions(configuration);",
-            "services.AddMailIntegrations(configuration);",
-            "services.AddBillingIntegrations();",
-        ];
-
-        string[] actualRegistrations = [.. File.ReadLines(dependencyInjectionPath)
-            .Select(static line => line.Trim())
-            .Where(static line => line.StartsWith("services.", StringComparison.Ordinal))];
-
-        Assert.Equal(expectedRegistrations, actualRegistrations);
     }
 
     [Fact]
@@ -470,7 +409,8 @@ public class LayeringTests {
 
         Assert.Contains("FoodDiary.Application.Runtime", references);
         Assert.Contains("FoodDiary.Infrastructure", references);
-        Assert.Contains("FoodDiary.Integrations", references);
+        Assert.Contains("FoodDiary.Email.MailRelay", references);
+        Assert.DoesNotContain("FoodDiary.Integrations", references);
         Assert.Contains("FoodDiary.Presentation.Api", references);
         Assert.DoesNotContain("FoodDiary.Resources", references);
         Assert.DoesNotContain("FoodDiary.Domain", references);

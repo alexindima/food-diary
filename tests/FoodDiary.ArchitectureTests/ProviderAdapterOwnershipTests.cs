@@ -57,10 +57,7 @@ public sealed class ProviderAdapterOwnershipTests {
         string[] references = ProjectReferenceReader.ReadProjectReferences($"Modules/{module}/Infrastructure/FoodDiary.Modules.{module}.Infrastructure.csproj");
         Assert.Contains("FoodDiary.Integrations.Http", references, StringComparer.Ordinal);
         Assert.DoesNotContain("FoodDiary.Integrations", references, StringComparer.Ordinal);
-        string[] central = ProjectReferenceReader.ReadProjectReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
-        Assert.DoesNotContain(central, reference => reference.StartsWith($"FoodDiary.Modules.{module}.", StringComparison.Ordinal));
-        string centralComposition = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Integrations/DependencyInjection.cs"));
-        Assert.DoesNotContain($"Add{module}Provider", centralComposition, StringComparison.Ordinal);
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Integrations", "FoodDiary.Integrations.csproj")));
     }
 
     [Theory]
@@ -83,9 +80,15 @@ public sealed class ProviderAdapterOwnershipTests {
     [Fact]
     public void IdentityProviders_DoNotNeedSharedIntegrationHelpersOrReverseExports() {
         string[] owner = ProjectReferenceReader.ReadProjectReferences("Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj");
-        string[] central = ProjectReferenceReader.ReadProjectReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
         Assert.DoesNotContain("FoodDiary.Integrations", owner, StringComparer.Ordinal);
-        Assert.DoesNotContain(central, reference => reference.StartsWith("FoodDiary.Modules.Identity.", StringComparison.Ordinal));
-        Assert.DoesNotContain(central, reference => reference.StartsWith("FoodDiary.Modules.Images.", StringComparison.Ordinal));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Integrations", "FoodDiary.Integrations.csproj")));
+    }
+
+    [Fact]
+    public void RemainingProviderAdapters_HaveExplicitPhysicalOwners() {
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Billing", "Infrastructure", "Providers", "Billing", "PaddleApiClient.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Admin", "Infrastructure", "Integrations", "MailInbox", "MailInboxClientAdminMailInboxReader.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Shared", "FoodDiary.Email.MailRelay", "RelayEmailTransport.cs")));
+        Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Integrations", "FoodDiary.Integrations.csproj")));
     }
 }

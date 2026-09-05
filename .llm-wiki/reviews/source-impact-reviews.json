@@ -8,13 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "dbcfe9346add5370b6dd8fec081392a7c7172c3246838f936ba31e88a1608269"
+          "sha256": "952110e7401d4d7c93278ccb368f0bdea605c27a1bf3b85243c6f2779f3a624c"
+        },
+        {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "29adc9308b15b17c0ad1b022543b9bfb44f4aaad38a04ec03f7b5cffcfa8c356"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "a8ca39be8112aa217ca58e3af054123d2b9a4acc3cba895cafdd7ddf98a61450"
         }
       ],
-      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T15:47:56.9624972Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:29.3813176Z"
     },
     {
       "pageId": "module.frontend",
@@ -38,17 +46,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "250604e886b5f6167b17b55e8b7655c914419c5444e741d1cef66169ccb3623c"
+          "sha256": "29adc9308b15b17c0ad1b022543b9bfb44f4aaad38a04ec03f7b5cffcfa8c356"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "85ee658643d0cd60867a7381a2b13f5c69a2b742e2385c088fa8ff334a98c3de"
+          "sha256": "a8ca39be8112aa217ca58e3af054123d2b9a4acc3cba895cafdd7ddf98a61450"
         }
       ],
-      "reason": "Reviewed current architecture, module-map, ownership and scoped-guide text against the final 32 module Presentation projects, one Presentation.Contracts project and the central Version-only kernel.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:41.7974436Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:30.2770128Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -71,14 +79,26 @@
       "pageSha256": "aecbc40ebd932d3500222bca6a84cbdaefaa0a2adf07b24580e0557a329ca8f7",
       "sources": [
         {
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "29adc9308b15b17c0ad1b022543b9bfb44f4aaad38a04ec03f7b5cffcfa8c356"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "5579f0772ebbb073db59b5a9be566d83bf1050a6f90983b7657bb82e3d2f6a96"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "a8ca39be8112aa217ca58e3af054123d2b9a4acc3cba895cafdd7ddf98a61450"
+        },
+        {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c49ff9f25cb742827c8cff9966be3608b894bfa7e957e4115f49a6d82e7a28bf"
+          "sha256": "92accf853f4066e7923eee7de6e062eca020c0231bdc88577b110199a63451d9"
         }
       ],
-      "reason": "Reviewed the final explicit project-reference matrix and regenerated architecture-health index; the three Shared PersistenceModel dependencies and 31 owner-only Presentation test references match the implemented solution graph.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T16:01:07.9233900Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:31.1507741Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -117,13 +137,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "dbcfe9346add5370b6dd8fec081392a7c7172c3246838f936ba31e88a1608269"
+          "sha256": "952110e7401d4d7c93278ccb368f0bdea605c27a1bf3b85243c6f2779f3a624c"
         }
       ],
-      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T15:47:57.4601238Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:31.9258155Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -132,13 +152,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "e35778591e983de75462749dec4e139a829723068c9364eeb18cf43af64066ce"
+          "sha256": "5579f0772ebbb073db59b5a9be566d83bf1050a6f90983b7657bb82e3d2f6a96"
         }
       ],
-      "reason": "Reviewed current architecture, module-map, ownership and scoped-guide text against the final 32 module Presentation projects, one Presentation.Contracts project and the central Version-only kernel.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:45.0155592Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:32.7404767Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -196,17 +216,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c60200a545c13b17b37754e4b78715cfdb1178f590b94c7d56af4ec9f97cda0f"
+          "sha256": "865b212b77525404c71efcc34e72302d6e938e2e43434f999070941c77758d37"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "5579f0772ebbb073db59b5a9be566d83bf1050a6f90983b7657bb82e3d2f6a96"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c49ff9f25cb742827c8cff9966be3608b894bfa7e957e4115f49a6d82e7a28bf"
+          "sha256": "92accf853f4066e7923eee7de6e062eca020c0231bdc88577b110199a63451d9"
         }
       ],
-      "reason": "Reviewed the final explicit project-reference matrix and regenerated architecture-health index; the three Shared PersistenceModel dependencies and 31 owner-only Presentation test references match the implemented solution graph.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T16:01:08.2133585Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:33.4544117Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -215,13 +239,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "75ae2fafba7a7960662c73248313ef2d4f6fb587018cc5ccdff8b2768acdc7ac"
+          "sha256": "6e6a85d33690ae82fdcdcd377f01edd61c44335738d857fe2e109f552378205e"
         }
       ],
-      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T15:47:58.2538394Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:34.6347806Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -468,13 +492,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "73e41b43ccfd909fe42cde58f48df44596ab6048d7deff18974ca2f3cf38111c"
+          "sha256": "97362557b211aaa9e418e3b0afa71b729e0fb32bfb2a098a8a97437b89e57a61"
         }
       ],
-      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:33:17.8867885Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:36.1464778Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -784,13 +808,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "2e2fbcc8ecfbd514bca783910995784b906ce156e4112ae60c873a75c60b3dc5"
+          "sha256": "41d4c6ec2f5c624f060649ce507686ac7d06fb267a71a0778856b6ac7b74f7bf"
+        },
+        {
+          "path": "docs/privacy/PRIVACY_RELEASE_CHECKLIST.md",
+          "sha256": "213ff72a394b0d7f996a7efe940c06ce17c19e47107409e96cbb6ad05e26d0c0"
         }
       ],
-      "reason": "Reviewed the moved request and response sources plus the regenerated sensitive-data index; this physical relocation adds no collection, logging, authorization, retention or external-transfer behavior.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:50.2375375Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:36.8993450Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -829,13 +857,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9612b06326547d67d07a0380300f0616d23e1537efc7ccf48fba740a2e83a0ac"
+          "sha256": "4362e4dd2831457ceac3679cc204b0ab3af699446d9cd811f97a8311911947ba"
         }
       ],
-      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T15:47:59.3041701Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:37.8653279Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -912,13 +940,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e248417a8579f89c623fa065cc3c0e8a156953ac1bd0331bc6330f6102647b0c"
+          "sha256": "317c0bd38eee0e89f9f62945ff10b3567eab353c2b8173424bbb8537a9e7cddb"
         }
       ],
-      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T15:48:00.5037018Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:40.1892766Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -927,17 +955,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9612b06326547d67d07a0380300f0616d23e1537efc7ccf48fba740a2e83a0ac"
+          "sha256": "4362e4dd2831457ceac3679cc204b0ab3af699446d9cd811f97a8311911947ba"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "e248417a8579f89c623fa065cc3c0e8a156953ac1bd0331bc6330f6102647b0c"
+          "sha256": "317c0bd38eee0e89f9f62945ff10b3567eab353c2b8173424bbb8537a9e7cddb"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "41d4c6ec2f5c624f060649ce507686ac7d06fb267a71a0778856b6ac7b74f7bf"
         }
       ],
-      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T15:48:01.1057428Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:41.2648088Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1111,13 +1143,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "dbcfe9346add5370b6dd8fec081392a7c7172c3246838f936ba31e88a1608269"
+          "sha256": "952110e7401d4d7c93278ccb368f0bdea605c27a1bf3b85243c6f2779f3a624c"
         }
       ],
-      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T15:47:58.5412891Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:35.3594522Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1171,17 +1203,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "8f36fe10b3591f07d7d4bcef41e92d27f1011fbe32bcbf15f1a00ecbaabd172a"
+          "sha256": "154bf217b3e8db8078881c031adb496faab1ca1235f6cfdc40ea57940a78e37d"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "dbcfe9346add5370b6dd8fec081392a7c7172c3246838f936ba31e88a1608269"
+          "sha256": "952110e7401d4d7c93278ccb368f0bdea605c27a1bf3b85243c6f2779f3a624c"
         }
       ],
-      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T15:47:59.7225522Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:38.6194238Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1190,13 +1222,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "dbcfe9346add5370b6dd8fec081392a7c7172c3246838f936ba31e88a1608269"
+          "sha256": "952110e7401d4d7c93278ccb368f0bdea605c27a1bf3b85243c6f2779f3a624c"
         }
       ],
-      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
+      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T15:48:00.1036494Z"
+      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
+      "reviewedAtUtc": "2026-09-05T20:35:39.4450215Z"
     }
   ]
 }

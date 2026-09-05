@@ -1,22 +1,15 @@
 using Asp.Versioning;
-using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using System.Reflection;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -30,10 +23,8 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         services.AddPresentationApi();
         using ServiceProvider provider = services.BuildServiceProvider();
 
-        IEmailVerificationNotifier emailVerificationNotifier = provider.GetRequiredService<IEmailVerificationNotifier>();
         IUserIdProvider userIdProvider = provider.GetRequiredService<IUserIdProvider>();
 
-        Assert.IsType<EmailVerificationNotifier>(emailVerificationNotifier);
         Assert.IsType<UserIdProvider>(userIdProvider);
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IActionDescriptorCollectionProvider));
     }
@@ -128,71 +119,17 @@ public sealed class PresentationServiceCollectionExtensionsTests {
     }
 
     [Fact]
-    public void MapPresentationApi_MapsHubsAndClosesConnectionsWhenAuthenticationExpires() {
+    public void MapPresentationApi_ReturnsTheApplicationForComposition() {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions {
             EnvironmentName = Environments.Development,
         });
-        builder.Services.AddCors(options => options.AddPolicy("TestCors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
-        builder.Services.AddAuthorization();
-        builder.Services.AddDistributedMemoryCache();
-        builder.Services.AddSingleton<ISender>(Substitute.For<ISender>());
-        builder.Services.AddScoped<IFastingTelemetryEventRepository, StubFastingTelemetryEventRepository>();
-        builder.Services.AddScoped<IUnitOfWork, StubUnitOfWork>();
-        builder.Services.AddSingleton<TimeProvider, StubDateTimeProvider>();
         builder.Services.AddPresentationApi();
 
         WebApplication app = builder.Build();
 
-        app.MapPresentationApi("TestCors");
+        WebApplication mapped = app.MapPresentationApi();
 
-        RouteEndpoint[] endpoints = [.. ((IEndpointRouteBuilder)app).DataSources
-            .SelectMany(dataSource => dataSource.Endpoints)
-            .OfType<RouteEndpoint>()];
-
-        Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/email-verification", StringComparison.Ordinal));
-        Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/email-verification/negotiate", StringComparison.Ordinal));
-        Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/notifications", StringComparison.Ordinal));
-
-        MethodInfo configureLifetime = typeof(PresentationApplicationBuilderExtensions).GetMethod(
-            "ConfigureHubAuthenticationLifetime",
-            BindingFlags.NonPublic | BindingFlags.Static)
-            ?? throw new InvalidOperationException("Hub authentication lifetime configuration was not found.");
-        var options = new HttpConnectionDispatcherOptions();
-
-        configureLifetime.Invoke(null, [options]);
-
-        Assert.True(options.CloseOnAuthenticationExpiration);
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class StubUnitOfWork : IUnitOfWork {
-        public bool HasPendingChanges => false;
-
-        public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
-            Task.CompletedTask;
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class StubFastingTelemetryEventRepository : IFastingTelemetryEventRepository {
-        public Task AddAsync(FastingTelemetryEventRecord record, CancellationToken cancellationToken = default) =>
-            Task.CompletedTask;
-
-        public Task<int> DeleteOlderThanAsync(
-            DateTime olderThanUtc,
-            int batchSize,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(0);
-
-        public Task<IReadOnlyList<FastingTelemetryEventRecord>> GetRangeAsync(
-            DateTime fromUtc,
-            DateTime toUtc,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<FastingTelemetryEventRecord>>([]);
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider : TimeProvider {
-        public override DateTimeOffset GetUtcNow() => new(new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        Assert.Same(app, mapped);
     }
 
     private static ApiBehaviorOptions ResolveApiBehaviorOptions(out ServiceProvider provider) {

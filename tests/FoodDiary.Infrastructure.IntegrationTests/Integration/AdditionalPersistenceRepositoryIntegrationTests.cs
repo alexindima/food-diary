@@ -458,7 +458,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         context.Users.Add(target);
         await context.SaveChangesAsync();
 
-        var subscriptionRepository = new BillingSubscriptionRepository(context);
+        var subscriptionRepository = new BillingSubscriptionRepository(context.BillingSubscriptions);
         BillingSubscription subscription = CreateActiveSubscription(target);
         await subscriptionRepository.AddAsync(subscription);
         await context.SaveChangesAsync();
@@ -475,7 +475,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.Equal(BillingProviderNames.Stripe, overviewValue.Provider);
         Assert.Equal("active", overviewValue.Status);
 
-        var paymentRepository = new BillingPaymentRepository(context);
+        var paymentRepository = new BillingPaymentRepository(context.BillingPayments);
         BillingPayment payment = await paymentRepository.AddAsync(CreatePayment(target, subscription.Id));
         await context.SaveChangesAsync();
 
@@ -497,7 +497,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             providerMetadataJson: null);
         await paymentRepository.UpdateAsync(payment);
 
-        var webhookRepository = new BillingWebhookEventRepository(context);
+        var webhookRepository = new BillingWebhookEventRepository(context.BillingWebhookEvents);
         BillingWebhookEvent webhookEvent = await webhookRepository.AddAsync(BillingWebhookEvent.CreateReceived(
             BillingProviderNames.Stripe,
             $"event-{Guid.NewGuid():N}",
@@ -719,7 +719,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
     [RequiresDockerFact]
     public async Task EmailTemplateRepository_GetsOrdersAndUpsertsTemplates() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var repository = new EmailTemplateRepository(context);
+        var repository = new EmailTemplateRepository(context.EmailTemplates);
 
         await repository.UpsertAsync("welcome", "en", "Welcome", "<p>Hello</p>", "Hello", isActive: true);
         await context.SaveChangesAsync();

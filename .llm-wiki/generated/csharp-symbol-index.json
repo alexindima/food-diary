@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3566,
-    "symbols": 3508,
+    "sourceFiles": 3570,
+    "symbols": 3510,
     "interfaceImplementationLinks": 235,
-    "dependencyInjectionRegistrations": 151,
+    "dependencyInjectionRegistrations": 150,
     "kinds": {
-      "class": 1831,
+      "class": 1833,
       "enum": 62,
       "interface": 425,
       "record": 1070,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1371,
+      "Other": 1373,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 30,
@@ -818,158 +818,11 @@
       "line": 10
     },
     {
-      "name": "BillingPublicConfigProvider",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Billing/BillingPublicConfigProvider.cs",
-      "line": 8
-    },
-    {
-      "name": "BillingUrlValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "FoodDiary.Integrations/Billing/BillingUrlValidator.cs",
-      "line": 2
-    },
-    {
-      "name": "ConfigurableBillingProviderGatewayAccessor",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Billing/ConfigurableBillingProviderGatewayAccessor.cs",
-      "line": 6
-    },
-    {
-      "name": "PaddleApiClient",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Billing/PaddleApiClient.cs",
-      "line": 13
-    },
-    {
-      "name": "PaddleBillingGateway",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 15
-    },
-    {
-      "name": "PaddleNotificationRecoveryResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Billing/PaddleNotificationRecoveryResult.cs",
-      "line": 2
-    },
-    {
-      "name": "PaddleNotificationRecoveryService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Integrations/Billing/PaddleNotificationRecoveryService.cs",
-      "line": 10
-    },
-    {
-      "name": "PaddlePage",
-      "kind": "record",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Billing/PaddlePage.cs",
-      "line": 2
-    },
-    {
-      "name": "StripeBillingGateway",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Billing/StripeBillingGateway.cs",
-      "line": 18
-    },
-    {
-      "name": "YooKassaApiClient",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Billing/YooKassaApiClient.cs",
-      "line": 13
-    },
-    {
-      "name": "YooKassaBillingGateway",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 13
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/DependencyInjection.Billing.cs",
-      "line": 9
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/DependencyInjection.cs",
-      "line": 5
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/DependencyInjection.Mail.cs",
-      "line": 13
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/DependencyInjection.Options.cs",
-      "line": 7
-    },
-    {
-      "name": "BillingOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Integrations/Options/BillingOptions.cs",
-      "line": 4
-    },
-    {
-      "name": "PaddleOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "StripeOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "YooKassaOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxClientAdminMailInboxReader",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Services/MailInbox/MailInboxClientAdminMailInboxReader.cs",
-      "line": 7
-    },
-    {
-      "name": "RelayEmailTransport",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Integrations/Services/RelayEmailTransport.cs",
-      "line": 6
-    },
-    {
       "name": "Program",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 69
+      "line": 73
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -1361,14 +1214,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationApplicationBuilderExtensions.cs",
-      "line": 6
+      "line": 4
     },
     {
       "name": "PresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 15
+      "line": 12
     },
     {
       "name": "ResultExtensions",
@@ -1474,41 +1327,6 @@
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Filters/TelemetryActionFilter.cs",
       "line": 10
-    },
-    {
-      "name": "EmailVerificationHub",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Presentation.Api/Hubs/EmailVerificationHub.cs",
-      "line": 7
-    },
-    {
-      "name": "EmailVerificationHubMethods",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Presentation.Api/Hubs/EmailVerificationHubMethods.cs",
-      "line": 2
-    },
-    {
-      "name": "NotificationHub",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Presentation.Api/Hubs/NotificationHub.cs",
-      "line": 7
-    },
-    {
-      "name": "NotificationHubMethods",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Presentation.Api/Hubs/NotificationHubMethods.cs",
-      "line": 2
-    },
-    {
-      "name": "TelegramBotAuthOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "FoodDiary.Presentation.Api/Options/TelegramBotAuthOptions.cs",
-      "line": 2
     },
     {
       "name": "AllowedQueryValuesAttribute",
@@ -1623,46 +1441,11 @@
       "line": 4
     },
     {
-      "name": "RefreshTokenCookieService",
-      "kind": "class",
-      "role": "Service",
-      "path": "FoodDiary.Presentation.Api/Security/RefreshTokenCookieService.cs",
-      "line": 4
-    },
-    {
-      "name": "RequireTelegramBotSecretAttribute",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Presentation.Api/Security/RequireTelegramBotSecretAttribute.cs",
-      "line": 4
-    },
-    {
       "name": "SecretComparison",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Security/SecretComparison.cs",
       "line": 5
-    },
-    {
-      "name": "TelegramBotSecretAuthorizationFilter",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Presentation.Api/Security/TelegramBotSecretAuthorizationFilter.cs",
-      "line": 12
-    },
-    {
-      "name": "EmailVerificationNotifier",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Presentation.Api/Services/EmailVerificationNotifier.cs",
-      "line": 6
-    },
-    {
-      "name": "NotificationPusher",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Presentation.Api/Services/NotificationPusher.cs",
-      "line": 6
     },
     {
       "name": "UserIdProvider",
@@ -1781,7 +1564,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 45
+      "line": 46
     },
     {
       "name": "ApiTelemetry",
@@ -4955,6 +4738,20 @@
       "line": 6
     },
     {
+      "name": "AdminMailInboxIntegration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Integrations/AdminMailInboxIntegration.cs",
+      "line": 9
+    },
+    {
+      "name": "MailInboxClientAdminMailInboxReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/MailInboxClientAdminMailInboxReader.cs",
+      "line": 7
+    },
+    {
       "name": "AdminPersistenceModelRegistration",
       "kind": "class",
       "role": "Other",
@@ -6751,28 +6548,28 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "BillingPaymentRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "BillingSubscriptionRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "BillingWebhookEventRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "EfBillingTransactionRunner",
@@ -6787,6 +6584,125 @@
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs",
       "line": 7
+    },
+    {
+      "name": "BillingPublicConfigProvider",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/BillingPublicConfigProvider.cs",
+      "line": 8
+    },
+    {
+      "name": "BillingUrlValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/BillingUrlValidator.cs",
+      "line": 2
+    },
+    {
+      "name": "ConfigurableBillingProviderGatewayAccessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/ConfigurableBillingProviderGatewayAccessor.cs",
+      "line": 6
+    },
+    {
+      "name": "PaddleApiClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs",
+      "line": 13
+    },
+    {
+      "name": "PaddleBillingGateway",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
+      "line": 15
+    },
+    {
+      "name": "PaddleNotificationRecoveryResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryResult.cs",
+      "line": 2
+    },
+    {
+      "name": "PaddleNotificationRecoveryService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryService.cs",
+      "line": 10
+    },
+    {
+      "name": "PaddlePage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddlePage.cs",
+      "line": 2
+    },
+    {
+      "name": "StripeBillingGateway",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/StripeBillingGateway.cs",
+      "line": 18
+    },
+    {
+      "name": "YooKassaApiClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaApiClient.cs",
+      "line": 13
+    },
+    {
+      "name": "YooKassaBillingGateway",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
+      "line": 13
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
+      "line": 10
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Options.cs",
+      "line": 7
+    },
+    {
+      "name": "BillingOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/BillingOptions.cs",
+      "line": 4
+    },
+    {
+      "name": "PaddleOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "StripeOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "YooKassaOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/YooKassaOptions.cs",
+      "line": 2
     },
     {
       "name": "BillingPresentationServiceCollectionExtensions",
@@ -14920,7 +14836,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "IdentityProviderRegistration",
@@ -15063,11 +14979,18 @@
       "line": 4
     },
     {
+      "name": "IdentityPresentationApplicationBuilderExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationApplicationBuilderExtensions.cs",
+      "line": 6
+    },
+    {
       "name": "IdentityPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
-      "line": 6
+      "line": 9
     },
     {
       "name": "AdminSsoController",
@@ -15264,6 +15187,55 @@
       "role": "Other",
       "path": "Modules/Identity/Presentation/Filters/AuthenticationCookieResultFilter.cs",
       "line": 7
+    },
+    {
+      "name": "EmailVerificationHub",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Hubs/EmailVerificationHub.cs",
+      "line": 7
+    },
+    {
+      "name": "EmailVerificationHubMethods",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Hubs/EmailVerificationHubMethods.cs",
+      "line": 2
+    },
+    {
+      "name": "TelegramBotAuthOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Identity/Presentation/Options/TelegramBotAuthOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "RefreshTokenCookieService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Identity/Presentation/Security/RefreshTokenCookieService.cs",
+      "line": 4
+    },
+    {
+      "name": "RequireTelegramBotSecretAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Security/RequireTelegramBotSecretAttribute.cs",
+      "line": 4
+    },
+    {
+      "name": "TelegramBotSecretAuthorizationFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Security/TelegramBotSecretAuthorizationFilter.cs",
+      "line": 12
+    },
+    {
+      "name": "EmailVerificationNotifier",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Identity/Presentation/Services/EmailVerificationNotifier.cs",
+      "line": 6
     },
     {
       "name": "DeleteImageAssetResult",
@@ -18623,7 +18595,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Infrastructure/ModuleRegistration.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "WebPushOptions",
@@ -18717,11 +18689,18 @@
       "line": 5
     },
     {
+      "name": "NotificationsPresentationApplicationBuilderExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Presentation/Extensions/NotificationsPresentationApplicationBuilderExtensions.cs",
+      "line": 6
+    },
+    {
       "name": "NotificationsPresentationServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Notifications/Presentation/Extensions/NotificationsPresentationServiceCollectionExtensions.cs",
-      "line": 4
+      "line": 6
     },
     {
       "name": "NotificationHttpMappings",
@@ -18820,6 +18799,27 @@
       "role": "Response",
       "path": "Modules/Notifications/Presentation/Features/Notifications/Responses/WebPushSubscriptionHttpResponse.cs",
       "line": 2
+    },
+    {
+      "name": "NotificationHub",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Presentation/Hubs/NotificationHub.cs",
+      "line": 7
+    },
+    {
+      "name": "NotificationHubMethods",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Presentation/Hubs/NotificationHubMethods.cs",
+      "line": 2
+    },
+    {
+      "name": "NotificationPusher",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Notifications/Presentation/Services/NotificationPusher.cs",
+      "line": 6
     },
     {
       "name": "IOpenFoodFactsProductCacheReadRepository",
@@ -24366,6 +24366,20 @@
       "line": 2
     },
     {
+      "name": "MailRelayDependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.MailRelay/MailRelayDependencyInjection.cs",
+      "line": 9
+    },
+    {
+      "name": "RelayEmailTransport",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.MailRelay/RelayEmailTransport.cs",
+      "line": 6
+    },
+    {
       "name": "EmailOutboxMessageConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -24833,7 +24847,7 @@
       "interface": "IBillingPublicConfigProvider",
       "interfacePath": "Modules/Billing/Application/Abstractions/Common/IBillingPublicConfigProvider.cs",
       "implementation": "BillingPublicConfigProvider",
-      "implementationPath": "FoodDiary.Integrations/Billing/BillingPublicConfigProvider.cs",
+      "implementationPath": "Modules/Billing/Infrastructure/Providers/Billing/BillingPublicConfigProvider.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25190,7 +25204,7 @@
       "interface": "IEmailVerificationNotifier",
       "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
       "implementation": "EmailVerificationNotifier",
-      "implementationPath": "FoodDiary.Presentation.Api/Services/EmailVerificationNotifier.cs",
+      "implementationPath": "Modules/Identity/Presentation/Services/EmailVerificationNotifier.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25624,7 +25638,7 @@
       "interface": "INotificationPusher",
       "interfacePath": "Modules/Notifications/Application/Abstractions/Common/INotificationPusher.cs",
       "implementation": "NotificationPusher",
-      "implementationPath": "FoodDiary.Presentation.Api/Services/NotificationPusher.cs",
+      "implementationPath": "Modules/Notifications/Presentation/Services/NotificationPusher.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26351,39 +26365,11 @@
       "line": 394
     },
     {
-      "service": "IBillingPublicConfigProvider",
-      "implementation": "BillingPublicConfigProvider",
-      "lifetime": "Singleton",
-      "path": "FoodDiary.Integrations/DependencyInjection.Billing.cs",
-      "line": 12
-    },
-    {
-      "service": "IBillingProviderGateway",
-      "implementation": "StripeBillingGateway",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Integrations/DependencyInjection.Billing.cs",
-      "line": 20
-    },
-    {
-      "service": "IBillingProviderGatewayAccessor",
-      "implementation": "ConfigurableBillingProviderGatewayAccessor",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Integrations/DependencyInjection.Billing.cs",
-      "line": 30
-    },
-    {
-      "service": "IAdminMailInboxReader",
-      "implementation": "MailInboxClientAdminMailInboxReader",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Integrations/DependencyInjection.Mail.cs",
-      "line": 42
-    },
-    {
       "service": "IRecurringJobRegistrationVerifier",
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 61
+      "line": 65
     },
     {
       "service": "IEmailVerificationNotifier",
@@ -26418,28 +26404,14 @@
       "implementation": "InMemoryIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 23
+      "line": 19
     },
     {
       "service": "IUserIdProvider",
       "implementation": "UserIdProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 55
-    },
-    {
-      "service": "IEmailVerificationNotifier",
-      "implementation": "EmailVerificationNotifier",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 56
-    },
-    {
-      "service": "INotificationPusher",
-      "implementation": "NotificationPusher",
-      "lifetime": "Scoped",
-      "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 57
+      "line": 50
     },
     {
       "service": "IAuthorizationMiddlewareResultHandler",
@@ -26453,7 +26425,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 172
+      "line": 176
     },
     {
       "service": "IMailInboxReadinessChecker",
@@ -26622,6 +26594,27 @@
       "lifetime": "Scoped",
       "path": "Modules/Billing/Application/DependencyInjection.cs",
       "line": 26
+    },
+    {
+      "service": "IBillingPublicConfigProvider",
+      "implementation": "BillingPublicConfigProvider",
+      "lifetime": "Singleton",
+      "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
+      "line": 16
+    },
+    {
+      "service": "IBillingProviderGateway",
+      "implementation": "StripeBillingGateway",
+      "lifetime": "Scoped",
+      "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
+      "line": 24
+    },
+    {
+      "service": "IBillingProviderGatewayAccessor",
+      "implementation": "ConfigurableBillingProviderGatewayAccessor",
+      "lifetime": "Scoped",
+      "path": "Modules/Billing/Infrastructure/Providers/DependencyInjection.Billing.cs",
+      "line": 34
     },
     {
       "service": "IWeightEntryReadService",
@@ -26939,6 +26932,13 @@
       "line": 25
     },
     {
+      "service": "IEmailVerificationNotifier",
+      "implementation": "EmailVerificationNotifier",
+      "lifetime": "Scoped",
+      "path": "Modules/Identity/Presentation/Extensions/IdentityPresentationServiceCollectionExtensions.cs",
+      "line": 15
+    },
+    {
       "service": "IImageAssetAccessService",
       "implementation": "ImageAssetAccessService",
       "lifetime": "Scoped",
@@ -27126,6 +27126,13 @@
       "lifetime": "Scoped",
       "path": "Modules/Notifications/Application/DependencyInjection.cs",
       "line": 29
+    },
+    {
+      "service": "INotificationPusher",
+      "implementation": "NotificationPusher",
+      "lifetime": "Scoped",
+      "path": "Modules/Notifications/Presentation/Extensions/NotificationsPresentationServiceCollectionExtensions.cs",
+      "line": 9
     },
     {
       "service": "IOpenFoodFactsCachedProductSearch",

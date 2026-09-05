@@ -1541,34 +1541,10 @@
           "Microsoft.Extensions.Hosting": "[10.0.11, )"
         }
       },
-      "fooddiary.integrations": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Email.Contracts": "[1.0.0, )",
-          "FoodDiary.Integrations.Http": "[1.0.0, )",
-          "FoodDiary.MailInbox.Client": "[1.0.0, )",
-          "FoodDiary.MailRelay.Client": "[1.0.0, )",
-          "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
-          "Microsoft.Extensions.Configuration": "[10.0.11, )",
-          "Microsoft.Extensions.Http": "[10.0.11, )",
-          "Microsoft.Extensions.Http.Resilience": "[10.9.0, )",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
-          "Stripe.net": "[52.3.0, )"
-        }
-      },
       "fooddiary.integrations.http": {
         "type": "Project"
       },
       "fooddiary.mailinbox.client": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Extensions.Http": "[10.0.11, )",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )"
-        }
-      },
-      "fooddiary.mailrelay.client": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Http": "[10.0.11, )",
@@ -1602,11 +1578,14 @@
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Authentication.Contracts": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.MailInbox.Client": "[1.0.0, )",
           "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Admin.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
+          "Microsoft.Extensions.Configuration": "[10.0.11, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )"
         }
       },
       "fooddiary.modules.admin.persistencemodel": {
@@ -1679,13 +1658,19 @@
         "dependencies": {
           "FoodDiary.Application.Billing": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Integrations.Http": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Billing.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
+          "Microsoft.Extensions.Configuration": "[10.0.11, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
+          "Microsoft.Extensions.Http": "[10.0.11, )",
+          "Microsoft.Extensions.Http.Resilience": "[10.9.0, )",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.11, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )",
+          "Stripe.net": "[52.3.0, )"
         }
       },
       "fooddiary.modules.billing.persistencemodel": {

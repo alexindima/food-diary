@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Notifications;
 
-public sealed class NotificationRepository(FoodDiaryDbContext context, TimeProvider timeProvider) : INotificationRepository {
+public sealed class NotificationRepository(DbSet<Notification> notifications, TimeProvider timeProvider) : INotificationRepository {
     public async Task<IReadOnlyList<Notification>> GetByUserAsync(
         UserId userId, int limit = 50, CancellationToken cancellationToken = default) {
-        return await context.Notifications
+        return await notifications
             .AsNoTracking()
             .Where(n => n.UserId == userId)
             .OrderByDescending(n => n.CreatedOnUtc)
@@ -21,7 +21,7 @@ public sealed class NotificationRepository(FoodDiaryDbContext context, TimeProvi
         UserId userId,
         int limit = 50,
         CancellationToken cancellationToken = default) {
-        return await context.Notifications
+        return await notifications
             .AsNoTracking()
             .Where(n => n.UserId == userId)
             .OrderByDescending(n => n.CreatedOnUtc)
@@ -38,7 +38,7 @@ public sealed class NotificationRepository(FoodDiaryDbContext context, TimeProvi
 
     public async Task<Notification?> GetByIdAsync(
         NotificationId id, bool asTracking = false, CancellationToken cancellationToken = default) {
-        IQueryable<Notification> query = context.Notifications;
+        IQueryable<Notification> query = notifications;
 
         if (!asTracking) {
             query = query.AsNoTracking();
@@ -48,12 +48,12 @@ public sealed class NotificationRepository(FoodDiaryDbContext context, TimeProvi
     }
 
     public Task<Notification> AddAsync(Notification notification, CancellationToken cancellationToken = default) {
-        context.Notifications.Add(notification);
+        notifications.Add(notification);
         return Task.FromResult(notification);
     }
 
     public Task UpdateAsync(Notification notification, CancellationToken cancellationToken = default) {
-        context.Notifications.Update(notification);
+        notifications.Update(notification);
         return Task.CompletedTask;
     }
 
@@ -62,7 +62,7 @@ public sealed class NotificationRepository(FoodDiaryDbContext context, TimeProvi
         string type,
         string referenceId,
         CancellationToken cancellationToken = default) {
-        return await context.Notifications
+        return await notifications
             .AsNoTracking()
             .AnyAsync(
                 n => n.UserId == userId &&
@@ -72,19 +72,19 @@ public sealed class NotificationRepository(FoodDiaryDbContext context, TimeProvi
     }
 
     public async Task<int> GetUnreadCountAsync(UserId userId, CancellationToken cancellationToken = default) {
-        return await context.Notifications
+        return await notifications
             .CountAsync(n => n.UserId == userId && !n.IsRead, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken cancellationToken = default) {
-        return await context.Notifications
+        return await notifications
             .CountAsync(n => n.UserId == userId && !n.IsRead && n.Type == type, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task MarkAllReadAsync(UserId userId, CancellationToken cancellationToken = default) {
         DateTime now = timeProvider.GetUtcNow().UtcDateTime;
 
-        await context.Notifications
+        await notifications
             .Where(n => n.UserId == userId && !n.IsRead)
             .ExecuteUpdateAsync(s => s
                 .SetProperty(n => n.IsRead, valueExpression: true)
@@ -109,7 +109,7 @@ public sealed class NotificationRepository(FoodDiaryDbContext context, TimeProvi
             .Where(static type => !string.IsNullOrWhiteSpace(type))
             .Distinct(StringComparer.Ordinal)];
 
-        List<Notification> candidates = await context.Notifications
+        List<Notification> candidates = await notifications
             .Where(n =>
                 (Enumerable.Contains(transientTypeList, n.Type) &&
                  ((n.IsRead && (n.ReadAtUtc ?? n.CreatedOnUtc) < transientReadOlderThanUtc) ||
@@ -125,7 +125,7 @@ public sealed class NotificationRepository(FoodDiaryDbContext context, TimeProvi
             return 0;
         }
 
-        context.Notifications.RemoveRange(candidates);
+        notifications.RemoveRange(candidates);
         return candidates.Count;
     }
 }

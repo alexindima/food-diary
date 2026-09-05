@@ -66,6 +66,9 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductSearchSuggestionTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.ReadQueryTests.cs`
+- [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/CentralRelocated/ProductsFeatureTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductSearchSuggestionTests.cs`
 - [behavioral-or-text-match] `Modules/Products/tests/FoodDiary.Modules.Products.Application.Tests/Products/ProductUsdaLinkServiceTests.cs`
@@ -86,9 +89,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Modules/Products/tests/FoodDiary.Modules.Products.Infrastructure.IntegrationTests/Integration/ProductRepositoryIntegrationTests.cs`
 - [presentation] `Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/ProductHttpMappingsTests.cs`
 - [presentation] `Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/ProductSuggestionsControllerTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ProductsModuleExtractionTests.cs`
 
 ## Working Rule

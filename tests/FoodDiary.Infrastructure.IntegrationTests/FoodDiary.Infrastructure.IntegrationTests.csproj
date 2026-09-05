@@ -50,7 +50,6 @@
     <ProjectReference Include="../../Modules/Wearables/Application/Abstractions/FoodDiary.Modules.Wearables.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Initializer\FoodDiary.Initializer.csproj" />
-    <ProjectReference Include="..\..\FoodDiary.Integrations\FoodDiary.Integrations.csproj" />
     <ProjectReference Include="..\..\Modules\Billing\Infrastructure\FoodDiary.Modules.Billing.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\BodyMetrics\Infrastructure\FoodDiary.Modules.BodyMetrics.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\ContentReports\Infrastructure\FoodDiary.Modules.ContentReports.Infrastructure.csproj" />

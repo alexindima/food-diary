@@ -12,7 +12,7 @@
     "health": 660,
     "financial": 120,
     "privateContent": 300,
-    "boundaryFiles": 166,
+    "boundaryFiles": 161,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 0
   },
@@ -61,59 +61,10 @@
     },
     {
       "category": "credential",
-      "name": "ApiKey",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
-      "line": 10
-    },
-    {
-      "category": "credential",
-      "name": "ClientSideToken",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
-      "line": 12
-    },
-    {
-      "category": "credential",
-      "name": "WebhookSecretKey",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
-      "line": 13
-    },
-    {
-      "category": "credential",
-      "name": "SecretKey",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
-      "line": 6
-    },
-    {
-      "category": "credential",
-      "name": "WebhookSecret",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
-      "line": 8
-    },
-    {
-      "category": "credential",
-      "name": "SecretKey",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
-      "line": 7
-    },
-    {
-      "category": "credential",
       "name": "OwnerToken",
       "type": "string?",
       "path": "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
       "line": 164
-    },
-    {
-      "category": "credential",
-      "name": "ApiSecret",
-      "type": "string",
-      "path": "FoodDiary.Presentation.Api/Options/TelegramBotAuthOptions.cs",
-      "line": 6
     },
     {
       "category": "credential",
@@ -425,6 +376,48 @@
     },
     {
       "category": "credential",
+      "name": "ApiKey",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
+      "line": 10
+    },
+    {
+      "category": "credential",
+      "name": "ClientSideToken",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
+      "line": 12
+    },
+    {
+      "category": "credential",
+      "name": "WebhookSecretKey",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
+      "line": 13
+    },
+    {
+      "category": "credential",
+      "name": "SecretKey",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
+      "line": 6
+    },
+    {
+      "category": "credential",
+      "name": "WebhookSecret",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
+      "line": 8
+    },
+    {
+      "category": "credential",
+      "name": "SecretKey",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/YooKassaOptions.cs",
+      "line": 7
+    },
+    {
+      "category": "credential",
       "name": "PaddleClientToken",
       "type": "string?",
       "path": "Modules/Billing/Presentation/Features/Billing/Responses/BillingOverviewHttpResponse.cs",
@@ -716,6 +709,13 @@
       "type": "string",
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/ExchangeImpersonationHttpResponse.cs",
       "line": 3
+    },
+    {
+      "category": "credential",
+      "name": "ApiSecret",
+      "type": "string",
+      "path": "Modules/Identity/Presentation/Options/TelegramBotAuthOptions.cs",
+      "line": 6
     },
     {
       "category": "credential",
@@ -1037,160 +1037,6 @@
       "name": "PasswordResetPath",
       "type": "string",
       "path": "Shared/FoodDiary.Email.Contracts/Email/Common/EmailOptions.cs",
-      "line": 11
-    },
-    {
-      "category": "financial",
-      "name": "CustomerId",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 767
-    },
-    {
-      "category": "financial",
-      "name": "Checkout",
-      "type": "TransactionCheckoutRequest",
-      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 770
-    },
-    {
-      "category": "financial",
-      "name": "PriceId",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 773
-    },
-    {
-      "category": "financial",
-      "name": "Checkout",
-      "type": "TransactionCheckoutResponse?",
-      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 781
-    },
-    {
-      "category": "financial",
-      "name": "Price",
-      "type": "TransactionPriceResponse?",
-      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 788
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "AmountRequest",
-      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 294
-    },
-    {
-      "category": "financial",
-      "name": "SavePaymentMethod",
-      "type": "bool",
-      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 297
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "AmountRequest",
-      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 302
-    },
-    {
-      "category": "financial",
-      "name": "PaymentMethodId",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 304
-    },
-    {
-      "category": "financial",
-      "name": "Currency",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 310
-    },
-    {
-      "category": "financial",
-      "name": "Amount",
-      "type": "AmountResponse?",
-      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 324
-    },
-    {
-      "category": "financial",
-      "name": "PaymentMethod",
-      "type": "PaymentMethodResponse?",
-      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 326
-    },
-    {
-      "category": "financial",
-      "name": "Currency",
-      "type": "string?",
-      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 333
-    },
-    {
-      "category": "financial",
-      "name": "CheckoutEnabled",
-      "type": "bool",
-      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
-      "line": 9
-    },
-    {
-      "category": "financial",
-      "name": "PremiumMonthlyPriceId",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
-      "line": 15
-    },
-    {
-      "category": "financial",
-      "name": "PremiumYearlyPriceId",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
-      "line": 16
-    },
-    {
-      "category": "financial",
-      "name": "CheckoutUrl",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
-      "line": 17
-    },
-    {
-      "category": "financial",
-      "name": "PremiumMonthlyPriceId",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
-      "line": 9
-    },
-    {
-      "category": "financial",
-      "name": "PremiumYearlyPriceId",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
-      "line": 10
-    },
-    {
-      "category": "financial",
-      "name": "PremiumMonthlyAmount",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
-      "line": 9
-    },
-    {
-      "category": "financial",
-      "name": "PremiumYearlyAmount",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
-      "line": 10
-    },
-    {
-      "category": "financial",
-      "name": "Currency",
-      "type": "string",
-      "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
       "line": 11
     },
     {
@@ -1815,6 +1661,160 @@
       "type": "bool",
       "path": "Modules/Billing/Domain/Entities/Billing/BillingSubscription.cs",
       "line": 34
+    },
+    {
+      "category": "financial",
+      "name": "CustomerId",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
+      "line": 767
+    },
+    {
+      "category": "financial",
+      "name": "Checkout",
+      "type": "TransactionCheckoutRequest",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
+      "line": 770
+    },
+    {
+      "category": "financial",
+      "name": "PriceId",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
+      "line": 773
+    },
+    {
+      "category": "financial",
+      "name": "Checkout",
+      "type": "TransactionCheckoutResponse?",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
+      "line": 781
+    },
+    {
+      "category": "financial",
+      "name": "Price",
+      "type": "TransactionPriceResponse?",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
+      "line": 788
+    },
+    {
+      "category": "financial",
+      "name": "Amount",
+      "type": "AmountRequest",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
+      "line": 294
+    },
+    {
+      "category": "financial",
+      "name": "SavePaymentMethod",
+      "type": "bool",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
+      "line": 297
+    },
+    {
+      "category": "financial",
+      "name": "Amount",
+      "type": "AmountRequest",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
+      "line": 302
+    },
+    {
+      "category": "financial",
+      "name": "PaymentMethodId",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
+      "line": 304
+    },
+    {
+      "category": "financial",
+      "name": "Currency",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
+      "line": 310
+    },
+    {
+      "category": "financial",
+      "name": "Amount",
+      "type": "AmountResponse?",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
+      "line": 324
+    },
+    {
+      "category": "financial",
+      "name": "PaymentMethod",
+      "type": "PaymentMethodResponse?",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
+      "line": 326
+    },
+    {
+      "category": "financial",
+      "name": "Currency",
+      "type": "string?",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/YooKassaBillingGateway.cs",
+      "line": 333
+    },
+    {
+      "category": "financial",
+      "name": "CheckoutEnabled",
+      "type": "bool",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
+      "line": 9
+    },
+    {
+      "category": "financial",
+      "name": "PremiumMonthlyPriceId",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
+      "line": 15
+    },
+    {
+      "category": "financial",
+      "name": "PremiumYearlyPriceId",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
+      "line": 16
+    },
+    {
+      "category": "financial",
+      "name": "CheckoutUrl",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/PaddleOptions.cs",
+      "line": 17
+    },
+    {
+      "category": "financial",
+      "name": "PremiumMonthlyPriceId",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
+      "line": 9
+    },
+    {
+      "category": "financial",
+      "name": "PremiumYearlyPriceId",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/StripeOptions.cs",
+      "line": 10
+    },
+    {
+      "category": "financial",
+      "name": "PremiumMonthlyAmount",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/YooKassaOptions.cs",
+      "line": 9
+    },
+    {
+      "category": "financial",
+      "name": "PremiumYearlyAmount",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/YooKassaOptions.cs",
+      "line": 10
+    },
+    {
+      "category": "financial",
+      "name": "Currency",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Options/YooKassaOptions.cs",
+      "line": 11
     },
     {
       "category": "financial",
@@ -6510,13 +6510,6 @@
       "category": "identity",
       "name": "Email",
       "type": "string",
-      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 757
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
       "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
       "line": 5
     },
@@ -6918,6 +6911,13 @@
       "type": "string",
       "path": "Modules/Billing/Application/Abstractions/Models/BillingCheckoutSessionRequestModel.cs",
       "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Modules/Billing/Infrastructure/Providers/Billing/PaddleBillingGateway.cs",
+      "line": 757
     },
     {
       "category": "identity",
@@ -9680,53 +9680,7 @@
   ],
   "boundaryFiles": [
     {
-      "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "categories": [
-        "financial",
-        "identity"
-      ],
-      "fieldCount": 6
-    },
-    {
-      "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 8
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/PaddleOptions.cs",
-      "categories": [
-        "credential",
-        "financial"
-      ],
-      "fieldCount": 7
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/StripeOptions.cs",
-      "categories": [
-        "credential",
-        "financial"
-      ],
-      "fieldCount": 4
-    },
-    {
-      "path": "FoodDiary.Integrations/Options/YooKassaOptions.cs",
-      "categories": [
-        "credential",
-        "financial"
-      ],
-      "fieldCount": 4
-    },
-    {
       "path": "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "FoodDiary.Presentation.Api/Options/TelegramBotAuthOptions.cs",
       "categories": [
         "credential"
       ],
@@ -10548,6 +10502,13 @@
     },
     {
       "path": "Modules/Identity/Presentation/Features/Auth/Responses/ExchangeImpersonationHttpResponse.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Identity/Presentation/Options/TelegramBotAuthOptions.cs",
       "categories": [
         "credential"
       ],

@@ -1114,6 +1114,13 @@
       "fooddiary.email.contracts": {
         "type": "Project"
       },
+      "fooddiary.email.mailrelay": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Email.Contracts": "[1.0.0, )",
+          "FoodDiary.MailRelay.Client": "[1.0.0, )"
+        }
+      },
       "fooddiary.email.persistencemodel": {
         "type": "Project",
         "dependencies": {
@@ -1197,20 +1204,6 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       },
-      "fooddiary.integrations": {
-        "type": "Project",
-        "dependencies": {
-          "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Email.Contracts": "[1.0.0, )",
-          "FoodDiary.Integrations.Http": "[1.0.0, )",
-          "FoodDiary.MailInbox.Client": "[1.0.0, )",
-          "FoodDiary.MailRelay.Client": "[1.0.0, )",
-          "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
-          "Microsoft.Extensions.Http.Resilience": "[10.9.0, )",
-          "Stripe.net": "[52.3.0, )"
-        }
-      },
       "fooddiary.integrations.http": {
         "type": "Project"
       },
@@ -1244,6 +1237,7 @@
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Authentication.Contracts": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.MailInbox.Client": "[1.0.0, )",
           "FoodDiary.Modules.Admin.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Admin.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
@@ -1339,12 +1333,15 @@
         "dependencies": {
           "FoodDiary.Application.Billing": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
+          "FoodDiary.Integrations.Http": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Billing.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Billing.PersistenceModel": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
+          "Microsoft.Extensions.Http.Resilience": "[10.9.0, )",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )",
+          "Stripe.net": "[52.3.0, )"
         }
       },
       "fooddiary.modules.billing.persistencemodel": {
@@ -2865,8 +2862,6 @@
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Export": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
-          "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
-          "FoodDiary.Modules.Notifications.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Results": "[1.0.0, )"
         }
       },

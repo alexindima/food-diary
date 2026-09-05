@@ -9,6 +9,20 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class PersistenceCapabilityTests {
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
+    [Theory]
+    [InlineData("Modules/Billing/Infrastructure/Persistence/BillingPaymentRepository.cs", "DbSet<BillingPayment>")]
+    [InlineData("Modules/Billing/Infrastructure/Persistence/BillingSubscriptionRepository.cs", "DbSet<BillingSubscription>")]
+    [InlineData("Modules/Billing/Infrastructure/Persistence/BillingWebhookEventRepository.cs", "DbSet<BillingWebhookEvent>")]
+    [InlineData("Modules/Identity/Infrastructure/Persistence/Admin/EmailTemplateRepository.cs", "DbSet<EmailTemplate>")]
+    [InlineData("Modules/Notifications/Infrastructure/Persistence/NotificationRepository.cs", "DbSet<Notification>")]
+    [InlineData("Modules/Notifications/Infrastructure/Persistence/WebPushSubscriptionRepository.cs", "DbSet<WebPushSubscription>")]
+    public void SimpleOwnerRepositories_DependsOnReviewedEntitySetInsteadOfSharedContext(string relativePath, string expectedSet) {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(relativePath));
+
+        Assert.Contains(expectedSet, source, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiaryDbContext", source, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void ModuleAdapters_UseOnlyReviewedPersistenceCapabilities() {
         (string Path, string Source)[] sources = [.. ModuleSourceCatalog.InfrastructureFiles()
