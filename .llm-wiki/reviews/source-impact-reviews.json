@@ -865,13 +865,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9c0433d7c181d0500d53489921df687d803ddf31b29a52c07ab369ff72c55cd6"
+          "sha256": "bfc490578d7c3ff826fcd6bd128cec16257b6fb632b7dc721a6aabe00d799529"
         }
       ],
-      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
+      "reason": "Reviewed the generated frontend and quality index deltas for the bounded PushNotificationService behavior change; no API, security, privacy, accessibility, or rendered UI contract changed, and focused plus full frontend verification passed.",
       "baseRef": "HEAD",
-      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
-      "reviewedAtUtc": "2026-08-28T20:48:29.0426282Z"
+      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
+      "reviewedAtUtc": "2026-09-06T05:27:40.3691418Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -963,17 +963,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9c0433d7c181d0500d53489921df687d803ddf31b29a52c07ab369ff72c55cd6"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "d864a0fa7a20868c5fbc97251847dd4d793fa07b473f8be4e2f8aab9d375e657"
+          "sha256": "bfc490578d7c3ff826fcd6bd128cec16257b6fb632b7dc721a6aabe00d799529"
         }
       ],
-      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
+      "reason": "Reviewed the generated frontend and quality index deltas for the bounded PushNotificationService behavior change; no API, security, privacy, accessibility, or rendered UI contract changed, and focused plus full frontend verification passed.",
       "baseRef": "HEAD",
-      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
-      "reviewedAtUtc": "2026-08-28T20:48:30.8045955Z"
+      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
+      "reviewedAtUtc": "2026-09-06T05:27:40.7766492Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1105,18 +1101,14 @@
       "pageSha256": "0dc23a14a2f598d67f9e84a22147eb0c2a64bbbb2ad9105dee754ee053a8abda",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "bbb7aea797dd193cabe0238df6a58f1f0b19fc9bbbb664ca005828623eb21b5e"
-        },
-        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "be7b0529e7cf2e96b4f7bb5abd7a3a91c1baf04cfd6cfab3129d25a7ea207f9f"
+          "sha256": "3c67857506817fedb7281699b6290311a8b7c1eacc63c7ac53d9ccdc92945d25"
         }
       ],
-      "reason": "Module and frontend documentation was checked against the platform-service refactor, fd-tour architecture entry, generated frontend/runtime indexes, and current source layout; existing navigation and ownership guidance remains accurate.",
+      "reason": "Reviewed the generated frontend and quality index deltas for the bounded PushNotificationService behavior change; no API, security, privacy, accessibility, or rendered UI contract changed, and focused plus full frontend verification passed.",
       "baseRef": "HEAD",
-      "gitHead": "59dae42662bdbd9701dd6fdad61dbdc4e72ae5e4",
-      "reviewedAtUtc": "2026-08-28T10:38:12.8623747Z"
+      "gitHead": "26b732de7ff87da3d112829816268a360e3677ec",
+      "reviewedAtUtc": "2026-09-06T05:27:41.1035661Z"
     },
     {
       "pageId": "workflow-verification-planner",
