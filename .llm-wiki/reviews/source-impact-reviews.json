@@ -135,14 +135,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "a1c00cbd487bef19b33e97cdb60d93cf0868f55b096d565975129eb6fb813477"
+          "path": "Directory.Packages.props",
+          "sha256": "b0ceaaf76e951981b516c0adf319dd6ea08422fffbd3e4836be3f2afa0a5de6a"
         }
       ],
-      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
+      "reason": "Integrated reviewed PRs 325-341 on current module layout; synchronized dependency locks, signing action guardrail and moved Admin test fixtures; reviewed existing metrics and push subscription contracts.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:06.4610272Z"
+      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
+      "reviewedAtUtc": "2026-09-06T16:55:19.5952106Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -570,13 +570,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "54e522a1de5fc9a62334cc7823ba6efdb92d5c967c6f9cbae423372755bcf310"
+          "sha256": "ecd5e562475b0e545177da1888ed6b354bad090efda26a8280d14298914efad0"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:28.4940291Z"
+      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
+      "reviewedAtUtc": "2026-09-06T17:13:37.5710154Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -833,13 +833,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "90b5b8bd52e83a57559e379f1e4debe5779ebb518a8121d83406d8e7d820ef12"
+          "sha256": "ceca5cf06bd648af8301b795177311f90f67fdb6759ac6c674f67e7f1c84924f"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:41.9390404Z"
+      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
+      "reviewedAtUtc": "2026-09-06T17:13:38.0076273Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -916,13 +916,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "10db7e971a48d69b0bbe2d1ae2427b17b37188bdabd1cf93523e8496a3c66144"
+          "sha256": "a290ce7b5040426edc1ae6aa555a77cb64d794aa26e7907c49f30feb00d53fe2"
         }
       ],
-      "reason": "Refresh runtime topology before commit after staged-file preflight found stale generated output; owner boundaries and runtime policies remain as reviewed in ADR 0035.",
+      "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T15:19:51.3041087Z"
+      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
+      "reviewedAtUtc": "2026-09-06T17:13:38.2304701Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -931,21 +931,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "90b5b8bd52e83a57559e379f1e4debe5779ebb518a8121d83406d8e7d820ef12"
+          "sha256": "ceca5cf06bd648af8301b795177311f90f67fdb6759ac6c674f67e7f1c84924f"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "10db7e971a48d69b0bbe2d1ae2427b17b37188bdabd1cf93523e8496a3c66144"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "82667e043424a238b2b92fa7bcd82c7bfa3042292106e2080811f7941b812dfe"
+          "sha256": "a290ce7b5040426edc1ae6aa555a77cb64d794aa26e7907c49f30feb00d53fe2"
         }
       ],
-      "reason": "Refresh runtime topology before commit after staged-file preflight found stale generated output; owner boundaries and runtime policies remain as reviewed in ADR 0035.",
+      "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T15:19:51.7962550Z"
+      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
+      "reviewedAtUtc": "2026-09-06T17:13:38.6939035Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1074,13 +1070,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "3363acc71df1dd04904099a9d50d03913540e1582cf62db306a6e05af05ef25d"
+          "sha256": "0f1176f45369b5745fda56dc9bbed13550768b0179ff6dce94803a6395cbe730"
         }
       ],
-      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
+      "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
       "baseRef": "HEAD",
-      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
-      "reviewedAtUtc": "2026-09-05T11:25:52.0947651Z"
+      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
+      "reviewedAtUtc": "2026-09-06T17:13:38.9614420Z"
     },
     {
       "pageId": "workflow-verification-planner",

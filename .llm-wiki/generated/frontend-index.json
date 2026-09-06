@@ -5411,7 +5411,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "ClientTelemetrySessionService",

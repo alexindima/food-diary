@@ -36,14 +36,14 @@ if (@($compact.discovery.routes).Count -gt 6 -or @($compact.discovery.guides).Co
 
 $testOnly = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Add focused coverage for uncovered user administration branches' `
-    -ProposedPath 'tests/FoodDiary.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs' `
+    -ProposedPath 'Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs' `
     -Limit 5 `
     -Format Json | ConvertFrom-Json
 if ($testOnly.profile -ne 'test-only') { throw 'Focused coverage research did not select the test-only profile.' }
 
 $testOnlyFlow = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphResearch.ps1') `
     -Objective 'Add focused coverage for uncovered user administration branches' `
-    -ProposedPath 'tests/FoodDiary.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs' `
+    -ProposedPath 'Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs' `
     -Limit 20 `
     -Format Json | ConvertFrom-Json
 if (@($testOnlyFlow.dependencies).Count -eq 0) { throw 'Graph-backed runtime-flow evidence did not identify code referenced by the focused test.' }
