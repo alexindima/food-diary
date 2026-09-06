@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Models;
@@ -18,7 +19,6 @@ using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Application.Favorites.FavoriteMeals.Services;
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Users;
@@ -274,14 +274,14 @@ public partial class MealsFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FailingNonNullImageAssetAccessService : IImageAssetAccessService {
-        public Task<Result<ImageAsset?>> ResolveOptionalAsync(
+        public Task<Result<ImageAssetReadModel?>> ResolveOptionalAsync(
             ImageAssetId? assetId,
             UserId userId,
             CancellationToken cancellationToken = default) =>
             Task.FromResult(
                 assetId.HasValue
-                    ? Result.Failure<ImageAsset?>(ImageErrors.Forbidden())
-                    : Result.Success<ImageAsset?>(value: null));
+                    ? Result.Failure<ImageAssetReadModel?>(ImageErrors.Forbidden())
+                    : Result.Success<ImageAssetReadModel?>(value: null));
     }
 
     [ExcludeFromCodeCoverage]

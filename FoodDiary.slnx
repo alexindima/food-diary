@@ -190,6 +190,7 @@
     <Project Path="Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj" />
     <Project Path="Modules/Images/Infrastructure/Model/FoodDiary.Modules.Images.PersistenceModel.csproj" />
     <Project Path="Modules/Images/Presentation/FoodDiary.Modules.Images.Presentation.csproj" />
+    <Project Path="Modules/Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
   </Folder>
   <Folder Name="/Modules/Images/tests/">
     <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/FoodDiary.Modules.Images.Infrastructure.Tests.csproj" />

@@ -26,7 +26,7 @@ internal sealed class MealAiSessionConfiguration : IEntityTypeConfiguration<Meal
         builder.HasOne<ImageAsset>()
             .WithMany()
             .HasForeignKey(e => e.ImageAssetId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.ClientNoAction);
 
         builder.Property(e => e.Source)
             .HasConversion<string>()

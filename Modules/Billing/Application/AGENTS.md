@@ -22,3 +22,5 @@ Rules for `Modules/Billing/Application/`.
 - Build: `dotnet build Modules/Billing/Application/FoodDiary.Application.Billing.csproj`
 - Tests: `dotnet test Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/FoodDiary.Modules.Billing.Application.Tests.csproj`
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+
+Transaction callbacks must reload previously captured subscription and inbox entities on every attempt; keep provider calls outside replayable callbacks. See ADR 0032.

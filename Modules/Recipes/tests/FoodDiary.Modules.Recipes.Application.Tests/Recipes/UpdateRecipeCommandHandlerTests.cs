@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Results;
@@ -8,7 +9,6 @@ using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
@@ -195,14 +195,14 @@ public partial class UpdateRecipeCommandHandlerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FailingNonNullImageAssetAccessService(Error error) : IImageAssetAccessService {
-        public Task<Result<ImageAsset?>> ResolveOptionalAsync(
+        public Task<Result<ImageAssetReadModel?>> ResolveOptionalAsync(
             ImageAssetId? assetId,
             UserId userId,
             CancellationToken cancellationToken = default) =>
             Task.FromResult(
                 assetId.HasValue
-                    ? Result.Failure<ImageAsset?>(error)
-                    : Result.Success<ImageAsset?>(value: null));
+                    ? Result.Failure<ImageAssetReadModel?>(error)
+                    : Result.Success<ImageAssetReadModel?>(value: null));
     }
 
     [ExcludeFromCodeCoverage]

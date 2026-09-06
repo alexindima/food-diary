@@ -149,6 +149,7 @@ public partial class NotificationsFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingPostCommitActionQueue : IPostCommitActionQueue {
+        public void Discard() { }
         private readonly List<Func<CancellationToken, Task>> _actions = [];
 
         public bool HasActions => _actions.Count > 0;

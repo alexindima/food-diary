@@ -3,7 +3,7 @@
 Images owns the dependency-free `ImageAssetId` contract, the `ImageAsset` domain
 entity, application policies, persistence mapping and repository adapters. Preserve
 their legacy CLR namespaces. ID-only consumers reference Images Contracts; Images Domain
-references Users Domain for User and Users Domain.Contracts for UserId.
+references Users Domain.Contracts for UserId.
 
 `MealAiSession` retains only `ImageAssetId`; Meals and Dashboard resolve image URLs
 through persistence read joins. Shared DbContext, migrations/snapshot, storage
@@ -39,3 +39,5 @@ kinds and parameter formatting. Reference the owner explicitly; this grants no f
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
 
 Shared URI validation and integration telemetry are owned by `Shared/FoodDiary.Integrations.Http`. Reference it directly; the S3 provider must not acquire Billing/mail bridge dependencies through FoodDiary.Integrations.
+
+Image service reads return immutable Id/Url projections from Service.Contracts; legacy Contracts remains ID-only. Orphan cleanup uses a fresh scope per candidate and propagates cancellation. Six image FKs restrict deletion to preserve concurrent references; ordinary cleanup still defers SaveChanges to its caller. See ADR 0032.

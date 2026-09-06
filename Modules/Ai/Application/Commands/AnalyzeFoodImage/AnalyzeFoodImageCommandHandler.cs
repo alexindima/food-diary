@@ -7,7 +7,7 @@ using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Application.Abstractions.Images.Models;
 
 namespace FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 
@@ -34,7 +34,7 @@ public sealed class AnalyzeFoodImageCommandHandler(
 
         UserId userId = userIdResult.Value;
         var imageAssetId = (ImageAssetId)query.ImageAssetId;
-        Result<ImageAsset?> assetResult = await imageAssetAccessService
+        Result<ImageAssetReadModel?> assetResult = await imageAssetAccessService
             .ResolveOptionalAsync(imageAssetId, userId, cancellationToken)
             .ConfigureAwait(false);
         if (assetResult.IsFailure) {
@@ -46,7 +46,7 @@ public sealed class AnalyzeFoodImageCommandHandler(
             return Result.Failure<FoodVisionModel>(error);
         }
 
-        ImageAsset asset = assetResult.Value!;
+        ImageAssetReadModel asset = assetResult.Value!;
 
         Result<AiUserContext> contextResult = await aiUserContextService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
         if (contextResult.IsFailure) {

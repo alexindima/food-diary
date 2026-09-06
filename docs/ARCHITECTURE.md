@@ -254,3 +254,5 @@ scalar IDs; immutable snapshots and no-tracking joins supply display/nutrition d
 Meals owns nutrition aggregation. FD0015/FD0016 enforce module EF ownership and exact
 reviewed technical escapes during compilation. The database, FK behavior and public
 API remain shared/compatible. See `docs/adr/0031-acyclic-contracts-and-scalar-aggregate-links.md`.
+
+Retry and image-reference boundaries follow [ADR 0032](adr/0032-retry-isolation-and-image-reference-integrity.md): fresh attempt state, isolated orphan cleanup, restrictive image FKs and immutable Images service contracts.

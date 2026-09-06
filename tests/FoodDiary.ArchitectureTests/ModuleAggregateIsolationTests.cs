@@ -37,8 +37,35 @@ public sealed class ModuleAggregateIsolationTests {
     }
 
     [Fact]
+    public void ImageForeignKeys_NeverNullForeignReferencesDuringDeletion() {
+        using FoodDiaryDbContext context = CreateContext();
+        Microsoft.EntityFrameworkCore.Metadata.IForeignKey[] imageLinks = [.. context.Model.GetEntityTypes().SelectMany(entity => entity.GetForeignKeys())
+            .Where(key => string.Equals(key.PrincipalEntityType.ClrType.Name, "ImageAsset", StringComparison.Ordinal))];
+        Assert.Equal(6, imageLinks.Length);
+        Assert.All(imageLinks, key => Assert.Equal(DeleteBehavior.ClientNoAction, key.DeleteBehavior));
+    }
+
+    [Fact]
     public void LegacyImagesContracts_ContainsOnlyTheDomainIdentifier() =>
         Assert.Equal([typeof(ImageAssetId)], typeof(ImageAssetId).Assembly.GetExportedTypes());
+
+    [Fact]
+    public void ImagesServiceContracts_ExposeOnlyImmutableReads() {
+        Assembly assembly = typeof(FoodDiary.Application.Abstractions.Images.Models.ImageAssetReadModel).Assembly;
+        Assert.Equal(
+            new[] {
+                typeof(FoodDiary.Application.Abstractions.Images.Common.IImageAssetAccessService),
+                typeof(FoodDiary.Application.Abstractions.Images.Models.ImageAssetReadModel),
+            }.OrderBy(type => type.FullName, StringComparer.Ordinal),
+            assembly.GetExportedTypes().OrderBy(type => type.FullName, StringComparer.Ordinal));
+        Assert.DoesNotContain(assembly.GetReferencedAssemblies(), reference =>
+            reference.Name!.EndsWith(".Domain", StringComparison.Ordinal) ||
+            reference.Name.EndsWith(".Application.Abstractions", StringComparison.Ordinal));
+        Assert.All(assembly.GetExportedTypes().SelectMany(type => type.GetMethods()), method => {
+            Assert.DoesNotContain(TypeClosure(method.ReturnType), IsEntity);
+            Assert.All(method.GetParameters(), parameter => Assert.DoesNotContain(TypeClosure(parameter.ParameterType), IsEntity));
+        });
+    }
 
     private static string ModuleOwner(Type type) {
         string assembly = type.Assembly.GetName().Name!;

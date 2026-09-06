@@ -7,18 +7,22 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
+          "path": "AGENTS.md",
+          "sha256": "bc04e512f0d1ab52d3b71291f9a639f2c3df1bf7f3ad4029bdc7546eed56bb6d"
+        },
+        {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "79881fb51a5bfda69bea910ed181e756b8fdaeb445248ed6b44b61d7942ac98b"
+          "sha256": "a84d02eca54a6cca521dbc9ae0445ef06e0e802fb2ee9c76ce6306808b9fb5ae"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "e9ed7952e1b544dcb870b4eeff548a3284421e3494192370d8aca034c7a55341"
+          "sha256": "c6f19efc9f5f9146edd5fc937fc1d828a88a2a2da69e0da4efe0a5ab8263fb89"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:28.3936208Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:35.5137793Z"
     },
     {
       "pageId": "module.frontend",
@@ -42,17 +46,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "79881fb51a5bfda69bea910ed181e756b8fdaeb445248ed6b44b61d7942ac98b"
+          "sha256": "a84d02eca54a6cca521dbc9ae0445ef06e0e802fb2ee9c76ce6306808b9fb5ae"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "e9ed7952e1b544dcb870b4eeff548a3284421e3494192370d8aca034c7a55341"
+          "sha256": "c6f19efc9f5f9146edd5fc937fc1d828a88a2a2da69e0da4efe0a5ab8263fb89"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:28.5834332Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:35.6469987Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -60,22 +64,26 @@
       "pageSha256": "19b4a19aacfe2c095a6a1dd83977162a2d3cc4f203f30f546a8eeb8ffffa5673",
       "sources": [
         {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "ec4eb27cd8fd7d8cb2421dec0fded38b98160839dba6295dc9fa8700fb1f2b7e"
+        },
+        {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "e9ed7952e1b544dcb870b4eeff548a3284421e3494192370d8aca034c7a55341"
+          "sha256": "c6f19efc9f5f9146edd5fc937fc1d828a88a2a2da69e0da4efe0a5ab8263fb89"
         },
         {
-          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "336f23a24941f15702ed961366a20fae57a9157322a73c555953bae0e53fd6f0"
+          "path": "FoodDiary.Application.Runtime/AGENTS.md",
+          "sha256": "c33ade571b4f4896e223e99ca63bf878d1261c5df8946dfd4f1bb3756dc53ec0"
         },
         {
-          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
-          "sha256": "e2ec8b5985aee2a25504912797114e827487418423f225d156656f56e205572a"
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "3e60141c53cd113e2da02d97efe9684cd7a66b1f5b58f1bf31194e597fbadaec"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "Reviewed the immutable Images service projection and all direct application consumers against ADR 0032. Id/Url and original authorization, null/error and cancellation semantics are preserved. No HTTP route or payload changes; host restore COPY lists include the new project.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:28.7947649Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:35.7698112Z"
     },
     {
       "pageId": "system.architecture",
@@ -84,25 +92,25 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "79881fb51a5bfda69bea910ed181e756b8fdaeb445248ed6b44b61d7942ac98b"
+          "sha256": "a84d02eca54a6cca521dbc9ae0445ef06e0e802fb2ee9c76ce6306808b9fb5ae"
         },
         {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "7adc1946e07a3da3516ee62e85370b33031fad819530ff11356c463fb391f2fd"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "ec4eb27cd8fd7d8cb2421dec0fded38b98160839dba6295dc9fa8700fb1f2b7e"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "e9ed7952e1b544dcb870b4eeff548a3284421e3494192370d8aca034c7a55341"
+          "sha256": "c6f19efc9f5f9146edd5fc937fc1d828a88a2a2da69e0da4efe0a5ab8263fb89"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "490b11e29f6003a13dbea6cea99304d9fc552a25a31dd53b7e7a68affd5aaa53"
+          "sha256": "ef4115e52e5ea00ecc014eea30c352246c5b0aff14878f8278979804615f87de"
         }
       ],
-      "reason": "Final validation corrections only: the password contract compatibility test now expects shared Authentication.Contracts; Dashboard DI test composes Meals persistence; the exact test-project matrix includes that direct dependency. Favorite EF tracking regression asserts persisted updates and owner-only tracking. All affected runtime/HTTP tests and focused reference guards pass; no API or schema changes.",
+      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:17:33.6443287Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:35.8987052Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -140,14 +148,18 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
+          "path": "AGENTS.md",
+          "sha256": "bc04e512f0d1ab52d3b71291f9a639f2c3df1bf7f3ad4029bdc7546eed56bb6d"
+        },
+        {
           "path": "docs/adr/README.md",
-          "sha256": "243dbe724879a6877d79c9546c9cf0472ff482532a64dfe433f3203518ca3a66"
+          "sha256": "b0b6a984cc667adb1e6af765c8e534968251927c4d46af1188ec6feda93225a5"
         }
       ],
-      "reason": "Reviewed owner purge adapters, immutable ingredient snapshots, Tdee Meals calorie contract, shared transaction entry guards, exact dependency and persistence manifests against current code and tests; ADR 0030 records preserved schema and remaining contract SCCs.",
+      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-05T22:15:22.5705364Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:36.0170637Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -155,18 +167,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "Directory.Build.props",
-          "sha256": "81cabc5e80e1be8733d7f3a7992a0d3def2629d748ac3209bc14b9caf0ba65d3"
-        },
-        {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "7adc1946e07a3da3516ee62e85370b33031fad819530ff11356c463fb391f2fd"
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "ec4eb27cd8fd7d8cb2421dec0fded38b98160839dba6295dc9fa8700fb1f2b7e"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:29.7871782Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:36.1409060Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -224,17 +232,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c2991c314bd290bffb028fa5ceb0741e3d3cd490a7113a68f73f076f67d8e7c5"
+          "sha256": "c50bf1716cf47b65c1f07b756ec573aa6cc99b88aee8ce9981b3410926831d59"
+        },
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "ec4eb27cd8fd7d8cb2421dec0fded38b98160839dba6295dc9fa8700fb1f2b7e"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "490b11e29f6003a13dbea6cea99304d9fc552a25a31dd53b7e7a68affd5aaa53"
+          "sha256": "ef4115e52e5ea00ecc014eea30c352246c5b0aff14878f8278979804615f87de"
         }
       ],
-      "reason": "Final validation corrections only: the password contract compatibility test now expects shared Authentication.Contracts; Dashboard DI test composes Meals persistence; the exact test-project matrix includes that direct dependency. Favorite EF tracking regression asserts persisted updates and owner-only tracking. All affected runtime/HTTP tests and focused reference guards pass; no API or schema changes.",
+      "reason": "Reviewed the concrete source and regression coverage for retry before-save/before-commit failures, image race, tracked foreign reference and batch isolation. Exact dependency, delegate analyzer and Docker restore guards track the new contract and adapter; verification is consolidated with focused corrections.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:17:33.8216526Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:36.2984202Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -243,17 +255,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "1ab0377ce65a243ae546fa7d206e0470eb8b660558c7b627668ab8c2b1223dbc"
-        },
-        {
-          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
-          "sha256": "e2ec8b5985aee2a25504912797114e827487418423f225d156656f56e205572a"
+          "sha256": "38ec2ce72612379d9751674b74755f1cd962d17b3db3e10683ccb8fc188d4877"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "Reviewed the immutable Images service projection and all direct application consumers against ADR 0032. Id/Url and original authorization, null/error and cancellation semantics are preserved. No HTTP route or payload changes; host restore COPY lists include the new project.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:32.1453721Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:36.6433528Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -485,13 +493,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "243dbe724879a6877d79c9546c9cf0472ff482532a64dfe433f3203518ca3a66"
+          "sha256": "b0b6a984cc667adb1e6af765c8e534968251927c4d46af1188ec6feda93225a5"
         }
       ],
-      "reason": "Reviewed owner purge adapters, immutable ingredient snapshots, Tdee Meals calorie contract, shared transaction entry guards, exact dependency and persistence manifests against current code and tests; ADR 0030 records preserved schema and remaining contract SCCs.",
+      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-05T22:15:23.6881072Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:36.9578380Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -533,14 +541,14 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
-          "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "5260a0a0a1024c00865f564f4cb56a4594eaa84308d8f3b9a886db9697ee239c"
+          "path": "FoodDiary.Infrastructure/AGENTS.md",
+          "sha256": "3e60141c53cd113e2da02d97efe9684cd7a66b1f5b58f1bf31194e597fbadaec"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "Reviewed the concrete source and regression coverage for retry before-save/before-commit failures, image race, tracked foreign reference and batch isolation. Exact dependency, delegate analyzer and Docker restore guards track the new contract and adapter; verification is consolidated with focused corrections.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:32.7949089Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:37.1097152Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -812,17 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "60a080ea329482f3de9d2271b91484594f387777c62ae5b161a0aebd7db315af"
-        },
-        {
-          "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
-          "sha256": "4a9080857fa779ead187a8d98eec89e26fffe54f7cc71dd51f9f34cd5b1483f5"
+          "sha256": "3356ef1e36b749840d72053698cf86995c45e282ccea3fa01603e17596d4f62f"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "Reviewed image owner checks, user purge ordering, outbox atomicity and failed-attempt cleanup. Six ClientNoAction FKs protect successful references without modifying foreign aggregates. No new logging payload, provider sharing, credential or retention policy.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:34.5549480Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:37.2899550Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -861,13 +865,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1371f08feed243289a4588d64ecb01cc712ab250ba9d3eadbc4fd020802fc1fd"
+          "sha256": "7b7d4a82755628c2fab7d854a591efcb2dae3e3fa046eae60c2282cbe4ee5e31"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "Reviewed the concrete source and regression coverage for retry before-save/before-commit failures, image race, tracked foreign reference and batch isolation. Exact dependency, delegate analyzer and Docker restore guards track the new contract and adapter; verification is consolidated with focused corrections.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:35.7490148Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:37.5478561Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -944,13 +948,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "eb902555cf8915c39221187370cb93230e98fd5561d8b0cc9f6255baf8d7f723"
+          "sha256": "c5eb88302ef24921a491ba2fdde987b8a44f1c95d12be32b127f9ddcba9c1e93"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:37.8650466Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:38.0997381Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -959,21 +963,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1371f08feed243289a4588d64ecb01cc712ab250ba9d3eadbc4fd020802fc1fd"
+          "sha256": "7b7d4a82755628c2fab7d854a591efcb2dae3e3fa046eae60c2282cbe4ee5e31"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "eb902555cf8915c39221187370cb93230e98fd5561d8b0cc9f6255baf8d7f723"
+          "sha256": "c5eb88302ef24921a491ba2fdde987b8a44f1c95d12be32b127f9ddcba9c1e93"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "60a080ea329482f3de9d2271b91484594f387777c62ae5b161a0aebd7db315af"
+          "sha256": "3356ef1e36b749840d72053698cf86995c45e282ccea3fa01603e17596d4f62f"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "Reviewed image owner checks, user purge ordering, outbox atomicity and failed-attempt cleanup. Six ClientNoAction FKs protect successful references without modifying foreign aggregates. No new logging payload, provider sharing, credential or retention policy.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:39.6769405Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:38.3914077Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1087,13 +1091,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "9e7f123ce5c612fa08b136c1512b040edc76418cf0f29e14881cf1693c5dd6b3"
+          "sha256": "3e2570ccdb3e34af30153215ef2ca29f0c86d161268d8f15b61fc755d6e524d0"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "Reviewed the concrete source and regression coverage for retry before-save/before-commit failures, image race, tracked foreign reference and batch isolation. Exact dependency, delegate analyzer and Docker restore guards track the new contract and adapter; verification is consolidated with focused corrections.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:40.6913002Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:38.5761056Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1147,13 +1151,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "952110e7401d4d7c93278ccb368f0bdea605c27a1bf3b85243c6f2779f3a624c"
+          "sha256": "bc04e512f0d1ab52d3b71291f9a639f2c3df1bf7f3ad4029bdc7546eed56bb6d"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:35.3594522Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:36.7942642Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1207,13 +1211,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "2e04fb6e888778c81066fdb582430eabd0b28a82c4abecbce33670422f07cd41"
+          "sha256": "0b649bbc72c6f5dbec536e344176bc264c291e29dabbf9a56aa37111773dc0fa"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "bc04e512f0d1ab52d3b71291f9a639f2c3df1bf7f3ad4029bdc7546eed56bb6d"
         }
       ],
-      "reason": "Final validation corrections only: the password contract compatibility test now expects shared Authentication.Contracts; Dashboard DI test composes Meals persistence; the exact test-project matrix includes that direct dependency. Favorite EF tracking regression asserts persisted updates and owner-only tracking. All affected runtime/HTTP tests and focused reference guards pass; no API or schema changes.",
+      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:17:34.1739625Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:37.7472115Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1222,13 +1230,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "952110e7401d4d7c93278ccb368f0bdea605c27a1bf3b85243c6f2779f3a624c"
+          "sha256": "bc04e512f0d1ab52d3b71291f9a639f2c3df1bf7f3ad4029bdc7546eed56bb6d"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed the concrete source and regression coverage for retry before-save/before-commit failures, image race, tracked foreign reference and batch isolation. Exact dependency, delegate analyzer and Docker restore guards track the new contract and adapter; verification is consolidated with focused corrections.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:39.4450215Z"
+      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
+      "reviewedAtUtc": "2026-09-06T01:38:37.9176172Z"
     }
   ]
 }

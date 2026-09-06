@@ -1,11 +1,11 @@
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Abstractions.Images.Common;
 
 public interface IImageAssetAccessService {
-    Task<Result<ImageAsset?>> ResolveOptionalAsync(
+    Task<Result<ImageAssetReadModel?>> ResolveOptionalAsync(
         ImageAssetId? assetId,
         UserId userId,
         CancellationToken cancellationToken = default);

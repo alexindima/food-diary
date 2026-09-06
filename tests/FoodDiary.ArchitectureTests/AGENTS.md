@@ -92,3 +92,5 @@ verifies the legacy Images ID-only contract exception, and checks that the relat
 model needs no migration. ModuleDependencyGraphTests requires zero combined API/
 service-contract cycles. PersistenceCapabilityTests reconciles the compiler exception
 file with the reviewed inventory; a passing analyzer alone does not review raw SQL.
+
+Images.Service.Contracts is the aggregate-free Id/Url access API; the combined graph includes Service.Contracts edges. Scalar mappings remain migration-aligned; ADR 0032 intentionally changes the six image FKs to Restrict.

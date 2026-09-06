@@ -4664,7 +4664,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.HasOne("FoodDiary.Domain.Entities.Assets.ImageAsset", null)
                     .WithMany()
                     .HasForeignKey("ImageAssetId")
-                    .OnDelete(DeleteBehavior.SetNull);
+                    .OnDelete(DeleteBehavior.ClientNoAction);
 
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany("Meals")
@@ -4684,18 +4684,16 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.MealAiSession", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Assets.ImageAsset", "ImageAsset")
+                b.HasOne("FoodDiary.Domain.Entities.Assets.ImageAsset", null)
                     .WithMany()
                     .HasForeignKey("ImageAssetId")
-                    .OnDelete(DeleteBehavior.SetNull);
+                    .OnDelete(DeleteBehavior.ClientNoAction);
 
                 b.HasOne("FoodDiary.Domain.Entities.Meals.Meal", "Meal")
                     .WithMany("AiSessions")
                     .HasForeignKey("MealId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("ImageAsset");
 
                 b.Navigation("Meal");
             });
@@ -4742,7 +4740,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.HasOne("FoodDiary.Domain.Entities.Assets.ImageAsset", null)
                     .WithMany()
                     .HasForeignKey("ImageAssetId")
-                    .OnDelete(DeleteBehavior.SetNull);
+                    .OnDelete(DeleteBehavior.ClientNoAction);
 
                 b.HasOne("FoodDiary.Domain.Entities.Usda.UsdaFood", null)
                     .WithMany()
@@ -4769,7 +4767,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.HasOne("FoodDiary.Domain.Entities.Assets.ImageAsset", null)
                     .WithMany()
                     .HasForeignKey("ImageAssetId")
-                    .OnDelete(DeleteBehavior.SetNull);
+                    .OnDelete(DeleteBehavior.ClientNoAction);
 
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany("Recipes")
@@ -4818,7 +4816,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.HasOne("FoodDiary.Domain.Entities.Assets.ImageAsset", null)
                     .WithMany()
                     .HasForeignKey("ImageAssetId")
-                    .OnDelete(DeleteBehavior.SetNull);
+                    .OnDelete(DeleteBehavior.ClientNoAction);
 
                 b.HasOne("FoodDiary.Domain.Entities.Recipes.Recipe", "Recipe")
                     .WithMany("Steps")
@@ -5095,7 +5093,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.HasOne("FoodDiary.Domain.Entities.Assets.ImageAsset", null)
                     .WithMany()
                     .HasForeignKey("ProfileImageAssetId")
-                    .OnDelete(DeleteBehavior.SetNull);
+                    .OnDelete(DeleteBehavior.ClientNoAction);
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Users.UserLoginEvent", b => {

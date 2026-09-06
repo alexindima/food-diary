@@ -400,6 +400,7 @@ public partial class FastingFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class ImmediatePostCommitActionQueue : IPostCommitActionQueue {
+        public void Discard() { }
         public bool HasActions => false;
 
         public void Enqueue(string actionName, Func<CancellationToken, Task> action) {
@@ -411,6 +412,7 @@ public partial class FastingFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingPostCommitActionQueue(bool hasActions) : IPostCommitActionQueue {
+        public void Discard() { }
         public bool HasActions => hasActions;
         public int FlushCallCount { get; private set; }
 

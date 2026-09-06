@@ -1,6 +1,6 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Images.Common;
@@ -17,7 +17,7 @@ public static class ImageAssetResolver {
             return Result.Failure<ImageAssetResolution>(imageAssetIdResult.Error);
         }
 
-        Result<ImageAsset?> imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+        Result<ImageAssetReadModel?> imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             imageAssetIdResult.Value,
             userId,
             cancellationToken).ConfigureAwait(false);

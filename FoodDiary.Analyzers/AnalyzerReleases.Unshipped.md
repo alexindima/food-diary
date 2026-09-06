@@ -18,5 +18,5 @@ FD0011 | Style | Disabled | Reject redundant empty record parameter lists
 FD0012 | Style | Disabled | Reject private readonly fields that only store primary constructor parameters
 FD0013 | Style | Disabled | Require camel case parameter names outside positional records
 FD0014 | Style | Disabled | Require underscore camel case for private instance fields
-FD0015 | Architecture | Disabled | Reject foreign EF writes and tracking acquisition in module adapters
-FD0016 | Architecture | Disabled | Require exact reviewed source fingerprints for technical persistence APIs
+FD0015 | Architecture | Disabled | Reject foreign EF writes and tracking acquisition, including method groups, in module adapters
+FD0016 | Architecture | Disabled | Require exact reviewed source fingerprints for technical persistence APIs and method groups

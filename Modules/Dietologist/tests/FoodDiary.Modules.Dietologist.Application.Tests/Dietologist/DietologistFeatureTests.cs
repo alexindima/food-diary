@@ -943,6 +943,7 @@ DietologistLastName: null,
 
     [ExcludeFromCodeCoverage]
     private sealed class ImmediatePostCommitActionQueue : IPostCommitActionQueue {
+        public void Discard() { }
         public bool HasActions => false;
 
         public void Enqueue(string actionName, Func<CancellationToken, Task> action) {

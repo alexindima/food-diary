@@ -36,7 +36,7 @@ internal sealed class MealConfiguration : IEntityTypeConfiguration<Meal> {
             .WithMany()
             .HasForeignKey(e => e.ImageAssetId)
             .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.ClientNoAction);
 
         builder.HasMany(e => e.AiSessions)
             .WithOne(s => s.Meal)

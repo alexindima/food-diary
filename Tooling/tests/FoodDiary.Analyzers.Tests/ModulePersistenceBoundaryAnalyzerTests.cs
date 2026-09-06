@@ -15,6 +15,9 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
     [Theory]
     [InlineData("db.Users.Add(new User());")]
     [InlineData("db.Add(new User());")]
+    [InlineData("Action<object> add = db.Add; add(new User());")]
+    [InlineData("Action<User> entry = db.Entry<User>; entry(new User());")]
+    [InlineData("Func<DbSet<User>> set = db.Set<User>; set();")]
     [InlineData("object user = new User(); db.Add(user);")]
     [InlineData("db.Entry(new User());")]
     [InlineData("db.Set<User>();")]
@@ -32,6 +35,7 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
     [InlineData("db.Products.Add(new Product());")]
     [InlineData("db.Add(new Product());")]
     [InlineData("db.Entry(new Product());")]
+    [InlineData("Action<Product> entry = db.Entry<Product>; entry(new Product());")]
     [InlineData("db.Set<Product>();")]
     [InlineData("db.Users.AsNoTracking().Where(user => true).ToList();")]
     [InlineData("db.Set<User>().AsNoTracking().ToList();")]
@@ -44,6 +48,8 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
         Assert.Contains(await AnalyzeAsync("db.SaveChanges();"),
             diagnostic => string.Equals(diagnostic.Id, ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
         Assert.Contains(await AnalyzeAsync("var tracker = db.ChangeTracker;"),
+            diagnostic => string.Equals(diagnostic.Id, ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
+        Assert.Contains(await AnalyzeAsync("Func<int> save = db.SaveChanges; save();"),
             diagnostic => string.Equals(diagnostic.Id, ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
     }
 

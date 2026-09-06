@@ -56,7 +56,6 @@
     "Ai": {
       "role": "aggregate-owner",
       "physicalIsolation": "module-root",
-
       "enforcement": "assembly-isolated",
       "ownedEntities": [
         "AiUsage",
@@ -66,7 +65,9 @@
       ],
       "sourceMappings": {
         "logicalRoot": "Modules/Ai",
-        "persistenceModelProjects": ["Modules/Ai/Infrastructure/Model"],
+        "persistenceModelProjects": [
+          "Modules/Ai/Infrastructure/Model"
+        ],
         "applicationProjects": [
           "Modules/Ai/Application"
         ],
@@ -225,19 +226,37 @@
       "role": "aggregate-owner",
       "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": ["ContentReport"],
+      "ownedEntities": [
+        "ContentReport"
+      ],
       "sourceMappings": {
-        "applicationProjects": ["Modules/ContentReports/Application"],
-        "abstractionAreas": ["Modules/ContentReports/Application/Abstractions"],
-        "domainAreas": ["Modules/ContentReports/Domain"],
-        "persistenceAreas": ["Modules/ContentReports/Infrastructure"]
+        "applicationProjects": [
+          "Modules/ContentReports/Application"
+        ],
+        "abstractionAreas": [
+          "Modules/ContentReports/Application/Abstractions"
+        ],
+        "domainAreas": [
+          "Modules/ContentReports/Domain"
+        ],
+        "persistenceAreas": [
+          "Modules/ContentReports/Infrastructure"
+        ]
       }
     },
     "Cycles": {
       "role": "aggregate-owner",
       "physicalIsolation": "project",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": ["CycleProfile", "CycleFactor", "CycleConsent", "CycleSymptomEntry", "CyclePredictionRevision", "BleedingEntry", "FertilitySignal"],
+      "ownedEntities": [
+        "CycleProfile",
+        "CycleFactor",
+        "CycleConsent",
+        "CycleSymptomEntry",
+        "CyclePredictionRevision",
+        "BleedingEntry",
+        "FertilitySignal"
+      ],
       "sourceMappings": {
         "applicationProjects": [
           "Modules/Cycles/Application"
@@ -260,54 +279,108 @@
       "ownedEntities": [],
       "sourceMappings": {
         "logicalRoot": "Modules/Dashboard",
-        "applicationProjects": ["Modules/Dashboard/Application"],
-        "applicationAbstractionProjects": ["Modules/Dashboard/Application/Abstractions"],
-        "contractProjects": ["Modules/Dashboard/Contracts"],
-        "infrastructureProjects": ["Modules/Dashboard/Infrastructure"],
-        "abstractionAreas": ["Modules/Dashboard/Application/Abstractions", "Modules/Dashboard/Contracts"]
+        "applicationProjects": [
+          "Modules/Dashboard/Application"
+        ],
+        "applicationAbstractionProjects": [
+          "Modules/Dashboard/Application/Abstractions"
+        ],
+        "contractProjects": [
+          "Modules/Dashboard/Contracts"
+        ],
+        "infrastructureProjects": [
+          "Modules/Dashboard/Infrastructure"
+        ],
+        "abstractionAreas": [
+          "Modules/Dashboard/Application/Abstractions",
+          "Modules/Dashboard/Contracts"
+        ]
       }
     },
     "DailyAdvices": {
       "role": "aggregate-owner",
       "physicalIsolation": "project",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": ["DailyAdvice"],
+      "ownedEntities": [
+        "DailyAdvice"
+      ],
       "sourceMappings": {
         "logicalRoot": "Modules/DailyAdvices",
-        "applicationProjects": ["Modules/DailyAdvices/Application"],
-        "abstractionAreas": ["Modules/DailyAdvices/Application/Abstractions"],
-        "domainAreas": ["Modules/DailyAdvices/Domain"],
-        "persistenceAreas": ["Modules/DailyAdvices/Infrastructure"]
+        "applicationProjects": [
+          "Modules/DailyAdvices/Application"
+        ],
+        "abstractionAreas": [
+          "Modules/DailyAdvices/Application/Abstractions"
+        ],
+        "domainAreas": [
+          "Modules/DailyAdvices/Domain"
+        ],
+        "persistenceAreas": [
+          "Modules/DailyAdvices/Infrastructure"
+        ]
       }
     },
     "Dietologist": {
       "role": "aggregate-owner",
       "physicalIsolation": "project",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": ["ClientTask", "DietologistInvitation", "Recommendation", "RecommendationBulkDispatch", "RecommendationComment", "RecommendationTemplate"],
+      "ownedEntities": [
+        "ClientTask",
+        "DietologistInvitation",
+        "Recommendation",
+        "RecommendationBulkDispatch",
+        "RecommendationComment",
+        "RecommendationTemplate"
+      ],
       "sourceMappings": {
         "logicalRoot": "Modules/Dietologist",
-        "applicationProjects": ["Modules/Dietologist/Application"],
-        "applicationAbstractionProjects": ["Modules/Dietologist/Application/Abstractions"],
-        "domainProjects": ["Modules/Dietologist/Domain"],
-        "infrastructureProjects": ["Modules/Dietologist/Infrastructure"],
-        "persistenceModelProjects": ["Modules/Dietologist/Infrastructure/Model"]
+        "applicationProjects": [
+          "Modules/Dietologist/Application"
+        ],
+        "applicationAbstractionProjects": [
+          "Modules/Dietologist/Application/Abstractions"
+        ],
+        "domainProjects": [
+          "Modules/Dietologist/Domain"
+        ],
+        "infrastructureProjects": [
+          "Modules/Dietologist/Infrastructure"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Dietologist/Infrastructure/Model"
+        ]
       }
     },
     "Exercises": {
       "role": "aggregate-owner",
       "physicalIsolation": "project",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": ["ExerciseEntry"],
+      "ownedEntities": [
+        "ExerciseEntry"
+      ],
       "sourceMappings": {
         "logicalRoot": "Modules/Exercises",
-        "abstractionAreas": ["Modules/Exercises/Application/Abstractions/Exercises"],
-        "applicationProjects": ["Modules/Exercises/Application"],
-        "applicationAbstractionProjects": ["Modules/Exercises/Application/Abstractions"],
-        "contractProjects": ["Modules/Exercises/Contracts"],
-        "domainProjects": ["Modules/Exercises/Domain"],
-        "infrastructureProjects": ["Modules/Exercises/Infrastructure"],
-        "persistenceModelProjects": ["Modules/Exercises/Infrastructure/Model"]
+        "abstractionAreas": [
+          "Modules/Exercises/Application/Abstractions/Exercises"
+        ],
+        "applicationProjects": [
+          "Modules/Exercises/Application"
+        ],
+        "applicationAbstractionProjects": [
+          "Modules/Exercises/Application/Abstractions"
+        ],
+        "contractProjects": [
+          "Modules/Exercises/Contracts"
+        ],
+        "domainProjects": [
+          "Modules/Exercises/Domain"
+        ],
+        "infrastructureProjects": [
+          "Modules/Exercises/Infrastructure"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Exercises/Infrastructure/Model"
+        ]
       }
     },
     "Export": {
@@ -317,9 +390,15 @@
       "ownedEntities": [],
       "sourceMappings": {
         "logicalRoot": "Modules/Export",
-        "applicationProjects": ["Modules/Export/Application"],
-        "applicationAbstractionProjects": ["Modules/Export/Application/Abstractions"],
-        "infrastructureProjects": ["Modules/Export/Infrastructure"]
+        "applicationProjects": [
+          "Modules/Export/Application"
+        ],
+        "applicationAbstractionProjects": [
+          "Modules/Export/Application/Abstractions"
+        ],
+        "infrastructureProjects": [
+          "Modules/Export/Infrastructure"
+        ]
       }
     },
     "Fasting": {
@@ -372,31 +451,57 @@
         "applicationProjects": [
           "Modules/Favorites/Application"
         ],
-        "applicationAbstractionProjects": ["Modules/Favorites/Application/Abstractions"],
-        "contractProjects": ["Modules/Favorites/Contracts"],
+        "applicationAbstractionProjects": [
+          "Modules/Favorites/Application/Abstractions"
+        ],
+        "contractProjects": [
+          "Modules/Favorites/Contracts"
+        ],
         "abstractionAreas": [
           "Modules/Favorites/Application/Abstractions"
         ],
-        "domainProjects": ["Modules/Favorites/Domain"],
+        "domainProjects": [
+          "Modules/Favorites/Domain"
+        ],
         "domainAreas": [
           "Modules/Favorites/Domain"
         ],
-        "infrastructureProjects": ["Modules/Favorites/Infrastructure"],
-        "persistenceModelProjects": ["Modules/Favorites/Infrastructure/Model"],
-        "persistenceAreas": ["Modules/Favorites/Infrastructure"],
-        "testAreas": ["Modules/Favorites/tests"]
+        "infrastructureProjects": [
+          "Modules/Favorites/Infrastructure"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Favorites/Infrastructure/Model"
+        ],
+        "persistenceAreas": [
+          "Modules/Favorites/Infrastructure"
+        ],
+        "testAreas": [
+          "Modules/Favorites/tests"
+        ]
       }
     },
     "Gamification": {
       "role": "aggregate-owner",
       "physicalIsolation": "module-root",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": ["AchievementDefinition", "UserAchievement", "AchievementEvaluationOutboxMessage"],
+      "ownedEntities": [
+        "AchievementDefinition",
+        "UserAchievement",
+        "AchievementEvaluationOutboxMessage"
+      ],
       "sourceMappings": {
-        "applicationProjects": ["Modules/Gamification/Application"],
-        "abstractionAreas": ["Modules/Gamification/Application/Abstractions"],
-        "domainAreas": ["Modules/Gamification/Domain"],
-        "persistenceAreas": ["Modules/Gamification/Infrastructure"]
+        "applicationProjects": [
+          "Modules/Gamification/Application"
+        ],
+        "abstractionAreas": [
+          "Modules/Gamification/Application/Abstractions"
+        ],
+        "domainAreas": [
+          "Modules/Gamification/Domain"
+        ],
+        "persistenceAreas": [
+          "Modules/Gamification/Infrastructure"
+        ]
       }
     },
     "Hydration": {
@@ -411,12 +516,18 @@
         "applicationProjects": [
           "Modules/Hydration/Application"
         ],
-        "abstractionAreas": ["Modules/Hydration/Application/Abstractions"],
-        "contractAreas": ["Modules/Hydration/Contracts"],
+        "abstractionAreas": [
+          "Modules/Hydration/Application/Abstractions"
+        ],
+        "contractAreas": [
+          "Modules/Hydration/Contracts"
+        ],
         "domainAreas": [
           "Modules/Hydration/Domain"
         ],
-        "persistenceAreas": ["Modules/Hydration/Infrastructure"]
+        "persistenceAreas": [
+          "Modules/Hydration/Infrastructure"
+        ]
       }
     },
     "Images": {
@@ -432,12 +543,25 @@
         "applicationProjects": [
           "Modules/Images/Application"
         ],
-        "abstractionAreas": ["Modules/Images/Application/Abstractions"],
-        "contractProjects": ["Modules/Images/Contracts"],
-        "domainProjects": ["Modules/Images/Domain"],
-        "infrastructureProjects": ["Modules/Images/Infrastructure"],
-        "persistenceModelProjects": ["Modules/Images/Infrastructure/Model"],
-        "adapterAreas": ["Modules/Images/Infrastructure/Providers"]
+        "abstractionAreas": [
+          "Modules/Images/Application/Abstractions"
+        ],
+        "contractProjects": [
+          "Modules/Images/Contracts",
+          "Modules/Images/Service.Contracts"
+        ],
+        "domainProjects": [
+          "Modules/Images/Domain"
+        ],
+        "infrastructureProjects": [
+          "Modules/Images/Infrastructure"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Images/Infrastructure/Model"
+        ],
+        "adapterAreas": [
+          "Modules/Images/Infrastructure/Providers"
+        ]
       }
     },
     "Lessons": {
@@ -542,11 +666,21 @@
       ],
       "sourceMappings": {
         "logicalRoot": "Modules/Notifications",
-        "applicationProjects": ["Modules/Notifications/Application"],
-        "applicationAbstractionProjects": ["Modules/Notifications/Application/Abstractions"],
-        "domainProjects": ["Modules/Notifications/Domain"],
-        "infrastructureProjects": ["Modules/Notifications/Infrastructure"],
-        "persistenceModelProjects": ["Modules/Notifications/Infrastructure/Model"]
+        "applicationProjects": [
+          "Modules/Notifications/Application"
+        ],
+        "applicationAbstractionProjects": [
+          "Modules/Notifications/Application/Abstractions"
+        ],
+        "domainProjects": [
+          "Modules/Notifications/Domain"
+        ],
+        "infrastructureProjects": [
+          "Modules/Notifications/Infrastructure"
+        ],
+        "persistenceModelProjects": [
+          "Modules/Notifications/Infrastructure/Model"
+        ]
       }
     },
     "OpenFoodFacts": {
@@ -588,10 +722,10 @@
           "Modules/Products/Application/Abstractions",
           "Modules/Products/Contracts"
         ],
-          "domainAreas": [
-            "Modules/Products/Domain",
-            "Modules/Products/Domain.Contracts"
-          ],
+        "domainAreas": [
+          "Modules/Products/Domain",
+          "Modules/Products/Domain.Contracts"
+        ],
         "infrastructureAreas": [
           "Modules/Products/Infrastructure"
         ],
@@ -609,15 +743,23 @@
       "role": "aggregate-owner",
       "physicalIsolation": "project",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": ["RecentItem"],
+      "ownedEntities": [
+        "RecentItem"
+      ],
       "sourceMappings": {
         "logicalRoot": "Modules/RecentItems",
         "applicationProjects": [
           "Modules/RecentItems/Application"
         ],
-        "abstractionAreas": ["Modules/RecentItems/Application/Abstractions"],
-        "domainAreas": ["Modules/RecentItems/Domain"],
-        "persistenceAreas": ["Modules/RecentItems/Infrastructure"]
+        "abstractionAreas": [
+          "Modules/RecentItems/Application/Abstractions"
+        ],
+        "domainAreas": [
+          "Modules/RecentItems/Domain"
+        ],
+        "persistenceAreas": [
+          "Modules/RecentItems/Infrastructure"
+        ]
       }
     },
     "RecipeCommunity": {
@@ -630,8 +772,13 @@
       ],
       "sourceMappings": {
         "logicalRoot": "Modules/RecipeCommunity",
-        "persistenceModelProjects": ["Modules/RecipeCommunity/Infrastructure/Model"],
-        "adapterAreas": ["Modules/RecipeCommunity/Presentation/Features/RecipeComments", "Modules/RecipeCommunity/Presentation/Features/RecipeLikes"],
+        "persistenceModelProjects": [
+          "Modules/RecipeCommunity/Infrastructure/Model"
+        ],
+        "adapterAreas": [
+          "Modules/RecipeCommunity/Presentation/Features/RecipeComments",
+          "Modules/RecipeCommunity/Presentation/Features/RecipeLikes"
+        ],
         "applicationProjects": [
           "Modules/RecipeCommunity/Application"
         ],
@@ -721,11 +868,21 @@
         "UsdaNutrient"
       ],
       "sourceMappings": {
-        "applicationProjects": ["Modules/Usda/Application"],
-        "applicationAbstractionProjects": ["Modules/Usda/Application/Abstractions"],
-        "contractProjects": ["Modules/Usda/Contracts"],
-        "domainProjects": ["Modules/Usda/Domain"],
-        "persistenceAreas": ["Modules/Usda/Infrastructure"],
+        "applicationProjects": [
+          "Modules/Usda/Application"
+        ],
+        "applicationAbstractionProjects": [
+          "Modules/Usda/Application/Abstractions"
+        ],
+        "contractProjects": [
+          "Modules/Usda/Contracts"
+        ],
+        "domainProjects": [
+          "Modules/Usda/Domain"
+        ],
+        "persistenceAreas": [
+          "Modules/Usda/Infrastructure"
+        ],
         "adapterAreas": [
           "Modules/Usda/Infrastructure/Providers"
         ]
@@ -745,14 +902,31 @@
       ],
       "sourceMappings": {
         "logicalRoot": "Modules/Users",
-        "applicationProjects": ["Modules/Users/Application"],
-        "abstractionAreas": ["Modules/Users/Application/Abstractions"],
-        "applicationAbstractionProjects": ["Modules/Users/Application/Abstractions"],
-        "contractProjects": ["Modules/Users/Contracts"],
-        "domainAreas": ["Modules/Users/Domain", "Modules/Users/Domain.Contracts"],
-        "persistenceAreas": ["Modules/Users/Infrastructure", "Modules/Users/Infrastructure/Model"],
+        "applicationProjects": [
+          "Modules/Users/Application"
+        ],
+        "abstractionAreas": [
+          "Modules/Users/Application/Abstractions"
+        ],
+        "applicationAbstractionProjects": [
+          "Modules/Users/Application/Abstractions"
+        ],
+        "contractProjects": [
+          "Modules/Users/Contracts"
+        ],
+        "domainAreas": [
+          "Modules/Users/Domain",
+          "Modules/Users/Domain.Contracts"
+        ],
+        "persistenceAreas": [
+          "Modules/Users/Infrastructure",
+          "Modules/Users/Infrastructure/Model"
+        ],
         "centralPersistenceSeams": [],
-        "identitySeams": ["Modules/Identity/Application", "Modules/Identity/Infrastructure/Persistence/Authentication"]
+        "identitySeams": [
+          "Modules/Identity/Application",
+          "Modules/Identity/Infrastructure/Persistence/Authentication"
+        ]
       }
     },
     "Wearables": {
@@ -789,7 +963,9 @@
       "ownedEntities": [],
       "sourceMappings": {
         "logicalRoot": "Modules/WeeklyCheckIn",
-        "applicationProjects": ["Modules/WeeklyCheckIn/Application"]
+        "applicationProjects": [
+          "Modules/WeeklyCheckIn/Application"
+        ]
       }
     },
     "WeeklyGoals": {

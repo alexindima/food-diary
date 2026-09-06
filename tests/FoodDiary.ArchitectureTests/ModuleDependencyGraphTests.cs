@@ -87,7 +87,7 @@ public sealed class ModuleDependencyGraphTests {
             pair => Directory.GetFiles(pair.Value, "*.csproj").SelectMany(ProjectReferenceReader.ReadProjectReferences)
                 // Images.Contracts is the legacy ID-only assembly, verified by ModuleAggregateIsolationTests.
                 .Where(reference => !reference.Equals("FoodDiary.Modules.Images.Contracts", StringComparison.Ordinal))
-                .Select(reference => Regex.Match(reference, @"^FoodDiary\.Modules\.(?<owner>[^.]+)\.(?:Contracts|Application\.Abstractions)$", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1)))
+                .Select(reference => Regex.Match(reference, @"^FoodDiary\.Modules\.(?<owner>[^.]+)\.(?:Contracts|Service\.Contracts|Application\.Abstractions)$", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1)))
                 .Where(match => match.Success)
                 .Select(match => match.Groups["owner"].Value)
                 .Where(owner => !owner.Equals(pair.Key, StringComparison.Ordinal))

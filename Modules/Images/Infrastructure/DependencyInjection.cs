@@ -14,6 +14,7 @@ public static class DependencyInjection {
         services.AddScoped<IImageAssetOwnershipService, ImageAssetOwnershipService>();
         services.AddScoped<IUserProfileImageService, UserProfileImageService>();
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IOutboxReplayStream, ImageDeletionOutboxReplayStream>());
+        services.AddScoped<IImageAssetCleanupBatch, ImageAssetCleanupBatch>();
         services.AddScoped<IImageAssetRepository, ImageAssetRepository>();
         services.AddScoped<IImageAssetReadRepository>(static provider => provider.GetRequiredService<IImageAssetRepository>());
         services.AddScoped<IImageAssetWriteRepository>(static provider => provider.GetRequiredService<IImageAssetRepository>());

@@ -83,6 +83,8 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Images logical module: `Modules/Images/AGENTS.md`
 - Images application: `Modules/Images/Application/AGENTS.md`
 - Images contracts: `Modules/Images/Contracts/AGENTS.md`
+- Images service contracts: `Modules/Images/Service.Contracts/AGENTS.md`
+- Images infrastructure: `Modules/Images/Infrastructure/AGENTS.md`
 - Images domain: `Modules/Images/Domain/AGENTS.md`
 - Images tests: `Modules/Images/tests/AGENTS.md`
 - Lessons logical module: `Modules/Lessons/AGENTS.md`

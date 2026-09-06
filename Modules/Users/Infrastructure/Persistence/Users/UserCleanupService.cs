@@ -115,6 +115,10 @@ public sealed class UserCleanupService(
                     return false;
                 }
 
+                await dbContext.Users.Where(user => user.Id == userId)
+                    .ExecuteUpdateAsync(setters => setters.SetProperty(user => user.ProfileImageAssetId, (ImageAssetId?)null), cancellationToken)
+                    .ConfigureAwait(false);
+
                 foreach (IUserDataPurgeParticipant participant in _participants) {
                     await participant.PurgeAsync(userId, reassignTarget, cancellationToken).ConfigureAwait(false);
                 }

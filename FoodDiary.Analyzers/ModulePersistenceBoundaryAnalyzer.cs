@@ -44,9 +44,32 @@ public sealed class ModulePersistenceBoundaryAnalyzer : DiagnosticAnalyzer {
             ImmutableDictionary<string, string> reviewed = ReadFingerprints(start.Options.AdditionalFiles, start.CancellationToken);
             var verified = new ConcurrentDictionary<SyntaxTree, bool>();
             start.RegisterOperationAction(operation => AnalyzeInvocation(operation, module, reviewed, verified), OperationKind.Invocation);
+            start.RegisterOperationAction(operation => AnalyzeMethodReference(operation, module, reviewed, verified), OperationKind.MethodReference);
             start.RegisterOperationAction(operation => AnalyzeReference(operation, module, reviewed, verified),
                 OperationKind.PropertyReference, OperationKind.FieldReference, OperationKind.ParameterReference);
         });
+    }
+
+    private static void AnalyzeMethodReference(OperationAnalysisContext context, string module,
+        ImmutableDictionary<string, string> reviewed, ConcurrentDictionary<SyntaxTree, bool> verified) {
+        var reference = (IMethodReferenceOperation)context.Operation;
+        IMethodSymbol method = reference.Method;
+        if (!IsEfType(method.ContainingType)) { return; }
+
+        if (method.Name.StartsWith("SaveChanges", StringComparison.Ordinal) ||
+            method.ContainingType.Name.EndsWith("DatabaseFacadeExtensions", StringComparison.Ordinal) ||
+            string.Equals(method.ContainingType.Name, "DatabaseFacade", StringComparison.Ordinal)) {
+            ReportTechnicalUnlessReviewed(context, method.Name, reviewed, verified);
+            return;
+        }
+
+        if (!WriteMethods.Contains(method.Name) && !string.Equals(method.Name, "Set", StringComparison.Ordinal)) { return; }
+        ITypeSymbol? target = method.TypeArguments.FirstOrDefault()
+            ?? SequenceElement(reference.Instance?.Type)
+            ?? method.Parameters.FirstOrDefault()?.Type;
+        if (!IsOwned(target, module) && !IsReviewedAudit(target, context, reviewed, verified)) {
+            ReportOwnership(context, module, target);
+        }
     }
 
     private static void AnalyzeInvocation(OperationAnalysisContext context, string module, ImmutableDictionary<string, string> reviewed, ConcurrentDictionary<SyntaxTree, bool> verified) {

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
@@ -392,7 +393,7 @@ public class ImagesFeatureTests {
             new FakeImageAssetRepository(),
             new FakeImageObjectDeletionOutbox(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            CreateUnitOfWork());
+            new FakeImageAssetCleanupBatch(new FakeImageAssetRepository(), new FakeImageObjectDeletionOutbox()));
 
         int removed = await service.CleanupOrphansAsync(DateTime.UtcNow, 0, CancellationToken.None);
 
@@ -411,7 +412,7 @@ public class ImagesFeatureTests {
             repository,
             new FakeImageObjectDeletionOutbox(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            CreateUnitOfWork());
+            new FakeImageAssetCleanupBatch(repository, new FakeImageObjectDeletionOutbox()));
 
         int removed = await service.CleanupOrphansAsync(
             DateTime.UtcNow.AddYears(1),
@@ -430,7 +431,7 @@ public class ImagesFeatureTests {
             repository,
             new FakeImageObjectDeletionOutbox(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            CreateUnitOfWork());
+            new FakeImageAssetCleanupBatch(repository, new FakeImageObjectDeletionOutbox()));
         var localCutoff = new DateTime(2026, 5, 20, 12, 30, 0, DateTimeKind.Local);
 
         int removed = await service.CleanupOrphansAsync(localCutoff, 10, CancellationToken.None);
@@ -451,7 +452,7 @@ public class ImagesFeatureTests {
             repo,
             new FakeImageObjectDeletionOutbox(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            CreateUnitOfWork());
+            new FakeImageAssetCleanupBatch(repo, new FakeImageObjectDeletionOutbox()));
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
 
@@ -465,7 +466,7 @@ public class ImagesFeatureTests {
             new FakeImageAssetRepository(),
             new FakeImageObjectDeletionOutbox(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            CreateUnitOfWork());
+            new FakeImageAssetCleanupBatch(new FakeImageAssetRepository(), new FakeImageObjectDeletionOutbox()));
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.Empty, CancellationToken.None);
 
@@ -479,7 +480,7 @@ public class ImagesFeatureTests {
             new FakeImageAssetRepository(),
             new FakeImageObjectDeletionOutbox(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            CreateUnitOfWork());
+            new FakeImageAssetCleanupBatch(new FakeImageAssetRepository(), new FakeImageObjectDeletionOutbox()));
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.New(), CancellationToken.None);
 
@@ -498,7 +499,7 @@ public class ImagesFeatureTests {
             repo,
             outbox,
             NullLogger<ImageAssetCleanupService>.Instance,
-            CreateUnitOfWork());
+            new FakeImageAssetCleanupBatch(repo, outbox));
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
         ImageAsset? storedAsset = await repo.GetByIdAsync(asset.Id, CancellationToken.None);
@@ -521,7 +522,7 @@ public class ImagesFeatureTests {
             repo,
             new FakeImageObjectDeletionOutbox(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            unitOfWork);
+            new FakeImageAssetCleanupBatch(repo, new FakeImageObjectDeletionOutbox()));
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
 
@@ -541,7 +542,7 @@ public class ImagesFeatureTests {
             repo,
             new SelectivelyThrowingImageObjectDeletionOutbox("images/fail.jpg"),
             NullLogger<ImageAssetCleanupService>.Instance,
-            CreateUnitOfWork());
+            new FakeImageAssetCleanupBatch(repo, new SelectivelyThrowingImageObjectDeletionOutbox("images/fail.jpg")));
 
         int removed = await service.CleanupOrphansAsync(
             DateTime.UtcNow.AddYears(1),
@@ -558,7 +559,7 @@ public class ImagesFeatureTests {
         var service = new ImageAssetAccessService(new FakeImageAssetRepository());
         var assetId = ImageAssetId.New();
 
-        Result<ImageAsset?> result = await service.ResolveOptionalAsync(assetId, UserId.New(), CancellationToken.None);
+        Result<ImageAssetReadModel?> result = await service.ResolveOptionalAsync(assetId, UserId.New(), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Image.NotFound", result.Error.Code);
@@ -574,7 +575,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(asset, CancellationToken.None);
         var service = new ImageAssetAccessService(repo);
 
-        Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
+        Result<ImageAssetReadModel?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal(asset.Url, result.Value!.Url);
@@ -588,7 +589,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(asset, CancellationToken.None);
         var service = new ImageAssetAccessService(repo);
 
-        Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, UserId.New(), CancellationToken.None);
+        Result<ImageAssetReadModel?> result = await service.ResolveOptionalAsync(asset.Id, UserId.New(), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Image.NotFound", result.Error.Code);
@@ -602,7 +603,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(asset, CancellationToken.None);
         var service = new ImageAssetAccessService(repo);
 
-        Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
+        Result<ImageAssetReadModel?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Image.InvalidData", result.Error.Code);
@@ -771,4 +772,14 @@ public class ImagesFeatureTests {
             return Task.FromResult<IReadOnlyList<ImageAsset>>(result);
         }
     }
+    [ExcludeFromCodeCoverage]
+    private sealed class FakeImageAssetCleanupBatch(
+        IImageAssetWriteRepository repository,
+        IImageObjectDeletionOutbox outbox) : IImageAssetCleanupBatch {
+        public async Task<bool> DeleteUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
+            var service = new ImageAssetCleanupService(repository, outbox, NullLogger<ImageAssetCleanupService>.Instance, this);
+            return (await service.DeleteIfUnusedAsync(assetId, cancellationToken)).Deleted;
+        }
+    }
+
 }

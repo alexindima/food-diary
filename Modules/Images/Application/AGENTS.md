@@ -15,3 +15,5 @@ Rules for `Modules/Images/Application/`.
 
 - Build: `dotnet build Modules/Images/Application/FoodDiary.Application.Images.csproj`
 - Tests: `dotnet test Modules/Images/tests/FoodDiary.Modules.Images.Application.Tests/FoodDiary.Modules.Images.Application.Tests.csproj`
+
+Cross-module image access returns ImageAssetReadModel from Service.Contracts, never ImageAsset. Batch cleanup delegates each candidate to IImageAssetCleanupBatch for an isolated save and recheck.

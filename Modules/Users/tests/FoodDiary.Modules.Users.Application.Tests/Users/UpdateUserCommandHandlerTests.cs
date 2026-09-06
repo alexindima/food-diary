@@ -365,7 +365,7 @@ public sealed class UpdateUserCommandHandlerTests {
         IUserProfileImageService service = Substitute.For<IUserProfileImageService>();
         service.ResolveOptionalUrlAsync(Arg.Any<ImageAssetId?>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(async call => {
-                Result<FoodDiary.Domain.Entities.Assets.ImageAsset?> result = await access.ResolveOptionalAsync(
+                Result<FoodDiary.Application.Abstractions.Images.Models.ImageAssetReadModel?> result = await access.ResolveOptionalAsync(
                     call.Arg<ImageAssetId?>(), call.Arg<UserId>(), call.Arg<CancellationToken>()).ConfigureAwait(false);
                 return result.IsFailure ? Result.Failure<string?>(result.Error) : Result.Success(result.Value?.Url);
             });

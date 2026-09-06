@@ -52,6 +52,6 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
             .WithMany()
             .HasForeignKey(e => e.ImageAssetId)
             .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.ClientNoAction);
     }
 }

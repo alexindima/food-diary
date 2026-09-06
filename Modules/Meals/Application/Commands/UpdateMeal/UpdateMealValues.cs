@@ -1,4 +1,4 @@
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,5 +11,5 @@ internal sealed record UpdateMealValues(
     Meal Meal,
     MealType? MealType,
     ImageAssetId? ImageAssetId,
-    ImageAsset? ImageAsset,
+    ImageAssetReadModel? ImageAsset,
     ImageAssetId? OldAssetId);

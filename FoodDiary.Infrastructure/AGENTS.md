@@ -148,3 +148,5 @@ Infrastructure owns UserRepository; authentication flows/providers, shared DbCon
 migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
+
+SharedTransactionBoundary resets attempt-local tracking, domain-event dispatch state and post-commit actions for replayable module transactions. Callbacks must reload mutable inputs on each attempt. Six restrictive image FKs protect references against concurrent cleanup; Users releases its profile FK explicitly before image purge. See ADR 0032.

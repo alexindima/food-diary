@@ -154,7 +154,7 @@
         "entity:BillingWebhookEvent"
       ],
       "reason": "Billing owns serialized payment/webhook operations, save/commit and retry tracker reset; advisory locks serialize billing updates.",
-      "technicalSourceSha256": "b4858549e2d4bdaf1442e3848b62f883361e48a3c438a10279efd9422acf5eae"
+      "technicalSourceSha256": "7459f98be78850aacd21d16ca8e194818f04724da3f9ff191dc37e2cbd0374db"
     },
     "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs": {
       "module": "Billing",
@@ -678,13 +678,6 @@
       ],
       "reason": "Images owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
     },
-    "Modules/Images/Infrastructure/UserProfileImageService.cs": {
-      "module": "Images",
-      "capabilities": [
-        "entity:ImageAsset"
-      ],
-      "reason": "Images resolves its own asset access result into the Users-owned URL contract; cleanup delegates to the existing owner service with unchanged cancellation and errors."
-    },
     "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs": {
       "module": "Lessons",
       "capabilities": [
@@ -841,7 +834,7 @@
         "context:Database"
       ],
       "reason": "Products serializes its approved mutations with the shared context/unit of work and caller operation; retains existing save/commit ownership.",
-      "technicalSourceSha256": "f41c0701bf5b0dbbb2b080fccdfbad7aaefee7a4241b7fe9c0f80629686f140d"
+      "technicalSourceSha256": "1cb75f3c29ad39a82cb75c48ea9c3c2f98638396c0a0416dfb4a1a6b18a0b29f"
     },
     "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs": {
       "module": "Products",
@@ -923,7 +916,7 @@
         "context:Database"
       ],
       "reason": "Recipes serializes approved mutations with the shared context/unit of work and caller operation; retains existing save/commit ownership.",
-      "technicalSourceSha256": "a05569a6cbac5b3f488b3a700ca86bd56423effbd9940c09ca63d92ed4f04fd4"
+      "technicalSourceSha256": "a02ca13324b4cb15561d18ffd3dcde7842f412d302e127f0b1d9ff21ffac7f82"
     },
     "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs": {
       "module": "Recipes",
@@ -1007,7 +1000,7 @@
         "write:UserRole"
       ],
       "reason": "Users lifecycle coordinator locks eligibility, invokes ordered owner purge participants, deletes only User/UserRole rows and commits once per account. Owner adapters govern foreign data lifecycle. Reject pending caller state; clear tracking before retry attempts and after failed accounts so rolled-back outbox additions cannot leak into later commits.",
-      "technicalSourceSha256": "09162d5cf8e79e57f0c0e53ce92462a8b339cf03dc1b19c287afb3df1f768ab1"
+      "technicalSourceSha256": "0e2935bc8ba5f3d378fc6b82ef10d43e728130fd4dbf38afcaceedfa2f7e9b78"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs": {
       "module": "Users",
@@ -1096,7 +1089,7 @@
         "context:Database"
       ],
       "reason": "WeeklyGoals serializes a user/week with an advisory lock and shared unit of work; no foreign aggregate mutation.",
-      "technicalSourceSha256": "035c9de4526f18e4415976648f014c05030ded94c5ad811deae50d4f536dc11f"
+      "technicalSourceSha256": "7f5e58de16dfb94e072572e6daf7695604807197f29a21c1eaeab2fa8460334e"
     },
     "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs": {
       "module": "WeeklyGoals",

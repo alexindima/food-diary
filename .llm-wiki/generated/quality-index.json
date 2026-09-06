@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4833,
+    "productionFiles": 4836,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -535,6 +535,14 @@
       "structuralRiskScore": 92.1
     },
     {
+      "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
+      "nonBlankLines": 178,
+      "decisionPoints": 59,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 92.06
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
       "nonBlankLines": 306,
       "decisionPoints": 57,
@@ -741,14 +749,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 76.8
-    },
-    {
-      "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
-      "nonBlankLines": 158,
-      "decisionPoints": 49,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 76.66
     },
     {
       "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
@@ -2450,11 +2450,11 @@
     },
     {
       "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
-      "nonBlankLines": 158,
-      "decisionPoints": 49,
+      "nonBlankLines": 178,
+      "decisionPoints": 59,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 76.66
+      "structuralRiskScore": 92.06
     },
     {
       "path": "FoodDiary.Analyzers/ParameterNamingAnalyzer.cs",
@@ -2546,11 +2546,11 @@
     },
     {
       "path": "FoodDiary.Application.Runtime/Common/Services/PostCommitActionQueue.cs",
-      "nonBlankLines": 122,
+      "nonBlankLines": 126,
       "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.94
+      "structuralRiskScore": 19.02
     },
     {
       "path": "FoodDiary.Application.Runtime/DependencyInjection.cs",
@@ -3258,11 +3258,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Shared/SharedTransactionBoundary.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 3,
+      "nonBlankLines": 41,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.76
+      "structuralRiskScore": 9.82
     },
     {
       "path": "FoodDiary.Infrastructure/Properties/AssemblyInfo.cs",
@@ -17834,11 +17834,11 @@
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs",
-      "nonBlankLines": 94,
-      "decisionPoints": 13,
+      "nonBlankLines": 100,
+      "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.38
+      "structuralRiskScore": 26
     },
     {
       "path": "Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
@@ -18050,11 +18050,11 @@
     },
     {
       "path": "Modules/Billing/Application/Services/BillingRenewalService.cs",
-      "nonBlankLines": 233,
-      "decisionPoints": 14,
+      "nonBlankLines": 239,
+      "decisionPoints": 17,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.66
+      "structuralRiskScore": 30.28
     },
     {
       "path": "Modules/Billing/Application/Services/BillingUserContextService.cs",
@@ -18066,11 +18066,11 @@
     },
     {
       "path": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
-      "nonBlankLines": 71,
-      "decisionPoints": 10,
+      "nonBlankLines": 73,
+      "decisionPoints": 11,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.42
+      "structuralRiskScore": 17.96
     },
     {
       "path": "Modules/Billing/Domain/Entities/Billing/BillingDomainGuard.cs",
@@ -28321,12 +28321,12 @@
       "structuralRiskScore": 0.04
     },
     {
-      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetAccessService.cs",
-      "nonBlankLines": 10,
+      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupBatch.cs",
+      "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
+      "structuralRiskScore": 0.1
     },
     {
       "path": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupService.cs",
@@ -28522,19 +28522,19 @@
     },
     {
       "path": "Modules/Images/Application/Services/ImageAssetAccessService.cs",
-      "nonBlankLines": 25,
+      "nonBlankLines": 26,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5
+      "structuralRiskScore": 5.02
     },
     {
       "path": "Modules/Images/Application/Services/ImageAssetCleanupService.cs",
-      "nonBlankLines": 56,
-      "decisionPoints": 8,
+      "nonBlankLines": 57,
+      "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.12
+      "structuralRiskScore": 16.14
     },
     {
       "path": "Modules/Images/Contracts/ValueObjects/Ids/ImageAssetId.cs",
@@ -28562,11 +28562,11 @@
     },
     {
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "nonBlankLines": 22,
+      "nonBlankLines": 23,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.44
+      "structuralRiskScore": 0.46
     },
     {
       "path": "Modules/Images/Infrastructure/ImagesProviderRegistration.cs",
@@ -28607,6 +28607,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetCleanupBatch.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.86
     },
     {
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetOwnershipService.cs",
@@ -28767,6 +28775,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Images/Service.Contracts/Models/ImageAssetReadModel.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
     },
     {
       "path": "Modules/Lessons/Application/Abstractions/Common/INutritionLessonReadModelRepository.cs",
@@ -33442,11 +33466,11 @@
     },
     {
       "path": "Modules/Products/Infrastructure/Persistence/Products/EfProductMutationTransactionRunner.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 5,
+      "nonBlankLines": 43,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.26
+      "structuralRiskScore": 9.86
     },
     {
       "path": "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs",
@@ -34882,11 +34906,11 @@
     },
     {
       "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/EfRecipeMutationTransactionRunner.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 5,
+      "nonBlankLines": 43,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.26
+      "structuralRiskScore": 9.86
     },
     {
       "path": "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs",
@@ -37578,11 +37602,11 @@
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs",
-      "nonBlankLines": 119,
+      "nonBlankLines": 122,
       "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.38
+      "structuralRiskScore": 23.44
     },
     {
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs",
@@ -38754,11 +38778,11 @@
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs",
-      "nonBlankLines": 51,
-      "decisionPoints": 1,
+      "nonBlankLines": 54,
+      "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.52
+      "structuralRiskScore": 5.58
     },
     {
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs",
@@ -38882,11 +38906,11 @@
     },
     {
       "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IPostCommitActionQueue.cs",
-      "nonBlankLines": 14,
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
+      "structuralRiskScore": 0.3
     },
     {
       "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Persistence/IUnitOfWork.cs",

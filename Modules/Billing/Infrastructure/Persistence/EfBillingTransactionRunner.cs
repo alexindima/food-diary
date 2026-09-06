@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Domain.Entities.Billing;
@@ -8,7 +9,7 @@ using Npgsql;
 
 namespace FoodDiary.Modules.Billing.Infrastructure.Persistence;
 
-public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context) : IBillingTransactionRunner {
+public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context, IPostCommitActionQueue? postCommitActionQueue = null) : IBillingTransactionRunner {
     public Task ExecuteAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default) =>
         ExecuteCoreAsync(serializationKey: null, operation, cancellationToken);
 
@@ -25,10 +26,10 @@ public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context) : IBi
         Func<CancellationToken, Task> operation,
         CancellationToken cancellationToken) {
         ArgumentNullException.ThrowIfNull(operation);
-        SharedTransactionBoundary.EnsureCleanEntry(context);
+        SharedTransactionBoundary.EnsureCleanEntry(context, postCommitActionQueue);
         IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
-        try {
-            await strategy.ExecuteAsync(async () => {
+        await strategy.ExecuteAsync(() => SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue, async () => {
+            try {
                 IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
                 await using (transaction.ConfigureAwait(false)) {
                     if (serializationKey is not null) {
@@ -39,24 +40,23 @@ public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context) : IBi
                     await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                     await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
                 }
-            }).ConfigureAwait(false);
-        } catch (DbUpdateException ex) when (IsDuplicatePayment(ex)) {
-            BillingPayment? payment = DetachAddedPayment();
-            if (payment is null) {
-                throw;
-            }
+            } catch (DbUpdateException ex) when (IsDuplicatePayment(ex)) {
+                BillingPayment? payment = DetachAddedPayment();
+                if (payment is null) {
+                    throw;
+                }
 
-            context.ChangeTracker.Clear();
-            throw new BillingPaymentAlreadyExistsException(payment.Provider, payment.ExternalPaymentId);
-        } catch (DbUpdateException ex) when (IsDuplicateWebhookEvent(ex)) {
-            BillingWebhookEvent? webhookEvent = DetachAddedWebhookEvent();
-            if (webhookEvent is null) {
-                throw;
-            }
+                throw new BillingPaymentAlreadyExistsException(payment.Provider, payment.ExternalPaymentId);
+            } catch (DbUpdateException ex) when (IsDuplicateWebhookEvent(ex)) {
+                BillingWebhookEvent? webhookEvent = DetachAddedWebhookEvent();
+                if (webhookEvent is null) {
+                    throw;
+                }
 
-            context.ChangeTracker.Clear();
-            throw new BillingWebhookEventAlreadyProcessedException(webhookEvent.Provider, webhookEvent.EventId);
-        }
+                throw new BillingWebhookEventAlreadyProcessedException(webhookEvent.Provider, webhookEvent.EventId);
+            }
+            return true;
+        }, cancellationToken)).ConfigureAwait(false);
     }
 
     private async Task AcquireTransactionLockAsync(

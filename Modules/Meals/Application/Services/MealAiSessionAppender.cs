@@ -4,7 +4,7 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Meals.Common.Validation;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Meals.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -47,7 +47,7 @@ internal static class MealAiSessionAppender {
             return sessionImageAssetIdResult;
         }
 
-        Result<ImageAsset?> sessionImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+        Result<ImageAssetReadModel?> sessionImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             sessionImageAssetIdResult.Value,
             userId,
             cancellationToken).ConfigureAwait(false);

@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3607,
-    "symbols": 3547,
-    "interfaceImplementationLinks": 239,
-    "dependencyInjectionRegistrations": 152,
+    "sourceFiles": 3610,
+    "symbols": 3550,
+    "interfaceImplementationLinks": 240,
+    "dependencyInjectionRegistrations": 153,
     "kinds": {
-      "class": 1853,
+      "class": 1854,
       "enum": 62,
-      "interface": 434,
-      "record": 1078,
+      "interface": 435,
+      "record": 1079,
       "record struct": 120
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1393,
+      "Other": 1396,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 30,
@@ -752,7 +752,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Shared/SharedTransactionBoundary.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "DatabaseCommandTelemetryInterceptor",
@@ -6604,7 +6604,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "PostgresBillingCheckoutLock",
@@ -15336,11 +15336,11 @@
       "line": 2
     },
     {
-      "name": "IImageAssetAccessService",
+      "name": "IImageAssetCleanupBatch",
       "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetAccessService.cs",
-      "line": 6
+      "role": "Other",
+      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupBatch.cs",
+      "line": 4
     },
     {
       "name": "IImageAssetCleanupService",
@@ -15508,14 +15508,14 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Application/Services/ImageAssetAccessService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ImageAssetCleanupService",
       "kind": "class",
       "role": "Service",
       "path": "Modules/Images/Application/Services/ImageAssetCleanupService.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ImageAssetId",
@@ -15572,6 +15572,13 @@
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Model/ImagesPersistenceModelBuilderExtensions.cs",
       "line": 4
+    },
+    {
+      "name": "ImageAssetCleanupBatch",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetCleanupBatch.cs",
+      "line": 7
     },
     {
       "name": "ImageAssetOwnershipService",
@@ -15712,6 +15719,20 @@
       "role": "Response",
       "path": "Modules/Images/Presentation/Features/Images/Responses/GetImageUploadUrlHttpResponse.cs",
       "line": 2
+    },
+    {
+      "name": "IImageAssetAccessService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs",
+      "line": 6
+    },
+    {
+      "name": "ImageAssetReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Service.Contracts/Models/ImageAssetReadModel.cs",
+      "line": 4
     },
     {
       "name": "INutritionLessonReadModelRepository",
@@ -25650,9 +25671,16 @@
     },
     {
       "interface": "IImageAssetAccessService",
-      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetAccessService.cs",
+      "interfacePath": "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs",
       "implementation": "ImageAssetAccessService",
       "implementationPath": "Modules/Images/Application/Services/ImageAssetAccessService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IImageAssetCleanupBatch",
+      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupBatch.cs",
+      "implementation": "ImageAssetCleanupBatch",
+      "implementationPath": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetCleanupBatch.cs",
       "confidence": "naming-convention"
     },
     {
@@ -27254,25 +27282,32 @@
       "line": 15
     },
     {
+      "service": "IImageAssetCleanupBatch",
+      "implementation": "ImageAssetCleanupBatch",
+      "lifetime": "Scoped",
+      "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
+      "line": 17
+    },
+    {
       "service": "IImageAssetRepository",
       "implementation": "ImageAssetRepository",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 17
+      "line": 18
     },
     {
       "service": "IImageObjectDeletionOutbox",
       "implementation": "ImageObjectDeletionOutbox",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 20
+      "line": 21
     },
     {
       "service": "IImageObjectDeletionOutboxProcessor",
       "implementation": "ImageObjectDeletionOutboxProcessor",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 21
+      "line": 22
     },
     {
       "service": "ILessonReadService",

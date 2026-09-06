@@ -126,6 +126,8 @@ public sealed class BillingRenewalService(
         DateTime skippedAtUtc,
         CancellationToken cancellationToken) {
         await billingTransactionRunner.ExecuteAsync(async ct => {
+            subscription = await billingSubscriptionRepository.GetByUserIdAsync(subscription.UserId, ct).ConfigureAwait(false)
+                ?? throw new InvalidOperationException("The subscription no longer exists.");
             subscription.MarkRenewalSkippedForInaccessibleUser(
                 BuildRenewalSkippedEventId(subscription, skippedAtUtc),
                 skippedAtUtc,
@@ -161,6 +163,8 @@ public sealed class BillingRenewalService(
         DateTime renewedAtUtc,
         CancellationToken cancellationToken) {
         await billingTransactionRunner.ExecuteAsync(async ct => {
+            subscription = await billingSubscriptionRepository.GetByUserIdAsync(subscription.UserId, ct).ConfigureAwait(false)
+                ?? throw new InvalidOperationException("The subscription no longer exists.");
             subscription.ApplyProviderSnapshot(
                 provider,
                 renewal.PaymentId,
@@ -239,6 +243,8 @@ public sealed class BillingRenewalService(
         CancellationToken cancellationToken) {
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
         await billingTransactionRunner.ExecuteAsync(async ct => {
+            subscription = await billingSubscriptionRepository.GetByUserIdAsync(subscription.UserId, ct).ConfigureAwait(false)
+                ?? throw new InvalidOperationException("The subscription no longer exists.");
             subscription.MarkRenewalFailed(
                 now.Add(FailedRenewalRetryDelay),
                 BuildRenewalFailureEventId(subscription, now),

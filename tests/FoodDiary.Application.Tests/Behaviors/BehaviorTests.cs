@@ -178,6 +178,19 @@ public class BehaviorTests {
     }
 
     [Fact]
+    public async Task PostCommitActionQueue_Discard_DropsFailedAttemptAndRestoresCapacity() {
+        var queue = new PostCommitActionQueue(NullLogger<PostCommitActionQueue>.Instance, TimeProvider.System,
+            TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2), maxActions: 1);
+        var delivered = new List<string>();
+        queue.Enqueue("failed", _ => { delivered.Add("failed"); return Task.CompletedTask; });
+        queue.Discard();
+        Assert.False(queue.HasActions);
+        queue.Enqueue("committed", _ => { delivered.Add("committed"); return Task.CompletedTask; });
+        await queue.FlushAsync();
+        Assert.Equal(["committed"], delivered);
+    }
+
+    [Fact]
     public async Task PostCommitActionQueue_FlushAsync_DrainsActionsEnqueuedDuringFlush() {
         var postCommitActionQueue = new PostCommitActionQueue(
             NullLogger<PostCommitActionQueue>.Instance,

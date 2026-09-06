@@ -8364,7 +8364,7 @@
     {
       "category": "privateContent",
       "name": "ImageAsset",
-      "type": "ImageAsset?",
+      "type": "ImageAssetReadModel?",
       "path": "Modules/Images/Application/Common/ImageAssetResolution.cs",
       "line": 6
     },
@@ -8406,7 +8406,7 @@
     {
       "category": "privateContent",
       "name": "ImageAsset",
-      "type": "ImageAsset?",
+      "type": "ImageAssetReadModel?",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealValues.cs",
       "line": 11
     },
@@ -8441,7 +8441,7 @@
     {
       "category": "privateContent",
       "name": "ImageAsset",
-      "type": "ImageAsset?",
+      "type": "ImageAssetReadModel?",
       "path": "Modules/Meals/Application/Commands/UpdateMeal/UpdateMealValues.cs",
       "line": 14
     },
@@ -9246,7 +9246,7 @@
     {
       "category": "privateContent",
       "name": "ImageAsset",
-      "type": "ImageAsset?",
+      "type": "ImageAssetReadModel?",
       "path": "Modules/Recipes/Application/Commands/CreateRecipe/CreateRecipeValues.cs",
       "line": 11
     },
@@ -9302,7 +9302,7 @@
     {
       "category": "privateContent",
       "name": "ImageAsset",
-      "type": "ImageAsset?",
+      "type": "ImageAssetReadModel?",
       "path": "Modules/Recipes/Application/Commands/UpdateRecipe/UpdateRecipeValues.cs",
       "line": 15
     },

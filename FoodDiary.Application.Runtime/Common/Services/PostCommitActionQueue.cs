@@ -46,6 +46,11 @@ internal sealed class PostCommitActionQueue : IPostCommitActionQueue {
 
     public bool HasActions => _actions.Count > 0;
 
+    public void Discard() {
+        _actions.Clear();
+        _acceptedActionCount = 0;
+    }
+
     public void Enqueue(string actionName, Func<CancellationToken, Task> action) {
         ArgumentException.ThrowIfNullOrWhiteSpace(actionName);
         ArgumentNullException.ThrowIfNull(action);

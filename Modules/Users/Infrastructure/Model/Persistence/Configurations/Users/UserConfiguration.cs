@@ -106,7 +106,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             .WithMany()
             .HasForeignKey(e => e.ProfileImageAssetId)
             .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.ClientNoAction);
     }
 
     private static void ConfigureNavigationAccess(EntityTypeBuilder<User> builder) {

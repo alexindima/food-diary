@@ -2,7 +2,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Images.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -47,7 +47,7 @@ internal static class RecipeStepAppender {
                 return stepImageAssetIdResult;
             }
 
-            Result<ImageAsset?> stepImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+            Result<ImageAssetReadModel?> stepImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
                 stepImageAssetIdResult.Value,
                 userId,
                 cancellationToken).ConfigureAwait(false);

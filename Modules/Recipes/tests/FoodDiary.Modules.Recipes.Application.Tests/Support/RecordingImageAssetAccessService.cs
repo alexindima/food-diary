@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.Entities.Assets;
@@ -23,21 +24,21 @@ public sealed class RecordingImageAssetAccessService : IImageAssetAccessService 
         return this;
     }
 
-    public Task<Result<ImageAsset?>> ResolveOptionalAsync(
+    public Task<Result<ImageAssetReadModel?>> ResolveOptionalAsync(
         ImageAssetId? assetId,
         UserId userId,
         CancellationToken cancellationToken = default) {
         _requestedAssetIds.Add(assetId);
         if (_failure is not null) {
-            return Task.FromResult(Result.Failure<ImageAsset?>(_failure));
+            return Task.FromResult(Result.Failure<ImageAssetReadModel?>(_failure));
         }
 
         if (!assetId.HasValue) {
-            return Task.FromResult(Result.Success<ImageAsset?>(value: null));
+            return Task.FromResult(Result.Success<ImageAssetReadModel?>(value: null));
         }
 
         string url = _urls.GetValueOrDefault(assetId.Value, $"https://cdn.example/{assetId.Value.Value:D}.jpg");
         var asset = ImageAsset.Create(userId, $"images/{assetId.Value.Value:D}.jpg", url);
-        return Task.FromResult(Result.Success<ImageAsset?>(asset));
+        return Task.FromResult(Result.Success<ImageAssetReadModel?>(new ImageAssetReadModel(asset.Id, asset.Url)));
     }
 }

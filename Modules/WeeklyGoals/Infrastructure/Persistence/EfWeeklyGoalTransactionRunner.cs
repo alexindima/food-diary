@@ -10,28 +10,31 @@ namespace FoodDiary.Infrastructure.Persistence.WeeklyGoals;
 
 public sealed class EfWeeklyGoalTransactionRunner(
     FoodDiaryDbContext context,
-    IUnitOfWork unitOfWork) : IWeeklyGoalTransactionRunner {
+    IUnitOfWork unitOfWork,
+    IPostCommitActionQueue? postCommitActionQueue = null) : IWeeklyGoalTransactionRunner {
     public async Task<T> ExecuteSerializedAsync<T>(
         UserId userId,
         DateTime weekStartUtc,
         Func<CancellationToken, Task<T>> operation,
         CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(operation);
-        SharedTransactionBoundary.EnsureCleanEntry(context);
+        SharedTransactionBoundary.EnsureCleanEntry(context, postCommitActionQueue);
         IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
-        return await strategy.ExecuteAsync(async () => {
+        return await strategy.ExecuteAsync(() => SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue, async () => {
             IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             await using (transaction.ConfigureAwait(false)) {
                 await AcquireLockAsync(userId, weekStartUtc, transaction, cancellationToken).ConfigureAwait(false);
                 T result = await operation(cancellationToken).ConfigureAwait(false);
-                if (unitOfWork.HasPendingChanges) {
+                if (result is not FoodDiary.Results.Result { IsFailure: true } && unitOfWork.HasPendingChanges) {
                     await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 }
 
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                if (result is not FoodDiary.Results.Result { IsFailure: true }) {
+                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                }
                 return result;
             }
-        }).ConfigureAwait(false);
+        }, cancellationToken)).ConfigureAwait(false);
     }
 
     private async Task AcquireLockAsync(

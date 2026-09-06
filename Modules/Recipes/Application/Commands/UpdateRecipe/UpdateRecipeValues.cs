@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -12,7 +12,7 @@ internal sealed record UpdateRecipeValues(
     Recipe Recipe,
     Visibility? Visibility,
     ImageAssetId? ImageAssetId,
-    ImageAsset? ImageAsset,
+    ImageAssetReadModel? ImageAsset,
     ImageAssetId? OldAssetId,
     IReadOnlyList<ImageAssetId> OldStepAssetIds,
     IReadOnlyList<RecipeStepInput> Steps);

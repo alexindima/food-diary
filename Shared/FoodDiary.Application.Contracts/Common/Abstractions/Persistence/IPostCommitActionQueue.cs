@@ -11,6 +11,8 @@ namespace FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 public interface IPostCommitActionQueue {
     bool HasActions { get; }
 
+    void Discard();
+
     void Enqueue(string actionName, Func<CancellationToken, Task> action);
 
     Task FlushAsync(CancellationToken cancellationToken = default);

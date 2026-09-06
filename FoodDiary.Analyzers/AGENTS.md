@@ -44,3 +44,5 @@ match reviewed technicalSourceSha256 values in persistence-capabilities.json.
 A technical exception never grants foreign module aggregate writes. Shared audit
 persistence writes require that same exact file fingerprint. This is a build-time
 architecture guard, not a database authorization boundary.
+
+FD0015/FD0016 inspect method references as well as invocations: delegates must not acquire untyped/foreign EF writes or unreviewed technical save capabilities.

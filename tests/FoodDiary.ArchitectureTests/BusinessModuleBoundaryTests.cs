@@ -298,6 +298,7 @@ public sealed class BusinessModuleBoundaryTests {
     private static readonly HashSet<string> ApprovedRecipesApplicationDependencies = new(StringComparer.Ordinal) {
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Images.Common",
+        "FoodDiary.Application.Abstractions.Images.Models",
         "FoodDiary.Application.Abstractions.Products.Common",
         "FoodDiary.Application.Abstractions.Products.Models",
         "FoodDiary.Application.Abstractions.RecentItems.Common",
@@ -320,6 +321,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Meals.Common",
         "FoodDiary.Application.Abstractions.FavoriteMeals",
         "FoodDiary.Application.Abstractions.Images.Common",
+        "FoodDiary.Application.Abstractions.Images.Models",
         "FoodDiary.Application.Abstractions.Meals",
         "FoodDiary.Application.Abstractions.Products.Common",
         "FoodDiary.Application.Abstractions.Products.Models",

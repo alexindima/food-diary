@@ -32,7 +32,7 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
             .WithMany()
             .HasForeignKey(e => e.ImageAssetId)
             .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.ClientNoAction);
 
         builder.HasOne<User>()
             .WithMany()

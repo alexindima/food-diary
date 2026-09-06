@@ -135,6 +135,7 @@ COPY Modules/RecentItems/Infrastructure/Model/*.csproj Modules/RecentItems/Infra
 COPY Modules/Images/Application/*.csproj Modules/Images/Application/
 COPY Modules/Images/Application/Abstractions/*.csproj Modules/Images/Application/Abstractions/
 COPY Modules/Images/Contracts/*.csproj Modules/Images/Contracts/
+COPY Modules/Images/Service.Contracts/*.csproj Modules/Images/Service.Contracts/
 COPY Modules/Images/Domain/*.csproj Modules/Images/Domain/
 COPY Modules/Images/Infrastructure/*.csproj Modules/Images/Infrastructure/
 COPY Modules/Images/Infrastructure/Model/*.csproj Modules/Images/Infrastructure/Model/
@@ -334,6 +335,7 @@ COPY Modules/RecentItems/Infrastructure/Model/ Modules/RecentItems/Infrastructur
 COPY Modules/Images/Application/ Modules/Images/Application/
 COPY Modules/Images/Application/Abstractions/ Modules/Images/Application/Abstractions/
 COPY Modules/Images/Contracts/ Modules/Images/Contracts/
+COPY Modules/Images/Service.Contracts/ Modules/Images/Service.Contracts/
 COPY Modules/Images/Domain/ Modules/Images/Domain/
 COPY Modules/Images/Infrastructure/ Modules/Images/Infrastructure/
 COPY Modules/Images/Infrastructure/Model/ Modules/Images/Infrastructure/Model/

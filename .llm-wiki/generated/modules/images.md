@@ -32,6 +32,7 @@ sources:
 - `Modules/Images/Infrastructure/Model`
 - `Modules/Images/Infrastructure/Providers`
 - `Modules/Images/Presentation`
+- `Modules/Images/Service.Contracts`
 
 ## HTTP Surface
 
@@ -42,20 +43,21 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
-- Public contract files: 14
+- Public contract files: 16
 - Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 14
-- Interfaces: 9
-- DTO/read-model/projection types: 0
+- Public contract types: 16
+- Interfaces: 10
+- DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 3
-- Contracts referencing domain entities: 3
+- Contracts referencing domain entities: 2
 - `class ImageErrors`
 - `interface IImageAssetAccessService`
+- `interface IImageAssetCleanupBatch`
 - `interface IImageAssetCleanupService`
 - `interface IImageAssetOwnershipService`
 - `interface IImageAssetReadRepository`
@@ -65,6 +67,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IImageObjectDeletionOutboxProcessor`
 - `interface IImageStorageService`
 - `record DeleteImageAssetResult`
+- `record ImageAssetReadModel`
 - `record ImageObjectValidationResult`
 - `record PresignedUpload`
 - `record struct ImageAssetId`

@@ -48,9 +48,11 @@ public sealed class BillingWebhookInboxService(
             return result;
         }
 
-        await billingTransactionRunner.ExecuteAsync(ct => {
+        await billingTransactionRunner.ExecuteAsync(async ct => {
+            inboxEvent = await billingWebhookEventRepository.GetByIdAsync(webhookEventId, ct).ConfigureAwait(false)
+                ?? throw new InvalidOperationException("The webhook inbox event no longer exists.");
             inboxEvent.MarkFailed(timeProvider.GetUtcNow().UtcDateTime, result.Error.Message);
-            return billingWebhookEventRepository.UpdateAsync(inboxEvent, ct);
+            await billingWebhookEventRepository.UpdateAsync(inboxEvent, ct).ConfigureAwait(false);
         },
             cancellationToken).ConfigureAwait(false);
         return result;

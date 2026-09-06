@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Application.Abstractions.Images.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
@@ -10,7 +10,7 @@ internal sealed class UserProfileImageService(
     IImageAssetAccessService accessService,
     IImageAssetCleanupService cleanupService) : IUserProfileImageService {
     public async Task<Result<string?>> ResolveOptionalUrlAsync(ImageAssetId? assetId, UserId userId, CancellationToken cancellationToken = default) {
-        Result<ImageAsset?> result = await accessService.ResolveOptionalAsync(assetId, userId, cancellationToken).ConfigureAwait(false);
+        Result<ImageAssetReadModel?> result = await accessService.ResolveOptionalAsync(assetId, userId, cancellationToken).ConfigureAwait(false);
         return result.IsFailure ? Result.Failure<string?>(result.Error) : Result.Success(result.Value?.Url);
     }
 
