@@ -53,9 +53,9 @@
   "cases": [
     { "id": "postfix-api-001", "cohort": "api-roles", "query": "атрибут подавляющий access log для запроса API", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Telemetry/SuppressRequestAccessLogAttribute.cs"] },
     { "id": "postfix-api-002", "cohort": "api-roles", "query": "атрибут запрещающий impersonated access к endpoint", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Security/BlockImpersonatedAccessAttribute.cs"] },
-    { "id": "postfix-api-003", "cohort": "api-roles", "query": "notifier отправляющий письмо подтверждения email", "changeType": "Backend", "expectedPaths": ["FoodDiary.Presentation.Api/Services/EmailVerificationNotifier.cs"] },
-    { "id": "postfix-api-004", "cohort": "api-roles", "query": "атрибут требующий secret телеграм бота для API", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Security/RequireTelegramBotSecretAttribute.cs"] },
-    { "id": "postfix-api-005", "cohort": "api-roles", "query": "presentation notification pusher отправляет доменное уведомление", "changeType": "Backend", "expectedPaths": ["FoodDiary.Presentation.Api/Services/NotificationPusher.cs"] },
+    { "id": "postfix-api-003", "cohort": "api-roles", "query": "notifier отправляющий письмо подтверждения email", "changeType": "Backend", "expectedPaths": ["Modules/Identity/Presentation/Services/EmailVerificationNotifier.cs"] },
+    { "id": "postfix-api-004", "cohort": "api-roles", "query": "атрибут требующий secret телеграм бота для API", "changeType": "Api", "expectedPaths": ["Modules/Identity/Presentation/Security/RequireTelegramBotSecretAttribute.cs"] },
+    { "id": "postfix-api-005", "cohort": "api-roles", "query": "presentation notification pusher отправляет доменное уведомление", "changeType": "Backend", "expectedPaths": ["Modules/Notifications/Presentation/Services/NotificationPusher.cs"] },
 
     { "id": "postfix-test-001", "cohort": "behavior-to-test", "query": "тест безопасности endpoint Web Push", "changeType": "Tests", "expectedPaths": ["Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushEndpointSecurityTests.cs"] },
     { "id": "postfix-test-002", "cohort": "behavior-to-test", "query": "тест structured audit logger", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Infrastructure.Tests/Services/StructuredAuditLoggerTests.cs"] },

@@ -131,6 +131,10 @@ Use the independently authored holdout corpus as the primary retrieval-quality
 signal. The frozen target-aware synthetic unseen corpus is a deterministic
 diagnostic for ranking regressions and cohort balance; because its expected
 paths informed its construction, it is not evidence of real-user query quality.
+Keep frozen target paths aligned with verified source relocations without
+changing their semantic targets, queries or thresholds. Structural ranking
+aliases preserve layer preferences for module providers and shared libraries;
+search results still name their current physical owners.
 
 Context discovery is advisory. Run `wiki.ps1 policy` for deterministic
 repository obligations and use an evidence bundle when those obligations need

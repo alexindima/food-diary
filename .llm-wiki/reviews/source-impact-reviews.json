@@ -214,14 +214,14 @@
       "pageSha256": "c89b4c5cb13fefe0a1c6171804cc91b5f6c9ce69753e8d4de9fda0bb2514b052",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "05917349c6db00f6c52ba4349e43487540d1344dfa9b8dc89608e5809adffcca"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "49e36a7b499b3a44c1768bc5c7e38ac57f19bb7c8fb7ce75c3e5e102683e0499"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed final context-ranking changes: physical paths, projection lineage, backend contract/privacy/impact queries and stale states remain intact. Shared/module selectors preserve roles; compound identifiers and explicit-test morphology reuse bounded ranking. Frozen path-only edits have verified Git rename evidence.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:40.705394Z"
+      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
+      "reviewedAtUtc": "2026-09-06T20:27:46.4131637Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -587,14 +587,14 @@
       "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "49e36a7b499b3a44c1768bc5c7e38ac57f19bb7c8fb7ce75c3e5e102683e0499"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed final context-ranking changes: physical paths, projection lineage, backend contract/privacy/impact queries and stale states remain intact. Shared/module selectors preserve roles; compound identifiers and explicit-test morphology reuse bounded ranking. Frozen path-only edits have verified Git rename evidence.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:31:56.8473346Z"
+      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
+      "reviewedAtUtc": "2026-09-06T20:27:46.9427562Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -768,17 +768,17 @@
     {
       "pageId": "workflow-privacy-review",
       "pagePath": ".llm-wiki/workflows/privacy-review.md",
-      "pageSha256": "e01ff59cf70144c17231e65657507cbf611981c565cc6c4e6c0504ac567e6a77",
+      "pageSha256": "78aa14b84fb0cb0d89ccb14af14b45659440ebc5989802a96986908f26653657",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "82667e043424a238b2b92fa7bcd82c7bfa3042292106e2080811f7941b812dfe"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "49e36a7b499b3a44c1768bc5c7e38ac57f19bb7c8fb7ce75c3e5e102683e0499"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed final context-ranking changes: physical paths, projection lineage, backend contract/privacy/impact queries and stale states remain intact. Shared/module selectors preserve roles; compound identifiers and explicit-test morphology reuse bounded ranking. Frozen path-only edits have verified Git rename evidence.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:41.5414529Z"
+      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
+      "reviewedAtUtc": "2026-09-06T20:27:47.5443176Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -817,13 +817,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5deac9c43536177327f46ac12370f9bead1ce7b7911483745236f71f10f022d2"
+          "sha256": "437a448ff463ea3c0310190954e8acd8730c7fde4d8136a2e288a7afc60dbee7"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed regenerated MCP complexity counts for the bounded selector and identifier changes. 109 focused reader tests passed, including synthetic negative boundaries; static reference counts are not presented as execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:31:58.3970093Z"
+      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
+      "reviewedAtUtc": "2026-09-06T20:28:42.2614307Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -899,14 +899,14 @@
       "pageSha256": "be8e261d7fdfddf0e283cb15cc99ec689bba8876b0f76794a40a01cdaea52b0d",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "81e0fb06333d3038ecbed7b103a05b9f27bf4fd2cc58c5b39d759c7f8fed7c7a"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Runtime topology diff changes only its source fingerprint after MCP edits; services, providers, jobs, cancellation and telemetry declarations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:31:59.829177Z"
+      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
+      "reviewedAtUtc": "2026-09-06T20:28:43.0277763Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -915,17 +915,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5deac9c43536177327f46ac12370f9bead1ce7b7911483745236f71f10f022d2"
+          "sha256": "437a448ff463ea3c0310190954e8acd8730c7fde4d8136a2e288a7afc60dbee7"
         },
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "e5eda71918759308dfbf2d038bbf0e27eaedad404be7763292e0682663916441"
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "81e0fb06333d3038ecbed7b103a05b9f27bf4fd2cc58c5b39d759c7f8fed7c7a"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed the quality-count and topology-fingerprint refresh: no security boundary or runtime declaration changed; evidence remains navigation, with actual ranking regression tests recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:32:00.6436202Z"
+      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
+      "reviewedAtUtc": "2026-09-06T20:28:43.8122006Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

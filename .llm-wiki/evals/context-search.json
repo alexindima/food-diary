@@ -147,7 +147,7 @@
       "id": "yookassa-api-client",
       "query": "call the external YooKassa payment API provider",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Billing/YooKassaApiClient.cs"]
+      "expectedPaths": ["Modules/Billing/Infrastructure/Providers/Billing/YooKassaApiClient.cs"]
     },
     {
       "id": "recipe-nutrition-update",

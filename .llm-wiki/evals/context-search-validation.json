@@ -30,7 +30,7 @@
       "id": "bounded-http-content-reader",
       "query": "read an HTTP response body with a strict maximum size",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Http/BoundedHttpContentReader.cs"]
+      "expectedPaths": ["Shared/FoodDiary.Integrations.Http/Http/BoundedHttpContentReader.cs"]
     },
     {
       "id": "web-push-delivery-audience",
@@ -84,13 +84,13 @@
       "id": "telegram-secret-authorization-filter",
       "query": "authorize Telegram bot HTTP calls using the configured secret",
       "changeType": "Api",
-      "expectedPaths": ["FoodDiary.Presentation.Api/Security/TelegramBotSecretAuthorizationFilter.cs"]
+      "expectedPaths": ["Modules/Identity/Presentation/Security/TelegramBotSecretAuthorizationFilter.cs"]
     },
     {
       "id": "notification-signalr-hub",
       "query": "SignalR hub pushes notification updates to connected clients",
       "changeType": "Api",
-      "expectedPaths": ["FoodDiary.Presentation.Api/Hubs/NotificationHub.cs"]
+      "expectedPaths": ["Modules/Notifications/Presentation/Hubs/NotificationHub.cs"]
     },
     {
       "id": "wearable-sync-repository-validation",

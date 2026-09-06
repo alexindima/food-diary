@@ -4,15 +4,29 @@ export function rankingPathIdentities(value) {
   const path = String(value ?? '').replaceAll('\\', '/').toLowerCase();
   const sharedTest = /^(?:shared|tooling)\/(tests\/[^/]+\.tests\/.+)$/.exec(path);
   if (sharedTest) return [path, sharedTest[1]];
+  const persistenceModel = /^shared\/fooddiary\.([^.\/]+)\.persistencemodel\/(.+)$/.exec(path);
+  if (persistenceModel && !/(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) {
+    const [, owner, tail] = persistenceModel;
+    return [path, tail.startsWith('configurations/')
+      ? `fooddiary.infrastructure/persistence/configurations/${owner}/${tail.slice('configurations/'.length)}`
+      : `fooddiary.infrastructure/persistence/${owner}/${tail}`];
+  }
+  if (path.startsWith('shared/fooddiary.integrations.http/') &&
+    !/(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) {
+    return [path, `fooddiary.integrations/${path.slice('shared/fooddiary.integrations.http/'.length)}`];
+  }
   if (path.startsWith('shared/fooddiary.domain.primitives/') &&
     !/(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) {
     return [path, `fooddiary.domain/${path.slice('shared/fooddiary.domain.primitives/'.length)}`];
   }
   const test = /^modules\/([^/]+)\/tests\/fooddiary\.modules\.([^/]+)\.((?:application|domain|infrastructure(?:\.integration)?)\.tests|infrastructure\.integrationtests)\/(.+)$/.exec(path);
   if (test && test[1] === test[2]) return [path, `tests/fooddiary.${test[3]}/${test[4]}`];
-  const match = /^modules\/([^/]+)\/(application|domain|infrastructure)\/(.+)$/.exec(path);
+  const match = /^modules\/([^/]+)\/(application|domain|infrastructure|presentation|contracts)\/(.+)$/.exec(path);
   if (!match || /(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$/.test(path)) return [path];
   const [, module, layer, tail] = match;
+  if (layer === 'presentation') return [path, `fooddiary.presentation.api/${tail}`];
+  // Consumer contracts keep abstraction selectors; they gain no implementation layer.
+  if (layer === 'contracts') return [path, `fooddiary.application.abstractions/${tail}`];
   if (layer === 'application') {
     return [path, tail.startsWith('abstractions/')
       ? `fooddiary.application.abstractions/${tail.slice('abstractions/'.length)}`
@@ -50,6 +64,13 @@ export function implicitImplementationIntent(changeType, terms, affinities) {
 export function directIdentifierTermMatchesMinimum(term, minimum) {
   return term.length >= minimum || (term.length >= 2 &&
     /^[\p{L}\p{N}]+$/u.test(term) && /\p{L}/u.test(term) && /\p{N}/u.test(term));
+}
+
+// Preserve a hyphenated identifier's compact spelling as well as its words,
+// so prose such as stock-count can match a StockCount symbol.
+export function hyphenatedIdentifierTerms(value) {
+  return [...new Set((String(value ?? '').toLowerCase().match(/\p{L}{2,}(?:-\p{L}{2,})+/gu) ?? [])
+    .map(term => term.replaceAll('-', '')))];
 }
 
 // A named module's application contract is a valid entry point unless a concrete

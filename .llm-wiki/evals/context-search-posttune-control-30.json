@@ -62,7 +62,7 @@
   },
   "cases": [
     { "id": "posttune-api-001", "cohort": "api-roles", "query": "billing HTTP controller для подписки и платежей", "changeType": "Api", "expectedPaths": ["Modules/Billing/Presentation/Features/Billing/BillingController.cs"], "acceptedPaths": ["Modules/Admin/Presentation/Features/Admin/AdminBillingController.cs"] },
-    { "id": "posttune-api-002", "cohort": "api-roles", "query": "SignalR hub подтверждения email", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Hubs/EmailVerificationHub.cs"] },
+    { "id": "posttune-api-002", "cohort": "api-roles", "query": "SignalR hub подтверждения email", "changeType": "Api", "expectedPaths": ["Modules/Identity/Presentation/Hubs/EmailVerificationHub.cs"] },
     { "id": "posttune-api-003", "cohort": "api-roles", "query": "API controller Web Push уведомлений", "changeType": "Api", "expectedPaths": ["Modules/Notifications/Presentation/Features/Notifications/NotificationPushController.cs"] },
     { "id": "posttune-api-004", "cohort": "api-roles", "query": "options rate limiting для API", "changeType": "Api", "expectedPaths": ["FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs"] },
     { "id": "posttune-api-005", "cohort": "api-roles", "query": "constant time сравнение secret в presentation security", "changeType": "Api", "expectedPaths": ["FoodDiary.Presentation.Api/Security/SecretComparison.cs"] },
@@ -88,7 +88,7 @@
     { "id": "posttune-test-001", "cohort": "behavior-to-test", "query": "тест parser значений enum", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Application.Tests/Validation/EnumValueParserTests.cs"] },
     { "id": "posttune-test-002", "cohort": "behavior-to-test", "query": "тест sender Web Push notification", "changeType": "Tests", "expectedPaths": ["Modules/Notifications/tests/FoodDiary.Modules.Notifications.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs"] },
     { "id": "posttune-test-003", "cohort": "behavior-to-test", "query": "тест job очистки fasting telemetry", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.JobManager.Tests/FastingTelemetryCleanupJobTests.cs"] },
-    { "id": "posttune-test-004", "cohort": "behavior-to-test", "query": "тест API controller push notifications", "changeType": "Tests", "expectedPaths": ["tests/FoodDiary.Presentation.Api.Tests/NotificationPushControllerTests.cs"] },
+    { "id": "posttune-test-004", "cohort": "behavior-to-test", "query": "тест API controller push notifications", "changeType": "Tests", "expectedPaths": ["Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPushControllerTests.cs"] },
     { "id": "posttune-test-005", "cohort": "behavior-to-test", "query": "domain tests инвариантов favorites", "changeType": "Tests", "expectedPaths": ["Modules/Favorites/tests/FoodDiary.Modules.Favorites.Domain.Tests/FavoriteInvariantTests.cs"] },
 
     { "id": "posttune-wiki-001", "cohort": "wiki-tooling", "query": "wiki builder sensitive data index", "changeType": "Any", "expectedPaths": [".llm-wiki/tools/Build-LlmWikiSensitiveDataIndex.ps1"] },
