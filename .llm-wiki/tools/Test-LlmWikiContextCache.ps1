@@ -16,10 +16,11 @@ $arguments = @{
     Limit = 3
 }
 $entry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'context' -Arguments $arguments `
-    -RelevantPath @('FoodDiary.Application/Users', 'FoodDiary.Application.Users') -DependencyPath @(
+    -RelevantPath @('Modules/Users/Application') -DependencyPath @(
     '.llm-wiki/generated/repository-catalog.json'
     '.llm-wiki/generated/csharp-symbol-index.json'
     '.llm-wiki/generated/frontend-index.json'
+    'docs/architecture/backend-modules.json'
 )
 if (Read-LlmWikiQueryCache -Entry $entry) { throw 'Unique context-cache smoke unexpectedly started with a cache hit.' }
 
