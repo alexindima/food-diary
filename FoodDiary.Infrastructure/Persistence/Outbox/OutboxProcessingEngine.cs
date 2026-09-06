@@ -20,7 +20,7 @@ public static class OutboxProcessingEngine {
         ILogger logger,
         IQueryable<TMessage>? claimedQuery = null,
         CancellationToken cancellationToken = default,
-        Func<TMessage, DateTime, CancellationToken, Task<bool>>? tryMarkProcessedAsync = null)
+        Func<TMessage, DateTime, CancellationToken, Task<OutboxCompletionResult>>? tryMarkProcessedAsync = null)
         where TMessage : class, IOutboxMessage {
         if (batchSize <= 0) {
             return 0;
@@ -91,7 +91,7 @@ public static class OutboxProcessingEngine {
         Func<TMessage, CancellationToken, Task> dispatchAsync,
         Func<TMessage, object?> messageIdentity,
         ILogger logger,
-        Func<TMessage, DateTime, CancellationToken, Task<bool>>? tryMarkProcessedAsync,
+        Func<TMessage, DateTime, CancellationToken, Task<OutboxCompletionResult>>? tryMarkProcessedAsync,
         CancellationToken cancellationToken)
         where TMessage : class, IOutboxMessage {
         string outcome;
@@ -100,10 +100,13 @@ public static class OutboxProcessingEngine {
             dispatchTimeout.CancelAfter(options.DispatchTimeout);
             await dispatchAsync(message, dispatchTimeout.Token).ConfigureAwait(false);
             DateTime processedOnUtc = timeProvider.GetUtcNow().UtcDateTime;
-            bool markedProcessed = tryMarkProcessedAsync is null
+            OutboxCompletionResult completion = tryMarkProcessedAsync is null
                 ? MarkProcessed(message, processedOnUtc)
                 : await tryMarkProcessedAsync(message, processedOnUtc, dispatchTimeout.Token).ConfigureAwait(false);
-            outcome = markedProcessed ? "processed" : "requeued";
+            if (completion == OutboxCompletionResult.ClaimLost) {
+                return ReleaseLostClaim(context, outboxName);
+            }
+            outcome = completion == OutboxCompletionResult.Processed ? "processed" : "requeued";
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
         } catch (OperationCanceledException ex) {
@@ -120,7 +123,11 @@ public static class OutboxProcessingEngine {
         }
 
         using var finalizationTimeout = new CancellationTokenSource(options.FinalizationTimeout);
-        await context.SaveChangesAsync(finalizationTimeout.Token).ConfigureAwait(false);
+        try {
+            await context.SaveChangesAsync(finalizationTimeout.Token).ConfigureAwait(false);
+        } catch (DbUpdateConcurrencyException exception) when (exception.Entries.Any(entry => ReferenceEquals(entry.Entity, message))) {
+            return ReleaseLostClaim(context, outboxName);
+        }
         RecordOutcome(outboxName, outcome);
         context.ChangeTracker.Clear();
         return string.Equals(outcome, "processed", StringComparison.Ordinal);
@@ -145,10 +152,16 @@ public static class OutboxProcessingEngine {
         }
     }
 
-    private static bool MarkProcessed<TMessage>(TMessage message, DateTime processedOnUtc)
+    private static bool ReleaseLostClaim(FoodDiaryDbContext context, string outboxName) {
+        InfrastructureTelemetry.RecordOutboxMessages(outboxName, "claim_lost", 1);
+        context.ChangeTracker.Clear();
+        return false;
+    }
+
+    private static OutboxCompletionResult MarkProcessed<TMessage>(TMessage message, DateTime processedOnUtc)
         where TMessage : IOutboxMessage {
         message.MarkProcessed(processedOnUtc);
-        return true;
+        return OutboxCompletionResult.Processed;
     }
 
     private static string HandleFailure<TMessage>(

@@ -148,6 +148,7 @@
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Contracts": "[1.0.0, )",
@@ -160,10 +161,10 @@
           "FluentValidation": "[12.1.1, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
           "FoodDiary.Application.Contracts": "[1.0.0, )",
-          "FoodDiary.Application.Cycles": "[1.0.0, )",
           "FoodDiary.Authentication.Contracts": "[1.0.0, )",
           "FoodDiary.Mediator": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Export.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Modules.Identity.Application.Abstractions": "[1.0.0, )",
@@ -190,6 +191,15 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.cycles.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
+          "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.cycles.domain": {
         "type": "Project",
         "dependencies": {
@@ -203,6 +213,7 @@
           "Asp.Versioning.Mvc": "[10.2.1, )",
           "FoodDiary.Application.Cycles": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Modules.Cycles.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Cycles.Domain": "[1.0.0, )",
           "FoodDiary.Presentation.Api": "[1.0.0, )"
         }

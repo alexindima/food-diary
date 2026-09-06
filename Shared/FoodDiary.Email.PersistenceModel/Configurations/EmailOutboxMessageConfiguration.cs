@@ -22,6 +22,7 @@ internal sealed class EmailOutboxMessageConfiguration : IEntityTypeConfiguration
             .HasMaxLength(2048);
 
         builder.Property(message => message.LockedBy)
+            .IsConcurrencyToken()
             .HasMaxLength(128);
 
         builder.HasIndex(message => new { message.ProcessedOnUtc, message.DeadLetteredOnUtc, message.NextAttemptOnUtc, message.LockedUntilUtc })

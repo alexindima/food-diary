@@ -3,6 +3,7 @@
   <ItemGroup><PackageReference Include="coverlet.collector" /><PackageReference Include="Microsoft.NET.Test.Sdk" /><PackageReference Include="NSubstitute" /><PackageReference Include="xunit" /><PackageReference Include="xunit.runner.visualstudio" /></ItemGroup>
   <ItemGroup><Using Include="System.Diagnostics.CodeAnalysis" /><Using Include="FoodDiary.Application.Tests.Support" /><Using Include="NSubstitute" /><Using Include="Xunit" /></ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../../Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
     <ProjectReference Include="..\..\Application\FoodDiary.Modules.Dietologist.Application.csproj" />

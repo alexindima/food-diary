@@ -81,6 +81,12 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.gamification.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.gamification.domain": {
         "type": "Project",
         "dependencies": {

@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Ai.Common;
 
 namespace FoodDiary.Application.Ai.Services;
 

@@ -240,9 +240,11 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             expectedAttemptCount: 1,
             CancellationToken.None);
 
+        ImageObjectDeletionOutboxMessage savedImage = await context.ImageObjectDeletionOutbox.AsNoTracking().SingleAsync();
+        NotificationWebPushOutboxMessage savedPush = await context.NotificationWebPushOutbox.AsNoTracking().SingleAsync();
         Assert.Multiple(
-            () => Assert.Null(image.DeadLetteredOnUtc),
-            () => Assert.Null(webPush.DeadLetteredOnUtc),
+            () => Assert.Null(savedImage.DeadLetteredOnUtc),
+            () => Assert.Null(savedPush.DeadLetteredOnUtc),
             () => Assert.Equal(2, context.OutboxReplayAudits.Count()));
     }
 

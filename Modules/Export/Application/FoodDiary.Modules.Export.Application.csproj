@@ -7,11 +7,11 @@
     <Compile Remove="Abstractions\**\*.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../Cycles/Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
     <ProjectReference Include="Abstractions\FoodDiary.Modules.Export.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\..\Cycles\Application\FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="..\..\Meals\Contracts\FoodDiary.Modules.Meals.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />

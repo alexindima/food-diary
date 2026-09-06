@@ -1,10 +1,10 @@
+using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Application.Abstractions.Ai.Models;
 
 namespace FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 
@@ -22,7 +22,7 @@ public sealed class UpsertAdminAiPromptCommandHandler(IAiPromptAdministrationSer
             return Result.Failure<AdminAiPromptModel>(localeResult.Error);
         }
 
-        Result<AiPromptTemplate> templateResult = await administrationService.UpsertAsync(
+        Result<AiPromptTemplateReadModel> templateResult = await administrationService.UpsertAsync(
             key,
             localeResult.Value,
             command.PromptText,

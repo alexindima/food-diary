@@ -8,21 +8,21 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "bc04e512f0d1ab52d3b71291f9a639f2c3df1bf7f3ad4029bdc7546eed56bb6d"
+          "sha256": "f8afe166cf0f765051b2fbdce9116af62060bcaaca362215b97570a28e745b70"
         },
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "a84d02eca54a6cca521dbc9ae0445ef06e0e802fb2ee9c76ce6306808b9fb5ae"
+          "sha256": "b618de80f5ac300538975ec6f5addecfab7008f0d28a1c097700087582df7a3d"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "c6f19efc9f5f9146edd5fc937fc1d828a88a2a2da69e0da4efe0a5ab8263fb89"
+          "sha256": "78eab927f2d36a389cc255107513692b7e95a7c3af1d69ae1cfc8cfb17a0ec41"
         }
       ],
-      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
+      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:35.5137793Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:09.4341253Z"
     },
     {
       "pageId": "module.frontend",
@@ -46,17 +46,17 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "a84d02eca54a6cca521dbc9ae0445ef06e0e802fb2ee9c76ce6306808b9fb5ae"
+          "sha256": "b618de80f5ac300538975ec6f5addecfab7008f0d28a1c097700087582df7a3d"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "c6f19efc9f5f9146edd5fc937fc1d828a88a2a2da69e0da4efe0a5ab8263fb89"
+          "sha256": "78eab927f2d36a389cc255107513692b7e95a7c3af1d69ae1cfc8cfb17a0ec41"
         }
       ],
-      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
+      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:35.6469987Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:09.5631356Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -65,25 +65,21 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "ec4eb27cd8fd7d8cb2421dec0fded38b98160839dba6295dc9fa8700fb1f2b7e"
+          "sha256": "0d457da514e323b57fff7bb98a719c1fc4c6b1133110630cbe0d0b7bc37cfef0"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "c6f19efc9f5f9146edd5fc937fc1d828a88a2a2da69e0da4efe0a5ab8263fb89"
-        },
-        {
-          "path": "FoodDiary.Application.Runtime/AGENTS.md",
-          "sha256": "c33ade571b4f4896e223e99ca63bf878d1261c5df8946dfd4f1bb3756dc53ec0"
+          "sha256": "78eab927f2d36a389cc255107513692b7e95a7c3af1d69ae1cfc8cfb17a0ec41"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "3e60141c53cd113e2da02d97efe9684cd7a66b1f5b58f1bf31194e597fbadaec"
+          "sha256": "5a05779fea2e31d1ba08738e5c31c8dcf9f3c11ebefd26e0a557b06a7bf4b93c"
         }
       ],
-      "reason": "Reviewed the immutable Images service projection and all direct application consumers against ADR 0032. Id/Url and original authorization, null/error and cancellation semantics are preserved. No HTTP route or payload changes; host restore COPY lists include the new project.",
+      "reason": "ADR 0033 moves consumed query/DTO and administration interfaces into narrow packages with coordinated rebuilds. AI upsert returns the existing immutable read projection. Public routes, payloads and error mapping are preserved; all 182 HTTP integration contracts passed.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:35.7698112Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:09.6781429Z"
     },
     {
       "pageId": "system.architecture",
@@ -92,25 +88,29 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "a84d02eca54a6cca521dbc9ae0445ef06e0e802fb2ee9c76ce6306808b9fb5ae"
+          "sha256": "b618de80f5ac300538975ec6f5addecfab7008f0d28a1c097700087582df7a3d"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "ec4eb27cd8fd7d8cb2421dec0fded38b98160839dba6295dc9fa8700fb1f2b7e"
+          "sha256": "0d457da514e323b57fff7bb98a719c1fc4c6b1133110630cbe0d0b7bc37cfef0"
+        },
+        {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "1f08c57d0f182efd719249d9b37391c3844e8c5d2be2aafebec5b890f13dd799"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "c6f19efc9f5f9146edd5fc937fc1d828a88a2a2da69e0da4efe0a5ab8263fb89"
+          "sha256": "78eab927f2d36a389cc255107513692b7e95a7c3af1d69ae1cfc8cfb17a0ec41"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "ef4115e52e5ea00ecc014eea30c352246c5b0aff14878f8278979804615f87de"
+          "sha256": "93e86565a85edca31789a5f3bc0a0a9dab5dea7308b2664fa027fca029339966"
         }
       ],
-      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
+      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:35.8987052Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:09.8054526Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -149,17 +149,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "bc04e512f0d1ab52d3b71291f9a639f2c3df1bf7f3ad4029bdc7546eed56bb6d"
-        },
-        {
-          "path": "docs/adr/README.md",
-          "sha256": "b0b6a984cc667adb1e6af765c8e534968251927c4d46af1188ec6feda93225a5"
+          "sha256": "f8afe166cf0f765051b2fbdce9116af62060bcaaca362215b97570a28e745b70"
         }
       ],
-      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
+      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:36.0170637Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:09.9624276Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -168,13 +164,17 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "ec4eb27cd8fd7d8cb2421dec0fded38b98160839dba6295dc9fa8700fb1f2b7e"
+          "sha256": "0d457da514e323b57fff7bb98a719c1fc4c6b1133110630cbe0d0b7bc37cfef0"
+        },
+        {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "1f08c57d0f182efd719249d9b37391c3844e8c5d2be2aafebec5b890f13dd799"
         }
       ],
-      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
+      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:36.1409060Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:10.1085605Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -232,21 +232,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c50bf1716cf47b65c1f07b756ec573aa6cc99b88aee8ce9981b3410926831d59"
+          "sha256": "3031925994890682242cb32183699708eb27a6ed1543e85765d9a8f249bdcd2d"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "ec4eb27cd8fd7d8cb2421dec0fded38b98160839dba6295dc9fa8700fb1f2b7e"
+          "sha256": "0d457da514e323b57fff7bb98a719c1fc4c6b1133110630cbe0d0b7bc37cfef0"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "ef4115e52e5ea00ecc014eea30c352246c5b0aff14878f8278979804615f87de"
+          "sha256": "93e86565a85edca31789a5f3bc0a0a9dab5dea7308b2664fa027fca029339966"
         }
       ],
-      "reason": "Reviewed the concrete source and regression coverage for retry before-save/before-commit failures, image race, tracked foreign reference and batch isolation. Exact dependency, delegate analyzer and Docker restore guards track the new contract and adapter; verification is consolidated with focused corrections.",
+      "reason": "Reviewed actual PostgreSQL fault injection, competing lease barriers, pretracked claim state, current-owner and revision checks, and InMemory query parity. Test corrections verify durable state instead of detached references. Exact matrices and zero foreign Application guard cover dependency changes.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:36.2984202Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:10.2642389Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -255,13 +255,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "38ec2ce72612379d9751674b74755f1cd962d17b3db3e10683ccb8fc188d4877"
+          "sha256": "210e87a8bacd650935043ee35d9afa6ada53c6ade2de4b6c7facaee042a565d1"
         }
       ],
-      "reason": "Reviewed the immutable Images service projection and all direct application consumers against ADR 0032. Id/Url and original authorization, null/error and cancellation semantics are preserved. No HTTP route or payload changes; host restore COPY lists include the new project.",
+      "reason": "ADR 0033 moves consumed query/DTO and administration interfaces into narrow packages with coordinated rebuilds. AI upsert returns the existing immutable read projection. Public routes, payloads and error mapping are preserved; all 182 HTTP integration contracts passed.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:36.6433528Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:10.6785382Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -542,13 +542,13 @@
       "sources": [
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "3e60141c53cd113e2da02d97efe9684cd7a66b1f5b58f1bf31194e597fbadaec"
+          "sha256": "5a05779fea2e31d1ba08738e5c31c8dcf9f3c11ebefd26e0a557b06a7bf4b93c"
         }
       ],
-      "reason": "Reviewed the concrete source and regression coverage for retry before-save/before-commit failures, image race, tracked foreign reference and batch isolation. Exact dependency, delegate analyzer and Docker restore guards track the new contract and adapter; verification is consolidated with focused corrections.",
+      "reason": "Reviewed actual PostgreSQL fault injection, competing lease barriers, pretracked claim state, current-owner and revision checks, and InMemory query parity. Test corrections verify durable state instead of detached references. Exact matrices and zero foreign Application guard cover dependency changes.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:37.1097152Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:11.0012288Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -760,13 +760,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "7adc1946e07a3da3516ee62e85370b33031fad819530ff11356c463fb391f2fd"
+          "sha256": "1f08c57d0f182efd719249d9b37391c3844e8c5d2be2aafebec5b890f13dd799"
         }
       ],
-      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
+      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
       "baseRef": "HEAD",
-      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
-      "reviewedAtUtc": "2026-09-06T00:02:33.5262442Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:11.2188579Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -820,13 +820,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3356ef1e36b749840d72053698cf86995c45e282ccea3fa01603e17596d4f62f"
+          "sha256": "54336abd99ff9f4a77a97574419c2a04d35cc98762feb6ed019f92c481bea21d"
         }
       ],
-      "reason": "Reviewed image owner checks, user purge ordering, outbox atomicity and failed-attempt cleanup. Six ClientNoAction FKs protect successful references without modifying foreign aggregates. No new logging payload, provider sharing, credential or retention policy.",
+      "reason": "Reviewed claim-owner concurrency fencing across all four outboxes, Gamification revision SQL, retry isolation and unchanged OAuth/token persistence ordering. External callbacks are not inside retries; no new private logging or provider sharing.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:37.2899550Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:11.4155074Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -865,13 +865,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7b7d4a82755628c2fab7d854a591efcb2dae3e3fa046eae60c2282cbe4ee5e31"
+          "sha256": "be4e36d78274d7a3da0541d08b87f6c96e58230262bb360ba9ebfe16aad07188"
         }
       ],
-      "reason": "Reviewed the concrete source and regression coverage for retry before-save/before-commit failures, image race, tracked foreign reference and batch isolation. Exact dependency, delegate analyzer and Docker restore guards track the new contract and adapter; verification is consolidated with focused corrections.",
+      "reason": "Reviewed actual PostgreSQL fault injection, competing lease barriers, pretracked claim state, current-owner and revision checks, and InMemory query parity. Test corrections verify durable state instead of detached references. Exact matrices and zero foreign Application guard cover dependency changes.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:37.5478561Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:11.6781050Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -948,13 +948,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "c5eb88302ef24921a491ba2fdde987b8a44f1c95d12be32b127f9ddcba9c1e93"
+          "sha256": "7a4b2d36bad43033258959a09810b11ed5ee579fa369859e45798f95b494a037"
         }
       ],
-      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
+      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:38.0997381Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:12.2592798Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -963,21 +963,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7b7d4a82755628c2fab7d854a591efcb2dae3e3fa046eae60c2282cbe4ee5e31"
+          "sha256": "be4e36d78274d7a3da0541d08b87f6c96e58230262bb360ba9ebfe16aad07188"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "c5eb88302ef24921a491ba2fdde987b8a44f1c95d12be32b127f9ddcba9c1e93"
+          "sha256": "7a4b2d36bad43033258959a09810b11ed5ee579fa369859e45798f95b494a037"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "3356ef1e36b749840d72053698cf86995c45e282ccea3fa01603e17596d4f62f"
+          "sha256": "54336abd99ff9f4a77a97574419c2a04d35cc98762feb6ed019f92c481bea21d"
         }
       ],
-      "reason": "Reviewed image owner checks, user purge ordering, outbox atomicity and failed-attempt cleanup. Six ClientNoAction FKs protect successful references without modifying foreign aggregates. No new logging payload, provider sharing, credential or retention policy.",
+      "reason": "Reviewed claim-owner concurrency fencing across all four outboxes, Gamification revision SQL, retry isolation and unchanged OAuth/token persistence ordering. External callbacks are not inside retries; no new private logging or provider sharing.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:38.3914077Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:12.6060150Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1091,13 +1091,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "3e2570ccdb3e34af30153215ef2ca29f0c86d161268d8f15b61fc755d6e524d0"
+          "sha256": "198ca8ff73aff9aa5dc6c64dca8cc3d01b73830408f8b56fc2c7ff1534125935"
         }
       ],
-      "reason": "Reviewed the concrete source and regression coverage for retry before-save/before-commit failures, image race, tracked foreign reference and batch isolation. Exact dependency, delegate analyzer and Docker restore guards track the new contract and adapter; verification is consolidated with focused corrections.",
+      "reason": "Reviewed actual PostgreSQL fault injection, competing lease barriers, pretracked claim state, current-owner and revision checks, and InMemory query parity. Test corrections verify durable state instead of detached references. Exact matrices and zero foreign Application guard cover dependency changes.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:38.5761056Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:12.8086439Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1151,13 +1151,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "bc04e512f0d1ab52d3b71291f9a639f2c3df1bf7f3ad4029bdc7546eed56bb6d"
+          "sha256": "f8afe166cf0f765051b2fbdce9116af62060bcaaca362215b97570a28e745b70"
         }
       ],
-      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
+      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:36.7942642Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:10.8498478Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1211,17 +1211,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "0b649bbc72c6f5dbec536e344176bc264c291e29dabbf9a56aa37111773dc0fa"
+          "sha256": "c792bb1c4b2075441505e246f7ab8dd95cf7ffef2d095afbf43ccad9592f0334"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "bc04e512f0d1ab52d3b71291f9a639f2c3df1bf7f3ad4029bdc7546eed56bb6d"
+          "sha256": "f8afe166cf0f765051b2fbdce9116af62060bcaaca362215b97570a28e745b70"
         }
       ],
-      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
+      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:37.7472115Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:11.8827105Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1230,13 +1230,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "bc04e512f0d1ab52d3b71291f9a639f2c3df1bf7f3ad4029bdc7546eed56bb6d"
+          "sha256": "f8afe166cf0f765051b2fbdce9116af62060bcaaca362215b97570a28e745b70"
         }
       ],
-      "reason": "Reviewed the concrete source and regression coverage for retry before-save/before-commit failures, image race, tracked foreign reference and batch isolation. Exact dependency, delegate analyzer and Docker restore guards track the new contract and adapter; verification is consolidated with focused corrections.",
+      "reason": "Reviewed actual PostgreSQL fault injection, competing lease barriers, pretracked claim state, current-owner and revision checks, and InMemory query parity. Test corrections verify durable state instead of detached references. Exact matrices and zero foreign Application guard cover dependency changes.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:37.9176172Z"
+      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
+      "reviewedAtUtc": "2026-09-06T03:09:12.0608192Z"
     }
   ]
 }

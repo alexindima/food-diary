@@ -19,13 +19,14 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Meals, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Modules.Dashboard.Application, FoodDiary.Modules.Export.Application, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `Modules/Cycles/Application`
 - `Modules/Cycles/Application/Abstractions`
+- `Modules/Cycles/Contracts`
 - `Modules/Cycles/Presentation`
 
 ## HTTP Surface
@@ -37,15 +38,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: CycleProfile, CycleFactor, CycleConsent, CycleSymptomEntry, CyclePredictionRevision, BleedingEntry, FertilitySignal
-- Public contract files: 14
-- Observed external consumer groups: 4
+- Public contract files: 27
+- Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 14
-- Interfaces: 4
-- DTO/read-model/projection types: 8
+- Public contract types: 27
+- Interfaces: 5
+- DTO/read-model/projection types: 19
 - Enums: 0
 - Exported repository-shaped contracts: 4
 - Contracts referencing domain entities: 2
@@ -53,15 +54,28 @@ No literal attribute-routed controller was associated with this module.
 - `class CycleErrors`
 - `interface ICycleReadModelRepository`
 - `interface ICycleReadRepository`
+- `interface ICycleReadService`
 - `interface ICycleRepository`
 - `interface ICycleWriteRepository`
+- `record BleedingEntryModel`
 - `record BleedingEntryReadModel`
+- `record CycleConsentModel`
 - `record CycleConsentReadModel`
+- `record CycleFactorModel`
 - `record CycleFactorReadModel`
+- `record CycleLogDayModel`
+- `record CycleModel`
+- `record CycleNutritionSummaryModel`
+- `record CyclePredictionRevisionModel`
 - `record CyclePredictionRevisionReadModel`
+- `record CyclePredictionsModel`
 - `record CycleProfileReadModel`
+- `record CycleSymptomEntryModel`
 - `record CycleSymptomEntryReadModel`
+- `record FertilitySignalModel`
 - `record FertilitySignalReadModel`
+- `record GetCurrentCycleQuery`
+- `record MenstrualEpisodeModel`
 - `record MenstrualEpisodeReadModel`
 
 ## Focused Tests

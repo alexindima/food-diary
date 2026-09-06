@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1082,
     "ambiguousContracts": 0,
-    "consumerEdges": 7807,
+    "consumerEdges": 7811,
     "productionConsumerEdges": 4626,
-    "testConsumerEdges": 3181,
+    "testConsumerEdges": 3185,
     "consumedContracts": 1082,
     "unconsumedContracts": 0
   },
@@ -4561,7 +4561,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
+        "Modules/Cycles/Contracts/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4646,7 +4646,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -5428,7 +5428,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs"
+        "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -5989,7 +5989,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -6601,7 +6601,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Contracts/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7026,7 +7026,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7043,7 +7043,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Common/IAiPromptAdministrationService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7978,7 +7978,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Common/ICycleReadService.cs"
+        "Modules/Cycles/Contracts/Common/ICycleReadService.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -35590,7 +35590,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
+        "Modules/Cycles/Contracts/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
@@ -35603,7 +35603,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
+        "Modules/Cycles/Contracts/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Presentation/Features/Cycles/Mappings/CycleHttpMappings.cs",
@@ -35616,7 +35616,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
+        "Modules/Cycles/Contracts/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
@@ -35629,7 +35629,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
+        "Modules/Cycles/Contracts/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Application.Tests/Cycles/CyclesFeatureTests.CreateAndRead.cs",
@@ -35642,7 +35642,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
+        "Modules/Cycles/Contracts/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CycleHttpMappingsTests.cs",
@@ -35655,7 +35655,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
+        "Modules/Cycles/Contracts/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/tests/FoodDiary.Modules.Cycles.Presentation.Tests/CyclesControllerCoverageTests.cs",
@@ -35993,7 +35993,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
@@ -36006,7 +36006,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryValidator.cs",
@@ -36019,7 +36019,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
@@ -36032,7 +36032,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Presentation/Features/Dashboard/Mappings/DashboardHttpQueryMappings.cs",
@@ -36045,7 +36045,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
@@ -36058,7 +36058,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Application.Tests/Queries/GetDailyAdviceQueryValidatorTests.cs",
@@ -36071,7 +36071,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Presentation.Tests/DashboardControllerTests.cs",
@@ -36084,7 +36084,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
+        "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Presentation.Tests/DashboardHttpMappingsTests.cs",
@@ -39139,7 +39139,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs"
+        "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Application/Services/MediatorDashboardMealsReadService.cs",
@@ -39152,7 +39152,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs"
+        "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Queries/GetMeals/GetMealsQueryHandler.cs",
@@ -39165,7 +39165,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs"
+        "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Presentation/Features/Meals/Mappings/MealHttpQueryMappings.cs",
@@ -39178,7 +39178,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs"
+        "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardFeatureTests.cs",
@@ -39191,7 +39191,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs"
+        "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs",
@@ -39204,7 +39204,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs"
+        "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/MealsFeatureTests.ReadQueryTests.cs",
@@ -39217,7 +39217,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs"
+        "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Presentation.Tests/MealHttpMappingsTests.cs",
@@ -41323,7 +41323,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Dashboard/Application/Services/DashboardSectionDataLoader.cs",
@@ -41336,7 +41336,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
@@ -41349,7 +41349,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryValidator.cs",
@@ -41362,7 +41362,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/Presentation/Features/Tdee/Mappings/TdeeHttpMappings.cs",
@@ -41375,7 +41375,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeFeatureTests.cs",
@@ -41388,7 +41388,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Application.Tests/Tdee/TdeeValidatorTests.cs",
@@ -41401,7 +41401,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Presentation.Tests/TdeeControllerTests.cs",
@@ -41414,7 +41414,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
+        "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Tdee/tests/FoodDiary.Modules.Tdee.Presentation.Tests/TdeeHttpMappingsTests.cs",
@@ -43689,7 +43689,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Contracts/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
@@ -43702,7 +43702,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Contracts/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
@@ -43715,7 +43715,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Contracts/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
@@ -43728,7 +43728,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Contracts/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/Application/DependencyInjection.cs",
@@ -43741,7 +43741,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Contracts/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs",
@@ -43754,7 +43754,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs"
+        "Modules/Gamification/Contracts/Common/IAchievementDefinitionAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs",
@@ -43939,6 +43939,19 @@
         "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AchievementLeaseOwnershipIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IAchievementEvaluationOutboxProcessor",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutboxProcessor.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.JobManager.Tests/JobsTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -44072,6 +44085,19 @@
       "consumerPath": "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/AchievementPersistenceTests.cs",
       "isTest": true,
       "referenceCount": 6
+    },
+    {
+      "contract": "IAchievementReconciliationHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementReconciliationHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AchievementLeaseOwnershipIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IAchievementReconciliationHandler",
@@ -45509,7 +45535,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Services/AdminAiUsageReadService.cs",
@@ -45522,7 +45548,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Services/AdminContentReadService.cs",
@@ -45535,7 +45561,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
@@ -45548,7 +45574,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Common/IAiAdministrationReadService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
@@ -45561,7 +45587,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Common/IAiPromptAdministrationService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommandHandler.cs",
@@ -45574,7 +45600,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Common/IAiPromptAdministrationService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/DependencyInjection.cs",
@@ -45587,7 +45613,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Ai/Application/Common/IAiPromptAdministrationService.cs"
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
@@ -45981,6 +46007,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IAiPromptTemplateWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptAdministrationServiceTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -57001,7 +57040,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Common/ICycleReadService.cs"
+        "Modules/Cycles/Contracts/Common/ICycleReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Application/DependencyInjection.cs",
@@ -57014,7 +57053,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Common/ICycleReadService.cs"
+        "Modules/Cycles/Contracts/Common/ICycleReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
@@ -57027,7 +57066,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Common/ICycleReadService.cs"
+        "Modules/Cycles/Contracts/Common/ICycleReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
@@ -57040,7 +57079,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Common/ICycleReadService.cs"
+        "Modules/Cycles/Contracts/Common/ICycleReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Application/Services/CycleReadService.cs",
@@ -57053,7 +57092,7 @@
         "Service"
       ],
       "definitionPaths": [
-        "Modules/Cycles/Application/Common/ICycleReadService.cs"
+        "Modules/Cycles/Contracts/Common/ICycleReadService.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Export/Application/Queries/ExportCycle/ExportCycleQueryHandler.cs",
@@ -66728,19 +66767,6 @@
         "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Images/Application/Common/ImageAssetResolver.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IImageAssetAccessService",
-      "roles": [
-        "Service"
-      ],
-      "definitionPaths": [
-        "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Application/DependencyInjection.cs",
       "isTest": false,
       "referenceCount": 1
@@ -66768,6 +66794,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Images/Infrastructure/UserProfileImageService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IImageAssetAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Images/Service.Contracts/Common/ImageAssetResolver.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -76581,6 +76620,19 @@
         "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.ArchitectureTests/ApplicationConsumerBoundaryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IOutboxMessage",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Outbox.Abstractions/IOutboxMessage.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -79311,19 +79363,6 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IQuery",
-      "roles": [
-        "Query"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -79337,7 +79376,20 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
+      "consumerPath": "Modules/Cycles/Contracts/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -79896,7 +79948,7 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs",
+      "consumerPath": "Modules/Meals/Application/Queries/GetMealsOverview/GetMealsOverviewQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -79909,7 +79961,7 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Application/Queries/GetMealsOverview/GetMealsOverviewQuery.cs",
+      "consumerPath": "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80195,7 +80247,7 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
+      "consumerPath": "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -96016,19 +96068,6 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IUserRequest",
-      "roles": [
-        "Request"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Cycles/Application/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -96042,7 +96081,20 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
+      "consumerPath": "Modules/Cycles/Contracts/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97186,7 +97238,7 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs",
+      "consumerPath": "Modules/Meals/Application/Queries/GetMealsOverview/GetMealsOverviewQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97199,7 +97251,7 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Application/Queries/GetMealsOverview/GetMealsOverviewQuery.cs",
+      "consumerPath": "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -97667,7 +97719,7 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IUserRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
+      "consumerPath": "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -106247,19 +106299,6 @@
         "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "PagedResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Application/Queries/GetMeals/GetMealsQueryHandler.cs",
       "isTest": false,
       "referenceCount": 4
@@ -106287,6 +106326,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/Presentation/Features/Meals/Mappings/MealHttpResponseMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "PagedResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Models/PagedResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },

@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4836,
+    "productionFiles": 4837,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 784,
@@ -3209,28 +3209,36 @@
       "structuralRiskScore": 0.08
     },
     {
+      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxCompletionResult.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-      "nonBlankLines": 169,
+      "nonBlankLines": 174,
       "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.88
+      "structuralRiskScore": 25.98
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "nonBlankLines": 190,
-      "decisionPoints": 11,
+      "nonBlankLines": 196,
+      "decisionPoints": 12,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.3
+      "structuralRiskScore": 21.92
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "nonBlankLines": 174,
-      "decisionPoints": 16,
+      "nonBlankLines": 186,
+      "decisionPoints": 18,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 27.48
+      "structuralRiskScore": 30.72
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingPolicy.cs",
@@ -15434,11 +15442,11 @@
     },
     {
       "path": "Modules/Admin/Application/Mappings/AdminAiPromptMappings.cs",
-      "nonBlankLines": 26,
+      "nonBlankLines": 15,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.52
+      "structuralRiskScore": 0.3
     },
     {
       "path": "Modules/Admin/Application/Mappings/AdminContentReportMappings.cs",
@@ -16889,6 +16897,22 @@
       "structuralRiskScore": 0.08
     },
     {
+      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
       "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptProvider.cs",
       "nonBlankLines": 4,
       "decisionPoints": 0,
@@ -17121,22 +17145,6 @@
       "structuralRiskScore": 0.16
     },
     {
-      "path": "Modules/Ai/Application/Common/IAiAdministrationReadService.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "Modules/Ai/Application/Common/IAiPromptAdministrationService.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
       "path": "Modules/Ai/Application/Common/IAiUserContextService.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -17186,19 +17194,19 @@
     },
     {
       "path": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 16,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
-      "nonBlankLines": 30,
+      "nonBlankLines": 33,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.6
+      "structuralRiskScore": 3.66
     },
     {
       "path": "Modules/Ai/Application/Services/AiUserContextService.cs",
@@ -19889,14 +19897,6 @@
       "structuralRiskScore": 5.64
     },
     {
-      "path": "Modules/Cycles/Application/Common/ICycleReadService.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
       "path": "Modules/Cycles/Application/DependencyInjection.cs",
       "nonBlankLines": 15,
       "decisionPoints": 0,
@@ -19927,102 +19927,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 18.02
-    },
-    {
-      "path": "Modules/Cycles/Application/Models/BleedingEntryModel.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "Modules/Cycles/Application/Models/CycleConsentModel.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "Modules/Cycles/Application/Models/CycleFactorModel.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "Modules/Cycles/Application/Models/CycleLogDayModel.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Cycles/Application/Models/CycleModel.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
-    },
-    {
-      "path": "Modules/Cycles/Application/Models/CycleNutritionSummaryModel.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
-    },
-    {
-      "path": "Modules/Cycles/Application/Models/CyclePredictionRevisionModel.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "Modules/Cycles/Application/Models/CyclePredictionsModel.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
-    },
-    {
-      "path": "Modules/Cycles/Application/Models/CycleSymptomEntryModel.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "Modules/Cycles/Application/Models/FertilitySignalModel.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "Modules/Cycles/Application/Models/MenstrualEpisodeModel.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
     },
     {
       "path": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
@@ -20079,6 +19983,110 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 28.62
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Common/ICycleReadService.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Models/BleedingEntryModel.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Models/CycleConsentModel.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Models/CycleFactorModel.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Models/CycleLogDayModel.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Models/CycleModel.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.54
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Models/CycleNutritionSummaryModel.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Models/CyclePredictionRevisionModel.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Models/CyclePredictionsModel.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.4
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Models/CycleSymptomEntryModel.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Models/FertilitySignalModel.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Models/MenstrualEpisodeModel.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Modules/Cycles/Contracts/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
     },
     {
       "path": "Modules/Cycles/Domain/Entities/Tracking/BleedingEntry.cs",
@@ -20665,22 +20673,6 @@
       "structuralRiskScore": 0.3
     },
     {
-      "path": "Modules/DailyAdvices/Application/Models/DailyAdviceModel.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
       "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
       "nonBlankLines": 22,
       "decisionPoints": 1,
@@ -20711,6 +20703,22 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 23.1
+    },
+    {
+      "path": "Modules/DailyAdvices/Contracts/Models/DailyAdviceModel.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/DailyAdvices/Domain/Entities/Content/DailyAdvice.cs",
@@ -26121,14 +26129,6 @@
       "structuralRiskScore": 0.2
     },
     {
-      "path": "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
       "path": "Modules/Gamification/Application/Common/IGamificationReadService.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -26159,30 +26159,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.4
-    },
-    {
-      "path": "Modules/Gamification/Application/Models/AchievementDefinitionAdminModel.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "Modules/Gamification/Application/Models/AchievementDefinitionCreateInput.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "Modules/Gamification/Application/Models/AchievementDefinitionUpdateInput.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Gamification/Application/Models/AchievementMetricSnapshot.cs",
@@ -26271,6 +26247,38 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.92
+    },
+    {
+      "path": "Modules/Gamification/Contracts/Common/IAchievementDefinitionAdministrationService.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Modules/Gamification/Contracts/Models/AchievementDefinitionAdminModel.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Modules/Gamification/Contracts/Models/AchievementDefinitionCreateInput.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Modules/Gamification/Contracts/Models/AchievementDefinitionUpdateInput.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
     },
     {
       "path": "Modules/Gamification/Domain/Entities/Achievements/AchievementDefinition.cs",
@@ -26386,11 +26394,11 @@
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
-      "nonBlankLines": 66,
-      "decisionPoints": 3,
+      "nonBlankLines": 70,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.82
+      "structuralRiskScore": 7.4
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxReplayStream.cs",
@@ -28489,30 +28497,6 @@
       "structuralRiskScore": 0.12
     },
     {
-      "path": "Modules/Images/Application/Common/ImageAssetIdParser.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.86
-    },
-    {
-      "path": "Modules/Images/Application/Common/ImageAssetResolution.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "Modules/Images/Application/Common/ImageAssetResolver.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2
-    },
-    {
       "path": "Modules/Images/Application/DependencyInjection.cs",
       "nonBlankLines": 14,
       "decisionPoints": 0,
@@ -28586,11 +28570,11 @@
     },
     {
       "path": "Modules/Images/Infrastructure/Model/Configurations/Images/ImageObjectDeletionOutboxMessageConfiguration.cs",
-      "nonBlankLines": 20,
+      "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.4
+      "structuralRiskScore": 0.42
     },
     {
       "path": "Modules/Images/Infrastructure/Model/Images/ImageObjectDeletionOutboxMessage.cs",
@@ -28783,6 +28767,30 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Modules/Images/Service.Contracts/Common/ImageAssetIdParser.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.86
+    },
+    {
+      "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolution.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolver.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2
     },
     {
       "path": "Modules/Images/Service.Contracts/Models/ImageAssetReadModel.cs",
@@ -30785,38 +30793,6 @@
       "structuralRiskScore": 32.02
     },
     {
-      "path": "Modules/Meals/Application/Models/MealAiItemModel.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "Modules/Meals/Application/Models/MealAiSessionModel.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.46
-    },
-    {
-      "path": "Modules/Meals/Application/Models/MealItemModel.cs",
-      "nonBlankLines": 32,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
-    },
-    {
-      "path": "Modules/Meals/Application/Models/MealModel.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
-    },
-    {
       "path": "Modules/Meals/Application/Models/MealOverviewModel.cs",
       "nonBlankLines": 7,
       "decisionPoints": 0,
@@ -30839,14 +30815,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 5.8
-    },
-    {
-      "path": "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs",
-      "nonBlankLines": 16,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Meals/Application/Queries/GetMeals/GetMealsQueryHandler.cs",
@@ -31479,6 +31447,46 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Meals/Service.Contracts/Models/MealAiItemModel.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Modules/Meals/Service.Contracts/Models/MealAiSessionModel.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.46
+    },
+    {
+      "path": "Modules/Meals/Service.Contracts/Models/MealItemModel.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.64
+    },
+    {
+      "path": "Modules/Meals/Service.Contracts/Models/MealModel.cs",
+      "nonBlankLines": 31,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.62
+    },
+    {
+      "path": "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs",
+      "nonBlankLines": 16,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.32
     },
     {
       "path": "Modules/Notifications/Application/Abstractions/Common/DietologistInvitationDecisionNotificationPayload.cs",
@@ -32314,11 +32322,11 @@
     },
     {
       "path": "Modules/Notifications/Infrastructure/Model/NotificationWebPushOutboxMessageConfiguration.cs",
-      "nonBlankLines": 27,
+      "nonBlankLines": 28,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.54
+      "structuralRiskScore": 0.56
     },
     {
       "path": "Modules/Notifications/Infrastructure/Model/NotificationsPersistenceModelRegistration.cs",
@@ -35281,30 +35289,6 @@
       "structuralRiskScore": 0.3
     },
     {
-      "path": "Modules/Tdee/Application/Models/TdeeConfidence.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "Modules/Tdee/Application/Models/TdeeInsightModel.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
       "path": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
       "nonBlankLines": 85,
       "decisionPoints": 3,
@@ -35343,6 +35327,30 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 1.96
+    },
+    {
+      "path": "Modules/Tdee/Contracts/Models/TdeeConfidence.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Modules/Tdee/Contracts/Models/TdeeInsightModel.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
     },
     {
       "path": "Modules/Tdee/Presentation/Extensions/TdeePresentationServiceCollectionExtensions.cs",
@@ -38315,10 +38323,10 @@
     {
       "path": "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs",
       "nonBlankLines": 30,
-      "decisionPoints": 1,
+      "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.1
+      "structuralRiskScore": 3.6
     },
     {
       "path": "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs",
@@ -39226,11 +39234,11 @@
     },
     {
       "path": "Shared/FoodDiary.Email.PersistenceModel/Configurations/EmailOutboxMessageConfiguration.cs",
-      "nonBlankLines": 21,
+      "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.42
+      "structuralRiskScore": 0.44
     },
     {
       "path": "Shared/FoodDiary.Email.PersistenceModel/EmailOutboxMessage.cs",
@@ -42711,10 +42719,11 @@
       "role": "Handler",
       "path": "Modules/Gamification/Application/Services/AchievementReconciliationHandler.cs",
       "line": 8,
-      "testReferenceCount": 3,
+      "testReferenceCount": 4,
       "testReferences": [
         "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
         "Modules/Gamification/tests/FoodDiary.Modules.Gamification.Infrastructure.Tests/Persistence/AchievementPersistenceTests.cs",
+        "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AchievementLeaseOwnershipIntegrationTests.cs",
         "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserAchievementStoreIntegrationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -49538,17 +49547,17 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 94,
+      "line": 101,
       "marker": "#pragma warning disable"
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 125,
+      "line": 132,
       "marker": "#pragma warning disable"
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 152,
+      "line": 159,
       "marker": "#pragma warning disable"
     },
     {
@@ -49563,7 +49572,7 @@
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
-      "line": 47,
+      "line": 51,
       "marker": "#pragma warning disable"
     }
   ]

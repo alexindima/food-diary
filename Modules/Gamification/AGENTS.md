@@ -17,3 +17,7 @@ Rules for `Modules/Gamification/`.
 
 - Keep module-owned Application, Domain, and Infrastructure unit tests under `Modules/Gamification/tests/`.
 - Keep HTTP, host, shared DbContext/integration, architecture, and cross-module tests central.
+
+## Consumer boundary
+
+Own achievement administration inputs/projections and IAchievementDefinitionAdministrationService consumed by Admin. Keep aggregate mutations and handlers in Application. Contracts depend only on Results. See `Contracts/AGENTS.md` and ADR 0033.

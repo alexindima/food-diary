@@ -21,6 +21,7 @@ internal sealed class NotificationWebPushOutboxMessageConfiguration : IEntityTyp
             .HasMaxLength(2048);
 
         builder.Property(message => message.LockedBy)
+            .IsConcurrencyToken()
             .HasMaxLength(128);
 
         builder.HasOne(message => message.Notification)

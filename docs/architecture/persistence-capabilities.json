@@ -508,8 +508,8 @@
         "entity:AchievementEvaluationOutboxMessage",
         "tracked:AchievementEvaluationOutboxMessage"
       ],
-      "reason": "Gamification processes its outbox with revision-aware SQL and reloads; the shared engine retains claiming/save boundaries.",
-      "technicalSourceSha256": "9b49314edbf23c54570cc0d73086028730a5fa5c70326f610477360cad237303"
+      "reason": "Gamification dispatches reconciliation through the shared engine; conditional SQL completes only the claimed Revision and LockedBy, and releases updated revisions only for the same owner. Lost owners cannot finalize or release a newer lease.",
+      "technicalSourceSha256": "8d8d91958498ba62007e1c6c4b1fd97eee0397292441d70261bbbb4821a5c2cb"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxReplayStream.cs": {
       "module": "Gamification",
@@ -1062,8 +1062,8 @@
         "context:Database",
         "context:SaveChangesAsync"
       ],
-      "reason": "Wearables owns its existing serialized sync transaction and save/commit boundary.",
-      "technicalSourceSha256": "6c72e3107d75c3bc559ee4dec27719ff52fc59d81c020f1f5bddf7aceaeb8df8"
+      "reason": "Wearables executes provider callbacks once under a separate session advisory lock; EF owns the implicit SaveChanges transaction and retries. Pending tracking is discarded on failure.",
+      "technicalSourceSha256": "b9d96f6c4f7f7dea603e3f309918101ca36a89a744031380fcd84e2e548292a4"
     },
     "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs": {
       "module": "Wearables",

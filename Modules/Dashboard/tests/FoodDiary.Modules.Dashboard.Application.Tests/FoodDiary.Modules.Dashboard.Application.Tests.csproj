@@ -14,6 +14,7 @@
     <Using Include="FoodDiary.Application.Tests.Support" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
+    <ProjectReference Include="../../../Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
     <ProjectReference Include="../../Application/FoodDiary.Modules.Dashboard.Application.csproj" />
     <ProjectReference Include="../../../Statistics/Application/FoodDiary.Modules.Statistics.Application.csproj" />
     <ProjectReference Include="../../../BodyMetrics/Application/FoodDiary.Application.BodyMetrics.csproj" />

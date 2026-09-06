@@ -196,7 +196,8 @@
           "Modules/Meals/Application/Abstractions"
         ],
         "contractProjects": [
-          "Modules/Meals/Contracts"
+          "Modules/Meals/Contracts",
+          "Modules/Meals/Service.Contracts"
         ],
         "domainProjects": [
           "Modules/Meals/Domain"
@@ -269,6 +270,9 @@
         ],
         "persistenceAreas": [
           "Modules/Cycles/Infrastructure"
+        ],
+        "contractProjects": [
+          "Modules/Cycles/Contracts"
         ]
       }
     },
@@ -317,6 +321,9 @@
         ],
         "persistenceAreas": [
           "Modules/DailyAdvices/Infrastructure"
+        ],
+        "contractProjects": [
+          "Modules/DailyAdvices/Contracts"
         ]
       }
     },
@@ -501,6 +508,9 @@
         ],
         "persistenceAreas": [
           "Modules/Gamification/Infrastructure"
+        ],
+        "contractProjects": [
+          "Modules/Gamification/Contracts"
         ]
       }
     },
@@ -853,6 +863,9 @@
         "logicalRoot": "Modules/Tdee",
         "applicationProjects": [
           "Modules/Tdee/Application"
+        ],
+        "contractProjects": [
+          "Modules/Tdee/Contracts"
         ]
       }
     },

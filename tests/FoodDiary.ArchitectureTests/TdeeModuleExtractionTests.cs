@@ -17,7 +17,7 @@ public sealed class TdeeModuleExtractionTests {
 
     [Fact]
     public void TdeeLogicalModule_DoesNotCreateUnownedLayers() {
-        Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Contracts")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Contracts", "FoodDiary.Modules.Tdee.Contracts.csproj")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Domain")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Infrastructure")));
         Assert.False(Directory.Exists(ArchitectureTestPaths.FromRoot("Modules", "Tdee", "Application", "Abstractions")));
@@ -35,7 +35,7 @@ public sealed class TdeeModuleExtractionTests {
     public void TdeeApplicationAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.BodyMetrics.Application.Abstractions", "FoodDiary.Modules.Exercises.Contracts", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Tdee.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Fact]

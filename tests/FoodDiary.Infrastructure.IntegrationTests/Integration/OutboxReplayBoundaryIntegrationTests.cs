@@ -199,8 +199,41 @@ public sealed class OutboxReplayBoundaryIntegrationTests(PostgresDatabaseFixture
         Assert.Empty(await seed.OutboxReplayAudits.ToListAsync());
     }
 
+    [RequiresDockerFact]
+    public async Task Replay_TransientCommitFailure_RetriesWithOneDurableAudit() {
+        await using FoodDiaryDbContext seed = await databaseFixture.CreateDbContextAsync();
+        var message = ImageObjectDeletionOutboxMessage.Create("replay-commit-retry", Now);
+        message.MarkDeadLettered("original failure", Now);
+        seed.Add(message);
+        await seed.SaveChangesAsync();
+        var fault = new TransientCommitFault();
+        await using FoodDiaryDbContext context = CreateContext(seed.Database.GetConnectionString()!, fault);
+        using var scope = new OutboxReplayTestScope(context, Clock);
+        OutboxReplayAuditModel audit = await scope.Service.ReplayAsync("image_object_deletion", message.Id, "operator", "retry", 1);
+        seed.ChangeTracker.Clear();
+        ImageObjectDeletionOutboxMessage saved = await seed.ImageObjectDeletionOutbox.SingleAsync();
+        Assert.Multiple(
+            () => Assert.Equal(2, fault.Attempts),
+            () => Assert.Null(saved.DeadLetteredOnUtc),
+            () => Assert.Equal(1, saved.AttemptCount),
+            () => Assert.Equal("original failure", audit.PreviousError));
+        Assert.Single(await seed.OutboxReplayAudits.ToListAsync());
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TransientCommitFault : DbTransactionInterceptor {
+        public int Attempts { get; private set; }
+        public override ValueTask<InterceptionResult> TransactionCommittingAsync(DbTransaction transaction,
+            TransactionEventData eventData, InterceptionResult result, CancellationToken cancellationToken = default) {
+            if (++Attempts == 1) {
+                throw new TimeoutException("Simulated failure before commit");
+            }
+            return ValueTask.FromResult(result);
+        }
+    }
+
     private static FoodDiaryDbContext CreateContext(string connection, IInterceptor interceptor) =>
-        new(new DbContextOptionsBuilder<FoodDiaryDbContext>().UseNpgsql(connection).AddInterceptors(interceptor).Options);
+        new(new DbContextOptionsBuilder<FoodDiaryDbContext>().UseNpgsql(connection, options => options.EnableRetryOnFailure()).AddInterceptors(interceptor).Options);
 
     private static async Task<IOutboxMessage[]> CreateLookupBatchAsync(FoodDiaryDbContext context, string marker, bool deadLettered) {
         var user = User.Create($"{marker}@example.com", "hash");

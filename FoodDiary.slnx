@@ -153,6 +153,7 @@
     <Project Path="Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests.csproj" />
   </Folder>
   <Folder Name="/Modules/Cycles/">
+    <Project Path="Modules/Cycles/Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
     <Project Path="Modules/Cycles/Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj" />
     <Project Path="Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj" />
     <Project Path="Modules/Cycles/Domain/FoodDiary.Modules.Cycles.Domain.csproj" />
@@ -200,6 +201,7 @@
     <Project Path="Modules/Images/tests/FoodDiary.Modules.Images.Presentation.Tests/FoodDiary.Modules.Images.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/DailyAdvices/">
+    <Project Path="Modules/DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
     <Project Path="Modules/DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />
     <Project Path="Modules/DailyAdvices/Application/Abstractions/FoodDiary.Modules.DailyAdvices.Application.Abstractions.csproj" />
     <Project Path="Modules/DailyAdvices/Domain/FoodDiary.Modules.DailyAdvices.Domain.csproj" />
@@ -256,6 +258,7 @@
     <Project Path="Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/FoodDiary.Modules.Fasting.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Gamification/">
+    <Project Path="Modules/Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj" />
     <Project Path="Modules/Gamification/Application/Abstractions/FoodDiary.Modules.Gamification.Application.Abstractions.csproj" />
     <Project Path="Modules/Gamification/Application/FoodDiary.Modules.Gamification.Application.csproj" />
     <Project Path="Modules/Gamification/Domain/FoodDiary.Modules.Gamification.Domain.csproj" />
@@ -300,6 +303,7 @@
     <Project Path="Modules/Lessons/tests/FoodDiary.Modules.Lessons.Presentation.Tests/FoodDiary.Modules.Lessons.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Tdee/">
+    <Project Path="Modules/Tdee/Contracts/FoodDiary.Modules.Tdee.Contracts.csproj" />
     <Project Path="Modules/Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj" />
     <Project Path="Modules/Tdee/Presentation/FoodDiary.Modules.Tdee.Presentation.csproj" />
   </Folder>
@@ -557,6 +561,7 @@
     <Project Path="Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/FoodDiary.Modules.Products.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Meals/">
+    <Project Path="Modules/Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
     <Project Path="Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
     <Project Path="Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj" />
     <Project Path="Modules/Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />

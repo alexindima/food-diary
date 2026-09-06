@@ -1,6 +1,9 @@
 # Images service contracts
 
 Expose immutable owner-validated image read projections and consumer capabilities.
-Keep this package free of aggregates, repositories, EF and Application implementations.
+Keep this package free of aggregates, repositories, EF and use-case handlers.
+The existing ImageAssetIdParser, ImageAssetResolution and ImageAssetResolver are small
+consumer-side input adapters over IImageAssetAccessService; they preserve validation
+and optional-image behavior without exposing Images Application to consumers.
 Images.Contracts remains the legacy ID-only package. Preserve CLR namespaces, owner
 checks, confirmation requirements, null behavior and existing error codes.

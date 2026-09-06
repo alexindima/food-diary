@@ -112,10 +112,11 @@ public sealed class AchievementPersistenceTests {
 
         int processed = await processor.ProcessDueAsync(batchSize: 10);
 
+        AchievementEvaluationOutboxMessage persisted = await context.AchievementEvaluationOutbox.AsNoTracking().SingleAsync();
         Assert.Multiple(
             () => Assert.Equal(0, processed),
-            () => Assert.Equal(1, message.AttemptCount),
-            () => Assert.Equal("Outbox dispatch failed (InvalidOperationException).", message.LastError));
+            () => Assert.Equal(1, persisted.AttemptCount),
+            () => Assert.Equal("Outbox dispatch failed (InvalidOperationException).", persisted.LastError));
     }
 
     [Fact]

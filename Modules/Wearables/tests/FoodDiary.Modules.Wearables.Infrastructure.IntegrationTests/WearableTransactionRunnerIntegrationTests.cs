@@ -150,7 +150,7 @@ public sealed class WearableTransactionRunnerIntegrationTests(PostgresDatabaseFi
         string connectionString = sourceContext.Database.GetConnectionString()
             ?? throw new InvalidOperationException("Source context does not have a connection string.");
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
-            .UseNpgsql(new NpgsqlConnectionStringBuilder(connectionString).ConnectionString)
+            .UseNpgsql(new NpgsqlConnectionStringBuilder(connectionString).ConnectionString, options => options.EnableRetryOnFailure())
             .Options;
         return new FoodDiaryDbContext(options);
     }

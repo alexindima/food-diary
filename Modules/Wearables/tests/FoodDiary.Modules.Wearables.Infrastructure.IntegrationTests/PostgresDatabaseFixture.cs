@@ -69,7 +69,7 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
         return connectionStringBuilder.ConnectionString;
     }
 
-    public FoodDiaryDbContext CreateDbContext(string connectionString, bool enableRetries = false) {
+    public FoodDiaryDbContext CreateDbContext(string connectionString, bool enableRetries = true) {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql(
                 connectionString,

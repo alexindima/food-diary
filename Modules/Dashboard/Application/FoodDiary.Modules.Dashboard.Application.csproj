@@ -5,16 +5,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Abstractions/**/*.cs" />
+    <ProjectReference Include="../../Tdee/Contracts/FoodDiary.Modules.Tdee.Contracts.csproj" />
+    <ProjectReference Include="../../DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
+    <ProjectReference Include="../../Cycles/Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
+    <ProjectReference Include="../../Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
     <ProjectReference Include="..\..\Products\Domain\FoodDiary.Modules.Products.Domain.csproj" />
     <ProjectReference Include="Abstractions/FoodDiary.Modules.Dashboard.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../Cycles/Application/FoodDiary.Application.Cycles.csproj" />
-    <ProjectReference Include="../../DailyAdvices/Application/FoodDiary.Modules.DailyAdvices.Application.csproj" />
     <ProjectReference Include="../../Hydration/Contracts/FoodDiary.Modules.Hydration.Contracts.csproj" />
-    <ProjectReference Include="../../Meals/Application/FoodDiary.Modules.Meals.Application.csproj" />
-    <ProjectReference Include="../../Tdee/Application/FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="../../Exercises/Contracts/FoodDiary.Modules.Exercises.Contracts.csproj" />
     <ProjectReference Include="../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />

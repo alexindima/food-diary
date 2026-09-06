@@ -19,13 +19,14 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Dashboard.Application, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `Modules/DailyAdvices/Application`
 - `Modules/DailyAdvices/Application/Abstractions`
+- `Modules/DailyAdvices/Contracts`
 
 ## HTTP Surface
 
@@ -36,21 +37,23 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: DailyAdvice
-- Public contract files: 3
-- Observed external consumer groups: 4
+- Public contract files: 5
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 3
+- Public contract types: 5
 - Interfaces: 1
-- DTO/read-model/projection types: 1
+- DTO/read-model/projection types: 2
 - Enums: 0
 - Exported repository-shaped contracts: 1
 - Contracts referencing domain entities: 0
 - `class DailyAdviceErrors`
 - `interface IDailyAdviceReadModelRepository`
+- `record DailyAdviceModel`
 - `record DailyAdviceReadModel`
+- `record GetDailyAdviceQuery`
 
 ## Focused Tests
 

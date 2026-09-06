@@ -77,7 +77,7 @@ public sealed class AdminModuleExtractionTests {
     public void ExtractedAdminAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Audit.Contracts", "FoodDiary.Authentication.Contracts", "FoodDiary.Email.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Billing.Domain", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.Gamification.Application", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Lessons.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Audit.Contracts", "FoodDiary.Authentication.Contracts", "FoodDiary.Email.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Billing.Domain", "FoodDiary.Modules.ContentReports.Contracts", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.Gamification.Contracts", "FoodDiary.Modules.Gamification.Domain", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Lessons.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Theory]

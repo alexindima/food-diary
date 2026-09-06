@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1282,
+    "productionProjectEdges": 1301,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -31,7 +31,7 @@
     {
       "module": "Admin",
       "fanIn": 0,
-      "fanOut": 4,
+      "fanOut": 3,
       "level": "informational",
       "role": "orchestrator"
     },
@@ -92,13 +92,6 @@
       "role": "read-composer"
     },
     {
-      "module": "Ai",
-      "fanIn": 1,
-      "fanOut": 0,
-      "level": "informational",
-      "role": "aggregate-owner"
-    },
-    {
       "module": "ContentReports",
       "fanIn": 1,
       "fanOut": 0,
@@ -153,6 +146,13 @@
       "fanOut": 1,
       "level": "informational",
       "role": "read-composer"
+    },
+    {
+      "module": "Ai",
+      "fanIn": 0,
+      "fanOut": 0,
+      "level": "informational",
+      "role": "aggregate-owner"
     },
     {
       "module": "Billing",
@@ -5027,17 +5027,17 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 94,
+      "line": 101,
       "marker": "#pragma warning disable"
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 125,
+      "line": 132,
       "marker": "#pragma warning disable"
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 152,
+      "line": 159,
       "marker": "#pragma warning disable"
     },
     {
@@ -5052,7 +5052,7 @@
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
-      "line": 47,
+      "line": 51,
       "marker": "#pragma warning disable"
     }
   ]

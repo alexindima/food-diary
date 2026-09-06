@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup><Compile Remove="Abstractions/**/*.cs" /></ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
     <ProjectReference Include="../../Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
     <ProjectReference Include="../../Usda/Application/Abstractions/FoodDiary.Modules.Usda.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
@@ -14,7 +15,6 @@
     <ProjectReference Include="../Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../RecentItems/Application/Abstractions/FoodDiary.Modules.RecentItems.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
-    <ProjectReference Include="../../Images/Application/FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />

@@ -28,20 +28,24 @@ internal sealed class AchievementEvaluationOutboxProcessor(
             cancellationToken: cancellationToken,
             tryMarkProcessedAsync: TryMarkProcessedAsync);
 
-    private async Task<bool> TryMarkProcessedAsync(
+    private async Task<OutboxCompletionResult> TryMarkProcessedAsync(
         AchievementEvaluationOutboxMessage message,
         DateTime processedOnUtc,
         CancellationToken cancellationToken) {
         long claimedRevision = message.Revision;
+        string? claimedBy = message.LockedBy;
         if (!context.Database.IsRelational()) {
             await context.Entry(message).ReloadAsync(cancellationToken).ConfigureAwait(false);
+            if (!string.Equals(message.LockedBy, claimedBy, StringComparison.Ordinal)) {
+                return OutboxCompletionResult.ClaimLost;
+            }
             if (message.Revision != claimedRevision) {
                 message.ReleaseForUpdatedRevision();
-                return false;
+                return OutboxCompletionResult.Requeued;
             }
 
             message.MarkProcessed(processedOnUtc);
-            return true;
+            return OutboxCompletionResult.Processed;
         }
 
 #pragma warning disable MA0076
@@ -52,21 +56,21 @@ internal sealed class AchievementEvaluationOutboxProcessor(
                 "LockedUntilUtc" = NULL,
                 "LockedBy" = NULL,
                 "LastError" = NULL
-            WHERE "Id" = {message.Id} AND "Revision" = {claimedRevision}
+            WHERE "Id" = {message.Id} AND "Revision" = {claimedRevision} AND "LockedBy" = {claimedBy}
             """,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (completed == 1) {
-            return true;
+            return OutboxCompletionResult.Processed;
         }
 
-        await context.Database.ExecuteSqlInterpolatedAsync(
+        int released = await context.Database.ExecuteSqlInterpolatedAsync(
             $"""
             UPDATE "AchievementEvaluationOutbox"
             SET "LockedUntilUtc" = NULL, "LockedBy" = NULL
-            WHERE "Id" = {message.Id}
+            WHERE "Id" = {message.Id} AND "LockedBy" = {claimedBy}
             """,
             cancellationToken: cancellationToken).ConfigureAwait(false);
 #pragma warning restore MA0076
-        return false;
+        return released == 1 ? OutboxCompletionResult.Requeued : OutboxCompletionResult.ClaimLost;
     }
 }

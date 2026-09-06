@@ -188,7 +188,7 @@ public sealed class EmailOutboxTests {
         await using (FoodDiaryDbContext processingContext = CreateContext(
                          databaseName,
                          databaseRoot,
-                         new FailOnSaveNumberInterceptor(failureNumber: 2))) {
+                         new FailOnFinalizationNumberInterceptor(failureNumber: 2))) {
             EmailOutboxProcessor processor = CreateProcessor(processingContext, transport);
 
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
@@ -398,12 +398,13 @@ public sealed class EmailOutboxTests {
             expectedAttemptCount: 1,
             CancellationToken.None);
 
+        AchievementEvaluationOutboxMessage persisted = await context.AchievementEvaluationOutbox.AsNoTracking().SingleAsync();
         Assert.NotNull(preview);
         Assert.Multiple(
             () => Assert.Equal(message.UserId.Value.ToString(), preview.Summary),
             () => Assert.Equal("achievement failure", preview.LastError),
             () => Assert.Equal("achievement failure", audit.PreviousError),
-            () => Assert.Null(message.DeadLetteredOnUtc));
+            () => Assert.Null(persisted.DeadLetteredOnUtc));
     }
 
     [Fact]
@@ -619,14 +620,16 @@ public sealed class EmailOutboxTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FailOnSaveNumberInterceptor(int failureNumber) : SaveChangesInterceptor {
+    private sealed class FailOnFinalizationNumberInterceptor(int failureNumber) : SaveChangesInterceptor {
         private int _saveCount;
 
         public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
             DbContextEventData eventData,
             InterceptionResult<int> result,
             CancellationToken cancellationToken = default) {
-            if (Interlocked.Increment(ref _saveCount) == failureNumber) {
+            if (eventData.Context!.ChangeTracker.Entries<EmailOutboxMessage>().Any(entry =>
+                    entry.State == EntityState.Modified && entry.Entity.ProcessedOnUtc is not null) &&
+                Interlocked.Increment(ref _saveCount) == failureNumber) {
                 throw new InvalidOperationException("Simulated finalization failure.");
             }
 

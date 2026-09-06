@@ -19,7 +19,7 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Admin, Images, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Admin.Application, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
@@ -42,20 +42,22 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AiUsage, AiPromptTemplate, AiQuotaPeriod, AiQuotaReservation
-- Public contract files: 29
-- Observed external consumer groups: 4
+- Public contract files: 31
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 29
-- Interfaces: 11
+- Public contract types: 31
+- Interfaces: 13
 - DTO/read-model/projection types: 8
 - Enums: 1
 - Exported repository-shaped contracts: 8
 - Contracts referencing domain entities: 3
 - `class AiErrors`
 - `enum AiQuotaReservationStatus`
+- `interface IAiAdministrationReadService`
+- `interface IAiPromptAdministrationService`
 - `interface IAiPromptProvider`
 - `interface IAiPromptTemplateReadModelRepository`
 - `interface IAiPromptTemplateReadRepository`
@@ -82,12 +84,13 @@ No literal attribute-routed controller was associated with this module.
 - `record FoodVisionModel`
 - `record OpenAiFoodClientResponse`
 - `record UserAiUsageModel`
-- `record struct AiUsageTokens`
+- ... 1 more type(s)
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiPromptAdministrationServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/AiValidatorsTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/OpenAiFoodServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Ai/tests/FoodDiary.Modules.Ai.Application.Tests/Ai/ParseFoodTextValidatorTests.cs`

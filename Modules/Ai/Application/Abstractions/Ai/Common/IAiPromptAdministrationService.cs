@@ -1,10 +1,10 @@
-using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Ai.Common;
+namespace FoodDiary.Application.Abstractions.Ai.Common;
 
 public interface IAiPromptAdministrationService {
-    Task<Result<AiPromptTemplate>> UpsertAsync(
+    Task<Result<AiPromptTemplateReadModel>> UpsertAsync(
         string key,
         string locale,
         string promptText,

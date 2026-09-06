@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence.Shared;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -23,14 +24,20 @@ internal static class OutboxMessageClaimer {
             $"{Environment.MachineName}:{Environment.ProcessId}:{Guid.NewGuid():N}"));
         DateTime lockedUntilUtc = nowUtc.Add(leaseDuration);
 
+        SharedTransactionBoundary.EnsureCleanEntry(context);
+        // A claim must materialize the current lease, not a previously tracked snapshot.
+        context.ChangeTracker.Clear();
+
         if (!context.Database.IsRelational()) {
-            return await ClaimDueWithTrackedEntitiesAsync(
-                messages,
+            OutboxClaimBatch<TMessage> claim = await ClaimDueWithTrackedEntitiesAsync(
+                claimedQuery ?? messages,
                 batchSize,
                 nowUtc,
                 lockedUntilUtc,
                 workerId,
                 cancellationToken).ConfigureAwait(false);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            return claim;
         }
 
         return await ClaimDueWithRelationalDatabaseAsync(
@@ -177,7 +184,7 @@ internal static class OutboxMessageClaimer {
         workerId.Length <= 128 ? workerId : workerId[..128];
 
     private static async Task<OutboxClaimBatch<TMessage>> ClaimDueWithTrackedEntitiesAsync<TMessage>(
-        DbSet<TMessage> messages,
+        IQueryable<TMessage> messages,
         int batchSize,
         DateTime nowUtc,
         DateTime lockedUntilUtc,

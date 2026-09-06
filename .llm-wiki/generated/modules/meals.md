@@ -19,7 +19,7 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: FavoriteMeals, Images, Nutrition, Products, RecentItems, Recipes, Usda, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Modules.Dashboard.Application
+- Host/adapter consumers: none observed
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
@@ -32,6 +32,7 @@ sources:
 - `Modules/Meals/Infrastructure/Model`
 - `Modules/Meals/Presentation`
 - `Modules/Meals/Presentation/Features/Meals`
+- `Modules/Meals/Service.Contracts`
 
 ## HTTP Surface
 
@@ -42,15 +43,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Meal, MealItem, MealAiSession, MealAiItem
-- Public contract files: 19
-- Observed external consumer groups: 1
+- Public contract files: 24
+- Observed external consumer groups: 0
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 19
+- Public contract types: 24
 - Interfaces: 11
-- DTO/read-model/projection types: 5
+- DTO/read-model/projection types: 9
 - Enums: 0
 - Exported repository-shaped contracts: 6
 - Contracts referencing domain entities: 2
@@ -66,10 +67,15 @@ No literal attribute-routed controller was associated with this module.
 - `interface IMealReadRepository`
 - `interface IMealRepository`
 - `interface IMealWriteRepository`
+- `record GetMealsQuery`
+- `record MealAiItemModel`
 - `record MealAiItemProjectionReadModel`
+- `record MealAiSessionModel`
 - `record MealAiSessionProjectionReadModel`
 - `record MealDailyCalories`
+- `record MealItemModel`
 - `record MealItemProjectionReadModel`
+- `record MealModel`
 - `record MealNutritionStatisticsBucket`
 - `record MealProjectionReadModel`
 - `record MealQueryFilters`

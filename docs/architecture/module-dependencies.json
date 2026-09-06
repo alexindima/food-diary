@@ -3,7 +3,6 @@
   "description": "Executable acyclic Application API and direct service-contract graphs. Domain IDs/values are separate project dependencies; Images.Contracts is verified ID-only.",
   "modules": {
     "Admin": [
-      "Ai",
       "ContentReports",
       "Gamification",
       "Lessons"
@@ -69,6 +68,7 @@
     "Admin": [
       "Ai",
       "ContentReports",
+      "Gamification",
       "Identity",
       "Lessons",
       "Users"
@@ -105,11 +105,15 @@
     ],
     "Dashboard": [
       "BodyMetrics",
+      "Cycles",
+      "DailyAdvices",
       "Dietologist",
       "Exercises",
       "Fasting",
       "Hydration",
       "Identity",
+      "Meals",
+      "Tdee",
       "Users"
     ],
     "DailyAdvices": [

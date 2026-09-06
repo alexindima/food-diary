@@ -87,6 +87,7 @@ COPY Shared/FoodDiary.Outbox.Abstractions/*.csproj Shared/FoodDiary.Outbox.Abstr
 COPY Shared/FoodDiary.Email.PersistenceModel/*.csproj Shared/FoodDiary.Email.PersistenceModel/
 COPY Shared/FoodDiary.Outbox.PersistenceModel/*.csproj Shared/FoodDiary.Outbox.PersistenceModel/
 COPY Modules/Cycles/Application/*.csproj Modules/Cycles/Application/
+COPY Modules/Cycles/Contracts/*.csproj Modules/Cycles/Contracts/
 COPY Modules/Cycles/Application/Abstractions/*.csproj Modules/Cycles/Application/Abstractions/
 COPY Modules/Cycles/Domain/*.csproj Modules/Cycles/Domain/
 COPY Modules/Cycles/Infrastructure/*.csproj Modules/Cycles/Infrastructure/
@@ -102,6 +103,7 @@ COPY Modules/Exercises/Domain/*.csproj Modules/Exercises/Domain/
 COPY Modules/Exercises/Infrastructure/*.csproj Modules/Exercises/Infrastructure/
 COPY Modules/Exercises/Infrastructure/Model/*.csproj Modules/Exercises/Infrastructure/Model/
 COPY Modules/Tdee/Application/*.csproj Modules/Tdee/Application/
+COPY Modules/Tdee/Contracts/*.csproj Modules/Tdee/Contracts/
 COPY Modules/OpenFoodFacts/Application/*.csproj Modules/OpenFoodFacts/Application/
 COPY Modules/OpenFoodFacts/Application/Abstractions/*.csproj Modules/OpenFoodFacts/Application/Abstractions/
 COPY Modules/OpenFoodFacts/Contracts/*.csproj Modules/OpenFoodFacts/Contracts/
@@ -110,6 +112,7 @@ COPY Modules/OpenFoodFacts/Infrastructure/*.csproj Modules/OpenFoodFacts/Infrast
 COPY Modules/OpenFoodFacts/Infrastructure/Model/*.csproj Modules/OpenFoodFacts/Infrastructure/Model/
 COPY Modules/Products/Application/*.csproj Modules/Products/Application/
 COPY Modules/Meals/Application/*.csproj Modules/Meals/Application/
+COPY Modules/Meals/Service.Contracts/*.csproj Modules/Meals/Service.Contracts/
 COPY Modules/Meals/Application/Abstractions/*.csproj Modules/Meals/Application/Abstractions/
 COPY Modules/Meals/Contracts/*.csproj Modules/Meals/Contracts/
 COPY Modules/Meals/Domain/*.csproj Modules/Meals/Domain/
@@ -170,6 +173,7 @@ COPY Modules/Usda/Infrastructure/*.csproj Modules/Usda/Infrastructure/
 COPY Modules/Usda/Infrastructure/Model/*.csproj Modules/Usda/Infrastructure/Model/
 COPY Modules/WeeklyCheckIn/Application/*.csproj Modules/WeeklyCheckIn/Application/
 COPY Modules/DailyAdvices/Application/*.csproj Modules/DailyAdvices/Application/
+COPY Modules/DailyAdvices/Contracts/*.csproj Modules/DailyAdvices/Contracts/
 COPY Modules/DailyAdvices/Application/Abstractions/*.csproj Modules/DailyAdvices/Application/Abstractions/
 COPY Modules/DailyAdvices/Domain/*.csproj Modules/DailyAdvices/Domain/
 COPY Modules/DailyAdvices/Infrastructure/*.csproj Modules/DailyAdvices/Infrastructure/
@@ -181,6 +185,7 @@ COPY Modules/ContentReports/Domain/*.csproj Modules/ContentReports/Domain/
 COPY Modules/ContentReports/Infrastructure/*.csproj Modules/ContentReports/Infrastructure/
 COPY Modules/ContentReports/Infrastructure/Model/*.csproj Modules/ContentReports/Infrastructure/Model/
 COPY Modules/Gamification/Application/*.csproj Modules/Gamification/Application/
+COPY Modules/Gamification/Contracts/*.csproj Modules/Gamification/Contracts/
 COPY Modules/Gamification/Application/Abstractions/*.csproj Modules/Gamification/Application/Abstractions/
 COPY Modules/Gamification/Domain/*.csproj Modules/Gamification/Domain/
 COPY Modules/Gamification/Infrastructure/*.csproj Modules/Gamification/Infrastructure/
@@ -321,6 +326,7 @@ COPY Shared/FoodDiary.Outbox.Abstractions/ Shared/FoodDiary.Outbox.Abstractions/
 COPY Shared/FoodDiary.Email.PersistenceModel/ Shared/FoodDiary.Email.PersistenceModel/
 COPY Shared/FoodDiary.Outbox.PersistenceModel/ Shared/FoodDiary.Outbox.PersistenceModel/
 COPY Modules/Cycles/Application/ Modules/Cycles/Application/
+COPY Modules/Cycles/Contracts/ Modules/Cycles/Contracts/
 COPY Modules/Cycles/Application/Abstractions/ Modules/Cycles/Application/Abstractions/
 COPY Modules/Cycles/Domain/ Modules/Cycles/Domain/
 COPY Modules/Cycles/Infrastructure/ Modules/Cycles/Infrastructure/
@@ -336,6 +342,7 @@ COPY Modules/Exercises/Domain/ Modules/Exercises/Domain/
 COPY Modules/Exercises/Infrastructure/ Modules/Exercises/Infrastructure/
 COPY Modules/Exercises/Infrastructure/Model/ Modules/Exercises/Infrastructure/Model/
 COPY Modules/Tdee/Application/ Modules/Tdee/Application/
+COPY Modules/Tdee/Contracts/ Modules/Tdee/Contracts/
 COPY Modules/OpenFoodFacts/Application/ Modules/OpenFoodFacts/Application/
 COPY Modules/OpenFoodFacts/Application/Abstractions/ Modules/OpenFoodFacts/Application/Abstractions/
 COPY Modules/OpenFoodFacts/Contracts/ Modules/OpenFoodFacts/Contracts/
@@ -344,6 +351,7 @@ COPY Modules/OpenFoodFacts/Infrastructure/ Modules/OpenFoodFacts/Infrastructure/
 COPY Modules/OpenFoodFacts/Infrastructure/Model/ Modules/OpenFoodFacts/Infrastructure/Model/
 COPY Modules/Products/Application/ Modules/Products/Application/
 COPY Modules/Meals/Application/ Modules/Meals/Application/
+COPY Modules/Meals/Service.Contracts/ Modules/Meals/Service.Contracts/
 COPY Modules/Meals/Application/Abstractions/ Modules/Meals/Application/Abstractions/
 COPY Modules/Meals/Contracts/ Modules/Meals/Contracts/
 COPY Modules/Meals/Domain/ Modules/Meals/Domain/
@@ -406,6 +414,7 @@ COPY Modules/Usda/Infrastructure/Model/ Modules/Usda/Infrastructure/Model/
 COPY Modules/WeeklyCheckIn/Application/ Modules/WeeklyCheckIn/Application/
 COPY Modules/DailyAdvices/ Modules/DailyAdvices/
 COPY Modules/DailyAdvices/Application/ Modules/DailyAdvices/Application/
+COPY Modules/DailyAdvices/Contracts/ Modules/DailyAdvices/Contracts/
 COPY Modules/DailyAdvices/Application/Abstractions/ Modules/DailyAdvices/Application/Abstractions/
 COPY Modules/DailyAdvices/Domain/ Modules/DailyAdvices/Domain/
 COPY Modules/DailyAdvices/Infrastructure/ Modules/DailyAdvices/Infrastructure/
@@ -418,6 +427,7 @@ COPY Modules/ContentReports/Infrastructure/ Modules/ContentReports/Infrastructur
 COPY Modules/ContentReports/Infrastructure/Model/ Modules/ContentReports/Infrastructure/Model/
 COPY Modules/Gamification/ Modules/Gamification/
 COPY Modules/Gamification/Application/ Modules/Gamification/Application/
+COPY Modules/Gamification/Contracts/ Modules/Gamification/Contracts/
 COPY Modules/Gamification/Application/Abstractions/ Modules/Gamification/Application/Abstractions/
 COPY Modules/Gamification/Domain/ Modules/Gamification/Domain/
 COPY Modules/Gamification/Infrastructure/ Modules/Gamification/Infrastructure/

@@ -25,6 +25,7 @@ public sealed class PersistenceTransactionGuardrailTests {
             ArchitectureTestPaths.FromRoot("Modules", "Images", "Infrastructure", "Persistence", "Images", "ImageAssetCleanupBatch.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
             Path.Combine(persistenceRoot, "Outbox", "OutboxProcessingEngine.cs"),
+            Path.Combine(persistenceRoot, "Outbox", "OutboxMessageClaimer.cs"),
             Path.Combine(persistenceRoot, "Outbox", "OutboxDeadLetterReplayService.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Products", "Infrastructure", "Persistence", "Products", "EfProductMutationTransactionRunner.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Recipes", "Infrastructure", "Persistence", "Recipes", "EfRecipeMutationTransactionRunner.cs"),

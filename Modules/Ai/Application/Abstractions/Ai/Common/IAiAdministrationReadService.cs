@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Models;
 
-namespace FoodDiary.Application.Ai.Common;
+namespace FoodDiary.Application.Abstractions.Ai.Common;
 
 public interface IAiAdministrationReadService {
     Task<AiUsageSummary> GetUsageSummaryAsync(

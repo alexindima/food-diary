@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
@@ -95,48 +96,52 @@ internal sealed class OutboxDeadLetterReplayService(
         if (_streams[normalizedName].ReplayRejectionReason is { } rejectionReason) {
             throw new InvalidOperationException(rejectionReason);
         }
-        IDbContextTransaction? transaction = context.Database.IsRelational()
-            ? await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false)
-            : null;
-        try {
-            OutboxReplayEntry entry = await FindAsync(
-                normalizedName,
-                messageId,
-                forUpdate: transaction is not null,
-                cancellationToken).ConfigureAwait(false)
-                ?? throw new InvalidOperationException("Outbox message was not found.");
-            IOutboxMessage message = entry.Message;
-            if (message.DeadLetteredOnUtc is null || message.ProcessedOnUtc is not null) {
-                throw new InvalidOperationException("Only a dead-lettered, unprocessed message can be replayed.");
-            }
-            if (message.AttemptCount != expectedAttemptCount) {
-                throw new InvalidOperationException(
-                    string.Create(
-                        CultureInfo.InvariantCulture,
-                        $"Outbox message changed after inspection. Expected {expectedAttemptCount} attempts, observed {message.AttemptCount}."));
-            }
+        SharedTransactionBoundary.EnsureCleanEntry(context);
+        IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
+        return await strategy.ExecuteAsync(() => SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue: null, async () => {
+            IDbContextTransaction? transaction = context.Database.IsRelational()
+                ? await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false)
+                : null;
+            try {
+                OutboxReplayEntry entry = await FindAsync(
+                    normalizedName,
+                    messageId,
+                    forUpdate: transaction is not null,
+                    cancellationToken).ConfigureAwait(false)
+                    ?? throw new InvalidOperationException("Outbox message was not found.");
+                IOutboxMessage message = entry.Message;
+                if (message.DeadLetteredOnUtc is null || message.ProcessedOnUtc is not null) {
+                    throw new InvalidOperationException("Only a dead-lettered, unprocessed message can be replayed.");
+                }
+                if (message.AttemptCount != expectedAttemptCount) {
+                    throw new InvalidOperationException(
+                        string.Create(
+                            CultureInfo.InvariantCulture,
+                            $"Outbox message changed after inspection. Expected {expectedAttemptCount} attempts, observed {message.AttemptCount}."));
+                }
 
-            DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
-            var audit = OutboxReplayAudit.Create(
-                normalizedName,
-                messageId,
-                requestedBy,
-                reason,
-                nowUtc,
-                message.AttemptCount,
-                entry.LastError);
-            context.OutboxReplayAudits.Add(audit);
-            message.MarkReplayed(nowUtc);
-            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            if (transaction is not null) {
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
+                var audit = OutboxReplayAudit.Create(
+                    normalizedName,
+                    messageId,
+                    requestedBy,
+                    reason,
+                    nowUtc,
+                    message.AttemptCount,
+                    entry.LastError);
+                context.OutboxReplayAudits.Add(audit);
+                message.MarkReplayed(nowUtc);
+                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                if (transaction is not null) {
+                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                }
+                return ToModel(audit);
+            } finally {
+                if (transaction is not null) {
+                    await transaction.DisposeAsync().ConfigureAwait(false);
+                }
             }
-            return ToModel(audit);
-        } finally {
-            if (transaction is not null) {
-                await transaction.DisposeAsync().ConfigureAwait(false);
-            }
-        }
+        }, cancellationToken)).ConfigureAwait(false);
     }
 
     private Task<OutboxReplayEntry?> FindAsync(

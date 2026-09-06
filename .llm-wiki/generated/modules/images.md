@@ -19,7 +19,7 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Meals.Application, FoodDiary.Modules.Products.Application, FoodDiary.Modules.Recipes.Application, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
@@ -43,18 +43,20 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
-- Public contract files: 16
-- Observed external consumer groups: 6
+- Public contract files: 19
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 16
+- Public contract types: 19
 - Interfaces: 10
 - DTO/read-model/projection types: 1
 - Enums: 0
 - Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 2
+- `class ImageAssetIdParser`
+- `class ImageAssetResolver`
 - `class ImageErrors`
 - `interface IImageAssetAccessService`
 - `interface IImageAssetCleanupBatch`
@@ -68,6 +70,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IImageStorageService`
 - `record DeleteImageAssetResult`
 - `record ImageAssetReadModel`
+- `record ImageAssetResolution`
 - `record ImageObjectValidationResult`
 - `record PresignedUpload`
 - `record struct ImageAssetId`

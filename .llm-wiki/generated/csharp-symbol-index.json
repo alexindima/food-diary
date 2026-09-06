@@ -8,13 +8,13 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3610,
-    "symbols": 3550,
+    "sourceFiles": 3611,
+    "symbols": 3551,
     "interfaceImplementationLinks": 240,
     "dependencyInjectionRegistrations": 153,
     "kinds": {
       "class": 1854,
-      "enum": 62,
+      "enum": 63,
       "interface": 435,
       "record": 1079,
       "record struct": 120
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1396,
+      "Other": 1397,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 30,
@@ -706,18 +706,25 @@
       "line": 2
     },
     {
+      "name": "OutboxCompletionResult",
+      "kind": "enum",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxCompletionResult.cs",
+      "line": 2
+    },
+    {
       "name": "OutboxDeadLetterReplayService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxDeadLetterReplayService.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "OutboxMessageClaimer",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxMessageClaimer.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "OutboxProcessingEngine",
@@ -4231,7 +4238,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Application/Mappings/AdminAiPromptMappings.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "AdminContentReportMappings",
@@ -5494,6 +5501,20 @@
       "line": 2
     },
     {
+      "name": "IAiAdministrationReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IAiPromptAdministrationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs",
+      "line": 5
+    },
+    {
       "name": "IAiPromptProvider",
       "kind": "interface",
       "role": "Other",
@@ -5690,20 +5711,6 @@
       "line": 4
     },
     {
-      "name": "IAiAdministrationReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Ai/Application/Common/IAiAdministrationReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IAiPromptAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Ai/Application/Common/IAiPromptAdministrationService.cs",
-      "line": 5
-    },
-    {
       "name": "IAiUserContextService",
       "kind": "interface",
       "role": "Service",
@@ -5750,7 +5757,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "AiPromptAdministrationService",
@@ -8063,13 +8070,6 @@
       "line": 5
     },
     {
-      "name": "ICycleReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Cycles/Application/Common/ICycleReadService.cs",
-      "line": 6
-    },
-    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
@@ -8095,90 +8095,6 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Cycles/Application/Mappings/CycleMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "BleedingEntryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Models/BleedingEntryModel.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleConsentModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Models/CycleConsentModel.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleFactorModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Models/CycleFactorModel.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleLogDayModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Models/CycleLogDayModel.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Models/CycleModel.cs",
-      "line": 4
-    },
-    {
-      "name": "CycleNutritionSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Models/CycleNutritionSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "CyclePredictionRevisionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Models/CyclePredictionRevisionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "CyclePredictionsModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Models/CyclePredictionsModel.cs",
-      "line": 2
-    },
-    {
-      "name": "CycleSymptomEntryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Models/CycleSymptomEntryModel.cs",
-      "line": 4
-    },
-    {
-      "name": "FertilitySignalModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Models/FertilitySignalModel.cs",
-      "line": 4
-    },
-    {
-      "name": "MenstrualEpisodeModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Cycles/Application/Models/MenstrualEpisodeModel.cs",
-      "line": 4
-    },
-    {
-      "name": "GetCurrentCycleQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/Cycles/Application/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
       "line": 6
     },
     {
@@ -8229,6 +8145,97 @@
       "role": "Service",
       "path": "Modules/Cycles/Application/Services/CycleReadService.cs",
       "line": 13
+    },
+    {
+      "name": "ICycleReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Cycles/Contracts/Common/ICycleReadService.cs",
+      "line": 6
+    },
+    {
+      "name": "BleedingEntryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Models/BleedingEntryModel.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleConsentModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Models/CycleConsentModel.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleFactorModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Models/CycleFactorModel.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleLogDayModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Models/CycleLogDayModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Models/CycleModel.cs",
+      "line": 4
+    },
+    {
+      "name": "CycleNutritionSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Models/CycleNutritionSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CyclePredictionRevisionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Models/CyclePredictionRevisionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CyclePredictionsModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Models/CyclePredictionsModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleSymptomEntryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Models/CycleSymptomEntryModel.cs",
+      "line": 4
+    },
+    {
+      "name": "FertilitySignalModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Models/FertilitySignalModel.cs",
+      "line": 4
+    },
+    {
+      "name": "MenstrualEpisodeModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Cycles/Contracts/Models/MenstrualEpisodeModel.cs",
+      "line": 4
+    },
+    {
+      "name": "GetCurrentCycleQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Cycles/Contracts/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
+      "line": 6
     },
     {
       "name": "BleedingEntry",
@@ -8742,20 +8749,6 @@
       "line": 8
     },
     {
-      "name": "DailyAdviceModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/DailyAdvices/Application/Models/DailyAdviceModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetDailyAdviceQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/DailyAdvices/Application/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
-      "line": 6
-    },
-    {
       "name": "GetDailyAdviceQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
@@ -8782,6 +8775,20 @@
       "role": "Other",
       "path": "Modules/DailyAdvices/Application/Services/DailyAdviceSelector.cs",
       "line": 9
+    },
+    {
+      "name": "DailyAdviceModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/DailyAdvices/Contracts/Models/DailyAdviceModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetDailyAdviceQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/DailyAdvices/Contracts/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
+      "line": 6
     },
     {
       "name": "DailyAdvice",
@@ -13432,13 +13439,6 @@
       "line": 5
     },
     {
-      "name": "IAchievementDefinitionAdministrationService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs",
-      "line": 5
-    },
-    {
       "name": "IGamificationReadService",
       "kind": "interface",
       "role": "Service",
@@ -13465,27 +13465,6 @@
       "role": "Other",
       "path": "Modules/Gamification/Application/DependencyInjection.cs",
       "line": 9
-    },
-    {
-      "name": "AchievementDefinitionAdminModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Gamification/Application/Models/AchievementDefinitionAdminModel.cs",
-      "line": 2
-    },
-    {
-      "name": "AchievementDefinitionCreateInput",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Gamification/Application/Models/AchievementDefinitionCreateInput.cs",
-      "line": 2
-    },
-    {
-      "name": "AchievementDefinitionUpdateInput",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Gamification/Application/Models/AchievementDefinitionUpdateInput.cs",
-      "line": 2
     },
     {
       "name": "AchievementMetricSnapshot",
@@ -13563,6 +13542,34 @@
       "role": "Service",
       "path": "Modules/Gamification/Application/Services/GamificationUserProfileService.cs",
       "line": 9
+    },
+    {
+      "name": "IAchievementDefinitionAdministrationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Gamification/Contracts/Common/IAchievementDefinitionAdministrationService.cs",
+      "line": 5
+    },
+    {
+      "name": "AchievementDefinitionAdminModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Gamification/Contracts/Models/AchievementDefinitionAdminModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AchievementDefinitionCreateInput",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Gamification/Contracts/Models/AchievementDefinitionCreateInput.cs",
+      "line": 2
+    },
+    {
+      "name": "AchievementDefinitionUpdateInput",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Gamification/Contracts/Models/AchievementDefinitionUpdateInput.cs",
+      "line": 2
     },
     {
       "name": "AchievementDefinition",
@@ -15476,27 +15483,6 @@
       "line": 2
     },
     {
-      "name": "ImageAssetIdParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Images/Application/Common/ImageAssetIdParser.cs",
-      "line": 6
-    },
-    {
-      "name": "ImageAssetResolution",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Images/Application/Common/ImageAssetResolution.cs",
-      "line": 5
-    },
-    {
-      "name": "ImageAssetResolver",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Images/Application/Common/ImageAssetResolver.cs",
-      "line": 7
-    },
-    {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
@@ -15726,6 +15712,27 @@
       "role": "Service",
       "path": "Modules/Images/Service.Contracts/Common/IImageAssetAccessService.cs",
       "line": 6
+    },
+    {
+      "name": "ImageAssetIdParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Service.Contracts/Common/ImageAssetIdParser.cs",
+      "line": 6
+    },
+    {
+      "name": "ImageAssetResolution",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolution.cs",
+      "line": 5
+    },
+    {
+      "name": "ImageAssetResolver",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Service.Contracts/Common/ImageAssetResolver.cs",
+      "line": 7
     },
     {
       "name": "ImageAssetReadModel",
@@ -17443,34 +17450,6 @@
       "line": 8
     },
     {
-      "name": "MealAiItemModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Meals/Application/Models/MealAiItemModel.cs",
-      "line": 6
-    },
-    {
-      "name": "MealAiSessionModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Meals/Application/Models/MealAiSessionModel.cs",
-      "line": 2
-    },
-    {
-      "name": "MealItemModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Meals/Application/Models/MealItemModel.cs",
-      "line": 6
-    },
-    {
-      "name": "MealModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Meals/Application/Models/MealModel.cs",
-      "line": 6
-    },
-    {
       "name": "MealOverviewModel",
       "kind": "record",
       "role": "Other",
@@ -17490,13 +17469,6 @@
       "role": "QueryHandler",
       "path": "Modules/Meals/Application/Queries/GetMealById/GetMealByIdQueryHandler.cs",
       "line": 11
-    },
-    {
-      "name": "GetMealsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/Meals/Application/Queries/GetMeals/GetMealsQuery.cs",
-      "line": 7
     },
     {
       "name": "GetMealsQueryHandler",
@@ -18043,6 +18015,41 @@
       "role": "Response",
       "path": "Modules/Meals/Presentation/Features/Meals/Responses/MealOverviewHttpResponse.cs",
       "line": 5
+    },
+    {
+      "name": "MealAiItemModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Meals/Service.Contracts/Models/MealAiItemModel.cs",
+      "line": 6
+    },
+    {
+      "name": "MealAiSessionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Meals/Service.Contracts/Models/MealAiSessionModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MealItemModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Meals/Service.Contracts/Models/MealItemModel.cs",
+      "line": 6
+    },
+    {
+      "name": "MealModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Meals/Service.Contracts/Models/MealModel.cs",
+      "line": 6
+    },
+    {
+      "name": "GetMealsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Meals/Service.Contracts/Queries/GetMeals/GetMealsQuery.cs",
+      "line": 7
     },
     {
       "name": "DietologistInvitationDecisionNotificationPayload",
@@ -21279,27 +21286,6 @@
       "line": 8
     },
     {
-      "name": "TdeeConfidence",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Tdee/Application/Models/TdeeConfidence.cs",
-      "line": 2
-    },
-    {
-      "name": "TdeeInsightModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Tdee/Application/Models/TdeeInsightModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetTdeeInsightQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/Tdee/Application/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
-      "line": 6
-    },
-    {
       "name": "GetTdeeInsightQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
@@ -21333,6 +21319,27 @@
       "role": "Service",
       "path": "Modules/Tdee/Application/Services/TdeeUserProfileService.cs",
       "line": 8
+    },
+    {
+      "name": "TdeeConfidence",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Tdee/Contracts/Models/TdeeConfidence.cs",
+      "line": 2
+    },
+    {
+      "name": "TdeeInsightModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Tdee/Contracts/Models/TdeeInsightModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetTdeeInsightQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Tdee/Contracts/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
+      "line": 6
     },
     {
       "name": "TdeePresentationServiceCollectionExtensions",
@@ -23880,7 +23887,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "WearableConnectionRepository",
@@ -24908,7 +24915,7 @@
     },
     {
       "interface": "IAchievementDefinitionAdministrationService",
-      "interfacePath": "Modules/Gamification/Application/Common/IAchievementDefinitionAdministrationService.cs",
+      "interfacePath": "Modules/Gamification/Contracts/Common/IAchievementDefinitionAdministrationService.cs",
       "implementation": "AchievementDefinitionAdministrationService",
       "implementationPath": "Modules/Gamification/Application/Services/AchievementDefinitionAdministrationService.cs",
       "confidence": "naming-convention"
@@ -25034,14 +25041,14 @@
     },
     {
       "interface": "IAiAdministrationReadService",
-      "interfacePath": "Modules/Ai/Application/Common/IAiAdministrationReadService.cs",
+      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs",
       "implementation": "AiAdministrationReadService",
       "implementationPath": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IAiPromptAdministrationService",
-      "interfacePath": "Modules/Ai/Application/Common/IAiPromptAdministrationService.cs",
+      "interfacePath": "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptAdministrationService.cs",
       "implementation": "AiPromptAdministrationService",
       "implementationPath": "Modules/Ai/Application/Services/AiPromptAdministrationService.cs",
       "confidence": "naming-convention"
@@ -25195,7 +25202,7 @@
     },
     {
       "interface": "ICycleReadService",
-      "interfacePath": "Modules/Cycles/Application/Common/ICycleReadService.cs",
+      "interfacePath": "Modules/Cycles/Contracts/Common/ICycleReadService.cs",
       "implementation": "CycleReadService",
       "implementationPath": "Modules/Cycles/Application/Services/CycleReadService.cs",
       "confidence": "naming-convention"

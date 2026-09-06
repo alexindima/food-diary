@@ -2,7 +2,6 @@ using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Infrastructure.Persistence.Locking;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace FoodDiary.Infrastructure.Persistence.Wearables;
 
@@ -21,15 +20,14 @@ internal sealed class EfWearableTransactionRunner(FoodDiaryDbContext context) : 
             .AcquireAsync(connectionString, serializationKey, cancellationToken)
             .ConfigureAwait(false);
         await using (advisoryLock.ConfigureAwait(false)) {
-            TResult result = await operation(cancellationToken).ConfigureAwait(false);
-
-            IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
-            await using (transaction.ConfigureAwait(false)) {
-                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-            }
-
-            return result;
+            // SaveChanges owns its atomic transaction and retries. Never replay provider calls.
+            return await SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue: null, async () => {
+                TResult result = await operation(cancellationToken).ConfigureAwait(false);
+                if (result is not FoodDiary.Results.Result { IsFailure: true }) {
+                    await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                }
+                return result;
+            }, cancellationToken).ConfigureAwait(false);
         }
     }
 }

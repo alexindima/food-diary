@@ -4056,6 +4056,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("character varying(2048)");
 
                 b.Property<string>("LockedBy")
+                        .IsConcurrencyToken()
                     .HasMaxLength(128)
                     .HasColumnType("character varying(128)");
 
@@ -4262,6 +4263,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("character varying(2048)");
 
                 b.Property<string>("LockedBy")
+                        .IsConcurrencyToken()
                     .HasMaxLength(128)
                     .HasColumnType("character varying(128)");
 
@@ -4316,6 +4318,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("character varying(2048)");
 
                 b.Property<string>("LockedBy")
+                        .IsConcurrencyToken()
                     .HasMaxLength(128)
                     .HasColumnType("character varying(128)");
 
@@ -4360,6 +4363,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("character varying(2048)");
 
                 b.Property<string>("LockedBy")
+                        .IsConcurrencyToken()
                     .HasMaxLength(128)
                     .HasColumnType("character varying(128)");
 

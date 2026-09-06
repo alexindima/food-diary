@@ -338,3 +338,13 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Always commit both migration files: `*.cs` and `*.Designer.cs`.
 - Add `[ExcludeFromCodeCoverage]` to migration implementation classes and model snapshots so generated EF code stays out of dotCover/code coverage.
 - After editing or generating a migration, run a whitespace/style pass before commit. Prefer `dotnet format whitespace FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj` or an equivalent fix on the migration files so CI does not fail with `WHITESPACE: Fix whitespace formatting`.
+
+- Cycles consumer API: `Modules/Cycles/Contracts/AGENTS.md`
+
+- DailyAdvices consumer API: `Modules/DailyAdvices/Contracts/AGENTS.md`
+
+- Tdee consumer API: `Modules/Tdee/Contracts/AGENTS.md`
+
+- Gamification consumer API: `Modules/Gamification/Contracts/AGENTS.md`
+
+- Meals consumer API: `Modules/Meals/Service.Contracts/AGENTS.md`

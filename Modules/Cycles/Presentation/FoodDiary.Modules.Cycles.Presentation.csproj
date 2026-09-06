@@ -7,6 +7,7 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Asp.Versioning.Mvc" />
+    <ProjectReference Include="../Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Cycles.Application.Abstractions.csproj" />

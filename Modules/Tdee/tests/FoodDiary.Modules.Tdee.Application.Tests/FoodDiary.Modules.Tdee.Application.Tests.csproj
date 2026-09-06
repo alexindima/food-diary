@@ -16,6 +16,7 @@
     <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../Contracts/FoodDiary.Modules.Tdee.Contracts.csproj" />
     <ProjectReference Include="..\..\..\BodyMetrics\Application\FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="..\..\Application\FoodDiary.Modules.Tdee.Application.csproj" />
     <ProjectReference Include="../../../Exercises/Application/FoodDiary.Application.Exercises.csproj" />

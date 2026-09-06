@@ -81,6 +81,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Domain.Tests/Domain/WearableInvariantTests.cs`
 - [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/PostgresDatabaseCollection.cs`
 - [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/PostgresDatabaseFixture.cs`
+- [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/WearableRetryIntegrationTests.cs`
 - [integration] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.IntegrationTests/WearableTransactionRunnerIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Authentication/WearableOAuthStateServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Wearables/tests/FoodDiary.Modules.Wearables.Infrastructure.Tests/Integrations/ProviderOptionsTests.cs`

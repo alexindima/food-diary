@@ -19,12 +19,13 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Meals, Users, WeightEntries
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Dashboard.Application, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `Modules/Tdee/Application`
+- `Modules/Tdee/Contracts`
 - `Modules/Tdee/Presentation`
 
 ## HTTP Surface
@@ -36,19 +37,21 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 0
-- Observed external consumer groups: 4
+- Public contract files: 3
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
+- Public contract types: 3
 - Interfaces: 0
-- DTO/read-model/projection types: 0
-- Enums: 0
+- DTO/read-model/projection types: 1
+- Enums: 1
 - Exported repository-shaped contracts: 0
 - Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- `enum TdeeConfidence`
+- `record GetTdeeInsightQuery`
+- `record TdeeInsightModel`
 
 ## Focused Tests
 

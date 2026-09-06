@@ -56,6 +56,9 @@ public sealed class ModuleAggregateIsolationTests {
             new[] {
                 typeof(FoodDiary.Application.Abstractions.Images.Common.IImageAssetAccessService),
                 typeof(FoodDiary.Application.Abstractions.Images.Models.ImageAssetReadModel),
+                typeof(FoodDiary.Application.Images.Common.ImageAssetIdParser),
+                typeof(FoodDiary.Application.Images.Common.ImageAssetResolution),
+                typeof(FoodDiary.Application.Images.Common.ImageAssetResolver),
             }.OrderBy(type => type.FullName, StringComparer.Ordinal),
             assembly.GetExportedTypes().OrderBy(type => type.FullName, StringComparer.Ordinal));
         Assert.DoesNotContain(assembly.GetReferencedAssemblies(), reference =>

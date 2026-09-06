@@ -19,13 +19,14 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Achievements, Meals, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Admin.Application, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `Modules/Gamification/Application`
 - `Modules/Gamification/Application/Abstractions`
+- `Modules/Gamification/Contracts`
 - `Modules/Gamification/Presentation`
 
 ## HTTP Surface
@@ -37,25 +38,29 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: AchievementDefinition, UserAchievement, AchievementEvaluationOutboxMessage
-- Public contract files: 8
-- Observed external consumer groups: 4
+- Public contract files: 12
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 8
-- Interfaces: 6
-- DTO/read-model/projection types: 1
+- Public contract types: 12
+- Interfaces: 7
+- DTO/read-model/projection types: 2
 - Enums: 0
 - Exported repository-shaped contracts: 2
 - Contracts referencing domain entities: 2
 - `class AchievementDefinitionErrors`
+- `interface IAchievementDefinitionAdministrationService`
 - `interface IAchievementDefinitionStore`
 - `interface IAchievementEvaluationOutbox`
 - `interface IAchievementEvaluationOutboxProcessor`
 - `interface IAchievementMetricReader`
 - `interface IAchievementReconciliationHandler`
 - `interface IUserAchievementStore`
+- `record AchievementDefinitionAdminModel`
+- `record AchievementDefinitionCreateInput`
+- `record AchievementDefinitionUpdateInput`
 - `record AchievementGrantModel`
 
 ## Focused Tests

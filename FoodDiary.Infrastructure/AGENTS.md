@@ -150,3 +150,5 @@ security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
 
 SharedTransactionBoundary resets attempt-local tracking, domain-event dispatch state and post-commit actions for replayable module transactions. Callbacks must reload mutable inputs on each attempt. Six restrictive image FKs protect references against concurrent cleanup; Users releases its profile FK explicitly before image purge. See ADR 0032.
+
+Outbox finalization is fenced by the original LockedBy concurrency token on all four streams. A lost claim must neither overwrite state nor release a newer claim. Gamification SQL completion/requeue also conditions on LockedBy and preserves revision coalescing. The InMemory fallback persists claims before dispatch. Replay wraps its short transaction in the provider execution strategy and resets tracking between failed attempts; external delivery is never retried by that transaction. See ADR 0033.
