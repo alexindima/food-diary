@@ -4756,7 +4756,7 @@
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(level), \"Activity level must be one of the supported values.\"),",
       "path": "Modules/Users/Domain/Entities/Users/User.Tdee.cs",
-      "line": 60
+      "line": 63
     },
     {
       "area": "FoodDiary",

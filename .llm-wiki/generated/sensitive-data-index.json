@@ -6,12 +6,12 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1389,
+    "candidateFields": 1395,
     "credential": 146,
     "identity": 154,
-    "health": 666,
+    "health": 670,
     "financial": 120,
-    "privateContent": 303,
+    "privateContent": 305,
     "boundaryFiles": 161,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 0
@@ -3085,27 +3085,6 @@
     },
     {
       "category": "health",
-      "name": "SnapshotCaloriesPerBase",
-      "type": "double?",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
-      "line": 16
-    },
-    {
-      "category": "health",
-      "name": "ProductCaloriesPerBase",
-      "type": "double?",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
-      "line": 26
-    },
-    {
-      "category": "health",
-      "name": "RecipeTotalCalories",
-      "type": "double?",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
-      "line": 37
-    },
-    {
-      "category": "health",
       "name": "TotalCalories",
       "type": "double",
       "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
@@ -3976,6 +3955,20 @@
       "category": "health",
       "name": "ProductCaloriesPerBase",
       "type": "double?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealItemDisplayReadModel.cs",
+      "line": 12
+    },
+    {
+      "category": "health",
+      "name": "RecipeTotalCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealItemDisplayReadModel.cs",
+      "line": 24
+    },
+    {
+      "category": "health",
+      "name": "ProductCaloriesPerBase",
+      "type": "double?",
       "path": "Modules/Meals/Contracts/Meals/Models/MealItemProjectionReadModel.cs",
       "line": 14
     },
@@ -4160,6 +4153,27 @@
       "type": "double",
       "path": "Modules/Meals/Domain/ValueObjects/MealNutritionUpdate.cs",
       "line": 4
+    },
+    {
+      "category": "health",
+      "name": "SnapshotCaloriesPerBase",
+      "type": "double?",
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayProjection.cs",
+      "line": 16
+    },
+    {
+      "category": "health",
+      "name": "ProductCaloriesPerBase",
+      "type": "double?",
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayProjection.cs",
+      "line": 26
+    },
+    {
+      "category": "health",
+      "name": "RecipeTotalCalories",
+      "type": "double?",
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayProjection.cs",
+      "line": 37
     },
     {
       "category": "health",
@@ -5819,6 +5833,20 @@
       "type": "SocialPushNotificationsEnabled,",
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
       "line": 312
+    },
+    {
+      "category": "health",
+      "name": "Gender",
+      "type": "BirthDate,",
+      "path": "Modules/Users/Domain/Entities/Users/User.Tdee.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "HeightCm",
+      "type": "WeightKg,",
+      "path": "Modules/Users/Domain/Entities/Users/User.Tdee.cs",
+      "line": 13
     },
     {
       "category": "health",
@@ -7999,27 +8027,6 @@
     },
     {
       "category": "privateContent",
-      "name": "SnapshotImageUrl",
-      "type": "string?",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
-      "line": 13
-    },
-    {
-      "category": "privateContent",
-      "name": "ProductImageUrl",
-      "type": "string?",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
-      "line": 23
-    },
-    {
-      "category": "privateContent",
-      "name": "RecipeImageUrl",
-      "type": "string?",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
-      "line": 35
-    },
-    {
-      "category": "privateContent",
       "name": "Comment",
       "type": "string?",
       "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealProjection.cs",
@@ -8484,6 +8491,20 @@
       "category": "privateContent",
       "name": "ProductImageUrl",
       "type": "string?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealItemDisplayReadModel.cs",
+      "line": 9
+    },
+    {
+      "category": "privateContent",
+      "name": "RecipeImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealItemDisplayReadModel.cs",
+      "line": 22
+    },
+    {
+      "category": "privateContent",
+      "name": "ProductImageUrl",
+      "type": "string?",
       "path": "Modules/Meals/Contracts/Meals/Models/MealItemProjectionReadModel.cs",
       "line": 11
     },
@@ -8626,6 +8647,27 @@
       "type": "ImageAssetId?",
       "path": "Modules/Meals/Domain/ValueObjects/MealDetailsState.cs",
       "line": 11
+    },
+    {
+      "category": "privateContent",
+      "name": "SnapshotImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayProjection.cs",
+      "line": 13
+    },
+    {
+      "category": "privateContent",
+      "name": "ProductImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayProjection.cs",
+      "line": 23
+    },
+    {
+      "category": "privateContent",
+      "name": "RecipeImageUrl",
+      "type": "string?",
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayProjection.cs",
+      "line": 35
     },
     {
       "category": "privateContent",

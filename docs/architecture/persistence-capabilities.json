@@ -282,14 +282,6 @@
       ],
       "reason": "Dashboard reads Favorites flags for visible meals."
     },
-    "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemsLoader.cs": {
-      "module": "Dashboard",
-      "capabilities": [
-        "entity:MealItem",
-        "entity:Product"
-      ],
-      "reason": "Dashboard projects meal items and Product nutrition; retained query acquisition does not authorize Product mutation."
-    },
     "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs": {
       "module": "Dashboard",
       "capabilities": [
@@ -731,6 +723,15 @@
       ],
       "reason": "MealPlanning-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
     },
+    "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayReadService.cs": {
+      "module": "Meals",
+      "capabilities": [
+        "entity:Meal",
+        "entity:MealItem",
+        "entity:Product"
+      ],
+      "reason": "Meals owns tenant-scoped batch display projection and snapshot fallback; Products is an immediate no-tracking read."
+    },
     "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs": {
       "module": "Meals",
       "capabilities": [
@@ -833,8 +834,8 @@
       "capabilities": [
         "context:Database"
       ],
-      "reason": "Products serializes its approved mutations with the shared context/unit of work and caller operation; retains existing save/commit ownership.",
-      "technicalSourceSha256": "1cb75f3c29ad39a82cb75c48ea9c3c2f98638396c0a0416dfb4a1a6b18a0b29f"
+      "reason": "Owner top-level Serializable transaction with whole-attempt retry and clean tracking/outbox callback reset; no global composition lock.",
+      "technicalSourceSha256": "eb0eec2bece41241dcbe85f1c1990e5dff14a923b748e64a0605cd8a3273b75f"
     },
     "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs": {
       "module": "Products",
@@ -915,8 +916,8 @@
       "capabilities": [
         "context:Database"
       ],
-      "reason": "Recipes serializes approved mutations with the shared context/unit of work and caller operation; retains existing save/commit ownership.",
-      "technicalSourceSha256": "a02ca13324b4cb15561d18ffd3dcde7842f412d302e127f0b1d9ff21ffac7f82"
+      "reason": "Owner top-level Serializable transaction with whole-attempt retry and clean tracking/outbox callback reset; no global composition lock.",
+      "technicalSourceSha256": "71a2226ead1164faa4306f586229656f3f8570b463dfae5e2cf8c8c3647e7813"
     },
     "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs": {
       "module": "Recipes",
@@ -1015,6 +1016,16 @@
         "entity:WeightEntry"
       ],
       "reason": "Users reads the latest BodyMetrics weight value for profile projection; no BodyMetrics mutation."
+    },
+    "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs": {
+      "module": "Users",
+      "capabilities": [
+        "call:User.CalculateBmr",
+        "call:User.CalculateEstimatedTdee",
+        "entity:Role",
+        "entity:User"
+      ],
+      "reason": "Persisted no-tracking projections for consumer profiles and account access, role existence and pure static BMR/TDEE calculation; no aggregate loading or saving."
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserRepository.cs": {
       "module": "Users",

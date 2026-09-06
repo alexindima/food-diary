@@ -4,7 +4,7 @@ Recipes owns the Recipe aggregate, steps, ingredients, recipe-only value objects
 
 Own recipe use cases, aggregate ports, projection contracts, EF mappings and adapters. Preserve legacy Application assembly and CLR namespaces. RecipeCommunity stays a separate owner. Remove foreign CLR navigations only with explicit schema-equivalent foreign keys and verified owner projections; preserve FK/delete/schema semantics.
 
-Central DbContext/DbSets/migrations/snapshot remain central; explicitly apply ApplyRecipesPersistenceModel. Shared RecipeCompositionTransactionLock remains central with narrowly granted friend access for Recipes infrastructure and unchanged Products coordination. Hosts call AddRecipesModule; JobManager calls AddRecipesPersistence only, preserving its application registration set.
+Central DbContext/DbSets/migrations/snapshot remain central; explicitly apply ApplyRecipesPersistenceModel. Products and Recipes coordinate through Serializable transactions with whole-attempt retries (ADR 0035). Hosts call AddRecipesModule; JobManager calls AddRecipesPersistence only, preserving its application registration set.
 
 Keep nested recipe/cycle validation, nutrition/rounding, servings/unit conversion, visibility/access, mutation transactions and media/outbox calls unchanged. Focused tests live in tests under this module. Mixed PostgreSQL, Domain Meal snapshots, HTTP and DI suites stay central. See docs/ai/recipes-ownership-inventory.md. Use one .artifacts/recipes-extraction build scope and separate .artifacts/recipes-extraction-results evidence. No coverage collectors.
 

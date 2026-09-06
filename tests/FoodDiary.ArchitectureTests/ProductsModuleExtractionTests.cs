@@ -90,7 +90,8 @@ public sealed class ProductsModuleExtractionTests {
         string infrastructure = ArchitectureTestPaths.FromRoot("Modules/Products/Infrastructure");
         string runner = Path.GetFullPath(Path.Combine(infrastructure, "Persistence", "Products", "EfProductMutationTransactionRunner.cs"));
         string runnerSource = File.ReadAllText(runner);
-        Assert.Contains("RecipeCompositionTransactionLock.AcquireAsync", runnerSource, StringComparison.Ordinal);
+        Assert.Contains("IsolationLevel.Serializable", runnerSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("RecipeCompositionTransactionLock", runnerSource, StringComparison.Ordinal);
         Assert.Contains("BeginTransactionAsync", runnerSource, StringComparison.Ordinal);
         Assert.DoesNotContain(SourceScanner.SourceFiles(infrastructure), path =>
             !string.Equals(Path.GetFullPath(path), runner, StringComparison.OrdinalIgnoreCase) &&

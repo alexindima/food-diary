@@ -3,7 +3,6 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Users.Common;
@@ -11,16 +10,7 @@ namespace FoodDiary.Application.Users.Common;
 internal sealed class UserContextService(
     IUserLookupRepository userLookupRepository,
     IUserWriteRepository userWriteRepository) :
-    IUserContextService,
-    IUserProfileReadService,
-    ICurrentUserAccessService,
-    IUserAiProfileReadService,
-    IUserDashboardProfileReadService,
-    IUserDietologistProfileReadService,
-    IUserGamificationProfileReadService,
-    IUserHydrationProfileReadService,
-    IUserTdeeProfileReadService,
-    IUserWeeklyCheckInProfileReadService {
+    IUserContextService, IUserProfileReadService {
     public async Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
         User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
@@ -36,132 +26,6 @@ internal sealed class UserContextService(
 
     public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
         userWriteRepository.UpdateAsync(user, cancellationToken);
-
-    public async Task<Result<UserAiProfileModel>> GetAiProfileAsync(
-        UserId userId,
-        CancellationToken cancellationToken = default) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (userResult.IsFailure) {
-            return Result.Failure<UserAiProfileModel>(userResult.Error);
-        }
-
-        User user = userResult.Value;
-        return Result.Success(new UserAiProfileModel(
-            user.Id,
-            user.Language,
-            user.AiInputTokenLimit,
-            user.AiOutputTokenLimit,
-            user.AiConsentAcceptedAt is not null));
-    }
-
-    public async Task<Result<UserDashboardProfileModel>> GetDashboardProfileAsync(
-        UserId userId,
-        CancellationToken cancellationToken = default) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (userResult.IsFailure) {
-            return Result.Failure<UserDashboardProfileModel>(userResult.Error);
-        }
-
-        User user = userResult.Value;
-        return Result.Success(new UserDashboardProfileModel(
-            user.Id.Value,
-            user.Email,
-            user.Language,
-            user.DashboardLayoutJson,
-            user.DesiredWeightKg,
-            user.DesiredWaistCm,
-            user.HydrationGoal,
-            user.WaterGoal,
-            user.ProteinTarget,
-            user.FatTarget,
-            user.CarbTarget,
-            user.FiberTarget,
-            CreateCalorieSchedule(user)));
-    }
-
-    public async Task<Result<UserGamificationProfileModel>> GetGamificationProfileAsync(
-        UserId userId,
-        CancellationToken cancellationToken = default) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        return userResult.IsFailure
-            ? Result.Failure<UserGamificationProfileModel>(userResult.Error)
-            : Result.Success(new UserGamificationProfileModel(CreateCalorieSchedule(userResult.Value)));
-    }
-
-    public async Task<Result<UserDietologistProfileModel>> GetAccessibleProfileAsync(
-        UserId userId,
-        CancellationToken cancellationToken) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        return userResult.IsFailure
-            ? Result.Failure<UserDietologistProfileModel>(userResult.Error)
-            : Result.Success(ToDietologistProfile(userResult.Value));
-    }
-
-    public async Task<UserDietologistProfileModel?> FindByIdAsync(UserId userId, CancellationToken cancellationToken) {
-        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        return user is null ? null : ToDietologistProfile(user);
-    }
-
-    public async Task<UserDietologistProfileModel?> FindByEmailAsync(string email, CancellationToken cancellationToken) {
-        User? user = await userLookupRepository.GetByEmailAsync(email, cancellationToken).ConfigureAwait(false);
-        return user is null ? null : ToDietologistProfile(user);
-    }
-
-    public async Task<Result<UserHydrationProfileModel>> GetHydrationProfileAsync(
-        UserId userId,
-        CancellationToken cancellationToken = default) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        return userResult.IsFailure
-            ? Result.Failure<UserHydrationProfileModel>(userResult.Error)
-            : Result.Success(new UserHydrationProfileModel(userResult.Value.HydrationGoal ?? userResult.Value.WaterGoal));
-    }
-
-    public async Task<Result<UserTdeeProfileModel>> GetTdeeProfileAsync(
-        UserId userId,
-        CancellationToken cancellationToken = default) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (userResult.IsFailure) {
-            return Result.Failure<UserTdeeProfileModel>(userResult.Error);
-        }
-
-        User user = userResult.Value;
-        return Result.Success(new UserTdeeProfileModel(
-            user.CalculateBmr(),
-            user.CalculateEstimatedTdee(),
-            user.WeightKg,
-            user.DesiredWeightKg,
-            user.DailyCalorieTarget));
-    }
-
-    public async Task<Result<UserWeeklyCheckInProfileModel>> GetWeeklyCheckInProfileAsync(
-        UserId userId,
-        CancellationToken cancellationToken = default) {
-        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        return userResult.IsFailure
-            ? Result.Failure<UserWeeklyCheckInProfileModel>(userResult.Error)
-            : Result.Success(new UserWeeklyCheckInProfileModel(userResult.Value.DailyCalorieTarget));
-    }
-
-    private static FoodDiary.Domain.ValueObjects.UserCalorieSchedule CreateCalorieSchedule(User user) =>
-        new(
-            user.DailyCalorieTarget,
-            user.CalorieCyclingEnabled,
-            user.MondayCalories,
-            user.TuesdayCalories,
-            user.WednesdayCalories,
-            user.ThursdayCalories,
-            user.FridayCalories,
-            user.SaturdayCalories,
-            user.SundayCalories);
-
-    private static UserDietologistProfileModel ToDietologistProfile(User user) =>
-        new(
-            user.Id.Value,
-            user.Email,
-            user.FirstName,
-            user.LastName,
-            user.Language,
-            user.HasRole(RoleNames.Dietologist));
 
     public async Task<Result<UserModel>> GetUserAsync(UserId userId, CancellationToken cancellationToken) {
         Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);

@@ -52,3 +52,5 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [0030: Owner lifecycle and transaction boundaries](0030-owner-lifecycle-and-transaction-boundaries.md)
 
 - [ADR 0032: Retry isolation and image reference integrity](0032-retry-isolation-and-image-reference-integrity.md)
+
+- [0035: Runtime boundaries and owner projections](0035-runtime-boundaries-and-owner-projections.md)

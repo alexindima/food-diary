@@ -10,20 +10,22 @@ public sealed partial class User {
     /// Calculates Basal Metabolic Rate using the Mifflin-St Jeor equation.
     /// Returns null if required profile data (weight, height, birth date, gender) is missing.
     /// </summary>
-    public double? CalculateBmr() {
-        if (WeightKg is null || HeightCm is null || BirthDate is null || Gender is null) {
+    public double? CalculateBmr() => CalculateBmr(WeightKg, HeightCm, BirthDate, Gender);
+
+    public static double? CalculateBmr(double? weightKg, double? heightCm, DateTime? birthDate, string? gender) {
+        if (weightKg is null || heightCm is null || birthDate is null || gender is null) {
             return null;
         }
 
-        int age = CalculateAge(BirthDate.Value, DomainTime.UtcNow);
+        int age = CalculateAge(birthDate.Value, DomainTime.UtcNow);
         if (age <= 0) {
             return null;
         }
 
         // Mifflin-St Jeor: 10 * weight(kg) + 6.25 * height(cm) - 5 * age + offset
-        double bmr = (10.0 * WeightKg.Value) + (6.25 * HeightCm.Value) - (5.0 * age);
+        double bmr = (10.0 * weightKg.Value) + (6.25 * heightCm.Value) - (5.0 * age);
 
-        bmr += Gender.ToUpperInvariant() switch {
+        bmr += gender.ToUpperInvariant() switch {
             "M" => 5.0,
             _ => -161.0,
         };
@@ -37,13 +39,14 @@ public sealed partial class User {
     /// Estimates TDEE by multiplying BMR by the activity level multiplier.
     /// Returns null if BMR cannot be calculated.
     /// </summary>
-    public double? CalculateEstimatedTdee() {
-        double? bmr = CalculateBmr();
+    public double? CalculateEstimatedTdee() => CalculateEstimatedTdee(CalculateBmr(), ActivityLevel);
+
+    public static double? CalculateEstimatedTdee(double? bmr, ActivityLevel activityLevel) {
         if (bmr is null) {
             return null;
         }
 
-        double multiplier = GetActivityMultiplier(ActivityLevel);
+        double multiplier = GetActivityMultiplier(activityLevel);
         double estimatedTdee = bmr.Value * multiplier;
         return double.IsFinite(estimatedTdee)
             ? Math.Round(estimatedTdee, 0, MidpointRounding.ToEven)

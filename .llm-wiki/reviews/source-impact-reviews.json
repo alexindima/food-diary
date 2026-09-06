@@ -7,14 +7,14 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "5905eedef807f38bd9e6c61e4dad5c5bfd87bb6c99b70b7f0155b45c7c3ad416"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "32996547dd548b39c14d1e2a9d7159fd7fcb89a9cdef8f6e5b536ec0fb55c0eb"
         }
       ],
-      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
+      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:05.2747316Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T14:57:39.1769404Z"
     },
     {
       "pageId": "module.frontend",
@@ -38,17 +38,13 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "b618de80f5ac300538975ec6f5addecfab7008f0d28a1c097700087582df7a3d"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "78eab927f2d36a389cc255107513692b7e95a7c3af1d69ae1cfc8cfb17a0ec41"
+          "sha256": "32996547dd548b39c14d1e2a9d7159fd7fcb89a9cdef8f6e5b536ec0fb55c0eb"
         }
       ],
-      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
+      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:09.5631356Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T14:57:39.4121333Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -56,18 +52,18 @@
       "pageSha256": "19b4a19aacfe2c095a6a1dd83977162a2d3cc4f203f30f546a8eeb8ffffa5673",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "a1c00cbd487bef19b33e97cdb60d93cf0868f55b096d565975129eb6fb813477"
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "3715be1f4fca90f2c36af507aae51c86af839c44534baa99adad1bc1cc3c9850"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "aa94360560dd6116807c3ffdf289072fa06fe8700487754d9531bd32f605e597"
+          "sha256": "98b253ba8222742b103d507ca9d0f11bab487199107a9499c0024d682997fee3"
         }
       ],
-      "reason": "All 182 HTTP cases pass with unchanged snapshots; moved public request/result namespaces, signatures, defaults and enum values are preserved. Coordinated rebuilds are recorded in ADR 0034.",
+      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:05.5679247Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T14:57:39.5711945Z"
     },
     {
       "pageId": "system.architecture",
@@ -75,18 +71,18 @@
       "pageSha256": "aecbc40ebd932d3500222bca6a84cbdaefaa0a2adf07b24580e0557a329ca8f7",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "a1c00cbd487bef19b33e97cdb60d93cf0868f55b096d565975129eb6fb813477"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "32996547dd548b39c14d1e2a9d7159fd7fcb89a9cdef8f6e5b536ec0fb55c0eb"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "73b929057cc0fd3c14e508f74b594bc6adb31d9a7739c0c360a6c309d3e4d0c9"
+          "sha256": "502eb90091e81873e027cd022fc7b4f1e2aa2d945429be2bd1ce386b16d70220"
         }
       ],
-      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
+      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:05.8738662Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T14:57:39.7561036Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -124,14 +120,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "5905eedef807f38bd9e6c61e4dad5c5bfd87bb6c99b70b7f0155b45c7c3ad416"
+          "path": "docs/adr/README.md",
+          "sha256": "48823bb1f00d4ef53d5b4ea6fe462d6a79085fa173aebe82d4b6c3c633d3d169"
         }
       ],
-      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
+      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:06.1503039Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T14:57:39.9568156Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -204,21 +200,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "2bb62ce5ed01d8b4ecf8ab0501c74efce343c80cc0b32749b64f99766faa5a23"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "a1c00cbd487bef19b33e97cdb60d93cf0868f55b096d565975129eb6fb813477"
+          "sha256": "bc0feafd5d0290a93647f4c8cfeda3d31781d52536ff9f18598811501720d74a"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "73b929057cc0fd3c14e508f74b594bc6adb31d9a7739c0c360a6c309d3e4d0c9"
+          "sha256": "502eb90091e81873e027cd022fc7b4f1e2aa2d945429be2bd1ce386b16d70220"
         }
       ],
-      "reason": "4971 unique scenarios in 54 physical test projects passed with zero failures/skips. Full build passes; PostgreSQL and HTTP suites ran once, and only five artifact-expectation failures were corrected with focused checks.",
+      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:06.8043392Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T14:57:40.1450521Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -227,13 +219,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "69b5158523dc876300ddccf337be09f4175a5fa2d646a451f815390b191bc4a9"
+          "sha256": "05917349c6db00f6c52ba4349e43487540d1344dfa9b8dc89608e5809adffcca"
         }
       ],
-      "reason": "All 182 HTTP cases pass with unchanged snapshots; moved public request/result namespaces, signatures, defaults and enum values are preserved. Coordinated rebuilds are recorded in ADR 0034.",
+      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:07.4893652Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T14:57:40.7053940Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -465,13 +457,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "b0b6a984cc667adb1e6af765c8e534968251927c4d46af1188ec6feda93225a5"
+          "sha256": "48823bb1f00d4ef53d5b4ea6fe462d6a79085fa173aebe82d4b6c3c633d3d169"
         }
       ],
-      "reason": "Reviewed current architecture/module/testing guides and ADR 0032 against implementation. The six-FK migration, ClientNoAction rationale, isolated cleanup scope, callback reload rule and coordinated consumer rebuild are documented; root guide links both new scoped guides.",
+      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
-      "gitHead": "839b2134e85d620bd641f2cf813ae675c258a2f8",
-      "reviewedAtUtc": "2026-09-06T01:38:36.9578380Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T14:57:40.9743688Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -514,17 +506,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "f4f92aeb364ecfb47394dd9ea9d7ae7d261a113e69378c6402eb15ceab2ca7f4"
+          "sha256": "125d723ade1c52de1217c7e17183d198ec7b5b47f6a258b74992907107b96d98"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "aa94360560dd6116807c3ffdf289072fa06fe8700487754d9531bd32f605e597"
+          "sha256": "98b253ba8222742b103d507ca9d0f11bab487199107a9499c0024d682997fee3"
         }
       ],
-      "reason": "4971 unique scenarios in 54 physical test projects passed with zero failures/skips. Full build passes; PostgreSQL and HTTP suites ran once, and only five artifact-expectation failures were corrected with focused checks.",
+      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:08.2100604Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T14:57:41.2759192Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -796,13 +788,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "54336abd99ff9f4a77a97574419c2a04d35cc98762feb6ed019f92c481bea21d"
+          "sha256": "82667e043424a238b2b92fa7bcd82c7bfa3042292106e2080811f7941b812dfe"
         }
       ],
-      "reason": "Reviewed claim-owner concurrency fencing across all four outboxes, Gamification revision SQL, retry isolation and unchanged OAuth/token persistence ordering. External callbacks are not inside retries; no new private logging or provider sharing.",
+      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:11.4155074Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T14:57:41.5414529Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -841,13 +833,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a849e15ac16798defb898c6a3bfea5ff71971d6b0246528e740eb18fda3ec810"
+          "sha256": "90b5b8bd52e83a57559e379f1e4debe5779ebb518a8121d83406d8e7d820ef12"
         }
       ],
-      "reason": "4971 unique scenarios in 54 physical test projects passed with zero failures/skips. Full build passes; PostgreSQL and HTTP suites ran once, and only five artifact-expectation failures were corrected with focused checks.",
+      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:08.6922257Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T14:57:41.9390404Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -924,13 +916,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "664d0a5228c9914e774ad94f78adba6182911079bce6ab14a9f768153e24833d"
+          "sha256": "10db7e971a48d69b0bbe2d1ae2427b17b37188bdabd1cf93523e8496a3c66144"
         }
       ],
-      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
+      "reason": "Refresh runtime topology before commit after staged-file preflight found stale generated output; owner boundaries and runtime policies remain as reviewed in ADR 0035.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:09.9208389Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T15:19:51.3041087Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -939,17 +931,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "a849e15ac16798defb898c6a3bfea5ff71971d6b0246528e740eb18fda3ec810"
+          "sha256": "90b5b8bd52e83a57559e379f1e4debe5779ebb518a8121d83406d8e7d820ef12"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "664d0a5228c9914e774ad94f78adba6182911079bce6ab14a9f768153e24833d"
+          "sha256": "10db7e971a48d69b0bbe2d1ae2427b17b37188bdabd1cf93523e8496a3c66144"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "82667e043424a238b2b92fa7bcd82c7bfa3042292106e2080811f7941b812dfe"
         }
       ],
-      "reason": "Admin requests only the existing session revocation capability; owner authorization is preserved. Revision and original lease owner fence success/failure and safe logs follow durable save. No payload, retention or provider sharing change.",
+      "reason": "Refresh runtime topology before commit after staged-file preflight found stale generated output; owner boundaries and runtime policies remain as reviewed in ADR 0035.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:10.5104444Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T15:19:51.7962550Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1183,17 +1179,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "01930d9d8f2e6db48112dc8958cd92da38aadefe4124fb9ca238bdcd51feca12"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "5905eedef807f38bd9e6c61e4dad5c5bfd87bb6c99b70b7f0155b45c7c3ad416"
+          "sha256": "f118df97d71356bc9b0813febd00b17e84e8c00b0c6e5d5f2617cdd6b30d4302"
         }
       ],
-      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
+      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:09.1499601Z"
+      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
+      "reviewedAtUtc": "2026-09-06T14:57:42.3116272Z"
     },
     {
       "pageId": "workflow.review-diff",

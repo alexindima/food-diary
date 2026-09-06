@@ -219,7 +219,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
     }
 
     [RequiresDockerFact]
-    public async Task ProductAndRecipeMutationRunners_SerializeRecipeCompositionChanges() {
+    public async Task ProductAndRecipeMutationRunners_AllowIndependentTransactionsToOverlap() {
         string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql(connectionString)
@@ -244,8 +244,12 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
             return Task.FromResult(Result.Success());
         });
 
-        await Assert.ThrowsAsync<TimeoutException>(() => secondEntered.Task.WaitAsync(TimeSpan.FromMilliseconds(250)));
-        releaseFirst.SetResult();
+        try {
+            await secondEntered.Task.WaitAsync(TimeSpan.FromSeconds(10));
+            Assert.False(first.IsCompleted);
+        } finally {
+            releaseFirst.TrySetResult();
+        }
         await Task.WhenAll(first, second);
         Assert.True(secondEntered.Task.IsCompletedSuccessfully);
     }

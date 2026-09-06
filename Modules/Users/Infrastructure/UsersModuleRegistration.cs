@@ -10,6 +10,15 @@ public static class UsersModuleRegistration {
         services.AddUsersApplication().AddUsersPersistence();
 
     public static IServiceCollection AddUsersPersistence(this IServiceCollection services) {
+        services.AddScoped<UserProfileProjectionService>();
+        services.AddScoped<ICurrentUserAccessService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
+        services.AddScoped<IUserAiProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
+        services.AddScoped<IUserDashboardProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
+        services.AddScoped<IUserDietologistProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
+        services.AddScoped<IUserGamificationProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
+        services.AddScoped<IUserHydrationProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
+        services.AddScoped<IUserTdeeProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
+        services.AddScoped<IUserWeeklyCheckInProfileReadService>(static provider => provider.GetRequiredService<UserProfileProjectionService>());
         services.AddScoped<UserRepository>();
         services.AddScoped<IUserRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserLookupRepository>(static provider => provider.GetRequiredService<UserRepository>());

@@ -1,0 +1,109 @@
+using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
+using Microsoft.EntityFrameworkCore;
+
+namespace FoodDiary.Infrastructure.Persistence.Meals;
+
+public sealed class MealItemDisplayReadService(FoodDiaryDbContext context) : IMealItemDisplayReadService {
+    public async Task<IReadOnlyList<MealItemDisplayReadModel>> GetByMealIdsAsync(
+        UserId userId,
+        IReadOnlyCollection<MealId> mealIds,
+        CancellationToken cancellationToken = default) {
+        if (mealIds.Count == 0) { return []; }
+        List<MealItemDisplayProjection> items = await context.MealItems
+            .AsNoTracking()
+            .Where(item => item.Meal.UserId == userId && mealIds.Contains(item.MealId))
+            .Select(item => new MealItemDisplayProjection(
+                item.MealId,
+                item.Id.Value,
+                item.MealId.Value,
+                item.Amount,
+                item.ProductId.HasValue ? item.ProductId.Value.Value : null,
+                item.SnapshotName,
+                item.SnapshotImageUrl,
+                item.SnapshotUnit,
+                item.SnapshotBaseAmount,
+                item.SnapshotCaloriesPerBase,
+                item.SnapshotProteinsPerBase,
+                item.SnapshotFatsPerBase,
+                item.SnapshotCarbsPerBase,
+                item.SnapshotFiberPerBase,
+                item.SnapshotAlcoholPerBase,
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => product.Name).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => product.ImageUrl).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (string?)product.BaseUnit.ToString()).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.BaseAmount).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.CaloriesPerBase).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.ProteinsPerBase).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.FatsPerBase).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.CarbsPerBase).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.FiberPerBase).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (double?)product.AlcoholPerBase).SingleOrDefault(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => (ProductType?)product.ProductType).SingleOrDefault(),
+                item.RecipeId.HasValue ? item.RecipeId.Value.Value : null,
+                item.SnapshotName,
+                item.SnapshotImageUrl,
+                item.SnapshotBaseAmount.HasValue ? 1 : (int?)null,
+                item.SnapshotCaloriesPerBase,
+                item.SnapshotProteinsPerBase,
+                item.SnapshotFatsPerBase,
+                item.SnapshotCarbsPerBase,
+                item.SnapshotFiberPerBase,
+                item.SnapshotAlcoholPerBase,
+                item.SourceAiItemId.HasValue ? item.SourceAiItemId.Value.Value : null,
+                item.Origin.ToString()))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
+        return items
+            .OrderBy(item => item.ItemId)
+            .Select(ToReadModel)
+            .ToList();
+    }
+
+    private static MealItemDisplayReadModel ToReadModel(MealItemDisplayProjection item) {
+        FoodQualityScore? productQuality = item.ProductCaloriesPerBase is null
+            ? null
+            : FoodQualityScore.Calculate(
+                item.ProductCaloriesPerBase.Value,
+                item.ProductProteinsPerBase ?? 0,
+                item.ProductFatsPerBase ?? 0,
+                item.ProductCarbsPerBase ?? 0,
+                item.ProductFiberPerBase ?? 0,
+                item.ProductAlcoholPerBase ?? 0,
+                item.ProductType ?? ProductType.Unknown);
+        bool hasNutritionSnapshot = item is { SnapshotBaseAmount: not null, SnapshotCaloriesPerBase: not null, SnapshotProteinsPerBase: not null, SnapshotFatsPerBase: not null, SnapshotCarbsPerBase: not null, SnapshotFiberPerBase: not null, SnapshotAlcoholPerBase: not null };
+
+        return new MealItemDisplayReadModel(
+            item.ItemId,
+            item.MealIdValue,
+            item.Amount,
+            item.ProductId,
+            item.SnapshotName ?? item.ProductName,
+            item.SnapshotImageUrl ?? item.ProductImageUrl,
+            item.SnapshotUnit ?? item.ProductBaseUnit,
+            item.SnapshotBaseAmount ?? item.ProductBaseAmount,
+            item.SnapshotCaloriesPerBase ?? item.ProductCaloriesPerBase,
+            item.SnapshotProteinsPerBase ?? item.ProductProteinsPerBase,
+            item.SnapshotFatsPerBase ?? item.ProductFatsPerBase,
+            item.SnapshotCarbsPerBase ?? item.ProductCarbsPerBase,
+            item.SnapshotFiberPerBase ?? item.ProductFiberPerBase,
+            item.SnapshotAlcoholPerBase ?? item.ProductAlcoholPerBase,
+            productQuality?.Score,
+            productQuality?.Grade.ToString().ToLowerInvariant(),
+            item.RecipeId,
+            item.SnapshotName ?? item.RecipeName,
+            item.SnapshotImageUrl ?? item.RecipeImageUrl,
+            hasNutritionSnapshot ? 1 : item.RecipeServings,
+            item.SnapshotCaloriesPerBase ?? item.RecipeTotalCalories,
+            item.SnapshotProteinsPerBase ?? item.RecipeTotalProteins,
+            item.SnapshotFatsPerBase ?? item.RecipeTotalFats,
+            item.SnapshotCarbsPerBase ?? item.RecipeTotalCarbs,
+            item.SnapshotFiberPerBase ?? item.RecipeTotalFiber,
+            item.SnapshotAlcoholPerBase ?? item.RecipeTotalAlcohol,
+            item.SourceAiItemId,
+            item.Origin);
+    }
+}

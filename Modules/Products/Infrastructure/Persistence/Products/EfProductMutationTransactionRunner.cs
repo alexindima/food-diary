@@ -29,10 +29,9 @@ internal sealed class EfProductMutationTransactionRunner(
         IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(() => SharedTransactionBoundary.ExecuteAttemptAsync(context, postCommitActionQueue, async () => {
             IDbContextTransaction transaction = await context.Database
-                .BeginTransactionAsync(cancellationToken)
+                .BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken)
                 .ConfigureAwait(false);
             await using (transaction.ConfigureAwait(false)) {
-                await RecipeCompositionTransactionLock.AcquireAsync(context, cancellationToken).ConfigureAwait(false);
                 T result = await operation(cancellationToken).ConfigureAwait(false);
                 if (result is not FoodDiary.Results.Result { IsFailure: true } && unitOfWork.HasPendingChanges) {
                     await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

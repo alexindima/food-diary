@@ -20,3 +20,5 @@ Own the complete tracked UserRepository; its four scoped aliases are registered
 here, not by AddInfrastructure. Google issuer/subject lookup reads stored Users
 state, not an external provider. Do not add SaveChanges/transactions inside the
 adapter: writes and role-audit additions remain part of the caller's unit of work.
+
+UserProfileProjectionService owns persisted no-tracking access checks and AI, Dashboard, Dietologist, Gamification, Hydration, TDEE and WeeklyCheckIn projections. These interfaces must not alias the tracked UserContextService. Preserve active/deleted filters; no credentials or goal collections are materialized for narrow profiles.

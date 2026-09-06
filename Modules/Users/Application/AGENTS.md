@@ -17,3 +17,5 @@ Rules for `Modules/Users/Application/`.
 - Build: `dotnet build Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj`
 - Tests: `dotnet test Modules/Users/tests/FoodDiary.Modules.Users.Application.Tests/FoodDiary.Modules.Users.Application.Tests.csproj`
 - Guardrails: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+
+UserContextService owns aggregate mutation and full profile/history reads. Register narrow consumer profiles and ICurrentUserAccessService through Users Infrastructure projections; preserve owner-internal tracked access separately.

@@ -94,3 +94,5 @@ service-contract cycles. PersistenceCapabilityTests reconciles the compiler exce
 file with the reviewed inventory; a passing analyzer alone does not review raw SQL.
 
 Images.Service.Contracts is the aggregate-free Id/Url access API; the combined graph includes Service.Contracts edges. Scalar mappings remain migration-aligned; ADR 0032 intentionally changes the six image FKs to Restrict.
+
+RuntimeModuleBoundaryTests reconciles consumer-owned interfaces with foreign implementation owners and conservative parameter-type consumers in runtime-module-boundaries.json. The transaction field is reviewed policy; provider tests establish actual transaction behavior. This inventory complements, and does not weaken, the acyclic Application reference graph.

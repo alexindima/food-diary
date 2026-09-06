@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3611,
-    "symbols": 3551,
-    "interfaceImplementationLinks": 240,
+    "sourceFiles": 3614,
+    "symbols": 3554,
+    "interfaceImplementationLinks": 241,
     "dependencyInjectionRegistrations": 153,
     "kinds": {
-      "class": 1854,
+      "class": 1855,
       "enum": 63,
-      "interface": 435,
-      "record": 1079,
+      "interface": 436,
+      "record": 1080,
       "record struct": 120
     },
     "roles": {
@@ -40,7 +40,7 @@
       "Repository": 103,
       "Request": 136,
       "Response": 181,
-      "Service": 291,
+      "Service": 294,
       "Validator": 206,
       "ValueObject": 114,
       "WriteRepository": 46
@@ -745,13 +745,6 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxReplayEntry.cs",
-      "line": 4
-    },
-    {
-      "name": "RecipeCompositionTransactionLock",
-      "kind": "class",
-      "role": "Other",
-      "path": "FoodDiary.Infrastructure/Persistence/Shared/RecipeCompositionTransactionLock.cs",
       "line": 4
     },
     {
@@ -9239,18 +9232,11 @@
       "line": 6
     },
     {
-      "name": "DashboardMealItemProjection",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemProjection.cs",
-      "line": 5
-    },
-    {
       "name": "DashboardMealItemsLoader",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealItemsLoader.cs",
-      "line": 9
+      "line": 7
     },
     {
       "name": "DashboardMealProjection",
@@ -9264,7 +9250,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardMealsReadService.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "DashboardReadService",
@@ -17632,6 +17618,13 @@
       "line": 5
     },
     {
+      "name": "IMealItemDisplayReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Meals/Contracts/Meals/Common/IMealItemDisplayReadService.cs",
+      "line": 5
+    },
+    {
       "name": "IMealNutritionStatisticsReadService",
       "kind": "interface",
       "role": "Service",
@@ -17664,6 +17657,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Meals/Contracts/Meals/Models/MealDailyCalories.cs",
+      "line": 2
+    },
+    {
+      "name": "MealItemDisplayReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealItemDisplayReadModel.cs",
       "line": 2
     },
     {
@@ -17868,6 +17868,20 @@
       "role": "Service",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealDailyCalorieReadService.cs",
       "line": 7
+    },
+    {
+      "name": "MealItemDisplayProjection",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayProjection.cs",
+      "line": 5
+    },
+    {
+      "name": "MealItemDisplayReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayReadService.cs",
+      "line": 9
     },
     {
       "name": "MealNutritionStatisticsReadService",
@@ -22179,7 +22193,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Users/Application/Common/UserContextService.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "UserInputParser",
@@ -23300,6 +23314,13 @@
       "role": "Other",
       "path": "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
       "line": 6
+    },
+    {
+      "name": "UserProfileProjectionService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Users/Infrastructure/Persistence/Users/UserProfileProjectionService.cs",
+      "line": 13
     },
     {
       "name": "UserRepository",
@@ -25880,6 +25901,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IMealItemDisplayReadService",
+      "interfacePath": "Modules/Meals/Contracts/Meals/Common/IMealItemDisplayReadService.cs",
+      "implementation": "MealItemDisplayReadService",
+      "implementationPath": "Modules/Meals/Infrastructure/Persistence/Meals/MealItemDisplayReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IMealNutritionService",
       "interfacePath": "Modules/Meals/Application/Services/IMealNutritionService.cs",
       "implementation": "MealNutritionService",
@@ -27622,7 +27650,7 @@
       "implementation": "ProfileOverviewReadService",
       "lifetime": "Scoped",
       "path": "Modules/Users/Application/DependencyInjection.cs",
-      "line": 35
+      "line": 27
     },
     {
       "service": "IWearableReadService",

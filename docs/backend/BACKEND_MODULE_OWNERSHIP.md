@@ -6,10 +6,10 @@ Users Contracts owns semantic capabilities/models/errors; Users Application/Abst
 owns aggregate/repository ports. Identity Application/Abstractions owns Authentication
 and email-template contracts. Admin owns role-audit reader ports; Billing owns its
 Marketing-implemented conversion recorder; Dietologist owns its two parsing helpers.
-Central Application.Abstractions retains shared interfaces and only references needed
-by its remaining facades/types, not unused umbrella exports or copies of these declarations.
+The former central Application.Abstractions aggregator is retired. Generic and technical
+contracts live in narrow Shared projects; feature contracts remain with their owners.
 Consumers reference the actual contract owner directly. CurrentUserAccessResolver and the shared single-use
-SSO store contract remain central. See `docs/ai/contracts-batch-ownership.md` and
+SSO store contract retain their narrow shared owners. See `docs/ai/contracts-batch-ownership.md` and
 `docs/ai/direct-contract-dependencies.md` for the explicit consumer-reference inventory.
 
 ## Outbox stream records
@@ -457,3 +457,9 @@ runners reject pending caller changes and existing transactions. The module grap
 now records direct owner-contract references and explicitly acknowledged combined
 cycles separately from its acyclic Application API edges. See
 `docs/adr/0030-owner-lifecycle-and-transaction-boundaries.md` for scope and invariants.
+
+## Runtime collaboration and projections
+
+The separate `docs/architecture/runtime-module-boundaries.json` inventory exposes foreign implementations of consumer-owned ports, including Users-to-Identity session revocation and owner purge participants. Reference direction and execution direction are different views. Synchronous owner capabilities normally join the caller unit of work; they must not save another caller's pending changes. See ADR 0035.
+
+Users Infrastructure owns narrow persisted profile projections. Dashboard consumes Meals' tenant-scoped batch ingredient display service; snapshot/fallback rules and quality calculations stay with Meals. Products/Recipes composition uses Serializable transactions and whole-attempt retries, with no global advisory lock.

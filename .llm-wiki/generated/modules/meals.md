@@ -44,15 +44,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Meal, MealItem, MealAiSession, MealAiItem
-- Public contract files: 24
+- Public contract files: 26
 - Observed external consumer groups: 0
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 24
-- Interfaces: 11
-- DTO/read-model/projection types: 9
+- Public contract types: 26
+- Interfaces: 12
+- DTO/read-model/projection types: 10
 - Enums: 0
 - Exported repository-shaped contracts: 6
 - Contracts referencing domain entities: 2
@@ -62,6 +62,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IMealActivityReadService`
 - `interface IMealDailyCalorieReadService`
 - `interface IMealExportReadService`
+- `interface IMealItemDisplayReadService`
 - `interface IMealNutritionStatisticsReadService`
 - `interface IMealProductNutritionReadRepository`
 - `interface IMealProjectionReadRepository`
@@ -74,6 +75,7 @@ No literal attribute-routed controller was associated with this module.
 - `record MealAiSessionModel`
 - `record MealAiSessionProjectionReadModel`
 - `record MealDailyCalories`
+- `record MealItemDisplayReadModel`
 - `record MealItemModel`
 - `record MealItemProjectionReadModel`
 - `record MealModel`
@@ -108,6 +110,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealExtractedInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealIdInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/Domain/MealInvariantTests.cs`
+- [integration] `Modules/Meals/tests/FoodDiary.Modules.Meals.Infrastructure.IntegrationTests/Integration/MealItemDisplayReadServiceIntegrationTests.cs`
 - [integration] `Modules/Meals/tests/FoodDiary.Modules.Meals.Infrastructure.IntegrationTests/Integration/MealRepositoryIntegrationTests.cs`
 - [presentation] `Modules/Meals/tests/FoodDiary.Modules.Meals.Presentation.Tests/MealHttpMappingsTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/MealsModuleExtractionTests.cs`

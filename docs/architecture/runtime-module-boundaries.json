@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "description": "Static inventory of consumer-owned ports with foreign implementations. Complements the acyclic Application contract-reference graph; dependency inversion does not remove runtime collaboration. Constructor/method parameter consumers are conservatively discovered. This is not a dynamic call trace or proof that every DI binding is reachable. Transaction modes are reviewed policy, verified by owner/provider integration tests.",
+  "consumerOwnedPorts": [
+    {
+      "contract": "IBillingMarketingConversionRecorder",
+      "contractOwner": "Billing",
+      "provider": "Marketing",
+      "implementation": "MarketingConversionRecorder",
+      "source": "Modules/Marketing/Application/Services/MarketingConversionRecorder.cs",
+      "consumers": [
+        "Billing"
+      ],
+      "transaction": "caller-unit-of-work",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IFavoriteMealSourceReadService",
+      "contractOwner": "Favorites",
+      "provider": "Meals",
+      "implementation": "MealReadService",
+      "source": "Modules/Meals/Application/Services/MealReadService.cs",
+      "consumers": [
+        "Favorites"
+      ],
+      "transaction": "read-only",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IFavoriteProductSourceReadService",
+      "contractOwner": "Favorites",
+      "provider": "Products",
+      "implementation": "FavoriteProductSourceReadService",
+      "source": "Modules/Products/Infrastructure/FavoriteProductSourceReadService.cs",
+      "consumers": [
+        "Favorites"
+      ],
+      "transaction": "read-only",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IFavoriteRecipeSourceReadService",
+      "contractOwner": "Favorites",
+      "provider": "Recipes",
+      "implementation": "FavoriteRecipeSourceReadService",
+      "source": "Modules/Recipes/Infrastructure/FavoriteRecipeSourceReadService.cs",
+      "consumers": [
+        "Favorites"
+      ],
+      "transaction": "read-only",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IMealAchievementEvaluationRequest",
+      "contractOwner": "Meals",
+      "provider": "Gamification",
+      "implementation": "AchievementEvaluationOutbox",
+      "source": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs",
+      "consumers": [
+        "Meals"
+      ],
+      "transaction": "ambient-transaction-or-autocommit",
+      "reason": "Gamification relational enqueue executes SQL immediately in an ambient transaction or autocommits when absent; InMemory stages tracked state. Shared context does not imply atomicity with later caller SaveChanges."
+    },
+    {
+      "contract": "IProfileDietologistReadService",
+      "contractOwner": "Users",
+      "provider": "Dietologist",
+      "implementation": "DietologistInvitationReadService",
+      "source": "Modules/Dietologist/Application/Services/DietologistInvitationReadService.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "read-only",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IProfileNotificationReadService",
+      "contractOwner": "Users",
+      "provider": "Notifications",
+      "implementation": "WebPushSubscriptionReadService",
+      "source": "Modules/Notifications/Application/Services/WebPushSubscriptionReadService.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "read-only",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUsdaMealNutritionReadService",
+      "contractOwner": "Usda",
+      "provider": "Meals",
+      "implementation": "MealProductNutritionReadService",
+      "source": "Modules/Meals/Application/Services/MealProductNutritionReadService.cs",
+      "consumers": [
+        "Usda"
+      ],
+      "transaction": "read-only",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUsdaProductLinkService",
+      "contractOwner": "Usda",
+      "provider": "Products",
+      "implementation": "ProductUsdaLinkService",
+      "source": "Modules/Products/Application/Services/ProductUsdaLinkService.cs",
+      "consumers": [
+        "Usda"
+      ],
+      "transaction": "caller-unit-of-work",
+      "reason": "USDA requests link/unlink through Products; Products stages its own aggregate mutation in the caller unit of work."
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "Admin",
+      "implementation": "AdminUserDataPurgeParticipant",
+      "source": "Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "owner-purge-transaction",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "Ai",
+      "implementation": "AiUserDataPurgeParticipant",
+      "source": "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "owner-purge-transaction",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "BodyMetrics",
+      "implementation": "BodyMetricsUserDataPurgeParticipant",
+      "source": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "owner-purge-transaction",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "Cycles",
+      "implementation": "CyclesUserDataPurgeParticipant",
+      "source": "Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "owner-purge-transaction",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "Dietologist",
+      "implementation": "DietologistUserDataPurgeParticipant",
+      "source": "Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "owner-purge-transaction",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "Hydration",
+      "implementation": "HydrationUserDataPurgeParticipant",
+      "source": "Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "owner-purge-transaction",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "Images",
+      "implementation": "ImagesUserDataPurgeParticipant",
+      "source": "Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "owner-purge-transaction",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "MealPlanning",
+      "implementation": "MealPlanningUserDataPurgeParticipant",
+      "source": "Modules/MealPlanning/Infrastructure/Persistence/MealPlanningUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "owner-purge-transaction",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "Meals",
+      "implementation": "MealsUserDataPurgeParticipant",
+      "source": "Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "owner-purge-transaction",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "Products",
+      "implementation": "ProductsUserDataPurgeParticipant",
+      "source": "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "owner-purge-transaction",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "RecentItems",
+      "implementation": "RecentItemsUserDataPurgeParticipant",
+      "source": "Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "owner-purge-transaction",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserDataPurgeParticipant",
+      "contractOwner": "Users",
+      "provider": "Recipes",
+      "implementation": "RecipesUserDataPurgeParticipant",
+      "source": "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "owner-purge-transaction",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserProfileImageService",
+      "contractOwner": "Users",
+      "provider": "Images",
+      "implementation": "UserProfileImageService",
+      "source": "Modules/Images/Infrastructure/UserProfileImageService.cs",
+      "consumers": [
+        "Users"
+      ],
+      "transaction": "caller-unit-of-work",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    },
+    {
+      "contract": "IUserSessionRevocationService",
+      "contractOwner": "Users",
+      "provider": "Identity",
+      "implementation": "RefreshTokenSessionRepository",
+      "source": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
+      "consumers": [
+        "Admin",
+        "Users"
+      ],
+      "transaction": "caller-unit-of-work",
+      "reason": "Owner-supplied implementation of a consumer-owned capability; see source and module registration."
+    }
+  ]
+}

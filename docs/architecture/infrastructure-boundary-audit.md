@@ -56,8 +56,8 @@ tests leave the mixed Dietologist class; see
   Images, Notifications and Gamification own query/preview adapters; email remains
   shared and non-replayable. Audit/reset/save/transaction remain central, with no
   concrete stream-type dependency in the coordinator.
-- `RecipeCompositionTransactionLock` coordinates Products and Recipes; retain one
-  shared lock identity until a deliberate composition boundary replaces it.
+- Products and Recipes now use Serializable transactions and whole-attempt retries
+  under ADR 0035; the global RecipeCompositionTransactionLock is retired.
 - `UserRepository` now belongs to Users Infrastructure together with its four
   scoped aliases. Its tracked aggregate access stays separate from administrative
   projections and access-token security-state reading. Identity consumes Users

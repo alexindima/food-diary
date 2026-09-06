@@ -7,9 +7,9 @@ fallback paths and cancellation unchanged during extraction.
 
 Application preserves FoodDiary.Application.Dashboard assembly and CLR namespaces.
 Contracts contains only the stable statistics read service and bucket model;
-Statistics, Cycles, WeeklyCheckIn, Gamification and Tdee reference it directly.
+Statistics and WeeklyCheckIn reference it directly; nutrition calculations use Meals contracts.
 Central Application.Abstractions does not re-export this project. Never reference Dashboard
-Application from Statistics: Dashboard's mediator fallback already consumes Statistics.
+Application from Statistics; use its stable Contracts seam.
 
 Infrastructure references the shared central DbContext one-way. Central Infrastructure
 must not reference this adapter project. Hosts call AddDashboardModule for Application

@@ -28,8 +28,8 @@ Rules for `FoodDiary.Infrastructure/`.
 - Dead-letter replay uses scoped `IOutboxReplayStream` extensions in this existing Infrastructure assembly. Images, Notifications and Gamification own their list/find SQL and metadata; only the purged, non-replayable email adapter remains central. The coordinator owns validation, audit/reset/SaveChanges/transaction and knows no concrete stream types. Adapters must share its scoped DbContext and must not save or commit. Preserve explicit stream ordering and replay eligibility; see `docs/ai/outbox-replay-stream-boundary.md`.
 - Keep repository-owned `SaveChangesAsync` and manual transactions inside the architecture-test allowlist. `AiQuotaRepository` is an explicit exception: its short PostgreSQL transactions atomically reserve or reconcile quota independently of the request transaction, and must never contain an external provider call.
 - `EfWeeklyGoalTransactionRunner` is an explicit exception: it uses a short advisory-lock transaction to serialize creation for one `(UserId, WeekStartUtc)` key and prevent unique-constraint races; keep notification delivery and other external calls outside that transaction.
-- `EfProductMutationTransactionRunner` is an explicit exception: it shares the Recipe-composition advisory lock and keeps the Product row lock, usage check, and mutation in one short transaction.
-- `EfRecipeMutationTransactionRunner` is an explicit exception: it shares the Recipe-composition advisory lock and keeps graph/usage checks and mutation in one short transaction.
+- `EfProductMutationTransactionRunner` is an explicit exception: it uses Serializable isolation with whole-attempt retries and keeps the Product row lock, usage check, and mutation in one short transaction.
+- `EfRecipeMutationTransactionRunner` is an explicit exception: it uses Serializable isolation with whole-attempt retries and keeps graph/usage checks and mutation in one short transaction.
 - Do not reintroduce direct SMTP delivery configuration into the primary API/infrastructure path; MailRelay owns mail delivery runtime configuration.
 - Keep retries/logging policies consistent with API composition.
 
@@ -85,7 +85,7 @@ retains DbContext and migrations. Do not register the Admin projection centrally
 
 Products aggregate, ProductId seam, use cases, ports, persistence adapters and EF
 model live under `Modules/Products`. User/Product and Product/MealItem relationships
-are mapped unidirectionally; shared context/migrations and composition lock remain central. Hosts explicitly
+are mapped unidirectionally; shared context/migrations and transaction-attempt reset remain central. Hosts explicitly
 compose AddProductsModule; JobManager adds AddProductsPersistence without new
 handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
 coordinated-rebuild compatibility promise.

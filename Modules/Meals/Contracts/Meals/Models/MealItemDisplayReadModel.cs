@@ -1,24 +1,10 @@
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects.Ids;
+namespace FoodDiary.Application.Abstractions.Meals.Models;
 
-namespace FoodDiary.Modules.Dashboard.Infrastructure.Persistence.Dashboard;
-
-internal sealed record DashboardMealItemProjection(
-    MealId MealId,
-    Guid ItemId,
-    Guid MealIdValue,
+public sealed record MealItemDisplayReadModel(
+    Guid Id,
+    Guid MealId,
     double Amount,
     Guid? ProductId,
-    string? SnapshotName,
-    string? SnapshotImageUrl,
-    string? SnapshotUnit,
-    double? SnapshotBaseAmount,
-    double? SnapshotCaloriesPerBase,
-    double? SnapshotProteinsPerBase,
-    double? SnapshotFatsPerBase,
-    double? SnapshotCarbsPerBase,
-    double? SnapshotFiberPerBase,
-    double? SnapshotAlcoholPerBase,
     string? ProductName,
     string? ProductImageUrl,
     string? ProductBaseUnit,
@@ -29,7 +15,8 @@ internal sealed record DashboardMealItemProjection(
     double? ProductCarbsPerBase,
     double? ProductFiberPerBase,
     double? ProductAlcoholPerBase,
-    ProductType? ProductType,
+    int? ProductQualityScore,
+    string? ProductQualityGrade,
     Guid? RecipeId,
     string? RecipeName,
     string? RecipeImageUrl,

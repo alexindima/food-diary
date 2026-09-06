@@ -46,7 +46,7 @@ public sealed class DashboardMealsReadServiceTests {
         context.AddRange(user, product, aiAsset, meal, FavoriteMeal.Create(user.Id, meal.Id, "Lunch"));
         await context.SaveChangesAsync();
 
-        var readService = new DashboardMealsReadService(context);
+        var readService = new DashboardMealsReadService(context, new FoodDiary.Infrastructure.Persistence.Meals.MealItemDisplayReadService(context));
 
         Result<DashboardMealsReadModel> result = await readService.GetMealsAsync(
             user.Id,
@@ -80,7 +80,7 @@ public sealed class DashboardMealsReadServiceTests {
     [Fact]
     public async Task GetMealsAsync_WhenDateRangeIsInvalid_ReturnsValidationFailure() {
         await using FoodDiaryDbContext context = CreateContext();
-        var readService = new DashboardMealsReadService(context);
+        var readService = new DashboardMealsReadService(context, new FoodDiary.Infrastructure.Persistence.Meals.MealItemDisplayReadService(context));
 
         Result<DashboardMealsReadModel> result = await readService.GetMealsAsync(
             Domain.ValueObjects.Ids.UserId.New(),
@@ -101,7 +101,7 @@ public sealed class DashboardMealsReadServiceTests {
         Meal meal = CreateMeal(user.Id);
         context.AddRange(user, meal);
         await context.SaveChangesAsync();
-        var readService = new DashboardMealsReadService(context);
+        var readService = new DashboardMealsReadService(context, new FoodDiary.Infrastructure.Persistence.Meals.MealItemDisplayReadService(context));
 
         Result<DashboardMealsReadModel> result = await readService.GetMealsAsync(
             user.Id,
