@@ -24,11 +24,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 1397,
-      "decisionPoints": 292,
+      "nonBlankLines": 1428,
+      "decisionPoints": 310,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 465.94
+      "structuralRiskScore": 493.56
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
@@ -48,11 +48,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-      "nonBlankLines": 1001,
-      "decisionPoints": 139,
+      "nonBlankLines": 1002,
+      "decisionPoints": 138,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 230.52
+      "structuralRiskScore": 229.04
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
@@ -1002,11 +1002,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-      "nonBlankLines": 1001,
-      "decisionPoints": 139,
+      "nonBlankLines": 1002,
+      "decisionPoints": 138,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 230.52
+      "structuralRiskScore": 229.04
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiDomainData.ps1",
@@ -2826,11 +2826,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/SqliteWikiContextSearch.cs",
-      "nonBlankLines": 1397,
-      "decisionPoints": 292,
+      "nonBlankLines": 1428,
+      "decisionPoints": 310,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 465.94
+      "structuralRiskScore": 493.56
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandRequest.cs",
@@ -3578,11 +3578,11 @@
     },
     {
       "path": "FoodDiary.JobManager/Services/JobManagerTelemetryServiceCollectionExtensions.cs",
-      "nonBlankLines": 40,
+      "nonBlankLines": 41,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.8
+      "structuralRiskScore": 3.82
     },
     {
       "path": "FoodDiary.JobManager/Services/MarketingAttributionCleanupJob.cs",
@@ -12306,11 +12306,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/notifications/push-notification.service.ts",
-      "nonBlankLines": 180,
-      "decisionPoints": 28,
+      "nonBlankLines": 216,
+      "decisionPoints": 33,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 45.6
+      "structuralRiskScore": 53.82
     },
     {
       "path": "FoodDiary.Web.Client/src/app/shared/observability/client-telemetry-session.service.ts",

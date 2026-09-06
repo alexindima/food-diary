@@ -5,7 +5,7 @@
 
   <ItemGroup>
     <!-- Analyzers -->
-    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.172" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.195" />
     <PackageVersion Include="Roslynator.Analyzers" Version="4.16.1" />
 
     <!-- API -->
@@ -49,7 +49,7 @@
     <PackageVersion Include="ModelContextProtocol" Version="2.2.0" />
 
     <!-- Infrastructure -->
-    <PackageVersion Include="AWSSDK.S3" Version="4.0.102.2" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.102.4" />
     <PackageVersion Include="DnsClient" Version="1.8.0" />
     <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.11" />
     <PackageVersion Include="MailKit" Version="4.17.0" />
@@ -63,8 +63,8 @@
     <PackageVersion Include="WebPush" Version="1.0.13" />
 
     <!-- Hangfire -->
-    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.24" />
-    <PackageVersion Include="Hangfire.Core" Version="1.8.24" />
+    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.25" />
+    <PackageVersion Include="Hangfire.Core" Version="1.8.25" />
     <PackageVersion Include="Hangfire.PostgreSql" Version="1.21.1" />
 
     <!-- Observability -->

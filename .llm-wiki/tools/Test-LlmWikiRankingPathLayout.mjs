@@ -11,6 +11,11 @@ const moved = [
   ['Modules/Inventory/Infrastructure/Model/Stock/StockReservation.cs', 'FoodDiary.Infrastructure/Persistence/Stock/StockReservation.cs'],
   ['Modules/Inventory/Infrastructure/Providers/Services/SupplierClient.cs', 'FoodDiary.Integrations/Services/SupplierClient.cs'],
   ['Modules/Shipping/Infrastructure/Providers/Options/CarrierOptions.cs', 'FoodDiary.Integrations/Options/CarrierOptions.cs'],
+  ['Shared/FoodDiary.Integrations.Http/Http/SampleTransport.cs', 'FoodDiary.Integrations/Http/SampleTransport.cs'],
+  ['Shared/FoodDiary.Inventory.PersistenceModel/StockRecord.cs', 'FoodDiary.Infrastructure/Persistence/Inventory/StockRecord.cs'],
+  ['Shared/FoodDiary.Inventory.PersistenceModel/Configurations/StockConfiguration.cs', 'FoodDiary.Infrastructure/Persistence/Configurations/Inventory/StockConfiguration.cs'],
+  ['Modules/Inventory/Presentation/Features/Stock/Mappings/StockResponseMappings.cs', 'FoodDiary.Presentation.Api/Features/Stock/Mappings/StockResponseMappings.cs'],
+  ['Modules/Inventory/Contracts/Stock/IStockReader.cs', 'FoodDiary.Application.Abstractions/Stock/IStockReader.cs'],
 ];
 for (const [current, legacy] of moved) {
   assert.deepEqual(rankingPathIdentities(current), [current.toLowerCase(), legacy.toLowerCase()]);
@@ -20,7 +25,7 @@ for (const [current, legacy] of moved) {
     assert.equal(rankingPathIdentities(current).some(path => path.startsWith(prefix.toLowerCase())), true);
   }
 }
-for (const path of ['Modules/Inventory/tests/Inventory.Tests/Domain/Test.cs', 'Modules/Inventory/Domain/tests/Test.cs', 'Modules/Inventory/Application/Stock.test.ts', 'ModulesExtra/Inventory/Domain/Entity.cs', 'nested/Modules/Inventory/Domain/Entity.cs', 'Modules/Inventory/Contracts/Dto.cs']) {
+for (const path of ['Modules/Inventory/tests/Inventory.Tests/Domain/Test.cs', 'Modules/Inventory/Domain/tests/Test.cs', 'Modules/Inventory/Application/Stock.test.ts', 'ModulesExtra/Inventory/Domain/Entity.cs', 'nested/Modules/Inventory/Domain/Entity.cs', 'Modules/Inventory/Domain.Contracts/Dto.cs', 'Modules/Inventory/ContractsExtra/Dto.cs', 'Modules/Inventory/Contracts/tests/Test.cs', 'Modules/Inventory/PresentationExtra/Dto.cs', 'Modules/Inventory/Presentation/tests/Test.cs']) {
   assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase()]);
 }
 const abstractions = rankingPathIdentities(moved[1][0]);
@@ -76,10 +81,16 @@ for (const root of ['Shared', 'Tooling']) {
   const path = `${root}/tests/FoodDiary.Sample.Tests/ValueTests.cs`;
   assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase(), 'tests/fooddiary.sample.tests/valuetests.cs']);
 }
-for (const path of ['Shared/FoodDiary.Domain.PrimitivesExtra/Value.cs', 'Shared/FoodDiary.Domain.Primitives/tests/ValueTests.cs', 'Shared/FoodDiary.Domain.Primitives/Value.test.js']) {
+for (const path of ['Shared/FoodDiary.Domain.PrimitivesExtra/Value.cs', 'Shared/FoodDiary.Domain.Primitives/tests/ValueTests.cs', 'Shared/FoodDiary.Domain.Primitives/Value.test.js', 'Shared/FoodDiary.Integrations.HttpExtra/Http/SampleTransport.cs', 'Shared/FoodDiary.Integrations.Http/tests/SampleTransport.cs', 'Shared/FoodDiary.Integrations.Http/Sample.test.js']) {
   assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase()]);
 }
 const entryPolicy = { ...intentPolicy, moduleIdentityMinimumLength: 8, moduleIdentityLeadingTermCount: 1, genericAffinities: intentPolicy };
+assert.deepEqual(layout.hyphenatedIdentifierTerms('Stock-count stock-count remote-cache-entry'), ['stockcount', 'remotecacheentry']);
+assert.deepEqual(layout.hyphenatedIdentifierTerms('a-b stock count stock--count 3-4'), []);
+assert.deepEqual(layout.hyphenatedIdentifierTerms('склад-остаток'), ['складостаток']);
+for (const path of ['Shared/FoodDiary.Inventory.PersistenceModelExtra/Stock.cs', 'Shared/FoodDiary.Inventory.PersistenceModel/tests/StockTests.cs', 'Shared/FoodDiary.Inventory.PersistenceModel/Stock.test.ts', 'Shared/FoodDiary..PersistenceModel/Stock.cs']) {
+  assert.deepEqual(rankingPathIdentities(path), [path.toLowerCase()]);
+}
 const entry = 'Modules/Inventory/Application/Abstractions/IStockService.cs';
 assert.equal(layout.isModuleEntryPointQuery(entry, 'Backend', ['inventory', 'lookup'], ['inventory', 'lookup'], entryPolicy), true);
 for (const term of ['adapter', 'endpoint', 'entity', 'storage', 'implementation', 'options']) {

@@ -56,7 +56,8 @@ JSON result callers reuse an exact content-addressed result keyed by the query
 arguments, HEAD, relevant worktree paths, and the selected source dependencies.
 SQLite routes use the graph dependency fingerprint; explicit JSON baselines hash
 their generated source files. `-ScopePath` supplies the explicit cache boundary; `-Module` derives the
-corresponding application project paths. An unrelated edit no longer invalidates
+corresponding application project paths through the backend module map, including
+`Modules/<Module>/Application` and supported legacy layouts. An unrelated edit no longer invalidates
 the query, while an edit inside the scope or a dependent-index change does.
 Unchanged orchestration calls avoid querying and transporting catalog/symbol
 records again.
@@ -130,6 +131,10 @@ Use the independently authored holdout corpus as the primary retrieval-quality
 signal. The frozen target-aware synthetic unseen corpus is a deterministic
 diagnostic for ranking regressions and cohort balance; because its expected
 paths informed its construction, it is not evidence of real-user query quality.
+Keep frozen target paths aligned with verified source relocations without
+changing their semantic targets, queries or thresholds. Structural ranking
+aliases preserve layer preferences for module providers and shared libraries;
+search results still name their current physical owners.
 
 Context discovery is advisory. Run `wiki.ps1 policy` for deterministic
 repository obligations and use an evidence bundle when those obligations need

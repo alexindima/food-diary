@@ -21,8 +21,8 @@
       "id": "favorite-product-read-bundle",
       "intent": "Improve favorite product summary loading without changing its public contract",
       "query": "load a user's favorite product summaries",
-      "plannedPath": "FoodDiary.Application.Favorites/FavoriteProducts/",
-      "expectedPaths": ["FoodDiary.Application.Favorites/FavoriteProducts/Services/FavoriteProductReadService.cs"],
+      "plannedPath": "Modules/Favorites/Application/FavoriteProducts/",
+      "expectedPaths": ["Modules/Favorites/Application/FavoriteProducts/Services/FavoriteProductReadService.cs"],
       "expectedLayers": ["Application"]
     },
     {
@@ -70,7 +70,7 @@
       "intent": "Review notification domain invariants before changing delivery state",
       "query": "domain notification entity and its delivery state rules",
       "plannedPath": null,
-      "expectedPaths": ["FoodDiary.Domain/Entities/Notifications/Notification.cs"],
+      "expectedPaths": ["Modules/Notifications/Domain/Entities/Notifications/Notification.cs"],
       "expectedLayers": ["Domain"]
     },
     {

@@ -25,6 +25,8 @@ review obligations, and structural invariants.
 Current policy families cover backend boundaries, HTTP contracts, paired
 English/Russian localization, EF migration pairs, frontend verification,
 security-sensitive areas, and LLM-Wiki freshness.
+Domain invariant review covers `Modules/<Module>/Domain`, shared domain
+primitives, and the remaining legacy domain projects.
 Angular TypeScript/templates require public component-contract review. Pure
 CSS/SCSS changes retain rendered visual and accessibility review without
 claiming that selectors, inputs, outputs, translations, or API shape changed.

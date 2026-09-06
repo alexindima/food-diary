@@ -24,7 +24,7 @@ commands before editing:
 
 ```powershell
 ./.llm-wiki/wiki.ps1 coverage-plan `
-  -PlannedPath 'tests/FoodDiary.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs' `
+  -PlannedPath 'Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs' `
   -Query 'cover the reported uncovered branches'
 ```
 
@@ -110,7 +110,7 @@ Record a completed check without creating tracked evidence files:
 
 ```powershell
 ./.llm-wiki/wiki.ps1 verification-record `
-  -EvidenceCommand 'dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore' `
+  -EvidenceCommand 'dotnet test Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FoodDiary.Modules.Admin.Application.Tests.csproj --no-restore' `
   -Status passed -DurationSeconds 24 -CoverageScope application-contract
 ```
 

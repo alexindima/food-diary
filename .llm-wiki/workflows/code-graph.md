@@ -353,7 +353,8 @@ not improve steady-state query latency and would make policy review and Git
 diffs less transparent.
 
 Relocated sources retain their real owner identity. Structural selector aliases
-cover module Providers, shared domain primitives and Shared/Tooling test roots
+cover module Providers and Presentation, shared HTTP primitives, shared persistence models,
+shared domain primitives and Shared/Tooling test roots
 in both Node and the in-process reader. A module-qualified neutral backend query
 does not penalize its Application entry-point interface simply for being an
 abstraction; explicit implementation/layer requests retain their preferences.
@@ -362,6 +363,22 @@ computed from distinct candidate paths with integer frequency buckets. This
 reuses existing score caps and leaves candidate recall and requested-limit
 independence intact. See `docs/ai/wiki-retrieval-ownership.md` for scope and
 measured evidence; historical quality figures below are not current guarantees.
+
+Provider relocation preserves its integration-layer preference without adding
+an infrastructure-layer bonus merely because its new parent is Infrastructure.
+Shared persistence models retain database and infrastructure selectors,
+including the owning scope of configuration files. Aliases exclude tests and
+similarly named sibling projects; returned paths remain physical source paths.
+When a frozen evaluation target moves, update only its path using verified Git
+rename evidence. Preserve queries, target identity, historical metrics and gates.
+Module consumer Contracts retain abstraction exclusions and penalties, without
+being classified as implementation-layer sources. Hyphenated query identifiers
+also contribute their compact spelling (for example, stock-count and StockCount),
+using the existing score caps and term limits in both runtimes.
+For explicit test requests, direct file-name matching reuses the existing English
+morphological variants used by lexical retrieval. Each original query term counts
+once, and the existing score caps still apply; production candidates retain their
+direct-name matching behavior.
 
 A separate post-fix control froze 30 additional unique targets before its first
 run and reused none of the earlier 550 targets. Without further tuning it

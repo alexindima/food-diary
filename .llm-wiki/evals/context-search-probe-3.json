@@ -84,7 +84,7 @@
       "id": "stripe-billing-gateway-probe-3",
       "query": "Stripe gateway creates checkout and customer portal sessions",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Billing/StripeBillingGateway.cs"]
+      "expectedPaths": ["Modules/Billing/Infrastructure/Providers/Billing/StripeBillingGateway.cs"]
     },
     {
       "id": "smtp-relay-delivery-transport-probe-3",

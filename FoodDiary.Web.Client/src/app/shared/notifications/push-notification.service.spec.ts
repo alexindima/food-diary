@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
-import { of, Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../../services/auth.service';
@@ -76,9 +76,10 @@ beforeEach(() => {
 
 function createPushSubscription(
     endpoint: string,
+    applicationServerKey: ArrayBuffer | null = null,
 ): PushSubscription & { unsubscribe: ReturnType<typeof vi.fn>; unsubscribeMock: ReturnType<typeof vi.fn> } {
     const options: PushSubscriptionOptions = {
-        applicationServerKey: null,
+        applicationServerKey,
         userVisibleOnly: true,
     };
     const unsubscribeMock = vi.fn().mockResolvedValue(true);
@@ -158,6 +159,79 @@ describe('PushNotificationService subscription lifecycle', () => {
         expect(service.currentSubscriptionEndpoint()).toBe(subscription.endpoint);
     });
 
+    it('should keep an existing subscription created with the current public key', async () => {
+        const applicationServerKey = new TextEncoder().encode('old').buffer;
+        const subscription = createPushSubscription('https://push.example.com/subscriptions/current', applicationServerKey);
+        notificationService.getWebPushConfiguration.mockReturnValue(of({ enabled: true, publicKey: 'b2xk' }));
+        swPush.subscription = of(subscription) as never;
+
+        const result = await service.ensureSubscriptionAsync();
+
+        expect(result).toBe('already-subscribed');
+        expect(subscription.unsubscribeMock).not.toHaveBeenCalled();
+        expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
+        expect(swPush.requestSubscription).not.toHaveBeenCalled();
+        expect(notificationService.upsertWebPushSubscription).toHaveBeenCalledWith(
+            expect.objectContaining({ endpoint: subscription.endpoint }),
+        );
+    });
+
+    it('should replace an existing subscription created with a different public key', async () => {
+        const subscription = createPushSubscription('https://push.example.com/subscriptions/stale', new TextEncoder().encode('old').buffer);
+        const replacement = createPushSubscription(
+            'https://push.example.com/subscriptions/replacement',
+            new TextEncoder().encode('new').buffer,
+        );
+        notificationService.getWebPushConfiguration.mockReturnValue(of({ enabled: true, publicKey: 'bmV3' }));
+        swPush.subscription = of(subscription) as never;
+        swPush.requestSubscription.mockResolvedValue(replacement);
+
+        const result = await service.ensureSubscriptionAsync();
+
+        expect(result).toBe('subscribed');
+        expect(notificationService.removeWebPushSubscription).toHaveBeenCalledWith(subscription.endpoint);
+        expect(subscription.unsubscribeMock).toHaveBeenCalledTimes(1);
+        expect(swPush.requestSubscription).toHaveBeenCalledWith({ serverPublicKey: 'bmV3' });
+        expect(notificationService.upsertWebPushSubscription).toHaveBeenCalledWith(
+            expect.objectContaining({ endpoint: replacement.endpoint }),
+        );
+        expect(service.currentSubscriptionEndpoint()).toBe(replacement.endpoint);
+    });
+});
+
+describe('PushNotificationService subscription failures', () => {
+    it('should retain the existing subscription when configuration cannot be loaded', async () => {
+        const subscription = createPushSubscription(
+            'https://push.example.com/subscriptions/current',
+            new TextEncoder().encode('old').buffer,
+        );
+        swPush.subscription = of(subscription) as never;
+        notificationService.getWebPushConfiguration.mockReturnValue(throwError(() => new Error('Configuration unavailable')));
+
+        await expect(service.ensureSubscriptionAsync()).resolves.toBe('already-subscribed');
+
+        expect(subscription.unsubscribeMock).not.toHaveBeenCalled();
+        expect(notificationService.removeWebPushSubscription).not.toHaveBeenCalled();
+        expect(service.currentSubscriptionEndpoint()).toBe(subscription.endpoint);
+    });
+
+    it('should clear stale state when requesting a replacement subscription fails', async () => {
+        const subscription = createPushSubscription('https://push.example.com/subscriptions/stale', new TextEncoder().encode('old').buffer);
+        subscription$.next(subscription);
+        swPush.subscription = of(subscription) as never;
+        notificationService.getWebPushConfiguration.mockReturnValue(of({ enabled: true, publicKey: 'bmV3' }));
+        swPush.requestSubscription.mockRejectedValue(new Error('Push service unavailable'));
+
+        await expect(service.ensureSubscriptionAsync()).resolves.toBe('unavailable');
+
+        expect(subscription.unsubscribeMock).toHaveBeenCalledTimes(1);
+        expect(service.isSubscribed()).toBe(false);
+        expect(service.currentSubscriptionEndpoint()).toBeNull();
+        expect(service.isBusy()).toBe(false);
+    });
+});
+
+describe('PushNotificationService subscription creation and removal', () => {
     it('should request and persist a new subscription', async () => {
         const subscription = createPushSubscription('https://push.example.com/subscriptions/new');
         swPush.subscription = of(null) as never;

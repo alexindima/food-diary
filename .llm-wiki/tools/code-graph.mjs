@@ -6,7 +6,7 @@ import { basename, dirname, extname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
 import { traceCandidateMatchesScope } from './code-graph-trace-scope.mjs';
-import { directIdentifierTermMatchesMinimum, implicitImplementationIntent, isModuleEntryPointQuery, rankingModuleIdentity, rankingPathIdentities, testIdentityWeights } from './code-graph-path-layout.mjs';
+import { directIdentifierTermMatchesMinimum, hyphenatedIdentifierTerms, implicitImplementationIntent, isModuleEntryPointQuery, rankingModuleIdentity, rankingPathIdentities, testIdentityWeights } from './code-graph-path-layout.mjs';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
@@ -2101,9 +2101,9 @@ function rankingTerms(query) {
 
 function directSearchTerms(query) {
   const stopTerms = new Set(contextSearchRanking.stopTerms ?? []);
-  return [...new Set(expandSearchText(query)
+  return [...new Set([...(expandSearchText(query)
     .toLowerCase()
-    .match(/[\p{L}\p{N}][\p{L}\p{N}_-]*/gu) ?? [])]
+    .match(/[\p{L}\p{N}][\p{L}\p{N}_-]*/gu) ?? []), ...hyphenatedIdentifierTerms(query)])]
     .filter((term) => term.length >= 2 && !stopTerms.has(term));
 }
 
@@ -2344,7 +2344,8 @@ function searchContext(database, query, limit, filters = {}) {
     const directFileNameAffinity = contextSearchRanking.directFileNameAffinity ?? {};
     const directFileNameMatches = directTerms.filter((term) =>
       directIdentifierTermMatchesMinimum(term, Number(directFileNameAffinity.minimumTermLength ?? 3))
-      && searchableFileIdentity.includes(term));
+      && (searchableFileIdentity.includes(term) || (isExplicitTestCandidate && stronglyRequestsTest &&
+        englishMorphologicalVariants(term).some(variant => searchableFileIdentity.includes(variant)))));
     const directFileNameScore = Math.min(
       directFileNameMatches.length * Number(directFileNameAffinity.scorePerMatch ?? 0),
       Number(directFileNameAffinity.maximumScore ?? 0));
@@ -2398,7 +2399,9 @@ function searchContext(database, query, limit, filters = {}) {
     applyGenericPathAffinity('integration-layer', genericAffinity.integrationIntentTerms,
       genericAffinity.integrationPathPrefixes, genericAffinity.integrationScore);
     const excludesInfrastructureAffinity = (genericAffinity.infrastructureExcludedIntentTerms ?? [])
-      .some((term) => boostTerms.includes(String(term).toLowerCase()));
+      .some((term) => boostTerms.includes(String(term).toLowerCase())) ||
+      // Moving a provider under its owner must not add a second layer bonus.
+      (normalizedPath.startsWith('modules/') && selectorPaths.some(path => path.startsWith('fooddiary.integrations/')));
     if (!excludesInfrastructureAffinity) {
       applyGenericPathAffinity('infrastructure-layer', genericAffinity.infrastructureIntentTerms,
         genericAffinity.infrastructurePathFragments, genericAffinity.infrastructureScore, false,

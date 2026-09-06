@@ -18,7 +18,7 @@
       "id": "relay-email-transport-probe",
       "query": "transport submits application email through the mail relay client",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Services/RelayEmailTransport.cs"]
+      "expectedPaths": ["Shared/FoodDiary.Email.MailRelay/RelayEmailTransport.cs"]
     },
     {
       "id": "web-push-http-handler-factory-probe",
@@ -30,13 +30,13 @@
       "id": "billing-public-config-provider-probe",
       "query": "provide public billing configuration for the active payment provider",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Billing/BillingPublicConfigProvider.cs"]
+      "expectedPaths": ["Modules/Billing/Infrastructure/Providers/Billing/BillingPublicConfigProvider.cs"]
     },
     {
       "id": "integration-uri-validator-probe",
       "query": "validate configured integration URLs before startup",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Options/IntegrationUriValidator.cs"]
+      "expectedPaths": ["Shared/FoodDiary.Integrations.Http/Options/IntegrationUriValidator.cs"]
     },
     {
       "id": "telegram-auth-timestamp-validator-probe",

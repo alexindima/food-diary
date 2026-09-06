@@ -21,6 +21,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         @"[\p{L}\p{N}][\p{L}\p{N}_-]*",
         RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
         TimeSpan.FromMilliseconds(100));
+    private static readonly Regex HyphenatedIdentifier = new(
+        @"\p{L}{2,}(?:-\p{L}{2,})+",
+        RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
+        TimeSpan.FromMilliseconds(100));
     private static readonly Regex TestPath = new(
         @"(^|/)(?:tests?|[^/]+\.tests?)(/|$)|\.(?:spec|test)\.(?:ts|js|mjs|cjs)$",
         RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture,
@@ -472,7 +476,8 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             string[] directFileNameMatches = [.. directTerms.Where(term =>
                 (term.Length >= policy.DirectFileNameAffinity.MinimumTermLength ||
                     (term.Length >= 2 && term.All(char.IsLetterOrDigit) && term.Any(char.IsLetter) && term.Any(char.IsDigit))) &&
-                searchableFileIdentity.Contains(term, StringComparison.Ordinal))];
+                (searchableFileIdentity.Contains(term, StringComparison.Ordinal) || (isExplicitTestCandidate && stronglyRequestsTest &&
+                    GetEnglishMorphologicalVariants(term).Any(variant => searchableFileIdentity.Contains(variant, StringComparison.Ordinal)))))];
             int directFileNameScore = Math.Min(
                 directFileNameMatches.Length * policy.DirectFileNameAffinity.ScorePerMatch,
                 policy.DirectFileNameAffinity.MaximumScore);
@@ -572,7 +577,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 genericAffinity.IntegrationPathPrefixes,
                 genericAffinity.IntegrationScore);
             bool excludesInfrastructureAffinity = genericAffinity.InfrastructureExcludedIntentTerms
-                .Any(term => terms.Contains(term.ToLowerInvariant()));
+                .Any(term => terms.Contains(term.ToLowerInvariant())) ||
+                // Moving a provider under its owner must not add a second layer bonus.
+                (normalizedPath.StartsWith("modules/", StringComparison.Ordinal) &&
+                    selectorPaths.Any(path => path.StartsWith("fooddiary.integrations/", StringComparison.Ordinal)));
             if (!excludesInfrastructureAffinity) {
                 ApplyGenericPathAffinity(
                     "infrastructure-layer",
@@ -981,6 +989,12 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 terms.Add(match.Value);
             }
         }
+        foreach (Match match in HyphenatedIdentifier.Matches(query.ToLowerInvariant())) {
+            string compact = match.Value.Replace("-", string.Empty, StringComparison.Ordinal);
+            if (!stopTerms.Contains(compact) && seen.Add(compact)) {
+                terms.Add(compact);
+            }
+        }
         return [.. terms];
     }
 
@@ -1184,6 +1198,20 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 return [path, $"tests/{rootParts[2]}"];
             }
         }
+        const string integrationsPrefix = "shared/fooddiary.integrations.http/";
+        if (rootParts.Length == 3 && string.Equals(rootParts[0], "shared", StringComparison.Ordinal) && !TestPath.IsMatch(path)) {
+            string[] projectParts = rootParts[1].Split('.');
+            if (projectParts.Length == 3 && string.Equals(projectParts[0], "fooddiary", StringComparison.Ordinal) && projectParts[1].Length > 0 &&
+                string.Equals(projectParts[2], "persistencemodel", StringComparison.Ordinal) && rootParts[2].Length > 0) {
+                string modelTail = rootParts[2];
+                return [path, modelTail.StartsWith("configurations/", StringComparison.Ordinal)
+                    ? $"fooddiary.infrastructure/persistence/configurations/{projectParts[1]}/{modelTail["configurations/".Length..]}"
+                    : $"fooddiary.infrastructure/persistence/{projectParts[1]}/{modelTail}"];
+            }
+        }
+        if (path.StartsWith(integrationsPrefix, StringComparison.Ordinal) && !TestPath.IsMatch(path)) {
+            return [path, $"fooddiary.integrations/{path[integrationsPrefix.Length..]}"];
+        }
         const string primitivesPrefix = "shared/fooddiary.domain.primitives/";
         if (path.StartsWith(primitivesPrefix, StringComparison.Ordinal) && !TestPath.IsMatch(path)) {
             return [path, $"fooddiary.domain/{path[primitivesPrefix.Length..]}"];
@@ -1206,6 +1234,9 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
         }
         string tail = parts[3];
         string? alias = parts[2] switch {
+            "presentation" => $"fooddiary.presentation.api/{tail}",
+            // Consumer contracts keep abstraction selectors; they gain no implementation layer.
+            "contracts" => $"fooddiary.application.abstractions/{tail}",
             "application" => tail.StartsWith("abstractions/", StringComparison.Ordinal)
                 ? $"fooddiary.application.abstractions/{tail["abstractions/".Length..]}"
                 : $"fooddiary.application.{parts[1]}/{tail}",

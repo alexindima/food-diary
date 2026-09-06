@@ -96,13 +96,13 @@
       "id": "paddle-api-client",
       "query": "HTTP client calls Paddle billing API",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Billing/PaddleApiClient.cs"]
+      "expectedPaths": ["Modules/Billing/Infrastructure/Providers/Billing/PaddleApiClient.cs"]
     },
     {
       "id": "billing-url-validation",
       "query": "reject unsafe redirect URLs supplied by a billing provider",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Billing/BillingUrlValidator.cs"]
+      "expectedPaths": ["Modules/Billing/Infrastructure/Providers/Billing/BillingUrlValidator.cs"]
     },
     {
       "id": "telegram-widget-validation",

@@ -183,6 +183,11 @@ if (@($sessionPlan.focusedTestFiles).Count -eq 0 -or
     @($sessionPlan.commands | Where-Object source -eq 'identity-session-intent').Count -lt 3) {
     throw 'Identity-session test plan omitted focused tests or cross-layer verification commands.'
 }
+$sessionApplicationProject = 'Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/FoodDiary.Modules.Identity.Application.Tests.csproj'
+if (-not (Test-Path (Join-Path $repositoryRoot $sessionApplicationProject)) -or
+    @($sessionPlan.commands | Where-Object { $_.id -eq 'session-application-tests' -and $_.command -like "dotnet test $sessionApplicationProject *" }).Count -ne 1) {
+    throw 'Identity-session test plan must run the owning module application tests.'
+}
 
 $sessionPrivacy = & (Join-Path $PSScriptRoot 'Find-LlmWikiSensitiveData.ps1') `
     -Query 'refresh token session' `

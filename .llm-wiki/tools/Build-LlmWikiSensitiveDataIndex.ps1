@@ -102,7 +102,7 @@ foreach ($file in $sourceFiles) {
         })
     }
 
-    if ($path -match '(^|/)[^/]*Integrations/' -and
+    if ($path -match '(^|/)[^/]*Integrations/|^Modules/[^/]+/Infrastructure/' -and
         $content -match '\bHttpClient\b' -and
         $content -match '\bSendAsync\s*\(') {
         $sensitiveParameters = @(

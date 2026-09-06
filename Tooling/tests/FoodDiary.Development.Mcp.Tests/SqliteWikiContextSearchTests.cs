@@ -79,6 +79,30 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("Shared\\FoodDiary.Domain.Primitives\\RequiredValue.cs", "domain required value", "generic domain-layer affinity", true)]
     [InlineData("Shared/FoodDiary.Domain.PrimitivesExtra/RequiredValue.cs", "domain required value", "generic domain-layer affinity", false)]
     [InlineData("Shared/FoodDiary.Domain.Primitives/tests/RequiredValue.cs", "domain required value", "generic domain-layer affinity", false)]
+    [InlineData("Shared/FoodDiary.Integrations.Http/Http/SampleTransport.cs", "external supplier client", "generic integration-layer affinity", true)]
+    [InlineData("Shared\\FoodDiary.Integrations.Http\\Http\\SampleTransport.cs", "external supplier client", "generic integration-layer affinity", true)]
+    [InlineData("Shared/FoodDiary.Integrations.HttpExtra/Http/SampleTransport.cs", "external supplier client", "generic integration-layer affinity", false)]
+    [InlineData("Shared/FoodDiary.Integrations.Http/tests/SampleTransport.cs", "external supplier client", "generic integration-layer affinity", false)]
+    [InlineData("Shared/FoodDiary.Inventory.PersistenceModel/StockRecord.cs", "stock storage implementation", "generic database-layer affinity", true)]
+    [InlineData("Shared\\FoodDiary.Inventory.PersistenceModel\\StockRecord.cs", "stock storage implementation", "generic infrastructure-layer affinity", true)]
+    [InlineData("Shared/FoodDiary.Inventory.PersistenceModel/Configurations/StockConfiguration.cs", "stock storage implementation", "generic database-layer affinity", true)]
+    [InlineData("Shared/FoodDiary.Inventory.PersistenceModelExtra/StockRecord.cs", "stock storage implementation", "generic database-layer affinity", false)]
+    [InlineData("Shared/FoodDiary.Inventory.PersistenceModel/tests/StockRecord.cs", "stock storage implementation", "generic database-layer affinity", false)]
+    [InlineData("Shared/FoodDiary..PersistenceModel/StockRecord.cs", "stock storage implementation", "generic database-layer affinity", false)]
+    [InlineData("Modules/Inventory/Infrastructure/Providers/Services/SupplierClient.cs", "stock provider implementation", "generic infrastructure-layer affinity", false)]
+    [InlineData("Modules/Inventory/Infrastructure/Services/StockStore.cs", "stock provider implementation", "generic infrastructure-layer affinity", true)]
+    [InlineData("FoodDiary.Integrations/Services/SupplierClient.cs", "stock provider implementation", "generic infrastructure-layer affinity", false)]
+    [InlineData("Modules/Inventory/Presentation/Mappings/StockResponseMappings.cs", "stock confirm result response http mapping", "structural role api-response-mapping-role", true, "Api")]
+    [InlineData("Modules\\Inventory\\Presentation\\Mappings\\StockResponseMappings.cs", "stock confirm result response http mapping", "structural role api-response-mapping-role", true, "Api")]
+    [InlineData("Modules/Inventory/PresentationExtra/Mappings/StockResponseMappings.cs", "stock confirm result response http mapping", "structural role api-response-mapping-role", false, "Api")]
+    [InlineData("Modules/Inventory/Contracts/Stock/IStockReadService.cs", "load stock read", "structural role backend-read-service-role", false)]
+    [InlineData("Modules/Inventory/ContractsExtra/Stock/IStockReadService.cs", "load stock read", "structural role backend-read-service-role", true)]
+    [InlineData("Modules/Inventory/Application/StockCount.cs", "stock-count", "direct file-name affinity stock, count, stockcount", true)]
+    [InlineData("Modules/Inventory/Application/Ab.cs", "a-b", "direct file-name affinity ab", false)]
+    [InlineData("Modules/Inventory/tests/Inventory.Tests/AppleTests.cs", "apples test", "direct file-name affinity apples", true, "Tests")]
+    [InlineData("Modules/Inventory/tests/Inventory.Tests/AppleTests.cs", "pears test", "direct file-name affinity pears", false, "Tests")]
+    [InlineData("Modules/Inventory/Application/Apple.cs", "apples test", "direct file-name affinity apples", false, "Tests")]
+    [InlineData("Modules/Inventory/tests/Inventory.Tests/AppleTests.cs", "apples", "direct file-name affinity apples", false)]
     [InlineData("Modules/Inventory/Application/Abstractions/IStockService.cs", "inventory stock lookup", "module entry-point abstraction penalty waived", true)]
     [InlineData("Modules/Inventory/Application/Abstractions/IStockService.cs", "inventory external provider lookup", "module entry-point abstraction penalty waived", false)]
     [InlineData("Modules/Inventory/Application/Abstractions/IStockService.cs", "inventory http lookup", "module entry-point abstraction penalty waived", false)]
@@ -88,7 +112,8 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         string path,
         string query,
         string expectedReason,
-        bool expectedMatch) {
+        bool expectedMatch,
+        string changeType = "Backend") {
         await using SqliteConnection connection = new($"Data Source={_databasePath}");
         await connection.OpenAsync();
         await using SqliteCommand command = connection.CreateCommand();
@@ -103,7 +128,7 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
         SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
 
         WikiContextSearchResult result = await search.SearchAsync(
-            query, limit: 10, changeType: "Backend", module: null, scopePaths: null, CancellationToken.None,
+            query, limit: 10, changeType: changeType, module: null, scopePaths: null, CancellationToken.None,
             expectedChangeSetFingerprint: "fixture-change-set");
 
         Assert.True(result.Ready, result.UnavailableReason);

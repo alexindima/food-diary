@@ -171,8 +171,8 @@ $billing = $billingJson | ConvertFrom-Json
 Assert-Wiki ($billing.module.name -eq 'Billing' -and $billing.module.origin -eq 'explicit-module') 'Billing context did not preserve the explicitly requested module.'
 $billingWikiPagePaths = @($billing.wikiPages | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['path']) { [string]$_.path } })
 Assert-Wiki ($billingWikiPagePaths -contains '.llm-wiki/generated/modules/billing.md') 'Billing module page is missing from context.'
-Assert-Wiki (@($billing.controllers.path) -contains 'FoodDiary.Presentation.Api/Features/Billing/BillingController.cs') 'BillingController is missing from API context.'
-Assert-Wiki (@($billing.implementationFiles.path | Where-Object { $_ -like 'FoodDiary.Application.Billing/*' }).Count -gt 0) 'Billing application implementation is missing from context.'
+Assert-Wiki (@($billing.controllers.path) -contains 'Modules/Billing/Presentation/Features/Billing/BillingController.cs') 'BillingController is missing from API context.'
+Assert-Wiki (@($billing.implementationFiles.path | Where-Object { $_ -like 'Modules/Billing/Application/*' }).Count -gt 0) 'Billing application implementation is missing from context.'
 Assert-Wiki (@($billing.implementationFiles | Where-Object {
     $_.path -match '/Billing/' -and
     @($_.reasons) -contains 'module Billing'
@@ -197,7 +197,7 @@ Assert-Wiki (@($frontendContext.implementationFiles | Where-Object {
 
 $diffJson = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') `
     -ChangedPath @(
-        'FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs'
+        'Modules/Fasting/Presentation/Features/Fasting/FastingReadController.cs'
         'Modules/Fasting/Application/Commands/StartFasting/StartFastingCommandHandler.cs'
         'FoodDiary.Web.Client/assets/i18n/en/common.json'
         'FoodDiary.Infrastructure/Persistence/Migrations/Example.cs'
@@ -222,14 +222,14 @@ Assert-Wiki (@($diff.warnings | Where-Object { $_ -match 'locale' }).Count -gt 0
 Assert-Wiki (@($diff.warnings | Where-Object { $_ -match 'migration' }).Count -gt 0) 'Migration warning is missing.'
 
 $persistenceOnlyDiff = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') `
-    -ChangedPath 'FoodDiary.Infrastructure/Persistence/Billing/EfBillingTransactionRunner.cs' `
+    -ChangedPath 'Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs' `
     -CompiledIndexSource Json `
     -Format Json | ConvertFrom-Json
 Assert-Wiki (@($persistenceOnlyDiff.scopes) -contains 'Database') 'Persistence-only diff did not retain database scope.'
 Assert-Wiki (@($persistenceOnlyDiff.warnings | Where-Object { $_ -match 'migration' }).Count -eq 0) 'Persistence-only diff emitted a false migration-pair warning.'
 
 $usersPacketJson = & (Join-Path $toolsRoot 'Get-LlmWikiChangePacket.ps1') `
-    -ChangedPath @('FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs') `
+    -ChangedPath @('Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs') `
     -Objective 'Smoke-test a Users application change.' `
     -Format Json
 $usersPacket = $usersPacketJson | ConvertFrom-Json
@@ -238,7 +238,7 @@ Assert-Wiki ($null -ne $usersPacket.diff -and $null -ne $usersPacket.policy -and
 $ownership = $usersPacket.ownership
 Assert-Wiki (@($ownership.directModules) -contains 'Users') 'Ownership impact did not resolve the directly changed Users module.'
 Assert-Wiki ($null -ne $ownership.PSObject.Properties['downstreamModules']) 'Ownership impact omitted its downstream-module contract.'
-Assert-Wiki (@($ownership.ownershipGuides.guide) -contains 'FoodDiary.Application.Users/AGENTS.md') 'Ownership impact did not resolve the scoped feature-project guide.'
+Assert-Wiki (@($ownership.ownershipGuides.guide) -contains 'Modules/Users/Application/AGENTS.md') 'Ownership impact did not resolve the scoped feature-project guide.'
 
 $brief = $usersPacket.brief
 Assert-Wiki ($brief.risk.level -in @('low', 'medium', 'high')) 'Task brief did not classify risk.'
@@ -332,7 +332,7 @@ Assert-Wiki ($intentBrief.analysis.confidence -eq 'low') 'Intent-inferred brief 
 Assert-Wiki (@($intentBrief.analysis.inferredPaths | Where-Object { $_ -match '(?i)(food|photo|openai)' }).Count -gt 0) 'Intent-inferred brief did not discover a relevant AI/photo path.'
 
 $criticalBriefJson = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
-    -ChangedPath @('FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs') `
+    -ChangedPath @('Modules/Identity/Presentation/Features/Auth/AuthSessionController.cs') `
     -Format Json
 $criticalBrief = $criticalBriefJson | ConvertFrom-Json
 Assert-Wiki ($criticalBrief.risk.level -eq 'high') 'Task brief did not elevate a security-sensitive API flow to high risk.'
@@ -353,7 +353,7 @@ Assert-Wiki (
 ) 'Database intent expanded an explicit changed-path boundary with research-only persistence paths.'
 
 $qualityBriefJson = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
-    -ChangedPath @('FoodDiary.Domain/Entities/Recipes/Recipe.cs') `
+    -ChangedPath @('Modules/Recipes/Domain/Entities/Recipes/Recipe.cs') `
     -Format Json
 $qualityBrief = $qualityBriefJson | ConvertFrom-Json
 Assert-Wiki (@($qualityBrief.quality.changedFiles).Count -eq 1) 'Task brief did not attach changed-file quality metrics.'
@@ -735,7 +735,7 @@ $scopedPrivacy = & (Join-Path $toolsRoot 'Find-LlmWikiSensitiveData.ps1') `
 Assert-Wiki (@($scopedPrivacy.items | Where-Object { $_.PSObject.Properties['providerHost'] -and $_.providerHost -eq 'api.openai.com' }).Count -gt 0) 'Scoped photo privacy review omitted the external OpenAI image boundary.'
 
 $securityReview = & (Join-Path $toolsRoot 'Find-LlmWikiSecurityReview.ps1') -Limit 20 -Format Json | ConvertFrom-Json
-Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'FoodDiary.Integrations/Services/WebPushSocketsHttpHandlerFactory.cs' -and [int]$_.rank -le 3 }).Count -gt 0) 'Security review did not rank the WebPush connect-time network boundary in the top three.'
+Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs' -and [int]$_.rank -le 3 }).Count -gt 0) 'Security review did not rank the WebPush connect-time network boundary in the top three.'
 Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs' -and [int]$_.rank -le 3 }).Count -gt 0) 'Security review did not rank the Mailgun webhook authorization boundary in the top three.'
 Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'FoodDiary.Web.Client/src/app/services/token-storage.service.ts' -and [int]$_.rank -le 3 }).Count -gt 0) 'Security review did not rank browser token persistence in the top three.'
 Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -in @('nginx.conf', 'nginx/sites-enabled/fooddiary.club') -and [int]$_.rank -le 4 }).Count -gt 0) 'Security review did not rank nginx transport configuration in the top four.'
@@ -790,7 +790,7 @@ $configurationPlan = $configurationPlanJson | ConvertFrom-Json
 Assert-Wiki (@($configurationPlan.scenarios.id) -contains 'configuration-contract') 'Test plan did not include configuration contract validation.'
 Assert-Wiki (@($configurationPlan.scenarios.id) -contains 'deployment-compatibility') 'Test plan did not include deployment compatibility validation.'
 
-$proposedBackendPath = 'FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs'
+$proposedBackendPath = 'Modules/Identity/Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs'
 $proposedBriefJson = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
     -BaseRef HEAD `
     -ProposedPath $proposedBackendPath `
@@ -815,7 +815,7 @@ $rankedPlan = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') `
     -ChangedPath @(
         'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts'
         'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.spec.ts'
-        'tests/FoodDiary.Presentation.Api.Tests/UserHttpMappingsTests.cs'
+        'Modules/Users/tests/FoodDiary.Modules.Users.Presentation.Tests/UserHttpMappingsTests.cs'
     ) `
     -Format Json | ConvertFrom-Json
 Assert-Wiki ($rankedPlan.focusedTestDetails[0].reason -eq 'changed-test') 'Test plan did not rank an explicitly changed test first.'
@@ -998,7 +998,7 @@ Assert-Wiki ($domainData.summary.persistenceMappings -gt 0) 'Domain/data index d
 $domainJson = & (Join-Path $toolsRoot 'Find-LlmWikiDomainData.ps1') -View invariants -Query weight -Format Json
 $domain = $domainJson | ConvertFrom-Json
 Assert-Wiki (@($domain.invariants).Count -gt 0) 'Domain invariant query did not resolve weight rules.'
-$domainPath = 'FoodDiary.Domain/Entities/Tracking/WeightEntry.cs'
+$domainPath = 'Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs'
 $domainPacketJson = & (Join-Path $toolsRoot 'Get-LlmWikiChangePacket.ps1') -ChangedPath $domainPath -Objective 'Smoke-test a domain invariant change.' -Format Json
 $domainPacket = $domainPacketJson | ConvertFrom-Json
 $domainPlan = $domainPacket.testPlan
@@ -1006,7 +1006,7 @@ Assert-Wiki (@($domainPlan.scenarios.id) -contains 'domain-invariant-boundaries'
 $domainBrief = $domainPacket.brief
 Assert-Wiki (@($domainBrief.domainDataImpact.types).Count -gt 0) 'Task brief did not attach changed domain types.'
 Assert-Wiki (@($domainBrief.generatedActions) -contains './.llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1') 'Domain change did not request domain/data-index regeneration.'
-$mappingPath = 'FoodDiary.Infrastructure/Persistence/Configurations/Users/UserConfiguration.cs'
+$mappingPath = 'Modules/Users/Infrastructure/Model/Persistence/Configurations/Users/UserConfiguration.cs'
 $mappingPlanJson = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') -ChangedPath $mappingPath -Format Json
 $mappingPlan = $mappingPlanJson | ConvertFrom-Json
 Assert-Wiki (@($mappingPlan.scenarios.id) -contains 'persistence-model-contract') 'Persistence test plan did not include model-contract verification.'
@@ -5143,7 +5143,7 @@ try {
         -CriterionId AC-002 `
         -ChangedPath $contractPath `
         -ScenarioId backend-validation `
-        -TestPath 'tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs' | Out-Null
+        -TestPath 'Modules/Fasting/tests/FoodDiary.Modules.Fasting.Application.Tests/Fasting/FastingValidatorTests.cs' | Out-Null
     & (Join-Path $toolsRoot 'Manage-LlmWikiAcceptanceMatrix.ps1') resolve `
         -Path $acceptancePath `
         -CriterionId AC-002 `

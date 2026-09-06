@@ -470,7 +470,7 @@
       "query": "storage or provider implementation for email outbox message",
       "changeType": "Any",
       "expectedPaths": [
-        "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxMessage.cs"
+        "Shared/FoodDiary.Email.PersistenceModel/EmailOutboxMessage.cs"
       ]
     },
     {
@@ -605,7 +605,7 @@
       "query": "automated checks for payment provider kassa http endpoint client",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Infrastructure.Tests/Services/YooKassaApiClientTests.cs"
+        "Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/YooKassaApiClientTests.cs"
       ]
     },
     {
@@ -713,7 +713,7 @@
       "query": "automated checks for api lesson http mappings",
       "changeType": "Tests",
       "expectedPaths": [
-        "tests/FoodDiary.Presentation.Api.Tests/LessonHttpMappingsTests.cs"
+        "Modules/Lessons/tests/FoodDiary.Modules.Lessons.Presentation.Tests/LessonHttpMappingsTests.cs"
       ]
     },
     {

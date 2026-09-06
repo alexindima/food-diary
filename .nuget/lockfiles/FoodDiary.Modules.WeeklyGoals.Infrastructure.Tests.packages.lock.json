@@ -10,9 +10,9 @@
       },
       "Meziantou.Analyzer": {
         "type": "Direct",
-        "requested": "[3.0.172, )",
-        "resolved": "3.0.172",
-        "contentHash": "6Kkqgaakp07Trl2Zz6YvqmeuTj4Q0qQe8o2AvrYvX28XH7n3wr8VBP/gvzbnXxgOirnd5n48craYnSLcMLe2tw=="
+        "requested": "[3.0.195, )",
+        "resolved": "3.0.195",
+        "contentHash": "+OzBSeXP1nXzQiLOIvZp6G9ldu8QkCTZjyVBAbn7dEBnEeWvDLUW1Py61cQ12OsYf45YpZ6Pel1rQ+cedWQR2Q=="
       },
       "Microsoft.NET.Test.Sdk": {
         "type": "Direct",
@@ -79,8 +79,8 @@
       },
       "AWSSDK.Core": {
         "type": "Transitive",
-        "resolved": "4.0.101.1",
-        "contentHash": "NtMRfAGDrdb5PVnTL4vIrnPuPSXbBw0j9+voVMYmgsH5Ep5H4tuNMkPJZCOO9q99mh0L9ClOwVkQHCliR5uOLA=="
+        "resolved": "4.0.102.1",
+        "contentHash": "vsf+/o+S/euH/wG7bO1cha+OWaHvjgvpDeGFO6l3Vcdio9GlSfXkZDD2BogMuAJ+/jDyqqSgqmYVolPKV9ie/A=="
       },
       "BouncyCastle.Cryptography": {
         "type": "Transitive",
@@ -1844,8 +1844,6 @@
           "FoodDiary.Modules.Meals.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Domain": "[1.0.0, )",
           "FoodDiary.Modules.Meals.Domain.Contracts": "[1.0.0, )",
-          "FoodDiary.Modules.Products.Domain": "[1.0.0, )",
-          "FoodDiary.Modules.Products.Domain.Contracts": "[1.0.0, )",
           "FoodDiary.Modules.Users.Domain.Contracts": "[1.0.0, )",
           "Microsoft.EntityFrameworkCore": "[10.0.11, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.11, )"
@@ -2231,7 +2229,7 @@
       "fooddiary.modules.images.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "AWSSDK.S3": "[4.0.102.2, )",
+          "AWSSDK.S3": "[4.0.102.4, )",
           "FoodDiary.Application.Contracts": "[1.0.0, )",
           "FoodDiary.Application.Images": "[1.0.0, )",
           "FoodDiary.Infrastructure": "[1.0.0, )",
@@ -2998,11 +2996,11 @@
       },
       "AWSSDK.S3": {
         "type": "CentralTransitive",
-        "requested": "[4.0.102.2, )",
-        "resolved": "4.0.102.2",
-        "contentHash": "KktYdgjSgC+lSSVf/kawvSsuRS83ovq33gKCJm/mTP5pIS/cdltJCGFQIpNiWqFhHdFfChLP6LxiFhrFHBDxIA==",
+        "requested": "[4.0.102.4, )",
+        "resolved": "4.0.102.4",
+        "contentHash": "rfUhmzlQifO7Uk3AErPweV1FbwZYI+OuogPjfS/7mbVKVWCYYCLkkLozh2mS/qaHPNGPGFeSFAR1NbWnQyd2pQ==",
         "dependencies": {
-          "AWSSDK.Core": "[4.0.101.1, 5.0.0)"
+          "AWSSDK.Core": "[4.0.102.1, 5.0.0)"
         }
       },
       "BCrypt.Net-Next": {

@@ -219,7 +219,7 @@
       "id": "paddle-notification-recovery-service",
       "query": "recover failed Paddle provider notification processing",
       "changeType": "Backend",
-      "expectedPaths": ["FoodDiary.Integrations/Billing/PaddleNotificationRecoveryService.cs"]
+      "expectedPaths": ["Modules/Billing/Infrastructure/Providers/Billing/PaddleNotificationRecoveryService.cs"]
     },
     {
       "id": "diary-pdf-generation",

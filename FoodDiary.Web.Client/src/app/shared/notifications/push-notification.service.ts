@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { DestroyRef, effect, inject, Service, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
@@ -21,6 +22,7 @@ export class PushNotificationService {
     private readonly router = inject(Router);
     private readonly destroyRef = inject(DestroyRef);
     private readonly browserNotifications = inject(BrowserNotificationCapabilityService);
+    private readonly document = inject(DOCUMENT);
 
     public readonly isSupported = signal(this.swPush.isEnabled);
     public readonly isSubscribed = signal(false);
@@ -83,8 +85,8 @@ export class PushNotificationService {
         try {
             const current = await firstValueFrom(this.swPush.subscription.pipe(take(1)));
             if (current !== null) {
-                await this.upsertSubscriptionAsync(current);
-                return 'already-subscribed';
+                const replaced = await this.synchronizeExistingSubscriptionAsync(current);
+                return replaced ? 'subscribed' : 'already-subscribed';
             }
 
             const configuration = await firstValueFrom(this.notificationService.getWebPushConfiguration());
@@ -123,7 +125,7 @@ export class PushNotificationService {
                 return;
             }
 
-            await this.upsertSubscriptionAsync(subscription);
+            await this.synchronizeExistingSubscriptionAsync(subscription);
         } catch {
             this.setSubscriptionState(null);
         }
@@ -199,6 +201,46 @@ export class PushNotificationService {
         }
 
         return configuration.publicKey;
+    }
+
+    private async synchronizeExistingSubscriptionAsync(subscription: PushSubscription): Promise<boolean> {
+        let publicKey: string | null;
+        try {
+            const configuration = await firstValueFrom(this.notificationService.getWebPushConfiguration());
+            publicKey = this.getSubscriptionPublicKey(configuration);
+        } catch {
+            await this.upsertSubscriptionAsync(subscription);
+            return false;
+        }
+
+        if (publicKey === null || this.subscriptionUsesPublicKey(subscription, publicKey)) {
+            await this.upsertSubscriptionAsync(subscription);
+            return false;
+        }
+
+        await firstValueFrom(this.notificationService.removeWebPushSubscription(subscription.endpoint));
+        await subscription.unsubscribe();
+        this.setSubscriptionState(null);
+        const replacement = await this.swPush.requestSubscription({ serverPublicKey: publicKey });
+        await this.upsertSubscriptionAsync(replacement);
+        return true;
+    }
+
+    private subscriptionUsesPublicKey(subscription: PushSubscription, publicKey: string): boolean {
+        const applicationServerKey = subscription.options.applicationServerKey;
+        if (applicationServerKey === null) {
+            return true;
+        }
+
+        const binaryKey = Array.from(new Uint8Array(applicationServerKey), byte => String.fromCodePoint(byte)).join('');
+        const encodedPublicKey = this.document.defaultView?.btoa(binaryKey);
+        if (encodedPublicKey === undefined) {
+            return true;
+        }
+
+        const currentPublicKey = encodedPublicKey.replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
+        const normalizedPublicKey = publicKey.replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
+        return currentPublicKey === normalizedPublicKey;
     }
 
     private isNotificationPermissionDenied(): boolean {

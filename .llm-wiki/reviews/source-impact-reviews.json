@@ -135,14 +135,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "a1c00cbd487bef19b33e97cdb60d93cf0868f55b096d565975129eb6fb813477"
+          "path": "Directory.Packages.props",
+          "sha256": "b0ceaaf76e951981b516c0adf319dd6ea08422fffbd3e4836be3f2afa0a5de6a"
         }
       ],
-      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
+      "reason": "Integrated reviewed PRs 325-341 on current module layout; synchronized dependency locks, signing action guardrail and moved Admin test fixtures; reviewed existing metrics and push subscription contracts.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:06.4610272Z"
+      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
+      "reviewedAtUtc": "2026-09-06T16:55:19.5952106Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -165,18 +165,14 @@
       "pageSha256": "c2e5e0aaf44c829b7d0ec32bd7ae6dc24cf2d5b5f5aa0edd3e102c65783488df",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
-          "sha256": "8e4f9d7b01d4d121c06dfcc38399ca4472edd1b4160bf972af9431a66b149b3f"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
-          "sha256": "b2108ffefc4e186747c4aa572bc12a2b3582fded8c1c42873be342c5f6c51b8f"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
         }
       ],
-      "reason": "Reviewed Wiki tooling, architecture matrix, quality indexes and workflow pages against the generic catalog, path resolver, deduplication and extraction-readiness regressions; no ranking, query, threshold or frozen evaluation target changed.",
+      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:33:11.0714387Z"
+      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
+      "reviewedAtUtc": "2026-09-06T18:02:59.3710321Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -218,14 +214,14 @@
       "pageSha256": "c89b4c5cb13fefe0a1c6171804cc91b5f6c9ce69753e8d4de9fda0bb2514b052",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "05917349c6db00f6c52ba4349e43487540d1344dfa9b8dc89608e5809adffcca"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "49e36a7b499b3a44c1768bc5c7e38ac57f19bb7c8fb7ce75c3e5e102683e0499"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed final context-ranking changes: physical paths, projection lineage, backend contract/privacy/impact queries and stale states remain intact. Shared/module selectors preserve roles; compound identifiers and explicit-test morphology reuse bounded ranking. Frozen path-only edits have verified Git rename evidence.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:40.7053940Z"
+      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
+      "reviewedAtUtc": "2026-09-06T20:27:46.4131637Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -233,14 +229,14 @@
       "pageSha256": "21ab43d3671a8a24506a2e1bc714f1e3490986d71f1bb1c45e2a896e7cc89b7f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-          "sha256": "7fbe087d35b01c5a36cf1d7837aa3ed5e08698a0feaef9eab6c4b5546044137c"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
         }
       ],
-      "reason": "Reviewed final bounded product metadata lookup and PostgreSQL snapshot regression; current ProductType is retained while snapshot nutrition wins. No API, schema, privacy, deployment, or ownership boundary changed beyond the documented extraction.",
+      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
       "baseRef": "HEAD",
-      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
-      "reviewedAtUtc": "2026-09-01T23:39:42.4249191Z"
+      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
+      "reviewedAtUtc": "2026-09-06T18:02:59.5287674Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -248,14 +244,14 @@
       "pageSha256": "23c1a9278403a636f6ec63e87fa3f5afd67333592db3e51c8c24dcb542ed6ec8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-          "sha256": "7fbe087d35b01c5a36cf1d7837aa3ed5e08698a0feaef9eab6c4b5546044137c"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
         }
       ],
-      "reason": "Reviewed final bounded product metadata lookup and PostgreSQL snapshot regression; current ProductType is retained while snapshot nutrition wins. No API, schema, privacy, deployment, or ownership boundary changed beyond the documented extraction.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
-      "reviewedAtUtc": "2026-09-01T23:39:43.3079431Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:52.75566Z"
     },
     {
       "pageId": "workflow-code-graph",
@@ -263,38 +259,26 @@
       "pageSha256": "8125215f523313db4f5d24a8398ee62bcbe5d6e2533066a2a1b5f53b12bd3491",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-generalization.json",
-          "sha256": "4158ca34d4ae1196549d9a1fe0bde6c329f16c3cc1af43f7f3fcb1e66a7ef67b"
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "a1cf4b79ef10c31f818bfaa6fa70281d50e949288895465b6afbde534a6c81d4"
         },
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "f1d9c1fbd6bae310193c5a921e2fccbdab9d0dab39b012440c46109fcf431495"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
         },
         {
-          "path": ".llm-wiki/evals/context-search-holdout.json",
-          "sha256": "a91e1804391b7db304ec74446bcfa28947f49cbc6434ba39d64f58781dba84c8"
+          "path": ".llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1",
+          "sha256": "6f3036ea2211b7b1396303db49274b75c8c8aadafb6a07ff99682c7cd693fbc6"
         },
         {
-          "path": ".llm-wiki/evals/context-search-posttune-control-30.json",
-          "sha256": "15d22e157eed3d9c791dbbbe0a26c69f027c8ca7826dbb645ee53af023ad7a2f"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "f4a5d39ee169f988d2edbaa87711710ee00f29714773fc94b78daf225508bf49"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-validation.json",
-          "sha256": "1e73139a9c64d9a1730e2100482754a84c7fa9e6d8e31571ee15cd43000522cb"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search.json",
-          "sha256": "2cd618ab1ebc83781a86aa690a6e2c741117d9b24d4d3c8f1e24f22e02047401"
+          "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
+          "sha256": "b11cc34134f7a771f90d0c28417340ecfb5543861aad6935c1c771ad13952e49"
         }
       ],
-      "reason": "Reviewed exact project-matrix coverage, controller discovery, module-page and architecture-health generator changes; 825 Presentation, 247 host unit and 1175 architecture tests pass, while the independent frozen retrieval holdout remains explicitly non-green at 99/100 top-ten.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:48.1086065Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:53.3473111Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -333,13 +317,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "229b107140848b762408ba5062b63475fc97d6a0b509a23915bc4a0050fab3fe"
+          "sha256": "a1cf4b79ef10c31f818bfaa6fa70281d50e949288895465b6afbde534a6c81d4"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
         }
       ],
-      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:33:16.1064166Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:53.9556261Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -471,14 +459,14 @@
       "pageSha256": "b8326a8fc44d9de804aa9a021771d97014a2ead8b3db08959f38add670525ba4",
       "sources": [
         {
-          "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "97362557b211aaa9e418e3b0afa71b729e0fb32bfb2a098a8a97437b89e57a61"
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:36.1464778Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:54.6041627Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -570,13 +558,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "54e522a1de5fc9a62334cc7823ba6efdb92d5c967c6f9cbae423372755bcf310"
+          "sha256": "ecd5e562475b0e545177da1888ed6b354bad090efda26a8280d14298914efad0"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:28.4940291Z"
+      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
+      "reviewedAtUtc": "2026-09-06T17:13:37.5710154Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -600,13 +588,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "4e78ee04548f64e6aed709d9d887de3eb36625522fa453d9365687c03f479f33"
+          "sha256": "49e36a7b499b3a44c1768bc5c7e38ac57f19bb7c8fb7ce75c3e5e102683e0499"
         }
       ],
-      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph.",
+      "reason": "Reviewed final context-ranking changes: physical paths, projection lineage, backend contract/privacy/impact queries and stale states remain intact. Shared/module selectors preserve roles; compound identifiers and explicit-test morphology reuse bounded ranking. Frozen path-only edits have verified Git rename evidence.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:53:00.6593066Z"
+      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
+      "reviewedAtUtc": "2026-09-06T20:27:46.9427562Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -614,18 +602,14 @@
       "pageSha256": "d45851e16e3d49ceca62d5cb5f1eb187c9b829e6a19c634ecd85a6238241dfe8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-          "sha256": "7fbe087d35b01c5a36cf1d7837aa3ed5e08698a0feaef9eab6c4b5546044137c"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
-          "sha256": "7a041f902be75ba4348569ab306cf7684ccf3b935ec204760bb974f418dcd149"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
         }
       ],
-      "reason": "Reviewed final bounded product metadata lookup and PostgreSQL snapshot regression; current ProductType is retained while snapshot nutrition wins. No API, schema, privacy, deployment, or ownership boundary changed beyond the documented extraction.",
+      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
       "baseRef": "HEAD",
-      "gitHead": "47d0dd4d3698a4729d3cb117ea74824793698096",
-      "reviewedAtUtc": "2026-09-01T23:39:44.2045376Z"
+      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
+      "reviewedAtUtc": "2026-09-06T18:03:00.4220788Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -649,13 +633,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "e3b11837b4815f79b9a5dab108eecb8ce799ceb32a134a39c23f5913c2f091f7"
+          "sha256": "15a4b69d7cb49bc9cc068fdc488db71756ea71033cfca395fbf8455f54c6deba"
         }
       ],
-      "reason": "Reviewed verification, model-routing, query parity, and Identity-session regression changes; all gates and selection invariants remain intact.",
+      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:56:19.4570793Z"
+      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
+      "reviewedAtUtc": "2026-09-06T18:03:00.7042889Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -679,13 +663,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
+          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
         }
       ],
-      "reason": "Reviewed documentation impact from current modular Identity paths in task briefs, test plans, and evaluation fixtures.",
+      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:56:20.0296602Z"
+      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
+      "reviewedAtUtc": "2026-09-06T18:03:00.9881096Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -743,13 +727,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
+          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:40.5657700Z"
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "baseRef": "HEAD",
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:57.5105005Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -779,22 +763,22 @@
       "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
       "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
       "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:41.0967780Z"
+      "reviewedAtUtc": "2026-08-31T13:06:41.096778Z"
     },
     {
       "pageId": "workflow-privacy-review",
       "pagePath": ".llm-wiki/workflows/privacy-review.md",
-      "pageSha256": "e01ff59cf70144c17231e65657507cbf611981c565cc6c4e6c0504ac567e6a77",
+      "pageSha256": "78aa14b84fb0cb0d89ccb14af14b45659440ebc5989802a96986908f26653657",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "82667e043424a238b2b92fa7bcd82c7bfa3042292106e2080811f7941b812dfe"
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "49e36a7b499b3a44c1768bc5c7e38ac57f19bb7c8fb7ce75c3e5e102683e0499"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed final context-ranking changes: physical paths, projection lineage, backend contract/privacy/impact queries and stale states remain intact. Shared/module selectors preserve roles; compound identifiers and explicit-test morphology reuse bounded ranking. Frozen path-only edits have verified Git rename evidence.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:41.5414529Z"
+      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
+      "reviewedAtUtc": "2026-09-06T20:27:47.5443176Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -833,13 +817,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "90b5b8bd52e83a57559e379f1e4debe5779ebb518a8121d83406d8e7d820ef12"
+          "sha256": "437a448ff463ea3c0310190954e8acd8730c7fde4d8136a2e288a7afc60dbee7"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed regenerated MCP complexity counts for the bounded selector and identifier changes. 109 focused reader tests passed, including synthetic negative boundaries; static reference counts are not presented as execution coverage.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:41.9390404Z"
+      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
+      "reviewedAtUtc": "2026-09-06T20:28:42.2614307Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -916,13 +900,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "10db7e971a48d69b0bbe2d1ae2427b17b37188bdabd1cf93523e8496a3c66144"
+          "sha256": "81e0fb06333d3038ecbed7b103a05b9f27bf4fd2cc58c5b39d759c7f8fed7c7a"
         }
       ],
-      "reason": "Refresh runtime topology before commit after staged-file preflight found stale generated output; owner boundaries and runtime policies remain as reviewed in ADR 0035.",
+      "reason": "Runtime topology diff changes only its source fingerprint after MCP edits; services, providers, jobs, cancellation and telemetry declarations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T15:19:51.3041087Z"
+      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
+      "reviewedAtUtc": "2026-09-06T20:28:43.0277763Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -931,21 +915,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "90b5b8bd52e83a57559e379f1e4debe5779ebb518a8121d83406d8e7d820ef12"
+          "sha256": "437a448ff463ea3c0310190954e8acd8730c7fde4d8136a2e288a7afc60dbee7"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "10db7e971a48d69b0bbe2d1ae2427b17b37188bdabd1cf93523e8496a3c66144"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "82667e043424a238b2b92fa7bcd82c7bfa3042292106e2080811f7941b812dfe"
+          "sha256": "81e0fb06333d3038ecbed7b103a05b9f27bf4fd2cc58c5b39d759c7f8fed7c7a"
         }
       ],
-      "reason": "Refresh runtime topology before commit after staged-file preflight found stale generated output; owner boundaries and runtime policies remain as reviewed in ADR 0035.",
+      "reason": "Reviewed the quality-count and topology-fingerprint refresh: no security boundary or runtime declaration changed; evidence remains navigation, with actual ranking regression tests recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T15:19:51.7962550Z"
+      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
+      "reviewedAtUtc": "2026-09-06T20:28:43.8122006Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -968,14 +948,14 @@
       "pageSha256": "65f4d9ae72ac28fb74987f36e590addfb2bc44bac79e07844eaa04a52661e307",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "23e7dd665d008b281609f45dedf5cdff4e280627883cff1c9107c8cc9c7b5327"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
         }
       ],
-      "reason": "Reviewed verification, model-routing, query parity, and Identity-session regression changes; all gates and selection invariants remain intact.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:56:21.2130028Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:32:01.3252363Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1035,7 +1015,7 @@
       "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
       "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
       "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:44.2844430Z"
+      "reviewedAtUtc": "2026-08-31T13:06:44.284443Z"
     },
     {
       "pageId": "workflow-task-workspace",
@@ -1050,7 +1030,7 @@
       "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
       "baseRef": "HEAD",
       "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:42:12.4568250Z"
+      "reviewedAtUtc": "2026-09-01T14:42:12.456825Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1058,14 +1038,14 @@
       "pageSha256": "034a7fbc5f124bcf40175e3a37f52338dfec658615c7b91245322232f61f08d6",
       "sources": [
         {
-          "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "198ca8ff73aff9aa5dc6c64dca8cc3d01b73830408f8b56fc2c7ff1534125935"
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "15a4b69d7cb49bc9cc068fdc488db71756ea71033cfca395fbf8455f54c6deba"
         }
       ],
-      "reason": "Reviewed actual PostgreSQL fault injection, competing lease barriers, pretracked claim state, current-owner and revision checks, and InMemory query parity. Test corrections verify durable state instead of detached references. Exact matrices and zero foreign Application guard cover dependency changes.",
+      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:12.8086439Z"
+      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
+      "reviewedAtUtc": "2026-09-06T18:03:01.7302642Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1074,13 +1054,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "3363acc71df1dd04904099a9d50d03913540e1582cf62db306a6e05af05ef25d"
+          "sha256": "0f1176f45369b5745fda56dc9bbed13550768b0179ff6dce94803a6395cbe730"
         }
       ],
-      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
+      "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
       "baseRef": "HEAD",
-      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
-      "reviewedAtUtc": "2026-09-05T11:25:52.0947651Z"
+      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
+      "reviewedAtUtc": "2026-09-06T17:13:38.961442Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1088,14 +1068,14 @@
       "pageSha256": "368dfe1e9684ead7a5e3207edd05e55477d432ae1f9627814d62bfeb9559fb84",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
         }
       ],
-      "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:42:12.9514864Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:32:01.8348524Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
@@ -1133,14 +1113,14 @@
       "pageSha256": "50ed04637edde217df4523303843af0ba9259b09af6ed1903b66160fc32b97b8",
       "sources": [
         {
-          "path": ".llm-wiki/evals/cases.json",
-          "sha256": "29aba37db801a1f64f4611dfed9f4f1572c361fefb903efd05f0e5b1434545db"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
         }
       ],
-      "reason": "Reviewed current architecture, module-map, ownership and scoped-guide text against the final 32 module Presentation projects, one Presentation.Contracts project and the central Version-only kernel.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:48.8421043Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:55.2540646Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1149,13 +1129,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
+          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:37.8559169Z"
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "baseRef": "HEAD",
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:56.0374305Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",
@@ -1178,14 +1158,14 @@
       "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
       "sources": [
         {
-          "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "f118df97d71356bc9b0813febd00b17e84e8c00b0c6e5d5f2617cdd6b30d4302"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:42.3116272Z"
+      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
+      "reviewedAtUtc": "2026-09-06T18:03:01.2113268Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1193,14 +1173,14 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "5905eedef807f38bd9e6c61e4dad5c5bfd87bb6c99b70b7f0155b45c7c3ad416"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
         }
       ],
-      "reason": "4971 unique scenarios in 54 physical test projects passed with zero failures/skips. Full build passes; PostgreSQL and HTTP suites ran once, and only five artifact-expectation failures were corrected with focused checks.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:09.4904280Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:59.1276895Z"
     }
   ]
 }

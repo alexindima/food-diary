@@ -25,6 +25,10 @@ $frontendIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
 . (Join-Path $PSScriptRoot 'LlmWikiQueryCache.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiContextScoring.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiApplicationModulePaths.ps1')
+$moduleImplementationRoots = if ($Module -match '^[A-Za-z][A-Za-z0-9_]*$') {
+    @((Get-LlmWikiApplicationModuleLayout -RepositoryRoot $repositoryRoot -Module $Module).sourceRoots)
+} else { @() }
 
 if ([string]::IsNullOrWhiteSpace($Module) -and [string]::IsNullOrWhiteSpace($Query)) {
     throw 'Provide -Module, -Query, or both.'
@@ -42,7 +46,7 @@ $queryCacheEntry = $null
 if ($Format -eq 'Json' -and $CompiledIndexSource -eq 'Json' -and -not $SqlShadow -and -not $SkipQueryCache) {
     $cacheRelevantPaths = @(
         @($ScopePath) + $(if (-not [string]::IsNullOrWhiteSpace($Module)) {
-            @("FoodDiary.Application/$Module", "FoodDiary.Application.$Module")
+            @($moduleImplementationRoots)
         }) | Where-Object { $_ } | Sort-Object -Unique
     )
     $compiledIndexDependencies = if ($CompiledIndexSource -eq 'Json') {
@@ -50,6 +54,7 @@ if ($Format -eq 'Json' -and $CompiledIndexSource -eq 'Json' -and -not $SqlShadow
             '.llm-wiki/generated/repository-catalog.json'
             '.llm-wiki/generated/csharp-symbol-index.json'
             '.llm-wiki/generated/frontend-index.json'
+            'docs/architecture/backend-modules.json'
         )
     } else {
         @('.artifacts/llm-wiki/code-graph/code-graph.fingerprint')
@@ -175,12 +180,7 @@ if ($CompiledIndexSource -eq 'Sqlite') {
         reasons = @($_.reasons)
     } }
     $selectionScopes = @($scopePaths)
-    if (-not [string]::IsNullOrWhiteSpace($Module)) {
-        $moduleImplementationScope = "FoodDiary.Application.$Module"
-        if (Test-Path -LiteralPath (Join-Path $repositoryRoot $moduleImplementationScope) -PathType Container) {
-            $selectionScopes += $moduleImplementationScope
-        }
-    }
+    $selectionScopes += @($moduleImplementationRoots)
     $visibleRecords = @(Select-ContextRecordsWithScopeCoverage $records $selectionScopes $Limit)
     $testRecords = @($records | Where-Object { [bool]$_.isTest } | Select-Object -First $Limit)
     $wikiRecords = @($records | Where-Object { $_.path -match '^(\.llm-wiki/|docs/).+\.md$' } | Select-Object -First $Limit)
@@ -867,7 +867,8 @@ $jsonCandidates = @(
         ForEach-Object -Begin { $rank = 0 } -Process {
             $rank++
             $candidatePath = ([string]$_.path).Replace('\', '/')
-            $candidateModule = if ($candidatePath -match '^FoodDiary\.Application\.([^/]+)/') { $Matches[1] }
+            $candidateModule = if ($candidatePath -match '^Modules/([^/]+)/') { $Matches[1] }
+                elseif ($candidatePath -match '^FoodDiary\.Application\.([^/]+)/') { $Matches[1] }
                 elseif ($candidatePath -match '^FoodDiary\.Web\.Client/') { 'Frontend' }
                 elseif ($candidatePath -match '^tests/') { 'Tests' }
                 else { $null }
