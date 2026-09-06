@@ -56,25 +56,25 @@ try {
         'Cold-checkout start did not complete through the JSON baseline.'
 
     $defaultBrief = Invoke-JsonFacade -Facade $facade -FacadeCommand brief -FacadeParameters @{
-        Objective = 'audit wearable synchronization'; ProposedPath = @('FoodDiary.Application.Wearables')
+        Objective = 'audit wearable synchronization'; ProposedPath = @('Modules/Wearables/Application')
         Compact = $true; Format = 'Json'; Limit = 3
     }
     Assert-ColdCheckout ([string]$defaultBrief.analysis.mode -eq 'planned-paths') 'Cold-checkout default brief did not fall back to the JSON baseline.'
 
     $develop = Invoke-JsonFacade -Facade $facade -FacadeCommand develop -FacadeParameters @{
-        Objective = 'audit wearable synchronization'; ProposedPath = @('FoodDiary.Application.Wearables')
+        Objective = 'audit wearable synchronization'; ProposedPath = @('Modules/Wearables/Application')
         Format = 'Json'; Limit = 3; TaskSessionId = "json-cold-develop-$([Guid]::NewGuid().ToString('N'))"
     }
     Assert-ColdCheckout (-not [string]::IsNullOrWhiteSpace([string]$develop.profile)) 'Cold-checkout develop did not complete through the automatic JSON baseline.'
 
     $research = Invoke-JsonFacade -Facade $facade -FacadeCommand research -FacadeParameters @{
-        Objective = 'audit wearable synchronization'; ProposedPath = @('FoodDiary.Application.Wearables')
+        Objective = 'audit wearable synchronization'; ProposedPath = @('Modules/Wearables/Application')
         Compact = $true; SkipHistory = $true; CompiledIndexSource = 'Json'; Format = 'Json'; Limit = 3
     }
     Assert-ColdCheckout (@($research.discovery.groundedPaths).Count -gt 0) 'Cold-checkout research did not ground any current-source path.'
     Assert-ColdCheckout ([string]$research.discovery.runtimeFlow.status -eq 'not-requested-json-baseline') 'Cold-checkout research attempted graph expansion in JSON mode.'
 
-    $backendPath = 'FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs'
+    $backendPath = 'Modules/Billing/Application/Commands/ProcessBillingWebhook/BillingWebhookEventProcessor.cs'
     $diff = Invoke-JsonFacade -Facade $facade -FacadeCommand diff -FacadeParameters @{
         ChangedPath = @($backendPath); Format = 'Json'; Limit = 3
     }

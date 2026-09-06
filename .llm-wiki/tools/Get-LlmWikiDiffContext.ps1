@@ -510,7 +510,7 @@ if ($scopes.Database) {
     $recommendedChecks.Add('dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj')
     $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1')
 }
-if ($scopes.Backend -and @($changedPaths | Where-Object { $_ -match '(^|/)(FoodDiary\.Domain|FoodDiary\.MailInbox\.Domain|FoodDiary\.MailRelay\.Domain)/' }).Count -gt 0) {
+if ($scopes.Backend -and @($changedPaths | Where-Object { $_ -match '(^|/)(FoodDiary\.Domain|FoodDiary\.MailInbox\.Domain|FoodDiary\.MailRelay\.Domain)/|^Modules/[^/]+/Domain/|^Shared/FoodDiary\.Domain\.Primitives/' }).Count -gt 0) {
     $generatedActions.Add('./.llm-wiki/tools/Build-LlmWikiDomainDataIndex.ps1')
 }
 if ($scopes.Backend -and @($changedPaths | Where-Object {

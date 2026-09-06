@@ -17,14 +17,14 @@ $cases = @(
     [pscustomobject]@{ Intent = 'Audit repository correctness reliability concurrency architecture privacy CI operations'; ProposedPath = @(); Compact = $true }
     [pscustomobject]@{
         Intent = 'Update user application behavior'
-        ProposedPath = @('FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs')
+        ProposedPath = @('Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs')
         Compact = $false
     }
     [pscustomobject]@{ Intent = 'Review a hosted service'; ProposedPath = @('MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs'); Compact = $false }
     [pscustomobject]@{ Intent = 'Review sensitive account data'; ProposedPath = @('Modules/Identity/Application/Abstractions/Authentication/Common/AccountCreatedMessage.cs'); Compact = $false }
     [pscustomobject]@{ Intent = 'Review an admin component contract'; ProposedPath = @('FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts'); Compact = $false }
     [pscustomobject]@{ Intent = 'Review a domain aggregate'; ProposedPath = @('Shared/FoodDiary.Domain.Primitives/AggregateRoot.cs'); Compact = $false }
-    [pscustomobject]@{ Intent = 'Review a backend command contract'; ProposedPath = @('FoodDiary.Application.Users/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs'); Compact = $false }
+    [pscustomobject]@{ Intent = 'Review a backend command contract'; ProposedPath = @('Modules/Users/Application/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs'); Compact = $false }
 )
 $sqlDurations = [Collections.Generic.List[double]]::new()
 $jsonDurations = [Collections.Generic.List[double]]::new()

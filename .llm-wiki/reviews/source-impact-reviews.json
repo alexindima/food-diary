@@ -221,7 +221,7 @@
       "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
       "baseRef": "HEAD",
       "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:40.7053940Z"
+      "reviewedAtUtc": "2026-09-06T14:57:40.705394Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -244,14 +244,14 @@
       "pageSha256": "23c1a9278403a636f6ec63e87fa3f5afd67333592db3e51c8c24dcb542ed6ec8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
         }
       ],
-      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
-      "reviewedAtUtc": "2026-09-06T18:02:59.7214229Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:52.75566Z"
     },
     {
       "pageId": "workflow-code-graph",
@@ -259,14 +259,26 @@
       "pageSha256": "8125215f523313db4f5d24a8398ee62bcbe5d6e2533066a2a1b5f53b12bd3491",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "a1cf4b79ef10c31f818bfaa6fa70281d50e949288895465b6afbde534a6c81d4"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1",
+          "sha256": "6f3036ea2211b7b1396303db49274b75c8c8aadafb6a07ff99682c7cd693fbc6"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
+          "sha256": "b11cc34134f7a771f90d0c28417340ecfb5543861aad6935c1c771ad13952e49"
         }
       ],
-      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
-      "reviewedAtUtc": "2026-09-06T18:02:59.9259757Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:53.3473111Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -305,13 +317,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "229b107140848b762408ba5062b63475fc97d6a0b509a23915bc4a0050fab3fe"
+          "sha256": "a1cf4b79ef10c31f818bfaa6fa70281d50e949288895465b6afbde534a6c81d4"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
         }
       ],
-      "reason": "Reviewed architecture, ADR, repository catalog, dependency rollout, runtime-impact and knowledge pages against the retired physical project, new shared projects, solution and Docker graph; descriptions match the coordinated-rebuild boundary.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "5b8f9a74230095e8e620b293634daf5ebed49992",
-      "reviewedAtUtc": "2026-09-04T21:33:16.1064166Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:53.9556261Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -443,14 +459,14 @@
       "pageSha256": "b8326a8fc44d9de804aa9a021771d97014a2ead8b3db08959f38add670525ba4",
       "sources": [
         {
-          "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "97362557b211aaa9e418e3b0afa71b729e0fb32bfb2a098a8a97437b89e57a61"
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:36.1464778Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:54.6041627Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -571,14 +587,14 @@
       "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
         }
       ],
-      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
-      "reviewedAtUtc": "2026-09-06T18:03:00.1688027Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:56.8473346Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -711,13 +727,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
+          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:40.5657700Z"
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "baseRef": "HEAD",
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:57.5105005Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -747,7 +763,7 @@
       "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
       "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
       "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:41.0967780Z"
+      "reviewedAtUtc": "2026-08-31T13:06:41.096778Z"
     },
     {
       "pageId": "workflow-privacy-review",
@@ -801,13 +817,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ceca5cf06bd648af8301b795177311f90f67fdb6759ac6c674f67e7f1c84924f"
+          "sha256": "5deac9c43536177327f46ac12370f9bead1ce7b7911483745236f71f10f022d2"
         }
       ],
-      "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
-      "reviewedAtUtc": "2026-09-06T17:13:38.0076273Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:58.3970093Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -883,14 +899,14 @@
       "pageSha256": "be8e261d7fdfddf0e283cb15cc99ec689bba8876b0f76794a40a01cdaea52b0d",
       "sources": [
         {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a290ce7b5040426edc1ae6aa555a77cb64d794aa26e7907c49f30feb00d53fe2"
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
         }
       ],
-      "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
-      "reviewedAtUtc": "2026-09-06T17:13:38.2304701Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:59.829177Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -899,17 +915,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ceca5cf06bd648af8301b795177311f90f67fdb6759ac6c674f67e7f1c84924f"
+          "sha256": "5deac9c43536177327f46ac12370f9bead1ce7b7911483745236f71f10f022d2"
         },
         {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "a290ce7b5040426edc1ae6aa555a77cb64d794aa26e7907c49f30feb00d53fe2"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "e5eda71918759308dfbf2d038bbf0e27eaedad404be7763292e0682663916441"
         }
       ],
-      "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
-      "reviewedAtUtc": "2026-09-06T17:13:38.6939035Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:32:00.6436202Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -932,14 +948,14 @@
       "pageSha256": "65f4d9ae72ac28fb74987f36e590addfb2bc44bac79e07844eaa04a52661e307",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
         }
       ],
-      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
-      "reviewedAtUtc": "2026-09-06T18:03:01.4740826Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:32:01.3252363Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -999,7 +1015,7 @@
       "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
       "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
       "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:44.2844430Z"
+      "reviewedAtUtc": "2026-08-31T13:06:44.284443Z"
     },
     {
       "pageId": "workflow-task-workspace",
@@ -1014,7 +1030,7 @@
       "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
       "baseRef": "HEAD",
       "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:42:12.4568250Z"
+      "reviewedAtUtc": "2026-09-01T14:42:12.456825Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1044,7 +1060,7 @@
       "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
       "baseRef": "HEAD",
       "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
-      "reviewedAtUtc": "2026-09-06T17:13:38.9614420Z"
+      "reviewedAtUtc": "2026-09-06T17:13:38.961442Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1052,14 +1068,14 @@
       "pageSha256": "368dfe1e9684ead7a5e3207edd05e55477d432ae1f9627814d62bfeb9559fb84",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "6a12c8e82a68b9b3ee77a0c893544614dfa921d4e6f9245c35156c419f7b9313"
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
         }
       ],
-      "reason": "Reviewed verification planning and quality workflow impact; selection rules, coverage invariants, priorities, and cost calculations are unchanged.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "e8f86dad52eef0eb1ae3c8283d2835eee463ed44",
-      "reviewedAtUtc": "2026-09-01T14:42:12.9514864Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:32:01.8348524Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
@@ -1097,14 +1113,14 @@
       "pageSha256": "50ed04637edde217df4523303843af0ba9259b09af6ed1903b66160fc32b97b8",
       "sources": [
         {
-          "path": ".llm-wiki/evals/cases.json",
-          "sha256": "29aba37db801a1f64f4611dfed9f4f1572c361fefb903efd05f0e5b1434545db"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
         }
       ],
-      "reason": "Reviewed current architecture, module-map, ownership and scoped-guide text against the final 32 module Presentation projects, one Presentation.Contracts project and the central Version-only kernel.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:48.8421043Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:55.2540646Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1113,13 +1129,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "de77a25a5550e840d6196a7bc15c400d063b3fac82fb2153f217e25aa4b65343"
+          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:37.8559169Z"
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "baseRef": "HEAD",
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:56.0374305Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",
@@ -1157,14 +1173,14 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "5905eedef807f38bd9e6c61e4dad5c5bfd87bb6c99b70b7f0155b45c7c3ad416"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
         }
       ],
-      "reason": "4971 unique scenarios in 54 physical test projects passed with zero failures/skips. Full build passes; PostgreSQL and HTTP suites ran once, and only five artifact-expectation failures were corrected with focused checks.",
+      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:09.4904280Z"
+      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
+      "reviewedAtUtc": "2026-09-06T19:31:59.1276895Z"
     }
   ]
 }

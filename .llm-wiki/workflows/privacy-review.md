@@ -74,7 +74,8 @@ authenticated linking request should remain in memory only. Do not place them
 in URLs, router state persisted across reloads, browser storage, logs,
 telemetry, queues, or error messages.
 
-The index also reports `externalTransfers`: integration clients that combine
+The index also reports `externalTransfers`: clients in module Infrastructure
+or legacy Integrations folders that combine
 an absolute external HTTP destination with image, prompt, description, text,
 food, nutrition, or similar sensitive parameters. Treat these entries as
 provider-sharing review leads. Verify the actual payload, consent, retention,

@@ -48,11 +48,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-      "nonBlankLines": 1001,
-      "decisionPoints": 139,
+      "nonBlankLines": 1002,
+      "decisionPoints": 138,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 230.52
+      "structuralRiskScore": 229.04
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
@@ -1002,11 +1002,11 @@
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-      "nonBlankLines": 1001,
-      "decisionPoints": 139,
+      "nonBlankLines": 1002,
+      "decisionPoints": 138,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 230.52
+      "structuralRiskScore": 229.04
     },
     {
       "path": ".llm-wiki/tools/Find-LlmWikiDomainData.ps1",

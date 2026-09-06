@@ -9,16 +9,16 @@ if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($repositoryRoot)) { thr
 $null = & $manager -Action build -Format Json
 
 $cases = @(
-    [pscustomobject]@{ ChangedPath = @('FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs'); MinimumSymbols = 1 }
-    [pscustomobject]@{ ChangedPath = @('FoodDiary.Presentation.Api/Features/Fasting/FastingController.cs'); MinimumSymbols = 1 }
+    [pscustomobject]@{ ChangedPath = @('Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs'); MinimumSymbols = 1 }
+    [pscustomobject]@{ ChangedPath = @('Modules/Fasting/Presentation/Features/Fasting/FastingController.cs'); MinimumSymbols = 1 }
     [pscustomobject]@{ ChangedPath = @(
-        'FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs'
-        'FoodDiary.Presentation.Api/Features/Fasting/FastingController.cs'
+        'Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs'
+        'Modules/Fasting/Presentation/Features/Fasting/FastingController.cs'
         'FoodDiary.Web.Api/appsettings.Production.json'
     ); MinimumSymbols = 2 }
     [pscustomobject]@{ ChangedPath = @('tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs'); MinimumSymbols = 0 }
     [pscustomobject]@{ ChangedPath = @(
-        'FoodDiary.Application.Users/FoodDiary.Application.Users.csproj'
+        'Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj'
         'docs/ARCHITECTURE.md'
     ); MinimumSymbols = 0 }
     [pscustomobject]@{ ChangedPath = @('FoodDiary.Web.Client/projects/fd-tour/src/lib/fd-tour-host.ts'); MinimumSymbols = 0; MinimumFrontendSymbols = 1 }

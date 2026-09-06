@@ -56,7 +56,8 @@ JSON result callers reuse an exact content-addressed result keyed by the query
 arguments, HEAD, relevant worktree paths, and the selected source dependencies.
 SQLite routes use the graph dependency fingerprint; explicit JSON baselines hash
 their generated source files. `-ScopePath` supplies the explicit cache boundary; `-Module` derives the
-corresponding application project paths. An unrelated edit no longer invalidates
+corresponding application project paths through the backend module map, including
+`Modules/<Module>/Application` and supported legacy layouts. An unrelated edit no longer invalidates
 the query, while an edit inside the scope or a dependent-index change does.
 Unchanged orchestration calls avoid querying and transporting catalog/symbol
 records again.

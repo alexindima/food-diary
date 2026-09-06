@@ -14,7 +14,7 @@
     "privateContent": 305,
     "boundaryFiles": 161,
     "potentialLoggingLeads": 1,
-    "externalTransferLeads": 0
+    "externalTransferLeads": 2
   },
   "fields": [
     {
@@ -10958,5 +10958,36 @@
       ]
     }
   ],
-  "externalTransfers": []
+  "externalTransfers": [
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+      "line": 208,
+      "providerHost": "api.openai.com",
+      "dataNames": [
+        "description",
+        "imageUrl",
+        "promptTemplate",
+        "text"
+      ],
+      "categories": [
+        "privateContent"
+      ],
+      "evidence": "External HttpClient destination and sensitive method parameters occur in the same integration client. Verify the runtime data flow in source."
+    },
+    {
+      "path": "Modules/Ai/Infrastructure/Providers/Services/OpenAi/OpenAiFoodClient.cs",
+      "line": 354,
+      "providerHost": "api.openai.com",
+      "dataNames": [
+        "description",
+        "imageUrl",
+        "promptTemplate",
+        "text"
+      ],
+      "categories": [
+        "privateContent"
+      ],
+      "evidence": "External HttpClient destination and sensitive method parameters occur in the same integration client. Verify the runtime data flow in source."
+    }
+  ]
 }

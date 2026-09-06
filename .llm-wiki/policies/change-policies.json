@@ -361,7 +361,8 @@
       "id": "domain-invariant",
       "description": "Domain entities and value objects require invariant and state-transition review.",
       "pathPatterns": [
-        "(^|/)(FoodDiary\\.(MailInbox\\.|MailRelay\\.)?Domain|FoodDiary\\.Domain|Shared/FoodDiary\\.Domain\\.Primitives)/.+\\.cs$"
+        "(^|/)(FoodDiary\\.(MailInbox\\.|MailRelay\\.)?Domain|FoodDiary\\.Domain|Shared/FoodDiary\\.Domain\\.Primitives)/.+\\.cs$",
+        "^Modules/[^/]+/Domain/.+\\.cs$"
       ],
       "excludePatterns": [],
       "requiredChecks": [],
