@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 

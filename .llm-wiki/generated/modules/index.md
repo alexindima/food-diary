@@ -18,7 +18,7 @@ are reported separately; `none observed` never means proven isolation.
 
 | Module | Role | Business deps | Contract deps | App consumers | Host consumers | Enforcement |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
-| [Admin](admin.md) | orchestrator | 0 | 6 | 0 | 4 | assembly-isolated |
+| [Admin](admin.md) | orchestrator | 0 | 6 | 0 | 3 | assembly-isolated |
 | [Ai](ai.md) | aggregate-owner | 0 | 3 | 0 | 3 | assembly-isolated |
 | [Billing](billing.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [BodyMetrics](body-metrics.md) | aggregate-owner | 0 | 3 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
@@ -29,14 +29,14 @@ are reported separately; `none observed` never means proven isolation.
 | [Dietologist](dietologist.md) | aggregate-owner | 0 | 5 | 0 | 3 | project-reference-matrix |
 | [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix |
 | [Export](export.md) | read-composer | 0 | 4 | 0 | 4 | project-reference-matrix |
-| [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 0 | 4 | project-reference-matrix |
+| [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 0 | 3 | project-reference-matrix |
 | [Favorites](favorites.md) | aggregate-owner | 0 | 4 | 0 | 3 | project-reference-matrix |
 | [Gamification](gamification.md) | aggregate-owner | 0 | 3 | 0 | 3 | project-reference-matrix |
 | [Hydration](hydration.md) | aggregate-owner | 0 | 1 | 0 | 2 | project-reference-matrix |
 | [Identity](identity.md) | aggregate-owner | 0 | 5 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [Images](images.md) | aggregate-owner | 0 | 0 | 0 | 3 | project-reference-matrix |
 | [Lessons](lessons.md) | aggregate-owner | 0 | 2 | 0 | 2 | project-reference-matrix-and-module-boundary-tests |
-| [Marketing](marketing.md) | aggregate-owner | 0 | 1 | 0 | 4 | project-reference-matrix-and-module-boundary-tests |
+| [Marketing](marketing.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [MealPlanning](meal-planning.md) | aggregate-owner | 0 | 4 | 0 | 3 | project-reference-matrix |
 | [Meals](meals.md) | aggregate-owner | 0 | 8 | 0 | 0 | project-reference-matrix |
 | [Notifications](notifications.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix |

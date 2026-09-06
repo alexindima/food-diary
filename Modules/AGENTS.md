@@ -13,7 +13,7 @@ Rules for all logical modules under `Modules/`. A module-specific `AGENTS.md` ma
 - Keep middleware, environment configuration, authentication setup, Swagger configuration, telemetry exporters, and executable composition in `FoodDiary.Web.Api`.
 - Every module Presentation assembly must be registered explicitly by the Web API composition root so MVC controller discovery cannot depend on accidental transitive references.
 - Presentation projects must not reference Infrastructure or executable host projects.
-- Module-owned controller and HTTP-mapping tests belong under `Modules/<Module>/tests/` in a Presentation test project that references only the owning module Presentation assembly. Keep shared filters, binders, conventions, composite endpoints, and cross-module HTTP tests in the central Presentation test project.
+- Module-owned controller and HTTP-mapping tests belong under `Modules/<Module>/tests/` in a Presentation test project that references the owning module Presentation assembly and actual consumed narrow Contracts/Domain.Contracts owners listed in the exact dependency matrix. Keep shared filters, binders, conventions, composite endpoints, and cross-module HTTP tests in the central Presentation test project.
 
 ## Verification
 
@@ -32,3 +32,5 @@ relational constraints in PersistenceModel. Infrastructure reads foreign sets th
 immediate AsNoTracking projections and requests mutations through owner ports.
 FD0015 blocks foreign tracking/writes; FD0016 requires an exact reviewed fingerprint
 for shared-context save, transaction and tracker escape APIs. See ADR 0031.
+
+Application and Presentation projects never reference a foreign whole Application implementation. Actual cross-module requests/results belong to the owning Contracts project. Scalar Meals/Favorites IDs and Meals enums belong to their Domain.Contracts seams.

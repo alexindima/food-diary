@@ -19,7 +19,7 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Notifications, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Admin.Presentation, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
@@ -41,13 +41,13 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FastingPlan, FastingOccurrence, FastingCheckIn, FastingSession, FastingTelemetryEvent
-- Public contract files: 35
-- Observed external consumer groups: 4
+- Public contract files: 36
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 35
+- Public contract types: 36
 - Interfaces: 21
 - DTO/read-model/projection types: 12
 - Enums: 0
@@ -83,7 +83,7 @@ No literal attribute-routed controller was associated with this module.
 - `record FastingOccurrenceReadModel`
 - `record FastingOverviewModel`
 - `record FastingPlanReadModel`
-- ... 5 more type(s)
+- ... 6 more type(s)
 
 ## Focused Tests
 

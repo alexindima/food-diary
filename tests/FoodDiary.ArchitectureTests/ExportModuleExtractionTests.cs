@@ -16,7 +16,7 @@ public sealed class ExportModuleExtractionTests {
     public void ExtractedExportAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Export/Application/FoodDiary.Modules.Export.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Authentication.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.Export.Application.Abstractions", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Authentication.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Cycles.Application.Abstractions", "FoodDiary.Modules.Cycles.Contracts", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.Export.Application.Abstractions", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], references);
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public sealed class ExportModuleExtractionTests {
     public void ExportPdfAdapter_IsOwnedByModuleWithoutCentralInfrastructureDependency() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Export/Infrastructure/FoodDiary.Modules.Export.Infrastructure.csproj");
-        Assert.Equal(["FoodDiary.Modules.Export.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain"], references);
+        Assert.Equal(["FoodDiary.Modules.Export.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Meals.Domain.Contracts"], references);
         string legacyRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Services", "DiaryPdf");
         Assert.Empty(Directory.Exists(legacyRoot) ? SourceScanner.SourceFiles(legacyRoot) : []);
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "DependencyInjection.Export.cs")));

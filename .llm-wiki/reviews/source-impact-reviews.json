@@ -8,21 +8,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f8afe166cf0f765051b2fbdce9116af62060bcaaca362215b97570a28e745b70"
-        },
-        {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "b618de80f5ac300538975ec6f5addecfab7008f0d28a1c097700087582df7a3d"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "78eab927f2d36a389cc255107513692b7e95a7c3af1d69ae1cfc8cfb17a0ec41"
+          "sha256": "5905eedef807f38bd9e6c61e4dad5c5bfd87bb6c99b70b7f0155b45c7c3ad416"
         }
       ],
-      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
+      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:09.4341253Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:05.2747316Z"
     },
     {
       "pageId": "module.frontend",
@@ -65,21 +57,17 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "0d457da514e323b57fff7bb98a719c1fc4c6b1133110630cbe0d0b7bc37cfef0"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "78eab927f2d36a389cc255107513692b7e95a7c3af1d69ae1cfc8cfb17a0ec41"
+          "sha256": "a1c00cbd487bef19b33e97cdb60d93cf0868f55b096d565975129eb6fb813477"
         },
         {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "5a05779fea2e31d1ba08738e5c31c8dcf9f3c11ebefd26e0a557b06a7bf4b93c"
+          "sha256": "aa94360560dd6116807c3ffdf289072fa06fe8700487754d9531bd32f605e597"
         }
       ],
-      "reason": "ADR 0033 moves consumed query/DTO and administration interfaces into narrow packages with coordinated rebuilds. AI upsert returns the existing immutable read projection. Public routes, payloads and error mapping are preserved; all 182 HTTP integration contracts passed.",
+      "reason": "All 182 HTTP cases pass with unchanged snapshots; moved public request/result namespaces, signatures, defaults and enum values are preserved. Coordinated rebuilds are recorded in ADR 0034.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:09.6781429Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:05.5679247Z"
     },
     {
       "pageId": "system.architecture",
@@ -87,30 +75,18 @@
       "pageSha256": "aecbc40ebd932d3500222bca6a84cbdaefaa0a2adf07b24580e0557a329ca8f7",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "b618de80f5ac300538975ec6f5addecfab7008f0d28a1c097700087582df7a3d"
-        },
-        {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "0d457da514e323b57fff7bb98a719c1fc4c6b1133110630cbe0d0b7bc37cfef0"
-        },
-        {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "1f08c57d0f182efd719249d9b37391c3844e8c5d2be2aafebec5b890f13dd799"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "78eab927f2d36a389cc255107513692b7e95a7c3af1d69ae1cfc8cfb17a0ec41"
+          "sha256": "a1c00cbd487bef19b33e97cdb60d93cf0868f55b096d565975129eb6fb813477"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "93e86565a85edca31789a5f3bc0a0a9dab5dea7308b2664fa027fca029339966"
+          "sha256": "73b929057cc0fd3c14e508f74b594bc6adb31d9a7739c0c360a6c309d3e4d0c9"
         }
       ],
-      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
+      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:09.8054526Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:05.8738662Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -149,13 +125,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f8afe166cf0f765051b2fbdce9116af62060bcaaca362215b97570a28e745b70"
+          "sha256": "5905eedef807f38bd9e6c61e4dad5c5bfd87bb6c99b70b7f0155b45c7c3ad416"
         }
       ],
-      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
+      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:09.9624276Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:06.1503039Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -164,17 +140,13 @@
       "sources": [
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "0d457da514e323b57fff7bb98a719c1fc4c6b1133110630cbe0d0b7bc37cfef0"
-        },
-        {
-          "path": "docs/architecture/module-dependencies.json",
-          "sha256": "1f08c57d0f182efd719249d9b37391c3844e8c5d2be2aafebec5b890f13dd799"
+          "sha256": "a1c00cbd487bef19b33e97cdb60d93cf0868f55b096d565975129eb6fb813477"
         }
       ],
-      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
+      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:10.1085605Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:06.4610272Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -232,21 +204,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "3031925994890682242cb32183699708eb27a6ed1543e85765d9a8f249bdcd2d"
+          "sha256": "2bb62ce5ed01d8b4ecf8ab0501c74efce343c80cc0b32749b64f99766faa5a23"
         },
         {
           "path": "docs/architecture/backend-modules.json",
-          "sha256": "0d457da514e323b57fff7bb98a719c1fc4c6b1133110630cbe0d0b7bc37cfef0"
+          "sha256": "a1c00cbd487bef19b33e97cdb60d93cf0868f55b096d565975129eb6fb813477"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "93e86565a85edca31789a5f3bc0a0a9dab5dea7308b2664fa027fca029339966"
+          "sha256": "73b929057cc0fd3c14e508f74b594bc6adb31d9a7739c0c360a6c309d3e4d0c9"
         }
       ],
-      "reason": "Reviewed actual PostgreSQL fault injection, competing lease barriers, pretracked claim state, current-owner and revision checks, and InMemory query parity. Test corrections verify durable state instead of detached references. Exact matrices and zero foreign Application guard cover dependency changes.",
+      "reason": "4971 unique scenarios in 54 physical test projects passed with zero failures/skips. Full build passes; PostgreSQL and HTTP suites ran once, and only five artifact-expectation failures were corrected with focused checks.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:10.2642389Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:06.8043392Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -255,13 +227,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "210e87a8bacd650935043ee35d9afa6ada53c6ade2de4b6c7facaee042a565d1"
+          "sha256": "69b5158523dc876300ddccf337be09f4175a5fa2d646a451f815390b191bc4a9"
         }
       ],
-      "reason": "ADR 0033 moves consumed query/DTO and administration interfaces into narrow packages with coordinated rebuilds. AI upsert returns the existing immutable read projection. Public routes, payloads and error mapping are preserved; all 182 HTTP integration contracts passed.",
+      "reason": "All 182 HTTP cases pass with unchanged snapshots; moved public request/result namespaces, signatures, defaults and enum values are preserved. Coordinated rebuilds are recorded in ADR 0034.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:10.6785382Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:07.4893652Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -541,14 +513,18 @@
       "pageSha256": "eec649689629bae96ce92254c8ed0d45aba5ee6ea0e9cd8090a9eb45af26fc3b",
       "sources": [
         {
+          "path": ".llm-wiki/generated/domain-data-index.json",
+          "sha256": "f4f92aeb364ecfb47394dd9ea9d7ae7d261a113e69378c6402eb15ceab2ca7f4"
+        },
+        {
           "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "5a05779fea2e31d1ba08738e5c31c8dcf9f3c11ebefd26e0a557b06a7bf4b93c"
+          "sha256": "aa94360560dd6116807c3ffdf289072fa06fe8700487754d9531bd32f605e597"
         }
       ],
-      "reason": "Reviewed actual PostgreSQL fault injection, competing lease barriers, pretracked claim state, current-owner and revision checks, and InMemory query parity. Test corrections verify durable state instead of detached references. Exact matrices and zero foreign Application guard cover dependency changes.",
+      "reason": "4971 unique scenarios in 54 physical test projects passed with zero failures/skips. Full build passes; PostgreSQL and HTTP suites ran once, and only five artifact-expectation failures were corrected with focused checks.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:11.0012288Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:08.2100604Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -865,13 +841,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "be4e36d78274d7a3da0541d08b87f6c96e58230262bb360ba9ebfe16aad07188"
+          "sha256": "a849e15ac16798defb898c6a3bfea5ff71971d6b0246528e740eb18fda3ec810"
         }
       ],
-      "reason": "Reviewed actual PostgreSQL fault injection, competing lease barriers, pretracked claim state, current-owner and revision checks, and InMemory query parity. Test corrections verify durable state instead of detached references. Exact matrices and zero foreign Application guard cover dependency changes.",
+      "reason": "4971 unique scenarios in 54 physical test projects passed with zero failures/skips. Full build passes; PostgreSQL and HTTP suites ran once, and only five artifact-expectation failures were corrected with focused checks.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:11.6781050Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:08.6922257Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -948,13 +924,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7a4b2d36bad43033258959a09810b11ed5ee579fa369859e45798f95b494a037"
+          "sha256": "664d0a5228c9914e774ad94f78adba6182911079bce6ab14a9f768153e24833d"
         }
       ],
-      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
+      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:12.2592798Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:09.9208389Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -963,21 +939,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "be4e36d78274d7a3da0541d08b87f6c96e58230262bb360ba9ebfe16aad07188"
+          "sha256": "a849e15ac16798defb898c6a3bfea5ff71971d6b0246528e740eb18fda3ec810"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "7a4b2d36bad43033258959a09810b11ed5ee579fa369859e45798f95b494a037"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "54336abd99ff9f4a77a97574419c2a04d35cc98762feb6ed019f92c481bea21d"
+          "sha256": "664d0a5228c9914e774ad94f78adba6182911079bce6ab14a9f768153e24833d"
         }
       ],
-      "reason": "Reviewed claim-owner concurrency fencing across all four outboxes, Gamification revision SQL, retry isolation and unchanged OAuth/token persistence ordering. External callbacks are not inside retries; no new private logging or provider sharing.",
+      "reason": "Admin requests only the existing session revocation capability; owner authorization is preserved. Revision and original lease owner fence success/failure and safe logs follow durable save. No payload, retention or provider sharing change.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:12.6060150Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:10.5104444Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1151,13 +1123,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f8afe166cf0f765051b2fbdce9116af62060bcaaca362215b97570a28e745b70"
+          "sha256": "5905eedef807f38bd9e6c61e4dad5c5bfd87bb6c99b70b7f0155b45c7c3ad416"
         }
       ],
-      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
+      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:10.8498478Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:07.8441478Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1211,17 +1183,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "c792bb1c4b2075441505e246f7ab8dd95cf7ffef2d095afbf43ccad9592f0334"
+          "sha256": "01930d9d8f2e6db48112dc8958cd92da38aadefe4124fb9ca238bdcd51feca12"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "f8afe166cf0f765051b2fbdce9116af62060bcaaca362215b97570a28e745b70"
+          "sha256": "5905eedef807f38bd9e6c61e4dad5c5bfd87bb6c99b70b7f0155b45c7c3ad416"
         }
       ],
-      "reason": "ADR 0033, five contract guides, root guide links and architecture/module/testing docs describe ownership, metadata-only concurrency mapping and retirement of old workers before relying on fencing.",
+      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:11.8827105Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:09.1499601Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1230,13 +1202,13 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f8afe166cf0f765051b2fbdce9116af62060bcaaca362215b97570a28e745b70"
+          "sha256": "5905eedef807f38bd9e6c61e4dad5c5bfd87bb6c99b70b7f0155b45c7c3ad416"
         }
       ],
-      "reason": "Reviewed actual PostgreSQL fault injection, competing lease barriers, pretracked claim state, current-owner and revision checks, and InMemory query parity. Test corrections verify durable state instead of detached references. Exact matrices and zero foreign Application guard cover dependency changes.",
+      "reason": "4971 unique scenarios in 54 physical test projects passed with zero failures/skips. Full build passes; PostgreSQL and HTTP suites ran once, and only five artifact-expectation failures were corrected with focused checks.",
       "baseRef": "HEAD",
-      "gitHead": "f09740bf6f65e381753895dc46293bcefb2d4930",
-      "reviewedAtUtc": "2026-09-06T03:09:12.0608192Z"
+      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
+      "reviewedAtUtc": "2026-09-06T13:37:09.4904280Z"
     }
   ]
 }

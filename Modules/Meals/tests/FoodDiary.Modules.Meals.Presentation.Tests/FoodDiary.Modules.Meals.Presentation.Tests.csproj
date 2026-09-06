@@ -6,6 +6,8 @@
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../../Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
     <ProjectReference Include="../../Presentation/FoodDiary.Modules.Meals.Presentation.csproj" />
     <PackageReference Include="coverlet.collector" />

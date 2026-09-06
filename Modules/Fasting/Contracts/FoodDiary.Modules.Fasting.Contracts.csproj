@@ -3,9 +3,11 @@
   <PropertyGroup>
     <AssemblyName>FoodDiary.Modules.Fasting.Contracts</AssemblyName>
     <RootNamespace>FoodDiary.Modules.Fasting.Contracts</RootNamespace>
+    <NoWarn>$(NoWarn);IDE0130</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../../Shared/FoodDiary.Results/FoodDiary.Results.csproj" />
     <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />
   </ItemGroup>

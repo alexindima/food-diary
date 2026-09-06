@@ -5,10 +5,10 @@ public sealed class MealsModuleExtractionTests {
     [Theory]
     [InlineData(typeof(FoodDiary.Domain.Enums.MealType))]
     [InlineData(typeof(FoodDiary.Domain.Enums.AiRecognitionSource))]
-    public void MealEnums_AreOwnedOnlyByMealsDomain(Type enumType) {
-        Assert.Equal("FoodDiary.Modules.Meals.Domain", enumType.Assembly.GetName().Name);
+    public void MealEnums_AreOwnedOnlyByMealsDomainContractsContracts(Type enumType) {
+        Assert.Equal("FoodDiary.Modules.Meals.Domain.Contracts", enumType.Assembly.GetName().Name);
         Assert.Equal("FoodDiary.Domain.Enums", enumType.Namespace);
-        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain", "Enums", $"{enumType.Name}.cs")));
+        Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Meals", "Domain.Contracts", "Enums", $"{enumType.Name}.cs")));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", "Enums", $"{enumType.Name}.cs")));
     }
 
@@ -24,7 +24,7 @@ public sealed class MealsModuleExtractionTests {
     public void ExtractedMealsAssembly_HasOnlyApprovedProjectReferences() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
             "Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj");
-        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Favorites.Application.Abstractions", "FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Images.Service.Contracts", "FoodDiary.Modules.Meals.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Meals.Service.Contracts", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.RecentItems.Application.Abstractions", "FoodDiary.Modules.Recipes.Application.Abstractions", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Nutrition.Contracts"], references);
+        Assert.Equal(["FoodDiary.Application.Contracts", "FoodDiary.Mediator", "FoodDiary.Modules.Favorites.Application.Abstractions", "FoodDiary.Modules.Favorites.Contracts", "FoodDiary.Modules.Favorites.Domain.Contracts", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Images.Service.Contracts", "FoodDiary.Modules.Meals.Application.Abstractions", "FoodDiary.Modules.Meals.Contracts", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Meals.Service.Contracts", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.RecentItems.Application.Abstractions", "FoodDiary.Modules.Recipes.Application.Abstractions", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Nutrition.Contracts"], references);
     }
 
     [Fact]
@@ -64,13 +64,15 @@ public sealed class MealsModuleExtractionTests {
         ];
         foreach (string path in ownedFiles) {
             Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/" + path)), path);
-            Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules/Meals/Domain/" + path)), path);
+            string layer = path.StartsWith("ValueObjects/Ids/", StringComparison.Ordinal) || path.StartsWith("Enums/", StringComparison.Ordinal)
+                ? "Domain.Contracts" : "Domain";
+            Assert.True(File.Exists(ArchitectureTestPaths.FromRoot($"Modules/Meals/{layer}/{path}")), path);
         }
 
-        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Modules.Images.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Recipes.Domain.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
+        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Modules.Images.Contracts", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Recipes.Domain.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj"));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
-        Assert.Equal(["FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Products.Domain", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
+        Assert.Equal(["FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Products.Domain", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Meals/tests/FoodDiary.Modules.Meals.Domain.Tests/FoodDiary.Modules.Meals.Domain.Tests.csproj"));
     }
 

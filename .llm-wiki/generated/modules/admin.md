@@ -19,13 +19,14 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Ai, Audit, Authentication, Email, Lessons, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Identity.Presentation, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `Modules/Admin/Application`
 - `Modules/Admin/Application/Abstractions`
+- `Modules/Admin/Contracts`
 - `Modules/Admin/Domain`
 - `Modules/Admin/Infrastructure`
 - `Modules/Admin/Infrastructure/Integrations/MailInbox`
@@ -42,13 +43,13 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AdminImpersonationSession
-- Public contract files: 22
-- Observed external consumer groups: 4
+- Public contract files: 23
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 22
+- Public contract types: 23
 - Interfaces: 9
 - DTO/read-model/projection types: 11
 - Enums: 0
@@ -76,6 +77,7 @@ No literal attribute-routed controller was associated with this module.
 - `record AdminMailInboxMessageDetailsModel`
 - `record AdminMailInboxMessageSummaryModel`
 - `record AdminUserRoleAuditEventReadModel`
+- `record ExchangeAdminImpersonationCommand`
 
 ## Focused Tests
 

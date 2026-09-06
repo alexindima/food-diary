@@ -324,12 +324,6 @@ public class LayeringTests {
         string root = GetRepositoryRoot();
         string[] projectFiles = Directory.GetFiles(Path.Combine(root, "Modules"), "*.Presentation.csproj", SearchOption.AllDirectories);
         var allowedCrossModuleApplicationReferences = new HashSet<string>(StringComparer.Ordinal) {
-            "Admin -> FoodDiary.Application.Fasting",
-            "Admin -> FoodDiary.Modules.Fasting.Application",
-            "Admin -> FoodDiary.Modules.Fasting.Application.Abstractions",
-            "Admin -> FoodDiary.Application.Marketing",
-            "Identity -> FoodDiary.Application.Admin",
-            "Identity -> FoodDiary.Modules.Admin.Application",
             "Users -> FoodDiary.Modules.Dietologist.Presentation.Contracts",
         };
 

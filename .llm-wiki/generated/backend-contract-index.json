@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1082,
     "ambiguousContracts": 0,
-    "consumerEdges": 7811,
+    "consumerEdges": 7812,
     "productionConsumerEdges": 4626,
-    "testConsumerEdges": 3185,
+    "testConsumerEdges": 3186,
     "consumedContracts": 1082,
     "unconsumedContracts": 0
   },
@@ -3388,7 +3388,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
+        "Modules/Admin/Contracts/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4884,7 +4884,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
+        "Modules/Fasting/Contracts/Telemetry/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -5309,7 +5309,7 @@
         "FoodDiary"
       ],
       "definitionPaths": [
-        "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs"
+        "Modules/Marketing/Contracts/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -31638,7 +31638,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
+        "Modules/Admin/Contracts/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
@@ -31651,7 +31651,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
+        "Modules/Admin/Contracts/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandValidator.cs",
@@ -31664,7 +31664,7 @@
         "Command"
       ],
       "definitionPaths": [
-        "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
+        "Modules/Admin/Contracts/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Presentation/Features/Auth/Mappings/AuthHttpMappings.cs",
@@ -37033,7 +37033,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
+        "Modules/Fasting/Contracts/Telemetry/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
@@ -37046,7 +37046,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
+        "Modules/Fasting/Contracts/Telemetry/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
@@ -37059,7 +37059,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
+        "Modules/Fasting/Contracts/Telemetry/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
@@ -37072,7 +37072,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
+        "Modules/Fasting/Contracts/Telemetry/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Fasting/tests/FoodDiary.Modules.Fasting.Presentation.Tests/FastingTelemetrySummaryServiceTests.cs",
@@ -38723,7 +38723,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs"
+        "Modules/Marketing/Contracts/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
@@ -38736,7 +38736,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs"
+        "Modules/Marketing/Contracts/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQueryHandler.cs",
@@ -38749,7 +38749,7 @@
         "Query"
       ],
       "definitionPaths": [
-        "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs"
+        "Modules/Marketing/Contracts/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs"
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs",
@@ -43892,6 +43892,19 @@
       "referenceCount": 7
     },
     {
+      "contract": "IAchievementEvaluationOutbox",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Gamification/Application/Abstractions/Achievements/Common/IAchievementEvaluationOutbox.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AchievementLeaseOwnershipIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IAchievementEvaluationOutboxProcessor",
       "roles": [
         "Other"
@@ -43941,7 +43954,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AchievementLeaseOwnershipIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IAchievementEvaluationOutboxProcessor",
@@ -44097,7 +44110,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AchievementLeaseOwnershipIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IAchievementReconciliationHandler",
@@ -49659,19 +49672,6 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ICommand",
-      "roles": [
-        "Command"
-      ],
-      "definitionPaths": [
-        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/ImportAdminLessons/ImportAdminLessonsCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -49803,6 +49803,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Commands/UpsertAdminEmailTemplate/UpsertAdminEmailTemplateCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Contracts/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -61801,7 +61814,7 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteMealId.cs",
+      "consumerPath": "Modules/Favorites/Domain.Contracts/ValueObjects/Ids/FavoriteMealId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -61814,7 +61827,7 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteProductId.cs",
+      "consumerPath": "Modules/Favorites/Domain.Contracts/ValueObjects/Ids/FavoriteProductId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -61827,7 +61840,7 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteRecipeId.cs",
+      "consumerPath": "Modules/Favorites/Domain.Contracts/ValueObjects/Ids/FavoriteRecipeId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62009,7 +62022,7 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Domain/ValueObjects/Ids/MealAiItemId.cs",
+      "consumerPath": "Modules/Meals/Domain.Contracts/ValueObjects/Ids/MealAiItemId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62022,7 +62035,7 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Domain/ValueObjects/Ids/MealAiSessionId.cs",
+      "consumerPath": "Modules/Meals/Domain.Contracts/ValueObjects/Ids/MealAiSessionId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62035,7 +62048,7 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Domain/ValueObjects/Ids/MealId.cs",
+      "consumerPath": "Modules/Meals/Domain.Contracts/ValueObjects/Ids/MealId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -62048,7 +62061,7 @@
         "Shared/FoodDiary.Domain.Primitives/IEntityId.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Meals/Domain/ValueObjects/Ids/MealItemId.cs",
+      "consumerPath": "Modules/Meals/Domain.Contracts/ValueObjects/Ids/MealItemId.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -79701,7 +79714,7 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs",
+      "consumerPath": "Modules/Fasting/Contracts/Telemetry/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -85551,19 +85564,6 @@
         "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Application/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "IRefreshTokenSessionWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
       "isTest": false,
       "referenceCount": 1
@@ -85671,19 +85671,6 @@
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
-    },
-    {
-      "contract": "IRefreshTokenSessionWriteRepository",
-      "roles": [
-        "WriteRepository"
-      ],
-      "definitionPaths": [
-        "Modules/Identity/Application/Abstractions/Authentication/Common/IRefreshTokenSessionWriteRepository.cs"
-      ],
-      "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
-      "isTest": true,
-      "referenceCount": 5
     },
     {
       "contract": "IRefreshTokenSessionWriteRepository",
@@ -86292,7 +86279,7 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs",
+      "consumerPath": "Modules/Marketing/Contracts/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -98382,6 +98369,19 @@
         "Modules/Users/Contracts/Users/Common/IUserSessionRevocationService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IUserSessionRevocationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserSessionRevocationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
       "isTest": false,
       "referenceCount": 1
@@ -98437,6 +98437,19 @@
       "consumerPath": "Modules/Users/Application/Commands/SetPassword/SetPasswordCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IUserSessionRevocationService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Users/Contracts/Users/Common/IUserSessionRevocationService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.UserCommandTests.cs",
+      "isTest": true,
+      "referenceCount": 10
     },
     {
       "contract": "IUserSessionRevocationService",

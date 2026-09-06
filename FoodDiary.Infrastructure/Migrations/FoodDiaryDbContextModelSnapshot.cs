@@ -4070,6 +4070,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("timestamp with time zone");
 
                 b.Property<long>("Revision")
+                        .IsConcurrencyToken()
                     .HasColumnType("bigint");
 
                 b.Property<Guid>("UserId")

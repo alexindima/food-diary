@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><RootNamespace>FoodDiary.Application.Abstractions</RootNamespace></PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="..\..\Domain\FoodDiary.Modules.MealPlanning.Domain.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />

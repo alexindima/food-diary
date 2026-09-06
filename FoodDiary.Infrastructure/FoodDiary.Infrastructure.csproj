@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <ProjectReference Include="../Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Audit.PersistenceModel/FoodDiary.Audit.PersistenceModel.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Email.PersistenceModel/FoodDiary.Email.PersistenceModel.csproj" />
     <ProjectReference Include="../Shared/FoodDiary.Outbox.PersistenceModel/FoodDiary.Outbox.PersistenceModel.csproj" />

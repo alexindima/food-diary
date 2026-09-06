@@ -20,7 +20,7 @@ public static class OutboxProcessingEngine {
         ILogger logger,
         IQueryable<TMessage>? claimedQuery = null,
         CancellationToken cancellationToken = default,
-        Func<TMessage, DateTime, CancellationToken, Task<OutboxCompletionResult>>? tryMarkProcessedAsync = null)
+        Func<TMessage, CancellationToken, Task<OutboxCompletionResult>>? tryReleaseUpdatedRevisionAsync = null)
         where TMessage : class, IOutboxMessage {
         if (batchSize <= 0) {
             return 0;
@@ -62,7 +62,7 @@ public static class OutboxProcessingEngine {
                         dispatchAsync,
                         messageIdentity,
                         logger,
-                        tryMarkProcessedAsync,
+                        tryReleaseUpdatedRevisionAsync,
                         cancellationToken).ConfigureAwait(false)) {
                     processed++;
                 }
@@ -91,42 +91,46 @@ public static class OutboxProcessingEngine {
         Func<TMessage, CancellationToken, Task> dispatchAsync,
         Func<TMessage, object?> messageIdentity,
         ILogger logger,
-        Func<TMessage, DateTime, CancellationToken, Task<OutboxCompletionResult>>? tryMarkProcessedAsync,
+        Func<TMessage, CancellationToken, Task<OutboxCompletionResult>>? tryReleaseUpdatedRevisionAsync,
         CancellationToken cancellationToken)
         where TMessage : class, IOutboxMessage {
         string outcome;
+        Exception? dispatchFailure = null;
         try {
             using var dispatchTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             dispatchTimeout.CancelAfter(options.DispatchTimeout);
             await dispatchAsync(message, dispatchTimeout.Token).ConfigureAwait(false);
-            DateTime processedOnUtc = timeProvider.GetUtcNow().UtcDateTime;
-            OutboxCompletionResult completion = tryMarkProcessedAsync is null
-                ? MarkProcessed(message, processedOnUtc)
-                : await tryMarkProcessedAsync(message, processedOnUtc, dispatchTimeout.Token).ConfigureAwait(false);
-            if (completion == OutboxCompletionResult.ClaimLost) {
-                return ReleaseLostClaim(context, outboxName);
-            }
-            outcome = completion == OutboxCompletionResult.Processed ? "processed" : "requeued";
+            message.MarkProcessed(timeProvider.GetUtcNow().UtcDateTime);
+            outcome = "processed";
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
         } catch (OperationCanceledException ex) {
             InfrastructureTelemetry.RecordOutboxMessages(outboxName, "dispatch_timeout", 1);
-            outcome = HandleFailure(
-                message,
-                new TimeoutException("Outbox dispatch exceeded its configured time budget.", ex),
-                outboxName,
-                messageIdentity,
-                timeProvider,
-                logger);
+            dispatchFailure = new TimeoutException("Outbox dispatch exceeded its configured time budget.", ex);
+            outcome = ApplyFailure(message, dispatchFailure, timeProvider);
         } catch (Exception ex) {
-            outcome = HandleFailure(message, ex, outboxName, messageIdentity, timeProvider, logger);
+            dispatchFailure = ex;
+            outcome = ApplyFailure(message, ex, timeProvider);
         }
 
         using var finalizationTimeout = new CancellationTokenSource(options.FinalizationTimeout);
         try {
             await context.SaveChangesAsync(finalizationTimeout.Token).ConfigureAwait(false);
         } catch (DbUpdateConcurrencyException exception) when (exception.Entries.Any(entry => ReferenceEquals(entry.Entity, message))) {
-            return ReleaseLostClaim(context, outboxName);
+            if (tryReleaseUpdatedRevisionAsync is null ||
+                await tryReleaseUpdatedRevisionAsync(message, finalizationTimeout.Token).ConfigureAwait(false) != OutboxCompletionResult.Requeued) {
+                return ReleaseLostClaim(context, outboxName);
+            }
+            try {
+                await context.SaveChangesAsync(finalizationTimeout.Token).ConfigureAwait(false);
+            } catch (DbUpdateConcurrencyException) {
+                return ReleaseLostClaim(context, outboxName);
+            }
+            outcome = "requeued";
+            dispatchFailure = null;
+        }
+        if (dispatchFailure is not null) {
+            LogFailure(message, dispatchFailure, outboxName, messageIdentity, logger);
         }
         RecordOutcome(outboxName, outcome);
         context.ChangeTracker.Clear();
@@ -158,42 +162,34 @@ public static class OutboxProcessingEngine {
         return false;
     }
 
-    private static OutboxCompletionResult MarkProcessed<TMessage>(TMessage message, DateTime processedOnUtc)
-        where TMessage : IOutboxMessage {
-        message.MarkProcessed(processedOnUtc);
-        return OutboxCompletionResult.Processed;
-    }
-
-    private static string HandleFailure<TMessage>(
-        TMessage message,
-        Exception exception,
-        string outboxName,
-        Func<TMessage, object?> messageIdentity,
-        TimeProvider timeProvider,
-        ILogger logger)
+    private static string ApplyFailure<TMessage>(TMessage message, Exception exception, TimeProvider timeProvider)
         where TMessage : IOutboxMessage {
         int attemptCount = message.AttemptCount + 1;
         string error = OutboxProcessingPolicy.FormatSafeError(exception);
         DateTime failedOnUtc = timeProvider.GetUtcNow().UtcDateTime;
         if (OutboxProcessingPolicy.ShouldDeadLetter(attemptCount)) {
             message.MarkDeadLettered(error, failedOnUtc);
-            logger.LogError(
-                "{OutboxName} outbox dead-lettered {MessageIdentity} after {AttemptCount} attempts. ErrorType={ErrorType}",
-                outboxName,
-                messageIdentity(message),
-                message.AttemptCount,
-                exception.GetType().Name);
             return "dead_lettered";
         }
-
         message.MarkFailed(error, failedOnUtc.Add(OutboxProcessingPolicy.CalculateRetryDelay(attemptCount)));
+        return "retried";
+    }
+
+    private static void LogFailure<TMessage>(
+        TMessage message,
+        Exception exception,
+        string outboxName,
+        Func<TMessage, object?> messageIdentity,
+        ILogger logger)
+        where TMessage : IOutboxMessage {
+        if (message.DeadLetteredOnUtc is not null) {
+            logger.LogError(
+                "{OutboxName} outbox dead-lettered {MessageIdentity} after {AttemptCount} attempts. ErrorType={ErrorType}",
+                outboxName, messageIdentity(message), message.AttemptCount, exception.GetType().Name);
+            return;
+        }
         logger.LogWarning(
             "{OutboxName} outbox failed for {MessageIdentity}. Attempt {AttemptCount} of {MaxAttemptCount}. ErrorType={ErrorType}",
-            outboxName,
-            messageIdentity(message),
-            message.AttemptCount,
-            OutboxProcessingPolicy.MaxAttemptCount,
-            exception.GetType().Name);
-        return "retried";
+            outboxName, messageIdentity(message), message.AttemptCount, OutboxProcessingPolicy.MaxAttemptCount, exception.GetType().Name);
     }
 }

@@ -13,3 +13,5 @@ Keep scalar product/recipe/image IDs and nutrition snapshots unchanged.
 User ownership: reference Users Domain.Contracts for UserId and shared user values. Keep foreign keys scalar; foreign aggregate CLR navigations are prohibited. PersistenceModel preserves the relational constraints with typed HasOne<T>() mappings.
 
 Generic DomainGuard belongs to FoodDiary.Domain.Primitives, referenced directly. Central Domain grants no friend access.
+
+Stable IDs and all five Meals enums now live in Domain.Contracts. Aggregate state, invariants, entities and events stay in Domain; reference the scalar owner explicitly.

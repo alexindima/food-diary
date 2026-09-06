@@ -3,8 +3,8 @@
     <RootNamespace>FoodDiary.Modules.MealPlanning.Infrastructure.Model</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Products/Domain/FoodDiary.Modules.Products.Domain.csproj" />
-    <ProjectReference Include="../../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="..\..\Domain\FoodDiary.Modules.MealPlanning.Domain.csproj" />
     <ProjectReference Include="../../../Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
     <ProjectReference Include="../../../Users/Domain/FoodDiary.Modules.Users.Domain.csproj" />

@@ -3891,13 +3891,6 @@
       "line": 7
     },
     {
-      "name": "ExchangeAdminImpersonationCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs",
-      "line": 5
-    },
-    {
       "name": "ExchangeAdminImpersonationCommandHandler",
       "kind": "class",
       "role": "CommandHandler",
@@ -4007,7 +4000,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "SetAdminUserPasswordCommandValidator",
@@ -4736,6 +4729,13 @@
       "role": "Service",
       "path": "Modules/Admin/Application/Services/AdminUserReadService.cs",
       "line": 9
+    },
+    {
+      "name": "ExchangeAdminImpersonationCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Modules/Admin/Contracts/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommand.cs",
+      "line": 5
     },
     {
       "name": "AdminImpersonationSession",
@@ -11738,20 +11738,6 @@
       "line": 5
     },
     {
-      "name": "FastingTelemetryPresetSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Fasting/Application/Abstractions/Models/FastingTelemetryPresetSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "FastingTelemetrySummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Fasting/Application/Abstractions/Models/FastingTelemetrySummaryModel.cs",
-      "line": 2
-    },
-    {
       "name": "EndFastingCommand",
       "kind": "record",
       "role": "Command",
@@ -12067,13 +12053,6 @@
       "line": 4
     },
     {
-      "name": "GetFastingTelemetrySummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/Fasting/Application/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs",
-      "line": 5
-    },
-    {
       "name": "GetFastingTelemetrySummaryQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
@@ -12331,6 +12310,27 @@
       "role": "Other",
       "path": "Modules/Fasting/Contracts/Read/Models/FastingStatsModel.cs",
       "line": 2
+    },
+    {
+      "name": "FastingTelemetryPresetSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Contracts/Telemetry/Models/FastingTelemetryPresetSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "FastingTelemetrySummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Contracts/Telemetry/Models/FastingTelemetrySummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetFastingTelemetrySummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Fasting/Contracts/Telemetry/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs",
+      "line": 6
     },
     {
       "name": "FastingCheckIn",
@@ -13180,6 +13180,27 @@
       "line": 2
     },
     {
+      "name": "FavoriteMealId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Favorites/Domain.Contracts/ValueObjects/Ids/FavoriteMealId.cs",
+      "line": 4
+    },
+    {
+      "name": "FavoriteProductId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Favorites/Domain.Contracts/ValueObjects/Ids/FavoriteProductId.cs",
+      "line": 4
+    },
+    {
+      "name": "FavoriteRecipeId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Favorites/Domain.Contracts/ValueObjects/Ids/FavoriteRecipeId.cs",
+      "line": 4
+    },
+    {
       "name": "FavoriteMeal",
       "kind": "class",
       "role": "Entity",
@@ -13199,27 +13220,6 @@
       "role": "Entity",
       "path": "Modules/Favorites/Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
       "line": 5
-    },
-    {
-      "name": "FavoriteMealId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteMealId.cs",
-      "line": 4
-    },
-    {
-      "name": "FavoriteProductId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteProductId.cs",
-      "line": 4
-    },
-    {
-      "name": "FavoriteRecipeId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteRecipeId.cs",
-      "line": 4
     },
     {
       "name": "FavoriteMealConfiguration",
@@ -16169,34 +16169,6 @@
       "line": 8
     },
     {
-      "name": "MarketingAttributionBreakdownModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Marketing/Application/Models/MarketingAttributionBreakdownModel.cs",
-      "line": 2
-    },
-    {
-      "name": "MarketingAttributionRecentEventModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Marketing/Application/Models/MarketingAttributionRecentEventModel.cs",
-      "line": 2
-    },
-    {
-      "name": "MarketingAttributionSummaryModel",
-      "kind": "record",
-      "role": "Other",
-      "path": "Modules/Marketing/Application/Models/MarketingAttributionSummaryModel.cs",
-      "line": 2
-    },
-    {
-      "name": "GetMarketingAttributionSummaryQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs",
-      "line": 6
-    },
-    {
       "name": "GetMarketingAttributionSummaryQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
@@ -16222,6 +16194,34 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Marketing/Application/Services/MarketingConversionRecorder.cs",
+      "line": 6
+    },
+    {
+      "name": "MarketingAttributionBreakdownModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Contracts/Models/MarketingAttributionBreakdownModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionRecentEventModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Contracts/Models/MarketingAttributionRecentEventModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionSummaryModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Contracts/Models/MarketingAttributionSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "GetMarketingAttributionSummaryQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Marketing/Contracts/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQuery.cs",
       "line": 6
     },
     {
@@ -17688,6 +17688,69 @@
       "line": 4
     },
     {
+      "name": "AiRecognitionSource",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Meals/Domain.Contracts/Enums/AiRecognitionSource.cs",
+      "line": 2
+    },
+    {
+      "name": "MealAiItemResolution",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Meals/Domain.Contracts/Enums/MealAiItemResolution.cs",
+      "line": 2
+    },
+    {
+      "name": "MealAiSessionStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Meals/Domain.Contracts/Enums/MealAiSessionStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "MealItemOrigin",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Meals/Domain.Contracts/Enums/MealItemOrigin.cs",
+      "line": 2
+    },
+    {
+      "name": "MealType",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Modules/Meals/Domain.Contracts/Enums/MealType.cs",
+      "line": 2
+    },
+    {
+      "name": "MealAiItemId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Meals/Domain.Contracts/ValueObjects/Ids/MealAiItemId.cs",
+      "line": 4
+    },
+    {
+      "name": "MealAiSessionId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Meals/Domain.Contracts/ValueObjects/Ids/MealAiSessionId.cs",
+      "line": 4
+    },
+    {
+      "name": "MealId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Meals/Domain.Contracts/ValueObjects/Ids/MealId.cs",
+      "line": 4
+    },
+    {
+      "name": "MealItemId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Meals/Domain.Contracts/ValueObjects/Ids/MealItemId.cs",
+      "line": 4
+    },
+    {
       "name": "Meal",
       "kind": "class",
       "role": "Entity",
@@ -17723,74 +17786,11 @@
       "line": 7
     },
     {
-      "name": "AiRecognitionSource",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Meals/Domain/Enums/AiRecognitionSource.cs",
-      "line": 2
-    },
-    {
-      "name": "MealAiItemResolution",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Meals/Domain/Enums/MealAiItemResolution.cs",
-      "line": 2
-    },
-    {
-      "name": "MealAiSessionStatus",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Meals/Domain/Enums/MealAiSessionStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "MealItemOrigin",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Meals/Domain/Enums/MealItemOrigin.cs",
-      "line": 2
-    },
-    {
-      "name": "MealType",
-      "kind": "enum",
-      "role": "Other",
-      "path": "Modules/Meals/Domain/Enums/MealType.cs",
-      "line": 2
-    },
-    {
       "name": "MealNutritionAppliedDomainEvent",
       "kind": "record",
       "role": "Event",
       "path": "Modules/Meals/Domain/Events/MealNutritionAppliedDomainEvent.cs",
       "line": 5
-    },
-    {
-      "name": "MealAiItemId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Meals/Domain/ValueObjects/Ids/MealAiItemId.cs",
-      "line": 4
-    },
-    {
-      "name": "MealAiSessionId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Meals/Domain/ValueObjects/Ids/MealAiSessionId.cs",
-      "line": 4
-    },
-    {
-      "name": "MealId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Meals/Domain/ValueObjects/Ids/MealId.cs",
-      "line": 4
-    },
-    {
-      "name": "MealItemId",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Meals/Domain/ValueObjects/Ids/MealItemId.cs",
-      "line": 4
     },
     {
       "name": "MealAiItemState",

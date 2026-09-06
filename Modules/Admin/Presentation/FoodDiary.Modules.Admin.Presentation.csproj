@@ -5,11 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj" />
+    <ProjectReference Include="../../Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj" />
     <ProjectReference Include="../../Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
-    <ProjectReference Include="../../Fasting/Application/FoodDiary.Modules.Fasting.Application.csproj" />
-    <ProjectReference Include="../../Fasting/Application/Abstractions/FoodDiary.Modules.Fasting.Application.Abstractions.csproj" />
-    <ProjectReference Include="../../Marketing/Application/FoodDiary.Application.Marketing.csproj" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Asp.Versioning.Mvc" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />

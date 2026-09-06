@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1301,
+    "productionProjectEdges": 1342,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -5052,7 +5052,7 @@
     },
     {
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs",
-      "line": 51,
+      "line": 49,
       "marker": "#pragma warning disable"
     }
   ]

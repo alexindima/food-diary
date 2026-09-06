@@ -21,3 +21,5 @@ Rules for `Modules/Admin/Application/`.
 
 - Register application handlers via AddAdminApplication; hosts use Infrastructure AddAdminModule.
 - Keep legacy FoodDiary.Application.Admin AssemblyName and CLR namespaces.
+
+Password reset requests session revocation through Users Contracts IUserSessionRevocationService. Admin must not acquire Identity session repository writes; Identity supplies the existing scoped implementation.

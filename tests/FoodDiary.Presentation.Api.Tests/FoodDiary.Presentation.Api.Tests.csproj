@@ -6,6 +6,9 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../../Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj" />
+    <ProjectReference Include="../../Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Modules/Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
     <ProjectReference Include="../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />

@@ -186,6 +186,10 @@ COPY Modules/ContentReports/Infrastructure/*.csproj Modules/ContentReports/Infra
 COPY Modules/ContentReports/Infrastructure/Model/*.csproj Modules/ContentReports/Infrastructure/Model/
 COPY Modules/Gamification/Application/*.csproj Modules/Gamification/Application/
 COPY Modules/Gamification/Contracts/*.csproj Modules/Gamification/Contracts/
+COPY Modules/Favorites/Domain.Contracts/*.csproj Modules/Favorites/Domain.Contracts/
+COPY Modules/Meals/Domain.Contracts/*.csproj Modules/Meals/Domain.Contracts/
+COPY Modules/Marketing/Contracts/*.csproj Modules/Marketing/Contracts/
+COPY Modules/Admin/Contracts/*.csproj Modules/Admin/Contracts/
 COPY Modules/Gamification/Application/Abstractions/*.csproj Modules/Gamification/Application/Abstractions/
 COPY Modules/Gamification/Domain/*.csproj Modules/Gamification/Domain/
 COPY Modules/Gamification/Infrastructure/*.csproj Modules/Gamification/Infrastructure/
@@ -394,6 +398,10 @@ COPY Modules/ContentReports/Infrastructure/Model/ Modules/ContentReports/Infrast
 COPY Modules/Gamification/ Modules/Gamification/
 COPY Modules/Gamification/Application/ Modules/Gamification/Application/
 COPY Modules/Gamification/Contracts/ Modules/Gamification/Contracts/
+COPY Modules/Favorites/Domain.Contracts/ Modules/Favorites/Domain.Contracts/
+COPY Modules/Meals/Domain.Contracts/ Modules/Meals/Domain.Contracts/
+COPY Modules/Marketing/Contracts/ Modules/Marketing/Contracts/
+COPY Modules/Admin/Contracts/ Modules/Admin/Contracts/
 COPY Modules/Gamification/Application/Abstractions/ Modules/Gamification/Application/Abstractions/
 COPY Modules/Gamification/Domain/ Modules/Gamification/Domain/
 COPY Modules/Gamification/Infrastructure/ Modules/Gamification/Infrastructure/

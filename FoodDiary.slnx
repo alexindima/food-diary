@@ -140,6 +140,7 @@
     <Project Path="Modules/OpenFoodFacts/tests/FoodDiary.Modules.OpenFoodFacts.Presentation.Tests/FoodDiary.Modules.OpenFoodFacts.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Marketing/">
+    <Project Path="Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj" />
     <Project Path="Modules/Marketing/Application/Abstractions/FoodDiary.Modules.Marketing.Application.Abstractions.csproj" />
     <Project Path="Modules/Marketing/Application/FoodDiary.Application.Marketing.csproj" />
     <Project Path="Modules/Marketing/Domain/FoodDiary.Modules.Marketing.Domain.csproj" />
@@ -214,6 +215,7 @@
     <Project Path="Modules/DailyAdvices/tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests/FoodDiary.Modules.DailyAdvices.Infrastructure.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Favorites/">
+    <Project Path="Modules/Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <Project Path="Modules/Favorites/Application/Abstractions/FoodDiary.Modules.Favorites.Application.Abstractions.csproj" />
     <Project Path="Modules/Favorites/Contracts/FoodDiary.Modules.Favorites.Contracts.csproj" />
     <Project Path="Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj" />
@@ -526,6 +528,7 @@
     <Project Path="Modules/Recipes/tests/FoodDiary.Modules.Recipes.Presentation.Tests/FoodDiary.Modules.Recipes.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Admin/">
+    <Project Path="Modules/Admin/Contracts/FoodDiary.Modules.Admin.Contracts.csproj" />
     <Project Path="Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
     <Project Path="Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
     <Project Path="Modules/Admin/Domain/FoodDiary.Modules.Admin.Domain.csproj" />
@@ -561,6 +564,7 @@
     <Project Path="Modules/Products/tests/FoodDiary.Modules.Products.Presentation.Tests/FoodDiary.Modules.Products.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Modules/Meals/">
+    <Project Path="Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <Project Path="Modules/Meals/Service.Contracts/FoodDiary.Modules.Meals.Service.Contracts.csproj" />
     <Project Path="Modules/Meals/Application/Abstractions/FoodDiary.Modules.Meals.Application.Abstractions.csproj" />
     <Project Path="Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj" />

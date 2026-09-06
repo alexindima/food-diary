@@ -26,48 +26,32 @@ internal sealed class AchievementEvaluationOutboxProcessor(
             static message => message.UserId.Value,
             logger,
             cancellationToken: cancellationToken,
-            tryMarkProcessedAsync: TryMarkProcessedAsync);
+            tryReleaseUpdatedRevisionAsync: TryReleaseUpdatedRevisionAsync);
 
-    private async Task<OutboxCompletionResult> TryMarkProcessedAsync(
+    private async Task<OutboxCompletionResult> TryReleaseUpdatedRevisionAsync(
         AchievementEvaluationOutboxMessage message,
-        DateTime processedOnUtc,
         CancellationToken cancellationToken) {
-        long claimedRevision = message.Revision;
-        string? claimedBy = message.LockedBy;
+        // Finalization clears the current lease; fencing must use the originally claimed values.
+        long claimedRevision = context.Entry(message).OriginalValues.GetValue<long>(nameof(message.Revision));
+        string? claimedBy = context.Entry(message).OriginalValues.GetValue<string?>(nameof(message.LockedBy));
+        context.ChangeTracker.Clear();
         if (!context.Database.IsRelational()) {
-            await context.Entry(message).ReloadAsync(cancellationToken).ConfigureAwait(false);
-            if (!string.Equals(message.LockedBy, claimedBy, StringComparison.Ordinal)) {
+            AchievementEvaluationOutboxMessage? current = await context.AchievementEvaluationOutbox
+                .SingleOrDefaultAsync(candidate => candidate.Id == message.Id, cancellationToken).ConfigureAwait(false);
+            if (current is null || current.Revision == claimedRevision ||
+                !string.Equals(current.LockedBy, claimedBy, StringComparison.Ordinal)) {
                 return OutboxCompletionResult.ClaimLost;
             }
-            if (message.Revision != claimedRevision) {
-                message.ReleaseForUpdatedRevision();
-                return OutboxCompletionResult.Requeued;
-            }
-
-            message.MarkProcessed(processedOnUtc);
-            return OutboxCompletionResult.Processed;
+            current.ReleaseForUpdatedRevision();
+            return OutboxCompletionResult.Requeued;
         }
 
 #pragma warning disable MA0076
-        int completed = await context.Database.ExecuteSqlInterpolatedAsync(
-            $"""
-            UPDATE "AchievementEvaluationOutbox"
-            SET "ProcessedOnUtc" = {processedOnUtc},
-                "LockedUntilUtc" = NULL,
-                "LockedBy" = NULL,
-                "LastError" = NULL
-            WHERE "Id" = {message.Id} AND "Revision" = {claimedRevision} AND "LockedBy" = {claimedBy}
-            """,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
-        if (completed == 1) {
-            return OutboxCompletionResult.Processed;
-        }
-
         int released = await context.Database.ExecuteSqlInterpolatedAsync(
             $"""
             UPDATE "AchievementEvaluationOutbox"
             SET "LockedUntilUtc" = NULL, "LockedBy" = NULL
-            WHERE "Id" = {message.Id} AND "LockedBy" = {claimedBy}
+            WHERE "Id" = {message.Id} AND "LockedBy" = {claimedBy} AND "Revision" <> {claimedRevision}
             """,
             cancellationToken: cancellationToken).ConfigureAwait(false);
 #pragma warning restore MA0076

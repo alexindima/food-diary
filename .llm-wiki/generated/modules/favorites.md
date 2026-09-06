@@ -28,6 +28,7 @@ sources:
 - `Modules/Favorites/Application/Abstractions`
 - `Modules/Favorites/Contracts`
 - `Modules/Favorites/Domain`
+- `Modules/Favorites/Domain.Contracts`
 - `Modules/Favorites/Infrastructure`
 - `Modules/Favorites/Infrastructure/Model`
 - `Modules/Favorites/Presentation`

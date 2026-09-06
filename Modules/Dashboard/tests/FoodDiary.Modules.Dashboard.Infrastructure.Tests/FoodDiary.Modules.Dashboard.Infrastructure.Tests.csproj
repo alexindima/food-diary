@@ -12,6 +12,8 @@
     <Using Include="System.Diagnostics.CodeAnalysis" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
+    <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\Products\Domain.Contracts\FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />

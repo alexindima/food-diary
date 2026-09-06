@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <ProjectReference Include="../../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Export.Infrastructure.csproj" />
     <ProjectReference Include="../../../Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />
     <ProjectReference Include="../../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />

@@ -6,7 +6,7 @@ Depend on Users/Products/Recipes Domain.Contracts, the Meals enum owner and shar
 through the exact references in this project. No EF or application dependencies.
 
 DietType belongs here in Enums with its existing FoodDiary.Domain.Enums namespace
-and member values. MealType belongs to Meals Domain, referenced directly for the
+and member values. MealType belongs to Meals Domain.Contracts, referenced directly for the
 existing planning enum contract. This is a one-way dependency and does not grant
 Meals aggregate mutation capabilities. Preserve existing string conversions;
 the changed enum assembly owner requires coordinated consumer rebuilds.
@@ -19,3 +19,5 @@ MealPlanMeal retains RecipeId and a transient immutable RecipeSnapshot. Snapshot
 assignment validates its recipe ID and copies the ingredient collection. The owner
 repository batch-projects recipe/product data; domain objects never retain their
 mutable aggregates. EF ignores RecipeSnapshot and preserves the original Recipe FK.
+
+MealType is owned by Meals Domain.Contracts; the planning domain has no Meals aggregate assembly reference.

@@ -3,6 +3,7 @@
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Export.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Meals/Contracts/FoodDiary.Modules.Meals.Contracts.csproj" />
     <ProjectReference Include="../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />

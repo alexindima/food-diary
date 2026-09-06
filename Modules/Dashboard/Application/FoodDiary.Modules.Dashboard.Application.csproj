@@ -5,6 +5,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Abstractions/**/*.cs" />
+    <ProjectReference Include="../../Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Tdee/Contracts/FoodDiary.Modules.Tdee.Contracts.csproj" />
     <ProjectReference Include="../../DailyAdvices/Contracts/FoodDiary.Modules.DailyAdvices.Contracts.csproj" />
     <ProjectReference Include="../../Cycles/Contracts/FoodDiary.Modules.Cycles.Contracts.csproj" />

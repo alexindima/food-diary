@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.SetAdminUserPassword;
 using FoodDiary.Domain.Entities.Users;
@@ -6,7 +7,6 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FluentValidation.Results;
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Users.Services;
 
 namespace FoodDiary.Application.Tests.Admin;
@@ -27,9 +27,10 @@ public partial class AdminFeatureTests {
     public async Task SetAdminUserPasswordHandler_WithExistingPassword_ReplacesPassword() {
         User user = CreateUserWithRoles("password-user@example.com", []);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
+        IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
             new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            revocation,
             TimeProvider.System,
             Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
 
@@ -38,6 +39,7 @@ public partial class AdminFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
+        await revocation.Received(1).RevokeAllAsync(user.Id, Arg.Any<DateTime>(), CancellationToken.None);
         Assert.True(user.HasPassword);
         Assert.Equal("hashed:NewPassword123!", user.Password);
         Assert.True(user.MustChangePassword);
@@ -48,9 +50,10 @@ public partial class AdminFeatureTests {
     public async Task SetAdminUserPasswordHandler_WithGoogleOnlyUser_SetsFirstPassword() {
         var user = User.Create("google-user@example.com", "placeholder-hash", hasPassword: false);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
+        IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
             new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            revocation,
             TimeProvider.System,
             Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
 
@@ -59,6 +62,7 @@ public partial class AdminFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
+        await revocation.Received(1).RevokeAllAsync(user.Id, Arg.Any<DateTime>(), CancellationToken.None);
         Assert.True(user.HasPassword);
         Assert.Equal("hashed:FirstPassword123!", user.Password);
         Assert.Equal(1, userRepository.UpdateCallCount);
@@ -70,9 +74,10 @@ public partial class AdminFeatureTests {
     public async Task SetAdminUserPasswordHandler_WithPrivilegedTarget_ReturnsForbidden(string roleName) {
         User user = CreateUserWithRoles("privileged-password@example.com", [roleName]);
         var userRepository = new InMemoryUserRepository(user, availableRoles: [roleName]);
+        IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
             new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            revocation,
             TimeProvider.System,
             Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
 
@@ -83,15 +88,17 @@ public partial class AdminFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("User.AdminPasswordResetForbidden", result.Error.Code);
         Assert.Equal(0, userRepository.UpdateCallCount);
+        await revocation.DidNotReceiveWithAnyArgs().RevokeAllAsync(default, default, default);
     }
 
     [Fact]
     public async Task SetAdminUserPasswordHandler_WithEmptyUserId_ReturnsValidationFailure() {
         User user = CreateUserWithRoles("password-empty-user@example.com", []);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
+        IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
             new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            revocation,
             TimeProvider.System,
             Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
 
@@ -102,15 +109,17 @@ public partial class AdminFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Equal(0, userRepository.UpdateCallCount);
+        await revocation.DidNotReceiveWithAnyArgs().RevokeAllAsync(default, default, default);
     }
 
     [Fact]
     public async Task SetAdminUserPasswordHandler_WhenUserMissing_ReturnsNotFound() {
         User user = CreateUserWithRoles("password-missing-user@example.com", []);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
+        IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
         var handler = new SetAdminUserPasswordCommandHandler(
             new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            revocation,
             TimeProvider.System,
             Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
 
@@ -121,6 +130,7 @@ public partial class AdminFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
         Assert.Equal(0, userRepository.UpdateCallCount);
+        await revocation.DidNotReceiveWithAnyArgs().RevokeAllAsync(default, default, default);
     }
 
     [Fact]

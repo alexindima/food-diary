@@ -8,6 +8,7 @@
     <Using Include="FoodDiary.Application.Tests.Support" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../../Favorites/Domain.Contracts/FoodDiary.Modules.Favorites.Domain.Contracts.csproj" />
     <ProjectReference Include="../../../Images/Service.Contracts/FoodDiary.Modules.Images.Service.Contracts.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Domain.Primitives\FoodDiary.Domain.Primitives.csproj" />
     <ProjectReference Include="..\..\..\Products\Domain\FoodDiary.Modules.Products.Domain.csproj" />

@@ -15,3 +15,5 @@
 - `dotnet test Modules/Marketing/tests/FoodDiary.Modules.Marketing.Domain.Tests/FoodDiary.Modules.Marketing.Domain.Tests.csproj`
 - `dotnet test Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests.csproj`
 - `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+
+Contracts owns the externally consumed attribution summary query and immutable models. Admin Presentation references that seam, while Marketing retains handlers, validation, authorization and persistence.

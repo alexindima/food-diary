@@ -28,6 +28,7 @@ sources:
 - `Modules/Meals/Application/Abstractions`
 - `Modules/Meals/Contracts`
 - `Modules/Meals/Domain`
+- `Modules/Meals/Domain.Contracts`
 - `Modules/Meals/Infrastructure`
 - `Modules/Meals/Infrastructure/Model`
 - `Modules/Meals/Presentation`

@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
@@ -11,7 +10,7 @@ namespace FoodDiary.Application.Admin.Commands.SetAdminUserPassword;
 
 public sealed class SetAdminUserPasswordCommandHandler(
     IUserAdministrationMutationService userManagementService,
-    IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
+    IUserSessionRevocationService sessionRevocationService,
     TimeProvider dateTimeProvider,
     IAuditLogger auditLogger)
     : ICommandHandler<SetAdminUserPasswordCommand, Result> {
@@ -37,7 +36,7 @@ public sealed class SetAdminUserPasswordCommandHandler(
             return passwordResult;
         }
 
-        await refreshTokenSessionRepository
+        await sessionRevocationService
             .RevokeAllAsync(userIdResult.Value, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
             .ConfigureAwait(false);
 

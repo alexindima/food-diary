@@ -50,6 +50,9 @@
         "adapterAreas": [
           "Modules/Admin/Presentation/Features/Admin",
           "Modules/Admin/Infrastructure/Integrations/MailInbox"
+        ],
+        "contractProjects": [
+          "Modules/Admin/Contracts"
         ]
       }
     },
@@ -200,7 +203,8 @@
           "Modules/Meals/Service.Contracts"
         ],
         "domainProjects": [
-          "Modules/Meals/Domain"
+          "Modules/Meals/Domain",
+          "Modules/Meals/Domain.Contracts"
         ],
         "domainAreas": [
           "Modules/Meals/Domain"
@@ -468,7 +472,8 @@
           "Modules/Favorites/Application/Abstractions"
         ],
         "domainProjects": [
-          "Modules/Favorites/Domain"
+          "Modules/Favorites/Domain",
+          "Modules/Favorites/Domain.Contracts"
         ],
         "domainAreas": [
           "Modules/Favorites/Domain"
@@ -623,6 +628,9 @@
         ],
         "persistenceAreas": [
           "Modules/Marketing/Infrastructure"
+        ],
+        "contractProjects": [
+          "Modules/Marketing/Contracts"
         ]
       }
     },

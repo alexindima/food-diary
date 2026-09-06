@@ -73,6 +73,13 @@
           "FoodDiary.Results": "[1.0.0, )"
         }
       },
+      "fooddiary.modules.admin.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Contracts": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.admin.domain": {
         "type": "Project",
         "dependencies": {

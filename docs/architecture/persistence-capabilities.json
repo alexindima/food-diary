@@ -501,15 +501,15 @@
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs": {
       "module": "Gamification",
       "capabilities": [
-        "call:AchievementEvaluationOutboxMessage.MarkProcessed",
         "call:AchievementEvaluationOutboxMessage.ReleaseForUpdatedRevision",
+        "context:ChangeTracker",
         "context:Database",
         "context:Entry",
         "entity:AchievementEvaluationOutboxMessage",
         "tracked:AchievementEvaluationOutboxMessage"
       ],
-      "reason": "Gamification dispatches reconciliation through the shared engine; conditional SQL completes only the claimed Revision and LockedBy, and releases updated revisions only for the same owner. Lost owners cannot finalize or release a newer lease.",
-      "technicalSourceSha256": "8d8d91958498ba62007e1c6c4b1fd97eee0397292441d70261bbbb4821a5c2cb"
+      "reason": "Shared EF finalization fences success and failure by Revision and LockedBy. On conflict Gamification discards stale tracking and releases only a changed revision held by the original owner, preserving new request state.",
+      "technicalSourceSha256": "97c93bcc7c1f1d5f029ad724fcc5249a5b0106184f996fb0f81152d6fa73add1"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxReplayStream.cs": {
       "module": "Gamification",

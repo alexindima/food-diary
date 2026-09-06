@@ -55,6 +55,13 @@
       "fooddiary.modules.marketing.application.abstractions": {
         "type": "Project"
       },
+      "fooddiary.modules.marketing.contracts": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
       "fooddiary.modules.users.domain.contracts": {
         "type": "Project",
         "dependencies": {

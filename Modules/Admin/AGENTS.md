@@ -27,3 +27,5 @@ Feature error factories belong to their existing owner contracts; call them dire
 The corresponding central Errors facades are retired. Preserve exact codes, messages,
 kinds and parameter formatting. Reference the owner explicitly; this grants no foreign
 repository or aggregate capability. See docs/ai/feature-error-retirement.md.
+
+Identity Presentation consumes only ExchangeAdminImpersonationCommand from Admin Contracts; the handler and protocol remain Admin-owned.

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 253,
+    "domainTypes": 241,
     "entities": 81,
-    "valueObjects": 105,
+    "valueObjects": 98,
     "invariants": 504,
     "persistenceMappings": 86,
     "indexes": 155,
@@ -684,13 +684,6 @@
     },
     {
       "area": "FoodDiary",
-      "name": "AiRecognitionSource",
-      "role": "enum",
-      "path": "Modules/Meals/Domain/Enums/AiRecognitionSource.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
       "name": "BleedingType",
       "role": "enum",
       "path": "Modules/Cycles/Domain/Enums/BleedingType.cs",
@@ -834,34 +827,6 @@
       "name": "LessonDifficulty",
       "role": "enum",
       "path": "Modules/Lessons/Domain/Enums/LessonDifficulty.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "MealAiItemResolution",
-      "role": "enum",
-      "path": "Modules/Meals/Domain/Enums/MealAiItemResolution.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "MealAiSessionStatus",
-      "role": "enum",
-      "path": "Modules/Meals/Domain/Enums/MealAiSessionStatus.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "MealItemOrigin",
-      "role": "enum",
-      "path": "Modules/Meals/Domain/Enums/MealItemOrigin.cs",
-      "line": 2
-    },
-    {
-      "area": "FoodDiary",
-      "name": "MealType",
-      "role": "enum",
-      "path": "Modules/Meals/Domain/Enums/MealType.cs",
       "line": 2
     },
     {
@@ -1104,27 +1069,6 @@
     },
     {
       "area": "FoodDiary",
-      "name": "FavoriteMealId",
-      "role": "value-object",
-      "path": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteMealId.cs",
-      "line": 4
-    },
-    {
-      "area": "FoodDiary",
-      "name": "FavoriteProductId",
-      "role": "value-object",
-      "path": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteProductId.cs",
-      "line": 4
-    },
-    {
-      "area": "FoodDiary",
-      "name": "FavoriteRecipeId",
-      "role": "value-object",
-      "path": "Modules/Favorites/Domain/ValueObjects/Ids/FavoriteRecipeId.cs",
-      "line": 4
-    },
-    {
-      "area": "FoodDiary",
       "name": "FertilitySignalId",
       "role": "value-object",
       "path": "Modules/Cycles/Domain/ValueObjects/Ids/FertilitySignalId.cs",
@@ -1188,13 +1132,6 @@
     },
     {
       "area": "FoodDiary",
-      "name": "MealAiItemId",
-      "role": "value-object",
-      "path": "Modules/Meals/Domain/ValueObjects/Ids/MealAiItemId.cs",
-      "line": 4
-    },
-    {
-      "area": "FoodDiary",
       "name": "MealAiItemState",
       "role": "value-object",
       "path": "Modules/Meals/Domain/ValueObjects/MealAiItemState.cs",
@@ -1202,31 +1139,10 @@
     },
     {
       "area": "FoodDiary",
-      "name": "MealAiSessionId",
-      "role": "value-object",
-      "path": "Modules/Meals/Domain/ValueObjects/Ids/MealAiSessionId.cs",
-      "line": 4
-    },
-    {
-      "area": "FoodDiary",
       "name": "MealDetailsState",
       "role": "value-object",
       "path": "Modules/Meals/Domain/ValueObjects/MealDetailsState.cs",
       "line": 5
-    },
-    {
-      "area": "FoodDiary",
-      "name": "MealId",
-      "role": "value-object",
-      "path": "Modules/Meals/Domain/ValueObjects/Ids/MealId.cs",
-      "line": 4
-    },
-    {
-      "area": "FoodDiary",
-      "name": "MealItemId",
-      "role": "value-object",
-      "path": "Modules/Meals/Domain/ValueObjects/Ids/MealItemId.cs",
-      "line": 4
     },
     {
       "area": "FoodDiary",

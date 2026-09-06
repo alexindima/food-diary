@@ -19,6 +19,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Shared outbox management contracts: `Shared/FoodDiary.Outbox.Management.Contracts/AGENTS.md`
 - Shared outbox persistence model: `Shared/FoodDiary.Outbox.PersistenceModel/AGENTS.md`
 - Admin logical module: `Modules/Admin/AGENTS.md`
+- Admin Contracts: `Modules/Admin/Contracts/AGENTS.md`
 - Admin application: `Modules/Admin/Application/AGENTS.md`
 - Admin ports: `Modules/Admin/Application/Abstractions/AGENTS.md`
 - Admin domain: `Modules/Admin/Domain/AGENTS.md`
@@ -63,6 +64,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Fasting infrastructure: `Modules/Fasting/Infrastructure/AGENTS.md`
 - Fasting persistence model: `Modules/Fasting/Infrastructure/Model/AGENTS.md`
 - Favorites logical module: `Modules/Favorites/AGENTS.md`
+- Favorites Domain.Contracts: `Modules/Favorites/Domain.Contracts/AGENTS.md`
 - Favorites application: `Modules/Favorites/Application/AGENTS.md`
 - Favorites application ports: `Modules/Favorites/Application/Abstractions/AGENTS.md`
 - Favorites consumer contracts: `Modules/Favorites/Contracts/AGENTS.md`
@@ -96,6 +98,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Meal planning Infrastructure/Model: `Modules/MealPlanning/Infrastructure/Model/AGENTS.md`
 - Meal planning tests: `Modules/MealPlanning/tests/AGENTS.md`
 - Meals logical module: `Modules/Meals/AGENTS.md`
+- Meals Domain.Contracts: `Modules/Meals/Domain.Contracts/AGENTS.md`
 - Meals application: `Modules/Meals/Application/AGENTS.md`
 - Meals application abstractions: `Modules/Meals/Application/Abstractions/AGENTS.md`
 - Meals contracts: `Modules/Meals/Contracts/AGENTS.md`
@@ -163,6 +166,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Billing infrastructure: `Modules/Billing/Infrastructure/AGENTS.md`
 - Billing persistence model: `Modules/Billing/Infrastructure/Model/AGENTS.md`
 - Marketing logical module: `Modules/Marketing/AGENTS.md`
+- Marketing Contracts: `Modules/Marketing/Contracts/AGENTS.md`
 - Marketing application: `Modules/Marketing/Application/AGENTS.md`
 - Notifications logical module: `Modules/Notifications/AGENTS.md`
 - Notifications application: `Modules/Notifications/Application/AGENTS.md`

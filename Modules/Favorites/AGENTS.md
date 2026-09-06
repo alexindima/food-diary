@@ -32,3 +32,5 @@ EF tracking mode affects the complete query. Apply the requested AsTracking/
 AsNoTracking mode after correlated foreign access predicates; otherwise nested
 AsNoTracking can silently detach the owned Favorite row. PostgreSQL coverage must
 verify identity reuse, persisted updates and absence of foreign tracked entities.
+
+Stable favorite IDs live in Domain.Contracts. Favorites Domain references Meals Domain.Contracts for MealId; this does not expose Meals aggregates.

@@ -119,13 +119,19 @@ public sealed class AchievementPersistenceTests {
             () => Assert.Equal("Outbox dispatch failed (InvalidOperationException).", persisted.LastError));
     }
 
-    [Fact]
-    public async Task AchievementEvaluationOutboxProcessor_WhenEvaluationIsRequestedDuringDispatch_ReleasesClaimWithoutMarkingProcessed() {
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(0, true)]
+    [InlineData(9, true)]
+    public async Task AchievementEvaluationOutboxProcessor_WhenEvaluationIsRequestedDuringDispatch_ReleasesClaimWithoutMarkingProcessed(int previousAttempts, bool failDispatch) {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
             .Options;
         await using var context = new FoodDiaryDbContext(options);
         var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now);
+        for (int attempt = 0; attempt < previousAttempts; attempt++) {
+            message.MarkFailed("Previous failure", Now);
+        }
         context.AchievementEvaluationOutbox.Add(message);
         await context.SaveChangesAsync();
         IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
@@ -135,6 +141,9 @@ public sealed class AchievementPersistenceTests {
                 AchievementEvaluationOutboxMessage updated = await writer.AchievementEvaluationOutbox.SingleAsync();
                 updated.RequestEvaluation(Now.AddMinutes(1));
                 await writer.SaveChangesAsync();
+                if (failDispatch) {
+                    throw new InvalidOperationException("Old revision failed.");
+                }
             });
         var processor = new AchievementEvaluationOutboxProcessor(
             context,
@@ -149,6 +158,10 @@ public sealed class AchievementPersistenceTests {
         Assert.Multiple(
             () => Assert.Equal(0, processed),
             () => Assert.Equal(2, pending.Revision),
+            () => Assert.Equal(0, pending.AttemptCount),
+            () => Assert.Null(pending.DeadLetteredOnUtc),
+            () => Assert.Null(pending.LastError),
+            () => Assert.Equal(Now.AddMinutes(1), pending.NextAttemptOnUtc),
             () => Assert.Null(pending.ProcessedOnUtc),
             () => Assert.Null(pending.LockedBy));
     }
