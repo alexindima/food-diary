@@ -13,7 +13,6 @@
     <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="../../Images/Application/FoodDiary.Application.Images.csproj" />
     <ProjectReference Include="../../OpenFoodFacts/Contracts/FoodDiary.Modules.OpenFoodFacts.Contracts.csproj" />
-    <ProjectReference Include="../../Usda/Application/FoodDiary.Application.Usda.csproj" />
     <ProjectReference Include="../../Usda/Contracts/FoodDiary.Modules.Usda.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
     <ProjectReference Include="Abstractions/FoodDiary.Modules.Products.Application.Abstractions.csproj" />

@@ -444,7 +444,7 @@ public partial class RecipesFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubFavoriteRecipeRepository(IReadOnlyList<FavoriteRecipe> favorites) : IFavoriteRecipeRepository {
+    private sealed class StubFavoriteRecipeRepository(IReadOnlyList<FavoriteRecipe> favorites, Recipe? source = null) : IFavoriteRecipeRepository {
         public Task<FavoriteRecipe> AddAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<FavoriteRecipe?> GetByIdAsync(FavoriteRecipeId id, UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -457,19 +457,19 @@ public partial class RecipesFeatureTests {
         public Task<IReadOnlyList<FavoriteRecipeReadModel>> GetAllReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<FavoriteRecipeReadModel>>([.. favorites.Select(ToReadModel)]);
 
-        private static FavoriteRecipeReadModel ToReadModel(FavoriteRecipe favorite) =>
+        private FavoriteRecipeReadModel ToReadModel(FavoriteRecipe favorite) =>
             new(
                 favorite.Id.Value,
                 favorite.RecipeId.Value,
                 favorite.Name,
                 favorite.CreatedAtUtc,
-                favorite.Recipe.Name,
-                favorite.Recipe.ImageUrl,
-                favorite.Recipe.TotalCalories ?? favorite.Recipe.ManualCalories,
-                favorite.Recipe.Servings,
-                favorite.Recipe.PrepTime,
-                favorite.Recipe.CookTime,
-                favorite.Recipe.Steps.Sum(step => step.Ingredients.Count));
+                source!.Name,
+                source!.ImageUrl,
+                source!.TotalCalories ?? source!.ManualCalories,
+                source!.Servings,
+                source!.PrepTime,
+                source!.CookTime,
+                source!.Steps.Sum(step => step.Ingredients.Count));
     }
 
     [ExcludeFromCodeCoverage]
@@ -594,12 +594,6 @@ public partial class RecipesFeatureTests {
             };
             return Task.FromResult(error);
         }
-    }
-
-    private static void SetFavoriteRecipeNavigation(FavoriteRecipe favorite, Recipe recipe) {
-        typeof(FavoriteRecipe)
-            .GetProperty(nameof(FavoriteRecipe.Recipe))!
-            .SetValue(favorite, recipe);
     }
 
 }

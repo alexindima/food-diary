@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
 internal sealed class AchievementEvaluationOutbox(
     FoodDiaryDbContext context,
-    TimeProvider timeProvider) : IAchievementEvaluationOutbox {
+    TimeProvider timeProvider) : IAchievementEvaluationOutbox, IMealAchievementEvaluationRequest {
     public async Task EnqueueAsync(UserId userId, CancellationToken cancellationToken = default) {
         DateTime requestedOnUtc = timeProvider.GetUtcNow().UtcDateTime;
         if (!context.Database.IsRelational()) {

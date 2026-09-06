@@ -1,9 +1,9 @@
-using FoodDiary.Application.Abstractions.Achievements.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Meals.Common;
 
-internal sealed class NullAchievementEvaluationOutbox : IAchievementEvaluationOutbox {
+internal sealed class NullAchievementEvaluationOutbox : IMealAchievementEvaluationRequest {
     public static readonly NullAchievementEvaluationOutbox Instance = new();
 
     private NullAchievementEvaluationOutbox() {

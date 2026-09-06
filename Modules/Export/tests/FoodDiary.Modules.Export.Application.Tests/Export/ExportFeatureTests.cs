@@ -1,9 +1,9 @@
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Export.Models;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Cycles.Models;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Cycles.Services;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Queries.ExportCycle;
@@ -11,7 +11,6 @@ using FoodDiary.Application.Export.Queries.ExportDiary;
 using FoodDiary.Application.Export.Services;
 using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.Meals.Common;
-using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
@@ -825,7 +824,7 @@ public class ExportFeatureTests {
         ICurrentUserAccessService currentUserAccessService,
         IUserCredentialVerificationService? credentialVerificationService = null) =>
         new(
-            new CycleReadService(CreateCycleRepository(profile), Substitute.For<IDashboardStatisticsReadService>()),
+            new CycleReadService(CreateCycleRepository(profile), Substitute.For<IMealNutritionStatisticsReadService>()),
             currentUserAccessService,
             credentialVerificationService);
 

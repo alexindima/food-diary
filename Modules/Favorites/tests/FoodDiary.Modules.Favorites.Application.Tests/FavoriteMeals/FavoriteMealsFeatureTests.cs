@@ -247,9 +247,8 @@ public class FavoriteMealsFeatureTests {
             ManualAlcohol: null));
         meal.AddProduct(ProductId.New(), 100);
         var favorite = FavoriteMeal.Create(user.Id, meal.Id, "  Work lunch  ");
-        SetFavoriteMealNavigation(favorite, meal);
         var handler = new GetFavoriteMealsQueryHandler(
-            CreateFavoriteMealReadService(CreateFavoriteMealRepository(favorites: [favorite])),
+            CreateFavoriteMealReadService(CreateFavoriteMealRepository(favorites: [favorite], meal: meal)),
             CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(user.Id.Value), CancellationToken.None);
@@ -306,14 +305,13 @@ public class FavoriteMealsFeatureTests {
     }
 
     [Fact]
-    public void FavoriteMealMappings_ToModel_UsesFavoriteMealNavigation() {
+    public void FavoriteMealMappings_ToModel_UsesExplicitMealSource() {
         var user = User.Create("favorite-navigation@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 5, 2, 8, 0, 0, DateTimeKind.Utc), MealType.Breakfast);
         meal.AddProduct(ProductId.New(), 100);
         var favorite = FavoriteMeal.Create(user.Id, meal.Id, "Morning");
-        SetFavoriteMealNavigation(favorite, meal);
 
-        FavoriteMealModel model = favorite.ToModel();
+        FavoriteMealModel model = favorite.ToModel(ToFavoriteMealSourceModel(meal));
 
         Assert.Equal(favorite.Id.Value, model.Id);
         Assert.Equal(meal.Id.Value, model.MealId);
@@ -349,7 +347,7 @@ public class FavoriteMealsFeatureTests {
     private static IFavoriteMealRepository CreateFavoriteMealRepository(
         FavoriteMeal? existingByMealId = null,
         FavoriteMeal? existingById = null,
-        IReadOnlyList<FavoriteMeal>? favorites = null) {
+        IReadOnlyList<FavoriteMeal>? favorites = null, Meal? meal = null) {
         IFavoriteMealRepository repository = Substitute.For<IFavoriteMealRepository>();
         ((IFavoriteMealWriteRepository)repository)
             .GetByMealIdAsync(Arg.Any<MealId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
@@ -387,18 +385,18 @@ public class FavoriteMealsFeatureTests {
         repository
             .GetAllReadModelsAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(_ => Task.FromResult<IReadOnlyList<FavoriteMealReadModel>>([
-                .. (favorites ?? []).Select(static favorite => new FavoriteMealReadModel(
+                .. (favorites ?? []).Select(favorite => new FavoriteMealReadModel(
                     favorite.Id.Value,
                     favorite.MealId.Value,
                     favorite.Name,
                     favorite.CreatedAtUtc,
-                    favorite.Meal.Date,
-                    favorite.Meal.MealType?.ToString(),
-                    favorite.Meal.TotalCalories,
-                    favorite.Meal.TotalProteins,
-                    favorite.Meal.TotalFats,
-                    favorite.Meal.TotalCarbs,
-                    favorite.Meal.Items.Count)),
+                    meal!.Date,
+                    meal!.MealType?.ToString(),
+                    meal!.TotalCalories,
+                    meal!.TotalProteins,
+                    meal!.TotalFats,
+                    meal!.TotalCarbs,
+                    meal!.Items.Count)),
             ]));
         return repository;
     }
@@ -406,8 +404,8 @@ public class FavoriteMealsFeatureTests {
     private static IFavoriteMealSourceReadService CreateMealReadService(Meal? meal) {
         IFavoriteMealSourceReadService service = Substitute.For<IFavoriteMealSourceReadService>();
         service
-            .GetAsync(Arg.Any<UserId>(), Arg.Any<MealId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(meal is null ? null : ToFavoriteMealSourceModel(meal)));
+            .GetAccessibleAsync(Arg.Any<UserId>(), Arg.Any<MealId>(), Arg.Any<CancellationToken>())
+            .Returns(call => Task.FromResult(meal is null ? Result.Failure<FavoriteMealSourceModel>(new Error("Meal.NotFound", $"Meal with ID {call.Arg<MealId>().Value} was not found.", Kind: ErrorKind.NotFound)) : Result.Success(ToFavoriteMealSourceModel(meal))));
         return service;
     }
 
@@ -429,9 +427,4 @@ public class FavoriteMealsFeatureTests {
         return service;
     }
 
-    private static void SetFavoriteMealNavigation(FavoriteMeal favorite, Meal meal) {
-        typeof(FavoriteMeal)
-            .GetProperty(nameof(FavoriteMeal.Meal))!
-            .SetValue(favorite, meal);
-    }
 }

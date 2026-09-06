@@ -1,5 +1,3 @@
-using FoodDiary.Application.Abstractions.Meals.Models;
-using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Usda.Mappings;
@@ -10,7 +8,7 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Usda.Services;
 
 public sealed class UsdaDailyMicronutrientReadService(
-    IMealProductNutritionReadService mealProductNutritionReadService,
+    IUsdaMealNutritionReadService mealProductNutritionReadService,
     IUsdaFoodReadModelRepository usdaFoodRepository) : IUsdaDailyMicronutrientReadService {
     public const int MaximumProductItemsPerDay = 1000;
 
@@ -18,7 +16,7 @@ public sealed class UsdaDailyMicronutrientReadService(
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken) {
-        IReadOnlyList<MealProductNutritionReadModel> productItems = await mealProductNutritionReadService.GetForDateAsync(
+        IReadOnlyList<UsdaMealProductNutritionReadModel> productItems = await mealProductNutritionReadService.GetForDateAsync(
             userId,
             date,
             MaximumProductItemsPerDay + 1,
@@ -67,10 +65,10 @@ public sealed class UsdaDailyMicronutrientReadService(
     }
 
     private static Dictionary<int, AggregatedNutrient> AggregateNutrients(
-        IReadOnlyList<MealProductNutritionReadModel> linkedItems,
+        IReadOnlyList<UsdaMealProductNutritionReadModel> linkedItems,
         IReadOnlyDictionary<int, IReadOnlyList<UsdaNutrientReadModel>> nutrientsByFdcId) {
         var aggregated = new Dictionary<int, AggregatedNutrient>();
-        foreach (MealProductNutritionReadModel item in linkedItems) {
+        foreach (UsdaMealProductNutritionReadModel item in linkedItems) {
             int fdcId = item.UsdaFdcId!.Value;
 
             if (!nutrientsByFdcId.TryGetValue(fdcId, out IReadOnlyList<UsdaNutrientReadModel>? nutrients)) {

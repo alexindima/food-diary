@@ -9,7 +9,7 @@ public sealed class ExercisesModuleExtractionTests {
     public void DomainOwnership_IsExclusiveToExercises(string relativePath) {
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain", relativePath)));
         Assert.True(File.Exists(ArchitectureTestPaths.FromRoot("Modules", "Exercises", "Domain", relativePath)));
-        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Modules.Users.Domain"], ProjectReferenceReader.ReadProjectReferences(
+        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Exercises/Domain/FoodDiary.Modules.Exercises.Domain.csproj"));
         Assert.False(File.Exists(ArchitectureTestPaths.FromRoot("FoodDiary.Domain/FoodDiary.Domain.csproj")));
     }

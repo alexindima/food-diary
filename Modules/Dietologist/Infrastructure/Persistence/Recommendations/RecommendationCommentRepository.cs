@@ -21,13 +21,13 @@ internal sealed class RecommendationCommentRepository(FoodDiaryDbContext context
             .AsNoTracking()
             .Where(comment => comment.RecommendationId == recommendationId)
             .OrderBy(comment => comment.CreatedOnUtc)
-            .Select(comment => new RecommendationCommentReadModel(
+            .Join(context.Users.AsNoTracking(), comment => comment.AuthorUserId, user => user.Id, (comment, user) => new RecommendationCommentReadModel(
                 comment.Id.Value,
                 comment.RecommendationId.Value,
                 comment.AuthorUserId.Value,
-                comment.AuthorUser.FirstName,
-                comment.AuthorUser.LastName,
-                comment.AuthorUser.Email,
+                user.FirstName,
+                user.LastName,
+                user.Email,
                 comment.Text,
                 comment.CreatedOnUtc))
             .ToListAsync(cancellationToken)

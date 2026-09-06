@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ internal sealed class MealPlanConfiguration : IEntityTypeConfiguration<MealPlan>
         builder.Property(e => e.Name).HasMaxLength(256);
         builder.Property(e => e.Description).HasMaxLength(2048);
 
-        builder.HasOne(e => e.User)
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade)

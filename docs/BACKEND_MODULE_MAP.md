@@ -33,7 +33,7 @@ Use this file when deciding where backend code belongs.
 | Application ports/models | Owning module Contracts or Application/Abstractions; central shared compatibility seams | Semantic consumer contracts separated from owner repository ports | Foreign aggregates/repositories in public contracts, ASP.NET, EF Core, provider SDKs |
 | Application runtime | `FoodDiary.Application.Runtime` | Mediator pipeline behaviors, transaction boundary, post-commit queue registration | Feature handlers, validators, business services, module aggregation |
 | Use cases | Owning `FoodDiary.Application.<Feature>` project or `Modules/<Feature>/Application` | Commands, queries, handlers, validators, application services | Cross-feature shared buckets, persistence implementation, HTTP request/response DTOs |
-| BodyMetrics domain | `Modules/BodyMetrics/Domain` | Weight/waist measurement entries, IDs, and invariants with legacy CLR namespaces and a one-way dependency on Users-owned `User`/`UserId`; User-owned goal lifecycle belongs to Users Domain | Reverse User measurement navigations, goal lifecycle, application orchestration, EF mappings, transport |
+| BodyMetrics domain | `Modules/BodyMetrics/Domain` | Weight/waist measurement entries, IDs, and invariants with legacy CLR namespaces and a scalar `UserId` dependency on Users Domain.Contracts; User-owned goal lifecycle belongs to Users Domain | Reverse User measurement navigations, goal lifecycle, application orchestration, EF mappings, transport |
 | BodyMetrics application ports | `Modules/BodyMetrics/Application/Abstractions` | Weight/waist repository ports, read capabilities, errors, and projection models | EF, HTTP transport, provider adapters |
 | BodyMetrics use cases | `Modules/BodyMetrics/Application` | Weight/waist commands, queries, handlers, validation, read services, and legacy application assembly identity | Persistence implementations and HTTP transport |
 | BodyMetrics persistence model | `Modules/BodyMetrics/Infrastructure/Model` | Entry EF configurations and explicit model-builder registration | Central DbContext, migrations, snapshot, and User-owned goal mappings |
@@ -45,7 +45,7 @@ Use this file when deciding where backend code belongs.
 | Fasting persistence model | `Modules/Fasting/Infrastructure/Model` | Fasting EF configurations and the model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
 | Fasting infrastructure | `Modules/Fasting/Infrastructure` | Fasting repository implementations and full module registration | HTTP transport, jobs, central migrations |
 | Hydration contracts | `Modules/Hydration/Contracts` | Stable hydration read service and projection models used by Dashboard and Weekly Check-In | Repositories, handlers, EF, HTTP transport |
-| Hydration domain | `Modules/Hydration/Domain` | `HydrationEntry`, its identifier and invariants with legacy CLR namespaces and a one-way dependency on Users-owned `User`/`UserId` | Reverse User navigation, application orchestration, EF mappings, transport |
+| Hydration domain | `Modules/Hydration/Domain` | `HydrationEntry`, its identifier and invariants with legacy CLR namespaces and a scalar `UserId` dependency on Users Domain.Contracts | Reverse User navigation, application orchestration, EF mappings, transport |
 | Hydration application ports | `Modules/Hydration/Application/Abstractions` | Hydration repository ports and persistence projections | Stable cross-module contracts and EF implementations |
 | Hydration use cases | `Modules/Hydration/Application` | Hydration commands, queries, handlers, validators, services, and registration | Persistence implementations and HTTP transport |
 | Hydration persistence model | `Modules/Hydration/Infrastructure/Model` | Hydration EF configuration and model-builder registration seam | Shared `DbContext`, migrations, repository behavior |
@@ -86,7 +86,7 @@ Use this file when deciding where backend code belongs.
 | Daily Advices infrastructure | `Modules/DailyAdvices/Infrastructure` | Repository and complete module registration | HTTP transport and central migrations |
 | Content Reports module | `Modules/ContentReports` | Creation, moderation contracts, aggregate, persistence model/adapter, and module tests | Central `DbContext`, migrations, HTTP transport, Admin orchestration |
 | OpenFoodFacts module | `Modules/OpenFoodFacts` | Public catalog queries, cached-search contract and lifecycle, provider/cache ports, durable cache entity, persistence/provider adapters, model, and focused tests | Central `DbContext`, migrations, snapshot, and HTTP presentation |
-| USDA module | `Modules/Usda` | USDA reference-data entities, catalog use cases, ports/contracts, EF mappings, repository/provider adapters, and focused tests | Central Product navigation, `DbContext`, migrations, snapshot, and HTTP presentation |
+| USDA module | `Modules/Usda` | USDA reference-data entities, catalog use cases, ports/contracts, EF mappings, repository/provider adapters, and focused tests | Product links, shared `DbContext`, migrations, snapshot, and HTTP presentation |
 | Images ID contracts | `Modules/Images/Contracts` | Dependency-free `ImageAssetId` with stable CLR namespace | Image aggregate behavior, EF, storage providers |
 | Images domain | `Modules/Images/Domain` | `ImageAsset` lifecycle and stable CLR namespace | EF, storage providers, HTTP transport |
 | Images application ports | `Modules/Images/Application/Abstractions` | Image access, storage, cleanup, repository and deletion-outbox ports | Provider SDKs, EF implementations, HTTP transport |
@@ -192,8 +192,8 @@ Infrastructure contains both repositories and complete module DI; its Model
 project contains all six EF mappings, explicitly applied by the central context.
 
 The ShoppingList-to-User relationship is one-way: ShoppingList retains scalar
-`UserId` and its `User` navigation, while Users-owned User has no inverse ShoppingLists
-CLR collection. Its EF mapping uses schema-equivalent `WithMany()` with the same
+`UserId`, and neither domain retains a foreign CLR navigation. Its EF mapping uses
+`HasOne<User>().WithMany()` with the same
 foreign key and cascade behavior. The module Domain references the existing Users,
 Products, Recipes and Meals owners plus shared Primitives through its declared
 project references. Source provenance IDs are not foreign keys. Shared DbContext,
@@ -208,7 +208,7 @@ Exercises ownership: `Modules/Exercises/Application` owns slices and read-servic
 
 ## RecipeCommunity logical module
 
-`Modules/RecipeCommunity` owns Application (RecipeComments/RecipeLikes), Application/Abstractions, Domain, Infrastructure and Infrastructure/Model. Legacy application assembly and CLR namespaces remain stable. RecipeCommunity entities and IDs remain separate from Users and Recipes Domain owners through one-way User/Recipe navigations. Shared context/migrations, HTTP and ContentReports reportability projection remain with their owners; no extra Contracts or provider layer. See `docs/ai/recipecommunity-ownership-inventory.md` for sources and compatibility seams.
+`Modules/RecipeCommunity` owns Application (RecipeComments/RecipeLikes), Application/Abstractions, Domain, Infrastructure and Infrastructure/Model. Legacy application assembly and CLR namespaces remain stable. RecipeCommunity entities and IDs remain separate from Users and Recipes Domain owners through scalar UserId/RecipeId links. Shared context/migrations, HTTP and ContentReports reportability projection remain with their owners; no extra Contracts or provider layer. See `docs/ai/recipecommunity-ownership-inventory.md` for sources and compatibility seams.
 
 ## Ai physical ownership
 
@@ -309,3 +309,12 @@ Infrastructure owns UserRepository; authentication flows/providers, shared DbCon
 migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
+
+## Contract and aggregate isolation
+
+ADR 0031 completes the contract-cycle and foreign-navigation follow-up to ADR 0030.
+The combined Application/service-contract graph is acyclic. Foreign domain links are
+scalar IDs; immutable snapshots and no-tracking joins supply display/nutrition data.
+Meals owns nutrition aggregation. FD0015/FD0016 enforce module EF ownership and exact
+reviewed technical escapes during compilation. The database, FK behavior and public
+API remain shared/compatible. See `docs/adr/0031-acyclic-contracts-and-scalar-aggregate-links.md`.

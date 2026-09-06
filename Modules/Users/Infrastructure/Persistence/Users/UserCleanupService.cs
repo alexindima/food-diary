@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -9,8 +9,18 @@ namespace FoodDiary.Infrastructure.Persistence.Users;
 
 public sealed class UserCleanupService(
     FoodDiaryDbContext dbContext,
-    IImageObjectDeletionOutbox imageObjectDeletionOutbox,
+    IEnumerable<IUserDataPurgeParticipant> participants,
     ILogger<UserCleanupService> logger) : IUserCleanupService {
+    private readonly IReadOnlyList<IUserDataPurgeParticipant> _participants = ValidateParticipants(participants);
+
+    private static IReadOnlyList<IUserDataPurgeParticipant> ValidateParticipants(IEnumerable<IUserDataPurgeParticipant> participants) {
+        IUserDataPurgeParticipant[] ordered = [.. participants.OrderBy(participant => participant.Order)];
+        if (ordered.Length == 0 || ordered.Select(participant => participant.Order).Distinct().Count() != ordered.Length) {
+            throw new InvalidOperationException("User purge requires explicitly composed participants with unique ordering.");
+        }
+        return ordered;
+    }
+
     public async Task<int> CleanupDeletedUsersAsync(
         DateTime olderThanUtc,
         int batchSize,
@@ -20,6 +30,7 @@ public sealed class UserCleanupService(
             throw new ArgumentOutOfRangeException(nameof(batchSize), "Batch size must be greater than zero.");
         }
 
+        SharedTransactionBoundary.EnsureCleanEntry(dbContext);
         UserId? reassignTarget = await ResolveReassignTargetAsync(reassignUserId, cancellationToken).ConfigureAwait(false);
         DateTime thresholdUtc = NormalizeUtc(olderThanUtc);
         IReadOnlyList<UserId> userIds = await GetDeletedUserIdsAsync(thresholdUtc, batchSize, cancellationToken).ConfigureAwait(false);
@@ -31,6 +42,7 @@ public sealed class UserCleanupService(
                     removed++;
                 }
             } catch (Exception ex) {
+                dbContext.ChangeTracker.Clear();
                 logger.LogError(ex, "Failed to clean up deleted user {UserId}. Continuing with the next deleted user.", userId.Value);
             }
         }
@@ -82,6 +94,7 @@ public sealed class UserCleanupService(
         CancellationToken cancellationToken) {
         IExecutionStrategy strategy = dbContext.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(async () => {
+            dbContext.ChangeTracker.Clear();
             IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             await using (transaction.ConfigureAwait(false)) {
                 FormattableString eligibilitySql = $"""
@@ -102,14 +115,9 @@ public sealed class UserCleanupService(
                     return false;
                 }
 
-                if (reassignTarget is not null) {
-                    await ReassignOwnedContentAsync(userId, reassignTarget.Value, cancellationToken).ConfigureAwait(false);
-                } else {
-                    await DeleteOwnedContentAsync(userId, cancellationToken).ConfigureAwait(false);
+                foreach (IUserDataPurgeParticipant participant in _participants) {
+                    await participant.PurgeAsync(userId, reassignTarget, cancellationToken).ConfigureAwait(false);
                 }
-
-                await DeleteDependentRowsAsync(userId, cancellationToken).ConfigureAwait(false);
-                await DeleteImageAssetsAsync(userId, cancellationToken).ConfigureAwait(false);
                 await DeleteUserRowsAsync(userId, cancellationToken).ConfigureAwait(false);
                 await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
@@ -118,97 +126,7 @@ public sealed class UserCleanupService(
         }).ConfigureAwait(false);
     }
 
-    private async Task ReassignOwnedContentAsync(UserId userId, UserId reassignTarget, CancellationToken cancellationToken) {
-        IReadOnlyList<ImageAssetId> assetIds = await GetOwnedContentAssetIdsAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (assetIds.Count > 0) {
-            await dbContext.ImageAssets
-                .Where(a => assetIds.Contains(a.Id))
-                .ExecuteUpdateAsync(setters => setters.SetProperty(a => a.UserId, reassignTarget), cancellationToken).ConfigureAwait(false);
-        }
-
-        await dbContext.Products
-            .Where(p => p.UserId == userId)
-            .ExecuteUpdateAsync(setters => setters.SetProperty(p => p.UserId, reassignTarget), cancellationToken).ConfigureAwait(false);
-
-        await dbContext.Recipes
-            .Where(r => r.UserId == userId)
-            .ExecuteUpdateAsync(setters => setters.SetProperty(r => r.UserId, reassignTarget), cancellationToken).ConfigureAwait(false);
-    }
-
-    private async Task<IReadOnlyList<ImageAssetId>> GetOwnedContentAssetIdsAsync(UserId userId, CancellationToken cancellationToken) {
-        List<ImageAssetId> productAssetIds = await dbContext.Products
-            .Where(p => p.UserId == userId && p.ImageAssetId != null)
-            .Select(p => p.ImageAssetId!.Value)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-
-        List<ImageAssetId> recipeAssetIds = await dbContext.Recipes
-            .Where(r => r.UserId == userId && r.ImageAssetId != null)
-            .Select(r => r.ImageAssetId!.Value)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-
-        List<ImageAssetId> stepAssetIds = await dbContext.RecipeSteps
-            .Where(step => step.Recipe.UserId == userId && step.ImageAssetId != null)
-            .Select(step => step.ImageAssetId!.Value)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-
-        return productAssetIds
-            .Concat(recipeAssetIds)
-            .Concat(stepAssetIds)
-            .Distinct()
-            .ToList();
-    }
-
-    private async Task DeleteOwnedContentAsync(UserId userId, CancellationToken cancellationToken) {
-        await dbContext.Products
-            .Where(p => p.UserId == userId)
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-
-        await dbContext.Recipes
-            .Where(r => r.UserId == userId)
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-    }
-
-    private async Task DeleteDependentRowsAsync(UserId userId, CancellationToken cancellationToken) {
-        await dbContext.AdminImpersonationSessions
-            .Where(session => session.ActorUserId == userId || session.TargetUserId == userId)
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.ClientTasks
-            .Where(task => task.ClientUserId == userId || task.DietologistUserId == userId)
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.MealItems.Where(item => item.Meal.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.Meals.Where(meal => meal.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.ShoppingLists.Where(list => list.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.RecentItems.Where(item => item.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.HydrationEntries.Where(entry => entry.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.WeightEntries.Where(entry => entry.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.WaistEntries.Where(entry => entry.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.CycleBleedingEntries.Where(entry => entry.CycleProfile.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.CycleSymptomEntries.Where(entry => entry.CycleProfile.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.CycleFactors.Where(factor => factor.CycleProfile.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.FertilitySignals.Where(signal => signal.CycleProfile.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.CycleProfiles.Where(profile => profile.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-    }
-
-    private async Task DeleteImageAssetsAsync(UserId userId, CancellationToken cancellationToken) {
-        var deletedImages = await dbContext.ImageAssets
-            .Where(asset => asset.UserId == userId)
-            .Select(asset => new { asset.ObjectKey, asset.IsConfirmed })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-
-        foreach (var image in deletedImages.DistinctBy(static image => new { image.ObjectKey, image.IsConfirmed })) {
-            await imageObjectDeletionOutbox.EnqueueAsync(image.ObjectKey, image.IsConfirmed, cancellationToken).ConfigureAwait(false);
-            if (!image.IsConfirmed) {
-                await imageObjectDeletionOutbox.EnqueueAsync(image.ObjectKey, isConfirmed: true, cancellationToken).ConfigureAwait(false);
-            }
-        }
-
-        await dbContext.ImageAssets
-            .Where(asset => asset.UserId == userId)
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-    }
-
     private async Task DeleteUserRowsAsync(UserId userId, CancellationToken cancellationToken) {
-        await dbContext.AiUsages.Where(usage => usage.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
         await dbContext.UserRoles.Where(role => role.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
         await dbContext.Users.Where(u => u.Id == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
     }

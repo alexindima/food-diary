@@ -1,3 +1,4 @@
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
@@ -70,6 +71,13 @@ public sealed class MealReadService(
             cancellationToken).ConfigureAwait(false);
 
         return meal?.ToModel();
+    }
+
+    public async Task<Result<FavoriteMealSourceModel>> GetAccessibleAsync(UserId userId, MealId mealId, CancellationToken cancellationToken) {
+        FavoriteMealSourceModel? source = await GetAsync(userId, mealId, cancellationToken).ConfigureAwait(false);
+        return source is null
+            ? Result.Failure<FavoriteMealSourceModel>(MealErrors.NotFound(mealId.Value))
+            : Result.Success(source);
     }
 
     public async Task<FavoriteMealSourceModel?> GetAsync(

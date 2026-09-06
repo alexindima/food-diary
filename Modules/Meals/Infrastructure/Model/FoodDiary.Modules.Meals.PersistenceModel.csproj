@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><RootNamespace>FoodDiary.Infrastructure.Persistence</RootNamespace></PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../../Products/Domain/FoodDiary.Modules.Products.Domain.csproj" />
     <ProjectReference Include="../../Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="../../../Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
     <ProjectReference Include="../../../Images/Domain/FoodDiary.Modules.Images.Domain.csproj" />

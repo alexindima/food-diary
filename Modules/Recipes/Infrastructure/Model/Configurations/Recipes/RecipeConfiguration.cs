@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Recipes;
@@ -25,7 +26,7 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
 
         builder.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);
         builder.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(value: true);
-        builder.HasOne(e => e.User)
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(e => e.UserId);
 

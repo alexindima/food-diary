@@ -33,24 +33,31 @@ public sealed class UserDataLifecycleGuardrailTests {
         Assert.Empty(violations);
     }
 
+    [Theory]
+    [InlineData("Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs", "context.AdminImpersonationSessions")]
+    [InlineData("Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs", "context.ClientTasks")]
+    public void RestrictedUserRelationships_AreHandledByTheirOwners(string path, string target) {
+        string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(path));
+        Assert.Contains(target, source, StringComparison.Ordinal);
+        Assert.Contains("ExecuteDeleteAsync", source, StringComparison.Ordinal);
+    }
+
     [Fact]
-    public void RestrictedUserRelationships_AreExplicitlyHandledByCleanupService() {
-        string cleanupSource = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "Modules",
-            "Users",
-            "Infrastructure",
-            "Persistence",
-            "Users",
-            "UserCleanupService.cs"));
-        string[] requiredCleanupTargets = [
-            "dbContext.AdminImpersonationSessions",
-            "dbContext.ClientTasks",
-        ];
-
-        string[] violations = [.. requiredCleanupTargets
-            .Where(target => !cleanupSource.Contains(target, StringComparison.Ordinal))];
-
-        Assert.Empty(violations);
+    public void PurgeParticipants_DoNotSaveOrCommitAndCoordinatorDoesNotAcquireForeignTables() {
+        string[] participants = [.. ModuleSourceCatalog.InfrastructureFiles()
+            .Where(path => path.EndsWith("UserDataPurgeParticipant.cs", StringComparison.Ordinal))];
+        Assert.Equal(12, participants.Length);
+        foreach (string path in participants) {
+            string source = File.ReadAllText(path);
+            Assert.DoesNotContain("SaveChanges", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("BeginTransaction", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("CommitAsync", source, StringComparison.Ordinal);
+        }
+        string coordinator = File.ReadAllText(ArchitectureTestPaths.FromRoot("Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs"));
+        Assert.Contains("participant.PurgeAsync", coordinator, StringComparison.Ordinal);
+        foreach (string table in new[] { "Products", "Recipes", "ImageAssets", "Meals", "AiUsages", "ClientTasks", "HydrationEntries" }) {
+            Assert.DoesNotContain("dbContext." + table, coordinator, StringComparison.Ordinal);
+        }
     }
 
     private static IReadOnlyDictionary<string, UserDataLifecyclePolicy> CreateClassifications() {

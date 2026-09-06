@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,11 @@ namespace FoodDiary.Modules.Fasting.Infrastructure.Persistence.Configurations;
 
 internal sealed class FastingOccurrenceConfiguration : IEntityTypeConfiguration<FastingOccurrence> {
     public void Configure(EntityTypeBuilder<FastingOccurrence> builder) {
+        builder.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(entity => entity.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.ToTable("FastingOccurrences");
 
         builder.Property(occurrence => occurrence.Id)

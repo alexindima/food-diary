@@ -398,8 +398,7 @@ public partial class DietologistFeatureTests {
 
         var invitation = DietologistInvitation.Create(
             UserId.New(), "diet@example.com", "hash", DateTime.UtcNow.AddDays(-1), AllDomainPermissions);
-        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.ClientUser))!
-            .SetValue(invitation, CreateUser(invitation.ClientUserId, "client@example.com"));
+        SetInvitationProfile(invitation, client: CreateUser(invitation.ClientUserId, "client@example.com"));
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 

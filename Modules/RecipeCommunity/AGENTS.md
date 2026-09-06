@@ -2,7 +2,7 @@
 
 Own RecipeComments and RecipeLikes as separate feature groups. Application keeps its legacy assembly and CLR namespaces. Ports and errors live in Application/Abstractions; entities and IDs in Domain; repositories in Infrastructure/Persistence; EF configurations in Infrastructure/Model.
 
-Domain references the Users and Recipes owners one-way for User/Recipe and their IDs. Neither has an inverse CLR navigation to these entities. Preserve existing navigation properties, WithMany mappings, cascade behavior and the unique user/recipe like index. Recipes remains a separate Domain owner; do not transfer its ownership into RecipeCommunity or introduce provider behavior changes.
+Domain references Users and Recipes Domain.Contracts for scalar IDs. Preserve the foreign keys with typed HasOne<T>().WithMany() mappings, cascade behavior and the unique user/recipe like index; no foreign aggregate CLR navigation remains. Recipes remains a separate Domain owner; do not transfer its ownership into RecipeCommunity or introduce provider behavior changes.
 
 Hosts compose AddRecipeCommunityModule; shared DbContext applies ApplyRecipeCommunityPersistenceModel explicitly. Shared migrations/snapshot, HTTP, cross-module PostgreSQL tests and ContentReports reportability stay with their current owner. RecipeCommentErrors is called directly; the central compatibility facade is retired. No separate Contracts layer is justified by current consumers.
 

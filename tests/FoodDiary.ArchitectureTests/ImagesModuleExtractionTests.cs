@@ -26,7 +26,7 @@ public sealed class ImagesModuleExtractionTests {
 
         Assert.Equal(["FoodDiary.Domain.Primitives"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj"));
-        Assert.Equal(["FoodDiary.Modules.Images.Contracts", "FoodDiary.Modules.Users.Domain"], ProjectReferenceReader.ReadProjectReferences(
+        Assert.Equal(["FoodDiary.Domain.Primitives", "FoodDiary.Modules.Images.Contracts", "FoodDiary.Modules.Users.Domain.Contracts"], ProjectReferenceReader.ReadProjectReferences(
             "Modules/Images/Domain/FoodDiary.Modules.Images.Domain.csproj"));
     }
 

@@ -13,6 +13,7 @@ internal sealed class EfRecipeMutationTransactionRunner(
         Func<CancellationToken, Task<T>> operation,
         CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(operation);
+        SharedTransactionBoundary.EnsureCleanEntry(context);
         if (!context.Database.IsRelational()) {
             T inMemoryResult = await operation(cancellationToken).ConfigureAwait(false);
             if (inMemoryResult is not FoodDiary.Results.Result { IsFailure: true } && unitOfWork.HasPendingChanges) {

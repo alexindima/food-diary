@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Users/Application/FoodDiary.Modules.Users.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Authentication, Images
+- Abstraction-contract dependencies: Authentication
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -38,14 +38,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 68
+- Public contract files: 71
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 68
-- Interfaces: 30
+- Public contract types: 71
+- Interfaces: 33
 - DTO/read-model/projection types: 33
 - Enums: 2
 - Exported repository-shaped contracts: 6
@@ -72,15 +72,15 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserCurrentWaistProvider`
 - `interface IUserCurrentWeightProvider`
 - `interface IUserDashboardProfileReadService`
+- `interface IUserDataPurgeParticipant`
 - `interface IUserDietologistProfileReadService`
 - `interface IUserGamificationProfileReadService`
 - `interface IUserGoogleIdentityRepository`
 - `interface IUserHydrationProfileReadService`
 - `interface IUserLookupRepository`
 - `interface IUserNotificationProfileService`
-- `interface IUserProfileReadService`
-- `interface IUserRepository`
-- ... 38 more type(s)
+- `interface IUserProfileImageService`
+- ... 41 more type(s)
 
 ## Extraction Readiness
 

@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Favorites/Application/FoodDiary.Application.Favorites.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: FavoriteMeals, FavoriteProducts, FavoriteRecipes, Meals, Products, Recipes, Users
+- Abstraction-contract dependencies: FavoriteMeals, FavoriteProducts, FavoriteRecipes, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -41,15 +41,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: FavoriteMeal, FavoriteProduct, FavoriteRecipe
-- Public contract files: 26
+- Public contract files: 32
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 26
-- Interfaces: 16
-- DTO/read-model/projection types: 7
+- Public contract types: 32
+- Interfaces: 19
+- DTO/read-model/projection types: 10
 - Enums: 0
 - Exported repository-shaped contracts: 12
 - Contracts referencing domain entities: 6
@@ -66,19 +66,24 @@ No literal attribute-routed controller was associated with this module.
 - `interface IFavoriteProductReadRepository`
 - `interface IFavoriteProductReadService`
 - `interface IFavoriteProductRepository`
+- `interface IFavoriteProductSourceReadService`
 - `interface IFavoriteProductWriteRepository`
 - `interface IFavoriteRecipeReadModelRepository`
 - `interface IFavoriteRecipeReadRepository`
 - `interface IFavoriteRecipeReadService`
 - `interface IFavoriteRecipeRepository`
+- `interface IFavoriteRecipeSourceReadService`
 - `interface IFavoriteRecipeWriteRepository`
+- `interface IMealFavoriteReadService`
 - `record FavoriteMealModel`
 - `record FavoriteMealReadModel`
 - `record FavoriteMealSourceModel`
 - `record FavoriteProductModel`
 - `record FavoriteProductReadModel`
+- `record FavoriteProductSourceModel`
 - `record FavoriteRecipeModel`
 - `record FavoriteRecipeReadModel`
+- ... 2 more type(s)
 
 ## Focused Tests
 

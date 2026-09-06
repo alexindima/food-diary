@@ -1,5 +1,4 @@
 using System.Globalization;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Primitives;
@@ -35,7 +34,6 @@ public sealed class Meal : AggregateRoot<MealId> {
     public int PreMealSatietyLevel { get; private set; }
     public int PostMealSatietyLevel { get; private set; }
 
-    public User User { get; private set; } = null!;
     private readonly List<MealItem> _items = [];
     public IReadOnlyCollection<MealItem> Items => _items.AsReadOnly();
     private readonly List<MealAiSession> _aiSessions = [];

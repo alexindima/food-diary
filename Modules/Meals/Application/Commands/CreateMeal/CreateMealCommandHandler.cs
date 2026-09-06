@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Meals.Mappings;
@@ -21,7 +20,7 @@ public sealed class CreateMealCommandHandler(
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider,
     IImageAssetAccessService imageAssetAccessService,
-    IAchievementEvaluationOutbox achievementEvaluationOutbox)
+    IMealAchievementEvaluationRequest achievementEvaluationOutbox)
     : ICommandHandler<CreateMealCommand, Result<MealModel>> {
     public CreateMealCommandHandler(
         IMealWriteRepository mealRepository,

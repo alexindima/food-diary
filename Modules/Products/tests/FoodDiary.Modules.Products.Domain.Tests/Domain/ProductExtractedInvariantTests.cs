@@ -33,7 +33,6 @@ public sealed class ProductExtractedInvariantTests {
     public void Product_EfNavigation_DefaultsToNull() {
         Product product = CreateProduct();
 
-        Assert.Null(product.UsdaFood);
     }
 
     [Fact]

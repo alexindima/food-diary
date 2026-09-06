@@ -36,7 +36,7 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 - `ModuleErrorOwnershipTests` keeps DailyAdvices, Dietologist, Fasting, Hydration and Meals error factories in their existing owner Abstractions. `RetiredErrorFacadeTests` rejects central DailyAdvice/Fasting/HydrationEntry declarations and owner exports; their exact error contract tests live in their modules. All feature facades, including Dietologist/Meals/Billing/Lesson, are retired. Positive owner guards and the exact five-reference central matrix prevent regression; literal contract tests live in owner suites. Do not restore reverse central references.
 
-- `FavoritesContractOwnershipTests` protects the 20 owner-port/error/read-model files and six public read-service/projection files in separate Favorites projects, rejects central duplicates and aggregate/repository types in consumer contracts, and keeps Meals' source-reader dependency one-way.
+- `FavoritesContractOwnershipTests` protects the explicit owner-port/error/source-model files and public read-service/projection files in separate Favorites projects, rejects central duplicates and aggregate/repository types in consumer contracts, and keeps Meals' source-reader dependency one-way.
 
 - `OutboxReplayOwnershipTests` rejects concrete stream types/names in the common
   replay coordinator and saving/transactions in its module-owned stream adapters.
@@ -86,3 +86,9 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 
 ## Commands
 - Run: `dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj`
+
+ModuleAggregateIsolationTests rejects foreign aggregate fields and EF navigations,
+verifies the legacy Images ID-only contract exception, and checks that the relational
+model needs no migration. ModuleDependencyGraphTests requires zero combined API/
+service-contract cycles. PersistenceCapabilityTests reconciles the compiler exception
+file with the reviewed inventory; a passing analyzer alone does not review raw SQL.

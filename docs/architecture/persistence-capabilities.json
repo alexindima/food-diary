@@ -31,6 +31,15 @@
       ],
       "reason": "Admin role-audit reporting projects Users-owned audit records and actor display data."
     },
+    "Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs": {
+      "module": "Admin",
+      "capabilities": [
+        "entity:AdminImpersonationSession",
+        "tracked:AdminImpersonationSession",
+        "write:AdminImpersonationSession"
+      ],
+      "reason": "Admin owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+    },
     "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptProvider.cs": {
       "module": "Ai",
       "capabilities": [
@@ -87,6 +96,15 @@
       ],
       "reason": "AI owns usage records; Users is a reporting projection only."
     },
+    "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs": {
+      "module": "Ai",
+      "capabilities": [
+        "entity:AiUsage",
+        "tracked:AiUsage",
+        "write:AiUsage"
+      ],
+      "reason": "Ai owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+    },
     "Modules/Billing/Infrastructure/ModuleRegistration.cs": {
       "module": "Billing",
       "capabilities": [
@@ -136,7 +154,7 @@
         "entity:BillingWebhookEvent"
       ],
       "reason": "Billing owns serialized payment/webhook operations, save/commit and retry tracker reset; advisory locks serialize billing updates.",
-      "technicalSourceSha256": "e7597df94cc3dcc3788aa1cc883657aa9dddcce6dae4ce8dff376c93dfda3d18"
+      "technicalSourceSha256": "b4858549e2d4bdaf1442e3848b62f883361e48a3c438a10279efd9422acf5eae"
     },
     "Modules/Billing/Infrastructure/Persistence/PostgresBillingCheckoutLock.cs": {
       "module": "Billing",
@@ -160,6 +178,18 @@
         "entity:BillingProviderNames"
       ],
       "reason": "Options validation calls the Billing-owned provider-name catalog and has no database access."
+    },
+    "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs": {
+      "module": "BodyMetrics",
+      "capabilities": [
+        "entity:WaistEntry",
+        "entity:WeightEntry",
+        "tracked:WaistEntry",
+        "tracked:WeightEntry",
+        "write:WaistEntry",
+        "write:WeightEntry"
+      ],
+      "reason": "BodyMetrics owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
     },
     "Modules/BodyMetrics/Infrastructure/Persistence/WaistEntryRepository.cs": {
       "module": "BodyMetrics",
@@ -199,6 +229,27 @@
       ],
       "reason": "Cycles-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
     },
+    "Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs": {
+      "module": "Cycles",
+      "capabilities": [
+        "entity:BleedingEntry",
+        "entity:CycleFactor",
+        "entity:CycleProfile",
+        "entity:CycleSymptomEntry",
+        "entity:FertilitySignal",
+        "tracked:BleedingEntry",
+        "tracked:CycleFactor",
+        "tracked:CycleProfile",
+        "tracked:CycleSymptomEntry",
+        "tracked:FertilitySignal",
+        "write:BleedingEntry",
+        "write:CycleFactor",
+        "write:CycleProfile",
+        "write:CycleSymptomEntry",
+        "write:FertilitySignal"
+      ],
+      "reason": "Cycles owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+    },
     "Modules/DailyAdvices/Infrastructure/Persistence/DailyAdviceRepository.cs": {
       "module": "DailyAdvices",
       "capabilities": [
@@ -235,8 +286,7 @@
       "module": "Dashboard",
       "capabilities": [
         "entity:MealItem",
-        "entity:Product",
-        "tracked:Product"
+        "entity:Product"
       ],
       "reason": "Dashboard projects meal items and Product nutrition; retained query acquisition does not authorize Product mutation."
     },
@@ -246,13 +296,6 @@
         "entity:Meal"
       ],
       "reason": "Dashboard reads Meals for the snapshot; no diary mutation."
-    },
-    "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs": {
-      "module": "Dashboard",
-      "capabilities": [
-        "entity:Meal"
-      ],
-      "reason": "Shared source for Dashboard and Statistics meal aggregates; no mediator call back into Statistics."
     },
     "Modules/Dietologist/Infrastructure/Persistence/Dietologist/AttentionSignalMetricsReadService.cs": {
       "module": "Dietologist",
@@ -273,7 +316,16 @@
         "write:DietologistInvitation"
       ],
       "reason": "Dietologist owns invitations; Entry/CurrentValues handles existing detached-instance reconciliation in the caller transaction.",
-      "technicalSourceSha256": "3c8752d64e690f5fccca740ccfba84586d23a179861a91b8daa34998672f0af1"
+      "technicalSourceSha256": "aff032126dfeba20fe5b5ae7b6a5b18a2d299b29ce0ed923cb80685a144da242"
+    },
+    "Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs": {
+      "module": "Dietologist",
+      "capabilities": [
+        "entity:ClientTask",
+        "tracked:ClientTask",
+        "write:ClientTask"
+      ],
+      "reason": "Dietologist owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
     },
     "Modules/Dietologist/Infrastructure/Persistence/Interceptors/CollaborationAuditInterceptor.cs": {
       "module": "Dietologist",
@@ -444,7 +496,7 @@
         "write:AchievementEvaluationOutboxMessage"
       ],
       "reason": "Gamification owns evaluation outbox rows; conflict upsert coalesces requests and preserves revisions.",
-      "technicalSourceSha256": "4501aa427e2a0cb7f8906af327c516539e4d267f2a9c3270ff3f042ff844a8fe"
+      "technicalSourceSha256": "6f6b9a7798c789026c6c091a38ae5e8ad321563791a8e7dfd45440700e0bce94"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutboxProcessor.cs": {
       "module": "Gamification",
@@ -501,6 +553,15 @@
       ],
       "reason": "Hydration repository accepts only DbSet<HydrationEntry>; shared caller retains context, SaveChanges and transaction. PostgreSQL regression verifies rollback, user cascade and no-tracking date reads."
     },
+    "Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs": {
+      "module": "Hydration",
+      "capabilities": [
+        "entity:HydrationEntry",
+        "tracked:HydrationEntry",
+        "write:HydrationEntry"
+      ],
+      "reason": "Hydration owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+    },
     "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs": {
       "module": "Identity",
       "capabilities": [
@@ -546,7 +607,7 @@
         "write:UserRefreshTokenSession"
       ],
       "reason": "Identity owns session rotation/revocation, including atomic bulk updates. Active-session listing uses a minimized no-tracking projection. No User aggregate writes.",
-      "technicalSourceSha256": "6328c5a13bd093d121720a6170281479dbc2e9f9f210fc19dcd434fafaa5ee95"
+      "technicalSourceSha256": "96f460f65c242cb80a9cd761e7c4b1cfb5557899f14f75a03a6ea5e0704db5ff"
     },
     "Modules/Identity/Infrastructure/Persistence/Users/UserLoginEventRepository.cs": {
       "module": "Identity",
@@ -557,6 +618,15 @@
         "write:UserLoginEvent"
       ],
       "reason": "Identity owns login-event reporting/retention; Users supplies reporting display data only."
+    },
+    "Modules/Images/Infrastructure/Persistence/Images/ImageAssetOwnershipService.cs": {
+      "module": "Images",
+      "capabilities": [
+        "entity:ImageAsset",
+        "tracked:ImageAsset",
+        "write:ImageAsset"
+      ],
+      "reason": "Images reassigns only requested asset IDs for catalog-owner cleanup within the coordinator transaction; it does not save or commit."
     },
     "Modules/Images/Infrastructure/Persistence/Images/ImageAssetRepository.cs": {
       "module": "Images",
@@ -569,12 +639,6 @@
         "entity:RecipeStep",
         "entity:User",
         "tracked:ImageAsset",
-        "tracked:Meal",
-        "tracked:MealAiSession",
-        "tracked:Product",
-        "tracked:Recipe",
-        "tracked:RecipeStep",
-        "tracked:User",
         "write:ImageAsset"
       ],
       "reason": "Images owns asset lifecycle; references in Users, Meals, Products, Recipes and recipe steps are usage checks for safe deletion, not foreign aggregate mutation."
@@ -605,6 +669,22 @@
       ],
       "reason": "Images-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
     },
+    "Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs": {
+      "module": "Images",
+      "capabilities": [
+        "entity:ImageAsset",
+        "tracked:ImageAsset",
+        "write:ImageAsset"
+      ],
+      "reason": "Images owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+    },
+    "Modules/Images/Infrastructure/UserProfileImageService.cs": {
+      "module": "Images",
+      "capabilities": [
+        "entity:ImageAsset"
+      ],
+      "reason": "Images resolves its own asset access result into the Users-owned URL contract; cleanup delegates to the existing owner service with unchanged cancellation and errors."
+    },
     "Modules/Lessons/Infrastructure/Persistence/NutritionLessonRepository.cs": {
       "module": "Lessons",
       "capabilities": [
@@ -627,16 +707,27 @@
       ],
       "reason": "Marketing-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
     },
+    "Modules/MealPlanning/Infrastructure/Persistence/MealPlanningUserDataPurgeParticipant.cs": {
+      "module": "MealPlanning",
+      "capabilities": [
+        "entity:ShoppingList",
+        "tracked:ShoppingList",
+        "write:ShoppingList"
+      ],
+      "reason": "MealPlanning owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
+    },
     "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs": {
       "module": "MealPlanning",
       "capabilities": [
+        "call:MealPlanMeal.SetRecipeSnapshot",
         "entity:MealPlan",
+        "entity:MealPlanRecipeIngredientSnapshot",
         "entity:Product",
         "entity:Recipe",
         "tracked:MealPlan",
         "write:MealPlan"
       ],
-      "reason": "MealPlanning-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "MealPlanning tracks/writes its own plans and batch-projects Recipes and Products without tracking into immutable recipe/ingredient snapshots. Foreign schema relationships remain scalar."
     },
     "Modules/MealPlanning/Infrastructure/Persistence/ShoppingLists/ShoppingListRepository.cs": {
       "module": "MealPlanning",
@@ -647,6 +738,13 @@
       ],
       "reason": "MealPlanning-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
     },
+    "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs": {
+      "module": "Meals",
+      "capabilities": [
+        "entity:Meal"
+      ],
+      "reason": "Meals owns the unchanged no-tracking nutrition bucket aggregation formerly in Dashboard; only scalar meal nutrition fields are projected."
+    },
     "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs": {
       "module": "Meals",
       "capabilities": [
@@ -656,10 +754,21 @@
         "entity:Product",
         "entity:Recipe",
         "tracked:Meal",
-        "tracked:Product",
         "write:Meal"
       ],
       "reason": "Meals owns diary writes; Products, Recipes and Images are source/nutrition/usage projections. Foreign tracked-query acquisition is retained pending narrower projections, not permission for foreign mutation."
+    },
+    "Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs": {
+      "module": "Meals",
+      "capabilities": [
+        "entity:Meal",
+        "entity:MealItem",
+        "tracked:Meal",
+        "tracked:MealItem",
+        "write:Meal",
+        "write:MealItem"
+      ],
+      "reason": "Meals owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
     },
     "Modules/Notifications/Infrastructure/ModuleRegistration.cs": {
       "module": "Notifications",
@@ -732,7 +841,7 @@
         "context:Database"
       ],
       "reason": "Products serializes its approved mutations with the shared context/unit of work and caller operation; retains existing save/commit ownership.",
-      "technicalSourceSha256": "75c4d6b37f06535bd1f33e9e8af0b8c07ca49b277ff2ae5448d74970771ef0e7"
+      "technicalSourceSha256": "f41c0701bf5b0dbbb2b080fccdfbad7aaefee7a4241b7fe9c0f80629686f140d"
     },
     "Modules/Products/Infrastructure/Persistence/Products/ProductOverviewReadService.cs": {
       "module": "Products",
@@ -740,9 +849,7 @@
         "entity:MealItem",
         "entity:Product",
         "entity:RecipeIngredient",
-        "tracked:MealItem",
-        "tracked:Product",
-        "tracked:RecipeIngredient"
+        "tracked:Product"
       ],
       "reason": "Products overview joins MealItem and RecipeIngredient usage counters; no foreign writes."
     },
@@ -753,13 +860,20 @@
         "entity:MealItem",
         "entity:Product",
         "entity:RecipeIngredient",
-        "tracked:MealItem",
         "tracked:Product",
-        "tracked:RecipeIngredient",
         "write:Product"
       ],
       "reason": "Products owns catalog writes and row locking; MealItem and RecipeIngredient are usage reads only.",
-      "technicalSourceSha256": "2ba08ce1ec21963d9e563257c00decb257e3a0b9a8bc23f026594275f5db2942"
+      "technicalSourceSha256": "d1370f54604a52d2554907dc8b0a9a008b4705ed6a3f2a2e3daea9ab9d9ee3f3"
+    },
+    "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs": {
+      "module": "Products",
+      "capabilities": [
+        "entity:Product",
+        "tracked:Product",
+        "write:Product"
+      ],
+      "reason": "Products owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
     },
     "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs": {
       "module": "RecentItems",
@@ -774,6 +888,15 @@
       ],
       "reason": "RecentItems owns recency upsert/pruning. Tracker inspection merges pending own records; SQL handles conflict-safe usage and bounded retention.",
       "technicalSourceSha256": "0e1ea87f47aefd60e53da5c3ca4b73f219ce970b0b3ecb21af118c0a43057de4"
+    },
+    "Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs": {
+      "module": "RecentItems",
+      "capabilities": [
+        "entity:RecentItem",
+        "tracked:RecentItem",
+        "write:RecentItem"
+      ],
+      "reason": "RecentItems owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
     },
     "Modules/RecipeCommunity/Infrastructure/Persistence/RecipeComments/RecipeCommentRepository.cs": {
       "module": "RecipeCommunity",
@@ -800,7 +923,7 @@
         "context:Database"
       ],
       "reason": "Recipes serializes approved mutations with the shared context/unit of work and caller operation; retains existing save/commit ownership.",
-      "technicalSourceSha256": "d30a4eb5a1353b7b6b7963543c761a9366c062b36711ed2fb59c121bdf006349"
+      "technicalSourceSha256": "a05569a6cbac5b3f488b3a700ca86bd56423effbd9940c09ca63d92ed4f04fd4"
     },
     "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs": {
       "module": "Recipes",
@@ -808,7 +931,6 @@
         "entity:MealItem",
         "entity:Product",
         "entity:Recipe",
-        "tracked:MealItem",
         "tracked:Recipe"
       ],
       "reason": "Recipes overview projects MealItem usage counters; no Meals writes."
@@ -816,17 +938,29 @@
     "Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeRepository.cs": {
       "module": "Recipes",
       "capabilities": [
+        "call:RecipeIngredient.SetProductSnapshot",
         "context:Database",
         "context:Entry",
         "entity:MealItem",
         "entity:Product",
         "entity:Recipe",
-        "tracked:MealItem",
+        "entity:RecipeIngredientProductSnapshot",
         "tracked:Recipe",
         "write:Recipe"
       ],
-      "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation; MealItem is a usage read only.",
-      "technicalSourceSha256": "ce5a2b37e8d5484ab48446cf56b33a1766ceb99c1d83d21fe50bef1d79d7d1ae"
+      "reason": "Recipes owns recipe writes, row locks and tracked-instance reconciliation; MealItem is a usage read only. Ingredient product snapshots are transient immutable projections, not mapped entities; SetProductSnapshot never mutates persisted recipe state or grants Product tracking/write access.",
+      "technicalSourceSha256": "5c97db172dc2076092a130f8b659f08e185d58b32e43e6d6bc0320041228ceaf"
+    },
+    "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs": {
+      "module": "Recipes",
+      "capabilities": [
+        "entity:Recipe",
+        "entity:RecipeStep",
+        "tracked:Recipe",
+        "tracked:RecipeStep",
+        "write:Recipe"
+      ],
+      "reason": "Recipes owns its user purge operations; only the Users coordinator saves and commits. Ordered owner participant preserves existing predicates and lifecycle policy."
     },
     "Modules/Usda/Infrastructure/Persistence/UsdaFoodRepository.cs": {
       "module": "Usda",
@@ -862,73 +996,18 @@
     "Modules/Users/Infrastructure/Persistence/Users/UserCleanupService.cs": {
       "module": "Users",
       "capabilities": [
+        "context:ChangeTracker",
         "context:Database",
         "context:SaveChangesAsync",
-        "entity:AdminImpersonationSession",
-        "entity:AiUsage",
-        "entity:BleedingEntry",
-        "entity:ClientTask",
-        "entity:CycleFactor",
-        "entity:CycleProfile",
-        "entity:CycleSymptomEntry",
-        "entity:FertilitySignal",
-        "entity:HydrationEntry",
-        "entity:ImageAsset",
-        "entity:Meal",
-        "entity:MealItem",
-        "entity:Product",
-        "entity:RecentItem",
-        "entity:Recipe",
-        "entity:RecipeStep",
-        "entity:ShoppingList",
         "entity:User",
         "entity:UserRole",
-        "entity:WaistEntry",
-        "entity:WeightEntry",
-        "tracked:AdminImpersonationSession",
-        "tracked:AiUsage",
-        "tracked:BleedingEntry",
-        "tracked:ClientTask",
-        "tracked:CycleFactor",
-        "tracked:CycleProfile",
-        "tracked:CycleSymptomEntry",
-        "tracked:FertilitySignal",
-        "tracked:HydrationEntry",
-        "tracked:ImageAsset",
-        "tracked:Meal",
-        "tracked:MealItem",
-        "tracked:Product",
-        "tracked:RecentItem",
-        "tracked:Recipe",
-        "tracked:RecipeStep",
-        "tracked:ShoppingList",
         "tracked:User",
         "tracked:UserRole",
-        "tracked:WaistEntry",
-        "tracked:WeightEntry",
-        "write:AdminImpersonationSession",
-        "write:AiUsage",
-        "write:BleedingEntry",
-        "write:ClientTask",
-        "write:CycleFactor",
-        "write:CycleProfile",
-        "write:CycleSymptomEntry",
-        "write:FertilitySignal",
-        "write:HydrationEntry",
-        "write:ImageAsset",
-        "write:Meal",
-        "write:MealItem",
-        "write:Product",
-        "write:RecentItem",
-        "write:Recipe",
-        "write:ShoppingList",
         "write:User",
-        "write:UserRole",
-        "write:WaistEntry",
-        "write:WeightEntry"
+        "write:UserRole"
       ],
-      "reason": "Explicit Users lifecycle coordinator: locks eligibility, removes/reassigns dependent module data and queues image deletion in one per-user transaction. Governed by UserDataLifecycleGuardrailTests and cleanup PostgreSQL tests; this exception is not available to ordinary Users services.",
-      "technicalSourceSha256": "2b69e47b85ef95d6633f24d0f2da4c7bcb7fa89cff6beaae234a3afdcb3dc8f3"
+      "reason": "Users lifecycle coordinator locks eligibility, invokes ordered owner purge participants, deletes only User/UserRole rows and commits once per account. Owner adapters govern foreign data lifecycle. Reject pending caller state; clear tracking before retry attempts and after failed accounts so rolled-back outbox additions cannot leak into later commits.",
+      "technicalSourceSha256": "09162d5cf8e79e57f0c0e53ce92462a8b339cf03dc1b19c287afb3df1f768ab1"
     },
     "Modules/Users/Infrastructure/Persistence/Users/UserCurrentWaistProvider.cs": {
       "module": "Users",
@@ -991,7 +1070,7 @@
         "context:SaveChangesAsync"
       ],
       "reason": "Wearables owns its existing serialized sync transaction and save/commit boundary.",
-      "technicalSourceSha256": "cda195f04e971c9e1895c4edd262173979829638828e9de5c1ab7512290433b0"
+      "technicalSourceSha256": "6c72e3107d75c3bc559ee4dec27719ff52fc59d81c020f1f5bddf7aceaeb8df8"
     },
     "Modules/Wearables/Infrastructure/Persistence/WearableConnectionRepository.cs": {
       "module": "Wearables",
@@ -1017,7 +1096,7 @@
         "context:Database"
       ],
       "reason": "WeeklyGoals serializes a user/week with an advisory lock and shared unit of work; no foreign aggregate mutation.",
-      "technicalSourceSha256": "f2a0c41cbaccbbfd5fea11fd3374d52e7639a3020051cbe062e200de090ddcd4"
+      "technicalSourceSha256": "035c9de4526f18e4415976648f014c05030ded94c5ad811deae50d4f536dc11f"
     },
     "Modules/WeeklyGoals/Infrastructure/Persistence/WeeklyGoalRepository.cs": {
       "module": "WeeklyGoals",

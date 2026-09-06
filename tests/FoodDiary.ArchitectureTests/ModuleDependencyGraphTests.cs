@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System.Text.Json;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -50,6 +51,48 @@ public sealed class ModuleDependencyGraphTests {
 
         Assert.Equal(acknowledgedCycles, actualCycles);
     }
+
+    [Fact]
+    public void Manifest_ExactlyMatchesOwnerContractDependencies() {
+        ModuleDependencyManifest manifest = LoadManifest();
+        IReadOnlyDictionary<string, string[]> actual = ReadContractGraph();
+        Assert.Equal(actual.Keys.Order(StringComparer.Ordinal), manifest.ContractDependencies.Keys.Order(StringComparer.Ordinal));
+        foreach ((string module, string[] dependencies) in actual) {
+            Assert.Equal(dependencies, manifest.ContractDependencies[module].Order(StringComparer.Ordinal), StringComparer.Ordinal);
+        }
+    }
+
+    [Fact]
+    public void CombinedApiAndContractGraph_DoesNotIntroduceUnacknowledgedCycles() {
+        ModuleDependencyManifest manifest = LoadManifest();
+        var combined = manifest.Modules.ToDictionary(
+            pair => pair.Key,
+            pair => pair.Value.Concat(manifest.ContractDependencies[pair.Key]).Distinct(StringComparer.Ordinal).ToArray(),
+            StringComparer.Ordinal);
+        string[] cycles = [.. FindStronglyConnectedComponents(combined).Where(component => component.Length > 1)
+            .Select(NormalizeCycle).Order(StringComparer.Ordinal)];
+        Assert.Empty(manifest.KnownContractCycles);
+        Assert.Empty(cycles);
+    }
+
+    [Fact]
+    public void ContractOnlyBackEdge_IsIncludedInCycleDetection() {
+        Dictionary<string, string[]> graph = new(StringComparer.Ordinal) { ["Dashboard"] = ["Tdee"], ["Tdee"] = ["Dashboard"] };
+        Assert.Contains(FindStronglyConnectedComponents(graph), component => component.Length == 2);
+    }
+
+    private static IReadOnlyDictionary<string, string[]> ReadContractGraph() =>
+        ModuleSourceCatalog.ApplicationRoots.ToDictionary(
+            pair => pair.Key,
+            pair => Directory.GetFiles(pair.Value, "*.csproj").SelectMany(ProjectReferenceReader.ReadProjectReferences)
+                // Images.Contracts is the legacy ID-only assembly, verified by ModuleAggregateIsolationTests.
+                .Where(reference => !reference.Equals("FoodDiary.Modules.Images.Contracts", StringComparison.Ordinal))
+                .Select(reference => Regex.Match(reference, @"^FoodDiary\.Modules\.(?<owner>[^.]+)\.(?:Contracts|Application\.Abstractions)$", RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1)))
+                .Where(match => match.Success)
+                .Select(match => match.Groups["owner"].Value)
+                .Where(owner => !owner.Equals(pair.Key, StringComparison.Ordinal))
+                .Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToArray(),
+            StringComparer.Ordinal);
 
     private static IReadOnlyDictionary<string, string[]> ReadActualGraph() {
         var moduleRoots = ModuleSourceCatalog.ApplicationRoots
@@ -154,5 +197,7 @@ public sealed class ModuleDependencyGraphTests {
     private sealed record ModuleDependencyManifest(
         int SchemaVersion,
         Dictionary<string, string[]> Modules,
-        string[][] KnownCycles);
+        string[][] KnownCycles,
+        Dictionary<string, string[]> ContractDependencies,
+        string[][] KnownContractCycles);
 }

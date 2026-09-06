@@ -1,7 +1,6 @@
 using FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
 using FoodDiary.Application.Usda.Commands.UnlinkProductFromUsdaFood;
 using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;
@@ -18,7 +17,7 @@ public class UsdaFeatureTests {
         var userId = UserId.New();
         var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
         var usdaFood = new UsdaFood { FdcId = 171077, Description = "Chicken, breast" };
-        IProductUsdaLinkService productLinkService = CreateProductLinkService(product);
+        IUsdaProductLinkService productLinkService = CreateProductLinkService(product);
         IUsdaFoodRepository usdaRepo = CreateUsdaFoodRepository(usdaFood);
 
         var handler = new LinkProductToUsdaFoodCommandHandler(productLinkService, usdaRepo, Substitute.For<ICurrentUserAccessService>());
@@ -67,14 +66,14 @@ public class UsdaFeatureTests {
         var userId = UserId.New();
         var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
         var usdaFood = new UsdaFood { FdcId = 171077, Description = "Chicken, breast" };
-        IProductUsdaLinkService productLinkService = CreateProductLinkService(product);
+        IUsdaProductLinkService productLinkService = CreateProductLinkService(product);
         productLinkService
             .LinkAsync(
                 productId: product.Id,
                 userId: userId,
                 fdcId: usdaFood.FdcId,
                 cancellationToken: Arg.Any<CancellationToken>())
-            .Returns(returnThis: false);
+            .Returns(Result.Failure(new Error("Product.NotAccessible", "Product is inaccessible", Kind: ErrorKind.NotFound)));
         var handler = new LinkProductToUsdaFoodCommandHandler(
             productLinkService,
             CreateUsdaFoodRepository(usdaFood),
@@ -92,7 +91,7 @@ public class UsdaFeatureTests {
     public async Task UnlinkProductFromUsdaFood_WithValidData_Succeeds() {
         var userId = UserId.New();
         var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
-        IProductUsdaLinkService productLinkService = CreateProductLinkService(product);
+        IUsdaProductLinkService productLinkService = CreateProductLinkService(product);
 
         var handler = new UnlinkProductFromUsdaFoodCommandHandler(productLinkService, Substitute.For<ICurrentUserAccessService>());
         Result result = await handler.Handle(
@@ -135,17 +134,17 @@ public class UsdaFeatureTests {
         ResultAssert.Failure(result);
     }
 
-    private static IProductUsdaLinkService CreateProductLinkService(Product? product) {
-        IProductUsdaLinkService service = Substitute.For<IProductUsdaLinkService>();
+    private static IUsdaProductLinkService CreateProductLinkService(Product? product) {
+        IUsdaProductLinkService service = Substitute.For<IUsdaProductLinkService>();
         service
             .IsAccessibleForUpdateAsync(Arg.Any<ProductId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(product is not null);
+            .Returns(product is not null ? Result.Success() : Result.Failure(new Error("Product.NotAccessible", "Product is inaccessible", Kind: ErrorKind.NotFound)));
         service
             .LinkAsync(Arg.Any<ProductId>(), Arg.Any<UserId>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
-            .Returns(product is not null);
+            .Returns(product is not null ? Result.Success() : Result.Failure(new Error("Product.NotAccessible", "Product is inaccessible", Kind: ErrorKind.NotFound)));
         service
             .UnlinkAsync(Arg.Any<ProductId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(product is not null);
+            .Returns(product is not null ? Result.Success() : Result.Failure(new Error("Product.NotAccessible", "Product is inaccessible", Kind: ErrorKind.NotFound)));
         return service;
     }
 

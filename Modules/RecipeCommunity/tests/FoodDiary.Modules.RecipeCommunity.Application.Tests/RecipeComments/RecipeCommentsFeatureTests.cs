@@ -418,8 +418,8 @@ public class RecipeCommentsFeatureTests {
                     comment.Id.Value,
                     comment.RecipeId.Value,
                     comment.UserId.Value,
-                    comment.User?.Username,
-                    comment.User?.FirstName,
+                    AuthorUsername: null,
+                    AuthorFirstName: null,
                     comment.Text,
                     comment.CreatedOnUtc,
                     comment.ModifiedOnUtc))

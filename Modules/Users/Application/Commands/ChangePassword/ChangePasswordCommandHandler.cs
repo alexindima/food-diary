@@ -10,7 +10,7 @@ namespace FoodDiary.Application.Users.Commands.ChangePassword;
 public sealed class ChangePasswordCommandHandler(
     IUserContextService userContextService,
     IPasswordHasher passwordHasher,
-    IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
+    IUserSessionRevocationService refreshTokenSessionRepository,
     TimeProvider dateTimeProvider)
     : ICommandHandler<ChangePasswordCommand, Result> {
     public async Task<Result> Handle(ChangePasswordCommand command, CancellationToken cancellationToken) {

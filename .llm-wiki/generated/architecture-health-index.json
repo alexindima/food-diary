@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1239,
+    "productionProjectEdges": 1273,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -36,13 +36,6 @@
       "role": "orchestrator"
     },
     {
-      "module": "Meals",
-      "fanIn": 3,
-      "fanOut": 1,
-      "level": "informational",
-      "role": "aggregate-owner"
-    },
-    {
       "module": "Images",
       "fanIn": 3,
       "fanOut": 0,
@@ -50,9 +43,9 @@
       "role": "aggregate-owner"
     },
     {
-      "module": "Products",
-      "fanIn": 0,
-      "fanOut": 3,
+      "module": "Meals",
+      "fanIn": 2,
+      "fanOut": 1,
       "level": "informational",
       "role": "aggregate-owner"
     },
@@ -85,18 +78,18 @@
       "role": "aggregate-owner"
     },
     {
+      "module": "Products",
+      "fanIn": 0,
+      "fanOut": 2,
+      "level": "informational",
+      "role": "aggregate-owner"
+    },
+    {
       "module": "Tdee",
       "fanIn": 1,
       "fanOut": 1,
       "level": "informational",
       "role": "read-composer"
-    },
-    {
-      "module": "Usda",
-      "fanIn": 1,
-      "fanOut": 1,
-      "level": "informational",
-      "role": "reference-data-owner"
     },
     {
       "module": "Ai",
@@ -237,6 +230,13 @@
       "fanOut": 0,
       "level": "informational",
       "role": "read-composer"
+    },
+    {
+      "module": "Usda",
+      "fanIn": 0,
+      "fanOut": 0,
+      "level": "informational",
+      "role": "reference-data-owner"
     },
     {
       "module": "Users",
@@ -5047,7 +5047,7 @@
     },
     {
       "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "line": 13,
+      "line": 12,
       "marker": "#pragma warning disable"
     },
     {

@@ -17,10 +17,9 @@ public partial class DietologistFeatureTests {
         typeof(User).GetProperty(nameof(User.LastName))!.SetValue(dietologist, "Smith");
 
         DietologistInvitation invitation = CreateAcceptedInvitation(UserId.New(), dietologistId);
-        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.DietologistUser))!
-            .SetValue(invitation, dietologist);
+        SetInvitationProfile(invitation, dietologist: dietologist);
 
-        var model = invitation.ToDietologistInfoModel();
+        var model = InMemoryInvitationRepository.ToReadModel(invitation)!.ToDietologistInfoModel();
 
         Assert.Equal(invitation.Id.Value, model.InvitationId);
         Assert.Equal(dietologistId.Value, model.DietologistUserId);
@@ -31,17 +30,16 @@ public partial class DietologistFeatureTests {
     }
 
     [Fact]
-    public void DietologistMappings_ToRelationshipModel_MapsDomainInvitation() {
+    public void DietologistMappings_ToRelationshipModel_MapsInvitationProjection() {
         var dietologistId = UserId.New();
         User dietologist = CreateUser(dietologistId, "diet@example.com");
         typeof(User).GetProperty(nameof(User.FirstName))!.SetValue(dietologist, "Dana");
         typeof(User).GetProperty(nameof(User.LastName))!.SetValue(dietologist, "Smith");
 
         DietologistInvitation invitation = CreateAcceptedInvitation(UserId.New(), dietologistId);
-        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.DietologistUser))!
-            .SetValue(invitation, dietologist);
+        SetInvitationProfile(invitation, dietologist: dietologist);
 
-        DietologistRelationshipModel model = invitation.ToRelationshipModel();
+        DietologistRelationshipModel model = InMemoryInvitationRepository.ToReadModel(invitation)!.ToRelationshipModel();
 
         Assert.Equal(invitation.Id.Value, model.InvitationId);
         Assert.Equal(DietologistInvitationStatus.Accepted.ToString(), model.Status);
@@ -67,10 +65,9 @@ public partial class DietologistFeatureTests {
         typeof(User).GetProperty(nameof(User.BirthDate))!.SetValue(client, birthDate);
 
         DietologistInvitation invitation = CreateAcceptedInvitation(clientId, dietologistId);
-        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.ClientUser))!
-            .SetValue(invitation, client);
+        SetInvitationProfile(invitation, client: client);
 
-        var model = invitation.ToClientSummaryModel();
+        var model = InMemoryInvitationRepository.ToReadModel(invitation)!.ToClientSummaryModel();
 
         Assert.Equal(clientId.Value, model.UserId);
         Assert.Equal("client@example.com", model.Email);
@@ -85,7 +82,7 @@ public partial class DietologistFeatureTests {
     }
 
     [Fact]
-    public void DietologistMappings_ToCurrentUserInvitationModel_MapsExpiredDomainInvitation() {
+    public void DietologistMappings_ToCurrentUserInvitationModel_MapsExpiredInvitationProjection() {
         var clientId = UserId.New();
         var invitation = DietologistInvitation.Create(
             clientId,
@@ -93,10 +90,9 @@ public partial class DietologistFeatureTests {
             "hash",
             DateTime.UtcNow.AddDays(-1),
             AllDomainPermissions);
-        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.ClientUser))!
-            .SetValue(invitation, CreateUser(clientId, "client@example.com"));
+        SetInvitationProfile(invitation, client: CreateUser(clientId, "client@example.com"));
 
-        DietologistInvitationForCurrentUserModel model = invitation.ToCurrentUserInvitationModel();
+        DietologistInvitationForCurrentUserModel model = InMemoryInvitationRepository.ToReadModel(invitation)!.ToCurrentUserInvitationModel(TimeProvider.System);
 
         Assert.Equal(invitation.Id.Value, model.InvitationId);
         Assert.Equal(clientId.Value, model.ClientUserId);
@@ -113,10 +109,9 @@ public partial class DietologistFeatureTests {
         typeof(User).GetProperty(nameof(User.LastName))!.SetValue(client, "Jones");
 
         DietologistInvitation invitation = CreatePendingInvitation(clientId, "diet@example.com");
-        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.ClientUser))!
-            .SetValue(invitation, client);
+        SetInvitationProfile(invitation, client: client);
 
-        var model = invitation.ToInvitationModel();
+        var model = InMemoryInvitationRepository.ToReadModel(invitation)!.ToInvitationModel();
 
         Assert.Equal(invitation.Id.Value, model.InvitationId);
         Assert.Equal("client@example.com", model.ClientEmail);

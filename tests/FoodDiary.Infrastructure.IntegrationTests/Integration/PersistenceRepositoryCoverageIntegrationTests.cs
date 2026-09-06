@@ -1604,15 +1604,19 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Empty(await repository.GetByProductIdsAsync(userId, []));
         FavoriteProduct favorite = await repository.AddAsync(FavoriteProduct.Create(userId, productId, "Rice", 120));
         await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
         Assert.NotNull(await repository.GetByIdAsync(favorite.Id, userId));
+        Assert.Empty(context.ChangeTracker.Entries());
         FavoriteProduct? tracked = await repository.GetByIdAsync(favorite.Id, userId, asTracking: true);
         Assert.NotNull(tracked);
+        Assert.Same(tracked, await repository.GetByIdAsync(favorite.Id, userId, asTracking: true));
+        Assert.IsType<FavoriteProduct>(Assert.Single(context.ChangeTracker.Entries()).Entity);
         tracked.UpdateName("Brown rice");
         tracked.UpdatePreferredPortionAmount(150);
         await repository.UpdateAsync(tracked);
         await context.SaveChangesAsync();
 
-        Assert.NotNull(await repository.GetByProductIdAsync(productId, userId));
+        Assert.Equal("Brown rice", (await repository.GetByProductIdAsync(productId, userId))?.Name);
         Assert.True(await repository.ExistsByProductIdAsync(productId, userId));
         Assert.Single(await repository.GetAllAsync(userId));
         Assert.True((await repository.GetByProductIdsAsync(userId, [productId])).ContainsKey(productId));
@@ -1632,12 +1636,15 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Empty(await repository.GetByRecipeIdsAsync(userId, []));
         FavoriteRecipe favorite = await repository.AddAsync(FavoriteRecipe.Create(userId, recipeId, "Dinner recipe"));
         await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
         FavoriteRecipe? tracked = await repository.GetByIdAsync(favorite.Id, userId, asTracking: true);
         Assert.NotNull(tracked);
+        Assert.Same(tracked, await repository.GetByIdAsync(favorite.Id, userId, asTracking: true));
+        Assert.IsType<FavoriteRecipe>(Assert.Single(context.ChangeTracker.Entries()).Entity);
         tracked.UpdateName("Weekend recipe");
         await context.SaveChangesAsync();
 
-        Assert.NotNull(await repository.GetByRecipeIdAsync(recipeId, userId));
+        Assert.Equal("Weekend recipe", (await repository.GetByRecipeIdAsync(recipeId, userId))?.Name);
         Assert.True(await repository.ExistsByRecipeIdAsync(recipeId, userId));
         Assert.Single(await repository.GetAllAsync(userId));
         Assert.True((await repository.GetByRecipeIdsAsync(userId, [recipeId])).ContainsKey(recipeId));

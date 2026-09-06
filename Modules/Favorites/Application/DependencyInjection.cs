@@ -1,5 +1,4 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;

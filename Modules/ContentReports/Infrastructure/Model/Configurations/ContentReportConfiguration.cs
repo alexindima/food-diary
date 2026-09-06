@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +36,7 @@ internal sealed class ContentReportConfiguration : IEntityTypeConfiguration<Cont
         builder.HasIndex(e => new { e.Status, e.CreatedOnUtc });
         builder.HasIndex(e => new { e.UserId, e.TargetType, e.TargetId }).IsUnique();
 
-        builder.HasOne(e => e.User)
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade);

@@ -82,8 +82,8 @@ public partial class FastingFeatureTests {
         }
 
         public Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<FastingOccurrence>> GetActiveAsync(CancellationToken ct = default) =>
-            Task.FromResult<IReadOnlyList<FastingOccurrence>>(StoredOccurrences.Where(x => x.Status == FastingOccurrenceStatus.Active).ToList());
+        public Task<IReadOnlyList<FastingActiveOccurrenceModel>> GetActiveAsync(CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<FastingActiveOccurrenceModel>>(StoredOccurrences.Where(x => x.Status == FastingOccurrenceStatus.Active).Select(x => new FastingActiveOccurrenceModel(x, 12, 20)).ToList());
         public Task<IReadOnlyList<FastingOccurrence>> GetByPlanAsync(FastingPlanId planId, bool includeCompleted = true, CancellationToken ct = default) {
             IReadOnlyList<FastingOccurrence> occurrences = StoredOccurrences
                 .Where(x => x.PlanId == planId)
@@ -186,8 +186,8 @@ public partial class FastingFeatureTests {
         public Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken ct = default) =>
             throw new NotSupportedException();
 
-        public Task<IReadOnlyList<FastingOccurrence>> GetActiveAsync(CancellationToken ct = default) =>
-            Task.FromResult<IReadOnlyList<FastingOccurrence>>(StoredOccurrences);
+        public Task<IReadOnlyList<FastingActiveOccurrenceModel>> GetActiveAsync(CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<FastingActiveOccurrenceModel>>(StoredOccurrences.ConvertAll(x => new FastingActiveOccurrenceModel(x, 12, 20)));
 
         public Task<IReadOnlyList<FastingOccurrence>> GetByPlanAsync(FastingPlanId planId, bool includeCompleted = true, CancellationToken ct = default) =>
             throw new NotSupportedException();

@@ -4426,13 +4426,11 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Achievements.UserAchievement", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Admin.AdminImpersonationSession", b => {
@@ -4458,13 +4456,11 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Assets.ImageAsset", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Billing.BillingPayment", b => {
@@ -4495,15 +4491,13 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
                 b.Navigation("Lesson");
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.ClientTask", b => {
@@ -4521,38 +4515,30 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.DietologistInvitation", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "ClientUser")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("ClientUserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "DietologistUser")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("DietologistUserId")
                     .OnDelete(DeleteBehavior.SetNull);
-
-                b.Navigation("ClientUser");
-
-                b.Navigation("DietologistUser");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.Recommendation", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "ClientUser")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("ClientUserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "DietologistUser")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("DietologistUserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("ClientUser");
-
-                b.Navigation("DietologistUser");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationBulkDispatch", b => {
@@ -4576,7 +4562,7 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Dietologist.RecommendationComment", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "AuthorUser")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("AuthorUserId")
                     .OnDelete(DeleteBehavior.Cascade)
@@ -4587,8 +4573,6 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasForeignKey("RecommendationId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("AuthorUser");
 
                 b.Navigation("Recommendation");
             });
@@ -4602,66 +4586,52 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.FavoriteMeals.FavoriteMeal", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Meals.Meal", "Meal")
+                b.HasOne("FoodDiary.Domain.Entities.Meals.Meal", null)
                     .WithMany()
                     .HasForeignKey("MealId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("Meal");
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.FavoriteProducts.FavoriteProduct", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Products.Product", "Product")
+                b.HasOne("FoodDiary.Domain.Entities.Products.Product", null)
                     .WithMany()
                     .HasForeignKey("ProductId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("Product");
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.FavoriteRecipes.FavoriteRecipe", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Recipes.Recipe", "Recipe")
+                b.HasOne("FoodDiary.Domain.Entities.Recipes.Recipe", null)
                     .WithMany()
                     .HasForeignKey("RecipeId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("Recipe");
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.MealPlans.MealPlan", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade);
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.MealPlans.MealPlanDay", b => {
@@ -4681,15 +4651,13 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("FoodDiary.Domain.Entities.Recipes.Recipe", "Recipe")
+                b.HasOne("FoodDiary.Domain.Entities.Recipes.Recipe", null)
                     .WithMany()
                     .HasForeignKey("RecipeId")
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
                 b.Navigation("Day");
-
-                b.Navigation("Recipe");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.Meal", b => {
@@ -4698,13 +4666,11 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasForeignKey("ImageAssetId")
                     .OnDelete(DeleteBehavior.SetNull);
 
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany("Meals")
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Meals.MealAiItem", b => {
@@ -4757,23 +4723,19 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Notifications.Notification", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Notifications.WebPushSubscription", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Products.Product", b => {
@@ -4782,30 +4744,25 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasForeignKey("ImageAssetId")
                     .OnDelete(DeleteBehavior.SetNull);
 
-                b.HasOne("FoodDiary.Domain.Entities.Usda.UsdaFood", "UsdaFood")
+                b.HasOne("FoodDiary.Domain.Entities.Usda.UsdaFood", null)
                     .WithMany()
                     .HasForeignKey("UsdaFdcId")
                     .OnDelete(DeleteBehavior.SetNull);
 
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany("Products")
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.Navigation("UsdaFood");
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Recents.RecentItem", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Recipes.Recipe", b => {
@@ -4814,31 +4771,26 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasForeignKey("ImageAssetId")
                     .OnDelete(DeleteBehavior.SetNull);
 
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany("Recipes")
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Recipes.RecipeComment", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Recipes.Recipe", "Recipe")
+                b.HasOne("FoodDiary.Domain.Entities.Recipes.Recipe", null)
                     .WithMany()
                     .HasForeignKey("RecipeId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("Recipe");
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Recipes.RecipeIngredient", b => {
@@ -4847,7 +4799,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasForeignKey("NestedRecipeId")
                     .OnDelete(DeleteBehavior.Restrict);
 
-                b.HasOne("FoodDiary.Domain.Entities.Products.Product", "Product")
+                b.HasOne("FoodDiary.Domain.Entities.Products.Product", null)
                     .WithMany("RecipeIngredients")
                     .HasForeignKey("ProductId");
 
@@ -4858,8 +4810,6 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
 
                 b.Navigation("NestedRecipe");
-
-                b.Navigation("Product");
 
                 b.Navigation("RecipeStep");
             });
@@ -4880,17 +4830,15 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Shopping.ShoppingList", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany("ShoppingLists")
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Shopping.ShoppingListItem", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Products.Product", "Product")
+                b.HasOne("FoodDiary.Domain.Entities.Products.Product", null)
                     .WithMany()
                     .HasForeignKey("ProductId")
                     .OnDelete(DeleteBehavior.SetNull);
@@ -4900,8 +4848,6 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasForeignKey("ShoppingListId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("Product");
 
                 b.Navigation("ShoppingList");
             });
@@ -4917,23 +4863,19 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Social.ContentReport", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Social.RecipeLike", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.BleedingEntry", b => {
@@ -4995,13 +4937,11 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.ExerciseEntry", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Fasting.FastingCheckIn", b => {
@@ -5027,35 +4967,29 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
                 b.Navigation("Plan");
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Fasting.FastingPlan", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Fasting.FastingSession", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.FertilitySignal", b => {
@@ -5088,13 +5022,11 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.WaistEntry", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany("WaistEntries")
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.WaistGoal", b => {
@@ -5106,13 +5038,11 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.WeightEntry", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany("WeightEntries")
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.WeightGoal", b => {
@@ -5216,23 +5146,19 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Wearables.WearableConnection", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Wearables.WearableSyncEntry", b => {
-                b.HasOne("FoodDiary.Domain.Entities.Users.User", "User")
+                b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
-                b.Navigation("User");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.WeeklyGoals.WeeklyGoal", b => {

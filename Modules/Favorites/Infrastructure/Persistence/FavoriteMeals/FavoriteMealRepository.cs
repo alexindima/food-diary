@@ -25,8 +25,6 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context) : IFavori
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
         IQueryable<FavoriteMeal> query = context.FavoriteMeals
-            .Include(f => f.Meal)
-            .ThenInclude(m => m.Items)
             .AsQueryable();
 
         if (!asTracking) {
@@ -98,8 +96,6 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context) : IFavori
         CancellationToken cancellationToken = default) {
         return await context.FavoriteMeals
             .AsNoTracking()
-            .Include(f => f.Meal)
-            .ThenInclude(m => m.Items)
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -113,18 +109,19 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context) : IFavori
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)
             .Take(PaginationPolicy.MaxCollectionSize)
-            .Select(f => new FavoriteMealReadModel(
-                f.Id.Value,
-                f.MealId.Value,
-                f.Name,
-                f.CreatedAtUtc,
-                f.Meal.Date,
-                f.Meal.MealType == null ? null : f.Meal.MealType.ToString(),
-                f.Meal.TotalCalories,
-                f.Meal.TotalProteins,
-                f.Meal.TotalFats,
-                f.Meal.TotalCarbs,
-                f.Meal.Items.Count))
+            .Join(context.Meals.AsNoTracking(), favorite => favorite.MealId, source => source.Id, (favorite, source) => new { Favorite = favorite, Source = source })
+            .Select(row => new FavoriteMealReadModel(
+                row.Favorite.Id.Value,
+                row.Favorite.MealId.Value,
+                row.Favorite.Name,
+                row.Favorite.CreatedAtUtc,
+                row.Source.Date,
+                row.Source.MealType == null ? null : row.Source.MealType.ToString(),
+                row.Source.TotalCalories,
+                row.Source.TotalProteins,
+                row.Source.TotalFats,
+                row.Source.TotalCarbs,
+                row.Source.Items.Count))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

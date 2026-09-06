@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
@@ -20,8 +19,6 @@ public sealed class WearableConnection : AggregateRoot<WearableConnectionId> {
     public bool IsActive { get; private set; }
     public string? LastConnectRequestId { get; private set; }
     public string? LastConnectRequestHash { get; private set; }
-
-    public User User { get; private set; } = null!;
 
     private WearableConnection() {
     }

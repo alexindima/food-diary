@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Usda.Common;
 
 namespace FoodDiary.Application.Products.SearchSuggestions;
 

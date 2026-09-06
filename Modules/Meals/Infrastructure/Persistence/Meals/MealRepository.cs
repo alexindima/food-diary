@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Meals.Models;
@@ -291,7 +292,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
+    public async Task<IReadOnlyList<UsdaMealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
         UserId userId,
         DateTime date,
         int limit,
@@ -309,10 +310,10 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
                 item.ProductId != null)
             .OrderBy(static item => item.Id)
             .Take(limit)
-            .Select(item => new MealProductNutritionReadModel(
+            .Select(item => new UsdaMealProductNutritionReadModel(
                 item.Amount,
-                context.Products.Where(product => product.Id == item.ProductId).Select(product => product.BaseAmount).Single(),
-                context.Products.Where(product => product.Id == item.ProductId).Select(product => product.UsdaFdcId).Single()))
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => product.BaseAmount).Single(),
+                context.Products.AsNoTracking().Where(product => product.Id == item.ProductId).Select(product => product.UsdaFdcId).Single()))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

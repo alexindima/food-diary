@@ -17,9 +17,9 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Usda/Application/FoodDiary.Application.Usda.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Meals, Products, Users
+- Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Modules.Products.Application, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
@@ -40,15 +40,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: DailyReferenceValue, UsdaFood, UsdaFoodNutrient, UsdaFoodPortion, UsdaNutrient
-- Public contract files: 17
-- Observed external consumer groups: 4
+- Public contract files: 21
+- Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 17
-- Interfaces: 5
-- DTO/read-model/projection types: 11
+- Public contract types: 21
+- Interfaces: 8
+- DTO/read-model/projection types: 12
 - Enums: 0
 - Exported repository-shaped contracts: 3
 - Contracts referencing domain entities: 1
@@ -58,6 +58,9 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUsdaFoodReadRepository`
 - `interface IUsdaFoodRepository`
 - `interface IUsdaFoodSearchService`
+- `interface IUsdaMealNutritionReadService`
+- `interface IUsdaProductLinkService`
+- `interface IUsdaProductSuggestionReadService`
 - `record DailyMicronutrientModel`
 - `record DailyMicronutrientSummaryModel`
 - `record HealthAreaScoreModel`
@@ -68,6 +71,7 @@ No literal attribute-routed controller was associated with this module.
 - `record UsdaFoodModel`
 - `record UsdaFoodPortionModel`
 - `record UsdaFoodReadModel`
+- `record UsdaMealProductNutritionReadModel`
 - `record UsdaNutrientReadModel`
 
 ## Focused Tests

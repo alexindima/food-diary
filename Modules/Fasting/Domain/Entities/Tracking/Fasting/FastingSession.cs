@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Diagnostics.CodeAnalysis;
@@ -22,8 +21,6 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
     public string? Notes { get; private set; }
     public FastingSessionStatus Status => GetStatus();
     public bool IsSuccessfulCompletion => GetStatus() == FastingSessionStatus.Completed;
-
-    public User User { get; private set; } = null!;
 
     [ExcludeFromCodeCoverage]
     private FastingSession() {

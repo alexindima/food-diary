@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -11,7 +10,6 @@ public sealed class ContentReport : AggregateRoot<ContentReportId> {
 
     public UserId UserId { get; private set; }
 #pragma warning disable RCS1170 // EF Core navigation property requires a private setter.
-    public User User { get; private set; } = null!;
 #pragma warning restore RCS1170
     public ReportTargetType TargetType { get; private set; }
     public Guid TargetId { get; private set; }

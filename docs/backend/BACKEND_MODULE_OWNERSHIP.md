@@ -446,3 +446,14 @@ context/migrations and composition lock remain central. Hosts explicitly
 compose AddProductsModule; JobManager adds AddProductsPersistence without new
 handlers. See `docs/ai/products-ownership-inventory.md` for the boundary and
 coordinated-rebuild compatibility promise.
+
+## Owner lifecycle and transaction entry
+
+ADR 0030 refines the remaining shared-context boundaries: Users coordinates
+owner-side purge participants; Recipes reads immutable product snapshots; Products
+and Recipes keep scalar foreign keys with unchanged relational mappings. Meals
+supplies TDEE daily calories independently of Dashboard. Top-level transaction
+runners reject pending caller changes and existing transactions. The module graph
+now records direct owner-contract references and explicitly acknowledged combined
+cycles separately from its acyclic Application API edges. See
+`docs/adr/0030-owner-lifecycle-and-transaction-boundaries.md` for scope and invariants.

@@ -164,7 +164,6 @@ public partial class RecipesFeatureTests {
         dinner.AddStep(1, "Cook soup");
 
         var favorite = FavoriteRecipe.Create(user.Id, dinner.Id, "Fav dinner");
-        SetFavoriteRecipeNavigation(favorite, dinner);
 
         var overviewReadService = new OverviewRecipeReadService(
             pagedItems: [(breakfast, 2), (dinner, 5)],
@@ -174,7 +173,7 @@ public partial class RecipesFeatureTests {
         var recentRepository = new StubRecentItemRepository([
             new RecentRecipeUsage(dinner.Id, 5, DateTime.UtcNow),
         ]);
-        var favoriteRepository = new StubFavoriteRecipeRepository([favorite]);
+        var favoriteRepository = new StubFavoriteRecipeRepository([favorite], dinner);
         GetRecipesOverviewQueryHandler handler = CreateRecipesOverviewHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<RecipeOverviewModel> result = await handler.Handle(

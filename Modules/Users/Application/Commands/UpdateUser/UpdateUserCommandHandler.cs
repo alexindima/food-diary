@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
@@ -10,14 +9,12 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Text.Json;
-using FoodDiary.Domain.Entities.Assets;
 
 namespace FoodDiary.Application.Users.Commands.UpdateUser;
 
 public sealed class UpdateUserCommandHandler(
     IUserContextService userContextService,
-    IImageAssetCleanupService imageAssetCleanupService,
-    IImageAssetAccessService imageAssetAccessService)
+    IUserProfileImageService profileImageService)
     : ICommandHandler<UpdateUserCommand, Result<UserModel>> {
     private sealed record UpdateUserValues(
         User User,
@@ -154,7 +151,7 @@ public sealed class UpdateUserCommandHandler(
         }
 
         ImageAssetId? newAssetId = profileImageAssetIdResult.Value;
-        Result<ImageAsset?> profileImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+        Result<string?> profileImageAssetResult = await profileImageService.ResolveOptionalUrlAsync(
             newAssetId,
             userId,
             cancellationToken).ConfigureAwait(false);
@@ -164,7 +161,7 @@ public sealed class UpdateUserCommandHandler(
 
         return Result.Success(new ProfileImageValues(
             newAssetId,
-            profileImageAssetResult.Value?.Url ?? Normalize(command.ProfileImage)));
+            profileImageAssetResult.Value ?? Normalize(command.ProfileImage)));
     }
 
     private static void ApplyUpdates(User user, UpdateUserCommand command, UpdateUserValues values) {
@@ -206,7 +203,7 @@ public sealed class UpdateUserCommandHandler(
         ImageAssetId? newAssetId,
         CancellationToken cancellationToken) {
         if (oldAssetId.HasValue && (!newAssetId.HasValue || oldAssetId.Value.Value != newAssetId.Value.Value)) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken).ConfigureAwait(false);
+            await profileImageService.DeleteIfUnusedAsync(oldAssetId.Value, cancellationToken).ConfigureAwait(false);
         }
     }
 

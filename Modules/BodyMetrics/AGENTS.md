@@ -10,7 +10,7 @@ Rules for `Modules/BodyMetrics/`.
 - Preserve `WeightEntries` and `WaistEntries` as the two cohesive feature groups.
 - WeightEntryErrors and WaistEntryErrors stay in the corresponding owner Abstractions groups. Call them directly; central Errors.WeightEntry/Errors.WaistEntry facades and the central BodyMetrics ports reference are retired. Preserve error codes/messages/kinds and invariant date formatting; see docs/ai/measurement-error-facades.md.
 - Preserve the legacy `FoodDiary.Application.BodyMetrics` assembly name and CLR namespaces.
-- Keep `WeightEntry`, `WaistEntry`, and their IDs in module-owned `Domain` with their legacy CLR namespaces. The module depends one-way on Users-owned `User`/`UserId`; do not restore the removed inverse measurement navigations.
+- Keep `WeightEntry`, `WaistEntry`, and their IDs in module-owned `Domain` with their legacy CLR namespaces. The module depends on Users Domain.Contracts for scalar `UserId`; do not restore the removed inverse measurement navigations.
 - Keep `WeightGoal`, `WaistGoal`, their IDs and lifecycle/status behavior, and the public goal navigations in Users Domain as User-owned responsibilities.
 - Keep the shared `FoodDiaryDbContext`, historical migrations, and model snapshot in central Infrastructure.
 - Register application and persistence through Infrastructure's `AddBodyMetricsModule` facade.

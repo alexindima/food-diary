@@ -502,7 +502,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
         });
 
-        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddDashboardReadServices();
+        services.AddInfrastructure(configuration).AddAiPersistence().AddRecipesPersistence().AddAdminPersistence().AddIdentityPersistence().AddIdentityAuthenticationInfrastructure().AddProductsPersistence().AddMealsPersistence().AddDashboardReadServices();
         Assert.Multiple(
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardStatisticsReadService))),
             () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardBodyReadService))),

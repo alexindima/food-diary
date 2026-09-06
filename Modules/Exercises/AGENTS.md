@@ -2,7 +2,7 @@
 
 - Own exercise entries, validation, read-service implementation, repository ports/errors, stable read contracts, domain aggregate/enum/ID, EF mapping and repository under this module.
 - Application preserves FoodDiary.Application.Exercises assembly identity and CLR namespaces. Contracts preserves the existing read-service/DTO CLR namespaces; Dashboard and TDEE reference Contracts only.
-- Domain depends one-way on Users Domain for User/UserId and shared Primitives for public DomainGuard. User has no inverse Exercises navigation. Do not move User or make Domain depend on Exercises.
+- Domain depends one-way on Users Domain.Contracts for UserId and shared Primitives for public DomainGuard. User has no inverse Exercises navigation. Do not move User or make Domain depend on Exercises.
 - ExerciseErrors and its callers belong to this module. The central Errors.Exercise facade is retired; module Abstractions must not reference central Abstractions. Preserve error codes, messages and kinds; see docs/ai/measurement-error-facades.md.
 - Keep calories/rounding, validation, UTC/date normalization, cancellation and user access unchanged.
 - Infrastructure owns AddExercisesModule; Application owns AddExercisesApplication. The shared DbContext explicitly calls ApplyExercisesPersistenceModel. Keep migrations and model snapshot central.

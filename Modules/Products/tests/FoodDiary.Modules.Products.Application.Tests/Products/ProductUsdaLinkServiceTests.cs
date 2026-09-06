@@ -1,3 +1,4 @@
+using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Products.Services;
 using FoodDiary.Domain.Entities.Products;
@@ -14,9 +15,9 @@ public sealed class ProductUsdaLinkServiceTests {
         IProductWriteRepository repository = CreateRepository(product);
         var service = new ProductUsdaLinkService(repository);
 
-        bool linked = await service.LinkAsync(product.Id, product.UserId, 171077, CancellationToken.None);
+        Result linked = await service.LinkAsync(product.Id, product.UserId, 171077, CancellationToken.None);
 
-        Assert.True(linked);
+        Assert.True(linked.IsSuccess);
         Assert.Equal(171077, product.UsdaFdcId);
         await repository.Received(1).UpdateAsync(product, CancellationToken.None);
     }
@@ -26,9 +27,9 @@ public sealed class ProductUsdaLinkServiceTests {
         IProductWriteRepository repository = CreateRepository(product: null);
         var service = new ProductUsdaLinkService(repository);
 
-        bool unlinked = await service.UnlinkAsync(ProductId.New(), UserId.New(), CancellationToken.None);
+        Result unlinked = await service.UnlinkAsync(ProductId.New(), UserId.New(), CancellationToken.None);
 
-        Assert.False(unlinked);
+        Assert.Equal("Product.NotAccessible", unlinked.Error.Code);
         await repository.DidNotReceive().UpdateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>());
     }
 
@@ -36,13 +37,13 @@ public sealed class ProductUsdaLinkServiceTests {
     public async Task IsAccessibleForUpdateAsync_ReturnsWhetherOwnedProductExists() {
         Product product = CreateProduct();
 
-        bool accessible = await new ProductUsdaLinkService(CreateRepository(product))
+        Result accessible = await new ProductUsdaLinkService(CreateRepository(product))
             .IsAccessibleForUpdateAsync(product.Id, product.UserId, CancellationToken.None);
-        bool missing = await new ProductUsdaLinkService(CreateRepository(product: null))
+        Result missing = await new ProductUsdaLinkService(CreateRepository(product: null))
             .IsAccessibleForUpdateAsync(ProductId.New(), UserId.New(), CancellationToken.None);
 
-        Assert.True(accessible);
-        Assert.False(missing);
+        Assert.True(accessible.IsSuccess);
+        Assert.Equal("Product.NotAccessible", missing.Error.Code);
     }
 
     [Fact]
@@ -50,9 +51,9 @@ public sealed class ProductUsdaLinkServiceTests {
         IProductWriteRepository repository = CreateRepository(product: null);
         var service = new ProductUsdaLinkService(repository);
 
-        bool linked = await service.LinkAsync(ProductId.New(), UserId.New(), 171077, CancellationToken.None);
+        Result linked = await service.LinkAsync(ProductId.New(), UserId.New(), 171077, CancellationToken.None);
 
-        Assert.False(linked);
+        Assert.Equal("Product.NotAccessible", linked.Error.Code);
         await repository.DidNotReceive().UpdateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>());
     }
 
@@ -63,9 +64,9 @@ public sealed class ProductUsdaLinkServiceTests {
         IProductWriteRepository repository = CreateRepository(product);
         var service = new ProductUsdaLinkService(repository);
 
-        bool unlinked = await service.UnlinkAsync(product.Id, product.UserId, CancellationToken.None);
+        Result unlinked = await service.UnlinkAsync(product.Id, product.UserId, CancellationToken.None);
 
-        Assert.True(unlinked);
+        Assert.True(unlinked.IsSuccess);
         Assert.Null(product.UsdaFdcId);
         await repository.Received(1).UpdateAsync(product, CancellationToken.None);
     }

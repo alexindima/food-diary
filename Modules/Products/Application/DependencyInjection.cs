@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Usda.Common;
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.SearchSuggestions;
 using FoodDiary.Application.Products.Services;
@@ -16,7 +16,7 @@ public static class DependencyInjection {
         services.AddScoped<IProductSearchSuggestionProvider, OpenFoodFactsProductSearchSuggestionProvider>();
         services.AddScoped<IProductSearchSuggestionProvider, UsdaProductSearchSuggestionProvider>();
         services.AddScoped<IRecentProductReadService, RecentProductReadService>();
-        services.AddScoped<IProductUsdaLinkService, ProductUsdaLinkService>();
+        services.AddScoped<IUsdaProductLinkService, ProductUsdaLinkService>();
         return services;
     }
 }

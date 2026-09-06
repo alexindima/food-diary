@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Infrastructure.Persistence.Admin;
@@ -17,6 +18,7 @@ public static class IdentityModuleRegistration {
         services.AddScoped<IUserLoginEventWriteRepository>(static provider => provider.GetRequiredService<IUserLoginEventRepository>());
         services.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
         services.AddScoped<IRefreshTokenSessionRepository, RefreshTokenSessionRepository>();
+        services.AddScoped<IUserSessionRevocationService>(static provider => (RefreshTokenSessionRepository)provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionReadModelRepository>(static provider => (RefreshTokenSessionRepository)provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionReadRepository>(static provider => provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionWriteRepository>(static provider => provider.GetRequiredService<IRefreshTokenSessionRepository>());

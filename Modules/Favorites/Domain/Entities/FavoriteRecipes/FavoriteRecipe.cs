@@ -1,6 +1,4 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Recipes;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.FavoriteRecipes;
@@ -11,9 +9,6 @@ public sealed class FavoriteRecipe : Entity<FavoriteRecipeId> {
     public RecipeId RecipeId { get; private set; }
     public string? Name { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
-
-    public User User { get; private set; } = null!;
-    public Recipe Recipe { get; private set; } = null!;
 
     private FavoriteRecipe() {
     }

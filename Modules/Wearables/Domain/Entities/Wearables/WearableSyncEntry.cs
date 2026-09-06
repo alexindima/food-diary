@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,8 +10,6 @@ public sealed class WearableSyncEntry : AggregateRoot<WearableSyncEntryId> {
     public WearableDataType DataType { get; private set; }
     public DateTime Date { get; private set; }
     public double Value { get; private set; }
-
-    public User User { get; private set; } = null!;
 
     private WearableSyncEntry() {
     }

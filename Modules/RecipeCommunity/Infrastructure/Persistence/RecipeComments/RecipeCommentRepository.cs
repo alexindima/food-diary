@@ -35,7 +35,6 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
         IQueryable<RecipeComment> query = context.RecipeComments
             .AsNoTracking()
-            .Include(c => c.User)
             .Where(c => c.RecipeId == recipeId);
 
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
@@ -66,12 +65,12 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
             .OrderByDescending(c => c.CreatedOnUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .Select(c => new RecipeCommentReadModel(
+            .Join(context.Users.AsNoTracking(), c => c.UserId, user => user.Id, (c, user) => new RecipeCommentReadModel(
                 c.Id.Value,
                 c.RecipeId.Value,
                 c.UserId.Value,
-                c.User.Username,
-                c.User.FirstName,
+                user.Username,
+                user.FirstName,
                 c.Text,
                 c.CreatedOnUtc,
                 c.ModifiedOnUtc))

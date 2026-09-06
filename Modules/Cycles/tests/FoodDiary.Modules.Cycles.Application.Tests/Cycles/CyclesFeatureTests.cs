@@ -1,9 +1,9 @@
+using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Cycles.Models;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
 using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
@@ -35,10 +35,10 @@ public partial class CyclesFeatureTests {
             Notes: null,
             CycleTrackingConsentGranted: true);
 
-    private static DashboardStatisticsBucketReadModel CreateNutritionBucket(DateTime date, double calories, double fiber) =>
+    private static MealNutritionStatisticsBucket CreateNutritionBucket(DateTime date, double calories, double fiber) =>
         new(date, date, calories, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: fiber, TotalFiber: fiber);
 
-    private static DashboardStatisticsBucketReadModel CreateNutritionBucket(DateOnly date, double calories, double fiber) =>
+    private static MealNutritionStatisticsBucket CreateNutritionBucket(DateOnly date, double calories, double fiber) =>
         CreateNutritionBucket(date.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), calories, fiber);
 
     private static GetCurrentCycleQueryHandler CreateCurrentCycleHandler(
@@ -48,7 +48,7 @@ public partial class CyclesFeatureTests {
 
     private static GetCycleNutritionSummaryQueryHandler CreateCycleNutritionSummaryHandler(
         ICycleReadModelRepository cycleRepository,
-        IDashboardStatisticsReadService statisticsReadService,
+        IMealNutritionStatisticsReadService statisticsReadService,
         ICurrentUserAccessService currentUserAccessService) =>
         new(new CycleReadService(cycleRepository, statisticsReadService), currentUserAccessService);
 
@@ -173,19 +173,19 @@ public partial class CyclesFeatureTests {
                 consent.RevokedAtUtc))];
     }
 
-    private static IDashboardStatisticsReadService CreateStatisticsReadService(IReadOnlyList<DashboardStatisticsBucketReadModel> buckets) {
-        IDashboardStatisticsReadService service = Substitute.For<IDashboardStatisticsReadService>();
+    private static IMealNutritionStatisticsReadService CreateStatisticsReadService(IReadOnlyList<MealNutritionStatisticsBucket> buckets) {
+        IMealNutritionStatisticsReadService service = Substitute.For<IMealNutritionStatisticsReadService>();
         service
             .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Success(buckets)));
         return service;
     }
 
-    private static IDashboardStatisticsReadService CreateFailingStatisticsReadService(Error error) {
-        IDashboardStatisticsReadService service = Substitute.For<IDashboardStatisticsReadService>();
+    private static IMealNutritionStatisticsReadService CreateFailingStatisticsReadService(Error error) {
+        IMealNutritionStatisticsReadService service = Substitute.For<IMealNutritionStatisticsReadService>();
         service
             .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(error)));
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(error)));
         return service;
     }
 

@@ -3,6 +3,7 @@
     <RootNamespace>FoodDiary.Application.Abstractions.Usda</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../../Products/Domain.Contracts/FoodDiary.Modules.Products.Domain.Contracts.csproj" />
     <ProjectReference Include="..\..\Contracts\FoodDiary.Modules.Usda.Contracts.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\FoodDiary.Results\FoodDiary.Results.csproj" />
     <ProjectReference Include="../../../Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj" />

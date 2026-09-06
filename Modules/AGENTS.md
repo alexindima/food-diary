@@ -20,3 +20,15 @@ Rules for all logical modules under `Modules/`. A module-specific `AGENTS.md` ma
 - Preserve route templates, authorization attributes, status codes, payload shapes, API versions, and Swagger-visible contracts during physical moves.
 - Add or update architecture tests whenever the allowed Presentation dependency graph changes.
 - Run the central Presentation tests and Web API integration/Swagger suites after moving controllers between assemblies.
+
+## Aggregate and persistence isolation
+
+Application API and owner service-contract dependencies must form an acyclic graph.
+Consumer ports may be implemented by the supplying owner; shared technical contracts
+belong in narrow Shared projects. The legacy Images.Contracts assembly is ID-only.
+No module Domain may retain a foreign aggregate navigation, including in a backing
+field or collection. Keep scalar IDs and immutable read snapshots; define unchanged
+relational constraints in PersistenceModel. Infrastructure reads foreign sets through
+immediate AsNoTracking projections and requests mutations through owner ports.
+FD0015 blocks foreign tracking/writes; FD0016 requires an exact reviewed fingerprint
+for shared-context save, transaction and tracker escape APIs. See ADR 0031.

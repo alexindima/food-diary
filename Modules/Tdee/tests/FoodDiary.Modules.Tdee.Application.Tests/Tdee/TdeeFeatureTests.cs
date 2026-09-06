@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Exercises.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Exercises.Services;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Tdee.Common;
@@ -109,7 +109,7 @@ public class TdeeFeatureTests {
 
     private static GetTdeeInsightQueryHandler CreateHandler(
         ITdeeUserProfileService? profileService = null,
-        IDashboardStatisticsReadService? statisticsReadService = null,
+        IMealDailyCalorieReadService? statisticsReadService = null,
         ICurrentUserAccessService? currentUserAccessService = null) =>
         new(
             profileService ?? CreateProfileService(user: null),
@@ -174,19 +174,19 @@ public class TdeeFeatureTests {
         return repository;
     }
 
-    private static IDashboardStatisticsReadService CreateStatisticsReadService() {
-        IDashboardStatisticsReadService service = Substitute.For<IDashboardStatisticsReadService>();
+    private static IMealDailyCalorieReadService CreateStatisticsReadService() {
+        IMealDailyCalorieReadService service = Substitute.For<IMealDailyCalorieReadService>();
         service
-            .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([])));
+            .GetDailyCaloriesAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<MealDailyCalories>>([])));
         return service;
     }
 
-    private static IDashboardStatisticsReadService CreateFailingStatisticsReadService(Error error) {
-        IDashboardStatisticsReadService service = Substitute.For<IDashboardStatisticsReadService>();
+    private static IMealDailyCalorieReadService CreateFailingStatisticsReadService(Error error) {
+        IMealDailyCalorieReadService service = Substitute.For<IMealDailyCalorieReadService>();
         service
-            .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(error)));
+            .GetDailyCaloriesAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<MealDailyCalories>>(error)));
         return service;
     }
 

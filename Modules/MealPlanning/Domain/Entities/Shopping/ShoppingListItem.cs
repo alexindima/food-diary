@@ -1,5 +1,4 @@
 using System.Globalization;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -26,7 +25,6 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
     public int SortOrder { get; private set; }
 
     public ShoppingList ShoppingList { get; private set; } = null!;
-    public Product? Product { get; private set; }
     public IReadOnlyCollection<ShoppingListItemSource> Sources => _sources.AsReadOnly();
 
     private ShoppingListItem() {

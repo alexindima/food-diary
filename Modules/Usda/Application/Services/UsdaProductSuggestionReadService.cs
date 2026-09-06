@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
-using FoodDiary.Application.Usda.Common;
 
 namespace FoodDiary.Application.Usda.Services;
 

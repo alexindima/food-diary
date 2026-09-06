@@ -1,6 +1,5 @@
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Recipes;
@@ -15,7 +14,14 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
     public double Amount { get; private set; }
 
     public RecipeStep RecipeStep { get; private set; } = null!;
-    public Product? Product { get; private set; }
+    public RecipeIngredientProductSnapshot? ProductSnapshot { get; private set; }
+
+    public void SetProductSnapshot(RecipeIngredientProductSnapshot? snapshot) {
+        if (snapshot is not null && snapshot.Id != ProductId) {
+            throw new ArgumentException("Product snapshot must match the ingredient product.", nameof(snapshot));
+        }
+        ProductSnapshot = snapshot;
+    }
     public Recipe? NestedRecipe { get; private set; }
 
     private RecipeIngredient() {

@@ -10,6 +10,17 @@ namespace FoodDiary.Domain.Tests.Domain;
 [ExcludeFromCodeCoverage]
 public class RecipeInvariantAndEventsTests {
     [Fact]
+    public void IngredientSnapshot_RejectsAnotherProductAndDoesNotChangeAmount() {
+        var recipe = Recipe.Create(UserId.New(), "Snapshot", 1);
+        RecipeIngredient ingredient = recipe.AddStep(1, "Prepare").AddProductIngredient(ProductId.New(), 50);
+        var snapshot = new RecipeIngredientProductSnapshot(ProductId.New(), "Other", FoodDiary.Domain.Enums.MeasurementUnit.G,
+            100, 52, 1, 1, 11, 2, 0, Visibility.Public);
+        Assert.Throws<ArgumentException>(() => ingredient.SetProductSnapshot(snapshot));
+        Assert.Null(ingredient.ProductSnapshot);
+        Assert.Equal(50, ingredient.Amount);
+    }
+
+    [Fact]
     public void Create_WithInvalidName_Throws() {
         Assert.Throws<ArgumentException>(() => Recipe.Create(
             UserId.New(),

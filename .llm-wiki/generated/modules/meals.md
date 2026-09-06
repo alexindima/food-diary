@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Meals/Application/FoodDiary.Modules.Meals.Application.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Achievements, FavoriteMeals, Images, Nutrition, Products, RecentItems, Recipes, Users
+- Abstraction-contract dependencies: FavoriteMeals, Images, Nutrition, Products, RecentItems, Recipes, Usda, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Modules.Dashboard.Application
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -42,34 +42,35 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Meal, MealItem, MealAiSession, MealAiItem
-- Public contract files: 18
+- Public contract files: 19
 - Observed external consumer groups: 1
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 18
-- Interfaces: 10
-- DTO/read-model/projection types: 6
+- Public contract types: 19
+- Interfaces: 11
+- DTO/read-model/projection types: 5
 - Enums: 0
 - Exported repository-shaped contracts: 6
 - Contracts referencing domain entities: 2
 - `class MealErrors`
+- `interface IMealAchievementEvaluationRequest`
 - `interface IMealActivityReadRepository`
 - `interface IMealActivityReadService`
+- `interface IMealDailyCalorieReadService`
 - `interface IMealExportReadService`
-- `interface IMealFavoriteReadService`
+- `interface IMealNutritionStatisticsReadService`
 - `interface IMealProductNutritionReadRepository`
-- `interface IMealProductNutritionReadService`
 - `interface IMealProjectionReadRepository`
 - `interface IMealReadRepository`
 - `interface IMealRepository`
 - `interface IMealWriteRepository`
 - `record MealAiItemProjectionReadModel`
 - `record MealAiSessionProjectionReadModel`
-- `record MealFavoriteMealModel`
+- `record MealDailyCalories`
 - `record MealItemProjectionReadModel`
-- `record MealProductNutritionReadModel`
+- `record MealNutritionStatisticsBucket`
 - `record MealProjectionReadModel`
 - `record MealQueryFilters`
 

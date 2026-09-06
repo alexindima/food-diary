@@ -51,13 +51,15 @@ public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IF
             occurrence.Symptoms,
             occurrence.CheckInNotes);
 
-    public async Task<IReadOnlyList<FastingOccurrence>> GetActiveAsync(CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyList<FastingActiveOccurrenceModel>> GetActiveAsync(CancellationToken cancellationToken = default) {
         return await context.FastingOccurrences
             .AsNoTracking()
             .Include(occurrence => occurrence.Plan)
-            .Include(occurrence => occurrence.User)
             .Where(occurrence => occurrence.Status == FastingOccurrenceStatus.Active)
             .OrderBy(occurrence => occurrence.StartedAtUtc)
+            .Join(context.Users.AsNoTracking(), occurrence => occurrence.UserId, user => user.Id,
+                (occurrence, user) => new FastingActiveOccurrenceModel(
+                    occurrence, user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

@@ -17,9 +17,6 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
         query.AsSplitQuery()
             .Include(r => r.Steps)
             .ThenInclude(s => s.Ingredients)
-            .ThenInclude(i => i.Product)
-            .Include(r => r.Steps)
-            .ThenInclude(s => s.Ingredients)
             .ThenInclude(i => i.NestedRecipe);
 
     public async Task<Recipe?> GetByIdAsync(
@@ -39,11 +36,13 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
             query = IncludeStepsAndIngredients(query);
         }
 
-        return await query.FirstOrDefaultAsync(
+        Recipe? recipe = await query.FirstOrDefaultAsync(
             r => r.Id == id && (includePublic
                 ? r.UserId == userId || r.Visibility == Visibility.Public
                 : r.UserId == userId),
             cancellationToken).ConfigureAwait(false);
+        if (includeSteps && recipe is not null) { await LoadProductSnapshotsAsync(recipe, cancellationToken).ConfigureAwait(false); }
+        return recipe;
     }
 
     public async Task<Recipe?> GetByIdForUpdateAsync(
@@ -68,9 +67,27 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
             query = IncludeStepsAndIngredients(query);
         }
 
-        return await query.FirstOrDefaultAsync(
+        Recipe? result = await query.FirstOrDefaultAsync(
             recipe => recipe.UserId == userId || (includePublic && recipe.Visibility == Visibility.Public),
             cancellationToken).ConfigureAwait(false);
+        if (includeSteps && result is not null) { await LoadProductSnapshotsAsync(result, cancellationToken).ConfigureAwait(false); }
+        return result;
+    }
+
+    private async Task LoadProductSnapshotsAsync(Recipe recipe, CancellationToken cancellationToken) {
+        RecipeIngredient[] ingredients = [.. recipe.Steps.SelectMany(step => step.Ingredients)];
+        ProductId[] ids = [.. ingredients.Where(ingredient => ingredient.ProductId.HasValue)
+            .Select(ingredient => ingredient.ProductId!.Value).Distinct()];
+        if (ids.Length == 0) { return; }
+        Dictionary<ProductId, RecipeIngredientProductSnapshot> products = await context.Products.AsNoTracking()
+            .Where(product => Enumerable.Contains(ids, product.Id))
+            .Select(product => new RecipeIngredientProductSnapshot(product.Id, product.Name, product.BaseUnit,
+                product.BaseAmount, product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase,
+                product.CarbsPerBase, product.FiberPerBase, product.AlcoholPerBase, product.Visibility, product.Category))
+            .ToDictionaryAsync(product => product.Id, cancellationToken).ConfigureAwait(false);
+        foreach (RecipeIngredient ingredient in ingredients) {
+            ingredient.SetProductSnapshot(ingredient.ProductId is { } id ? products.GetValueOrDefault(id) : null);
+        }
     }
 
     public async Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) {
@@ -132,7 +149,7 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
             .Where(r => r.Id == id && (includePublic
                 ? r.UserId == userId || r.Visibility == Visibility.Public
                 : r.UserId == userId))
-            .Select(r => context.MealItems.Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count)
+            .Select(r => context.MealItems.AsNoTracking().Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count)
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
 }

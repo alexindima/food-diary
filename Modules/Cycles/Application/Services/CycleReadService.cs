@@ -1,7 +1,7 @@
+using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Cycles.Models;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Cycles.Common;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
@@ -13,7 +13,7 @@ namespace FoodDiary.Application.Cycles.Services;
 
 public sealed class CycleReadService(
     ICycleReadModelRepository cycleRepository,
-    IDashboardStatisticsReadService statisticsReadService)
+    IMealNutritionStatisticsReadService statisticsReadService)
     : ICycleReadService {
     private const int MinimumComparableCycles = 3;
     private const string AlgorithmVersion = "nutrition-v2.0";
@@ -44,7 +44,7 @@ public sealed class CycleReadService(
             return Result.Success<CycleNutritionSummaryModel?>(CreateConsentRequiredSummary(dateFrom, dateTo));
         }
 
-        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> nutritionResult = await statisticsReadService.GetStatisticsAsync(
+        Result<IReadOnlyList<MealNutritionStatisticsBucket>> nutritionResult = await statisticsReadService.GetStatisticsAsync(
             userId,
             ToUtcStart(dateFrom),
             ToUtcEnd(dateTo),
@@ -64,10 +64,10 @@ public sealed class CycleReadService(
 
     private static CycleNutritionSummaryModel BuildSummary(
         CycleProfileReadModel profile,
-        IReadOnlyCollection<DashboardStatisticsBucketReadModel> nutritionBuckets,
+        IReadOnlyCollection<MealNutritionStatisticsBucket> nutritionBuckets,
         DateOnly dateFrom,
         DateOnly dateTo) {
-        IReadOnlyDictionary<DateOnly, DashboardStatisticsBucketReadModel> nutritionByDate = nutritionBuckets
+        IReadOnlyDictionary<DateOnly, MealNutritionStatisticsBucket> nutritionByDate = nutritionBuckets
             .Where(static bucket => bucket.TotalCalories > 0 || bucket.TotalFiber > 0)
             .GroupBy(static bucket => DateOnly.FromDateTime(bucket.DateFrom))
             .ToDictionary(static group => group.Key, static group => group.Last());
@@ -167,7 +167,7 @@ public sealed class CycleReadService(
 
     private static CycleNutritionAggregate BuildAggregate(
         CycleProfileReadModel profile,
-        IReadOnlyDictionary<DateOnly, DashboardStatisticsBucketReadModel> nutritionByDate,
+        IReadOnlyDictionary<DateOnly, MealNutritionStatisticsBucket> nutritionByDate,
         CycleInterval interval) {
         CycleNutritionDay[] nutritionDays = [
             .. nutritionByDate
@@ -191,7 +191,7 @@ public sealed class CycleReadService(
     private static CycleNutritionDay BuildDay(
         CycleProfileReadModel profile,
         DateOnly date,
-        DashboardStatisticsBucketReadModel nutrition) {
+        MealNutritionStatisticsBucket nutrition) {
         IReadOnlyCollection<BleedingEntryReadModel> bleedingEntries = [
             .. profile.BleedingEntries.Where(entry => entry.Date == date),
         ];

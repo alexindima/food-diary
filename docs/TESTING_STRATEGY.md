@@ -125,7 +125,7 @@ Identity-focused Authentication tests live in `Modules/Identity/tests/FoodDiary.
 
 ## Recipes physical ownership
 
-Recipes use cases, ports, read contracts, persistence model and adapters live under `Modules/Recipes`. Recipe/Steps/Ingredients, IDs/value objects/events remain central Domain because public User/MealItem/Product inverse navigations prohibit a one-way extraction. Shared context/migrations/snapshot and cross-module tests stay central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers. See `docs/ai/recipes-ownership-inventory.md`; this is not full Domain/database isolation.
+Recipes use cases, ports, read contracts, persistence model and adapters live under `Modules/Recipes`. Recipe/Steps/Ingredients and values/events belong to Recipes Domain; IDs belong to Recipes Domain.Contracts. Foreign relationships use scalar IDs and immutable read snapshots. Shared context/migrations/snapshot and cross-module tests stay central. Hosts compose AddRecipesModule; JobManager uses AddRecipesPersistence without adding application handlers. See `docs/ai/recipes-ownership-inventory.md`; this is not full Domain/database isolation.
 
 ## Admin physical ownership
 
@@ -168,3 +168,12 @@ an aggregate re-export. Authentication flows/providers, combined UserRepository,
 DbContext, migrations and snapshot retain their existing owners. CLR namespaces,
 security behavior and EF/HTTP contracts are unchanged. See
 `docs/ai/users-domain-extraction.md` for residual seams and verification evidence.
+
+## Contract and aggregate isolation
+
+ADR 0031 completes the contract-cycle and foreign-navigation follow-up to ADR 0030.
+The combined Application/service-contract graph is acyclic. Foreign domain links are
+scalar IDs; immutable snapshots and no-tracking joins supply display/nutrition data.
+Meals owns nutrition aggregation. FD0015/FD0016 enforce module EF ownership and exact
+reviewed technical escapes during compilation. The database, FK behavior and public
+API remain shared/compatible. See `docs/adr/0031-acyclic-contracts-and-scalar-aggregate-links.md`.

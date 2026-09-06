@@ -9,10 +9,12 @@ internal static class FastingNotificationCandidatePlanner {
         FastingOccurrence occurrence,
         FastingPlan plan,
         IReadOnlyList<FastingCheckIn>? checkIns,
-        DateTime nowUtc) {
+        DateTime nowUtc,
+        int reminderHours,
+        int followUpReminderHours) {
         var notifications = new List<FastingNotificationCandidate>();
 
-        foreach (string referenceId in FastingCheckInReminderPlanner.GetDueReferenceIds(occurrence, checkIns, nowUtc)) {
+        foreach (string referenceId in FastingCheckInReminderPlanner.GetDueReferenceIds(occurrence, checkIns, nowUtc, reminderHours, followUpReminderHours)) {
             notifications.Add(FastingNotificationCandidate.Create(
                 occurrence,
                 plan,

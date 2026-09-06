@@ -2,8 +2,6 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
-using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Favorites.FavoriteRecipes.Mappings;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
@@ -14,7 +12,7 @@ namespace FoodDiary.Application.Favorites.FavoriteRecipes.Commands.AddFavoriteRe
 
 public sealed class AddFavoriteRecipeCommandHandler(
     IFavoriteRecipeWriteRepository favoriteRecipeRepository,
-    IRecipeAccessService recipeAccessService,
+    IFavoriteRecipeSourceReadService sourceReadService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<AddFavoriteRecipeCommand, Result<FavoriteRecipeModel>> {
     public async Task<Result<FavoriteRecipeModel>> Handle(
@@ -38,14 +36,13 @@ public sealed class AddFavoriteRecipeCommandHandler(
 
         UserId userId = userIdResult.Value;
         RecipeId recipeId = recipeIdResult.Value;
-        RecipeOverviewReadItem? recipe = await recipeAccessService.GetAccessibleByIdAsync(
-            recipeId,
-            userId,
-            includePublic: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
-        if (recipe is null) {
-            return Result.Failure<FavoriteRecipeModel>(RecipeErrors.NotFound(command.RecipeId));
+        Result<FavoriteRecipeSourceModel> sourceResult = await sourceReadService
+            .GetAccessibleAsync(recipeId, userId, cancellationToken).ConfigureAwait(false);
+        if (sourceResult.IsFailure) {
+            return Result.Failure<FavoriteRecipeModel>(sourceResult.Error);
         }
+
+        FavoriteRecipeSourceModel recipe = sourceResult.Value;
 
         FavoriteRecipe? existing = await favoriteRecipeRepository.GetByRecipeIdAsync(recipeId, userId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {

@@ -2,6 +2,7 @@
   <PropertyGroup><RootNamespace>FoodDiary.Infrastructure</RootNamespace></PropertyGroup>
   <ItemGroup><Compile Remove="Model/**/*.cs" /></ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="Model/FoodDiary.Modules.Admin.PersistenceModel.csproj" />

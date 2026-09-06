@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -9,7 +10,7 @@ public interface IFastingOccurrenceReadRepository {
 
     Task<FastingOccurrence?> GetByIdAsync(FastingOccurrenceId id, bool asTracking = false, CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyList<FastingOccurrence>> GetActiveAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<FastingActiveOccurrenceModel>> GetActiveAsync(CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<FastingOccurrence>> GetByPlanAsync(
         FastingPlanId planId,

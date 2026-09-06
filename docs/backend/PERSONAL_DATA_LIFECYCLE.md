@@ -30,3 +30,9 @@ The database foreign-key model is the final safety net for dependent feature row
 ## Operational evidence
 
 Cleanup jobs emit execution outcome, duration, and affected-row telemetry. Durable object deletion uses the shared outbox with retries and dead-lettering. Dead-letter replay requires an operator identity and reason and persists an immutable replay audit record.
+
+Purge SQL now lives in the owning modules' ordered `IUserDataPurgeParticipant`
+adapters. Users retains eligibility locking, ordering, final user deletion and the
+single transaction. Images owns content asset reassignment and queues deletion of
+remaining assets. Participants never save/commit; a participant failure rolls back
+all relational changes for that account. See ADR 0030.

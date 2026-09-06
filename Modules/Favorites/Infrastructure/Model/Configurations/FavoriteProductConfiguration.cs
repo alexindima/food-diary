@@ -1,3 +1,5 @@
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -29,12 +31,12 @@ internal sealed class FavoriteProductConfiguration : IEntityTypeConfiguration<Fa
         builder.Property(e => e.CreatedAtUtc)
             .HasColumnType("timestamp with time zone");
 
-        builder.HasOne(e => e.User)
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(e => e.Product)
+        builder.HasOne<Product>()
             .WithMany()
             .HasForeignKey(e => e.ProductId)
             .OnDelete(DeleteBehavior.Cascade);

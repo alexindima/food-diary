@@ -74,7 +74,7 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
 
         int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         IQueryable<Recipe> orderedQuery = string.Equals(sortBy, "popular", StringComparison.OrdinalIgnoreCase)
-            ? query.OrderByDescending(r => context.MealItems.Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count).ThenByDescending(r => r.CreatedOnUtc)
+            ? query.OrderByDescending(r => context.MealItems.AsNoTracking().Count(item => item.RecipeId == r.Id) + r.NestedRecipeUsages.Count).ThenByDescending(r => r.CreatedOnUtc)
             : query.OrderByDescending(r => r.CreatedOnUtc);
 
         List<RecipeOverviewReadRow> rows = await ProjectRows(orderedQuery
@@ -161,7 +161,7 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
             recipe.TotalFiber, recipe.TotalAlcohol, recipe.IsNutritionAutoCalculated,
             recipe.ManualCalories, recipe.ManualProteins, recipe.ManualFats, recipe.ManualCarbs,
             recipe.ManualFiber, recipe.ManualAlcohol, recipe.Visibility,
-            context.MealItems.Count(item => item.RecipeId == recipe.Id) + recipe.NestedRecipeUsages.Count, recipe.CreatedOnUtc,
+            context.MealItems.AsNoTracking().Count(item => item.RecipeId == recipe.Id) + recipe.NestedRecipeUsages.Count, recipe.CreatedOnUtc,
             recipe.Steps
                 .OrderBy(step => step.StepNumber)
                 .Select(step => new RecipeOverviewStepReadItem(
@@ -171,19 +171,21 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
                     step.Instruction,
                     step.ImageUrl,
                     step.ImageAssetId.HasValue ? step.ImageAssetId.Value.Value : null,
-                    step.Ingredients.Select(ingredient => new RecipeOverviewIngredientReadItem(
+                    step.Ingredients.SelectMany(
+                        ingredient => context.Products.AsNoTracking().Where(product => product.Id == ingredient.ProductId).DefaultIfEmpty(),
+                        (ingredient, product) => new RecipeOverviewIngredientReadItem(
                         ingredient.Id.Value,
                         ingredient.Amount,
                         ingredient.ProductId.HasValue ? ingredient.ProductId.Value.Value : null,
-                        ingredient.Product != null ? ingredient.Product.Name : null,
-                        ingredient.Product != null ? ingredient.Product.BaseUnit.ToString() : null,
-                        ingredient.Product != null ? ingredient.Product.BaseAmount : null,
-                        ingredient.Product != null ? ingredient.Product.CaloriesPerBase : null,
-                        ingredient.Product != null ? ingredient.Product.ProteinsPerBase : null,
-                        ingredient.Product != null ? ingredient.Product.FatsPerBase : null,
-                        ingredient.Product != null ? ingredient.Product.CarbsPerBase : null,
-                        ingredient.Product != null ? ingredient.Product.FiberPerBase : null,
-                        ingredient.Product != null ? ingredient.Product.AlcoholPerBase : null,
+                        product != null ? product.Name : null,
+                        product != null ? product.BaseUnit.ToString() : null,
+                        product != null ? product.BaseAmount : null,
+                        product != null ? product.CaloriesPerBase : null,
+                        product != null ? product.ProteinsPerBase : null,
+                        product != null ? product.FatsPerBase : null,
+                        product != null ? product.CarbsPerBase : null,
+                        product != null ? product.FiberPerBase : null,
+                        product != null ? product.AlcoholPerBase : null,
                         ingredient.NestedRecipeId.HasValue ? ingredient.NestedRecipeId.Value.Value : null,
                         ingredient.NestedRecipe != null ? ingredient.NestedRecipe.Name : null,
                         ingredient.NestedRecipe != null ? ingredient.NestedRecipe.Servings : null,
@@ -193,7 +195,7 @@ internal sealed class RecipeOverviewReadService(FoodDiaryDbContext context) : IR
                         ingredient.NestedRecipe != null ? ingredient.NestedRecipe.TotalCarbs : null,
                         ingredient.NestedRecipe != null ? ingredient.NestedRecipe.TotalFiber : null,
                         ingredient.NestedRecipe != null ? ingredient.NestedRecipe.TotalAlcohol : null,
-                        ingredient.Product == null || ingredient.Product.UserId == currentUserId || ingredient.Product.Visibility == Visibility.Public,
+                        product == null || product.UserId == currentUserId || product.Visibility == Visibility.Public,
                         ingredient.NestedRecipe == null || ingredient.NestedRecipe.UserId == currentUserId || ingredient.NestedRecipe.Visibility == Visibility.Public))
                         .ToList()))
                 .ToList()));

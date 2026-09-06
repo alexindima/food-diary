@@ -13,3 +13,7 @@ helper algorithms unchanged during relocation.
 IAdminSsoCodeStore remains a shared central contract used by ordinary Identity
 SSO and Admin impersonation; its in-memory/Redis implementations do not move.
 Shared rendered-email transport/outbox contracts also remain central.
+
+Password hashing contracts live in Shared/FoodDiary.Authentication.Contracts.
+Identity implements Users-owned IUserSessionRevocationService through its scoped
+refresh-token repository; Users does not consume Identity repository ports.

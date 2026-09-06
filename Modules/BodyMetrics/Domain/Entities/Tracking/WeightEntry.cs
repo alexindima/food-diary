@@ -1,6 +1,5 @@
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -12,8 +11,6 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
     public UserId UserId { get; private set; }
     public DateTime Date { get; private set; }
     public double WeightKg { get; private set; }
-
-    public User User { get; private set; } = null!;
 
     private WeightEntry() {
     }

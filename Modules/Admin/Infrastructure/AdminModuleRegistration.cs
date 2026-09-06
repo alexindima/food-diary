@@ -1,3 +1,6 @@
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Admin;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Infrastructure.Authentication;
@@ -11,6 +14,7 @@ public static class AdminModuleRegistration {
         services.AddAdminApplication().AddAdminPersistence();
 
     public static IServiceCollection AddAdminPersistence(this IServiceCollection services) {
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, AdminUserDataPurgeParticipant>());
         services.AddScoped<IAdminUserRoleAuditRepository, AdminUserRoleAuditRepository>();
         services.AddScoped<IAdminUserRoleAuditReadRepository>(static provider => provider.GetRequiredService<IAdminUserRoleAuditRepository>());
         services.AddScoped<IAdminBillingRepository, AdminBillingRepository>();

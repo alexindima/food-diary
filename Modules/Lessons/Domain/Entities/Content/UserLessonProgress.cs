@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Content;
@@ -9,7 +8,6 @@ public sealed class UserLessonProgress : Entity<UserLessonProgressId> {
     public NutritionLessonId LessonId { get; private set; }
     public DateTime ReadAtUtc { get; private set; }
 
-    public User User { get; } = null!;
     public NutritionLesson Lesson { get; } = null!;
 
     private UserLessonProgress() {

@@ -25,21 +25,14 @@ public sealed class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavo
         UserId userId,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<FavoriteRecipe> query = context.FavoriteRecipes
-            .AsSplitQuery()
-            .Include(f => f.Recipe)
-            .ThenInclude(r => r.Steps)
-            .ThenInclude(s => s.Ingredients)
-            .AsQueryable();
+        IQueryable<FavoriteRecipe> query = context.FavoriteRecipes.Where(
+            favorite => favorite.Id == id && favorite.UserId == userId &&
+                context.Recipes.AsNoTracking().Any(source => source.Id == favorite.RecipeId &&
+                    (source.UserId == userId || source.Visibility == Visibility.Public)));
 
-        if (!asTracking) {
-            query = query.AsNoTracking();
-        }
-
-        return await query.FirstOrDefaultAsync(
-            f => f.Id == id && f.UserId == userId &&
-                (f.Recipe.UserId == userId || f.Recipe.Visibility == Visibility.Public),
-            cancellationToken).ConfigureAwait(false);
+        // EF tracking applies to the whole query, including nested access checks.
+        query = asTracking ? query.AsTracking() : query.AsNoTracking();
+        return await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FavoriteRecipe?> GetOwnedByIdAsync(
@@ -47,11 +40,7 @@ public sealed class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavo
         UserId userId,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<FavoriteRecipe> query = context.FavoriteRecipes
-            .AsSplitQuery()
-            .Include(favorite => favorite.Recipe)
-            .ThenInclude(recipe => recipe.Steps)
-            .ThenInclude(step => step.Ingredients);
+        IQueryable<FavoriteRecipe> query = context.FavoriteRecipes;
         if (!asTracking) {
             query = query.AsNoTracking();
         }
@@ -69,7 +58,7 @@ public sealed class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavo
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 f => f.RecipeId == recipeId && f.UserId == userId &&
-                    (f.Recipe.UserId == userId || f.Recipe.Visibility == Visibility.Public),
+                    context.Recipes.AsNoTracking().Any(source => source.Id == f.RecipeId && (source.UserId == userId || source.Visibility == Visibility.Public)),
                 cancellationToken).ConfigureAwait(false);
     }
 
@@ -81,7 +70,7 @@ public sealed class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavo
             .AsNoTracking()
             .AnyAsync(
                 f => f.RecipeId == recipeId && f.UserId == userId &&
-                    (f.Recipe.UserId == userId || f.Recipe.Visibility == Visibility.Public),
+                    context.Recipes.AsNoTracking().Any(source => source.Id == f.RecipeId && (source.UserId == userId || source.Visibility == Visibility.Public)),
                 cancellationToken).ConfigureAwait(false);
     }
 
@@ -90,12 +79,9 @@ public sealed class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavo
         CancellationToken cancellationToken = default) {
         return await context.FavoriteRecipes
             .AsNoTracking()
-            .AsSplitQuery()
-            .Include(f => f.Recipe)
-            .ThenInclude(r => r.Steps)
-            .ThenInclude(s => s.Ingredients)
+
             .Where(f => f.UserId == userId &&
-                (f.Recipe.UserId == userId || f.Recipe.Visibility == Visibility.Public))
+                context.Recipes.AsNoTracking().Any(source => source.Id == f.RecipeId && (source.UserId == userId || source.Visibility == Visibility.Public)))
             .OrderByDescending(f => f.CreatedAtUtc)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -106,21 +92,22 @@ public sealed class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavo
         return await context.FavoriteRecipes
             .AsNoTracking()
             .Where(f => f.UserId == userId &&
-                (f.Recipe.UserId == userId || f.Recipe.Visibility == Visibility.Public))
+                context.Recipes.AsNoTracking().Any(source => source.Id == f.RecipeId && (source.UserId == userId || source.Visibility == Visibility.Public)))
             .OrderByDescending(f => f.CreatedAtUtc)
             .Take(PaginationPolicy.MaxCollectionSize)
-            .Select(f => new FavoriteRecipeReadModel(
-                f.Id.Value,
-                f.RecipeId.Value,
-                f.Name,
-                f.CreatedAtUtc,
-                f.Recipe.Name,
-                f.Recipe.ImageUrl,
-                f.Recipe.TotalCalories ?? f.Recipe.ManualCalories,
-                f.Recipe.Servings,
-                f.Recipe.PrepTime,
-                f.Recipe.CookTime,
-                f.Recipe.Steps.Sum(step => step.Ingredients.Count)))
+            .Join(context.Recipes.AsNoTracking(), favorite => favorite.RecipeId, source => source.Id, (favorite, source) => new { Favorite = favorite, Source = source })
+            .Select(row => new FavoriteRecipeReadModel(
+                row.Favorite.Id.Value,
+                row.Favorite.RecipeId.Value,
+                row.Favorite.Name,
+                row.Favorite.CreatedAtUtc,
+                row.Source.Name,
+                row.Source.ImageUrl,
+                row.Source.TotalCalories ?? row.Source.ManualCalories,
+                row.Source.Servings,
+                row.Source.PrepTime,
+                row.Source.CookTime,
+                row.Source.Steps.Sum(step => step.Ingredients.Count)))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -135,7 +122,7 @@ public sealed class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavo
         List<FavoriteRecipe> favorites = await context.FavoriteRecipes
             .AsNoTracking()
             .Where(f => f.UserId == userId && recipeIds.Contains(f.RecipeId) &&
-                (f.Recipe.UserId == userId || f.Recipe.Visibility == Visibility.Public))
+                context.Recipes.AsNoTracking().Any(source => source.Id == f.RecipeId && (source.UserId == userId || source.Visibility == Visibility.Public)))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return favorites.ToDictionary(f => f.RecipeId);

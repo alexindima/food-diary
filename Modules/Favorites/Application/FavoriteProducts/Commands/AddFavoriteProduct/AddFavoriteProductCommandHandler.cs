@@ -2,8 +2,6 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
-using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Favorites.FavoriteProducts.Mappings;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
@@ -14,7 +12,7 @@ namespace FoodDiary.Application.Favorites.FavoriteProducts.Commands.AddFavoriteP
 
 public sealed class AddFavoriteProductCommandHandler(
     IFavoriteProductWriteRepository favoriteProductRepository,
-    IProductLookupService productLookupService,
+    IFavoriteProductSourceReadService sourceReadService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<AddFavoriteProductCommand, Result<FavoriteProductModel>> {
     public async Task<Result<FavoriteProductModel>> Handle(
@@ -38,13 +36,13 @@ public sealed class AddFavoriteProductCommandHandler(
 
         UserId userId = userIdResult.Value;
         ProductId productId = productIdResult.Value;
-        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await productLookupService
-            .GetAccessibleByIdsAsync([productId], userId, cancellationToken)
-            .ConfigureAwait(false);
-        ProductOverviewReadItem? product = products.GetValueOrDefault(productId);
-        if (product is null) {
-            return Result.Failure<FavoriteProductModel>(ProductErrors.NotFound(command.ProductId));
+        Result<FavoriteProductSourceModel> sourceResult = await sourceReadService
+            .GetAccessibleAsync(productId, userId, cancellationToken).ConfigureAwait(false);
+        if (sourceResult.IsFailure) {
+            return Result.Failure<FavoriteProductModel>(sourceResult.Error);
         }
+
+        FavoriteProductSourceModel product = sourceResult.Value;
 
         FavoriteProduct? existing = await favoriteProductRepository.GetByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {

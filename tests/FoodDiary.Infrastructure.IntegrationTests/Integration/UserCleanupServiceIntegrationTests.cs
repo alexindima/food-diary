@@ -1,3 +1,11 @@
+using FoodDiary.Modules.MealPlanning.Infrastructure;
+using FoodDiary.Modules.Images.Infrastructure;
+using FoodDiary.Modules.Hydration.Infrastructure;
+using FoodDiary.Modules.Dietologist.Infrastructure;
+using FoodDiary.Modules.Cycles.Infrastructure;
+using FoodDiary.Modules.BodyMetrics.Infrastructure;
+using FoodDiary.Application.Abstractions.Users.Common;
+using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Admin;
@@ -92,7 +100,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         await context.SaveChangesAsync();
 
         var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
-        var service = new UserCleanupService(context, imageObjectDeletionOutbox, NullLogger<UserCleanupService>.Instance);
+        UserCleanupService service = CreateService(context, imageObjectDeletionOutbox);
 
         int removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), batchSize: 10, reassignUserId: null);
 
@@ -124,7 +132,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         (User? deletedUser, User? survivorUser) = await SeedReassignScenarioAsync(context).ConfigureAwait(false);
 
         var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
-        var service = new UserCleanupService(context, imageObjectDeletionOutbox, NullLogger<UserCleanupService>.Instance);
+        UserCleanupService service = CreateService(context, imageObjectDeletionOutbox);
 
         int removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
@@ -171,7 +179,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         await context.SaveChangesAsync();
 
         var imageObjectDeletionOutbox = new RecordingImageObjectDeletionOutbox();
-        var service = new UserCleanupService(context, imageObjectDeletionOutbox, NullLogger<UserCleanupService>.Instance);
+        UserCleanupService service = CreateService(context, imageObjectDeletionOutbox);
 
         int removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
@@ -198,10 +206,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         user.Restore();
         await context.SaveChangesAsync();
 
-        var service = new UserCleanupService(
-            context,
-            new RecordingImageObjectDeletionOutbox(),
-            NullLogger<UserCleanupService>.Instance);
+        UserCleanupService service = CreateService(context, new RecordingImageObjectDeletionOutbox());
 
         bool removed = await service.CleanupUserAsync(
             user.Id,
@@ -212,6 +217,56 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
         Assert.False(removed);
         Assert.True(await verificationContext.Users.AnyAsync(candidate => candidate.Id == user.Id));
+    }
+
+    [RequiresDockerFact]
+    public async Task OwnerFailure_RollsBackContentReassignmentAndUserDeletion() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        (User deleted, User survivor) = await SeedReassignScenarioAsync(context);
+        UserCleanupService service = CreateService(context, new RecordingImageObjectDeletionOutbox(), new FailingParticipant(context));
+
+        int removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), 10, survivor.Id.Value);
+
+        Assert.Equal(0, removed);
+        Assert.False(context.ChangeTracker.HasChanges());
+        await context.SaveChangesAsync();
+        await using FoodDiaryDbContext verification = CreateVerificationContext(context);
+        Assert.True(await verification.Users.AnyAsync(user => user.Id == deleted.Id));
+        Assert.All(await verification.Products.ToListAsync(), product => Assert.Equal(deleted.Id, product.UserId));
+        Assert.All(await verification.Recipes.ToListAsync(), recipe => Assert.Equal(deleted.Id, recipe.UserId));
+        Assert.All(await verification.ImageAssets.ToListAsync(), asset => Assert.Equal(deleted.Id, asset.UserId));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FailingParticipant(FoodDiaryDbContext context) : IUserDataPurgeParticipant {
+        public int Order => 115;
+        public Task PurgeAsync(FoodDiary.Domain.ValueObjects.Ids.UserId userId, FoodDiary.Domain.ValueObjects.Ids.UserId? reassignTarget, CancellationToken cancellationToken) {
+            context.Users.Add(User.Create("uncommitted-purge-work@example.com", "hash"));
+            throw new InvalidOperationException("Injected owner cleanup failure.");
+        }
+    }
+
+    private static UserCleanupService CreateService(FoodDiaryDbContext context, IImageObjectDeletionOutbox outbox, IUserDataPurgeParticipant? extra = null) {
+        var services = new ServiceCollection();
+        services.AddSingleton(context);
+        services.AddAdminPersistence();
+        services.AddAiPersistence();
+        services.AddBodyMetricsModule();
+        services.AddCyclesModule();
+        services.AddDietologistModule();
+        services.AddHydrationModule();
+        services.AddImagesInfrastructure();
+        services.AddMealPlanningModule();
+        services.AddMealsPersistence();
+        services.AddProductsPersistence();
+        services.AddRecentItemsModule();
+        services.AddRecipesPersistence();
+        services.AddSingleton(outbox);
+        if (extra is not null) { services.AddSingleton(extra); }
+        using ServiceProvider provider = services.BuildServiceProvider();
+        IUserDataPurgeParticipant[] participants = [.. provider.GetServices<IUserDataPurgeParticipant>()];
+        Assert.Equal(extra is null ? 12 : 13, participants.Length);
+        return new UserCleanupService(context, participants, NullLogger<UserCleanupService>.Instance);
     }
 
     private static FoodDiaryDbContext CreateVerificationContext(FoodDiaryDbContext sourceContext) {

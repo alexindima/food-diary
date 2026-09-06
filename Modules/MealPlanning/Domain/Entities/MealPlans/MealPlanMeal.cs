@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -10,8 +9,18 @@ public sealed class MealPlanMeal : Entity<MealPlanMealId> {
     public MealPlanDay Day { get; private set; } = null!;
     public MealType MealType { get; private set; }
     public RecipeId RecipeId { get; private set; }
-    public Recipe Recipe { get; private set; } = null!;
     public int Servings { get; private set; }
+    public MealPlanRecipeSnapshot? RecipeSnapshot { get; private set; }
+
+    public void SetRecipeSnapshot(MealPlanRecipeSnapshot? snapshot) {
+        if (snapshot is not null && snapshot.Id != RecipeId) {
+            throw new ArgumentException("Recipe snapshot must match the planned recipe.", nameof(snapshot));
+        }
+
+        RecipeSnapshot = snapshot is null ? null : snapshot with {
+            Ingredients = Array.AsReadOnly(snapshot.Ingredients.ToArray()),
+        };
+    }
 
     private MealPlanMeal() {
     }

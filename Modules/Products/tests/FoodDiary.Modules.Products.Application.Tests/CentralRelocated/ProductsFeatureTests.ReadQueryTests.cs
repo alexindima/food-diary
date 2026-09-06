@@ -44,7 +44,6 @@ public partial class ProductsFeatureTests {
             visibility: Visibility.Private);
 
         var favorite = FavoriteProduct.Create(user.Id, lunch.Id, "Fav lunch");
-        SetFavoriteProductNavigation(favorite, lunch);
 
         var overviewReadService = new OverviewProductReadService(
             pagedItems: [(breakfast, 2), (lunch, 5)],
@@ -54,7 +53,7 @@ public partial class ProductsFeatureTests {
         var recentRepository = new StubRecentItemRepository([
             new RecentProductUsage(lunch.Id, 5, DateTime.UtcNow),
         ]);
-        var favoriteRepository = new StubFavoriteProductRepository([favorite]);
+        var favoriteRepository = new StubFavoriteProductRepository([favorite], lunch);
         GetProductsOverviewQueryHandler handler = CreateProductsOverviewHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<ProductOverviewModel> result = await handler.Handle(

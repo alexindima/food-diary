@@ -2,14 +2,13 @@
   <PropertyGroup><RootNamespace>FoodDiary.Infrastructure</RootNamespace></PropertyGroup>
   <ItemGroup><Compile Remove="Model/**/*.cs" /></ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../../RecentItems/Domain/FoodDiary.Modules.RecentItems.Domain.csproj" />
+    <ProjectReference Include="../../Images/Contracts/FoodDiary.Modules.Images.Contracts.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Users.Application.csproj" />
     <ProjectReference Include="../../../FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="Model/FoodDiary.Modules.Users.PersistenceModel.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.Users.Domain.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Users.Application.Abstractions.csproj" />
     <ProjectReference Include="../Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
-    <ProjectReference Include="../../Images/Application/Abstractions/FoodDiary.Modules.Images.Application.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>

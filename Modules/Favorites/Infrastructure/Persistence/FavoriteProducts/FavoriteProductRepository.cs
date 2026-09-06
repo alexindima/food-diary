@@ -27,18 +27,14 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
         UserId userId,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<FavoriteProduct> query = context.FavoriteProducts
-            .Include(f => f.Product)
-            .AsQueryable();
+        IQueryable<FavoriteProduct> query = context.FavoriteProducts.Where(
+            favorite => favorite.Id == id && favorite.UserId == userId &&
+                context.Products.AsNoTracking().Any(source => source.Id == favorite.ProductId &&
+                    (source.UserId == userId || source.Visibility == Visibility.Public)));
 
-        if (!asTracking) {
-            query = query.AsNoTracking();
-        }
-
-        return await query.FirstOrDefaultAsync(
-            f => f.Id == id && f.UserId == userId &&
-                (f.Product.UserId == userId || f.Product.Visibility == Visibility.Public),
-            cancellationToken).ConfigureAwait(false);
+        // EF tracking applies to the whole query, including nested access checks.
+        query = asTracking ? query.AsTracking() : query.AsNoTracking();
+        return await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FavoriteProduct?> GetOwnedByIdAsync(
@@ -46,8 +42,7 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
         UserId userId,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<FavoriteProduct> query = context.FavoriteProducts
-            .Include(favorite => favorite.Product);
+        IQueryable<FavoriteProduct> query = context.FavoriteProducts;
         if (!asTracking) {
             query = query.AsNoTracking();
         }
@@ -65,7 +60,7 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 f => f.ProductId == productId && f.UserId == userId &&
-                    (f.Product.UserId == userId || f.Product.Visibility == Visibility.Public),
+                    context.Products.AsNoTracking().Any(source => source.Id == f.ProductId && (source.UserId == userId || source.Visibility == Visibility.Public)),
                 cancellationToken).ConfigureAwait(false);
     }
 
@@ -77,7 +72,7 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
             .AsNoTracking()
             .AnyAsync(
                 f => f.ProductId == productId && f.UserId == userId &&
-                    (f.Product.UserId == userId || f.Product.Visibility == Visibility.Public),
+                    context.Products.AsNoTracking().Any(source => source.Id == f.ProductId && (source.UserId == userId || source.Visibility == Visibility.Public)),
                 cancellationToken).ConfigureAwait(false);
     }
 
@@ -86,9 +81,8 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
         CancellationToken cancellationToken = default) {
         return await context.FavoriteProducts
             .AsNoTracking()
-            .Include(f => f.Product)
             .Where(f => f.UserId == userId &&
-                (f.Product.UserId == userId || f.Product.Visibility == Visibility.Public))
+                context.Products.AsNoTracking().Any(source => source.Id == f.ProductId && (source.UserId == userId || source.Visibility == Visibility.Public)))
             .OrderByDescending(f => f.CreatedAtUtc)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
@@ -99,31 +93,32 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
         return await context.FavoriteProducts
             .AsNoTracking()
             .Where(f => f.UserId == userId &&
-                (f.Product.UserId == userId || f.Product.Visibility == Visibility.Public))
+                context.Products.AsNoTracking().Any(source => source.Id == f.ProductId && (source.UserId == userId || source.Visibility == Visibility.Public)))
             .OrderByDescending(f => f.CreatedAtUtc)
             .Take(PaginationPolicy.MaxCollectionSize)
-            .Select(f => new FavoriteProductReadModel(
-                f.Id.Value,
-                f.ProductId.Value,
-                f.UserId.Value,
-                f.Name,
-                f.CreatedAtUtc,
-                f.Product.Name,
-                f.Product.Brand,
-                f.Product.Barcode,
-                f.Product.UserId == f.UserId ? f.Product.Comment : null,
-                f.Product.ImageUrl,
-                f.Product.CaloriesPerBase,
-                f.Product.ProteinsPerBase,
-                f.Product.FatsPerBase,
-                f.Product.CarbsPerBase,
-                f.Product.FiberPerBase,
-                f.Product.AlcoholPerBase,
-                f.Product.ProductType,
-                f.Product.BaseUnit,
-                f.PreferredPortionAmount,
-                f.Product.DefaultPortionAmount,
-                f.Product.UserId.Value))
+            .Join(context.Products.AsNoTracking(), favorite => favorite.ProductId, source => source.Id, (favorite, source) => new { Favorite = favorite, Source = source })
+            .Select(row => new FavoriteProductReadModel(
+                row.Favorite.Id.Value,
+                row.Favorite.ProductId.Value,
+                row.Favorite.UserId.Value,
+                row.Favorite.Name,
+                row.Favorite.CreatedAtUtc,
+                row.Source.Name,
+                row.Source.Brand,
+                row.Source.Barcode,
+                row.Source.UserId == row.Favorite.UserId ? row.Source.Comment : null,
+                row.Source.ImageUrl,
+                row.Source.CaloriesPerBase,
+                row.Source.ProteinsPerBase,
+                row.Source.FatsPerBase,
+                row.Source.CarbsPerBase,
+                row.Source.FiberPerBase,
+                row.Source.AlcoholPerBase,
+                row.Source.ProductType,
+                row.Source.BaseUnit,
+                row.Favorite.PreferredPortionAmount,
+                row.Source.DefaultPortionAmount,
+                row.Source.UserId.Value))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -138,7 +133,7 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
         List<FavoriteProduct> favorites = await context.FavoriteProducts
             .AsNoTracking()
             .Where(f => f.UserId == userId && productIds.Contains(f.ProductId) &&
-                (f.Product.UserId == userId || f.Product.Visibility == Visibility.Public))
+                context.Products.AsNoTracking().Any(source => source.Id == f.ProductId && (source.UserId == userId || source.Visibility == Visibility.Public)))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return favorites.ToDictionary(f => f.ProductId);

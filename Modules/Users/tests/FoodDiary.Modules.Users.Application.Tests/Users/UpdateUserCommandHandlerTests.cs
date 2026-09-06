@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Text.Json;
 using FoodDiary.Results;
@@ -17,8 +18,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateImageAssetCleanupService(),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
 
         var layout = new DashboardLayoutModel(["summary", "goals"], ["water", "weight"]);
         var command = new UpdateUserCommand(
@@ -63,8 +63,7 @@ public sealed class UpdateUserCommandHandlerTests {
         IImageAssetCleanupService cleanup = CreateImageAssetCleanupService("storage_error", out List<ImageAssetId> requestedAssetIds);
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            cleanup,
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            CreateProfileImageService(cleanup, FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
 
         var newAssetId = ImageAssetId.New();
         var command = new UpdateUserCommand(
@@ -102,8 +101,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateImageAssetCleanupService(),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(
             new UpdateUserCommand(
@@ -140,8 +138,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateImageAssetCleanupService(),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(CreateCommand(userId: null), CancellationToken.None);
 
@@ -155,8 +152,7 @@ public sealed class UpdateUserCommandHandlerTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateImageAssetCleanupService(),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(CreateCommand(user.Id.Value), CancellationToken.None);
 
@@ -176,8 +172,8 @@ public sealed class UpdateUserCommandHandlerTests {
             .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
         var handler = new UpdateUserCommandHandler(
             userContextService,
-            CreateImageAssetCleanupService(),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            CreateProfileImageService(CreateImageAssetCleanupService(),
+                FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(CreateCommand(userId.Value), CancellationToken.None);
 
@@ -201,8 +197,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("preferences-user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateImageAssetCleanupService(),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(
             CreateCommand(
@@ -224,8 +219,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateImageAssetCleanupService(),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
 
         var command = new UpdateUserCommand(
             UserId: user.Id.Value,
@@ -266,8 +260,7 @@ public sealed class UpdateUserCommandHandlerTests {
             .WithFailure(ImageErrors.NotFound(Guid.NewGuid()));
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateImageAssetCleanupService(),
-            imageAccess);
+            CreateProfileImageService(CreateImageAssetCleanupService(), imageAccess));
 
         var assetId = Guid.NewGuid();
         Result<UserModel> result = await handler.Handle(
@@ -284,8 +277,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("active@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateImageAssetCleanupService(),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(
             CreateCommand(user.Id.Value, isActive: false),
@@ -301,8 +293,7 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("active-again@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
             CreateUserRepository(user),
-            CreateImageAssetCleanupService(),
-            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
+            CreateProfileImageService(CreateImageAssetCleanupService(), FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance));
 
         Result<UserModel> result = await handler.Handle(
             CreateCommand(user.Id.Value, isActive: true),
@@ -366,6 +357,21 @@ public sealed class UpdateUserCommandHandlerTests {
             .UpdateUserAsync(Arg.Any<User>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
         return userContextService;
+    }
+
+    private static IUserProfileImageService CreateProfileImageService(
+        IImageAssetCleanupService cleanup,
+        IImageAssetAccessService access) {
+        IUserProfileImageService service = Substitute.For<IUserProfileImageService>();
+        service.ResolveOptionalUrlAsync(Arg.Any<ImageAssetId?>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(async call => {
+                Result<FoodDiary.Domain.Entities.Assets.ImageAsset?> result = await access.ResolveOptionalAsync(
+                    call.Arg<ImageAssetId?>(), call.Arg<UserId>(), call.Arg<CancellationToken>()).ConfigureAwait(false);
+                return result.IsFailure ? Result.Failure<string?>(result.Error) : Result.Success(result.Value?.Url);
+            });
+        service.DeleteIfUnusedAsync(Arg.Any<ImageAssetId>(), Arg.Any<CancellationToken>())
+            .Returns(call => cleanup.DeleteIfUnusedAsync(call.Arg<ImageAssetId>(), call.Arg<CancellationToken>()));
+        return service;
     }
 
     private static IImageAssetCleanupService CreateImageAssetCleanupService(string? errorCode = null) =>

@@ -5,14 +5,13 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Users.Commands.DeleteUser;
 
 public sealed class DeleteUserCommandHandler(
     IUserContextService userContextService,
     TimeProvider dateTimeProvider,
-    IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
+    IUserSessionRevocationService refreshTokenSessionRepository,
     IAuditLogger auditLogger)
     : ICommandHandler<DeleteUserCommand, Result> {
     public async Task<Result> Handle(DeleteUserCommand command, CancellationToken cancellationToken) {

@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -16,6 +17,7 @@ public sealed class EfWeeklyGoalTransactionRunner(
         Func<CancellationToken, Task<T>> operation,
         CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(operation);
+        SharedTransactionBoundary.EnsureCleanEntry(context);
         IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(async () => {
             IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);

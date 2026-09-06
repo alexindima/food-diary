@@ -177,8 +177,8 @@ public partial class DietologistFeatureTests {
         typeof(User).GetProperty(nameof(User.LastName))!.SetValue(dietologist, "Smith");
 
         DietologistInvitation invitation = CreateAcceptedInvitation(clientId, dietologistId);
-        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.ClientUser))!.SetValue(invitation, client);
-        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.DietologistUser))!.SetValue(invitation, dietologist);
+        SetInvitationProfile(invitation, client: client);
+        SetInvitationProfile(invitation, dietologist: dietologist);
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
@@ -265,8 +265,8 @@ public partial class DietologistFeatureTests {
                 ShareProfile: false,
                 ShareFasting: true));
 
-        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.ClientUser))!.SetValue(invitation, client);
-        typeof(DietologistInvitation).GetProperty(nameof(DietologistInvitation.DietologistUser))!.SetValue(invitation, dietologist);
+        SetInvitationProfile(invitation, client: client);
+        SetInvitationProfile(invitation, dietologist: dietologist);
 
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(dietologist);

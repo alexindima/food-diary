@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Assets;
@@ -9,8 +8,6 @@ public sealed class ImageAsset : Entity<ImageAssetId> {
     public string ObjectKey { get; private set; } = string.Empty;
     public string Url { get; private set; } = string.Empty;
     public bool IsConfirmed { get; private set; }
-
-    public User User { get; private set; } = null!;
 
     private ImageAsset() {
     }

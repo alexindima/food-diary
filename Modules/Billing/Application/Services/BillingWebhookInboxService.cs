@@ -48,9 +48,10 @@ public sealed class BillingWebhookInboxService(
             return result;
         }
 
-        inboxEvent.MarkFailed(timeProvider.GetUtcNow().UtcDateTime, result.Error.Message);
-        await billingTransactionRunner.ExecuteAsync(
-            ct => billingWebhookEventRepository.UpdateAsync(inboxEvent, ct),
+        await billingTransactionRunner.ExecuteAsync(ct => {
+            inboxEvent.MarkFailed(timeProvider.GetUtcNow().UtcDateTime, result.Error.Message);
+            return billingWebhookEventRepository.UpdateAsync(inboxEvent, ct);
+        },
             cancellationToken).ConfigureAwait(false);
         return result;
     }

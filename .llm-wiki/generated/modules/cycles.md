@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `Modules/Cycles/Application/FoodDiary.Application.Cycles.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Dashboard, Users
+- Abstraction-contract dependencies: Meals, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Modules.Dashboard.Application, FoodDiary.Modules.Export.Application, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.

@@ -121,7 +121,7 @@ public sealed class DuplicateRecipeCommandHandler(
 
             foreach (RecipeIngredient ingredient in step.Ingredients) {
                 if (ingredient.ProductId.HasValue &&
-                    (preserveManagedAssets || ingredient.Product?.Visibility == Visibility.Public)) {
+                    (preserveManagedAssets || ingredient.ProductSnapshot?.Visibility == Visibility.Public)) {
                     newStep.AddProductIngredient(ingredient.ProductId.Value, ingredient.Amount);
                 } else if (ingredient.NestedRecipeId.HasValue &&
                     (preserveManagedAssets || ingredient.NestedRecipe?.Visibility == Visibility.Public)) {

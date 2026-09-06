@@ -1,6 +1,4 @@
 using System.Globalization;
-using FoodDiary.Domain.Entities.Usda;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
@@ -46,8 +44,6 @@ public sealed class Product : AggregateRoot<ProductId> {
     public int? UsdaFdcId { get; private set; }
 
     public UserId UserId { get; private set; }
-    public User User { get; private set; } = null!;
-    public UsdaFood? UsdaFood { get; private set; }
 
     private Product() {
     }

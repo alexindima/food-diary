@@ -16,7 +16,7 @@ public sealed class UsersIdentityContractAssemblyTests {
     [InlineData(typeof(IUserRepository), "FoodDiary.Modules.Users.Application.Abstractions")]
     [InlineData(typeof(IUserRoleCatalogService), "FoodDiary.Modules.Users.Application.Abstractions")]
     [InlineData(typeof(IUserAdminReadRepository), "FoodDiary.Modules.Users.Application.Abstractions")]
-    [InlineData(typeof(IPasswordHasher), "FoodDiary.Modules.Identity.Application.Abstractions")]
+    [InlineData(typeof(IPasswordHasher), "FoodDiary.Authentication.Contracts")]
     [InlineData(typeof(IEmailTemplateRepository), "FoodDiary.Modules.Identity.Application.Abstractions")]
     [InlineData(typeof(IAdminUserRoleAuditRepository), "FoodDiary.Modules.Admin.Application.Abstractions")]
     [InlineData(typeof(IBillingMarketingConversionRecorder), "FoodDiary.Modules.Billing.Application.Abstractions")]

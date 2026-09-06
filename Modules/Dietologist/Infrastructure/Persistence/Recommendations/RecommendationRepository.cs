@@ -14,11 +14,11 @@ public sealed class RecommendationRepository(FoodDiaryDbContext context) : IReco
             .Where(r => r.ClientUserId == clientUserId)
             .OrderByDescending(r => r.CreatedOnUtc)
             .Take(limit)
-            .Select(r => new RecommendationReadModel(
+            .Join(context.Users.AsNoTracking(), r => r.DietologistUserId, user => user.Id, (r, user) => new RecommendationReadModel(
                 r.Id.Value,
                 r.DietologistUserId.Value,
-                r.DietologistUser.FirstName,
-                r.DietologistUser.LastName,
+                user.FirstName,
+                user.LastName,
                 r.Text,
                 r.IsRead,
                 r.CreatedOnUtc,
@@ -30,7 +30,6 @@ public sealed class RecommendationRepository(FoodDiaryDbContext context) : IReco
         UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) {
         return await context.Recommendations
             .AsNoTracking()
-            .Include(r => r.DietologistUser)
             .Where(r => r.ClientUserId == clientUserId)
             .OrderByDescending(r => r.CreatedOnUtc)
             .Take(limit)
@@ -44,11 +43,11 @@ public sealed class RecommendationRepository(FoodDiaryDbContext context) : IReco
             .Where(r => r.DietologistUserId == dietologistUserId && r.ClientUserId == clientUserId)
             .OrderByDescending(r => r.CreatedOnUtc)
             .Take(limit)
-            .Select(r => new RecommendationReadModel(
+            .Join(context.Users.AsNoTracking(), r => r.DietologistUserId, user => user.Id, (r, user) => new RecommendationReadModel(
                 r.Id.Value,
                 r.DietologistUserId.Value,
-                r.DietologistUser.FirstName,
-                r.DietologistUser.LastName,
+                user.FirstName,
+                user.LastName,
                 r.Text,
                 r.IsRead,
                 r.CreatedOnUtc,
@@ -60,7 +59,6 @@ public sealed class RecommendationRepository(FoodDiaryDbContext context) : IReco
         UserId dietologistUserId, UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) {
         return await context.Recommendations
             .AsNoTracking()
-            .Include(r => r.DietologistUser)
             .Where(r => r.DietologistUserId == dietologistUserId && r.ClientUserId == clientUserId)
             .OrderByDescending(r => r.CreatedOnUtc)
             .Take(limit)
@@ -76,7 +74,6 @@ public sealed class RecommendationRepository(FoodDiaryDbContext context) : IReco
         }
 
         return await query
-            .Include(r => r.DietologistUser)
             .FirstOrDefaultAsync(r => r.Id == id, cancellationToken).ConfigureAwait(false);
     }
 

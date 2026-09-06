@@ -7,22 +7,18 @@
       "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "952110e7401d4d7c93278ccb368f0bdea605c27a1bf3b85243c6f2779f3a624c"
-        },
-        {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "29adc9308b15b17c0ad1b022543b9bfb44f4aaad38a04ec03f7b5cffcfa8c356"
+          "sha256": "79881fb51a5bfda69bea910ed181e756b8fdaeb445248ed6b44b61d7942ac98b"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "a8ca39be8112aa217ca58e3af054123d2b9a4acc3cba895cafdd7ddf98a61450"
+          "sha256": "e9ed7952e1b544dcb870b4eeff548a3284421e3494192370d8aca034c7a55341"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:29.3813176Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:28.3936208Z"
     },
     {
       "pageId": "module.frontend",
@@ -46,32 +42,40 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "29adc9308b15b17c0ad1b022543b9bfb44f4aaad38a04ec03f7b5cffcfa8c356"
+          "sha256": "79881fb51a5bfda69bea910ed181e756b8fdaeb445248ed6b44b61d7942ac98b"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "a8ca39be8112aa217ca58e3af054123d2b9a4acc3cba895cafdd7ddf98a61450"
+          "sha256": "e9ed7952e1b544dcb870b4eeff548a3284421e3494192370d8aca034c7a55341"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:30.2770128Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:28.5834332Z"
     },
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "23e3cd05fa0382f84b46d35c6c360c6b17310cbd9db4e4ca83fd676bec75c635",
+      "pageSha256": "19b4a19aacfe2c095a6a1dd83977162a2d3cc4f203f30f546a8eeb8ffffa5673",
       "sources": [
         {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "1dcd2b12aa82aa2c8450735ef2fc8d04f27d034a9a25ba8ddc258e5d3d2fcd36"
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "e9ed7952e1b544dcb870b4eeff548a3284421e3494192370d8aca034c7a55341"
+        },
+        {
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "336f23a24941f15702ed961366a20fae57a9157322a73c555953bae0e53fd6f0"
+        },
+        {
+          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
+          "sha256": "e2ec8b5985aee2a25504912797114e827487418423f225d156656f56e205572a"
         }
       ],
-      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T15:47:57.2427587Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:28.7947649Z"
     },
     {
       "pageId": "system.architecture",
@@ -80,25 +84,25 @@
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "29adc9308b15b17c0ad1b022543b9bfb44f4aaad38a04ec03f7b5cffcfa8c356"
+          "sha256": "79881fb51a5bfda69bea910ed181e756b8fdaeb445248ed6b44b61d7942ac98b"
         },
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "5579f0772ebbb073db59b5a9be566d83bf1050a6f90983b7657bb82e3d2f6a96"
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "7adc1946e07a3da3516ee62e85370b33031fad819530ff11356c463fb391f2fd"
         },
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "a8ca39be8112aa217ca58e3af054123d2b9a4acc3cba895cafdd7ddf98a61450"
+          "sha256": "e9ed7952e1b544dcb870b4eeff548a3284421e3494192370d8aca034c7a55341"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "92accf853f4066e7923eee7de6e062eca020c0231bdc88577b110199a63451d9"
+          "sha256": "490b11e29f6003a13dbea6cea99304d9fc552a25a31dd53b7e7a68affd5aaa53"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Final validation corrections only: the password contract compatibility test now expects shared Authentication.Contracts; Dashboard DI test composes Meals persistence; the exact test-project matrix includes that direct dependency. Favorite EF tracking regression asserts persisted updates and owner-only tracking. All affected runtime/HTTP tests and focused reference guards pass; no API or schema changes.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:31.1507741Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:17:33.6443287Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -107,13 +111,13 @@
       "sources": [
         {
           "path": "Directory.Build.props",
-          "sha256": "3bdf89ef9e4529d4860c320b02fbbe646d131f339950569be665a374c21da904"
+          "sha256": "81cabc5e80e1be8733d7f3a7992a0d3def2629d748ac3209bc14b9caf0ba65d3"
         }
       ],
-      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
-      "reviewedAtUtc": "2026-08-17T15:56:42.9180971Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:29.2419188Z"
     },
     {
       "pageId": "system.frontend-index",
@@ -136,14 +140,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "952110e7401d4d7c93278ccb368f0bdea605c27a1bf3b85243c6f2779f3a624c"
+          "path": "docs/adr/README.md",
+          "sha256": "243dbe724879a6877d79c9546c9cf0472ff482532a64dfe433f3203518ca3a66"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed owner purge adapters, immutable ingredient snapshots, Tdee Meals calorie contract, shared transaction entry guards, exact dependency and persistence manifests against current code and tests; ADR 0030 records preserved schema and remaining contract SCCs.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:31.9258155Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-05T22:15:22.5705364Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -151,14 +155,18 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "5579f0772ebbb073db59b5a9be566d83bf1050a6f90983b7657bb82e3d2f6a96"
+          "path": "Directory.Build.props",
+          "sha256": "81cabc5e80e1be8733d7f3a7992a0d3def2629d748ac3209bc14b9caf0ba65d3"
+        },
+        {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "7adc1946e07a3da3516ee62e85370b33031fad819530ff11356c463fb391f2fd"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:32.7404767Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:29.7871782Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -216,21 +224,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "865b212b77525404c71efcc34e72302d6e938e2e43434f999070941c77758d37"
-        },
-        {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "5579f0772ebbb073db59b5a9be566d83bf1050a6f90983b7657bb82e3d2f6a96"
+          "sha256": "c2991c314bd290bffb028fa5ceb0741e3d3cd490a7113a68f73f076f67d8e7c5"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "92accf853f4066e7923eee7de6e062eca020c0231bdc88577b110199a63451d9"
+          "sha256": "490b11e29f6003a13dbea6cea99304d9fc552a25a31dd53b7e7a68affd5aaa53"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Final validation corrections only: the password contract compatibility test now expects shared Authentication.Contracts; Dashboard DI test composes Meals persistence; the exact test-project matrix includes that direct dependency. Favorite EF tracking regression asserts persisted updates and owner-only tracking. All affected runtime/HTTP tests and focused reference guards pass; no API or schema changes.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:33.4544117Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:17:33.8216526Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -239,13 +243,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "6e6a85d33690ae82fdcdcd377f01edd61c44335738d857fe2e109f552378205e"
+          "sha256": "1ab0377ce65a243ae546fa7d206e0470eb8b660558c7b627668ab8c2b1223dbc"
+        },
+        {
+          "path": "Shared/FoodDiary.Authentication.Contracts/AGENTS.md",
+          "sha256": "e2ec8b5985aee2a25504912797114e827487418423f225d156656f56e205572a"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:34.6347806Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:32.1453721Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -477,13 +485,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "0f1655c63f67bf6d0e484d9d0bfed27925598abd27e84275a64d7a18d00b68a7"
+          "sha256": "243dbe724879a6877d79c9546c9cf0472ff482532a64dfe433f3203518ca3a66"
         }
       ],
-      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
+      "reason": "Reviewed owner purge adapters, immutable ingredient snapshots, Tdee Meals calorie contract, shared transaction entry guards, exact dependency and persistence manifests against current code and tests; ADR 0030 records preserved schema and remaining contract SCCs.",
       "baseRef": "HEAD",
-      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
-      "reviewedAtUtc": "2026-09-05T11:25:43.9134740Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-05T22:15:23.6881072Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -526,17 +534,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "364d001b110b21e9a8324595a3861891435f3a5f4dd9b9aa7e55bf5ae809244c"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "1dcd2b12aa82aa2c8450735ef2fc8d04f27d034a9a25ba8ddc258e5d3d2fcd36"
+          "sha256": "5260a0a0a1024c00865f564f4cb56a4594eaa84308d8f3b9a886db9697ee239c"
         }
       ],
-      "reason": "Reviewed generated navigation against the combined Presentation-test ownership and shared persistence-model boundary; solution, project references, explicit EF registrations, unchanged HTTP contracts, and the documented central runtime seams remain authoritative.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "5e1924e24281f080da6a45c65e59aee2d8463db9",
-      "reviewedAtUtc": "2026-09-05T15:47:58.8648814Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:32.7949089Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -748,13 +752,13 @@
       "sources": [
         {
           "path": "docs/architecture/module-dependencies.json",
-          "sha256": "e62e8257c00ca90b636e598d364e56728305d43cab9622203dc953b6c880f70b"
+          "sha256": "7adc1946e07a3da3516ee62e85370b33031fad819530ff11356c463fb391f2fd"
         }
       ],
-      "reason": "Compared current guides, ADR 0029, inventories and runtime registration with each affected navigation page. Updated the architecture overview for approved API edges and scoped persistence. Supporting mail-service boundaries, source authority, decision matching, trace and topology interpretation remain valid.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "081ee2f5f0470e8e1ed7a05e434c0d6bcfe74def",
-      "reviewedAtUtc": "2026-09-05T11:25:45.5753082Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:33.5262442Z"
     },
     {
       "pageId": "workflow-performance-observability-review",
@@ -808,17 +812,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "41d4c6ec2f5c624f060649ce507686ac7d06fb267a71a0778856b6ac7b74f7bf"
+          "sha256": "60a080ea329482f3de9d2271b91484594f387777c62ae5b161a0aebd7db315af"
         },
         {
-          "path": "docs/privacy/PRIVACY_RELEASE_CHECKLIST.md",
-          "sha256": "213ff72a394b0d7f996a7efe940c06ce17c19e47107409e96cbb6ad05e26d0c0"
+          "path": "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
+          "sha256": "4a9080857fa779ead187a8d98eec89e26fffe54f7cc71dd51f9f34cd5b1483f5"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:36.8993450Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:34.5549480Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -857,13 +861,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4362e4dd2831457ceac3679cc204b0ab3af699446d9cd811f97a8311911947ba"
+          "sha256": "1371f08feed243289a4588d64ecb01cc712ab250ba9d3eadbc4fd020802fc1fd"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:37.8653279Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:35.7490148Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -940,13 +944,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "317c0bd38eee0e89f9f62945ff10b3567eab353c2b8173424bbb8537a9e7cddb"
+          "sha256": "eb902555cf8915c39221187370cb93230e98fd5561d8b0cc9f6255baf8d7f723"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:40.1892766Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:37.8650466Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -955,21 +959,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4362e4dd2831457ceac3679cc204b0ab3af699446d9cd811f97a8311911947ba"
+          "sha256": "1371f08feed243289a4588d64ecb01cc712ab250ba9d3eadbc4fd020802fc1fd"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "317c0bd38eee0e89f9f62945ff10b3567eab353c2b8173424bbb8537a9e7cddb"
+          "sha256": "eb902555cf8915c39221187370cb93230e98fd5561d8b0cc9f6255baf8d7f723"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "41d4c6ec2f5c624f060649ce507686ac7d06fb267a71a0778856b6ac7b74f7bf"
+          "sha256": "60a080ea329482f3de9d2271b91484594f387777c62ae5b161a0aebd7db315af"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:41.2648088Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:39.6769405Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1083,13 +1087,13 @@
       "sources": [
         {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "054cb134a182ef780c80b465ebede9bfa0da805a76f85eee1b0d6e42ec27c39f"
+          "sha256": "9e7f123ce5c612fa08b136c1512b040edc76418cf0f29e14881cf1693c5dd6b3"
         }
       ],
-      "reason": "Only five focused test projects moved into Shared/tests and Tooling/tests. Project identities, dependency targets, test bodies and runtime source are preserved; central test props and editor rules are retained. Solution ownership guards and current test commands were updated. Seven evaluation target literals follow these exact moved test sources; queries, thresholds, weights and historical results are unchanged. This is test placement, not a new runtime boundary or ADR.",
+      "reason": "Reviewed ADR 0031 and actual owners/consumers: acyclic consumer source/revocation/profile/nutrition ports; scalar foreign keys and copied snapshots; unchanged API/schema/privacy/transaction semantics; compiler-owned writes and exact technical exceptions. Source-impact guides now describe current physical owners and scalar EF mappings. Existing ADR 0030 lifecycle tranche is preserved. Architecture/model checks and owner tests verify these boundaries; central HTTP/PostgreSQL completion is recorded separately.",
       "baseRef": "HEAD",
-      "gitHead": "0c3b805571fd75a396d4f8bbaedf556aedbdaaf1",
-      "reviewedAtUtc": "2026-09-02T21:26:08.4343216Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:02:40.6913002Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1203,17 +1207,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "154bf217b3e8db8078881c031adb496faab1ca1235f6cfdc40ea57940a78e37d"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "952110e7401d4d7c93278ccb368f0bdea605c27a1bf3b85243c6f2779f3a624c"
+          "sha256": "2e04fb6e888778c81066fdb582430eabd0b28a82c4abecbce33670422f07cd41"
         }
       ],
-      "reason": "Reviewed against the combined source diff, solution/project graph, explicit host composition, architecture matrix, persistence capability manifest, privacy checklist, full PostgreSQL 93/93 and HTTP 182/182 results. The change relocates adapters/tests and narrows eligible repositories without route, payload, migration, provider protocol, retention, or domain behavior changes; generated catalog/topology/privacy/quality indexes now reflect the removed Integrations project and new owners.",
+      "reason": "Final validation corrections only: the password contract compatibility test now expects shared Authentication.Contracts; Dashboard DI test composes Meals persistence; the exact test-project matrix includes that direct dependency. Favorite EF tracking regression asserts persisted updates and owner-only tracking. All affected runtime/HTTP tests and focused reference guards pass; no API or schema changes.",
       "baseRef": "HEAD",
-      "gitHead": "d23de9592ec1fcedb704b582678ac56fb0b7ff38",
-      "reviewedAtUtc": "2026-09-05T20:35:38.6194238Z"
+      "gitHead": "8e43bb566d75f0b6040a7a583f79bd41bb7a2401",
+      "reviewedAtUtc": "2026-09-06T00:17:34.1739625Z"
     },
     {
       "pageId": "workflow.review-diff",

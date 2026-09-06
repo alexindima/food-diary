@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Infrastructure.Persistence;
@@ -23,6 +24,8 @@ public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context) : IBi
         string? serializationKey,
         Func<CancellationToken, Task> operation,
         CancellationToken cancellationToken) {
+        ArgumentNullException.ThrowIfNull(operation);
+        SharedTransactionBoundary.EnsureCleanEntry(context);
         IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
         try {
             await strategy.ExecuteAsync(async () => {

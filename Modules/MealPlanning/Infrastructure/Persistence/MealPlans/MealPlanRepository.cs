@@ -23,14 +23,12 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
             query = query
                 .Include(p => p.Days)
                     .ThenInclude(d => d.Meals)
-                        .ThenInclude(m => m.Recipe)
-                            .ThenInclude(r => r.Steps)
-                                .ThenInclude(s => s.Ingredients)
-                                    .ThenInclude(i => i.Product)
                 .AsSplitQuery();
         }
 
-        return await query.FirstOrDefaultAsync(p => p.Id == id, cancellationToken).ConfigureAwait(false);
+        MealPlan? result = await query.FirstOrDefaultAsync(p => p.Id == id, cancellationToken).ConfigureAwait(false);
+        if (includeDays && result is not null) { await LoadRecipeSnapshotsAsync(result, cancellationToken).ConfigureAwait(false); }
+        return result;
     }
 
     public Task<MealPlan?> GetCuratedByIdAsync(
@@ -72,17 +70,17 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
                         d.DayNumber,
                         d.Meals
                             .OrderBy(m => m.MealType)
-                            .Select(m => new MealPlanMealReadModel(
+                            .Join(context.Recipes.AsNoTracking(), m => m.RecipeId, recipe => recipe.Id, (m, recipe) => new MealPlanMealReadModel(
                                 m.Id.Value,
                                 m.MealType.ToString(),
                                 m.RecipeId.Value,
-                                m.Recipe.Name,
+                                recipe.Name,
                                 m.Servings,
-                                m.Recipe.Servings > 0 ? m.Recipe.Servings : 1,
-                                m.Recipe.TotalCalories,
-                                m.Recipe.TotalProteins,
-                                m.Recipe.TotalFats,
-                                m.Recipe.TotalCarbs))
+                                recipe.Servings > 0 ? recipe.Servings : 1,
+                                recipe.TotalCalories,
+                                recipe.TotalProteins,
+                                recipe.TotalFats,
+                                recipe.TotalCarbs))
                             .ToList()))
                     .ToList()))
             .AsSplitQuery()
@@ -177,13 +175,38 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
             query = query
                 .Include(plan => plan.Days)
                     .ThenInclude(day => day.Meals)
-                        .ThenInclude(meal => meal.Recipe)
-                            .ThenInclude(recipe => recipe.Steps)
-                                .ThenInclude(step => step.Ingredients)
-                                    .ThenInclude(ingredient => ingredient.Product)
                 .AsSplitQuery();
         }
 
-        return await query.FirstOrDefaultAsync(plan => plan.Id == id, cancellationToken).ConfigureAwait(false);
+        MealPlan? result = await query.FirstOrDefaultAsync(plan => plan.Id == id, cancellationToken).ConfigureAwait(false);
+        if (includeDays && result is not null) { await LoadRecipeSnapshotsAsync(result, cancellationToken).ConfigureAwait(false); }
+        return result;
+    }
+
+    private async Task LoadRecipeSnapshotsAsync(MealPlan plan, CancellationToken cancellationToken) {
+        MealPlanMeal[] meals = [.. plan.Days.SelectMany(day => day.Meals)];
+        RecipeId[] ids = [.. meals.Select(meal => meal.RecipeId).Distinct()];
+        if (ids.Length == 0) { return; }
+
+        var recipes = await context.Recipes.AsNoTracking()
+            .Where(recipe => Enumerable.Contains(ids, recipe.Id))
+            .Select(recipe => new { recipe.Id, recipe.Name, recipe.Servings, recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs })
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        var ingredients = await context.Recipes.AsNoTracking()
+            .Where(recipe => Enumerable.Contains(ids, recipe.Id))
+            .SelectMany(recipe => recipe.Steps.SelectMany(step => step.Ingredients)
+                .Select(ingredient => new { RecipeId = recipe.Id, ingredient.ProductId, ingredient.Amount }))
+            .Join(context.Products.AsNoTracking(), ingredient => ingredient.ProductId, product => (ProductId?)product.Id,
+                (ingredient, product) => new {
+                    ingredient.RecipeId,
+                    Ingredient = new MealPlanRecipeIngredientSnapshot(product.Id, ingredient.Amount, product.Name, product.BaseUnit, product.Category),
+                })
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+        ILookup<RecipeId, MealPlanRecipeIngredientSnapshot> byRecipe = ingredients.ToLookup(item => item.RecipeId, item => item.Ingredient);
+        var snapshots = recipes.ToDictionary(recipe => recipe.Id,
+            recipe => new MealPlanRecipeSnapshot(recipe.Id, recipe.Name, recipe.Servings, byRecipe[recipe.Id].ToArray(), recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs));
+        foreach (MealPlanMeal meal in meals) {
+            meal.SetRecipeSnapshot(snapshots.GetValueOrDefault(meal.RecipeId));
+        }
     }
 }

@@ -7,7 +7,6 @@ using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
 using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.MealPlanning.MealPlans.Commands.GenerateShoppingList;
 
@@ -80,7 +79,7 @@ public sealed class GenerateShoppingListCommandHandler(
 
         foreach (MealPlanDay day in plan.Days.OrderBy(d => d.DayNumber)) {
             foreach (MealPlanMeal meal in day.Meals) {
-                Recipe? recipe = meal.Recipe;
+                MealPlanRecipeSnapshot? recipe = meal.RecipeSnapshot;
                 if (recipe is null) {
                     continue;
                 }
@@ -89,39 +88,33 @@ public sealed class GenerateShoppingListCommandHandler(
                     ? (double)meal.Servings / recipe.Servings
                     : 1.0;
 
-                foreach (RecipeStep step in recipe.Steps) {
-                    foreach (RecipeIngredient ingredient in step.Ingredients) {
-                        if (ingredient.ProductId is null || ingredient.Product is null) {
-                            continue;
-                        }
+                foreach (MealPlanRecipeIngredientSnapshot ingredient in recipe.Ingredients) {
+                    ProductId productId = ingredient.ProductId;
+                    double scaledAmount = ingredient.Amount * servingsMultiplier;
 
-                        ProductId productId = ingredient.ProductId.Value;
-                        double scaledAmount = ingredient.Amount * servingsMultiplier;
+                    var source = new IngredientSource {
+                        MealPlanMealId = meal.Id,
+                        RecipeId = recipe.Id,
+                        Label = recipe.Name,
+                        DayNumber = day.DayNumber,
+                        MealType = meal.MealType.ToString(),
+                        Amount = scaledAmount,
+                        Unit = ingredient.BaseUnit,
+                    };
 
-                        var source = new IngredientSource {
-                            MealPlanMealId = meal.Id,
-                            RecipeId = recipe.Id,
-                            Label = recipe.Name,
-                            DayNumber = day.DayNumber,
-                            MealType = meal.MealType.ToString(),
-                            Amount = scaledAmount,
-                            Unit = ingredient.Product.BaseUnit,
+                    if (aggregated.TryGetValue(productId, out AggregatedIngredient? existing)) {
+                        existing.TotalAmount += scaledAmount;
+                        existing.Sources.Add(source);
+                    } else {
+                        aggregated[productId] = new AggregatedIngredient {
+                            ProductId = productId,
+                            Name = ingredient.Name,
+                            Unit = ingredient.BaseUnit,
+                            Category = ingredient.Category,
+                            TotalAmount = scaledAmount,
+                            SortOrder = sortOrder++,
+                            Sources = [source],
                         };
-
-                        if (aggregated.TryGetValue(productId, out AggregatedIngredient? existing)) {
-                            existing.TotalAmount += scaledAmount;
-                            existing.Sources.Add(source);
-                        } else {
-                            aggregated[productId] = new AggregatedIngredient {
-                                ProductId = productId,
-                                Name = ingredient.Product.Name,
-                                Unit = ingredient.Product.BaseUnit,
-                                Category = ingredient.Product.Category,
-                                TotalAmount = scaledAmount,
-                                SortOrder = sortOrder++,
-                                Sources = [source],
-                            };
-                        }
                     }
                 }
             }

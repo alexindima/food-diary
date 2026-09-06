@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -13,9 +12,6 @@ public sealed class Recommendation : AggregateRoot<RecommendationId> {
     public string Text { get; private set; } = string.Empty;
     public bool IsRead { get; private set; }
     public DateTime? ReadAtUtc { get; private set; }
-
-    public User DietologistUser { get; private set; } = null!;
-    public User ClientUser { get; private set; } = null!;
 
     private Recommendation() {
     }

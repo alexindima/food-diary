@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Usda;
@@ -9,7 +8,7 @@ using FoodDiary.Domain.Entities.Usda;
 namespace FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
 
 public sealed class LinkProductToUsdaFoodCommandHandler(
-    IProductUsdaLinkService productLinkService,
+    IUsdaProductLinkService productLinkService,
     IUsdaFoodReadRepository usdaFoodRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<LinkProductToUsdaFoodCommand, Result> {
@@ -25,11 +24,11 @@ public sealed class LinkProductToUsdaFoodCommandHandler(
         }
 
         var productId = (ProductId)command.ProductId;
-        bool isAccessible = await productLinkService.IsAccessibleForUpdateAsync(
+        Result isAccessible = await productLinkService.IsAccessibleForUpdateAsync(
             productId, userIdResult.Value, cancellationToken).ConfigureAwait(false);
 
-        if (!isAccessible) {
-            return Result.Failure(ProductErrors.NotAccessible(command.ProductId));
+        if (isAccessible.IsFailure) {
+            return isAccessible;
         }
 
         UsdaFood? usdaFood = await usdaFoodRepository.GetByFdcIdAsync(command.FdcId, cancellationToken).ConfigureAwait(false);
@@ -37,13 +36,13 @@ public sealed class LinkProductToUsdaFoodCommandHandler(
             return Result.Failure(UsdaErrors.FoodNotFound(command.FdcId));
         }
 
-        bool linked = await productLinkService.LinkAsync(
+        Result linked = await productLinkService.LinkAsync(
             productId,
             userIdResult.Value,
             command.FdcId,
             cancellationToken).ConfigureAwait(false);
-        if (!linked) {
-            return Result.Failure(ProductErrors.NotAccessible(command.ProductId));
+        if (linked.IsFailure) {
+            return linked;
         }
 
         return Result.Success();

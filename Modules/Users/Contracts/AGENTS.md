@@ -14,3 +14,5 @@ implementations, Infrastructure, HTTP or provider SDKs. Identity contracts may
 depend on these Users capabilities, never the reverse. CurrentUserAccessResolver
 and UserIdParser belong here because they express the shared Users access boundary;
 they may use generic shared application contracts and Results.
+
+IUserSessionRevocationService and IUserProfileImageService are consumer-owned semantic capabilities implemented by Identity and Images. Expose revocation, URL resolution and cleanup requests without foreign aggregates or repositories.

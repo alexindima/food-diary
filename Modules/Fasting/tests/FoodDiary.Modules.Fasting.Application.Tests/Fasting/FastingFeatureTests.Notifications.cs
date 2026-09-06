@@ -103,7 +103,6 @@ public partial class FastingFeatureTests {
     public async Task ProcessDueNotificationsAsync_WhenOccurrenceHasNoPlan_SkipsOccurrence() {
         var user = User.Create("fasting-missing-plan@example.com", "hash");
         var occurrence = FastingOccurrence.Create(FastingPlanId.New(), user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-40), 1, 36);
-        SetPrivateProperty(occurrence, nameof(FastingOccurrence.User), user);
         var notificationRepo = new InMemorySchedulerNotificationRepository();
         var notificationPusher = new RecordingNotificationPusher();
         var webPushSender = new RecordingWebPushNotificationSender();

@@ -6,7 +6,6 @@ using FoodDiary.Application.Meals.Mappings;
 using FoodDiary.Application.Meals.Models;
 using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
@@ -21,7 +20,7 @@ public sealed class RepeatMealCommandHandler(
     IMealWriteRepository mealWriteRepository,
     IMealNutritionService mealNutritionService,
     ICurrentUserAccessService currentUserAccessService,
-    IAchievementEvaluationOutbox achievementEvaluationOutbox)
+    IMealAchievementEvaluationRequest achievementEvaluationOutbox)
     : ICommandHandler<RepeatMealCommand, Result<MealModel>> {
     public RepeatMealCommandHandler(
         IMealReadRepository mealReadRepository,

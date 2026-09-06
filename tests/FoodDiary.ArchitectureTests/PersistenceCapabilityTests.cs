@@ -60,6 +60,19 @@ public sealed class PersistenceCapabilityTests {
         }
     }
 
+    [Fact]
+    public void CompilerTechnicalExceptions_ExactlyMatchReviewedManifest() {
+        using var manifest = JsonDocument.Parse(File.ReadAllText(
+            ArchitectureTestPaths.FromRoot("docs", "architecture", "persistence-capabilities.json")));
+        string[] expected = [.. manifest.RootElement.GetProperty("adapters").EnumerateObject()
+            .Where(adapter => adapter.Value.TryGetProperty("technicalSourceSha256", out _))
+            .Select(adapter => adapter.Value.GetProperty("technicalSourceSha256").GetString() + " " + adapter.Name)
+            .Order(StringComparer.Ordinal)];
+        string[] actual = [.. File.ReadAllLines(ArchitectureTestPaths.FromRoot("docs", "architecture", "persistence-technical-sources.txt"))
+            .Where(line => !string.IsNullOrWhiteSpace(line)).Order(StringComparer.Ordinal)];
+        Assert.Equal(expected, actual);
+    }
+
     private static string WithProjectUsings(string relativePath, string source) {
         string[] segments = relativePath.Split('/');
         string projectDirectory = ArchitectureTestPaths.FromRoot(segments[0], segments[1], "Infrastructure");

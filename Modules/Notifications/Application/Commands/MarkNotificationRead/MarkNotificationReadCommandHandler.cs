@@ -1,4 +1,3 @@
-using DietologistErrors = FoodDiary.Application.Abstractions.Dietologist.Common.DietologistErrors;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
@@ -42,7 +41,7 @@ public sealed class MarkNotificationReadCommandHandler(
             notificationId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (notification is null || notification.UserId != userId) {
-            return Result.Failure(DietologistErrors.InvitationNotFound);
+            return Result.Failure(NotificationErrors.LegacyNotFound);
         }
 
         notification.MarkAsRead();

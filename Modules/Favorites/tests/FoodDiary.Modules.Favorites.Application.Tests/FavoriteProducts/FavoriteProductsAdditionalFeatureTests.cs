@@ -1,6 +1,5 @@
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
@@ -66,7 +65,6 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var user = User.Create("duplicate-favorite-product@example.com", "hash");
         Product product = CreateProduct(user.Id, "Apple");
         var existing = FavoriteProduct.Create(user.Id, product.Id, "Existing");
-        SetProductNavigation(existing, product);
         var handler = new AddFavoriteProductCommandHandler(
             new InMemoryFavoriteProductRepository(product, [existing]),
             new SingleProductRepository(product),
@@ -133,7 +131,6 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var user = User.Create("get-favorite-products@example.com", "hash");
         Product product = CreateProduct(user.Id, "Chicken");
         var favorite = FavoriteProduct.Create(user.Id, product.Id, "Lunch");
-        SetProductNavigation(favorite, product);
         var handler = new GetFavoriteProductsQueryHandler(
             new InMemoryFavoriteProductRepository(product, [favorite]),
             CreateCurrentUserAccessService(user));
@@ -264,7 +261,6 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var user = User.Create("remove-favorite-product@example.com", "hash");
         Product product = CreateProduct(user.Id, "Pear");
         var favorite = FavoriteProduct.Create(user.Id, product.Id, "Snack");
-        SetProductNavigation(favorite, product);
         var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
         var handler = new RemoveFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user));
 
@@ -281,9 +277,8 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var user = User.Create("update-favorite-product@example.com", "hash");
         Product product = CreateProduct(user.Id, "Cottage Cheese");
         var favorite = FavoriteProduct.Create(user.Id, product.Id, "Old name", 100);
-        SetProductNavigation(favorite, product);
         var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
-        var handler = new UpdateFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new UpdateFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user), repository);
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new UpdateFavoriteProductCommand(user.Id.Value, favorite.Id.Value, "Evening snack", 180),
@@ -299,7 +294,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     public async Task UpdateFavoriteProduct_WhenFavoriteMissing_ReturnsNotFound() {
         var user = User.Create("missing-update-favorite-product@example.com", "hash");
         var repository = new InMemoryFavoriteProductRepository();
-        var handler = new UpdateFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new UpdateFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user), repository);
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new UpdateFavoriteProductCommand(user.Id.Value, Guid.NewGuid(), "Missing", 120),
@@ -315,7 +310,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var repository = new InMemoryFavoriteProductRepository();
         var handler = new UpdateFavoriteProductCommandHandler(
             repository,
-            CreateCurrentUserAccessService(User.Create("invalid-update-favorite-product@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("invalid-update-favorite-product@example.com", "hash")), repository);
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new UpdateFavoriteProductCommand(Guid.Empty, Guid.NewGuid(), "Invalid", 120),
@@ -332,7 +327,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var repository = new InMemoryFavoriteProductRepository();
         var handler = new UpdateFavoriteProductCommandHandler(
             repository,
-            CreateCurrentUserAccessService(user));
+            CreateCurrentUserAccessService(user), repository);
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new UpdateFavoriteProductCommand(user.Id.Value, Guid.Empty, "Invalid", 120),
@@ -350,9 +345,8 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         Product product = CreateProduct(user.Id, "Deleted User Pear");
         var favorite = FavoriteProduct.Create(user.Id, product.Id, "Snack");
-        SetProductNavigation(favorite, product);
         var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
-        var handler = new UpdateFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user));
+        var handler = new UpdateFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user), repository);
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new UpdateFavoriteProductCommand(user.Id.Value, favorite.Id.Value, "Updated", 120),
@@ -417,7 +411,6 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var userId = Guid.NewGuid();
         Product product = CreateProduct(new UserId(userId), "Missing User Pear");
         var favorite = FavoriteProduct.Create(new UserId(userId), product.Id, "Snack");
-        SetProductNavigation(favorite, product);
         var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
         var handler = new RemoveFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user: null));
 
@@ -435,7 +428,6 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var userId = UserId.New();
         Product product = CreateProduct(userId, "Favorite Read Product");
         var favorite = FavoriteProduct.Create(userId, product.Id, "Snack", preferredPortionAmount: 80);
-        SetProductNavigation(favorite, product);
         var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
         var service = new FavoriteProductReadService(repository);
 
@@ -462,17 +454,16 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryFavoriteProductRepository(
         Product? product = null,
-        IReadOnlyList<FavoriteProduct>? favorites = null) : IFavoriteProductRepository, IFavoriteProductReadService, IFavoriteProductReadModelRepository {
+        IReadOnlyList<FavoriteProduct>? favorites = null) : IFavoriteProductRepository, IFavoriteProductReadService, IFavoriteProductReadModelRepository, IFavoriteProductSourceReadService {
         private readonly List<FavoriteProduct> _favorites = favorites?.ToList() ?? [];
+        public Task<Result<FavoriteProductSourceModel>> GetAccessibleAsync(ProductId id, UserId userId, CancellationToken cancellationToken = default) =>
+            new SingleProductRepository(product).GetAccessibleAsync(id, userId, cancellationToken);
+
         public FavoriteProduct? AddedFavorite { get; private set; }
         public bool DeleteCalled { get; private set; }
         public bool UpdateCalled { get; private set; }
 
         public Task<FavoriteProduct> AddAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
-            if (product is not null) {
-                SetProductNavigation(favorite, product);
-            }
-
             AddedFavorite = favorite;
             _favorites.Add(favorite);
             return Task.FromResult(favorite);
@@ -521,34 +512,34 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             Task.FromResult<IReadOnlyDictionary<ProductId, FavoriteProduct>>(
                 _favorites.Where(f => f.UserId == userId && productIds.Contains(f.ProductId)).ToDictionary(f => f.ProductId));
 
-        private static FavoriteProductReadModel ToReadModel(FavoriteProduct favorite) =>
+        private FavoriteProductReadModel ToReadModel(FavoriteProduct favorite) =>
             new(
                 favorite.Id.Value,
                 favorite.ProductId.Value,
                 favorite.UserId.Value,
                 favorite.Name,
                 favorite.CreatedAtUtc,
-                favorite.Product.Name,
-                favorite.Product.Brand,
-                favorite.Product.Barcode,
-                favorite.Product.UserId == favorite.UserId ? favorite.Product.Comment : null,
-                favorite.Product.ImageUrl,
-                favorite.Product.CaloriesPerBase,
-                favorite.Product.ProteinsPerBase,
-                favorite.Product.FatsPerBase,
-                favorite.Product.CarbsPerBase,
-                favorite.Product.FiberPerBase,
-                favorite.Product.AlcoholPerBase,
-                favorite.Product.ProductType,
-                favorite.Product.BaseUnit,
+                product!.Name,
+                product!.Brand,
+                product!.Barcode,
+                product!.UserId == favorite.UserId ? product!.Comment : null,
+                product!.ImageUrl,
+                product!.CaloriesPerBase,
+                product!.ProteinsPerBase,
+                product!.FatsPerBase,
+                product!.CarbsPerBase,
+                product!.FiberPerBase,
+                product!.AlcoholPerBase,
+                product!.ProductType,
+                product!.BaseUnit,
                 favorite.PreferredPortionAmount,
-                favorite.Product.DefaultPortionAmount,
-                favorite.Product.UserId.Value);
+                product!.DefaultPortionAmount,
+                product!.UserId.Value);
         async Task<IReadOnlyList<FavoriteProductModel>> IFavoriteProductReadService.GetAllAsync(
             UserId userId,
             CancellationToken cancellationToken) {
             IReadOnlyList<FavoriteProduct> favoriteEntities = await GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
-            return [.. favoriteEntities.Select(favorite => favorite.ToModel())];
+            return [.. favoriteEntities.Select(favorite => ToReadModel(favorite).ToModel())];
         }
 
         async Task<bool> IFavoriteProductReadService.ExistsByProductIdAsync(
@@ -559,16 +550,11 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class SingleProductRepository(Product? product) : IProductLookupService {
-        public Task<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>> GetAccessibleByIdsAsync(
-            IEnumerable<ProductId> ids,
-            UserId userId,
-            CancellationToken cancellationToken = default) {
-            IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = product is not null && ids.Contains(product.Id)
-                ? new[] { TestProductOverview.From(product, userId) }.ToDictionary(item => item.Id)
-                : [];
-            return Task.FromResult(products);
-        }
+    private sealed class SingleProductRepository(Product? product) : IFavoriteProductSourceReadService {
+        public Task<Result<FavoriteProductSourceModel>> GetAccessibleAsync(ProductId id, UserId userId, CancellationToken cancellationToken = default) =>
+            Task.FromResult(product is not null && product.Id == id
+                ? Result.Success(TestProductOverview.From(product, userId))
+                : Result.Failure<FavoriteProductSourceModel>(ProductErrors.NotFound(id.Value)));
     }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User? user) {
@@ -589,9 +575,4 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         return service;
     }
 
-    private static void SetProductNavigation(FavoriteProduct favorite, Product product) {
-        typeof(FavoriteProduct)
-            .GetProperty(nameof(FavoriteProduct.Product))!
-            .SetValue(favorite, product);
-    }
 }

@@ -1,14 +1,12 @@
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Usda.Queries.GetDailyMicronutrients;
 using FoodDiary.Application.Usda.Queries.GetMicronutrients;
 using FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 using FoodDiary.Application.Usda.Services;
 using FoodDiary.Application.Meals.Services;
-using FoodDiary.Application.Meals.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;
@@ -250,7 +248,7 @@ public sealed class UsdaQueryHandlerTests {
 
     [Fact]
     public async Task GetDailyMicronutrients_WhenProductItemLimitIsExceeded_ReturnsRateLimitedFailure() {
-        IMealProductNutritionReadService mealNutrition = Substitute.For<IMealProductNutritionReadService>();
+        IUsdaMealNutritionReadService mealNutrition = Substitute.For<IUsdaMealNutritionReadService>();
         mealNutrition
             .GetForDateAsync(
                 Arg.Any<UserId>(),
@@ -259,7 +257,7 @@ public sealed class UsdaQueryHandlerTests {
                 Arg.Any<CancellationToken>())
             .Returns(Enumerable
                 .Repeat(
-                    new MealProductNutritionReadModel(Amount: 1, ProductBaseAmount: 100, UsdaFdcId: null),
+                    new UsdaMealProductNutritionReadModel(Amount: 1, ProductBaseAmount: 100, UsdaFdcId: null),
                     UsdaDailyMicronutrientReadService.MaximumProductItemsPerDay + 1)
                 .ToList());
         var service = new UsdaDailyMicronutrientReadService(mealNutrition, CreateUsdaFoodRepository());
@@ -550,11 +548,11 @@ public sealed class UsdaQueryHandlerTests {
                 Arg.Any<DateTime>(),
                 Arg.Any<int>(),
                 Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<IReadOnlyList<MealProductNutritionReadModel>>([
+            .Returns(Task.FromResult<IReadOnlyList<UsdaMealProductNutritionReadModel>>([
                 .. meals
                     .SelectMany(static meal => meal.Items)
                     .Where(static item => item.IsProduct && item.SnapshotBaseAmount.HasValue)
-                    .Select(static item => new MealProductNutritionReadModel(
+                    .Select(static item => new UsdaMealProductNutritionReadModel(
                         item.Amount,
                         item.SnapshotBaseAmount!.Value,
                         ProductUsdaLinks.GetValueOrDefault(item.ProductId!.Value))),

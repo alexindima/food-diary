@@ -7,8 +7,8 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class FavoritesContractOwnershipTests {
     [Theory]
     [InlineData("Meal", 8)]
-    [InlineData("Product", 6)]
-    [InlineData("Recipe", 6)]
+    [InlineData("Product", 8)]
+    [InlineData("Recipe", 8)]
     public void Contracts_AreOwnedOnce_AndSeparatedFromRepositories(string kind, int ownerFileCount) {
         string area = $"Favorite{kind}s";
         string ownerRoot = ArchitectureTestPaths.FromRoot($"Modules/Favorites/Application/Abstractions/{area}");
@@ -18,7 +18,7 @@ public sealed class FavoritesContractOwnershipTests {
             Assert.Empty(SourceScanner.SourceFiles(centralRoot));
         }
         Assert.Equal(ownerFileCount, SourceScanner.SourceFiles(ownerRoot).Count());
-        Assert.Equal(2, SourceScanner.SourceFiles(publicRoot).Count());
+        Assert.Equal(kind.Equals("Meal", StringComparison.Ordinal) ? 4 : 2, SourceScanner.SourceFiles(publicRoot).Count());
         foreach (string suffix in new[] { "Repository", "ReadRepository", "ReadModelRepository", "WriteRepository" }) {
             Assert.True(File.Exists(Path.Combine(ownerRoot, "Common", $"IFavorite{kind}{suffix}.cs")));
         }

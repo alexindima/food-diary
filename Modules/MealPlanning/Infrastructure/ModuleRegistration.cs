@@ -1,3 +1,6 @@
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using FoodDiary.Modules.MealPlanning.Infrastructure.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.MealPlanning;
@@ -9,6 +12,7 @@ namespace FoodDiary.Modules.MealPlanning.Infrastructure;
 
 public static class ModuleRegistration {
     public static IServiceCollection AddMealPlanningModule(this IServiceCollection services) {
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, MealPlanningUserDataPurgeParticipant>());
         services.AddMealPlanningApplication();
         services.AddScoped<IMealPlanRepository, MealPlanRepository>();
         services.AddScoped<IMealPlanReadRepository>(static provider => provider.GetRequiredService<IMealPlanRepository>());

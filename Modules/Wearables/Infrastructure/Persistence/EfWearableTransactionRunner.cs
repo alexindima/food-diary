@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence.Shared;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Infrastructure.Persistence.Locking;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ internal sealed class EfWearableTransactionRunner(FoodDiaryDbContext context) : 
         CancellationToken cancellationToken = default) {
         ArgumentException.ThrowIfNullOrWhiteSpace(serializationKey);
         ArgumentNullException.ThrowIfNull(operation);
+        SharedTransactionBoundary.EnsureCleanEntry(context);
 
         string connectionString = context.Database.GetConnectionString()
             ?? throw new InvalidOperationException("The wearable transaction runner requires a relational connection string.");

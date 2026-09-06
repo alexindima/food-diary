@@ -21,8 +21,8 @@ public sealed class FastingNotificationScheduler(
 
     public async Task<int> ProcessDueNotificationsAsync(CancellationToken cancellationToken = default) {
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
-        IReadOnlyList<FastingOccurrence> activeOccurrences = await fastingOccurrenceRepository.GetActiveAsync(cancellationToken).ConfigureAwait(false);
-        FastingOccurrenceId[] activeOccurrenceIds = [.. activeOccurrences.Select(static x => x.Id)];
+        IReadOnlyList<FastingActiveOccurrenceModel> activeOccurrences = await fastingOccurrenceRepository.GetActiveAsync(cancellationToken).ConfigureAwait(false);
+        FastingOccurrenceId[] activeOccurrenceIds = [.. activeOccurrences.Select(static x => x.Occurrence.Id)];
         IReadOnlyList<FastingCheckIn> checkIns = activeOccurrenceIds.Length == 0
             ? []
             : await fastingCheckInRepository.GetByOccurrenceIdsAsync(activeOccurrenceIds, cancellationToken).ConfigureAwait(false);
@@ -31,14 +31,15 @@ public sealed class FastingNotificationScheduler(
         var usersToPush = new HashSet<UserId>();
         int createdCount = 0;
 
-        foreach (FastingOccurrence occurrence in activeOccurrences) {
+        foreach (FastingActiveOccurrenceModel active in activeOccurrences) {
+            FastingOccurrence occurrence = active.Occurrence;
             FastingPlan? plan = occurrence.Plan;
             if (plan is null || plan.Status != FastingPlanStatus.Active) {
                 continue;
             }
 
             checkInLookup.TryGetValue(occurrence.Id, out IReadOnlyList<FastingCheckIn>? occurrenceCheckIns);
-            foreach (FastingNotificationCandidate notification in FastingNotificationCandidatePlanner.GetDueNotifications(occurrence, plan, occurrenceCheckIns, now)) {
+            foreach (FastingNotificationCandidate notification in FastingNotificationCandidatePlanner.GetDueNotifications(occurrence, plan, occurrenceCheckIns, now, active.ReminderHours, active.FollowUpReminderHours)) {
                 bool created = await FastingNotificationCreationService.TryCreateAsync(
                     notification,
                     notificationDeduplicationService,

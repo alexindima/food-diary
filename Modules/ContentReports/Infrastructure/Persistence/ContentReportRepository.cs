@@ -25,7 +25,7 @@ internal sealed class ContentReportRepository(FoodDiaryDbContext context)
                 cancellationToken),
             ReportTargetType.Comment => context.RecipeComments.AsNoTracking().AnyAsync(
                 comment => comment.Id == new RecipeCommentId(targetId)
-                    && (comment.Recipe.Visibility == Visibility.Public || comment.Recipe.UserId == reporterUserId),
+                    && context.Recipes.AsNoTracking().Any(recipe => recipe.Id == comment.RecipeId && (recipe.Visibility == Visibility.Public || recipe.UserId == reporterUserId)),
                 cancellationToken),
             _ => Task.FromResult(false),
         };

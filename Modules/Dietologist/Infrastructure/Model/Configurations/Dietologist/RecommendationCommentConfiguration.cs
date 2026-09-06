@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ internal sealed class RecommendationCommentConfiguration : IEntityTypeConfigurat
             .HasForeignKey(e => e.RecommendationId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(e => e.AuthorUser)
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(e => e.AuthorUserId)
             .OnDelete(DeleteBehavior.Cascade);

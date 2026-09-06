@@ -12,7 +12,7 @@ namespace FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
-    public async Task ShoppingListMappings_PreserveOneWayUserNavigationProvenanceAndDeletionSemantics() {
+    public async Task ShoppingListMappings_PreserveScalarUserForeignKeyProvenanceAndDeletionSemantics() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"planning-mapping-{Guid.NewGuid():N}@example.com", "hash");
         var product = Product.Create(user.Id, "Rice", MeasurementUnit.G, 100, 100,
@@ -32,9 +32,9 @@ public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFi
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
 
-        ShoppingList savedList = await context.ShoppingLists.Include(value => value.User)
+        ShoppingList savedList = await context.ShoppingLists
             .SingleAsync(value => value.Id == list.Id);
-        Assert.Equal(user.Id, savedList.User.Id);
+        Assert.Equal(user.Id, savedList.UserId);
         ShoppingListItem savedItem = await context.Set<ShoppingListItem>().Include(value => value.Sources)
             .SingleAsync(value => value.Id == item.Id);
         ShoppingListItemSource savedSource = Assert.Single(savedItem.Sources);

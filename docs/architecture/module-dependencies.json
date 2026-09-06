@@ -1,41 +1,217 @@
 {
   "schemaVersion": 1,
-  "description": "Executable Application module dependency graph. Edges are direct in-process Module API dependencies; Abstractions DTO references are excluded.",
+  "description": "Executable acyclic Application API and direct service-contract graphs. Domain IDs/values are separate project dependencies; Images.Contracts is verified ID-only.",
   "modules": {
-    "Admin": ["Ai", "ContentReports", "Gamification", "Lessons"],
+    "Admin": [
+      "Ai",
+      "ContentReports",
+      "Gamification",
+      "Lessons"
+    ],
     "Ai": [],
+    "Identity": [],
     "Billing": [],
     "BodyMetrics": [],
-    "Meals": ["Images"],
+    "Meals": [
+      "Images"
+    ],
     "ContentReports": [],
     "Cycles": [],
+    "Dashboard": [
+      "Cycles",
+      "DailyAdvices",
+      "Exercises",
+      "Fasting",
+      "Hydration",
+      "Meals",
+      "Tdee"
+    ],
     "DailyAdvices": [],
-    "Dashboard": ["Meals", "Cycles", "DailyAdvices", "Exercises", "Fasting", "Hydration", "Tdee"],
     "Dietologist": [],
     "Exercises": [],
-    "Export": ["Meals", "Cycles"],
+    "Export": [
+      "Cycles",
+      "Meals"
+    ],
     "Fasting": [],
     "Favorites": [],
     "Gamification": [],
     "Hydration": [],
-    "Identity": [],
     "Images": [],
     "Lessons": [],
-    "MealPlanning": [],
     "Marketing": [],
+    "MealPlanning": [],
     "Notifications": [],
     "OpenFoodFacts": [],
-    "Products": ["Images", "OpenFoodFacts", "Usda"],
+    "Products": [
+      "Images",
+      "OpenFoodFacts"
+    ],
     "RecentItems": [],
     "RecipeCommunity": [],
-    "Recipes": ["Images"],
+    "Recipes": [
+      "Images"
+    ],
     "Statistics": [],
-    "Tdee": ["Exercises"],
-    "Usda": ["Meals"],
+    "Tdee": [
+      "Exercises"
+    ],
+    "Usda": [],
     "Users": [],
     "Wearables": [],
-    "WeeklyCheckIn": ["Hydration"],
+    "WeeklyCheckIn": [
+      "Hydration"
+    ],
     "WeeklyGoals": []
   },
-  "knownCycles": []
+  "knownCycles": [],
+  "contractDependencies": {
+    "Admin": [
+      "Ai",
+      "ContentReports",
+      "Identity",
+      "Lessons",
+      "Users"
+    ],
+    "Ai": [
+      "Images",
+      "Users"
+    ],
+    "Identity": [
+      "Notifications",
+      "Users"
+    ],
+    "Billing": [
+      "Users"
+    ],
+    "BodyMetrics": [
+      "Users"
+    ],
+    "Meals": [
+      "Favorites",
+      "Images",
+      "Products",
+      "RecentItems",
+      "Recipes",
+      "Usda",
+      "Users"
+    ],
+    "ContentReports": [
+      "Users"
+    ],
+    "Cycles": [
+      "Meals",
+      "Users"
+    ],
+    "Dashboard": [
+      "BodyMetrics",
+      "Dietologist",
+      "Exercises",
+      "Fasting",
+      "Hydration",
+      "Identity",
+      "Users"
+    ],
+    "DailyAdvices": [
+      "Users"
+    ],
+    "Dietologist": [
+      "Identity",
+      "Notifications",
+      "Users"
+    ],
+    "Exercises": [
+      "Users"
+    ],
+    "Export": [
+      "Cycles",
+      "Identity",
+      "Meals",
+      "Users"
+    ],
+    "Fasting": [
+      "Notifications",
+      "Users"
+    ],
+    "Favorites": [
+      "Users"
+    ],
+    "Gamification": [
+      "Meals",
+      "Users"
+    ],
+    "Hydration": [
+      "Users"
+    ],
+    "Images": [
+      "Users"
+    ],
+    "Lessons": [
+      "Gamification",
+      "Users"
+    ],
+    "Marketing": [
+      "Billing"
+    ],
+    "MealPlanning": [
+      "Products",
+      "Users"
+    ],
+    "Notifications": [
+      "Users"
+    ],
+    "OpenFoodFacts": [],
+    "Products": [
+      "Favorites",
+      "Images",
+      "OpenFoodFacts",
+      "RecentItems",
+      "Usda",
+      "Users"
+    ],
+    "RecentItems": [],
+    "RecipeCommunity": [
+      "Notifications",
+      "Recipes",
+      "Users"
+    ],
+    "Recipes": [
+      "Favorites",
+      "Images",
+      "Products",
+      "RecentItems",
+      "Users"
+    ],
+    "Statistics": [
+      "BodyMetrics",
+      "Dashboard",
+      "Users"
+    ],
+    "Tdee": [
+      "BodyMetrics",
+      "Exercises",
+      "Meals",
+      "Users"
+    ],
+    "Usda": [
+      "Users"
+    ],
+    "Users": [],
+    "Wearables": [
+      "Users"
+    ],
+    "WeeklyCheckIn": [
+      "BodyMetrics",
+      "Dashboard",
+      "Hydration",
+      "Meals",
+      "Users"
+    ],
+    "WeeklyGoals": [
+      "Meals",
+      "Notifications",
+      "Users"
+    ]
+  },
+  "knownContractCycles": []
 }

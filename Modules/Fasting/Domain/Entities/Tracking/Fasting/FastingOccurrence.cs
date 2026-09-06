@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -34,7 +33,6 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
     public string? CheckInNotes { get; private set; }
 
     public FastingPlan Plan { get; private set; } = null!;
-    public User User { get; private set; } = null!;
 
     private FastingOccurrence() {
     }

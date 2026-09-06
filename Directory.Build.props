@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(MSBuildProjectName)' != 'FoodDiary.Analyzers' and '$(MSBuildProjectName)' != 'FoodDiary.Analyzers.Tests'">
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)docs/architecture/persistence-technical-sources.txt" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)FoodDiary.Analyzers\FoodDiary.Analyzers.csproj"
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false" />

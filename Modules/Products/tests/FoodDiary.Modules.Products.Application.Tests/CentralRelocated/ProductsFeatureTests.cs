@@ -283,7 +283,7 @@ public partial class ProductsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubFavoriteProductRepository(IReadOnlyList<FavoriteProduct> favorites) : IFavoriteProductRepository {
+    private sealed class StubFavoriteProductRepository(IReadOnlyList<FavoriteProduct> favorites, Product? source = null) : IFavoriteProductRepository {
         public Task<FavoriteProduct> AddAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -297,29 +297,29 @@ public partial class ProductsFeatureTests {
         public Task<IReadOnlyList<FavoriteProductReadModel>> GetAllReadModelsAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<FavoriteProductReadModel>>([.. favorites.Select(ToReadModel)]);
 
-        private static FavoriteProductReadModel ToReadModel(FavoriteProduct favorite) =>
+        private FavoriteProductReadModel ToReadModel(FavoriteProduct favorite) =>
             new(
                 favorite.Id.Value,
                 favorite.ProductId.Value,
                 favorite.UserId.Value,
                 favorite.Name,
                 favorite.CreatedAtUtc,
-                favorite.Product.Name,
-                favorite.Product.Brand,
-                favorite.Product.Barcode,
-                favorite.Product.UserId == favorite.UserId ? favorite.Product.Comment : null,
-                favorite.Product.ImageUrl,
-                favorite.Product.CaloriesPerBase,
-                favorite.Product.ProteinsPerBase,
-                favorite.Product.FatsPerBase,
-                favorite.Product.CarbsPerBase,
-                favorite.Product.FiberPerBase,
-                favorite.Product.AlcoholPerBase,
-                favorite.Product.ProductType,
-                favorite.Product.BaseUnit,
+                source!.Name,
+                source!.Brand,
+                source!.Barcode,
+                source!.UserId == favorite.UserId ? source!.Comment : null,
+                source!.ImageUrl,
+                source!.CaloriesPerBase,
+                source!.ProteinsPerBase,
+                source!.FatsPerBase,
+                source!.CarbsPerBase,
+                source!.FiberPerBase,
+                source!.AlcoholPerBase,
+                source!.ProductType,
+                source!.BaseUnit,
                 favorite.PreferredPortionAmount,
-                favorite.Product.DefaultPortionAmount,
-                favorite.Product.UserId.Value);
+                source!.DefaultPortionAmount,
+                source!.UserId.Value);
     }
 
     [ExcludeFromCodeCoverage]
@@ -332,12 +332,6 @@ public partial class ProductsFeatureTests {
             };
             return Task.FromResult(error);
         }
-    }
-
-    private static void SetFavoriteProductNavigation(FavoriteProduct favorite, Product product) {
-        typeof(FavoriteProduct)
-            .GetProperty(nameof(FavoriteProduct.Product))!
-            .SetValue(favorite, product);
     }
 
     private static Product CreateProduct(UserId userId, string name, string? imageUrl = null) =>

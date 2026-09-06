@@ -31,7 +31,6 @@ public partial class FastingFeatureTests {
 
     private static void AttachNavigation(FastingOccurrence occurrence, FastingPlan plan, User user) {
         SetPrivateProperty(occurrence, nameof(FastingOccurrence.Plan), plan);
-        SetPrivateProperty(occurrence, nameof(FastingOccurrence.User), user);
     }
 
     private static void SetPrivateProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) {

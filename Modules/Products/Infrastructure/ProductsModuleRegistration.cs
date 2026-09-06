@@ -1,3 +1,7 @@
+using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Products;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Infrastructure.Persistence.Products;
@@ -11,6 +15,7 @@ public static class ProductsModuleRegistration {
         services.AddProductsApplication().AddProductsPersistence();
 
     public static IServiceCollection AddProductsPersistence(this IServiceCollection services) {
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, ProductsUserDataPurgeParticipant>());
         services.AddScoped<ProductRepository>();
         services.AddScoped<IProductOverviewReadService, ProductOverviewReadService>();
         services.AddScoped<IProductRepository, CachedProductRepository>();
@@ -18,6 +23,7 @@ public static class ProductsModuleRegistration {
         services.AddScoped<IProductWriteRepository>(static provider => provider.GetRequiredService<IProductRepository>());
         services.AddScoped<IProductMutationTransactionRunner, EfProductMutationTransactionRunner>();
         services.AddScoped<IProductLookupService, ProductLookupService>();
+        services.AddScoped<IFavoriteProductSourceReadService, FavoriteProductSourceReadService>();
         return services;
     }
 }

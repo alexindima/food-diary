@@ -62,7 +62,6 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var user = User.Create("duplicate-favorite-recipe@example.com", "hash");
         Recipe recipe = CreateRecipe(user.Id, "Soup");
         var existing = FavoriteRecipe.Create(user.Id, recipe.Id, "Existing");
-        SetRecipeNavigation(existing, recipe);
         var handler = new AddFavoriteRecipeCommandHandler(
             new InMemoryFavoriteRecipeRepository(recipe, [existing]),
             CreateRecipeAccessService(recipe),
@@ -147,7 +146,6 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var user = User.Create("get-favorite-recipes@example.com", "hash");
         Recipe recipe = CreateRecipe(user.Id, "Chicken Soup");
         var favorite = FavoriteRecipe.Create(user.Id, recipe.Id, "Lunch");
-        SetRecipeNavigation(favorite, recipe);
         var handler = new GetFavoriteRecipesQueryHandler(
             new InMemoryFavoriteRecipeRepository(recipe, [favorite]),
             CreateCurrentUserAccessService());
@@ -277,7 +275,6 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var user = User.Create("remove-favorite-recipe@example.com", "hash");
         Recipe recipe = CreateRecipe(user.Id, "Pear Tart");
         var favorite = FavoriteRecipe.Create(user.Id, recipe.Id, "Dessert");
-        SetRecipeNavigation(favorite, recipe);
         var repository = new InMemoryFavoriteRecipeRepository(recipe, [favorite]);
         var handler = new RemoveFavoriteRecipeCommandHandler(repository, CreateCurrentUserAccessService());
 
@@ -344,7 +341,6 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         Recipe recipe = CreateRecipe(user.Id, "Deleted User Tart");
         var favorite = FavoriteRecipe.Create(user.Id, recipe.Id, "Dessert");
-        SetRecipeNavigation(favorite, recipe);
         var repository = new InMemoryFavoriteRecipeRepository(recipe, [favorite]);
         var handler = new RemoveFavoriteRecipeCommandHandler(repository, CreateCurrentUserAccessService(Errors.Authentication.AccountDeleted));
 
@@ -362,7 +358,6 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var userId = Guid.NewGuid();
         Recipe recipe = CreateRecipe(new UserId(userId), "Missing User Tart");
         var favorite = FavoriteRecipe.Create(new UserId(userId), recipe.Id, "Dessert");
-        SetRecipeNavigation(favorite, recipe);
         var repository = new InMemoryFavoriteRecipeRepository(recipe, [favorite]);
         var handler = new RemoveFavoriteRecipeCommandHandler(repository, CreateCurrentUserAccessService(Errors.Authentication.InvalidToken));
 
@@ -380,7 +375,6 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var userId = UserId.New();
         Recipe recipe = CreateRecipe(userId, "Favorite Read Soup");
         var favorite = FavoriteRecipe.Create(userId, recipe.Id, "Lunch");
-        SetRecipeNavigation(favorite, recipe);
         var repository = new InMemoryFavoriteRecipeRepository(recipe, [favorite]);
         var service = new FavoriteRecipeReadService(repository);
 
@@ -404,10 +398,6 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         public bool DeleteCalled { get; private set; }
 
         public Task<FavoriteRecipe> AddAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) {
-            if (recipe is not null) {
-                SetRecipeNavigation(favorite, recipe);
-            }
-
             AddedFavorite = favorite;
             _favorites.Add(favorite);
             return Task.FromResult(favorite);
@@ -451,24 +441,24 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             Task.FromResult<IReadOnlyDictionary<RecipeId, FavoriteRecipe>>(
                 _favorites.Where(f => f.UserId == userId && recipeIds.Contains(f.RecipeId)).ToDictionary(f => f.RecipeId));
 
-        private static FavoriteRecipeReadModel ToReadModel(FavoriteRecipe favorite) =>
+        private FavoriteRecipeReadModel ToReadModel(FavoriteRecipe favorite) =>
             new(
                 favorite.Id.Value,
                 favorite.RecipeId.Value,
                 favorite.Name,
                 favorite.CreatedAtUtc,
-                favorite.Recipe.Name,
-                favorite.Recipe.ImageUrl,
-                favorite.Recipe.TotalCalories ?? favorite.Recipe.ManualCalories,
-                favorite.Recipe.Servings,
-                favorite.Recipe.PrepTime,
-                favorite.Recipe.CookTime,
-                favorite.Recipe.Steps.Sum(step => step.Ingredients.Count));
+                recipe!.Name,
+                recipe!.ImageUrl,
+                recipe!.TotalCalories ?? recipe!.ManualCalories,
+                recipe!.Servings,
+                recipe!.PrepTime,
+                recipe!.CookTime,
+                recipe!.Steps.Sum(step => step.Ingredients.Count));
         async Task<IReadOnlyList<FavoriteRecipeModel>> IFavoriteRecipeReadService.GetAllAsync(
             UserId userId,
             CancellationToken cancellationToken) {
             IReadOnlyList<FavoriteRecipe> favoriteEntities = await GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
-            return [.. favoriteEntities.Select(favorite => favorite.ToModel())];
+            return [.. favoriteEntities.Select(favorite => ToReadModel(favorite).ToModel())];
         }
 
         async Task<bool> IFavoriteRecipeReadService.ExistsByRecipeIdAsync(
@@ -478,17 +468,14 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             await GetByRecipeIdAsync(recipeId, userId, cancellationToken).ConfigureAwait(false) is not null;
     }
 
-    private static IRecipeAccessService CreateRecipeAccessService(Recipe? recipe) {
-        IRecipeAccessService service = Substitute.For<IRecipeAccessService>();
-        service
-            .GetAccessibleByIdAsync(
-                Arg.Any<RecipeId>(),
-                Arg.Any<UserId>(),
-                Arg.Any<bool>(),
-                Arg.Any<CancellationToken>())
+    private static IFavoriteRecipeSourceReadService CreateRecipeAccessService(Recipe? recipe) {
+        IFavoriteRecipeSourceReadService service = Substitute.For<IFavoriteRecipeSourceReadService>();
+        service.GetAccessibleAsync(Arg.Any<RecipeId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 RecipeId id = call.Arg<RecipeId>();
-                return Task.FromResult(recipe is not null && recipe.Id == id ? TestRecipeOverview.From(recipe, call.ArgAt<UserId>(1)) : null);
+                return Task.FromResult(recipe is not null && recipe.Id == id
+                    ? Result.Success(TestRecipeOverview.From(recipe, call.Arg<UserId>()))
+                    : Result.Failure<FavoriteRecipeSourceModel>(RecipeErrors.NotFound(id.Value)));
             });
         return service;
     }
@@ -501,9 +488,4 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         return service;
     }
 
-    private static void SetRecipeNavigation(FavoriteRecipe favorite, Recipe recipe) {
-        typeof(FavoriteRecipe)
-            .GetProperty(nameof(FavoriteRecipe.Recipe))!
-            .SetValue(favorite, recipe);
-    }
 }

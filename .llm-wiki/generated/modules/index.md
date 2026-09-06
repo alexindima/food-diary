@@ -30,8 +30,8 @@ are reported separately; `none observed` never means proven isolation.
 | [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix |
 | [Export](export.md) | read-composer | 0 | 4 | 0 | 4 | project-reference-matrix |
 | [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 0 | 4 | project-reference-matrix |
-| [Favorites](favorites.md) | aggregate-owner | 0 | 7 | 0 | 3 | project-reference-matrix |
-| [Gamification](gamification.md) | aggregate-owner | 0 | 4 | 0 | 4 | project-reference-matrix |
+| [Favorites](favorites.md) | aggregate-owner | 0 | 4 | 0 | 3 | project-reference-matrix |
+| [Gamification](gamification.md) | aggregate-owner | 0 | 3 | 0 | 4 | project-reference-matrix |
 | [Hydration](hydration.md) | aggregate-owner | 0 | 1 | 0 | 2 | project-reference-matrix |
 | [Identity](identity.md) | aggregate-owner | 0 | 5 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
 | [Images](images.md) | aggregate-owner | 0 | 0 | 0 | 6 | project-reference-matrix |
@@ -39,7 +39,7 @@ are reported separately; `none observed` never means proven isolation.
 | [Marketing](marketing.md) | aggregate-owner | 0 | 1 | 0 | 4 | project-reference-matrix-and-module-boundary-tests |
 | [MealPlanning](meal-planning.md) | aggregate-owner | 0 | 4 | 0 | 3 | project-reference-matrix |
 | [Meals](meals.md) | aggregate-owner | 0 | 8 | 0 | 1 | project-reference-matrix |
-| [Notifications](notifications.md) | aggregate-owner | 0 | 2 | 0 | 3 | project-reference-matrix |
+| [Notifications](notifications.md) | aggregate-owner | 0 | 1 | 0 | 3 | project-reference-matrix |
 | [OpenFoodFacts](open-food-facts.md) | aggregate-owner | 0 | 0 | 0 | 3 | project-reference-matrix |
 | [Products](products.md) | aggregate-owner | 0 | 6 | 0 | 3 | project-reference-matrix |
 | [RecentItems](recent-items.md) | aggregate-owner | 0 | 0 | 0 | 0 | project-reference-matrix |
@@ -47,8 +47,8 @@ are reported separately; `none observed` never means proven isolation.
 | [Recipes](recipes.md) | aggregate-owner | 0 | 6 | 0 | 3 | project-reference-matrix |
 | [Statistics](statistics.md) | read-composer | 0 | 4 | 0 | 3 | project-reference-matrix |
 | [Tdee](tdee.md) | read-composer | 0 | 3 | 0 | 4 | project-reference-matrix |
-| [Usda](usda.md) | reference-data-owner | 0 | 3 | 0 | 4 | project-reference-matrix-and-module-boundary-tests |
-| [Users](users.md) | aggregate-owner | 0 | 2 | 0 | 2 | project-reference-matrix-and-module-boundary-tests |
+| [Usda](usda.md) | reference-data-owner | 0 | 1 | 0 | 3 | project-reference-matrix-and-module-boundary-tests |
+| [Users](users.md) | aggregate-owner | 0 | 1 | 0 | 2 | project-reference-matrix-and-module-boundary-tests |
 | [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 2 | assembly-isolated |
 | [WeeklyCheckIn](weekly-check-in.md) | read-composer | 0 | 5 | 0 | 2 | project-reference-matrix |
 | [WeeklyGoals](weekly-goals.md) | aggregate-owner | 0 | 3 | 0 | 3 | project-reference-matrix |

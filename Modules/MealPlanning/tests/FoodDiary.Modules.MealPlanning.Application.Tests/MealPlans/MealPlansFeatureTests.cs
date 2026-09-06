@@ -147,7 +147,7 @@ public class MealPlansFeatureTests {
         var recipe = Recipe.Create(userId, "Chicken bowl", servings: 2);
         RecipeStep step = recipe.AddStep(1, "Cook chicken.");
         RecipeIngredient ingredient = step.AddProductIngredient(product.Id, 100);
-        SetProperty(ingredient, nameof(ingredient.Product), product);
+        ingredient.SetProductSnapshot(new RecipeIngredientProductSnapshot(product.Id, product.Name, product.BaseUnit, product.BaseAmount, product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase, product.CarbsPerBase, product.FiberPerBase, product.AlcoholPerBase, product.Visibility, product.Category));
         step.AddProductIngredient(ProductId.New(), 50);
 
         var plan = MealPlan.CreateCurated("High protein", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
@@ -155,8 +155,8 @@ public class MealPlansFeatureTests {
         day.AddMeal(MealType.Breakfast, RecipeId.New(), servings: 1);
         MealPlanMeal lunch = day.AddMeal(MealType.Lunch, recipe.Id, servings: 3);
         MealPlanMeal dinner = day.AddMeal(MealType.Dinner, recipe.Id, servings: 1);
-        SetProperty(lunch, nameof(lunch.Recipe), recipe);
-        SetProperty(dinner, nameof(dinner.Recipe), recipe);
+        lunch.SetRecipeSnapshot(ToRecipeSnapshot(recipe));
+        dinner.SetRecipeSnapshot(ToRecipeSnapshot(recipe));
 
         var shoppingLists = new RecordingShoppingListRepository();
         var handler = new GenerateShoppingListCommandHandler(
@@ -369,8 +369,8 @@ public class MealPlansFeatureTests {
         MealPlanDay day1 = plan.AddDay(1);
         MealPlanMeal dinnerMeal = day1.AddMeal(MealType.Dinner, dinner.Id, servings: 2);
         MealPlanMeal breakfastMeal = day1.AddMeal(MealType.Breakfast, breakfast.Id, servings: 1);
-        SetProperty(dinnerMeal, nameof(dinnerMeal.Recipe), dinner);
-        SetProperty(breakfastMeal, nameof(breakfastMeal.Recipe), breakfast);
+        dinnerMeal.SetRecipeSnapshot(ToRecipeSnapshot(dinner));
+        breakfastMeal.SetRecipeSnapshot(ToRecipeSnapshot(breakfast));
 
         MealPlanModel model = plan.ToModel();
 
@@ -525,13 +525,13 @@ public class MealPlansFeatureTests {
                                     meal.Id.Value,
                                     meal.MealType.ToString(),
                                     meal.RecipeId.Value,
-                                    meal.Recipe?.Name,
+                                    meal.RecipeSnapshot?.Name,
                                     meal.Servings,
-                                    meal.Recipe is { Servings: > 0 } ? meal.Recipe.Servings : 1,
-                                    meal.Recipe?.TotalCalories,
-                                    meal.Recipe?.TotalProteins,
-                                    meal.Recipe?.TotalFats,
-                                    meal.Recipe?.TotalCarbs)),
+                                    meal.RecipeSnapshot is { Servings: > 0 } ? meal.RecipeSnapshot.Servings : 1,
+                                    meal.RecipeSnapshot?.TotalCalories,
+                                    meal.RecipeSnapshot?.TotalProteins,
+                                    meal.RecipeSnapshot?.TotalFats,
+                                    meal.RecipeSnapshot?.TotalCarbs)),
                         ])),
             ];
 
@@ -625,6 +625,14 @@ public class MealPlansFeatureTests {
         public Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
     }
+
+    private static MealPlanRecipeSnapshot? ToRecipeSnapshot(Recipe? recipe) => recipe is null ? null : new(
+        recipe.Id, recipe.Name, recipe.Servings,
+        [.. recipe.Steps.SelectMany(step => step.Ingredients)
+            .Where(ingredient => ingredient.ProductId.HasValue && ingredient.ProductSnapshot is not null)
+            .Select(ingredient => new MealPlanRecipeIngredientSnapshot(ingredient.ProductId!.Value, ingredient.Amount,
+                ingredient.ProductSnapshot!.Name, ingredient.ProductSnapshot.BaseUnit, ingredient.ProductSnapshot.Category))],
+        recipe.TotalCalories, recipe.TotalProteins, recipe.TotalFats, recipe.TotalCarbs);
 
     private static void SetProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) where TTarget : class {
         typeof(TTarget).GetProperty(propertyName)!.SetValue(target, value);

@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -27,12 +28,12 @@ internal sealed class RecommendationConfiguration : IEntityTypeConfiguration<Rec
             .IsRequired()
             .HasMaxLength(2000);
 
-        builder.HasOne(e => e.DietologistUser)
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(e => e.DietologistUserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(e => e.ClientUser)
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(e => e.ClientUserId)
             .OnDelete(DeleteBehavior.Cascade);

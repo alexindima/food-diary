@@ -18,7 +18,7 @@ public static class RecipeNutritionCalculator {
 
         foreach (RecipeStep step in recipe.Steps) {
             foreach (RecipeIngredient ingredient in step.Ingredients) {
-                if (ingredient.Product is { BaseAmount: > 0 } product) {
+                if (ingredient.ProductSnapshot is { BaseAmount: > 0 } product) {
                     double factor = ingredient.Amount / product.BaseAmount;
                     totalCalories += product.CaloriesPerBase * factor;
                     totalProteins += product.ProteinsPerBase * factor;

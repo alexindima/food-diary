@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ namespace FoodDiary.Infrastructure.Persistence.Configurations.MealPlans;
 
 internal sealed class MealPlanMealConfiguration : IEntityTypeConfiguration<MealPlanMeal> {
     public void Configure(EntityTypeBuilder<MealPlanMeal> builder) {
+        builder.Ignore(meal => meal.RecipeSnapshot);
         builder.Property(e => e.Id).HasConversion(
             id => id.Value,
             value => new MealPlanMealId(value));
@@ -22,7 +24,7 @@ internal sealed class MealPlanMealConfiguration : IEntityTypeConfiguration<MealP
         builder.Property(e => e.MealType)
             .HasConversion<string>();
 
-        builder.HasOne(e => e.Recipe)
+        builder.HasOne<Recipe>()
             .WithMany()
             .HasForeignKey(e => e.RecipeId)
             .OnDelete(DeleteBehavior.Restrict);

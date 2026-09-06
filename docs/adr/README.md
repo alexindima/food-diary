@@ -48,3 +48,5 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 2. Complete the context, decision drivers, considered options, decision, and consequences.
 3. Link related or superseded ADRs and the tests or manifests that enforce the decision.
 4. Add the record to this index and link it from relevant living documentation.
+
+- [0030: Owner lifecycle and transaction boundaries](0030-owner-lifecycle-and-transaction-boundaries.md)

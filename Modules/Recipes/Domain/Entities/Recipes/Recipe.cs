@@ -1,5 +1,4 @@
 using System.Globalization;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects;
@@ -39,7 +38,6 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     public Visibility Visibility { get; private set; } = Visibility.Public;
 
     public UserId UserId { get; private set; }
-    public User User { get; private set; } = null!;
     private readonly List<RecipeStep> _steps = [];
     private readonly List<RecipeIngredient> _nestedRecipeUsages = [];
     public IReadOnlyCollection<RecipeStep> Steps => _steps.AsReadOnly();

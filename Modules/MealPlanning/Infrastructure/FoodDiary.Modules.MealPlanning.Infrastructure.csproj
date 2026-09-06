@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup><Compile Remove="Model/**/*.cs" /></ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../../Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj" />
     <ProjectReference Include="../Domain/FoodDiary.Modules.MealPlanning.Domain.csproj" />
     <ProjectReference Include="../../Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
     <ProjectReference Include="..\Application\FoodDiary.Application.MealPlanning.csproj" />

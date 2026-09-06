@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Primitives;
@@ -27,9 +26,6 @@ public sealed class DietologistInvitation : AggregateRoot<DietologistInvitationI
     public bool ShareFasting { get; private set; }
     public DateTime? AcceptedAtUtc { get; private set; }
     public DateTime? RevokedAtUtc { get; private set; }
-
-    public User ClientUser { get; private set; } = null!;
-    public User? DietologistUser { get; private set; }
 
     private DietologistInvitation() {
     }

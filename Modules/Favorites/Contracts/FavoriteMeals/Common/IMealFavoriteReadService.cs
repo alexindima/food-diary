@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.Meals.Common;
+namespace FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 
 public interface IMealFavoriteReadService {
     Task<IReadOnlyDictionary<MealId, FavoriteMealId>> GetFavoriteIdsByMealIdsAsync(

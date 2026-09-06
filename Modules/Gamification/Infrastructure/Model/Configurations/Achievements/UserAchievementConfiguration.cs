@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ internal sealed class UserAchievementConfiguration : IEntityTypeConfiguration<Us
         builder.Property(achievement => achievement.EarnedAtUtc)
             .HasColumnType("timestamp with time zone");
 
-        builder.HasOne(achievement => achievement.User)
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(achievement => achievement.UserId)
             .OnDelete(DeleteBehavior.Cascade);

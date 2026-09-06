@@ -8,7 +8,7 @@ Rules for `Modules/Tdee/`.
 
 - Own TDEE calculation, insight models, and their use cases.
 - Keep the real application assembly at `Application/FoodDiary.Modules.Tdee.Application.csproj`; do not recreate a root module project or empty wrapper layers.
-- Depend on Exercises through `Modules/Exercises/Contracts`, on dashboard data directly through `Modules/Dashboard/Contracts`, and on user/weight data through their existing application contracts.
+- Depend on Exercises through `Modules/Exercises/Contracts`, on daily calories through `Modules/Meals/Contracts`, and on user/weight data through their existing application contracts.
 - Do not reference the core `FoodDiary.Application` project.
 - Preserve the legacy `FoodDiary.Application.Tdee` assembly name and `FoodDiary.Application.Tdee.*` CLR namespaces during this extraction.
 - Register handlers, validators, and profile services through `AddTdeeModule`.

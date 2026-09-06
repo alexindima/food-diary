@@ -10,7 +10,7 @@ namespace FoodDiary.Application.Users.Commands.SetPassword;
 public sealed class SetPasswordCommandHandler(
     IUserContextService userContextService,
     IPasswordHasher passwordHasher,
-    IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
+    IUserSessionRevocationService refreshTokenSessionRepository,
     TimeProvider dateTimeProvider)
     : ICommandHandler<SetPasswordCommand, Result> {
     public async Task<Result> Handle(SetPasswordCommand command, CancellationToken cancellationToken) {

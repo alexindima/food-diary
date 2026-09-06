@@ -1,3 +1,5 @@
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Products;
@@ -32,11 +34,11 @@ internal sealed class ProductConfiguration : IEntityTypeConfiguration<Product> {
             .IsRequired(false)
             .OnDelete(DeleteBehavior.SetNull);
 
-        builder.HasOne(e => e.User)
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(e => e.UserId);
 
-        builder.HasOne(e => e.UsdaFood)
+        builder.HasOne<UsdaFood>()
             .WithMany()
             .HasForeignKey(e => e.UsdaFdcId)
             .IsRequired(false)

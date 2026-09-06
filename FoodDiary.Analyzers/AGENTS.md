@@ -37,3 +37,10 @@ Rules for `FoodDiary.Analyzers/`.
 - Build: `dotnet build FoodDiary.Analyzers/FoodDiary.Analyzers.csproj`
 - Focused tests: `dotnet test Tooling/tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj`
 - Consumer verification: `dotnet build FoodDiary.slnx`
+
+FD0015 and FD0016 apply to module Infrastructure assemblies and source paths.
+The compiler consumes persistence-technical-sources.txt, whose entries must exactly
+match reviewed technicalSourceSha256 values in persistence-capabilities.json.
+A technical exception never grants foreign module aggregate writes. Shared audit
+persistence writes require that same exact file fingerprint. This is a build-time
+architecture guard, not a database authorization boundary.

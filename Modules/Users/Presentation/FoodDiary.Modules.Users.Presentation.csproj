@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../Dietologist/Presentation.Contracts/FoodDiary.Modules.Dietologist.Presentation.Contracts.csproj" />
     <ProjectReference Include="../../Notifications/Presentation/FoodDiary.Modules.Notifications.Presentation.csproj" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

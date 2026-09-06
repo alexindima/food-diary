@@ -2,81 +2,11 @@ using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Dietologist.Mappings;
 
 public static class DietologistMappings {
-    public static DietologistRelationshipModel ToRelationshipModel(this DietologistInvitation invitation) =>
-        new(
-            invitation.Id.Value,
-            invitation.Status.ToString(),
-            invitation.DietologistUser?.Email ?? invitation.DietologistEmail,
-            invitation.DietologistUser?.FirstName,
-            invitation.DietologistUser?.LastName,
-            invitation.DietologistUserId?.Value,
-            invitation.GetPermissions().ToModel(),
-            invitation.CreatedOnUtc,
-            invitation.ExpiresAtUtc,
-            invitation.AcceptedAtUtc);
-
-    public static DietologistRelationshipModel ToRelationshipModel(this DietologistInvitationReadModel invitation) =>
-        new(
-            invitation.InvitationId,
-            invitation.Status.ToString(),
-            invitation.DietologistUserEmail ?? invitation.DietologistEmail,
-            invitation.DietologistFirstName,
-            invitation.DietologistLastName,
-            invitation.DietologistUserId,
-            invitation.Permissions.ToModel(),
-            invitation.CreatedAtUtc,
-            invitation.ExpiresAtUtc,
-            invitation.AcceptedAtUtc);
-
-    public static DietologistInfoModel ToDietologistInfoModel(this DietologistInvitation invitation) =>
-        new(
-            invitation.Id.Value,
-            invitation.DietologistUserId!.Value.Value,
-            invitation.DietologistUser!.Email,
-            invitation.DietologistUser.FirstName,
-            invitation.DietologistUser.LastName,
-            invitation.GetPermissions().ToModel(),
-            invitation.AcceptedAtUtc!.Value);
-
-    public static ClientSummaryModel ToClientSummaryModel(this DietologistInvitation invitation) =>
-        new(
-            invitation.ClientUserId.Value,
-            invitation.ClientUser.Email,
-            invitation.ShareProfile ? invitation.ClientUser.FirstName : null,
-            invitation.ShareProfile ? invitation.ClientUser.LastName : null,
-            invitation.ShareProfile ? invitation.ClientUser.ProfileImage : null,
-            invitation.ShareProfile ? invitation.ClientUser.BirthDate : null,
-            invitation.ShareProfile ? invitation.ClientUser.Gender : null,
-            invitation.ShareProfile ? invitation.ClientUser.HeightCm : null,
-            invitation.ShareProfile ? invitation.ClientUser.ActivityLevel.ToString() : null,
-            invitation.GetPermissions().ToModel(),
-            invitation.AcceptedAtUtc!.Value);
-
-    public static InvitationModel ToInvitationModel(this DietologistInvitation invitation) =>
-        new(
-            invitation.Id.Value,
-            invitation.ClientUser.Email,
-            invitation.ClientUser.FirstName,
-            invitation.ClientUser.LastName,
-            invitation.Status.ToString(),
-            invitation.CreatedOnUtc,
-            invitation.ExpiresAtUtc);
-
-    public static DietologistInvitationForCurrentUserModel ToCurrentUserInvitationModel(this DietologistInvitation invitation) =>
-        new(
-            invitation.Id.Value,
-            invitation.ClientUserId.Value,
-            invitation.ClientUser.Email,
-            invitation.ClientUser.FirstName,
-            invitation.ClientUser.LastName,
-            invitation.IsExpired() ? "Expired" : invitation.Status.ToString(),
-            invitation.CreatedOnUtc,
-            invitation.ExpiresAtUtc);
-
     public static DietologistPermissions ToPermissions(this DietologistPermissionsInput input) =>
         new(
             input.ShareMeals,
@@ -114,10 +44,72 @@ public static class DietologistMappings {
         new(
             recommendation.Id.Value,
             recommendation.DietologistUserId.Value,
-            recommendation.DietologistUser?.FirstName,
-            recommendation.DietologistUser?.LastName,
+            DietologistFirstName: null,
+            DietologistLastName: null,
             recommendation.Text,
             recommendation.IsRead,
             recommendation.CreatedOnUtc,
             recommendation.ReadAtUtc);
+    public static DietologistRelationshipModel ToRelationshipModel(this DietologistInvitationReadModel invitation) =>
+        new(
+            invitation.InvitationId,
+            invitation.Status.ToString(),
+            invitation.DietologistUserEmail ?? invitation.DietologistEmail,
+            invitation.DietologistFirstName,
+            invitation.DietologistLastName,
+            invitation.DietologistUserId,
+            invitation.Permissions.ToModel(),
+            invitation.CreatedAtUtc,
+            invitation.ExpiresAtUtc,
+            invitation.AcceptedAtUtc);
+
+    public static DietologistInfoModel ToDietologistInfoModel(this DietologistInvitationReadModel invitation) =>
+        new(
+            invitation.InvitationId,
+            invitation.DietologistUserId!.Value,
+            invitation.DietologistUserEmail!,
+            invitation.DietologistFirstName,
+            invitation.DietologistLastName,
+            invitation.Permissions.ToModel(),
+            invitation.AcceptedAtUtc!.Value);
+
+    public static ClientSummaryModel ToClientSummaryModel(this DietologistInvitationReadModel invitation) =>
+        new(
+            invitation.ClientUserId,
+            invitation.ClientEmail,
+            invitation.Permissions.ShareProfile ? invitation.ClientFirstName : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientLastName : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientProfileImage : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientBirthDate : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientGender : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientHeightCm : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientActivityLevel.ToString() : null,
+            invitation.Permissions.ToModel(),
+            invitation.AcceptedAtUtc!.Value);
+
+    public static InvitationModel ToInvitationModel(this DietologistInvitationReadModel invitation) =>
+        new(
+            invitation.InvitationId,
+            invitation.ClientEmail,
+            invitation.ClientFirstName,
+            invitation.ClientLastName,
+            invitation.Status.ToString(),
+            invitation.CreatedAtUtc,
+            invitation.ExpiresAtUtc);
+
+    public static DietologistInvitationForCurrentUserModel ToCurrentUserInvitationModel(
+        this DietologistInvitationReadModel invitation,
+        TimeProvider timeProvider) =>
+        new(
+            invitation.InvitationId,
+            invitation.ClientUserId,
+            invitation.ClientEmail,
+            invitation.ClientFirstName,
+            invitation.ClientLastName,
+            invitation.Status == DietologistInvitationStatus.Pending &&
+                invitation.ExpiresAtUtc <= timeProvider.GetUtcNow().UtcDateTime
+                    ? "Expired"
+                    : invitation.Status.ToString(),
+            invitation.CreatedAtUtc,
+            invitation.ExpiresAtUtc);
 }

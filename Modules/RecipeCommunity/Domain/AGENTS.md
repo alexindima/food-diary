@@ -1,5 +1,5 @@
 # RecipeCommunity Domain
 
-Own RecipeComment, RecipeLike and their IDs. Preserve namespaces, User/Recipe navigations and invariants; central Domain must not reference this project.
+Own RecipeComment, RecipeLike and their IDs. Preserve namespaces, scalar UserId/RecipeId relationships and invariants; central Domain must not reference this project.
 
-User ownership: use Users Domain for aggregate navigations, Users Domain.Contracts for ID-only dependencies, and the exact module or Primitives owner for shared values/guards. Preserve all existing relationships.
+User ownership: reference Users Domain.Contracts for UserId and shared user values. Keep foreign keys scalar; foreign aggregate CLR navigations are prohibited. PersistenceModel preserves the relational constraints with typed HasOne<T>() mappings.

@@ -164,11 +164,10 @@ public partial class MealsFeatureTests {
         var dinner = Meal.Create(user.Id, new DateTime(2026, 3, 26, 19, 0, 0, DateTimeKind.Utc), MealType.Dinner);
         dinner.ApplyNutrition(new MealNutritionUpdate(610, 38, 20, 58, 7, 0, IsAutoCalculated: true));
         var favorite = FavoriteMeal.Create(user.Id, dinner.Id, "Evening favorite");
-        SetFavoriteMealNavigation(favorite, dinner);
         var handler = new GetMealsQueryHandler(
             CreateMealReadService(
                 new RecordingMealPageRepository([lunch, dinner], totalItems: 2),
-                new StubFavoriteMealRepository([favorite])),
+                new StubFavoriteMealRepository([favorite], dinner)),
             CreateCurrentUserAccessService(user));
 
         Result<PagedResponse<MealModel>> result = await handler.Handle(
@@ -193,11 +192,10 @@ public partial class MealsFeatureTests {
         dinner.ApplyNutrition(new MealNutritionUpdate(640, 40, 24, 52, 6, 0, IsAutoCalculated: true));
 
         var favorite = FavoriteMeal.Create(user.Id, dinner.Id, "Fav dinner");
-        SetFavoriteMealNavigation(favorite, dinner);
 
         var repository = new RecordingMealPageRepository([breakfast, dinner], totalItems: 2);
         var handler = new GetMealsOverviewQueryHandler(
-            CreateMealReadService(repository, new StubFavoriteMealRepository([favorite])),
+            CreateMealReadService(repository, new StubFavoriteMealRepository([favorite], dinner)),
             CreateCurrentUserAccessService(user));
 
         Result<MealOverviewModel> result = await handler.Handle(

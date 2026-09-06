@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -12,8 +11,6 @@ public sealed class UserAchievement : Entity<UserAchievementId> {
     public DateTime EarnedAtUtc { get; private set; }
     public int EarnedValue { get; private set; }
     public int DefinitionVersion { get; private set; }
-
-    public User User { get; } = null!;
 
     private UserAchievement() {
     }

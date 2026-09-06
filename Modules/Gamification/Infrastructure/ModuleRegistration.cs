@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Gamification;
 using FoodDiary.Infrastructure.Persistence.Outbox;
@@ -14,6 +15,7 @@ public static class ModuleRegistration {
         services.AddScoped<IAchievementDefinitionStore, AchievementDefinitionStore>();
         services.AddScoped<IUserAchievementStore, UserAchievementStore>();
         services.AddScoped<IAchievementEvaluationOutbox, AchievementEvaluationOutbox>();
+        services.AddScoped<IMealAchievementEvaluationRequest>(static provider => (AchievementEvaluationOutbox)provider.GetRequiredService<IAchievementEvaluationOutbox>());
         services.AddScoped<IAchievementMetricReader, AchievementMetricReader>();
         services.AddScoped<IAchievementEvaluationOutboxProcessor, AchievementEvaluationOutboxProcessor>();
         return services;

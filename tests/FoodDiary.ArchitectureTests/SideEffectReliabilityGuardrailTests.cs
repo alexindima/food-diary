@@ -334,13 +334,17 @@ public sealed class SideEffectReliabilityGuardrailTests {
         string notificationWriterSource = File.ReadAllText(notificationWriterPath);
         string imageCleanupSource = File.ReadAllText(imageCleanupPath);
         string userCleanupSource = File.ReadAllText(userCleanupPath);
+        string imagePurgeSource = File.ReadAllText(ArchitectureTestPaths.FromRoot(
+            "Modules", "Images", "Infrastructure", "Persistence", "ImagesUserDataPurgeParticipant.cs"));
 
         Assert.Contains("emailOutbox.EnqueueAsync", emailSenderSource, StringComparison.Ordinal);
         Assert.Contains("emailOutbox.EnqueueAsync", dietologistEmailSenderSource, StringComparison.Ordinal);
         Assert.Contains("webPushOutbox.EnqueueAsync", notificationWriterSource, StringComparison.Ordinal);
         Assert.Contains("imageObjectDeletionOutbox.EnqueueAsync", imageCleanupSource, StringComparison.Ordinal);
         Assert.DoesNotContain("imageStorageService.DeleteAsync", imageCleanupSource, StringComparison.Ordinal);
-        Assert.Contains("imageObjectDeletionOutbox.EnqueueAsync", userCleanupSource, StringComparison.Ordinal);
+        Assert.Contains("participant.PurgeAsync", userCleanupSource, StringComparison.Ordinal);
+        Assert.Contains("imageObjectDeletionOutbox.EnqueueAsync", imagePurgeSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("imageStorageService.DeleteAsync", imagePurgeSource, StringComparison.Ordinal);
     }
     [Fact]
     public void ArchitectureRoadmap_DocumentsDurableSideEffectDirection() {

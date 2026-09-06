@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Meals.Models;
+namespace FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 
 public sealed record MealFavoriteMealModel(
     Guid Id,

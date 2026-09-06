@@ -1,10 +1,9 @@
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Gamification.Queries.GetGamification;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Services;
 using FoodDiary.Application.Meals.Services;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -89,7 +88,7 @@ public class GamificationFeatureTests {
         var user = User.Create("gamification-calories@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
         user.UpdateGoals(dailyCalorieTarget: 2000);
-        IReadOnlyList<DashboardStatisticsBucketReadModel> buckets = [
+        IReadOnlyList<MealNutritionStatisticsBucket> buckets = [
             CreateStatisticsBucket(Today.AddDays(-2), totalCalories: 1800),
             CreateStatisticsBucket(Today.AddDays(-1), totalCalories: 0),
             CreateStatisticsBucket(Today, totalCalories: -100),
@@ -128,10 +127,10 @@ public class GamificationFeatureTests {
         var userId = UserId.New();
         var user = User.Create("gamification-statistics-failure@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
-        IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
+        IMealNutritionStatisticsReadService statisticsReadService = Substitute.For<IMealNutritionStatisticsReadService>();
         statisticsReadService
             .GetStatisticsAsync(userId, Today.AddDays(-6), Today, 1, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<DashboardStatisticsBucketReadModel>>(
+            .Returns(Task.FromResult(Result.Failure<IReadOnlyList<MealNutritionStatisticsBucket>>(
                 Errors.Validation.Invalid("statistics", "Statistics unavailable."))));
         IGamificationReadService service = CreateGamificationReadService(
             CreateMealRepository(),
@@ -182,7 +181,7 @@ public class GamificationFeatureTests {
 
     private static IGamificationReadService CreateGamificationReadService(
         IMealActivityReadRepository mealRepository,
-        IDashboardStatisticsReadService statisticsReadService,
+        IMealNutritionStatisticsReadService statisticsReadService,
         IGamificationUserProfileService userProfileService) =>
         new GamificationReadService(
             new MealActivityReadService(mealRepository),
@@ -209,16 +208,16 @@ public class GamificationFeatureTests {
         return reader;
     }
 
-    private static IDashboardStatisticsReadService CreateStatisticsReadService(
-        IReadOnlyList<DashboardStatisticsBucketReadModel>? buckets = null) {
-        IDashboardStatisticsReadService service = Substitute.For<IDashboardStatisticsReadService>();
+    private static IMealNutritionStatisticsReadService CreateStatisticsReadService(
+        IReadOnlyList<MealNutritionStatisticsBucket>? buckets = null) {
+        IMealNutritionStatisticsReadService service = Substitute.For<IMealNutritionStatisticsReadService>();
         service
             .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>(buckets ?? [])));
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<MealNutritionStatisticsBucket>>(buckets ?? [])));
         return service;
     }
 
-    private static DashboardStatisticsBucketReadModel CreateStatisticsBucket(DateTime date, double totalCalories) =>
+    private static MealNutritionStatisticsBucket CreateStatisticsBucket(DateTime date, double totalCalories) =>
         new(date, date.AddDays(1), totalCalories, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: 0);
 
     private static IUserGamificationProfileReadService CreateGamificationProfileReadService(User? user) {

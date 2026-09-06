@@ -37,12 +37,12 @@ public sealed class ImageAssetRepository(FoodDiaryDbContext context) : IImageAss
         return await context.ImageAssets
             .Where(a => a.Id == assetId)
             .Select(_ =>
-                context.Products.Any(p => p.ImageAssetId == assetId) ||
-                context.Recipes.Any(r => r.ImageAssetId == assetId) ||
-                context.RecipeSteps.Any(s => s.ImageAssetId == assetId) ||
-                context.Meals.Any(m => m.ImageAssetId == assetId) ||
-                context.MealAiSessions.Any(s => s.ImageAssetId == assetId) ||
-                context.Users.Any(u => u.ProfileImageAssetId == assetId))
+                context.Products.AsNoTracking().Any(p => p.ImageAssetId == assetId) ||
+                context.Recipes.AsNoTracking().Any(r => r.ImageAssetId == assetId) ||
+                context.RecipeSteps.AsNoTracking().Any(s => s.ImageAssetId == assetId) ||
+                context.Meals.AsNoTracking().Any(m => m.ImageAssetId == assetId) ||
+                context.MealAiSessions.AsNoTracking().Any(s => s.ImageAssetId == assetId) ||
+                context.Users.AsNoTracking().Any(u => u.ProfileImageAssetId == assetId))
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -54,12 +54,12 @@ public sealed class ImageAssetRepository(FoodDiaryDbContext context) : IImageAss
             .AsNoTracking()
             .Where(asset =>
                 asset.CreatedOnUtc < olderThanUtc &&
-                !context.Products.Any(p => p.ImageAssetId == asset.Id) &&
-                !context.Recipes.Any(r => r.ImageAssetId == asset.Id) &&
-                !context.RecipeSteps.Any(s => s.ImageAssetId == asset.Id) &&
-                !context.Meals.Any(m => m.ImageAssetId == asset.Id) &&
-                !context.MealAiSessions.Any(s => s.ImageAssetId == asset.Id) &&
-                !context.Users.Any(u => u.ProfileImageAssetId == asset.Id))
+                !context.Products.AsNoTracking().Any(p => p.ImageAssetId == asset.Id) &&
+                !context.Recipes.AsNoTracking().Any(r => r.ImageAssetId == asset.Id) &&
+                !context.RecipeSteps.AsNoTracking().Any(s => s.ImageAssetId == asset.Id) &&
+                !context.Meals.AsNoTracking().Any(m => m.ImageAssetId == asset.Id) &&
+                !context.MealAiSessions.AsNoTracking().Any(s => s.ImageAssetId == asset.Id) &&
+                !context.Users.AsNoTracking().Any(u => u.ProfileImageAssetId == asset.Id))
             .OrderBy(asset => asset.CreatedOnUtc)
             .Take(batchSize)
             .ToListAsync(cancellationToken).ConfigureAwait(false);

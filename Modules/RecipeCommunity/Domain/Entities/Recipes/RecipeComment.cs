@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Recipes;
@@ -10,9 +9,6 @@ public sealed class RecipeComment : AggregateRoot<RecipeCommentId> {
     public UserId UserId { get; private set; }
     public RecipeId RecipeId { get; private set; }
     public string Text { get; private set; } = string.Empty;
-
-    public User User { get; private set; } = null!;
-    public Recipe Recipe { get; private set; } = null!;
 
     private RecipeComment() {
     }

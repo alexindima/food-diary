@@ -17,6 +17,6 @@ Rules for `Modules/Notifications/Application/`.
 - Keep notification aggregate mutation inside this module; consumers use semantic notification contracts.
 
 MarkNotificationRead intentionally preserves its existing Dietologist.InvitationNotFound
-error for missing/foreign notifications. Call DietologistErrors through the explicit
-owner reference; this compatibility cleanup does not change the public error or grant
-Dietologist repository access. See docs/ai/feature-error-retirement.md.
+error for missing/foreign notifications. NotificationErrors owns the literal legacy
+code and message, without a reverse Dietologist contract dependency. Preserve this
+wire compatibility until an explicit API change is approved. See docs/ai/feature-error-retirement.md.

@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Application.MealPlanning.MealPlans.Models;
 using FoodDiary.Domain.Entities.MealPlans;
-using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.MealPlanning.MealPlans.Mappings;
 
@@ -82,7 +81,7 @@ public static class MealPlanMappings {
     }
 
     private static MealPlanMealModel ToModel(this MealPlanMeal meal) {
-        Recipe? recipe = meal.Recipe;
+        MealPlanRecipeSnapshot? recipe = meal.RecipeSnapshot;
         int servings = recipe?.Servings > 0 ? recipe.Servings : 1;
         double multiplier = (double)meal.Servings / servings;
 

@@ -1,7 +1,6 @@
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Models;
@@ -11,7 +10,7 @@ namespace FoodDiary.Application.Gamification.Services;
 
 public sealed class GamificationReadService(
     IMealActivityReadService mealActivityReadService,
-    IDashboardStatisticsReadService statisticsReadService,
+    IMealNutritionStatisticsReadService statisticsReadService,
     IGamificationUserProfileService userProfileService,
     IAchievementMetricReader achievementMetricReader,
     IAchievementAwardService achievementAwardService,
@@ -36,7 +35,7 @@ public sealed class GamificationReadService(
             .ConfigureAwait(false);
 
         DateTime weekStart = today.AddDays(-6);
-        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> weeklyCaloriesResult = await statisticsReadService.GetStatisticsAsync(
+        Result<IReadOnlyList<MealNutritionStatisticsBucket>> weeklyCaloriesResult = await statisticsReadService.GetStatisticsAsync(
             userId,
             weekStart,
             today,
@@ -67,7 +66,7 @@ public sealed class GamificationReadService(
             badges));
     }
 
-    private static IReadOnlyDictionary<DateTime, double> ToDailyCalories(IReadOnlyList<DashboardStatisticsBucketReadModel> buckets) =>
+    private static IReadOnlyDictionary<DateTime, double> ToDailyCalories(IReadOnlyList<MealNutritionStatisticsBucket> buckets) =>
         buckets
             .Where(static bucket => bucket.TotalCalories > 0)
             .ToDictionary(static bucket => bucket.DateFrom.Date, static bucket => bucket.TotalCalories);

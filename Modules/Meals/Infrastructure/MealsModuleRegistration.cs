@@ -1,3 +1,6 @@
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Meals;
 using FoodDiary.Infrastructure.Persistence.Meals;
@@ -10,6 +13,9 @@ public static class MealsModuleRegistration {
         services.AddMealsApplication().AddMealsPersistence();
 
     public static IServiceCollection AddMealsPersistence(this IServiceCollection services) {
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, MealsUserDataPurgeParticipant>());
+        services.AddScoped<IMealDailyCalorieReadService, MealDailyCalorieReadService>();
+        services.AddScoped<IMealNutritionStatisticsReadService, MealNutritionStatisticsReadService>();
         services.AddScoped<IMealRepository, MealRepository>();
         services.AddScoped<IMealReadRepository>(static provider => provider.GetRequiredService<IMealRepository>());
         services.AddScoped<IMealProjectionReadRepository>(static provider => provider.GetRequiredService<IMealRepository>());

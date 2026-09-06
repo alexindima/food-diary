@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ internal sealed class ImageAssetConfiguration : IEntityTypeConfiguration<ImageAs
         builder.Property(e => e.Url).IsRequired();
         builder.Property(e => e.IsConfirmed);
 
-        builder.HasOne(e => e.User)
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade);

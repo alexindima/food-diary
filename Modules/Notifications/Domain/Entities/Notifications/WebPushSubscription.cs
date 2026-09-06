@@ -1,6 +1,5 @@
 using System.Globalization;
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Notifications;
@@ -18,8 +17,6 @@ public sealed class WebPushSubscription : AggregateRoot<WebPushSubscriptionId> {
     public DateTime? ExpirationTimeUtc { get; private set; }
     public string? Locale { get; private set; }
     public string? UserAgent { get; private set; }
-
-    public User User { get; private set; } = null!;
 
     private WebPushSubscription() {
     }

@@ -1,5 +1,4 @@
 using System.Globalization;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -16,8 +15,6 @@ public sealed class Notification : AggregateRoot<NotificationId> {
     public string? ReferenceId { get; private set; }
     public bool IsRead { get; private set; }
     public DateTime? ReadAtUtc { get; private set; }
-
-    public User User { get; private set; } = null!;
 
     private Notification() {
     }

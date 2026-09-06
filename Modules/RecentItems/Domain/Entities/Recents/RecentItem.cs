@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,8 +10,6 @@ public sealed class RecentItem : Entity<RecentItemId> {
     public Guid ItemId { get; private set; }
     public DateTime LastUsedAtUtc { get; private set; }
     public int UsageCount { get; private set; }
-
-    public User User { get; private set; } = null!;
 
     private RecentItem() {
     }

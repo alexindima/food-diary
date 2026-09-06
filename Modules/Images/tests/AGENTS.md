@@ -16,3 +16,5 @@ suites. Do not duplicate the six relocated record lifecycle cases there.
 
 OutboxReplayStreamTests exercises Images-owned list/metadata/tracking on PostgreSQL.
 The common four-stream replay transaction/concurrency tests remain central.
+
+Domain and PostgreSQL checks preserve scalar User FK semantics; Users profile updates exercise the owner URL/cleanup port. No foreign User aggregate navigation remains.

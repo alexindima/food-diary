@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Social;
@@ -7,8 +6,6 @@ namespace FoodDiary.Domain.Entities.Social;
 public sealed class RecipeLike : Entity<RecipeLikeId> {
     public UserId UserId { get; private set; }
     public RecipeId RecipeId { get; private set; }
-
-    public User User { get; private set; } = null!;
 
     private RecipeLike() {
     }

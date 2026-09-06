@@ -204,9 +204,7 @@ public partial class RecipesFeatureTests {
         RecipeStep step = recipe.AddStep(1, "Mix");
         step.AddProductIngredient(product.Id, 100);
         RecipeIngredient ingredient = Assert.Single(step.Ingredients);
-        typeof(RecipeIngredient)
-            .GetProperty(nameof(RecipeIngredient.Product))!
-            .SetValue(ingredient, product);
+        ingredient.SetProductSnapshot(new RecipeIngredientProductSnapshot(product.Id, product.Name, product.BaseUnit, product.BaseAmount, product.CaloriesPerBase, product.ProteinsPerBase, product.FatsPerBase, product.CarbsPerBase, product.FiberPerBase, product.AlcoholPerBase, product.Visibility));
         var repository = new RecordingRecipeNutritionRepository();
 
         await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, repository, CancellationToken.None);

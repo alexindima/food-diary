@@ -1,5 +1,3 @@
-using FoodDiary.Application.Abstractions.Meals.Models;
-using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Application.Favorites.FavoriteMeals.Mappings;

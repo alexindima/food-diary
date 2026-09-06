@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Dashboard.Common;
-using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Exercises.Models;
@@ -17,7 +17,7 @@ namespace FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 public sealed class GetTdeeInsightQueryHandler(
     ITdeeUserProfileService tdeeUserProfileService,
     IWeightEntryReadService weightEntryReadService,
-    IDashboardStatisticsReadService statisticsReadService,
+    IMealDailyCalorieReadService statisticsReadService,
     IExerciseEntryReadService exerciseEntryReadService,
     TimeProvider dateTimeProvider,
     ICurrentUserAccessService currentUserAccessService)
@@ -49,11 +49,10 @@ public sealed class GetTdeeInsightQueryHandler(
         IReadOnlyList<WeightEntryModel> weights = await weightEntryReadService
             .GetEntriesAsync(userId, periodStart, today, limit: null, descending: false, cancellationToken)
             .ConfigureAwait(false);
-        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> dailyCaloriesResult = await statisticsReadService.GetStatisticsAsync(
+        Result<IReadOnlyList<MealDailyCalories>> dailyCaloriesResult = await statisticsReadService.GetDailyCaloriesAsync(
             userId,
             periodStart,
             today,
-            quantizationDays: 1,
             cancellationToken).ConfigureAwait(false);
         if (dailyCaloriesResult.IsFailure) {
             return Result.Failure<TdeeInsightModel>(dailyCaloriesResult.Error);
@@ -88,14 +87,14 @@ public sealed class GetTdeeInsightQueryHandler(
             GoalAdjustmentHint: hint));
     }
 
-    private static IReadOnlyDictionary<DateTime, double> ToDailyCalories(IReadOnlyList<DashboardStatisticsBucketReadModel> buckets) =>
+    private static IReadOnlyDictionary<DateTime, double> ToDailyCalories(IReadOnlyList<MealDailyCalories> buckets) =>
         buckets
             .Where(static bucket => bucket.TotalCalories > 0)
-            .ToDictionary(static bucket => bucket.DateFrom.Date, static bucket => bucket.TotalCalories);
+            .ToDictionary(static bucket => bucket.Date.Date, static bucket => bucket.TotalCalories);
 
     private static AdaptiveTdeeResult CalculateAdaptive(
         IReadOnlyList<WeightEntryModel> weights,
-        IReadOnlyList<DashboardStatisticsBucketReadModel> dailyCalories,
+        IReadOnlyList<MealDailyCalories> dailyCalories,
         IReadOnlyList<ExerciseEntryModel> exercises) =>
         TdeeCalculator.CalculateAdaptive(weights, ToDailyCalories(dailyCalories), AnalysisPeriodDays, exercises);
 }

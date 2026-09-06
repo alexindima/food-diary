@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Results;
@@ -76,7 +75,7 @@ public partial class MealsFeatureTests {
         sourceMeal.AddRecipe(RecipeId.New(), 1);
 
         var repository = new SingleMealRepository(sourceMeal);
-        IAchievementEvaluationOutbox achievementOutbox = Substitute.For<IAchievementEvaluationOutbox>();
+        IMealAchievementEvaluationRequest achievementOutbox = Substitute.For<IMealAchievementEvaluationRequest>();
         RepeatMealCommandHandler handler = RepeatMealHandler(
             repository,
             new FixedMealNutritionService(new MealNutritionSummary(510, 33, 18, 47, 5, 0)),

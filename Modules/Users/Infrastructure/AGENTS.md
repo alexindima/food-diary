@@ -2,7 +2,7 @@
 
 Own separable Users persistence adapters and complete module DI. Depend on the
 central Infrastructure project only for the shared DbContext compatibility seam.
-Do not absorb Identity repositories or provider services.
+Do not absorb Identity repositories or provider services. UserCleanupService coordinates ordered owner-side IUserDataPurgeParticipant extensions inside its per-user transaction and only mutates Users/UserRoles itself; participants never save or commit.
 
 Own `UserAccessTokenSecurityReader`, scoped through `AddUsersPersistence`. Its
 unchanged no-tracking query reads persisted active/deleted/security-version state;

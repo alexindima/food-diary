@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence.Meals;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Domain.Entities.Meals;
@@ -24,7 +25,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         context.Meals.AddRange(firstMeal, secondMeal, thirdMeal);
         await context.SaveChangesAsync();
 
-        var readService = new DashboardStatisticsReadService(context);
+        var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context));
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
             user.Id,
@@ -53,7 +54,7 @@ public sealed class DashboardStatisticsReadServiceTests {
     [Fact]
     public async Task GetStatisticsAsync_WhenDateRangeIsInvalid_ReturnsValidationFailure() {
         await using FoodDiaryDbContext context = CreateContext();
-        var readService = new DashboardStatisticsReadService(context);
+        var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context));
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
             Domain.ValueObjects.Ids.UserId.New(),
@@ -69,7 +70,7 @@ public sealed class DashboardStatisticsReadServiceTests {
     [Fact]
     public async Task GetStatisticsAsync_AtMaximumInstant_ReturnsSingleBucketWithoutOverflow() {
         await using FoodDiaryDbContext context = CreateContext();
-        var readService = new DashboardStatisticsReadService(context);
+        var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context));
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
             Domain.ValueObjects.Ids.UserId.New(),
@@ -93,7 +94,7 @@ public sealed class DashboardStatisticsReadServiceTests {
         int periodDays,
         int quantizationDays) {
         await using FoodDiaryDbContext context = CreateContext();
-        var readService = new DashboardStatisticsReadService(context);
+        var readService = new DashboardStatisticsReadService(new MealNutritionStatisticsReadService(context));
         var from = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> result = await readService.GetStatisticsAsync(
@@ -128,7 +129,7 @@ public sealed class DashboardStatisticsReadServiceTests {
     }
 
     private static DateTime InvokeNormalizeUtcInstant(DateTime value) {
-        MethodInfo method = typeof(DashboardStatisticsReadService).GetMethod(
+        MethodInfo method = typeof(MealNutritionStatisticsReadService).GetMethod(
             "NormalizeUtcInstant",
             BindingFlags.Static | BindingFlags.NonPublic)!;
         return (DateTime)method.Invoke(null, [value])!;

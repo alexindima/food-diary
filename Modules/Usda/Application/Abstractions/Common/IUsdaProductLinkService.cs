@@ -1,20 +1,21 @@
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Results;
 
-namespace FoodDiary.Application.Abstractions.Products.Common;
+namespace FoodDiary.Application.Abstractions.Usda.Common;
 
-public interface IProductUsdaLinkService {
-    Task<bool> IsAccessibleForUpdateAsync(
+public interface IUsdaProductLinkService {
+    Task<Result> IsAccessibleForUpdateAsync(
         ProductId productId,
         UserId userId,
         CancellationToken cancellationToken = default);
 
-    Task<bool> LinkAsync(
+    Task<Result> LinkAsync(
         ProductId productId,
         UserId userId,
         int fdcId,
         CancellationToken cancellationToken = default);
 
-    Task<bool> UnlinkAsync(
+    Task<Result> UnlinkAsync(
         ProductId productId,
         UserId userId,
         CancellationToken cancellationToken = default);

@@ -1,5 +1,5 @@
 using FoodDiary.Infrastructure.Persistence.Users;
-using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 public sealed class UserCleanupServiceTests {
     [Fact]
     public async Task CleanupDeletedUsersAsync_WithNonPositiveBatchSize_Throws() {
-        var service = new UserCleanupService(dbContext: null!, imageObjectDeletionOutbox: CreateImageObjectDeletionOutbox(), logger: NullLogger<UserCleanupService>.Instance);
+        var service = new UserCleanupService(dbContext: null!, participants: [Substitute.For<IUserDataPurgeParticipant>()], logger: NullLogger<UserCleanupService>.Instance);
 
         ArgumentOutOfRangeException ex = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             service.CleanupDeletedUsersAsync(DateTime.UtcNow, 0, reassignUserId: null, CancellationToken.None));
@@ -27,7 +27,7 @@ public sealed class UserCleanupServiceTests {
         deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
         context.Users.Add(deletedUser);
         await context.SaveChangesAsync();
-        var service = new UserCleanupService(context, CreateImageObjectDeletionOutbox(), NullLogger<UserCleanupService>.Instance);
+        var service = new UserCleanupService(context, [Substitute.For<IUserDataPurgeParticipant>()], NullLogger<UserCleanupService>.Instance);
 
         int removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
@@ -56,12 +56,6 @@ public sealed class UserCleanupServiceTests {
             .Options;
 
         return new FoodDiaryDbContext(options);
-    }
-
-    private static IImageObjectDeletionOutbox CreateImageObjectDeletionOutbox() {
-        IImageObjectDeletionOutbox outbox = Substitute.For<IImageObjectDeletionOutbox>();
-        outbox.EnqueueAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
-        return outbox;
     }
 
     private static T InvokePrivateStatic<T>(string methodName, params object[] args) {

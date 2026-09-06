@@ -364,9 +364,9 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.Equal(Npgsql.PostgresErrorCodes.UniqueViolation, postgresException.SqlState);
         context.ChangeTracker.Clear();
 
-        RecipeComment comment = await context.RecipeComments.Include(item => item.User).Include(item => item.Recipe).SingleAsync();
-        Assert.Equal(user.Id, comment.User.Id);
-        Assert.Equal(recipe.Id, comment.Recipe.Id);
+        RecipeComment comment = await context.RecipeComments.SingleAsync();
+        Assert.Equal(user.Id, comment.UserId);
+        Assert.Equal(recipe.Id, comment.RecipeId);
         await context.Recipes.Where(item => item.Id == recipe.Id).ExecuteDeleteAsync();
         Assert.False(await context.RecipeComments.AnyAsync());
         // Likes deliberately have no Recipe FK in the existing schema.

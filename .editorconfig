@@ -512,3 +512,7 @@ dotnet_diagnostic.IDE0130.severity = none
 # Provider relocations preserve public CLR names and ILogger<T> categories; exact owner tests guard these types.
 [Modules/{Ai,Wearables,Usda,OpenFoodFacts,Identity,Images}/Infrastructure/Providers/**/*.cs]
 dotnet_diagnostic.IDE0130.severity = none
+
+[Modules/*/Infrastructure/**/*.cs]
+dotnet_diagnostic.FD0015.severity = error
+dotnet_diagnostic.FD0016.severity = error

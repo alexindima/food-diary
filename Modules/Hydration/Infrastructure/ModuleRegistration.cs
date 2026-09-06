@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Hydration;
 using FoodDiary.Infrastructure.Persistence;
@@ -8,6 +10,7 @@ namespace FoodDiary.Modules.Hydration.Infrastructure;
 
 public static class ModuleRegistration {
     public static IServiceCollection AddHydrationModule(this IServiceCollection services) {
+        services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, HydrationUserDataPurgeParticipant>());
         services.AddHydrationApplication();
         services.AddScoped(static provider => new HydrationEntryRepository(
             provider.GetRequiredService<FoodDiaryDbContext>().HydrationEntries));

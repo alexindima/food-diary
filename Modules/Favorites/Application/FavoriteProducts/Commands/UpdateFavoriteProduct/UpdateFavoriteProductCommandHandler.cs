@@ -12,7 +12,8 @@ namespace FoodDiary.Application.Favorites.FavoriteProducts.Commands.UpdateFavori
 
 public sealed class UpdateFavoriteProductCommandHandler(
     IFavoriteProductWriteRepository favoriteProductRepository,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IFavoriteProductSourceReadService sourceReadService)
     : ICommandHandler<UpdateFavoriteProductCommand, Result<FavoriteProductModel>> {
     public async Task<Result<FavoriteProductModel>> Handle(
         UpdateFavoriteProductCommand command,
@@ -45,10 +46,16 @@ public sealed class UpdateFavoriteProductCommandHandler(
             return Result.Failure<FavoriteProductModel>(FavoriteProductErrors.NotFound(command.FavoriteProductId));
         }
 
+        Result<FavoriteProductSourceModel> sourceResult = await sourceReadService
+            .GetAccessibleAsync(favorite.ProductId, userId, cancellationToken).ConfigureAwait(false);
+        if (sourceResult.IsFailure) {
+            return Result.Failure<FavoriteProductModel>(FavoriteProductErrors.NotFound(command.FavoriteProductId));
+        }
+
         favorite.UpdateName(command.Name);
         favorite.UpdatePreferredPortionAmount(command.PreferredPortionAmount);
 
         await favoriteProductRepository.UpdateAsync(favorite, cancellationToken).ConfigureAwait(false);
-        return Result.Success(favorite.ToModel());
+        return Result.Success(favorite.ToModel(sourceResult.Value));
     }
 }

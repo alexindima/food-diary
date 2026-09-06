@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3570,
-    "symbols": 3510,
-    "interfaceImplementationLinks": 235,
-    "dependencyInjectionRegistrations": 150,
+    "sourceFiles": 3607,
+    "symbols": 3547,
+    "interfaceImplementationLinks": 239,
+    "dependencyInjectionRegistrations": 152,
     "kinds": {
-      "class": 1833,
+      "class": 1853,
       "enum": 62,
-      "interface": 425,
-      "record": 1070,
+      "interface": 434,
+      "record": 1078,
       "record struct": 120
     },
     "roles": {
@@ -24,7 +24,7 @@
       "CommandHandler": 159,
       "Configuration": 90,
       "Controller": 92,
-      "Entity": 89,
+      "Entity": 92,
       "Event": 19,
       "Factory": 11,
       "Handler": 9,
@@ -32,15 +32,15 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 64,
-      "Other": 1373,
+      "Other": 1393,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 30,
       "ReadRepository": 47,
       "Repository": 103,
-      "Request": 135,
+      "Request": 136,
       "Response": 181,
-      "Service": 278,
+      "Service": 291,
       "Validator": 206,
       "ValueObject": 114,
       "WriteRepository": 46
@@ -53,6 +53,13 @@
       "role": "Other",
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
       "line": 12
+    },
+    {
+      "name": "ModulePersistenceBoundaryAnalyzer",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
+      "line": 15
     },
     {
       "name": "ParameterNamingAnalyzer",
@@ -739,6 +746,13 @@
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Shared/RecipeCompositionTransactionLock.cs",
       "line": 4
+    },
+    {
+      "name": "SharedTransactionBoundary",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Shared/SharedTransactionBoundary.cs",
+      "line": 6
     },
     {
       "name": "DatabaseCommandTelemetryInterceptor",
@@ -4728,7 +4742,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/AdminModuleRegistration.cs",
-      "line": 8
+      "line": 11
     },
     {
       "name": "AdminImpersonationHandoffService",
@@ -4785,6 +4799,13 @@
       "role": "Repository",
       "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminUserRoleAuditRepository.cs",
       "line": 7
+    },
+    {
+      "name": "AdminUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Persistence/AdminUserDataPurgeParticipant.cs",
+      "line": 6
     },
     {
       "name": "AdminPresentationServiceCollectionExtensions",
@@ -5862,7 +5883,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Ai/Infrastructure/ModuleRegistration.cs",
-      "line": 6
+      "line": 9
     },
     {
       "name": "AiPromptProvider",
@@ -5891,6 +5912,13 @@
       "role": "Repository",
       "path": "Modules/Ai/Infrastructure/Persistence/Ai/AiUsageRepository.cs",
       "line": 8
+    },
+    {
+      "name": "AiUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Ai/Infrastructure/Persistence/AiUserDataPurgeParticipant.cs",
+      "line": 6
     },
     {
       "name": "OpenAiOptions",
@@ -6576,7 +6604,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Billing/Infrastructure/Persistence/EfBillingTransactionRunner.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "PostgresBillingCheckoutLock",
@@ -7255,14 +7283,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WaistEntry.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "WeightEntry",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/BodyMetrics/Domain/Entities/Tracking/WeightEntry.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "WaistEntryId",
@@ -7290,21 +7318,28 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WaistEntryConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WeightEntryConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/BodyMetrics/Infrastructure/Model/Configurations/WeightEntryConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ModuleRegistration",
       "kind": "class",
       "role": "Other",
       "path": "Modules/BodyMetrics/Infrastructure/ModuleRegistration.cs",
-      "line": 8
+      "line": 10
+    },
+    {
+      "name": "BodyMetricsUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/BodyMetrics/Infrastructure/Persistence/BodyMetricsUserDataPurgeParticipant.cs",
+      "line": 7
     },
     {
       "name": "WaistEntryRepository",
@@ -7605,7 +7640,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/ContentReports/Domain/Entities/Social/ContentReport.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "ContentReportsDomainGuard",
@@ -7640,7 +7675,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/ContentReports/Infrastructure/Model/Configurations/ContentReportConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ContentReportsPersistenceModelRegistration",
@@ -8466,7 +8501,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Cycles/Infrastructure/ModuleRegistration.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "CycleRepository",
@@ -8474,6 +8509,13 @@
       "role": "Repository",
       "path": "Modules/Cycles/Infrastructure/Persistence/CycleRepository.cs",
       "line": 10
+    },
+    {
+      "name": "CyclesUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Cycles/Infrastructure/Persistence/CyclesUserDataPurgeParticipant.cs",
+      "line": 7
     },
     {
       "name": "CyclesPresentationServiceCollectionExtensions",
@@ -9229,7 +9271,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Dashboard/Infrastructure/Persistence/Dashboard/DashboardStatisticsReadService.cs",
-      "line": 12
+      "line": 9
     },
     {
       "name": "DashboardPresentationServiceCollectionExtensions",
@@ -10055,7 +10097,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dietologist/Application/Mappings/DietologistMappings.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "AttentionSignalModel",
@@ -10377,7 +10419,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Dietologist/Application/Services/DietologistInvitationReadService.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "DietologistRecommendationReadService",
@@ -10426,14 +10468,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/DietologistInvitation.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "Recommendation",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/Recommendation.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "RecommendationBulkDispatch",
@@ -10447,7 +10489,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Dietologist/Domain/Entities/Dietologist/RecommendationComment.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "RecommendationTemplate",
@@ -10552,7 +10594,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/DietologistInvitationConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecommendationBulkDispatchConfiguration",
@@ -10566,14 +10608,14 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationCommentConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecommendationConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Dietologist/Infrastructure/Model/Configurations/Dietologist/RecommendationConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecommendationTemplateConfiguration",
@@ -10594,7 +10636,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Dietologist/Infrastructure/ModuleRegistration.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "AttentionSignalMetricsReadService",
@@ -10608,7 +10650,14 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Dietologist/Infrastructure/Persistence/Dietologist/DietologistInvitationRepository.cs",
-      "line": 11
+      "line": 10
+    },
+    {
+      "name": "DietologistUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Dietologist/Infrastructure/Persistence/DietologistUserDataPurgeParticipant.cs",
+      "line": 7
     },
     {
       "name": "CollaborationAuditInterceptor",
@@ -11119,7 +11168,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Exercises/Domain/Entities/Tracking/ExerciseEntry.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ExerciseType",
@@ -11140,7 +11189,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Exercises/Infrastructure/Model/Configurations/Exercises/ExerciseEntryConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ExercisesPersistenceModelRegistration",
@@ -11567,7 +11616,7 @@
       "kind": "interface",
       "role": "ReadRepository",
       "path": "Modules/Fasting/Application/Abstractions/Common/IFastingOccurrenceReadRepository.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "IFastingOccurrenceRepository",
@@ -11652,6 +11701,13 @@
       "role": "Service",
       "path": "Modules/Fasting/Application/Abstractions/Common/IFastingTelemetrySummaryReadService.cs",
       "line": 5
+    },
+    {
+      "name": "FastingActiveOccurrenceModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Fasting/Application/Abstractions/Models/FastingActiveOccurrenceModel.cs",
+      "line": 4
     },
     {
       "name": "FastingCheckInReadModel",
@@ -12288,21 +12344,21 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "FastingPlan",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingPlan.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "FastingSession",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Fasting/Domain/Entities/Tracking/Fasting/FastingSession.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "FastingTelemetryEvent",
@@ -12400,21 +12456,21 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingOccurrenceConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "FastingPlanConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingPlanConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "FastingSessionConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Fasting/Infrastructure/Model/Configurations/FastingSessionConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "FastingTelemetryEventConfiguration",
@@ -12659,7 +12715,7 @@
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Favorites/Application/Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "IFavoriteMealWriteRepository",
@@ -12711,6 +12767,13 @@
       "line": 2
     },
     {
+      "name": "IFavoriteProductSourceReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs",
+      "line": 6
+    },
+    {
       "name": "IFavoriteProductWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -12722,6 +12785,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
+      "line": 4
+    },
+    {
+      "name": "FavoriteProductSourceModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Models/FavoriteProductSourceModel.cs",
       "line": 4
     },
     {
@@ -12753,6 +12823,13 @@
       "line": 2
     },
     {
+      "name": "IFavoriteRecipeSourceReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs",
+      "line": 6
+    },
+    {
       "name": "IFavoriteRecipeWriteRepository",
       "kind": "interface",
       "role": "WriteRepository",
@@ -12767,6 +12844,13 @@
       "line": 2
     },
     {
+      "name": "FavoriteRecipeSourceModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Models/FavoriteRecipeSourceModel.cs",
+      "line": 2
+    },
+    {
       "name": "RequiredIdParser",
       "kind": "class",
       "role": "Other",
@@ -12778,7 +12862,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Application/DependencyInjection.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "AddFavoriteMealCommand",
@@ -12792,7 +12876,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "AddFavoriteMealCommandValidator",
@@ -12820,7 +12904,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Application/FavoriteMeals/Mappings/FavoriteMealMappings.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "GetFavoriteMealsQuery",
@@ -12855,7 +12939,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Favorites/Application/FavoriteMeals/Services/FavoriteMealReadService.cs",
-      "line": 9
+      "line": 7
     },
     {
       "name": "AddFavoriteProductCommand",
@@ -12869,7 +12953,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
-      "line": 14
+      "line": 12
     },
     {
       "name": "AddFavoriteProductCommandValidator",
@@ -12918,7 +13002,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Application/FavoriteProducts/Mappings/FavoriteProductMappings.cs",
-      "line": 8
+      "line": 6
     },
     {
       "name": "GetFavoriteProductsQuery",
@@ -12967,7 +13051,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
-      "line": 14
+      "line": 12
     },
     {
       "name": "AddFavoriteRecipeCommandValidator",
@@ -12995,7 +13079,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Favorites/Application/FavoriteRecipes/Mappings/FavoriteRecipeMappings.cs",
-      "line": 7
+      "line": 5
     },
     {
       "name": "GetFavoriteRecipesQuery",
@@ -13040,10 +13124,24 @@
       "line": 5
     },
     {
+      "name": "IMealFavoriteReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Common/IMealFavoriteReadService.cs",
+      "line": 5
+    },
+    {
       "name": "FavoriteMealModel",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Favorites/Contracts/FavoriteMeals/Models/FavoriteMealModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MealFavoriteMealModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Favorites/Contracts/FavoriteMeals/Models/MealFavoriteMealModel.cs",
       "line": 2
     },
     {
@@ -13079,21 +13177,21 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Favorites/Domain/Entities/FavoriteMeals/FavoriteMeal.cs",
-      "line": 7
+      "line": 5
     },
     {
       "name": "FavoriteProduct",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Favorites/Domain/Entities/FavoriteProducts/FavoriteProduct.cs",
-      "line": 7
+      "line": 5
     },
     {
       "name": "FavoriteRecipe",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Favorites/Domain/Entities/FavoriteRecipes/FavoriteRecipe.cs",
-      "line": 7
+      "line": 5
     },
     {
       "name": "FavoriteMealId",
@@ -13121,21 +13219,21 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteMealConfiguration.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "FavoriteProductConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteProductConfiguration.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "FavoriteRecipeConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Favorites/Infrastructure/Model/Configurations/FavoriteRecipeConfiguration.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "FavoritesPersistenceModelRegistration",
@@ -13457,7 +13555,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Gamification/Application/Services/GamificationReadService.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "GamificationUserProfileService",
@@ -13478,7 +13576,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Gamification/Domain/Entities/Achievements/UserAchievement.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "AchievementMetric",
@@ -13527,7 +13625,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Gamification/Infrastructure/Model/Configurations/Achievements/UserAchievementConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "GamificationPersistenceModelRegistration",
@@ -13541,7 +13639,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/ModuleRegistration.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "AchievementDefinitionStore",
@@ -13555,7 +13653,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "AchievementEvaluationOutboxProcessor",
@@ -13863,7 +13961,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Hydration/Infrastructure/ModuleRegistration.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "HydrationEntryRepository",
@@ -13871,6 +13969,13 @@
       "role": "Repository",
       "path": "Modules/Hydration/Infrastructure/Persistence/HydrationEntryRepository.cs",
       "line": 9
+    },
+    {
+      "name": "HydrationUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Hydration/Infrastructure/Persistence/HydrationUserDataPurgeParticipant.cs",
+      "line": 7
     },
     {
       "name": "HydrationPresentationServiceCollectionExtensions",
@@ -14083,13 +14188,6 @@
       "line": 2
     },
     {
-      "name": "AuthenticationInputLimits",
-      "kind": "class",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/AuthenticationInputLimits.cs",
-      "line": 2
-    },
-    {
       "name": "EmailTemplateContent",
       "kind": "record",
       "role": "Other",
@@ -14136,13 +14234,6 @@
       "kind": "interface",
       "role": "Other",
       "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
-      "line": 2
-    },
-    {
-      "name": "IPasswordHasher",
-      "kind": "interface",
-      "role": "Other",
-      "path": "Modules/Identity/Application/Abstractions/Authentication/Common/IPasswordHasher.cs",
       "line": 2
     },
     {
@@ -14836,7 +14927,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Identity/Infrastructure/IdentityModuleRegistration.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "IdentityProviderRegistration",
@@ -14913,7 +15004,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "UserLoginEventRepository",
@@ -15259,6 +15350,13 @@
       "line": 4
     },
     {
+      "name": "IImageAssetOwnershipService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Images/Application/Abstractions/Common/IImageAssetOwnershipService.cs",
+      "line": 4
+    },
+    {
       "name": "IImageAssetReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
@@ -15431,14 +15529,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Images/Domain/Entities/Assets/ImageAsset.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "DependencyInjection",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 8
+      "line": 10
     },
     {
       "name": "ImagesProviderRegistration",
@@ -15452,7 +15550,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Images/Infrastructure/Model/Configurations/ImageAssetConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ImageObjectDeletionOutboxMessageConfiguration",
@@ -15474,6 +15572,13 @@
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Model/ImagesPersistenceModelBuilderExtensions.cs",
       "line": 4
+    },
+    {
+      "name": "ImageAssetOwnershipService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetOwnershipService.cs",
+      "line": 6
     },
     {
       "name": "ImageAssetRepository",
@@ -15501,6 +15606,13 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Images/Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
+      "line": 8
+    },
+    {
+      "name": "ImagesUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Images/Infrastructure/Persistence/ImagesUserDataPurgeParticipant.cs",
       "line": 8
     },
     {
@@ -15544,6 +15656,13 @@
       "role": "Service",
       "path": "Modules/Images/Infrastructure/Providers/Services/UnconfiguredImageStorageService.cs",
       "line": 5
+    },
+    {
+      "name": "UserProfileImageService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Images/Infrastructure/UserProfileImageService.cs",
+      "line": 8
     },
     {
       "name": "ImagesPresentationServiceCollectionExtensions",
@@ -15816,7 +15935,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Lessons/Domain/Entities/Content/UserLessonProgress.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "LessonCategory",
@@ -15858,7 +15977,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Lessons/Infrastructure/Model/Configurations/UserLessonProgressConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "LessonsPersistenceModelRegistration",
@@ -16355,7 +16474,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/MealPlanning/Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "GenerateShoppingListCommandValidator",
@@ -16376,7 +16495,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/MealPlanning/Application/MealPlans/Mappings/MealPlanMappings.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "MealPlanDayModel",
@@ -16705,7 +16824,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlan.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "MealPlanDay",
@@ -16719,21 +16838,35 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanMeal.cs",
-      "line": 7
+      "line": 6
+    },
+    {
+      "name": "MealPlanRecipeIngredientSnapshot",
+      "kind": "record",
+      "role": "Entity",
+      "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanRecipeIngredientSnapshot.cs",
+      "line": 5
+    },
+    {
+      "name": "MealPlanRecipeSnapshot",
+      "kind": "record",
+      "role": "Entity",
+      "path": "Modules/MealPlanning/Domain/Entities/MealPlans/MealPlanRecipeSnapshot.cs",
+      "line": 4
     },
     {
       "name": "ShoppingList",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingList.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ShoppingListItem",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/MealPlanning/Domain/Entities/Shopping/ShoppingListItem.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ShoppingListItemSource",
@@ -16824,7 +16957,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans/MealPlanConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "MealPlanDayConfiguration",
@@ -16838,21 +16971,21 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/MealPlans/MealPlanMealConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ShoppingListConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists/ShoppingListConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ShoppingListItemConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/MealPlanning/Infrastructure/Model/Configurations/ShoppingLists/ShoppingListItemConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ShoppingListItemSourceConfiguration",
@@ -16873,7 +17006,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/MealPlanning/Infrastructure/ModuleRegistration.cs",
-      "line": 9
+      "line": 12
+    },
+    {
+      "name": "MealPlanningUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/MealPlanning/Infrastructure/Persistence/MealPlanningUserDataPurgeParticipant.cs",
+      "line": 7
     },
     {
       "name": "MealPlanRepository",
@@ -17069,7 +17209,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Meals/Application/Commands/CreateMeal/CreateMealCommandHandler.cs",
-      "line": 16
+      "line": 15
     },
     {
       "name": "CreateMealCommandValidator",
@@ -17118,7 +17258,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Meals/Application/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
-      "line": 18
+      "line": 17
     },
     {
       "name": "RepeatMealCommandValidator",
@@ -17272,7 +17412,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Application/DependencyInjection.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "MealMappings",
@@ -17461,7 +17601,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Meals/Application/Services/MealReadService.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "SatietyLevelValidator",
@@ -17471,11 +17611,25 @@
       "line": 5
     },
     {
+      "name": "IMealAchievementEvaluationRequest",
+      "kind": "interface",
+      "role": "Request",
+      "path": "Modules/Meals/Contracts/Meals/Common/IMealAchievementEvaluationRequest.cs",
+      "line": 4
+    },
+    {
       "name": "IMealActivityReadService",
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Meals/Contracts/Meals/Common/IMealActivityReadService.cs",
       "line": 4
+    },
+    {
+      "name": "IMealDailyCalorieReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Meals/Contracts/Meals/Common/IMealDailyCalorieReadService.cs",
+      "line": 6
     },
     {
       "name": "IMealExportReadService",
@@ -17485,18 +17639,11 @@
       "line": 5
     },
     {
-      "name": "IMealFavoriteReadService",
+      "name": "IMealNutritionStatisticsReadService",
       "kind": "interface",
       "role": "Service",
-      "path": "Modules/Meals/Contracts/Meals/Common/IMealFavoriteReadService.cs",
-      "line": 5
-    },
-    {
-      "name": "IMealProductNutritionReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Meals/Contracts/Meals/Common/IMealProductNutritionReadService.cs",
-      "line": 5
+      "path": "Modules/Meals/Contracts/Meals/Common/IMealNutritionStatisticsReadService.cs",
+      "line": 6
     },
     {
       "name": "MealQueryFilters",
@@ -17520,10 +17667,10 @@
       "line": 4
     },
     {
-      "name": "MealFavoriteMealModel",
+      "name": "MealDailyCalories",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealFavoriteMealModel.cs",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealDailyCalories.cs",
       "line": 2
     },
     {
@@ -17534,10 +17681,10 @@
       "line": 4
     },
     {
-      "name": "MealProductNutritionReadModel",
+      "name": "MealNutritionStatisticsBucket",
       "kind": "record",
       "role": "Other",
-      "path": "Modules/Meals/Contracts/Meals/Models/MealProductNutritionReadModel.cs",
+      "path": "Modules/Meals/Contracts/Meals/Models/MealNutritionStatisticsBucket.cs",
       "line": 2
     },
     {
@@ -17552,7 +17699,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Meals/Domain/Entities/Meals/Meal.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "MealAiItem",
@@ -17685,7 +17832,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Meals/Infrastructure/MealsModuleRegistration.cs",
-      "line": 7
+      "line": 10
     },
     {
       "name": "MealAiItemConfiguration",
@@ -17706,7 +17853,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Meals/Infrastructure/Model/Configurations/Meals/MealConfiguration.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "MealItemConfiguration",
@@ -17723,11 +17870,32 @@
       "line": 4
     },
     {
+      "name": "MealDailyCalorieReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealDailyCalorieReadService.cs",
+      "line": 7
+    },
+    {
+      "name": "MealNutritionStatisticsReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs",
+      "line": 11
+    },
+    {
       "name": "MealRepository",
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Meals/Infrastructure/Persistence/Meals/MealRepository.cs",
-      "line": 11
+      "line": 12
+    },
+    {
+      "name": "MealsUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Meals/Infrastructure/Persistence/MealsUserDataPurgeParticipant.cs",
+      "line": 6
     },
     {
       "name": "MealsPresentationServiceCollectionExtensions",
@@ -18182,7 +18350,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Notifications/Application/Commands/MarkNotificationRead/MarkNotificationReadCommandHandler.cs",
-      "line": 13
+      "line": 12
     },
     {
       "name": "RemoveWebPushSubscriptionCommand",
@@ -18532,14 +18700,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Notifications/Domain/Entities/Notifications/Notification.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "WebPushSubscription",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Notifications/Domain/Entities/Notifications/WebPushSubscription.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "NotificationId",
@@ -18560,7 +18728,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Notifications/Infrastructure/Model/NotificationConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "NotificationsPersistenceModelRegistration",
@@ -18588,7 +18756,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Notifications/Infrastructure/Model/WebPushSubscriptionConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ModuleRegistration",
@@ -19400,14 +19568,14 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Application/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "ProductUsdaLinkService",
       "kind": "class",
       "role": "Service",
       "path": "Modules/Products/Application/Services/ProductUsdaLinkService.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "RecentProductReadService",
@@ -19429,13 +19597,6 @@
       "role": "Service",
       "path": "Modules/Products/Contracts/Products/Common/IProductOverviewReadService.cs",
       "line": 5
-    },
-    {
-      "name": "IProductUsdaLinkService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Products/Contracts/Products/Common/IProductUsdaLinkService.cs",
-      "line": 4
     },
     {
       "name": "ProductOverviewReadItem",
@@ -19477,7 +19638,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Products/Domain/Entities/Products/Product.cs",
-      "line": 10
+      "line": 8
     },
     {
       "name": "FoodQualityGrade",
@@ -19536,11 +19697,18 @@
       "line": 6
     },
     {
+      "name": "FavoriteProductSourceReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Products/Infrastructure/FavoriteProductSourceReadService.cs",
+      "line": 9
+    },
+    {
       "name": "ProductConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Products/Infrastructure/Model/Configurations/Products/ProductConfiguration.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "ProductsPersistenceModelRegistration",
@@ -19578,11 +19746,18 @@
       "line": 8
     },
     {
+      "name": "ProductsUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Products/Infrastructure/Persistence/ProductsUserDataPurgeParticipant.cs",
+      "line": 7
+    },
+    {
       "name": "ProductsModuleRegistration",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Products/Infrastructure/ProductsModuleRegistration.cs",
-      "line": 8
+      "line": 12
     },
     {
       "name": "ProductLookupService",
@@ -19750,7 +19925,7 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/RecentItems/Domain/Entities/Recents/RecentItem.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "RecentItemType",
@@ -19771,7 +19946,7 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/RecentItems/Infrastructure/Model/Configurations/RecentItems/RecentItemConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecentItemsPersistenceModelRegistration",
@@ -19785,7 +19960,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/RecentItems/Infrastructure/ModuleRegistration.cs",
-      "line": 6
+      "line": 9
     },
     {
       "name": "PostCommitRecentItemUsageRecorder",
@@ -19800,6 +19975,13 @@
       "role": "Repository",
       "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItems/RecentItemRepository.cs",
       "line": 8
+    },
+    {
+      "name": "RecentItemsUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/RecentItems/Infrastructure/Persistence/RecentItemsUserDataPurgeParticipant.cs",
+      "line": 6
     },
     {
       "name": "IRecipeCommentReadModelRepository",
@@ -20009,14 +20191,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/RecipeCommunity/Domain/Entities/Recipes/RecipeComment.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "RecipeLike",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/RecipeCommunity/Domain/Entities/Social/RecipeLike.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "RecipeCommentId",
@@ -20037,14 +20219,14 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/RecipeCommunity/Infrastructure/Model/Configurations/RecipeSocial/RecipeCommentConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecipeLikeConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/RecipeCommunity/Infrastructure/Model/Configurations/RecipeSocial/RecipeLikeConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecipeCommunityPersistenceModelRegistration",
@@ -20653,14 +20835,21 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Recipes/Domain/Entities/Recipes/Recipe.cs",
-      "line": 9
+      "line": 8
     },
     {
       "name": "RecipeIngredient",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Recipes/Domain/Entities/Recipes/RecipeIngredient.cs",
-      "line": 7
+      "line": 6
+    },
+    {
+      "name": "RecipeIngredientProductSnapshot",
+      "kind": "record",
+      "role": "Entity",
+      "path": "Modules/Recipes/Domain/Entities/Recipes/RecipeIngredientProductSnapshot.cs",
+      "line": 8
     },
     {
       "name": "RecipeStep",
@@ -20719,18 +20908,25 @@
       "line": 5
     },
     {
+      "name": "FavoriteRecipeSourceReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Recipes/Infrastructure/FavoriteRecipeSourceReadService.cs",
+      "line": 9
+    },
+    {
       "name": "RecipeConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeConfiguration.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "RecipeIngredientConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Recipes/Infrastructure/Model/Configurations/Recipes/RecipeIngredientConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "RecipeStepConfiguration",
@@ -20768,11 +20964,18 @@
       "line": 9
     },
     {
+      "name": "RecipesUserDataPurgeParticipant",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Recipes/Infrastructure/Persistence/RecipesUserDataPurgeParticipant.cs",
+      "line": 7
+    },
+    {
       "name": "RecipesModuleRegistration",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Recipes/Infrastructure/RecipesModuleRegistration.cs",
-      "line": 8
+      "line": 12
     },
     {
       "name": "RecipeAccessService",
@@ -21174,11 +21377,39 @@
       "line": 4
     },
     {
+      "name": "IUsdaMealNutritionReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Usda/Application/Abstractions/Common/IUsdaMealNutritionReadService.cs",
+      "line": 5
+    },
+    {
+      "name": "IUsdaProductLinkService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Usda/Application/Abstractions/Common/IUsdaProductLinkService.cs",
+      "line": 5
+    },
+    {
+      "name": "IUsdaProductSuggestionReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Usda/Application/Abstractions/Common/IUsdaProductSuggestionReadService.cs",
+      "line": 4
+    },
+    {
       "name": "UsdaErrors",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Usda/Application/Abstractions/Common/UsdaErrors.cs",
       "line": 5
+    },
+    {
+      "name": "UsdaMealProductNutritionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Usda/Application/Abstractions/Models/UsdaMealProductNutritionReadModel.cs",
+      "line": 2
     },
     {
       "name": "LinkProductToUsdaFoodCommand",
@@ -21192,7 +21423,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Usda/Application/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "UnlinkProductFromUsdaFoodCommand",
@@ -21214,13 +21445,6 @@
       "role": "Service",
       "path": "Modules/Usda/Application/Common/IUsdaFoodReadService.cs",
       "line": 5
-    },
-    {
-      "name": "IUsdaProductSuggestionReadService",
-      "kind": "interface",
-      "role": "Service",
-      "path": "Modules/Usda/Application/Common/IUsdaProductSuggestionReadService.cs",
-      "line": 4
     },
     {
       "name": "DependencyInjection",
@@ -21297,7 +21521,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Usda/Application/Services/UsdaDailyMicronutrientReadService.cs",
-      "line": 11
+      "line": 9
     },
     {
       "name": "UsdaFoodReadService",
@@ -21311,7 +21535,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Usda/Application/Services/UsdaProductSuggestionReadService.cs",
-      "line": 6
+      "line": 5
     },
     {
       "name": "DailyMicronutrientModel",
@@ -21731,7 +21955,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/DeleteUser/DeleteUserCommandHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "DeleteUserCommandValidator",
@@ -21850,7 +22074,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-      "line": 16
+      "line": 14
     },
     {
       "name": "UpdateUserCommandValidator",
@@ -22273,6 +22497,13 @@
       "line": 6
     },
     {
+      "name": "IUserDataPurgeParticipant",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Common/IUserDataPurgeParticipant.cs",
+      "line": 6
+    },
+    {
       "name": "IUserDietologistProfileReadService",
       "kind": "interface",
       "role": "Service",
@@ -22301,6 +22532,13 @@
       "line": 7
     },
     {
+      "name": "IUserProfileImageService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserProfileImageService.cs",
+      "line": 5
+    },
+    {
       "name": "IUserProfileReadService",
       "kind": "interface",
       "role": "Service",
@@ -22312,6 +22550,13 @@
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Users/Contracts/Users/Common/IUserRoleMembershipService.cs",
+      "line": 4
+    },
+    {
+      "name": "IUserSessionRevocationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Users/Contracts/Users/Common/IUserSessionRevocationService.cs",
       "line": 4
     },
     {
@@ -22588,6 +22833,20 @@
       "line": 2
     },
     {
+      "name": "DesiredWaistCm",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/DesiredWaistCm.cs",
+      "line": 4
+    },
+    {
+      "name": "DesiredWeightKg",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "Modules/Users/Domain.Contracts/ValueObjects/DesiredWeightKg.cs",
+      "line": 4
+    },
+    {
       "name": "UserId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -22726,20 +22985,6 @@
       "role": "Event",
       "path": "Modules/Users/Domain/Events/UserRestoredDomainEvent.cs",
       "line": 5
-    },
-    {
-      "name": "DesiredWaistCm",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Users/Domain/ValueObjects/DesiredWaistCm.cs",
-      "line": 4
-    },
-    {
-      "name": "DesiredWeightKg",
-      "kind": "record struct",
-      "role": "ValueObject",
-      "path": "Modules/Users/Domain/ValueObjects/DesiredWeightKg.cs",
-      "line": 4
     },
     {
       "name": "GenderCode",
@@ -23530,14 +23775,14 @@
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Wearables/Domain/Entities/Wearables/WearableConnection.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "WearableSyncEntry",
       "kind": "class",
       "role": "Entity",
       "path": "Modules/Wearables/Domain/Entities/Wearables/WearableSyncEntry.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "WearableDataType",
@@ -23586,14 +23831,14 @@
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Wearables/Infrastructure/Model/Configurations/Wearables/WearableConnectionConfiguration.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "WearableSyncEntryConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "Modules/Wearables/Infrastructure/Model/Configurations/Wearables/WearableSyncEntryConfiguration.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WearablesPersistenceModelRegistration",
@@ -23614,7 +23859,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Wearables/Infrastructure/Persistence/EfWearableTransactionRunner.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "WearableConnectionRepository",
@@ -24006,7 +24251,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/WeeklyGoals/Infrastructure/Persistence/EfWeeklyGoalTransactionRunner.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "WeeklyGoalRepository",
@@ -24251,6 +24496,20 @@
       "kind": "interface",
       "role": "Other",
       "path": "Shared/FoodDiary.Authentication.Contracts/Authentication/Abstractions/IAdminSsoCodeStore.cs",
+      "line": 2
+    },
+    {
+      "name": "AuthenticationInputLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Authentication.Contracts/Authentication/Common/AuthenticationInputLimits.cs",
+      "line": 2
+    },
+    {
+      "name": "IPasswordHasher",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Authentication.Contracts/Authentication/Common/IPasswordHasher.cs",
       "line": 2
     },
     {
@@ -25327,6 +25586,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IFavoriteProductSourceReadService",
+      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteProducts/Common/IFavoriteProductSourceReadService.cs",
+      "implementation": "FavoriteProductSourceReadService",
+      "implementationPath": "Modules/Products/Infrastructure/FavoriteProductSourceReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IFavoriteRecipeReadService",
       "interfacePath": "Modules/Favorites/Contracts/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs",
       "implementation": "FavoriteRecipeReadService",
@@ -25338,6 +25604,13 @@
       "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
       "implementation": "FavoriteRecipeRepository",
       "implementationPath": "Modules/Favorites/Infrastructure/Persistence/FavoriteRecipes/FavoriteRecipeRepository.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IFavoriteRecipeSourceReadService",
+      "interfacePath": "Modules/Favorites/Application/Abstractions/FavoriteRecipes/Common/IFavoriteRecipeSourceReadService.cs",
+      "implementation": "FavoriteRecipeSourceReadService",
+      "implementationPath": "Modules/Recipes/Infrastructure/FavoriteRecipeSourceReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25387,6 +25660,13 @@
       "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetCleanupService.cs",
       "implementation": "ImageAssetCleanupService",
       "implementationPath": "Modules/Images/Application/Services/ImageAssetCleanupService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IImageAssetOwnershipService",
+      "interfacePath": "Modules/Images/Application/Abstractions/Common/IImageAssetOwnershipService.cs",
+      "implementation": "ImageAssetOwnershipService",
+      "implementationPath": "Modules/Images/Infrastructure/Persistence/Images/ImageAssetOwnershipService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25551,6 +25831,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IMealDailyCalorieReadService",
+      "interfacePath": "Modules/Meals/Contracts/Meals/Common/IMealDailyCalorieReadService.cs",
+      "implementation": "MealDailyCalorieReadService",
+      "implementationPath": "Modules/Meals/Infrastructure/Persistence/Meals/MealDailyCalorieReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IMealExportReadService",
       "interfacePath": "Modules/Meals/Contracts/Meals/Common/IMealExportReadService.cs",
       "implementation": "MealExportReadService",
@@ -25565,6 +25852,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IMealNutritionStatisticsReadService",
+      "interfacePath": "Modules/Meals/Contracts/Meals/Common/IMealNutritionStatisticsReadService.cs",
+      "implementation": "MealNutritionStatisticsReadService",
+      "implementationPath": "Modules/Meals/Infrastructure/Persistence/Meals/MealNutritionStatisticsReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IMealPlanReadService",
       "interfacePath": "Modules/MealPlanning/Application/MealPlans/Common/IMealPlanReadService.cs",
       "implementation": "MealPlanReadService",
@@ -25576,13 +25870,6 @@
       "interfacePath": "Modules/MealPlanning/Application/Abstractions/MealPlans/Common/IMealPlanRepository.cs",
       "implementation": "MealPlanRepository",
       "implementationPath": "Modules/MealPlanning/Infrastructure/Persistence/MealPlans/MealPlanRepository.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IMealProductNutritionReadService",
-      "interfacePath": "Modules/Meals/Contracts/Meals/Common/IMealProductNutritionReadService.cs",
-      "implementation": "MealProductNutritionReadService",
-      "implementationPath": "Modules/Meals/Application/Services/MealProductNutritionReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25734,7 +26021,7 @@
     },
     {
       "interface": "IPasswordHasher",
-      "interfacePath": "Modules/Identity/Application/Abstractions/Authentication/Common/IPasswordHasher.cs",
+      "interfacePath": "Shared/FoodDiary.Authentication.Contracts/Authentication/Common/IPasswordHasher.cs",
       "implementation": "PasswordHasher",
       "implementationPath": "Modules/Identity/Infrastructure/Services/PasswordHasher.cs",
       "confidence": "naming-convention"
@@ -25765,13 +26052,6 @@
       "interfacePath": "Modules/Products/Application/Abstractions/Products/Common/IProductRepository.cs",
       "implementation": "ProductRepository",
       "implementationPath": "Modules/Products/Infrastructure/Persistence/Products/ProductRepository.cs",
-      "confidence": "naming-convention"
-    },
-    {
-      "interface": "IProductUsdaLinkService",
-      "interfacePath": "Modules/Products/Contracts/Products/Common/IProductUsdaLinkService.cs",
-      "implementation": "ProductUsdaLinkService",
-      "implementationPath": "Modules/Products/Application/Services/ProductUsdaLinkService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26000,7 +26280,7 @@
     },
     {
       "interface": "IUsdaProductSuggestionReadService",
-      "interfacePath": "Modules/Usda/Application/Common/IUsdaProductSuggestionReadService.cs",
+      "interfacePath": "Modules/Usda/Application/Abstractions/Common/IUsdaProductSuggestionReadService.cs",
       "implementation": "UsdaProductSuggestionReadService",
       "implementationPath": "Modules/Usda/Application/Services/UsdaProductSuggestionReadService.cs",
       "confidence": "naming-convention"
@@ -26115,6 +26395,13 @@
       "interfacePath": "Modules/Users/Contracts/Users/Common/IUserNotificationProfileService.cs",
       "implementation": "UserNotificationProfileService",
       "implementationPath": "Modules/Users/Application/Services/UserNotificationProfileService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IUserProfileImageService",
+      "interfacePath": "Modules/Users/Contracts/Users/Common/IUserProfileImageService.cs",
+      "implementation": "UserProfileImageService",
+      "implementationPath": "Modules/Images/Infrastructure/UserProfileImageService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26817,21 +27104,21 @@
       "implementation": "FavoriteMealReadService",
       "lifetime": "Scoped",
       "path": "Modules/Favorites/Application/DependencyInjection.cs",
-      "line": 20
+      "line": 19
     },
     {
       "service": "IFavoriteProductReadService",
       "implementation": "FavoriteProductReadService",
       "lifetime": "Scoped",
       "path": "Modules/Favorites/Application/DependencyInjection.cs",
-      "line": 23
+      "line": 22
     },
     {
       "service": "IFavoriteRecipeReadService",
       "implementation": "FavoriteRecipeReadService",
       "lifetime": "Scoped",
       "path": "Modules/Favorites/Application/DependencyInjection.cs",
-      "line": 24
+      "line": 23
     },
     {
       "service": "IGamificationReadService",
@@ -26953,25 +27240,39 @@
       "line": 13
     },
     {
+      "service": "IImageAssetOwnershipService",
+      "implementation": "ImageAssetOwnershipService",
+      "lifetime": "Scoped",
+      "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
+      "line": 14
+    },
+    {
+      "service": "IUserProfileImageService",
+      "implementation": "UserProfileImageService",
+      "lifetime": "Scoped",
+      "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
+      "line": 15
+    },
+    {
       "service": "IImageAssetRepository",
       "implementation": "ImageAssetRepository",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 12
+      "line": 17
     },
     {
       "service": "IImageObjectDeletionOutbox",
       "implementation": "ImageObjectDeletionOutbox",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 15
+      "line": 20
     },
     {
       "service": "IImageObjectDeletionOutboxProcessor",
       "implementation": "ImageObjectDeletionOutboxProcessor",
       "lifetime": "Scoped",
       "path": "Modules/Images/Infrastructure/DependencyInjection.cs",
-      "line": 16
+      "line": 21
     },
     {
       "service": "ILessonReadService",
@@ -27034,35 +27335,35 @@
       "implementation": "MealReadService",
       "lifetime": "Scoped",
       "path": "Modules/Meals/Application/DependencyInjection.cs",
-      "line": 16
+      "line": 17
     },
     {
       "service": "IMealActivityReadService",
       "implementation": "MealActivityReadService",
       "lifetime": "Scoped",
       "path": "Modules/Meals/Application/DependencyInjection.cs",
-      "line": 20
+      "line": 21
     },
     {
       "service": "IMealExportReadService",
       "implementation": "MealExportReadService",
       "lifetime": "Scoped",
       "path": "Modules/Meals/Application/DependencyInjection.cs",
-      "line": 21
+      "line": 22
     },
     {
-      "service": "IMealProductNutritionReadService",
+      "service": "IUsdaMealNutritionReadService",
       "implementation": "MealProductNutritionReadService",
       "lifetime": "Scoped",
       "path": "Modules/Meals/Application/DependencyInjection.cs",
-      "line": 22
+      "line": 23
     },
     {
       "service": "IMealNutritionService",
       "implementation": "MealNutritionService",
       "lifetime": "Scoped",
       "path": "Modules/Meals/Application/DependencyInjection.cs",
-      "line": 23
+      "line": 24
     },
     {
       "service": "INotificationCleanupService",
@@ -27163,7 +27464,7 @@
       "line": 18
     },
     {
-      "service": "IProductUsdaLinkService",
+      "service": "IUsdaProductLinkService",
       "implementation": "ProductUsdaLinkService",
       "lifetime": "Scoped",
       "path": "Modules/Products/Application/DependencyInjection.cs",

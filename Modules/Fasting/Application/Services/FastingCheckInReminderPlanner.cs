@@ -7,7 +7,9 @@ internal static class FastingCheckInReminderPlanner {
     public static IReadOnlyList<string> GetDueReferenceIds(
         FastingOccurrence occurrence,
         IReadOnlyList<FastingCheckIn>? checkIns,
-        DateTime nowUtc) {
+        DateTime nowUtc,
+        int reminderHours,
+        int followUpReminderHours) {
         if (HasExistingCheckIn(occurrence, checkIns)) {
             return [];
         }
@@ -18,8 +20,8 @@ internal static class FastingCheckInReminderPlanner {
         }
 
         return [.. new[] {
-                occurrence.User.FastingCheckInReminderHours,
-                occurrence.User.FastingCheckInFollowUpReminderHours,
+                reminderHours,
+                followUpReminderHours,
             }
             .Distinct()
             .Order()

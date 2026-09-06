@@ -1,4 +1,3 @@
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -12,7 +11,6 @@ public sealed class RecommendationComment : AggregateRoot<RecommendationCommentI
     public string Text { get; private set; } = string.Empty;
 
     public Recommendation Recommendation { get; private set; } = null!;
-    public User AuthorUser { get; private set; } = null!;
 
     private RecommendationComment() {
     }

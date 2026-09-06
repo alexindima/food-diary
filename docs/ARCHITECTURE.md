@@ -234,3 +234,23 @@ changes accompany this physical move.
 One shared DbContext, ChangeTracker, unit of work and migration history remain intentional. Module adapter access is reviewed in `docs/architecture/persistence-capabilities.json` and checked against current Roslyn source evidence by `PersistenceCapabilityTests`. New entity access, writes, tracked queries and context escape APIs require an explicit review. Adapters with SQL/ChangeTracker/context access also carry a source fingerprint, so an existing Database permission cannot silently authorize new SQL.
 
 This is a source guardrail, not a runtime authorization boundary or a proof about dynamic reflection. Authentication and tenant predicates remain in the existing use cases and queries. Start new simple adapters with owner-scoped sets when that preserves transactions; Hydration is the verified pilot. Preserve aggregate invariants before extending this pattern elsewhere.
+
+## Owner lifecycle and transaction entry
+
+ADR 0030 refines the remaining shared-context boundaries: Users coordinates
+owner-side purge participants; Recipes reads immutable product snapshots; Products
+and Recipes keep scalar foreign keys with unchanged relational mappings. Meals
+supplies TDEE daily calories independently of Dashboard. Top-level transaction
+runners reject pending caller changes and existing transactions. The module graph
+records direct owner-contract references alongside Application API edges.
+ADR 0031 removes the previously acknowledged combined cycles. See
+`docs/adr/0030-owner-lifecycle-and-transaction-boundaries.md` for scope and invariants.
+
+## Contract and aggregate isolation
+
+ADR 0031 completes the contract-cycle and foreign-navigation follow-up to ADR 0030.
+The combined Application/service-contract graph is acyclic. Foreign domain links are
+scalar IDs; immutable snapshots and no-tracking joins supply display/nutrition data.
+Meals owns nutrition aggregation. FD0015/FD0016 enforce module EF ownership and exact
+reviewed technical escapes during compilation. The database, FK behavior and public
+API remain shared/compatible. See `docs/adr/0031-acyclic-contracts-and-scalar-aggregate-links.md`.

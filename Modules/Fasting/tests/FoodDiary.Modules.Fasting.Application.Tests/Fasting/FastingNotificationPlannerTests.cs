@@ -22,12 +22,12 @@ public sealed class FastingNotificationPlannerTests {
             FixedNow.AddHours(-21),
             sequenceNumber: 1,
             targetHours: 36);
-        AttachNavigation(occurrence, plan, user);
+        AttachNavigation(occurrence, plan);
 
         IReadOnlyList<string> referenceIds = FastingCheckInReminderPlanner.GetDueReferenceIds(
             occurrence,
             checkIns: null,
-            FixedNow);
+            FixedNow, user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours);
 
         Assert.Equal(
             [
@@ -49,12 +49,12 @@ public sealed class FastingNotificationPlannerTests {
             sequenceNumber: 1,
             targetHours: 36);
         var checkIn = FastingCheckIn.Create(occurrence.Id, user.Id, 3, 3, 3, ["ok"], notes: null, FixedNow);
-        AttachNavigation(occurrence, plan, user);
+        AttachNavigation(occurrence, plan);
 
         IReadOnlyList<string> referenceIds = FastingCheckInReminderPlanner.GetDueReferenceIds(
             occurrence,
             [checkIn],
-            FixedNow);
+            FixedNow, user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours);
 
         Assert.Empty(referenceIds);
     }
@@ -70,12 +70,12 @@ public sealed class FastingNotificationPlannerTests {
             FixedNow.AddHours(1),
             sequenceNumber: 1,
             targetHours: 36);
-        AttachNavigation(occurrence, plan, user);
+        AttachNavigation(occurrence, plan);
 
         IReadOnlyList<string> referenceIds = FastingCheckInReminderPlanner.GetDueReferenceIds(
             occurrence,
             checkIns: null,
-            FixedNow);
+            FixedNow, user.FastingCheckInReminderHours, user.FastingCheckInFollowUpReminderHours);
 
         Assert.Empty(referenceIds);
     }
@@ -91,7 +91,7 @@ public sealed class FastingNotificationPlannerTests {
             FixedNow.AddHours(-25),
             sequenceNumber: 1,
             targetHours: 16);
-        AttachNavigation(occurrence, plan, user);
+        AttachNavigation(occurrence, plan);
 
         IReadOnlyList<FastingWindowNotificationPlan> plans =
             FastingIntermittentNotificationPlanner.GetDueNotifications(occurrence, plan, FixedNow);
@@ -120,7 +120,7 @@ public sealed class FastingNotificationPlannerTests {
             FixedNow.AddHours(-25),
             sequenceNumber: 1,
             targetHours: 16);
-        AttachNavigation(occurrence, plan, user);
+        AttachNavigation(occurrence, plan);
 
         IReadOnlyList<FastingWindowNotificationPlan> plans =
             FastingIntermittentNotificationPlanner.GetDueNotifications(occurrence, plan, FixedNow);
@@ -139,7 +139,7 @@ public sealed class FastingNotificationPlannerTests {
             FixedNow.AddHours(1),
             sequenceNumber: 1,
             targetHours: 16);
-        AttachNavigation(occurrence, plan, user);
+        AttachNavigation(occurrence, plan);
 
         IReadOnlyList<FastingWindowNotificationPlan> plans =
             FastingIntermittentNotificationPlanner.GetDueNotifications(occurrence, plan, FixedNow);
@@ -147,9 +147,8 @@ public sealed class FastingNotificationPlannerTests {
         Assert.Empty(plans);
     }
 
-    private static void AttachNavigation(FastingOccurrence occurrence, FastingPlan plan, User user) {
+    private static void AttachNavigation(FastingOccurrence occurrence, FastingPlan plan) {
         SetPrivateProperty(occurrence, nameof(FastingOccurrence.Plan), plan);
-        SetPrivateProperty(occurrence, nameof(FastingOccurrence.User), user);
     }
 
     private static void SetPrivateProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) {

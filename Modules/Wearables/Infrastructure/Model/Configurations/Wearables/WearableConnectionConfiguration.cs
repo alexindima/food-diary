@@ -1,3 +1,4 @@
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.ValueObjects;
@@ -37,7 +38,7 @@ internal sealed class WearableConnectionConfiguration : IEntityTypeConfiguration
 
         builder.HasIndex(e => new { e.UserId, e.Provider }).IsUnique();
 
-        builder.HasOne(e => e.User)
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade);

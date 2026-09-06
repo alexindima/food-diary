@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Abstractions.Authentication.Models;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Users;
 
-public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository {
+public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : IUserSessionRevocationService, IRefreshTokenSessionRepository, IRefreshTokenSessionReadModelRepository {
     public async Task<IReadOnlyList<RefreshTokenSessionReadModel>> GetActiveReadModelsAsync(
         UserId userId, CancellationToken cancellationToken = default) =>
         await context.UserRefreshTokenSessions

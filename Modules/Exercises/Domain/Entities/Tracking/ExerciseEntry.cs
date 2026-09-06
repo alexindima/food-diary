@@ -1,5 +1,4 @@
 using System.Globalization;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Primitives;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -19,8 +18,6 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
     public int DurationMinutes { get; private set; }
     public double CaloriesBurned { get; private set; }
     public string? Notes { get; private set; }
-
-    public User User { get; private set; } = null!;
 
     private ExerciseEntry() {
     }

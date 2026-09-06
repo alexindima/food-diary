@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Usda.Common;
 using FluentValidation;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
@@ -19,7 +20,7 @@ public static class DependencyInjection {
             ?? throw new InvalidOperationException($"{nameof(IMealReadService)} must implement {nameof(IFavoriteMealSourceReadService)}."));
         services.AddScoped<IMealActivityReadService, MealActivityReadService>();
         services.AddScoped<IMealExportReadService, MealExportReadService>();
-        services.AddScoped<IMealProductNutritionReadService, MealProductNutritionReadService>();
+        services.AddScoped<IUsdaMealNutritionReadService, MealProductNutritionReadService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         return services;
     }

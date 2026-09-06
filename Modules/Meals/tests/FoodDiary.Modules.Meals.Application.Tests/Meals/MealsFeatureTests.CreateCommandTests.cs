@@ -1,5 +1,5 @@
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Meals.Commands.CreateMeal;
 using FoodDiary.Application.Meals.Common;
@@ -57,7 +57,7 @@ public partial class MealsFeatureTests {
         var user = User.Create("create-meal@example.com", "hash");
         var repository = new CreatingMealRepository();
         var recentItems = new RecordingRecentItemRepository();
-        IAchievementEvaluationOutbox achievementOutbox = Substitute.For<IAchievementEvaluationOutbox>();
+        IMealAchievementEvaluationRequest achievementOutbox = Substitute.For<IMealAchievementEvaluationRequest>();
         var handler = new CreateMealCommandHandler(
             repository,
             new FixedMealNutritionService(new MealNutritionSummary(420, 28, 16, 38, 6, 0)),

@@ -260,7 +260,6 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedNotificationsApplicationDependencies = new(StringComparer.Ordinal) {
-        "FoodDiary.Application.Abstractions.Dietologist.Common.DietologistErrors",
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Notifications",
         "FoodDiary.Application.Abstractions.Users.Common",
@@ -314,6 +313,7 @@ public sealed class BusinessModuleBoundaryTests {
     };
 
     private static readonly HashSet<string> ApprovedMealsApplicationDependencies = new(StringComparer.Ordinal) {
+        "FoodDiary.Application.Abstractions.Usda",
         "FoodDiary.Application.Abstractions.Achievements.Common",
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Meals",
@@ -1071,7 +1071,8 @@ public sealed class BusinessModuleBoundaryTests {
             "Configurations");
 
         string[] unownedConfigurations = [.. Directory
-            .EnumerateFiles(configurationsRoot, "*.cs", SearchOption.TopDirectoryOnly)
+            .EnumerateFiles(Path.GetDirectoryName(configurationsRoot)!, "*.cs", SearchOption.AllDirectories)
+            .Where(path => string.Equals(Path.GetDirectoryName(path), configurationsRoot, StringComparison.OrdinalIgnoreCase))
             .Select(path => Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path))
             .Order(StringComparer.Ordinal)];
 

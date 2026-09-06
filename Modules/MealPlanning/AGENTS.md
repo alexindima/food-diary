@@ -23,7 +23,7 @@ SetNull, Recipe Restrict, list/item/source cascade and scalar source IDs without
 MealPlan/Recipe foreign keys.
 
 The ShoppingList-to-User relationship is deliberately one-way: preserve scalar
-`UserId`, the `ShoppingList.User` navigation and schema-equivalent `WithMany()`;
+`UserId` and schema-equivalent `HasOne<User>().WithMany()`;
 do not restore a central `User.ShoppingLists` CLR navigation.
 
 Focused tests live under tests in this module. Mixed HTTP, host, cleanup and

@@ -48,7 +48,7 @@ public partial class UsersFeatureTests {
         new(
             userContextService,
             passwordHasher,
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            Substitute.For<IUserSessionRevocationService>(),
             TimeProvider.System);
 
     private static SetPasswordCommandHandler CreateSetPasswordHandler(
@@ -57,7 +57,7 @@ public partial class UsersFeatureTests {
         new(
             userContextService,
             passwordHasher,
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            Substitute.For<IUserSessionRevocationService>(),
             TimeProvider.System);
 
     [Fact]
@@ -190,7 +190,7 @@ public partial class UsersFeatureTests {
         var handler = new DeleteUserCommandHandler(
             new SingleUserRepository(user),
             new FixedDateTimeProvider(DateTime.UtcNow),
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            Substitute.For<IUserSessionRevocationService>(),
             new NullAuditLogger());
 
         Result result = await handler.Handle(new DeleteUserCommand(Guid.Empty), CancellationToken.None);
@@ -203,7 +203,7 @@ public partial class UsersFeatureTests {
     public async Task DeleteUserHandler_UsesDateTimeProvider() {
         var user = User.Create("user@example.com", "hash");
         var deletedAtUtc = new DateTime(2026, 2, 23, 10, 30, 0, DateTimeKind.Utc);
-        IRefreshTokenSessionWriteRepository refreshSessions = Substitute.For<IRefreshTokenSessionWriteRepository>();
+        IUserSessionRevocationService refreshSessions = Substitute.For<IUserSessionRevocationService>();
         var handler = new DeleteUserCommandHandler(
             new SingleUserRepository(user),
             new FixedDateTimeProvider(deletedAtUtc),
@@ -225,7 +225,7 @@ public partial class UsersFeatureTests {
         var handler = new DeleteUserCommandHandler(
             new SingleUserRepository(user),
             new FixedDateTimeProvider(DateTime.UtcNow),
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            Substitute.For<IUserSessionRevocationService>(),
             new NullAuditLogger());
 
         Result result = await handler.Handle(new DeleteUserCommand(user.Id.Value), CancellationToken.None);
@@ -240,7 +240,7 @@ public partial class UsersFeatureTests {
         var handler = new DeleteUserCommandHandler(
             CreateAccessCheckedFailingUserContext(userId),
             new FixedDateTimeProvider(DateTime.UtcNow),
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            Substitute.For<IUserSessionRevocationService>(),
             new NullAuditLogger());
 
         Result result = await handler.Handle(new DeleteUserCommand(userId.Value), CancellationToken.None);
@@ -1440,17 +1440,17 @@ public partial class UsersFeatureTests {
                 invitation.ClientUserId.Value,
                 invitation.DietologistUserId?.Value,
                 invitation.DietologistEmail,
-                invitation.ClientUser?.Email ?? "client@example.com",
-                invitation.ClientUser?.FirstName,
-                invitation.ClientUser?.LastName,
-                invitation.ClientUser?.ProfileImage,
-                invitation.ClientUser?.BirthDate,
-                invitation.ClientUser?.Gender,
-                invitation.ClientUser?.HeightCm,
-                invitation.ClientUser?.ActivityLevel ?? ActivityLevel.Moderate,
-                invitation.DietologistUser?.Email,
-                invitation.DietologistUser?.FirstName,
-                invitation.DietologistUser?.LastName,
+                "client@example.com",
+                ClientFirstName: null,
+                ClientLastName: null,
+                ClientProfileImage: null,
+                ClientBirthDate: null,
+                ClientGender: null,
+                ClientHeightCm: null,
+                ActivityLevel.Moderate,
+                DietologistUserEmail: null,
+                DietologistFirstName: null,
+                DietologistLastName: null,
                 invitation.Status,
                 new DietologistPermissionsReadModel(
                     invitation.ShareMeals,

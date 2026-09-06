@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Primitives;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +12,6 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
     public UserId UserId { get; private set; }
     public string Name { get; private set; } = string.Empty;
 
-    public User User { get; private set; } = null!;
     public IReadOnlyCollection<ShoppingListItem> Items => _items.AsReadOnly();
 
     private ShoppingList() {

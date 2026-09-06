@@ -9,3 +9,5 @@ Do not reference central Application.Abstractions, application implementations,
 Infrastructure or HTTP. Public favorite read services and projections belong to
 `Modules/Favorites/Contracts`; foreign applications must not acquire repository
 ports. The central Errors facade is retired; direct callers preserve the existing error contract.
+
+Consumer-owned Result source ports cover Meals, Products and Recipes. Their owners supply scoped source models and original errors; keep foreign aggregates and foreign repository writes out of these contracts.

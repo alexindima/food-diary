@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
@@ -18,7 +19,7 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
-    public async Task MealUser_OneWayRelationship_RetainsSoftDeletedMealsAndCascadesOnPurge() {
+    public async Task MealUser_ScalarForeignKey_RetainsSoftDeletedMealsAndCascadesOnPurge() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"meal-owner-{Guid.NewGuid():N}@example.com", "hash");
         var otherUser = User.Create($"meal-survivor-{Guid.NewGuid():N}@example.com", "hash");
@@ -36,20 +37,22 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         await context.SaveChangesAsync();
         context.ChangeTracker.Clear();
 
-        Meal loaded = await context.Meals.Include(entry => entry.User).SingleAsync(entry => entry.Id == meal.Id);
-        IForeignKey relationship = context.Model.FindEntityType(typeof(Meal))!.FindNavigation(nameof(Meal.User))!.ForeignKey;
+        Meal loaded = await context.Meals.SingleAsync(entry => entry.Id == meal.Id);
+        IForeignKey relationship = context.Model.FindEntityType(typeof(Meal))!.GetForeignKeys().Single(key => key.PrincipalEntityType.ClrType == typeof(User));
         Assert.Multiple(
-            () => Assert.Equal(user.Id, loaded.User.Id),
+            () => Assert.Equal(user.Id, loaded.UserId),
             () => Assert.Null(relationship.PrincipalToDependent),
+            () => Assert.Null(relationship.DependentToPrincipal),
             () => Assert.True(relationship.IsRequired),
             () => Assert.Equal(DeleteBehavior.Cascade, relationship.DeleteBehavior),
             () => Assert.Equal("FK_Meals_Users_UserId", relationship.GetConstraintName()),
             () => Assert.Null(context.Model.FindEntityType(typeof(User))!.FindNavigation("Meals")));
 
-        loaded.User.MarkDeleted(DateTime.UtcNow);
+        User loadedUser = await context.Users.SingleAsync(entry => entry.Id == loaded.UserId);
+        loadedUser.MarkDeleted(DateTime.UtcNow);
         await context.SaveChangesAsync();
         Assert.True(await context.Meals.AnyAsync(entry => entry.Id == meal.Id));
-        loaded.User.Restore();
+        loadedUser.Restore();
         await context.SaveChangesAsync();
         Assert.True(await context.Meals.AnyAsync(entry => entry.Id == meal.Id));
 
@@ -342,7 +345,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         var repository = new MealRepository(context);
 
-        IReadOnlyList<MealProductNutritionReadModel> items = await repository.GetProductNutritionReadModelsAsync(
+        IReadOnlyList<UsdaMealProductNutritionReadModel> items = await repository.GetProductNutritionReadModelsAsync(
             user.Id,
             new DateTime(2026, 5, 2, 23, 30, 0, DateTimeKind.Utc),
             limit: 10);
@@ -360,7 +363,7 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
                 Assert.Null(unlinkedItem.UsdaFdcId);
             });
 
-        IReadOnlyList<MealProductNutritionReadModel> limitedItems = await repository.GetProductNutritionReadModelsAsync(
+        IReadOnlyList<UsdaMealProductNutritionReadModel> limitedItems = await repository.GetProductNutritionReadModelsAsync(
             user.Id,
             new DateTime(2026, 5, 2, 23, 30, 0, DateTimeKind.Utc),
             limit: 1);

@@ -46,16 +46,17 @@ public sealed class DomainCoverageCompletionTests {
 
     [Fact]
     public void EntityNavigationAndPrivateConstructors_AreCoveredForEfOnlyMembers() {
+        var ownerId = UserId.New();
         Recipe recipe = CreateRecipe();
         var mealPlan = MealPlan.CreateForUser(
-            UserId.New(),
+            ownerId,
             name: "Plan",
             description: null,
             DietType.Balanced,
             durationDays: 1,
             targetCaloriesPerDay: null);
         var invitation = DietologistInvitation.Create(
-            UserId.New(),
+            ownerId,
             dietologistEmail: "dietologist@example.com",
             tokenHash: "token",
             expiresAtUtc: DateTime.UtcNow.AddDays(1),
@@ -69,7 +70,7 @@ public sealed class DomainCoverageCompletionTests {
                 ShareProfile: true,
                 ShareFasting: true));
         var fastingSession = FastingSession.Create(
-            UserId.New(),
+            ownerId,
             FastingProtocol.Fast16Eat8,
             plannedDurationHours: 16,
             startedAtUtc: DateTime.UtcNow);
@@ -104,9 +105,9 @@ public sealed class DomainCoverageCompletionTests {
         }
 
         Assert.Multiple(
-            () => Assert.Null(mealPlan.User),
-            () => Assert.Null(invitation.DietologistUser),
-            () => Assert.Null(fastingSession.User),
+            () => Assert.Equal(ownerId, mealPlan.UserId),
+            () => Assert.Null(invitation.DietologistUserId),
+            () => Assert.Equal(ownerId, fastingSession.UserId),
             () => Assert.Equal(BillingProviderNames.YooKassa, webhookEvent.Provider),
             () => Assert.Equal(10, usdaFood.FoodCategoryId),
             () => Assert.Equal("Fruit", usdaFood.FoodCategory));

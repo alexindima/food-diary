@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
@@ -37,11 +36,11 @@ public sealed class AddFavoriteMealCommandHandler(
 
         UserId userId = userIdResult.Value;
         MealId mealId = mealIdResult.Value;
-        FavoriteMealSourceModel? source = await favoriteMealSourceReadService
-            .GetAsync(userId, mealId, cancellationToken)
+        Result<FavoriteMealSourceModel> source = await favoriteMealSourceReadService
+            .GetAccessibleAsync(userId, mealId, cancellationToken)
             .ConfigureAwait(false);
-        if (source is null) {
-            return Result.Failure<FavoriteMealModel>(MealErrors.NotFound(command.MealId));
+        if (source.IsFailure) {
+            return Result.Failure<FavoriteMealModel>(source.Error);
         }
 
         FavoriteMeal? existing = await favoriteMealRepository.GetByMealIdAsync(mealId, userId, cancellationToken).ConfigureAwait(false);
@@ -52,6 +51,6 @@ public sealed class AddFavoriteMealCommandHandler(
         var favorite = FavoriteMeal.Create(userId, mealId, command.Name);
         await favoriteMealRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(favorite.ToModel(source));
+        return Result.Success(favorite.ToModel(source.Value));
     }
 }
