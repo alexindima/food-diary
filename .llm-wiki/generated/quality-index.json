@@ -536,11 +536,11 @@
     },
     {
       "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
-      "nonBlankLines": 178,
+      "nonBlankLines": 177,
       "decisionPoints": 59,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 92.06
+      "structuralRiskScore": 92.04
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-redesign-preview/fasting-redesign-preview.ts",
@@ -2450,11 +2450,11 @@
     },
     {
       "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
-      "nonBlankLines": 178,
+      "nonBlankLines": 177,
       "decisionPoints": 59,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 92.06
+      "structuralRiskScore": 92.04
     },
     {
       "path": "FoodDiary.Analyzers/ParameterNamingAnalyzer.cs",

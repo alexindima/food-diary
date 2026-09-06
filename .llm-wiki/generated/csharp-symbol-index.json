@@ -59,7 +59,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "ParameterNamingAnalyzer",
