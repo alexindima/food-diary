@@ -68,17 +68,17 @@ $repositoryAssessment = $normalizedIntent -match '\b(audit|assessment|evaluate|r
     ($assessmentDimensionCount -ge 3 -or ($explicitRepositoryWideIntent -and $assessmentDimensionCount -ge 2))
 if ($identitySessionIntent) {
     $identitySessionGroundingPaths = @(
-        'FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs'
+        'Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs'
         'Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs'
         'Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs'
         'Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs'
-        'FoodDiary.Infrastructure/Persistence/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs'
-        'FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs'
-        'FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs'
+        'Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs'
+        'Modules/Identity/Presentation/Features/Auth/AuthSessionController.cs'
+        'Modules/Identity/Presentation/Features/Auth/AuthSessionLifecycleController.cs'
         'FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts'
         'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts'
         'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
-        'tests/FoodDiary.Presentation.Api.Tests/AuthSessionLifecycleControllerTests.cs'
+        'Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionLifecycleControllerTests.cs'
     ) | Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) }
     $effectivePaths = @($effectivePaths + $identitySessionGroundingPaths | Sort-Object -Unique)
 }
@@ -123,18 +123,18 @@ if ($databaseIntent) {
     $null = $behavioralIntentTests.Add('tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs')
     $null = $behavioralIntentTests.Add('tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs')
     if ($dashboardIntent) {
-        $null = $behavioralIntentTests.Add('tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs')
-        $null = $behavioralIntentTests.Add('tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs')
+        $null = $behavioralIntentTests.Add('Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs')
+        $null = $behavioralIntentTests.Add('Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs')
     }
 }
 if ($identitySessionIntent) {
     foreach ($sessionTest in @(
-        'tests/FoodDiary.Application.Tests/Authentication/ActiveSessionManagementTests.cs'
-        'tests/FoodDiary.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs'
-        'tests/FoodDiary.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs'
-        'tests/FoodDiary.Infrastructure.Tests/Authentication/JwtTokenGeneratorTests.cs'
+        'Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/ActiveSessionManagementTests.cs'
+        'Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs'
+        'Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs'
+        'Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/JwtTokenGeneratorTests.cs'
         'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
-        'tests/FoodDiary.Presentation.Api.Tests/AuthSessionLifecycleControllerTests.cs'
+        'Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionLifecycleControllerTests.cs'
         'tests/FoodDiary.Presentation.Api.Tests/CurrentRefreshSessionIdModelBinderTests.cs'
         'tests/FoodDiary.Web.Api.Tests/Extensions/SwaggerOperationFilterTests.cs'
         'FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.spec.ts'
@@ -326,11 +326,11 @@ if ($repositoryAssessment) {
         'tests/FoodDiary.ArchitectureTests/SideEffectReliabilityGuardrailTests.cs'
         'tests/FoodDiary.Web.Api.IntegrationTests/RedisIdempotencyConcurrencyIntegrationTests.cs'
         'tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs'
-        'tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs'
-        'tests/FoodDiary.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs'
+        'Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs'
+        'Modules/Billing/tests/FoodDiary.Modules.Billing.Application.Tests/Billing/BillingFeatureTests.WebhookCommandTests.cs'
         'tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs'
         'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/MigrationSafetyIntegrationTests.cs'
-        'tests/FoodDiary.Infrastructure.Tests/Services/BillingGatewayTests.cs'
+        'Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.cs'
         'tests/FoodDiary.Web.Api.Tests/Extensions/RateLimiterOptionsSetupTests.cs'
         'tests/FoodDiary.ArchitectureTests/ContainerSupplyChainGuardrailTests.cs'
         'MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayMessageProcessorTests.cs'
@@ -568,8 +568,8 @@ if ($databaseIntent) {
 }
 if ($identitySessionIntent) {
     $commands += [pscustomobject]@{
-        id = 'session-application-tests'; command = 'dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --filter "FullyQualifiedName~Authentication"'
-        source = 'identity-session-intent'; priority = 'required'; reason = 'session-lifecycle-use-cases'; commandEvidence = 'tests/FoodDiary.Application.Tests/Authentication'
+        id = 'session-application-tests'; command = 'dotnet test Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/FoodDiary.Modules.Identity.Application.Tests.csproj --filter "FullyQualifiedName~Authentication"'
+        source = 'identity-session-intent'; priority = 'required'; reason = 'session-lifecycle-use-cases'; commandEvidence = 'Modules/Identity/tests/FoodDiary.Modules.Identity.Application.Tests/Authentication'
     }
     $commands += [pscustomobject]@{
         id = 'session-provider-tests'; command = 'dotnet test tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj --filter "FullyQualifiedName~PersistenceRepositoryCoverageIntegrationTests"'

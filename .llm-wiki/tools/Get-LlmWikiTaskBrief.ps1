@@ -234,20 +234,20 @@ if ($databaseIntent) {
 }
 if ($identitySessionIntent) {
     $identitySessionGroundingPaths = @(
-        'FoodDiary.Domain/Entities/Users/UserRefreshTokenSession.cs'
+        'Modules/Identity/Domain/Entities/Users/UserRefreshTokenSession.cs'
         'Modules/Identity/Application/Authentication/Services/AuthenticationTokenService.cs'
         'Modules/Identity/Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs'
         'Modules/Identity/Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs'
-        'FoodDiary.Infrastructure/Persistence/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs'
+        'Modules/Identity/Infrastructure/Model/Configurations/Authentication/UserRefreshTokenSessionConfiguration.cs'
         'FoodDiary.Infrastructure/Migrations/20260606024116_AddUserRefreshTokenSessions.cs'
         'FoodDiary.Infrastructure/Migrations/20260612195402_AddPreviousRefreshTokenGrace.cs'
-        'FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs'
-        'FoodDiary.Presentation.Api/Features/Auth/AuthSessionLifecycleController.cs'
+        'Modules/Identity/Presentation/Features/Auth/AuthSessionController.cs'
+        'Modules/Identity/Presentation/Features/Auth/AuthSessionLifecycleController.cs'
         'FoodDiary.Web.Client/src/app/interceptor/auth.interceptor.ts'
         'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts'
         'FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.html'
         'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/PersistenceRepositoryCoverageIntegrationTests.cs'
-        'tests/FoodDiary.Presentation.Api.Tests/AuthSessionLifecycleControllerTests.cs'
+        'Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AuthSessionLifecycleControllerTests.cs'
     ) | Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) }
     if ($callerPathCount -eq 0) {
         # Generic words such as "session" also name fasting and AI concepts.
