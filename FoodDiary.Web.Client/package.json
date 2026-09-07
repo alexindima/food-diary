@@ -139,7 +139,7 @@
         "@types/node": "^26.4.0",
         "@typescript-eslint/eslint-plugin": "^8.68.0",
         "@typescript-eslint/parser": "^8.68.0",
-        "@vitest/coverage-v8": "^4.1.11",
+        "@vitest/coverage-v8": "^5.0.0",
         "angular-eslint": "^22.1.0",
         "baseline-browser-mapping": "^2.11.20",
         "chrome-launcher": "^1.2.1",
@@ -170,6 +170,6 @@
         "stylelint-order": "^8.1.1",
         "stylelint-scss": "^7.2.0",
         "typescript": "6.0.3",
-        "vitest": "^4.1.11"
+        "vitest": "^5.0.0"
     }
 }
