@@ -13,7 +13,7 @@ RUN sed -i "s/__BUILD_VERSION__/${BUILD_VERSION}/g" src/environments/environment
 
 RUN npx ng build fd-ui-kit && npm run build:prod && npm run build:admin && npm run build:storybook
 
-FROM nginx:alpine@sha256:db35bfc6b2951e7f8a72db5db120288c127ffaeeb4a6d4b95a26fead017d5913
+FROM nginx:alpine@sha256:72ba65eb42c10344912a84ff42408db7d34f2feb642204570ab8fc5ffd29f1d3
 
 COPY --from=build /app/dist/browser/. /usr/share/nginx/html
 COPY --from=build /app/dist-admin /usr/share/nginx/html-admin
