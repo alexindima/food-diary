@@ -6,6 +6,37 @@ using Testcontainers.PostgreSql;
 namespace FoodDiary.BugTriage.Tests;
 
 public sealed class ReportStoreTests : IAsyncLifetime {
+    [Fact]
+    public async Task RecentReports_ExcludeExpiredOrderNewestFirstAndMapCompletion() {
+        Assert.Empty(await _store.GetRecentAsync(Now, CancellationToken.None));
+        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddMinutes(-2), "older", "body", [1]), Now.AddDays(1), CancellationToken.None);
+        ReportLease lease = Assert.IsType<ReportLease>(await _store.ClaimAsync(Now, TimeSpan.FromMinutes(5), 3, CancellationToken.None));
+        var completion = new ReportCompletion(ReportOutcome.DraftReady, "Verified regression", "https://github.com/example/repo/pull/2");
+        Assert.True(await _store.CompleteAsync(lease.Id, lease.LeaseToken, completion, Now, CancellationToken.None));
+        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddMinutes(-1), "newer", "body", [1]), Now.AddDays(1), CancellationToken.None);
+        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now, "expired", "body", [1]), Now, CancellationToken.None);
+
+        IReadOnlyList<ReportSummary> reports = await _store.GetRecentAsync(Now, CancellationToken.None);
+
+        Assert.Equal(2, reports.Count);
+        Assert.Multiple(
+            () => Assert.Equal("pending", reports[0].Status),
+            () => Assert.Equal(0, reports[0].Attempt),
+            () => Assert.Null(reports[0].Summary),
+            () => Assert.Null(reports[0].MergeRequestUrl),
+            () => Assert.Equal(new ReportSummary(lease.Id, ReportOutcome.DraftReady, 1, completion.Summary, completion.MergeRequestUrl), reports[1]));
+        for (int index = 0; index < 51; index++) {
+            await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddSeconds(index), "new", "body", RawMime: null), Now.AddDays(1), CancellationToken.None);
+        }
+        Assert.Equal(50, (await _store.GetRecentAsync(Now, CancellationToken.None)).Count);
+    }
+
+    [Fact]
+    public async Task CompleteAsync_RejectsInvalidOutcomeBeforeWriting() {
+        await Assert.ThrowsAsync<ArgumentException>(() => _store.CompleteAsync(Guid.NewGuid(), Guid.NewGuid(),
+            new ReportCompletion("invalid", "summary", MergeRequestUrl: null), Now, CancellationToken.None));
+    }
+
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:17-alpine")
         .WithDatabase("fooddiary_bugtriage").Build();
     private NpgsqlDataSource _dataSource = null!;

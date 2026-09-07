@@ -699,6 +699,27 @@ public sealed class IdempotencyFilterTests {
             () => Assert.Null(context.Result));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task FinalizationRenewalFailure_DoesNotCacheOrReleaseExecutedAction(bool throws) {
+        var store = new RecordingIdempotencyStore(renewResult: false, throwOnFirstRenew: throws);
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext http = CreateHttpContext("POST", "/api/v1/products", "final-renewal", "user");
+        ActionExecutingContext context = CreateActionExecutingContext(http, new EnableIdempotencyAttribute());
+        var executed = new ActionExecutedContext(context, [], new object()) { Result = new OkObjectResult(new { id = 1 }) };
+
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(executed));
+
+        ObjectResult result = Assert.IsType<ObjectResult>(executed.Result);
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status409Conflict, result.StatusCode),
+            () => Assert.Equal("Idempotency.LeaseLost", Assert.IsType<ApiErrorHttpResponse>(result.Value).Error),
+            () => Assert.Equal(0, store.CompleteCalls),
+            () => Assert.Equal(0, store.ReleaseCalls),
+            () => Assert.Equal(1, store.RenewCalls));
+    }
+
     [Fact]
     public async Task OnActionExecutionAsync_WhenFirstHeartbeatThrows_RetriesAndCompletes() {
         var store = new RecordingIdempotencyStore(throwOnFirstRenew: true);

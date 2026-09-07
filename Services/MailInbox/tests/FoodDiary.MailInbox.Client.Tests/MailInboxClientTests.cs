@@ -10,6 +10,24 @@ namespace FoodDiary.MailInbox.Client.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxClientTests {
+    [Theory]
+    [InlineData(null, true)]
+    [InlineData(20, false)]
+    public async Task GetFilteredMessagesAsync_EncodesFiltersAndUsesMetadataKey(int? limit, bool unread) {
+        var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent.Create(Array.Empty<InboundMailMessageSummaryResponse>()),
+        });
+        using var httpClient = new HttpClient(handler) { BaseAddress = new Uri("https://inbox.example.test") };
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
+
+        Assert.Empty(await client.GetFilteredMessagesAsync(limit, " bugs+one@example.test ", "a&b", unread, CancellationToken.None));
+
+        string prefix = limit.HasValue ? "?limit=20&" : "?";
+        Assert.Multiple(
+            () => Assert.Equal("/api/mail-inbox/messages" + prefix + "recipient=bugs%2Bone%40example.test&category=a%26b&unread=" + (unread ? "true" : "false"), handler.Request!.RequestUri!.PathAndQuery),
+            () => Assert.Equal("test-metadata", handler.Request!.Headers.GetValues("X-MailInbox-Api-Key").Single()));
+    }
+
     [Fact]
     public async Task GetMessagesAsync_WhenPayloadContainsAuthenticationProvenance_ReturnsIt() {
         var expected = new InboundMailMessageSummaryResponse(

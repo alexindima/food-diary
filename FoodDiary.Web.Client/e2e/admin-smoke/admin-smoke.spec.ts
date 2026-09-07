@@ -1,5 +1,9 @@
 import { expect, type Page, test } from '@playwright/test';
 
+import type { AdminDashboardOverview } from '../../projects/fooddiary-admin/src/app/features/admin-dashboard/models/admin-dashboard-overview.data';
+
+const DAY_MS = 86_400_000;
+
 test.describe('admin smoke', () => {
     test('redirects unauthenticated user to unauthorized page', async ({ page }) => {
         await page.goto('/users');
@@ -11,6 +15,7 @@ test.describe('admin smoke', () => {
 
     test('renders admin pages for authenticated admin with mocked api', async ({ page }) => {
         const consoleErrors: string[] = [];
+        page.on('pageerror', error => consoleErrors.push(error.message));
         page.on('console', message => {
             if (message.type() === 'error') {
                 consoleErrors.push(message.text());
@@ -21,10 +26,18 @@ test.describe('admin smoke', () => {
 
         await page.goto('/');
 
-        await expect(page.getByText('Total users')).toBeVisible();
-        await expect(page.getByText('AI total tokens')).toBeVisible();
+        await expect(page.getByText('Total accounts', { exact: true })).toBeVisible();
+        await expect(page.getByText('42', { exact: true })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'AI tokens', exact: true })).toBeVisible();
+        await expect(page.getByText('Successful payments', { exact: true })).toBeVisible();
 
-        await page.getByRole('link', { name: 'Accounts' }).click();
+        const refreshed = page.waitForResponse(response => response.url().includes('/admin/dashboard/overview?'));
+        await page.getByRole('button', { name: 'Refresh', exact: true }).click();
+        const response = await refreshed;
+        expect(response.ok()).toBe(true);
+        await expect(page.getByText('Total accounts', { exact: true })).toBeVisible();
+
+        await page.getByRole('link', { name: 'Accounts', exact: true }).click();
         await expect(page).toHaveURL(/\/users$/);
         await expect(page.getByRole('textbox', { name: 'Search users' })).toBeVisible();
         await expect(page.getByText('Total users: 1')).toBeVisible();
@@ -52,16 +65,17 @@ async function authenticateAdminAsync(page: Page): Promise<void> {
 }
 
 async function mockAdminApiAsync(page: Page): Promise<void> {
-    await page.route('**/api/v1/admin/dashboard', async route => {
-        await route.fulfill(jsonResponse({ totalUsers: 42, activeUsers: 30, premiumUsers: 10 }));
+    await page.route('**/api/v1/admin/dashboard/overview?*', async route => {
+        const params = new URL(route.request().url()).searchParams;
+        const from = params.get('from') ?? '';
+        const to = params.get('to') ?? '';
+        expect(from).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(to).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        await route.fulfill(jsonResponse(createDashboardOverview(from, to)));
     });
 
     await page.route('**/api/v1/admin/ai-usage/summary', async route => {
         await route.fulfill(jsonResponse({ totalTokens: 12345, inputTokens: 7000, outputTokens: 5345 }));
-    });
-
-    await page.route('**/api/v1/admin/telemetry/fasting**', async route => {
-        await route.fulfill(jsonResponse(null));
     });
 
     await page.route('**/api/v1/admin/users**', async route => {
@@ -76,6 +90,31 @@ async function mockAdminApiAsync(page: Page): Promise<void> {
     await page.route('**/api/v1/admin/email-templates**', async route => {
         await route.fulfill(jsonResponse([createEmailTemplate()]));
     });
+}
+
+function createDashboardOverview(from: string, to: string): AdminDashboardOverview {
+    const fromUtc = `${from}T00:00:00.000Z`;
+    const toUtc = new Date(Date.parse(`${to}T00:00:00Z`) + DAY_MS).toISOString();
+    return {
+        fromUtc,
+        toUtc,
+        interval: 'day',
+        period: {
+            fromUtc,
+            toUtc,
+            metrics: {
+                registrations: 5,
+                payingUsers: 2,
+                aiTokens: 12345,
+                trend: [{ date: fromUtc, registrations: 5, aiTokens: 12345, revenue: [{ currency: 'USD', gross: 25 }] }],
+            },
+            currencies: [{ currency: 'USD', gross: 25, net: 25, refunds: 0, chargebacks: 0, successfulPayments: 2 }],
+        },
+        previous: null,
+        totalUsersNow: 42,
+        premiumUsersNow: 10,
+        pendingReportsNow: 0,
+    };
 }
 
 function createUsersPage(): Record<string, unknown> {

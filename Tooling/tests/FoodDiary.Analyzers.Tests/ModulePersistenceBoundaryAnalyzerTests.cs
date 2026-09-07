@@ -84,8 +84,17 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
     public async Task NonModuleCompositionRootIsOutsideScopeAsync() =>
         Assert.Empty(await AnalyzeAsync("db.Add(new User()); db.SaveChanges();", assembly: "FoodDiary.Web.Api"));
 
+    [Fact]
+    public async Task Fingerprints_IgnoreMalformedNonModuleAndDuplicateEntries() {
+        const string body = "db.SaveChanges();";
+        string hash = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(Source(body).Trim())));
+        const string path = "Modules/Products/Infrastructure/Probe.cs";
+        string content = $"\n# comment\ninvalid\n{hash} Services/Probe.cs\n{hash} {path}\n{new string('0', 64)} {path}\n";
+        Assert.Empty(await AnalyzeAsync(body, fingerprintContent: content));
+    }
+
     private static async Task<ImmutableArray<Diagnostic>> AnalyzeAsync(
-        string body, string? reviewedBody = null, string assembly = "FoodDiary.Modules.Products.Infrastructure") {
+        string body, string? reviewedBody = null, string assembly = "FoodDiary.Modules.Products.Infrastructure", string? fingerprintContent = null) {
         var references = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")!).Split(Path.PathSeparator)
             .Select(path => MetadataReference.CreateFromFile(path)).Cast<MetadataReference>().ToList();
         foreach (string owner in new[] { "Users", "Products" }) {
@@ -112,6 +121,9 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
             string hash = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(Source(reviewedBody).Trim())));
             files = [new InMemoryAdditionalText("C:/FD/docs/architecture/persistence-technical-sources.txt",
                 hash + " Modules/Products/Infrastructure/Probe.cs")];
+        }
+        if (fingerprintContent is not null) {
+            files = [new InMemoryAdditionalText("C:/FD/docs/architecture/persistence-technical-sources.txt", fingerprintContent)];
         }
         return await compilation.WithAnalyzers([new ModulePersistenceBoundaryAnalyzer()], new AnalyzerOptions(files))
             .GetAnalyzerDiagnosticsAsync().ConfigureAwait(false);

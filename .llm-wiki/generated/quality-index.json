@@ -42029,8 +42029,9 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Features/Admin/AdminDashboardController.cs",
       "line": 16,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminDashboardOverviewTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ],
@@ -42394,8 +42395,9 @@
       "role": "Controller",
       "path": "Modules/Dashboard/Presentation/Features/Dashboard/DashboardController.cs",
       "line": 18,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminDashboardOverviewTests.cs",
         "Modules/Dashboard/tests/FoodDiary.Modules.Dashboard.Presentation.Tests/DashboardControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs",

@@ -14,6 +14,30 @@ namespace FoodDiary.Application.Tests.Images;
 
 [ExcludeFromCodeCoverage]
 public class ImagesFeatureTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task CleanupOrphans_PropagatesCancellationAndStopsBeforeNextCandidate(bool cancelInsideBatch) {
+        var repository = new FakeImageAssetRepository();
+        var first = ImageAsset.Create(UserId.New(), "images/first.jpg", "https://cdn/first.jpg");
+        var second = ImageAsset.Create(UserId.New(), "images/second.jpg", "https://cdn/second.jpg");
+        await repository.AddAsync(first, CancellationToken.None);
+        await repository.AddAsync(second, CancellationToken.None);
+        using var cancellation = new CancellationTokenSource();
+        IImageAssetCleanupBatch batch = Substitute.For<IImageAssetCleanupBatch>();
+        batch.DeleteUnusedAsync(Arg.Any<ImageAssetId>(), cancellation.Token).Returns(async _ => {
+            await cancellation.CancelAsync();
+            return await Task.FromCanceled<bool>(cancellation.Token);
+        });
+        var service = new ImageAssetCleanupService(repository, new FakeImageObjectDeletionOutbox(), NullLogger<ImageAssetCleanupService>.Instance, batch);
+        if (!cancelInsideBatch) { await cancellation.CancelAsync(); }
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.CleanupOrphansAsync(DateTime.UtcNow.AddYears(1), 10, cancellation.Token));
+
+        Assert.Equal(cancelInsideBatch ? 1 : 0, batch.ReceivedCalls().Count());
+        Assert.NotNull(await repository.GetByIdAsync(second.Id, CancellationToken.None));
+    }
+
     [Fact]
     public async Task ImageAbstraction_DefaultOverloads_ForwardSemanticDefaults() {
         var storage = new DefaultMethodImageStorageService();

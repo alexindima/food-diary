@@ -11,6 +11,48 @@ namespace FoodDiary.BugTriage.Tests;
 
 public sealed class MailInboxBugSourceTests {
     [Fact]
+    public async Task Scan_RejectsNonAdvancingCursorInsteadOfLooping() {
+        IMailInboxExportClient client = Substitute.For<IMailInboxExportClient>();
+        var entry = new MailInboxExportEntryResponse(Guid.NewGuid(), DateTimeOffset.UtcNow, ContentAvailable: false);
+        client.GetPageAsync(Arg.Any<string>(), Arg.Any<DateTimeOffset?>(), Arg.Any<Guid?>(), Arg.Any<CancellationToken>()).Returns([entry]);
+        var source = new MailInboxBugSource(client, Substitute.For<IBugReportStore>(), Microsoft.Extensions.Options.Options.Create(new BugTriageOptions()));
+        int seen = 0;
+
+        InvalidOperationException error = await Assert.ThrowsAsync<InvalidOperationException>(async () => {
+            await foreach (ImportedReport report in source.ReadNewAsync(CancellationToken.None).ConfigureAwait(false)) {
+                Assert.Equal(entry.Id, report.SourceMessageId);
+                seen++;
+            }
+        });
+
+        Assert.Equal(2, seen);
+        Assert.Contains("cursor did not advance", error.Message, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("", "Unparseable email", "")]
+    [InlineData("Subject: HTML\r\nContent-Type: text/html\r\n\r\n<p>bug</p>", "HTML", "<p>bug</p>")]
+    [InlineData("MIME-Version: 1.0\r\nContent-Type: application/octet-stream\r\n\r\nabc", "(no subject)", "")]
+    public async Task Scan_HandlesMalformedHtmlAndNonTextMime(string raw, string subject, string body) {
+        IMailInboxExportClient client = Substitute.For<IMailInboxExportClient>();
+        var entry = new MailInboxExportEntryResponse(Guid.NewGuid(), DateTimeOffset.UtcNow, ContentAvailable: true);
+        client.GetPageAsync(Arg.Any<string>(), beforeReceivedAtUtc: null, beforeId: null, Arg.Any<CancellationToken>()).Returns([entry]);
+        client.GetPageAsync(Arg.Any<string>(), entry.ReceivedAtUtc, entry.Id, Arg.Any<CancellationToken>()).Returns([]);
+        byte[] mime = Encoding.UTF8.GetBytes(raw);
+        client.GetMimeAsync(entry.Id, Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(mime);
+        var source = new MailInboxBugSource(client, Substitute.For<IBugReportStore>(), Microsoft.Extensions.Options.Options.Create(new BugTriageOptions()));
+        var results = new List<ImportedReport>();
+
+        await foreach (ImportedReport report in source.ReadNewAsync(CancellationToken.None)) { results.Add(report); }
+
+        ImportedReport actual = Assert.Single(results);
+        Assert.Multiple(
+            () => Assert.Equal(subject, actual.Subject),
+            () => Assert.Equal(body, actual.TextBody),
+            () => Assert.Equal(mime, actual.RawMime));
+    }
+
+    [Fact]
     public async Task ScanCapsNewImports_AndResumesAfterPersistedReceipts() {
         IMailInboxExportClient client = Substitute.For<IMailInboxExportClient>();
         IBugReportStore store = Substitute.For<IBugReportStore>();

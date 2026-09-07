@@ -144,7 +144,12 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("tests/FoodDiary.Infrastructure.IntegrationTests/StockStoreTests.cs", true)]
     [InlineData("Modules/Inventory/tests/FoodDiary.Modules.Shipping.Infrastructure.IntegrationTests/StockStoreTests.cs", false)]
     [InlineData("Modules/Inventory/tests/FoodDiary.Modules.Inventory.Infrastructure.IntegrationTestsExtra/StockStoreTests.cs", false)]
-    public async Task SearchAsync_PreservesIntegrationTestSelectorAfterModuleRelocation(string path, bool expectedMatch) {
+    [InlineData("Tooling/tests/FoodDiary.Analyzers.Tests/StockStoreTests.cs", true, "tests/FoodDiary.Analyzers.Tests/")]
+    [InlineData("Shared/tests/FoodDiary.Domain.Primitives.Tests/StockStoreTests.cs", true, "tests/FoodDiary.Domain.Primitives.Tests/")]
+    [InlineData("Shared/FoodDiary.Email.PersistenceModel/StockStoreTests.cs", true, "FoodDiary.Infrastructure/Persistence/Email/")]
+    [InlineData("Shared/FoodDiary.Email.PersistenceModel/Configurations/StockStoreTests.cs", true, "FoodDiary.Infrastructure/Persistence/Configurations/Email/")]
+    public async Task SearchAsync_PreservesIntegrationTestSelectorAfterModuleRelocation(string path, bool expectedMatch,
+        string selectorPrefix = "tests/FoodDiary.Infrastructure.IntegrationTests/") {
         string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
         System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
         // A synthetic role tests selector equivalence without any benchmark vocabulary.
@@ -154,6 +159,7 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
               "score":300,"identityScope":"file","changeTypes":["Tests"],"recordTypes":["code"],
               "pathPrefixes":["tests/FoodDiary.Infrastructure.IntegrationTests/"],"pathSuffixes":["Tests.cs"]}]
             """);
+        policy["structuralRoleBoosts"]![0]!["pathPrefixes"] = System.Text.Json.JsonSerializer.SerializeToNode<string[]>([selectorPrefix]);
         await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
         await using SqliteConnection connection = new($"Data Source={_databasePath}");
         await connection.OpenAsync();

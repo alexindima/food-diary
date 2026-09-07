@@ -103,7 +103,8 @@ public sealed class MailInboxExportClientTests {
 
     private static MailInboxExportClient CreateClient(HttpClient http) => new(http,
         Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions {
-            MetadataApiKey = "metadata-test-key", ContentApiKey = "content-test-key",
+            MetadataApiKey = "metadata-test-key",
+            ContentApiKey = "content-test-key",
         }));
 
     [ExcludeFromCodeCoverage]

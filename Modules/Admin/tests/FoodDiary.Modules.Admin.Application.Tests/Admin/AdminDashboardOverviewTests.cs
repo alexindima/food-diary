@@ -10,6 +10,23 @@ namespace FoodDiary.Application.Tests.Admin;
 [ExcludeFromCodeCoverage]
 public sealed class AdminDashboardOverviewTests {
     [Fact]
+    public async Task Overview_PropagatesCurrentSummaryFailure() {
+        IAdminDashboardMetricsReader reader = Substitute.For<IAdminDashboardMetricsReader>();
+        IAdminBillingReadRepository billing = Substitute.For<IAdminBillingReadRepository>();
+        IAdminDashboardReadService dashboard = Substitute.For<IAdminDashboardReadService>();
+        reader.GetAsync(Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<bool>(), Arg.Any<CancellationToken>()).Returns(new AdminDashboardMetrics(0, 0, 0, []));
+        billing.GetRevenueSummaryAsync(Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(new AdminBillingRevenueSummaryReadModel(DateTime.UnixEpoch, DateTime.UnixEpoch, []));
+        var error = new Error("dashboard.unavailable", "Unavailable", ErrorKind.Internal);
+        dashboard.GetSummaryAsync(1, Arg.Any<CancellationToken>()).Returns(Result.Failure<AdminDashboardSummaryModel>(error));
+        var service = new FoodDiary.Application.Admin.Services.AdminDashboardOverviewReadService(reader, billing, dashboard, new Clock());
+
+        Result<AdminDashboardOverviewModel> result = await service.GetAsync(fromDate: null, toDate: null, allTime: true, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(error, result.Error);
+    }
+
+    [Fact]
     public async Task Overview_UsesInclusiveUiDatesAndEqualPreviousRange() {
         IAdminDashboardMetricsReader reader = Substitute.For<IAdminDashboardMetricsReader>();
         IAdminBillingReadRepository billing = Substitute.For<IAdminBillingReadRepository>();

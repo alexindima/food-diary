@@ -10,6 +10,17 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserCleanupServiceTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Constructor_RejectsMissingOrDuplicatePurgeOrdering(bool duplicate) {
+        IUserDataPurgeParticipant[] participants = duplicate
+            ? [Substitute.For<IUserDataPurgeParticipant>(), Substitute.For<IUserDataPurgeParticipant>()] : [];
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() =>
+            new UserCleanupService(dbContext: null!, participants, NullLogger<UserCleanupService>.Instance));
+        Assert.Contains("unique ordering", error.Message, StringComparison.Ordinal);
+    }
+
     [Fact]
     public async Task CleanupDeletedUsersAsync_WithNonPositiveBatchSize_Throws() {
         var service = new UserCleanupService(dbContext: null!, participants: [Substitute.For<IUserDataPurgeParticipant>()], logger: NullLogger<UserCleanupService>.Instance);

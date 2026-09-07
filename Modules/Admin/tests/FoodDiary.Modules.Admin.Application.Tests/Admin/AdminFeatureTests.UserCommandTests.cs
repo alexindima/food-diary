@@ -91,8 +91,10 @@ public partial class AdminFeatureTests {
         await revocation.DidNotReceiveWithAnyArgs().RevokeAllAsync(default, default, default);
     }
 
-    [Fact]
-    public async Task SetAdminUserPasswordHandler_WithEmptyUserId_ReturnsValidationFailure() {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task SetAdminUserPasswordHandler_WithEmptyUserOrActorId_ReturnsValidationFailure(bool emptyActor) {
         User user = CreateUserWithRoles("password-empty-user@example.com", []);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         IUserSessionRevocationService revocation = Substitute.For<IUserSessionRevocationService>();
@@ -103,7 +105,7 @@ public partial class AdminFeatureTests {
             Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Audit.IAuditLogger>());
 
         Result result = await handler.Handle(
-            new SetAdminUserPasswordCommand(Guid.Empty, UserId.New().Value, "NewPassword123!"),
+            new SetAdminUserPasswordCommand(emptyActor ? user.Id.Value : Guid.Empty, emptyActor ? Guid.Empty : UserId.New().Value, "NewPassword123!"),
             CancellationToken.None);
 
         ResultAssert.Failure(result);

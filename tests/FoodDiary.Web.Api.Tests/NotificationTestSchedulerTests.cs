@@ -11,6 +11,64 @@ namespace FoodDiary.Web.Api.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class NotificationTestSchedulerTests {
     [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task DispatchFailure_DoesNotStopFollowingNotification(bool canceledWithoutShutdown) {
+        var completed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        int calls = 0;
+        ITestNotificationDeliveryDispatcher dispatcher = Substitute.For<ITestNotificationDeliveryDispatcher>();
+        dispatcher.DispatchAsync(Arg.Any<Guid>(), Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(_ => {
+            if (Interlocked.Increment(ref calls) == 1) {
+                return Task.FromException(canceledWithoutShutdown ? new OperationCanceledException() : new InvalidOperationException("provider failed"));
+            }
+            completed.TrySetResult();
+            return Task.CompletedTask;
+        });
+        await using ServiceProvider provider = CreateServiceProvider(dispatcher);
+        var clock = new DispatchClock();
+        using var scheduler = new NotificationTestScheduler(provider.GetRequiredService<IServiceScopeFactory>(), clock,
+            MsOptions.Create(new NotificationTestSchedulerOptions { MaxPending = 2 }), NullLogger<NotificationTestScheduler>.Instance);
+        await scheduler.ScheduleAsync(Guid.NewGuid(), 1, NotificationTypes.FastingCompleted, CancellationToken.None);
+        await scheduler.ScheduleAsync(Guid.NewGuid(), 1, NotificationTypes.FastingCompleted, CancellationToken.None);
+        clock.Now = clock.Now.AddSeconds(2);
+
+        await scheduler.StartAsync(CancellationToken.None);
+        await completed.Task.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+        await scheduler.StopAsync(CancellationToken.None);
+
+        Assert.Equal(2, calls);
+        Assert.True(scheduler.ExecuteTask!.IsCompletedSuccessfully);
+    }
+
+    [Fact]
+    public async Task ShutdownDuringDispatch_CompletesWithoutEscapingCancellation() {
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        ITestNotificationDeliveryDispatcher dispatcher = Substitute.For<ITestNotificationDeliveryDispatcher>();
+        dispatcher.DispatchAsync(Arg.Any<Guid>(), Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(call => {
+            entered.TrySetResult();
+            return Task.Delay(Timeout.InfiniteTimeSpan, call.Arg<CancellationToken>());
+        });
+        await using ServiceProvider provider = CreateServiceProvider(dispatcher);
+        var clock = new DispatchClock();
+        using var scheduler = new NotificationTestScheduler(provider.GetRequiredService<IServiceScopeFactory>(), clock,
+            MsOptions.Create(new NotificationTestSchedulerOptions { MaxPending = 1 }), NullLogger<NotificationTestScheduler>.Instance);
+        await scheduler.ScheduleAsync(Guid.NewGuid(), 1, NotificationTypes.FastingCompleted, CancellationToken.None);
+        clock.Now = clock.Now.AddSeconds(2);
+        await scheduler.StartAsync(CancellationToken.None);
+        await entered.Task.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+
+        await scheduler.StopAsync(CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+
+        Assert.True(scheduler.ExecuteTask!.IsCompletedSuccessfully);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class DispatchClock : TimeProvider {
+        public DateTimeOffset Now { get; set; } = new(2030, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        public override DateTimeOffset GetUtcNow() => Now;
+    }
+
+    [Theory]
     [InlineData("", NotificationTypes.FastingCompleted)]
     [InlineData(" unknown ", NotificationTypes.FastingCompleted)]
     [InlineData(NotificationTypes.FastingCompleted, NotificationTypes.FastingCompleted)]
