@@ -1,37 +1,3 @@
-@use 'variables' as variables;
-
-.toolbar__field {
-    color: var(--fd-color-slate-600);
-}
-
-.toolbar__field select {
-    min-height: 2.5rem;
-    padding: 0 var(--fd-space-sm);
-    border: var(--fd-border-strong);
-    border-radius: var(--fd-radius-md);
-    background: var(--fd-color-white);
-    color: var(--fd-color-gray-900);
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    line-height: inherit;
-
-    &:where(:focus-visible) {
-        outline: none;
-        border-color: var(--fd-color-primary-500);
-        box-shadow: var(--fd-shadow-focus);
-    }
-}
-
-.mail-layout {
-    grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
-}
-
-.mail-list,
-.mail-details {
-    min-width: 0;
-}
-
 .mail-table {
     width: 100%;
     border-collapse: collapse;
@@ -108,95 +74,25 @@
     color: var(--fd-color-amber-500);
 }
 
-.mail-fields {
-    margin: 0;
+.mail-layout {
+    grid-template-columns: minmax(0, 1fr);
 }
-
-.mail-fields dt {
-    color: var(--fd-color-text-muted);
-    text-transform: uppercase;
-}
-
-.mail-fields dd {
-    margin: 0;
-    overflow-wrap: anywhere;
-}
-
-.mail-verification-warning,
-.dmarc-report__warning {
-    color: var(--fd-color-amber-500);
-    font-weight: var(--fd-font-weight-bold);
-}
-
-.mail-verification-warning {
-    display: block;
-}
-
-.dmarc-report__warning {
-    margin: 0;
-    padding: var(--fd-space-sm);
-    border: var(--fd-border-width) solid var(--fd-color-amber-500);
-    border-radius: var(--fd-radius-md);
-    background: var(--fd-bg-status-warning);
-}
-
-.dmarc-report {
-    padding: var(--fd-space-md);
-    border: var(--fd-border-width) solid var(--fd-color-border-status-success);
-    border-radius: var(--fd-radius-md);
-    background: var(--fd-bg-status-success);
-}
-
-.dmarc-report__header h3 {
-    margin: 0 0 var(--fd-space-xxs);
-}
-
-.dmarc-report__header p {
-    margin: 0;
-    color: var(--fd-color-slate-600);
-}
-
-.dmarc-report__table-wrap {
+.mail-list {
+    min-width: 0;
     overflow-x: auto;
 }
-
-.dmarc-report__table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--fd-color-white);
+.mail-verification-warning {
+    display: block;
+    color: var(--fd-color-amber-500);
 }
-
-.dmarc-report__table th,
-.dmarc-report__table td {
-    padding: var(--fd-space-xs);
-    border-bottom: var(--fd-border-width) solid var(--fd-color-border-status-success);
+.mail-subject {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
     text-align: left;
-    white-space: nowrap;
-}
-
-.dmarc-report__table th {
-    color: var(--fd-color-primary-800);
-    font-size: var(--fd-text-helper-size);
-    text-transform: uppercase;
-}
-
-.mail-body {
-    min-height: 16rem;
-    max-height: 32rem;
-    margin: 0;
-    padding: var(--fd-space-md);
-    overflow: auto;
-    border-radius: var(--fd-radius-md);
-    background: var(--fd-color-gray-900);
-    color: var(--fd-color-slate-50);
-    font-family: var(--fd-font-family-monospace), monospace;
-    font-size: var(--fd-text-body-xs-size);
-    line-height: var(--fd-line-height-base);
-    white-space: pre-wrap;
-}
-
-@media #{variables.$media-desktop-sm} {
-    .mail-layout {
-        grid-template-columns: 1fr;
-    }
+    cursor: pointer;
 }

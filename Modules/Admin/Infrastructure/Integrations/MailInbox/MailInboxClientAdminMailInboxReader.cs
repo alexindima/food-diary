@@ -6,10 +6,14 @@ using FoodDiary.MailInbox.Client.Models;
 namespace FoodDiary.Infrastructure.Integrations.MailInbox;
 
 internal sealed class MailInboxClientAdminMailInboxReader(IMailInboxClient mailInboxClient) : IAdminMailInboxReader {
-    public async Task<IReadOnlyList<AdminMailInboxMessageSummaryModel>> GetMessagesAsync(
-        int limit,
-        CancellationToken cancellationToken) {
-        IReadOnlyList<InboundMailMessageSummaryResponse> messages = await mailInboxClient.GetMessagesAsync(limit, cancellationToken).ConfigureAwait(false);
+    public Task<IReadOnlyList<AdminMailInboxMessageSummaryModel>> GetMessagesAsync(int limit, CancellationToken cancellationToken) =>
+        GetFilteredMessagesAsync(limit, recipient: null, category: null, unread: null, cancellationToken);
+
+    public async Task<IReadOnlyList<AdminMailInboxMessageSummaryModel>> GetFilteredMessagesAsync(
+        int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) {
+        IReadOnlyList<InboundMailMessageSummaryResponse> messages = recipient is null && category is null && unread is null
+            ? await mailInboxClient.GetMessagesAsync(limit, cancellationToken).ConfigureAwait(false)
+            : await mailInboxClient.GetFilteredMessagesAsync(limit, recipient, category, unread, cancellationToken).ConfigureAwait(false);
         return messages.Select(static message => message.ToModel()).ToList();
     }
 

@@ -39,6 +39,21 @@ namespace FoodDiary.Application.Tests.Dashboard;
 [ExcludeFromCodeCoverage]
 public sealed class DashboardSnapshotBuilderTests {
     [Fact]
+    public async Task CreateBuildContextAsync_RejectsPreloadedContextForAnotherUser() {
+        var user = User.Create("dashboard-context@example.com", "hash");
+        IDashboardUserContextService userContextService = Substitute.For<IDashboardUserContextService>();
+        var loader = new DashboardSectionDataLoader(Substitute.For<ISender>(), userContextService,
+            Substitute.For<IFastingReadService>(), Substitute.For<IExerciseEntryReadService>(), Substitute.For<IDashboardReadService>());
+        DashboardSnapshotRequest request = CreateRequest(Guid.NewGuid(), Sections()) with { UserContext = CreateDashboardUserContext(user) };
+
+        Result<DashboardBuildContext> result = await loader.CreateBuildContextAsync(request, CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Contains("must match", result.Error.Message, StringComparison.Ordinal);
+        await userContextService.DidNotReceiveWithAnyArgs().GetAccessibleDashboardUserAsync(default, default);
+    }
+
+    [Fact]
     public async Task CreateBuildContextAsync_WithPreloadedUser_DoesNotReloadProfile() {
         var user = User.Create("dashboard-preloaded@example.com", "hash");
         DashboardUserContextModel userContext = CreateDashboardUserContext(user);

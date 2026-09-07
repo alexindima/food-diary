@@ -32,7 +32,8 @@ public static class BugTriageInfrastructureExtensions {
             .Validate(static o => System.Net.Mail.MailAddress.TryCreate(o.Recipient, out _) &&
                 o.PollInterval >= TimeSpan.FromSeconds(10) && o.PollInterval <= TimeSpan.FromDays(1) &&
                 o.ImportTimeout >= TimeSpan.FromSeconds(10) && o.ImportTimeout <= TimeSpan.FromHours(1) &&
-                o.ContentRetention >= TimeSpan.FromDays(1) && o.ContentRetention <= TimeSpan.FromDays(90), "Invalid BugTriage settings.")
+                o.ContentRetention >= TimeSpan.FromDays(1) && o.ContentRetention <= TimeSpan.FromDays(90) &&
+                o.MaxConcurrentReports is >= 1 and <= 10 && o.MaxImportsPerPoll is >= 1 and <= 1000, "Invalid BugTriage settings.")
             .ValidateOnStart();
         services.AddOptions<MailInboxClientOptions>().Bind(configuration.GetSection(MailInboxClientOptions.SectionName))
             .Validate(MailInboxClientOptions.HasValidBaseUrl, "A trusted HTTPS MailInbox URL is required.")

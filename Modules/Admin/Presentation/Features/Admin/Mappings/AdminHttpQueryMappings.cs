@@ -128,7 +128,7 @@ public static class AdminHttpQueryMappings {
 
     extension(GetAdminMailInboxMessagesHttpQuery query) {
         public GetAdminMailInboxMessagesQuery ToQuery() {
-            return new GetAdminMailInboxMessagesQuery(query.Limit);
+            return new GetAdminMailInboxMessagesQuery(query.Limit, query.Recipient, query.Category, query.Unread);
         }
     }
 

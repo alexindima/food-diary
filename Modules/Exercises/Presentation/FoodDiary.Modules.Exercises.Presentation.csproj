@@ -5,8 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Asp.Versioning.Mvc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Exercises.Application.Abstractions.csproj" />

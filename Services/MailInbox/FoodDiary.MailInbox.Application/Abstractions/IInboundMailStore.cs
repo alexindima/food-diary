@@ -14,6 +14,12 @@ public interface IInboundMailStore {
 
     Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(int limit, CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<InboundMailMessageSummary>> GetFilteredMessagesAsync(
+        int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) =>
+        recipient is null && category is null && unread is null
+            ? GetMessagesAsync(limit, cancellationToken)
+            : throw new NotSupportedException("Filtered message queries are not implemented.");
+
     Task<InboundMailMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken);
 
     Task<bool> MarkAsReadAsync(Guid id, DateTimeOffset readAtUtc, CancellationToken cancellationToken);

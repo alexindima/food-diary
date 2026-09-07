@@ -3,6 +3,21 @@ namespace FoodDiary.Development.Mcp.Tests;
 [ExcludeFromCodeCoverage]
 [Collection("PowerShell Wiki process")]
 public sealed class PowerShellWikiCommandExecutorTests {
+    [Theory]
+    [InlineData(0)]
+    [InlineData(8192)]
+    [InlineData(9000)]
+    public async Task ReadBoundedAsync_ReturnsCompleteOutputAtOrBelowLimit(int length) {
+        var executor = new PowerShellWikiCommandExecutor(maxConcurrentCommands: 1, maxOutputCharacters: 9000);
+        System.Reflection.MethodInfo method = typeof(PowerShellWikiCommandExecutor).GetMethod(
+            "ReadBoundedAsync", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        string expected = new('я', length);
+        using StringReader reader = new(expected);
+        var operation = (Task<string>)method.Invoke(executor, [reader, "standard output", CancellationToken.None])!;
+
+        Assert.Equal(expected, await operation);
+    }
+
     [Fact]
     public async Task ExecuteAsync_WhenWikiCommandFails_RecordsFailureAndThrows() {
         WikiRuntimeTelemetry telemetry = new();

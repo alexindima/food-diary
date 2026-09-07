@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Recipes/Domain/FoodDiary.Modules.Recipes.Domain.csproj" />
     <ProjectReference Include="..\..\Shared\FoodDiary.Domain.Primitives\FoodDiary.Domain.Primitives.csproj" />
@@ -21,10 +28,6 @@
     <ProjectReference Include="..\..\Modules\Billing\Domain\FoodDiary.Modules.Billing.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\ContentReports\Domain\FoodDiary.Modules.ContentReports.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Gamification\Domain\FoodDiary.Modules.Gamification.Domain.csproj" />
-    <PackageReference Include="coverlet.collector" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" />
     <ProjectReference Include="..\..\Modules\Wearables\Domain\FoodDiary.Modules.Wearables.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Favorites\Domain\FoodDiary.Modules.Favorites.Domain.csproj" />
     <ProjectReference Include="..\..\Modules\Dietologist\Domain\FoodDiary.Modules.Dietologist.Domain.csproj" />

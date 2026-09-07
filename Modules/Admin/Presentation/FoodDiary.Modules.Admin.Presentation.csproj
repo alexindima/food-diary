@@ -5,12 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Mvc" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj" />
     <ProjectReference Include="../../Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj" />
     <ProjectReference Include="../../Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Asp.Versioning.Mvc" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />

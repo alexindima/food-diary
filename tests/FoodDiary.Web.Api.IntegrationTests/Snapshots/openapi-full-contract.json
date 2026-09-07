@@ -910,6 +910,73 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/dashboard/overview",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminDashboardOverviewHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminDashboardOverviewHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminDashboardOverviewHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "AllTime",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean",
+              "Default": "false"
+            },
+            {
+              "Name": "From",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
+              "Name": "To",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/email-templates",
       "Operations": [
         {
@@ -1394,6 +1461,12 @@
           ],
           "QueryParameters": [
             {
+              "Name": "Category",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
@@ -1402,6 +1475,18 @@
               "Default": "50",
               "Minimum": 1,
               "Maximum": 200
+            },
+            {
+              "Name": "Recipient",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Unread",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
             }
           ],
           "PathParameters": [
@@ -16420,6 +16505,147 @@
       ]
     },
     {
+      "Name": "AdminDashboardMetricsHttpResponse",
+      "Properties": [
+        {
+          "Name": "aiTokens",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int64",
+          "Nullable": false
+        },
+        {
+          "Name": "payingUsers",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "registrations",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "trend",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/AdminDashboardTrendHttpResponse"
+        }
+      ]
+    },
+    {
+      "Name": "AdminDashboardOverviewHttpResponse",
+      "Properties": [
+        {
+          "Name": "fromUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "interval",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "pendingReportsNow",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "period",
+          "Required": false,
+          "Reference": "#/components/schemas/AdminDashboardPeriodHttpResponse",
+          "Nullable": false
+        },
+        {
+          "Name": "premiumUsersNow",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "previous",
+          "Required": false,
+          "Reference": "#/components/schemas/AdminDashboardPeriodHttpResponse",
+          "Nullable": false
+        },
+        {
+          "Name": "toUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "totalUsersNow",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "AdminDashboardPeriodHttpResponse",
+      "Properties": [
+        {
+          "Name": "currencies",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/AdminBillingRevenueCurrencyHttpResponse"
+        },
+        {
+          "Name": "fromUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "metrics",
+          "Required": false,
+          "Reference": "#/components/schemas/AdminDashboardMetricsHttpResponse",
+          "Nullable": false
+        },
+        {
+          "Name": "toUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "AdminDashboardRevenuePointHttpResponse",
+      "Properties": [
+        {
+          "Name": "currency",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "gross",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": false
+        }
+      ]
+    },
+    {
       "Name": "AdminDashboardSummaryHttpResponse",
       "Properties": [
         {
@@ -16463,6 +16689,39 @@
           "Type": "integer",
           "Format": "int32",
           "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "AdminDashboardTrendHttpResponse",
+      "Properties": [
+        {
+          "Name": "aiTokens",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int64",
+          "Nullable": false
+        },
+        {
+          "Name": "date",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "registrations",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "revenue",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/AdminDashboardRevenuePointHttpResponse"
         }
       ]
     },

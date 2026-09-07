@@ -7,6 +7,36 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class ProjectFileConventionTests {
     [Fact]
+    public void ItemGroups_DoNotMixPackageAndProjectReferences() {
+        string[] violations = [.. Directory
+            .GetFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)
+            .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
+            .SelectMany(FindMixedReferenceGroups)
+            .Order(StringComparer.Ordinal)];
+
+        Assert.True(
+            violations.Length == 0,
+            $"PackageReference and ProjectReference items must use separate ItemGroups.{Environment.NewLine}" +
+            string.Join(Environment.NewLine, violations));
+    }
+
+    private static IEnumerable<string> FindMixedReferenceGroups(string projectPath) {
+        var document = XDocument.Load(projectPath, LoadOptions.SetLineInfo);
+
+        return document
+            .Descendants()
+            .Where(static element => element.Name.LocalName.Equals("ItemGroup", StringComparison.Ordinal))
+            .Where(static group => group.Elements().Any(element => element.Name.LocalName.Equals("PackageReference", StringComparison.Ordinal)) &&
+                                   group.Elements().Any(element => element.Name.LocalName.Equals("ProjectReference", StringComparison.Ordinal)))
+            .Select(group => {
+                string relativePath = Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, projectPath)
+                    .Replace(Path.DirectorySeparatorChar, '/');
+                int line = ((IXmlLineInfo)group).LineNumber;
+                return $"{relativePath}:{line.ToString(CultureInfo.InvariantCulture)}: Mixed PackageReference and ProjectReference items.";
+            });
+    }
+
+    [Fact]
     public void UnconditionalProjectReferences_AreGroupedInSingleItemGroup() {
         string[] violations = [.. Directory
             .GetFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)

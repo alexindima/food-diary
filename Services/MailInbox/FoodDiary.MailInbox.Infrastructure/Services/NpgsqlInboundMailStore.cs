@@ -384,11 +384,21 @@ public sealed class NpgsqlInboundMailStore(
         }
     }
 
-    public async Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(int limit, CancellationToken cancellationToken) {
+    public Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(int limit, CancellationToken cancellationToken) =>
+        GetFilteredMessagesAsync(limit, recipient: null, category: null, unread: null, cancellationToken);
+
+    public async Task<IReadOnlyList<InboundMailMessageSummary>> GetFilteredMessagesAsync(
+        int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) {
         const string sql = """
                            select id, from_address, to_recipients_json::text, subject, status, read_at_utc, received_at_utc,
                                envelope_from_address, is_trusted_relay
                            from mailinbox_messages
+                           where (@recipient::jsonb is null or to_recipients_json @> @recipient)
+                             and (@unread::boolean is null or (read_at_utc is null) = @unread)
+                             and (@category::text is null or @category = case when
+                                 to_recipients_json @> '["dmarc@fooddiary.club"]'::jsonb
+                                 or subject ilike '%DMARC%' or subject ilike '%Report Domain:%'
+                                 then 'dmarc-report' else 'general' end)
                            order by received_at_utc desc
                            limit @limit;
                            """;
@@ -399,6 +409,9 @@ public sealed class NpgsqlInboundMailStore(
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("limit", limit);
+                command.Parameters.AddWithValue("recipient", NpgsqlDbType.Jsonb, recipient is null ? DBNull.Value : JsonSerializer.Serialize(new[] { recipient.Trim().ToLowerInvariant() }));
+                command.Parameters.AddWithValue("category", NpgsqlDbType.Text, (object?)category ?? DBNull.Value);
+                command.Parameters.AddWithValue("unread", NpgsqlDbType.Boolean, (object?)unread ?? DBNull.Value);
                 NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
                 await using (reader.ConfigureAwait(false)) {
                     while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {

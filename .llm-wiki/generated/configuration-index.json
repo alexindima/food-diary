@@ -3,7 +3,7 @@
   "summary": {
     "optionTypes": 60,
     "configurationFiles": 8,
-    "configurationKeys": 268,
+    "configurationKeys": 270,
     "environmentVariables": 188
   },
   "optionTypes": [
@@ -133,6 +133,8 @@
       "properties": [
         "ContentRetention",
         "ImportTimeout",
+        "MaxConcurrentReports",
+        "MaxImportsPerPoll",
         "PollInterval",
         "Recipient"
       ],
@@ -937,6 +939,8 @@
       "path": "Services/BugTriage/FoodDiary.BugTriage.WebApi/appsettings.json",
       "keys": [
         "BugTriage:ContentRetention",
+        "BugTriage:MaxConcurrentReports",
+        "BugTriage:MaxImportsPerPoll",
         "BugTriage:PollInterval",
         "BugTriage:Recipient",
         "Logging:LogLevel:Default",

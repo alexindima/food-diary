@@ -1,0 +1,102 @@
+<div class="fd-row fd-wrap fd-gap-md fd-align-end fd-justify-between">
+    <div class="admin-dashboard__muted">
+        {{ 'ADMIN_OVERVIEW.SELECTED' | translate }}: {{ data().fromUtc | date: 'yyyy-MM-dd' : 'UTC' }} —
+        {{ lastDate(data().toUtc) }}
+        @if (data().previous; as previous) {
+            <div>
+                {{ 'ADMIN_OVERVIEW.COMPARISON' | translate }}: {{ previous.fromUtc | date: 'yyyy-MM-dd' : 'UTC' }} —
+                {{ lastDate(previous.toUtc) }}
+            </div>
+        }
+    </div>
+    @if (currencyOptions().length > 0) {
+        <fd-ui-select
+            [label]="'ADMIN_OVERVIEW.CURRENCY' | translate"
+            [value]="selectedCurrency()"
+            [options]="currencyOptions()"
+            (valueChange)="currency.set($event)"
+        />
+    }
+</div>
+<div class="admin-dashboard__metrics fd-grid fd-gap-md">
+    @for (card of cards(); track card.key) {
+        <fd-ui-card>
+            <div class="fd-grid fd-gap-xs">
+                <span class="admin-dashboard__muted">{{ `ADMIN_OVERVIEW.${card.key}` | translate }}</span>
+                <strong class="fd-ui-metric-md">{{ card.value | number: card.digits }} {{ card.currency }}</strong>
+                <small class="admin-dashboard__muted">{{ card.hint | translate }}</small>
+                @if (data().previous) {
+                    <small class="admin-dashboard__muted"
+                        >{{ 'ADMIN_OVERVIEW.PREVIOUS' | translate }}: {{ card.previous | number: card.digits }} {{ card.currency }}</small
+                    >
+                }
+            </div>
+        </fd-ui-card>
+    }
+</div>
+<div class="admin-dashboard__charts fd-grid fd-gap-md">
+    <fd-ui-card>
+        <h2 class="fd-ui-title-sm">{{ 'ADMIN_OVERVIEW.REVENUE_TREND' | translate }} {{ selectedCurrency() }}</h2>
+        <fd-ui-line-chart
+            xAxisLabelLayout="stacked"
+            [minValue]="0"
+            [showAxisLabels]="true"
+            [showGrid]="true"
+            [showArea]="true"
+            [emptyLabel]="'ADMIN_OVERVIEW.EMPTY' | translate"
+            [points]="revenuePoints()"
+            [title]="'ADMIN_OVERVIEW.GROSS' | translate"
+        />
+        <a routerLink="/billing">{{ 'ADMIN_OVERVIEW.OPEN_BILLING' | translate }}</a>
+    </fd-ui-card>
+    <fd-ui-card>
+        <h2 class="fd-ui-title-sm">{{ 'ADMIN_OVERVIEW.REGISTRATIONS' | translate }}</h2>
+        <fd-ui-line-chart
+            xAxisLabelLayout="stacked"
+            [minValue]="0"
+            [showAxisLabels]="true"
+            [showGrid]="true"
+            [showArea]="true"
+            [emptyLabel]="'ADMIN_OVERVIEW.EMPTY' | translate"
+            [points]="registrationPoints()"
+            [title]="'ADMIN_OVERVIEW.REGISTRATIONS' | translate"
+        />
+        <a routerLink="/users">{{ 'ADMIN_OVERVIEW.OPEN_USERS' | translate }}</a>
+    </fd-ui-card>
+</div>
+<div class="admin-dashboard__charts fd-grid fd-gap-md">
+    <fd-ui-card>
+        <h2 class="fd-ui-title-sm">{{ 'ADMIN_OVERVIEW.AI_TOKENS' | translate }}</h2>
+        <fd-ui-line-chart
+            xAxisLabelLayout="stacked"
+            [minValue]="0"
+            [showAxisLabels]="true"
+            [showGrid]="true"
+            [showArea]="true"
+            [emptyLabel]="'ADMIN_OVERVIEW.EMPTY' | translate"
+            [points]="aiPoints()"
+            [title]="'ADMIN_OVERVIEW.AI_TOKENS' | translate"
+        />
+        <a routerLink="/ai-usage">{{ 'ADMIN_OVERVIEW.OPEN_AI' | translate }}</a>
+    </fd-ui-card>
+    <fd-ui-card>
+        <div class="fd-grid fd-gap-md">
+            <h2 class="fd-ui-title-sm">{{ 'ADMIN_OVERVIEW.NOW' | translate }}</h2>
+            <div class="fd-row fd-justify-between fd-gap-sm">
+                <span>{{ 'ADMIN_OVERVIEW.TOTAL_USERS' | translate }}</span
+                ><strong>{{ data().totalUsersNow | number }}</strong>
+            </div>
+            <div class="fd-row fd-justify-between fd-gap-sm">
+                <span>{{ 'ADMIN_OVERVIEW.PREMIUM' | translate }}</span
+                ><strong>{{ data().premiumUsersNow | number }}</strong>
+            </div>
+            <div class="fd-row fd-justify-between fd-gap-sm">
+                <a routerLink="/moderation">{{ 'ADMIN_OVERVIEW.PENDING' | translate }}</a
+                ><strong>{{ data().pendingReportsNow | number }}</strong>
+            </div>
+            <a routerLink="/mail-inbox">{{ 'ADMIN_OVERVIEW.OPEN_MAIL' | translate }}</a>
+            <small class="admin-dashboard__muted">{{ 'ADMIN_OVERVIEW.NOW_HINT' | translate }}</small>
+        </div>
+    </fd-ui-card>
+</div>
+<p class="admin-dashboard__muted">{{ 'ADMIN_OVERVIEW.DATA_HINT' | translate }}</p>

@@ -13,6 +13,27 @@ namespace FoodDiary.MailInbox.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixture fixture) {
     [RequiresDockerFact]
+    public async Task GetFilteredMessagesAsync_FiltersBeforeLimitAndUsesDeliveryRecipients() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        using NpgsqlInboundMailStore store = CreateStore(dataSource);
+        DateTimeOffset now = FixedTime.GetUtcNow();
+        var older = InboundMailMessage.Receive("filtered-older", "sender@example.com", ["bugs@fooddiary.club"],
+            "A bug", "Details", htmlBody: null, Encoding.UTF8.GetBytes("older"), now.AddMinutes(-1));
+        var newer = InboundMailMessage.Receive("filtered-newer", "sender@example.com", ["dmarc@fooddiary.club"],
+            "Report Domain: fooddiary.club", "Report", htmlBody: null, Encoding.UTF8.GetBytes("newer"), now);
+        InboundMailSaveResult saved = await store.SaveAsync(older, CancellationToken.None);
+        await store.SaveAsync(newer, CancellationToken.None);
+        IReadOnlyList<InboundMailMessageSummary> result = await store.GetFilteredMessagesAsync(1,
+            " BUGS@FOODDIARY.CLUB ", "general", unread: true, CancellationToken.None);
+        Assert.Equal(saved.Id, Assert.Single(result).Id);
+        await store.MarkAsReadAsync(saved.Id, now, CancellationToken.None);
+        Assert.Empty(await store.GetFilteredMessagesAsync(1, "bugs@fooddiary.club", "general", unread: true, CancellationToken.None));
+        Assert.Equal(saved.Id, Assert.Single(await store.GetFilteredMessagesAsync(1,
+            "bugs@fooddiary.club", "general", unread: false, CancellationToken.None)).Id);
+    }
+
+    [RequiresDockerFact]
     public async Task GetMessageDetailsAsync_WhenDmarcAttachmentIsBinary_PreservesReportBytes() {
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
         using NpgsqlInboundMailStore store = CreateStore(dataSource);

@@ -2,6 +2,15 @@
   "schemaVersion": 1,
   "description": "Reviewed source-level persistence capability inventory. entity = acquisition/read; tracked = query path without explicit AsNoTracking (potential tracking, not proof of materialization); write = collection/bulk/property mutation; call = exact domain operation; context = technical escape API. SQL semantics require source review. Fingerprints are SHA256 of LF-normalized trimmed source.",
   "adapters": {
+    "Modules/Admin/Infrastructure/Persistence/Admin/AdminDashboardMetricsReader.cs": {
+      "module": "Admin",
+      "capabilities": [
+        "entity:AiUsage",
+        "entity:BillingPayment",
+        "entity:User"
+      ],
+      "reason": "Admin-only aggregate reporting: no-tracking UTC period counts and trends over registration dates, positive completed payments and token counts. Projects no addresses, prompts, bodies or provider metadata; no tracking, writes or context escapes. Explicit owner domain references document read capability under ADR 0029."
+    },
     "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs": {
       "module": "Admin",
       "capabilities": [

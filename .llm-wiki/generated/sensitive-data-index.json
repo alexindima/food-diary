@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1401,
+    "candidateFields": 1405,
     "credential": 150,
     "identity": 156,
     "health": 670,
-    "financial": 120,
+    "financial": 124,
     "privateContent": 305,
-    "boundaryFiles": 165,
+    "boundaryFiles": 167,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -1209,6 +1209,20 @@
     },
     {
       "category": "financial",
+      "name": "Currency",
+      "type": "string",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminDashboardRevenuePoint.cs",
+      "line": 3
+    },
+    {
+      "category": "financial",
+      "name": "Revenue",
+      "type": "IReadOnlyList<AdminDashboardRevenuePoint>",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminDashboardTrend.cs",
+      "line": 4
+    },
+    {
+      "category": "financial",
       "name": "BillingSubscriptionId",
       "type": "Guid?",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingPaymentHttpResponse.cs",
@@ -1332,6 +1346,20 @@
       "type": "DateTime?",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingSubscriptionHttpResponse.cs",
       "line": 17
+    },
+    {
+      "category": "financial",
+      "name": "Currency",
+      "type": "string",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardRevenuePointHttpResponse.cs",
+      "line": 3
+    },
+    {
+      "category": "financial",
+      "name": "Revenue",
+      "type": "IReadOnlyList<AdminDashboardRevenuePointHttpResponse>",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardTrendHttpResponse.cs",
+      "line": 4
     },
     {
       "category": "financial",
@@ -9919,6 +9947,20 @@
         "identity"
       ],
       "fieldCount": 6
+    },
+    {
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardRevenuePointHttpResponse.cs",
+      "categories": [
+        "financial"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardTrendHttpResponse.cs",
+      "categories": [
+        "financial"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminImpersonationSessionHttpResponse.cs",

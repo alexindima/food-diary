@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1346,
+    "productionProjectEdges": 1349,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -10,10 +10,10 @@
     "moduleHotspotReviewCandidates": 0,
     "ambiguousBackendContracts": 0,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 96,
+    "selectorUnreferencedComponents": 97,
     "routedStandaloneComponents": 55,
-    "componentsWithoutDirectSpecs": 128,
-    "criticalSymbolsWithoutTestReferences": 21,
+    "componentsWithoutDirectSpecs": 130,
+    "criticalSymbolsWithoutTestReferences": 17,
     "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
@@ -277,6 +277,14 @@
       "feature": "admin-lessons",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog.html",
+      "specPath": null
+    },
+    {
+      "class": "AdminMailMessageDialogComponent",
+      "selector": "fd-admin-mail-message-dialog",
+      "feature": "admin-mail-inbox",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
       "specPath": null
     },
     {
@@ -1134,6 +1142,22 @@
       "specPath": null
     },
     {
+      "class": "AdminDashboardContentComponent",
+      "selector": "fd-admin-dashboard-content",
+      "feature": "admin-dashboard",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/components/admin-dashboard-content.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/components/admin-dashboard-content.html",
+      "inputs": [
+        {
+          "name": "data",
+          "type": "AdminDashboardOverview",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "AdminLessonEditDialogComponent",
       "selector": "fd-admin-lesson-edit-dialog",
       "feature": "admin-lessons",
@@ -1159,6 +1183,16 @@
       "feature": "admin-mail-inbox",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminMailMessageDialogComponent",
+      "selector": "fd-admin-mail-message-dialog",
+      "feature": "admin-mail-inbox",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.html",
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -4809,36 +4843,6 @@
   ],
   "criticalSymbolsWithoutTestReferences": [
     {
-      "name": "ExchangeAdminImpersonationCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandHandler.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "RevokeOtherSessionsCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/RevokeOtherSessions/RevokeOtherSessionsCommandHandler.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "RevokeSessionCommandHandler",
-      "role": "CommandHandler",
-      "path": "Modules/Identity/Application/Authentication/Commands/RevokeSession/RevokeSessionCommandHandler.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "BugReportsController",
       "role": "Controller",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
@@ -4862,16 +4866,6 @@
       "name": "EnqueueMailRelayEmailCommandValidator",
       "role": "Validator",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "ExchangeAdminImpersonationCommandValidator",
-      "role": "Validator",
-      "path": "Modules/Admin/Application/Commands/ExchangeAdminImpersonation/ExchangeAdminImpersonationCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],

@@ -25,10 +25,10 @@ public sealed class MailInboxMessagesController(
     [ProducesResponseType<IReadOnlyList<InboundMailMessageSummaryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<MailInboxApiErrorHttpResponse>(StatusCodes.Status429TooManyRequests)]
     [ProducesResponseType<MailInboxApiErrorHttpResponse>(StatusCodes.Status503ServiceUnavailable)]
-    public Task<IActionResult> Get([FromQuery] int? limit) =>
+    public Task<IActionResult> Get([FromQuery] int? limit, [FromQuery] string? recipient = null, [FromQuery] string? category = null, [FromQuery] bool? unread = null) =>
         ExecuteMetadataOperationAsync(
             cancellationToken => HandleOk(
-                limit.ToQuery(),
+                new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessages.GetInboundMailMessagesQuery(limit ?? 50, recipient, category, unread),
                 static value => value.ToHttpResponse(),
                 cancellationToken));
 

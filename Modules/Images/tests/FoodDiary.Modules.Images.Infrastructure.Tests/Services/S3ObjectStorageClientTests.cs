@@ -9,6 +9,31 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 [ExcludeFromCodeCoverage]
 public sealed class S3ObjectStorageClientTests {
     [Fact]
+    public async Task PutObjectBytesAsync_ForwardsBytesMetadataAndCancellationAndDisposesStream() {
+        byte[] expected = [0, 255, 10, 13];
+        Stream? sentStream = null;
+        using var cancellation = new CancellationTokenSource();
+        IAmazonS3 amazonS3 = CreateS3Client((method, args) => {
+            Assert.Equal(nameof(IAmazonS3.PutObjectAsync), method.Name);
+            PutObjectRequest request = Assert.IsType<PutObjectRequest>(args![0]);
+            sentStream = request.InputStream;
+            Assert.Multiple(
+                () => Assert.Equal("bucket", request.BucketName),
+                () => Assert.Equal("image.webp", request.Key),
+                () => Assert.Equal("image/webp", request.ContentType),
+                () => Assert.Equal(expected, Assert.IsType<MemoryStream>(request.InputStream).ToArray()),
+                () => Assert.Equal(cancellation.Token, Assert.IsType<CancellationToken>(args[1])));
+            return Task.FromResult(new PutObjectResponse());
+        });
+        var client = new S3ObjectStorageClient(amazonS3);
+
+        await client.PutObjectBytesAsync("bucket", "image.webp", "image/webp", expected, cancellation.Token);
+
+        Assert.NotNull(sentStream);
+        Assert.False(sentStream.CanRead);
+    }
+
+    [Fact]
     public void GetPreSignedUploadUrl_BuildsPutRequestAndReturnsUrl() {
         GetPreSignedUrlRequest? capturedRequest = null;
         IAmazonS3 amazonS3 = CreateS3Client((method, args) => {

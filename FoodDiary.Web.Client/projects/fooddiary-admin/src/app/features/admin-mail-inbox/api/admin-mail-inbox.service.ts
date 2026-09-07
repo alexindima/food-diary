@@ -10,8 +10,17 @@ export class AdminMailInboxService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/mail-inbox/messages`;
 
-    public getMessages(limit: number): Observable<AdminMailInboxMessageSummary[]> {
-        const params = new HttpParams().set('limit', limit);
+    public getMessages(limit: number, recipient = '', category = '', unread?: boolean): Observable<AdminMailInboxMessageSummary[]> {
+        let params = new HttpParams().set('limit', limit);
+        if (recipient.trim().length > 0) {
+            params = params.set('recipient', recipient.trim());
+        }
+        if (category.length > 0) {
+            params = params.set('category', category);
+        }
+        if (unread !== undefined) {
+            params = params.set('unread', unread);
+        }
         return this.http.get<AdminMailInboxMessageSummary[]>(this.baseUrl, { params });
     }
 

@@ -7,6 +7,17 @@ namespace FoodDiary.Web.Api.Tests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class AccessTokenSecurityStateValidatorTests {
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("invalid-guid")]
+    public async Task IsCurrentAsync_WithMissingOrInvalidIdentity_RejectsBeforeLookup(string? id) {
+        IUserAccessTokenSecurityReader reader = Substitute.For<IUserAccessTokenSecurityReader>();
+        ClaimsPrincipal? principal = id is null ? null : new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, id)]));
+        Assert.False(await AccessTokenSecurityStateValidator.IsCurrentAsync(principal, reader, CancellationToken.None));
+        await reader.DidNotReceiveWithAnyArgs().IsCurrentAsync(default, default, default);
+    }
+
     [Fact]
     public async Task IsCurrentAsync_WithMatchingSecurityVersion_AllowsToken() {
         var userId = Guid.NewGuid();

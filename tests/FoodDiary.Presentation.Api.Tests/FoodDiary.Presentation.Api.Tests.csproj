@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="../../Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj" />
     <ProjectReference Include="../../Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
@@ -57,12 +66,6 @@
     <ProjectReference Include="..\..\Modules\WeeklyGoals\Application\FoodDiary.Modules.WeeklyGoals.Application.csproj" />
     <ProjectReference Include="..\..\Shared\FoodDiary.Application.Contracts\FoodDiary.Application.Contracts.csproj" />
     <ProjectReference Include="..\..\Shared\FoodDiary.Domain.Primitives\FoodDiary.Domain.Primitives.csproj" />
-    <PackageReference Include="coverlet.collector" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="NSubstitute" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
     <ProjectReference Include="../../Modules/Admin/Presentation/FoodDiary.Modules.Admin.Presentation.csproj" />

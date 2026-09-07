@@ -59,6 +59,16 @@ describe('AdminMailInboxService', () => {
         httpMock.verify();
     });
 
+    it('sends mailbox, category and read filters to the server before limiting results', () => {
+        service.getMessages(1, ' bugs@fooddiary.club ', 'general', false).subscribe();
+        const request = httpMock.expectOne(req => req.url === baseUrl);
+        expect(request.request.params.get('recipient')).toBe('bugs@fooddiary.club');
+        expect(request.request.params.get('category')).toBe('general');
+        expect(request.request.params.get('unread')).toBe('false');
+        expect(request.request.params.get('limit')).toBe('1');
+        request.flush([]);
+    });
+
     it('should request inbound messages with limit', () => {
         const response = [
             {

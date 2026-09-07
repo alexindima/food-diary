@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3644,
-    "symbols": 3584,
-    "interfaceImplementationLinks": 242,
-    "dependencyInjectionRegistrations": 154,
+    "sourceFiles": 3662,
+    "symbols": 3602,
+    "interfaceImplementationLinks": 244,
+    "dependencyInjectionRegistrations": 155,
     "kinds": {
-      "class": 1872,
+      "class": 1876,
       "enum": 63,
-      "interface": 440,
-      "record": 1089,
+      "interface": 442,
+      "record": 1101,
       "record struct": 120
     },
     "roles": {
@@ -32,15 +32,15 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 66,
-      "Other": 1419,
-      "Query": 162,
-      "QueryHandler": 124,
+      "Other": 1427,
+      "Query": 164,
+      "QueryHandler": 125,
       "ReadModelRepository": 30,
       "ReadRepository": 47,
       "Repository": 103,
       "Request": 138,
-      "Response": 183,
-      "Service": 294,
+      "Response": 188,
+      "Service": 296,
       "Validator": 206,
       "ValueObject": 114,
       "WriteRepository": 46
@@ -1833,6 +1833,13 @@
       "line": 2
     },
     {
+      "name": "IAdminDashboardMetricsReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs",
+      "line": 4
+    },
+    {
       "name": "IAdminImpersonationHandoffService",
       "kind": "interface",
       "role": "Service",
@@ -1921,6 +1928,27 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingWebhookEventReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDashboardMetrics",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminDashboardMetrics.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDashboardRevenuePoint",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminDashboardRevenuePoint.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDashboardTrend",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminDashboardTrend.cs",
       "line": 2
     },
     {
@@ -2337,6 +2365,13 @@
       "line": 6
     },
     {
+      "name": "IAdminDashboardOverviewReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Common/IAdminDashboardOverviewReadService.cs",
+      "line": 5
+    },
+    {
       "name": "IAdminDashboardReadService",
       "kind": "interface",
       "role": "Service",
@@ -2475,6 +2510,20 @@
       "role": "Other",
       "path": "Modules/Admin/Application/Models/AdminContentReportModel.cs",
       "line": 2
+    },
+    {
+      "name": "AdminDashboardOverviewModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminDashboardOverviewModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDashboardPeriodModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminDashboardPeriodModel.cs",
+      "line": 4
     },
     {
       "name": "AdminDashboardSummaryModel",
@@ -2657,6 +2706,20 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryHandler.cs",
       "line": 11
+    },
+    {
+      "name": "GetAdminDashboardOverviewQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminDashboardOverview/GetAdminDashboardOverviewQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminDashboardOverviewQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminDashboardOverview/GetAdminDashboardOverviewQueryHandler.cs",
+      "line": 7
     },
     {
       "name": "GetAdminDashboardSummaryQuery",
@@ -2876,6 +2939,13 @@
       "line": 16
     },
     {
+      "name": "AdminDashboardOverviewReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Services/AdminDashboardOverviewReadService.cs",
+      "line": 9
+    },
+    {
       "name": "AdminDashboardReadService",
       "kind": "class",
       "role": "Service",
@@ -2958,6 +3028,13 @@
       "role": "Repository",
       "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
       "line": 7
+    },
+    {
+      "name": "AdminDashboardMetricsReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminDashboardMetricsReader.cs",
+      "line": 9
     },
     {
       "name": "AdminImpersonationSessionRepository",
@@ -3128,6 +3205,13 @@
       "line": 5
     },
     {
+      "name": "AdminDashboardOverviewHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminDashboardOverviewHttpMappings.cs",
+      "line": 7
+    },
+    {
       "name": "AdminHttpMappings",
       "kind": "class",
       "role": "Other",
@@ -3287,6 +3371,13 @@
       "role": "Query",
       "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminDashboardHttpQuery.cs",
       "line": 4
+    },
+    {
+      "name": "GetAdminDashboardOverviewHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminDashboardOverviewHttpQuery.cs",
+      "line": 2
     },
     {
       "name": "GetAdminImpersonationSessionsHttpQuery",
@@ -3450,10 +3541,45 @@
       "line": 2
     },
     {
+      "name": "AdminDashboardMetricsHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardMetricsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDashboardOverviewHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardOverviewHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDashboardPeriodHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardPeriodHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDashboardRevenuePointHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardRevenuePointHttpResponse.cs",
+      "line": 2
+    },
+    {
       "name": "AdminDashboardSummaryHttpResponse",
       "kind": "record",
       "role": "Response",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardSummaryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminDashboardTrendHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminDashboardTrendHttpResponse.cs",
       "line": 2
     },
     {
@@ -22613,7 +22739,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportStore.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "BugMailImportWorker",
@@ -25222,6 +25348,20 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IAdminDashboardMetricsReader",
+      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminDashboardMetricsReader.cs",
+      "implementation": "AdminDashboardMetricsReader",
+      "implementationPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminDashboardMetricsReader.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IAdminDashboardOverviewReadService",
+      "interfacePath": "Modules/Admin/Application/Common/IAdminDashboardOverviewReadService.cs",
+      "implementation": "AdminDashboardOverviewReadService",
+      "implementationPath": "Modules/Admin/Application/Services/AdminDashboardOverviewReadService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IAdminDashboardReadService",
       "interfacePath": "Modules/Admin/Application/Common/IAdminDashboardReadService.cs",
       "implementation": "AdminDashboardReadService",
@@ -27030,18 +27170,25 @@
       "line": 18
     },
     {
+      "service": "IAdminDashboardOverviewReadService",
+      "implementation": "AdminDashboardOverviewReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Admin/Application/DependencyInjection.cs",
+      "line": 19
+    },
+    {
       "service": "IAdminUserReadService",
       "implementation": "AdminUserReadService",
       "lifetime": "Scoped",
       "path": "Modules/Admin/Application/DependencyInjection.cs",
-      "line": 19
+      "line": 20
     },
     {
       "service": "IAdminUserLoginReadService",
       "implementation": "AdminUserLoginReadService",
       "lifetime": "Scoped",
       "path": "Modules/Admin/Application/DependencyInjection.cs",
-      "line": 20
+      "line": 21
     },
     {
       "service": "IOpenAiFoodService",

@@ -15,6 +15,7 @@ public sealed class MailInboxBugSource(IMailInboxExportClient client, IBugReport
         // Revisit retained mail each scan: late commits and SMTP retries cannot be lost behind a high-water mark.
         DateTimeOffset? before = null;
         Guid? beforeId = null;
+        int imported = 0;
         while (true) {
             IReadOnlyList<MailInboxExportEntryResponse> page = await client.GetPageAsync(options.Value.Recipient, before, beforeId, cancellationToken).ConfigureAwait(false);
             if (page.Count == 0) {
@@ -25,6 +26,10 @@ public sealed class MailInboxBugSource(IMailInboxExportClient client, IBugReport
                 if (await store.ContainsAsync(entry.Id, cancellationToken).ConfigureAwait(false)) {
                     continue;
                 }
+                if (imported >= options.Value.MaxImportsPerPoll) {
+                    yield break;
+                }
+                imported++;
                 byte[]? mime = entry.ContentAvailable
                     ? await client.GetMimeAsync(entry.Id, options.Value.Recipient, cancellationToken).ConfigureAwait(false)
                     : null;

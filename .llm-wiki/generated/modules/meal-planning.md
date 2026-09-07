@@ -97,6 +97,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/Domain/MealPlanningExtractedInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/Domain/ShoppingListInvariantTests.cs`
 - [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/Domain/TrackingAndMealPlanCoverageGapTests.cs`
+- [behavioral-or-text-match] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Domain.Tests/MealPlanningIdConversionTests.cs`
 - [integration] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/MealPlanningPersistenceCompatibilityTests.cs`
 - [integration] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/PostgresDatabaseCollection.cs`
 - [integration] `Modules/MealPlanning/tests/FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests/PostgresDatabaseFixture.cs`

@@ -3,46 +3,45 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signa
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
+import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
+import type { Subscription } from 'rxjs';
 
+import { AdminMailMessageDialogComponent } from '../dialogs/admin-mail-message-dialog';
 import { AdminMailInboxFacade } from '../lib/admin-mail-inbox.facade';
-import type { AdminMailInboxMessageDetails, AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.data';
+import type { AdminMailInboxMessageSummary } from '../models/admin-mail-inbox.data';
 
 type AdminMailInboxMessageSummaryViewModel = {
     categoryLabel: string;
     readStateLabel: string;
 } & AdminMailInboxMessageSummary;
 
-type AdminMailInboxMessageDetailsViewModel = {
-    categoryLabel: string;
-    readStateLabel: string;
-    toRecipientsLabel: string;
-} & AdminMailInboxMessageDetails;
-
 const DEFAULT_MAIL_INBOX_LIMIT = 50;
 const MAX_MAIL_INBOX_LIMIT = 200;
 
 @Component({
     selector: 'fd-admin-mail-inbox',
-    imports: [CommonModule, FdUiButtonComponent, FdUiInputComponent, TranslatePipe],
+    imports: [CommonModule, FdUiButtonComponent, FdUiInputComponent, FdUiSelectComponent, TranslatePipe],
     templateUrl: './admin-mail-inbox.html',
     styleUrl: './admin-mail-inbox.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminMailInboxComponent {
+    private readonly dialogService = inject(FdUiDialogService);
     private readonly mailInboxFacade = inject(AdminMailInboxFacade);
     private readonly destroyRef = inject(DestroyRef);
 
+    private listRequest?: Subscription;
+    protected readonly loadFailed = signal(false);
     protected readonly messages = signal<AdminMailInboxMessageSummary[]>([]);
-    protected readonly selectedMessage = signal<AdminMailInboxMessageDetails | null>(null);
     protected readonly isLoading = signal(false);
-    protected readonly isDetailsLoading = signal(false);
     protected readonly limit = signal(DEFAULT_MAIL_INBOX_LIMIT);
+    protected readonly recipientFilter = signal('');
+    protected readonly unreadFilter = signal<string | null>('all');
     protected readonly categoryFilter = signal<'all' | 'dmarc-report' | 'general'>('all');
-    protected readonly selectedBodyMode = signal<'text' | 'html' | 'raw'>('text');
     protected readonly filteredMessages = computed<AdminMailInboxMessageSummaryViewModel[]>(() => {
-        const category = this.categoryFilter();
-        const messages = category === 'all' ? this.messages() : this.messages().filter(message => message.category === category);
+        const messages = this.messages();
 
         return messages.map(message => ({
             ...message,
@@ -50,43 +49,21 @@ export class AdminMailInboxComponent {
             readStateLabel: this.formatReadState(message.readAtUtc),
         }));
     });
-    protected readonly selectedMessageDetails = computed<AdminMailInboxMessageDetailsViewModel | null>(() => {
-        const message = this.selectedMessage();
-        if (message === null) {
-            return null;
-        }
-
-        return {
-            ...message,
-            categoryLabel: this.formatCategory(message.category),
-            readStateLabel: this.formatReadState(message.readAtUtc),
-            toRecipientsLabel: this.formatRecipients(message.toRecipients),
-        };
-    });
-    protected readonly selectedBody = computed(() => {
-        const message = this.selectedMessage();
-        if (message === null) {
-            return '';
-        }
-
-        if (this.selectedBodyMode() === 'html') {
-            return message.htmlBody ?? '';
-        }
-
-        if (this.selectedBodyMode() === 'raw') {
-            return message.rawMime ?? '';
-        }
-
-        return message.textBody ?? '';
-    });
     public constructor() {
         this.loadMessages();
     }
 
     protected loadMessages(): void {
+        this.listRequest?.unsubscribe();
+        this.loadFailed.set(false);
         this.isLoading.set(true);
-        this.mailInboxFacade
-            .getMessages(this.limit())
+        this.listRequest = this.mailInboxFacade
+            .getMessages(
+                this.limit(),
+                this.recipientFilter(),
+                this.categoryFilter() === 'all' ? '' : this.categoryFilter(),
+                this.unreadFilter() === 'all' ? undefined : this.unreadFilter() === 'unread',
+            )
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
@@ -94,6 +71,7 @@ export class AdminMailInboxComponent {
                     this.isLoading.set(false);
                 },
                 error: () => {
+                    this.loadFailed.set(true);
                     this.messages.set([]);
                     this.isLoading.set(false);
                 },
@@ -101,25 +79,18 @@ export class AdminMailInboxComponent {
     }
 
     protected selectMessage(message: AdminMailInboxMessageSummary): void {
-        this.isDetailsLoading.set(true);
-        this.selectedBodyMode.set('text');
-        this.mailInboxFacade
-            .getMessage(message.id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => {
-                    this.selectedMessage.set(response);
-                    if (response.readAtUtc === null || response.readAtUtc === undefined) {
-                        this.markMessageRead(response.id);
-                    }
-
-                    this.isDetailsLoading.set(false);
+        this.dialogService.open(AdminMailMessageDialogComponent, {
+            preset: 'detail',
+            panelClass: 'fd-admin-mail-message-dialog',
+            size: 'xl',
+            data: {
+                id: message.id,
+                subject: message.subject,
+                onRead: (id: string, readAtUtc: string) => {
+                    this.messages.update(messages => messages.map(item => (item.id === id ? { ...item, readAtUtc } : item)));
                 },
-                error: () => {
-                    this.selectedMessage.set(null);
-                    this.isDetailsLoading.set(false);
-                },
-            });
+            },
+        });
     }
 
     protected updateLimit(value: FdUiInputValue): void {
@@ -131,25 +102,9 @@ export class AdminMailInboxComponent {
         this.limit.set(Math.max(1, Math.min(parsed, MAX_MAIL_INBOX_LIMIT)));
     }
 
-    protected setBodyMode(mode: 'text' | 'html' | 'raw'): void {
-        this.selectedBodyMode.set(mode);
-    }
-
-    protected setCategoryFilter(value: string): void {
-        if (value === 'dmarc-report' || value === 'general') {
-            this.categoryFilter.set(value);
-            return;
-        }
-
-        this.categoryFilter.set('all');
-    }
-
-    protected getSelectValue(event: Event): string {
-        return event.target instanceof HTMLSelectElement ? event.target.value : 'all';
-    }
-
-    private formatRecipients(recipients: string[]): string {
-        return recipients.length > 0 ? recipients.join(', ') : '-';
+    protected setCategoryFilter(value: string | null): void {
+        this.categoryFilter.set(value === 'dmarc-report' || value === 'general' ? value : 'all');
+        this.loadMessages();
     }
 
     private formatCategory(category: string): string {
@@ -158,18 +113,5 @@ export class AdminMailInboxComponent {
 
     private formatReadState(readAtUtc: string | null | undefined): string {
         return readAtUtc === null || readAtUtc === undefined ? 'Unread' : 'Read';
-    }
-
-    private markMessageRead(id: string): void {
-        this.mailInboxFacade
-            .markMessageRead(id)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => {
-                    const readAtUtc = new Date().toISOString();
-                    this.messages.update(messages => messages.map(message => (message.id === id ? { ...message, readAtUtc } : message)));
-                    this.selectedMessage.update(message => (message?.id === id ? { ...message, readAtUtc } : message));
-                },
-            });
     }
 }

@@ -16,6 +16,7 @@ public static class DependencyInjection {
         services.AddScoped<IAdminBillingReadService, AdminBillingReadService>();
         services.AddScoped<IAdminContentReadService, AdminContentReadService>();
         services.AddScoped<IAdminDashboardReadService, AdminDashboardReadService>();
+        services.AddScoped<IAdminDashboardOverviewReadService, AdminDashboardOverviewReadService>();
         services.AddScoped<IAdminUserReadService, AdminUserReadService>();
         services.AddScoped<IAdminUserLoginReadService, AdminUserLoginReadService>();
         return services;

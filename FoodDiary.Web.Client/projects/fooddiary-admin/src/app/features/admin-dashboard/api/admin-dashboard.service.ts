@@ -4,6 +4,7 @@ import type { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import type { AdminDashboardSummary } from '../models/admin-dashboard.data';
+import type { AdminDashboardOverview, DashboardRange } from '../models/admin-dashboard-overview.data';
 
 @Service()
 export class AdminDashboardService {
@@ -12,5 +13,20 @@ export class AdminDashboardService {
 
     public getSummary(): Observable<AdminDashboardSummary> {
         return this.http.get<AdminDashboardSummary>(this.baseUrl);
+    }
+
+    public getOverview(range: DashboardRange): Observable<AdminDashboardOverview> {
+        const params: Record<string, string> = {};
+        if (range.allTime === true) {
+            params['allTime'] = 'true';
+        } else {
+            if (range.from !== undefined) {
+                params['from'] = range.from;
+            }
+            if (range.to !== undefined) {
+                params['to'] = range.to;
+            }
+        }
+        return this.http.get<AdminDashboardOverview>(`${this.baseUrl}/overview`, { params });
     }
 }

@@ -5,11 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Mvc" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../Admin/Contracts/FoodDiary.Modules.Admin.Contracts.csproj" />
     <ProjectReference Include="../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
     <ProjectReference Include="../../Users/Presentation/FoodDiary.Modules.Users.Presentation.csproj" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Asp.Versioning.Mvc" />
     <ProjectReference Include="../../../FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
     <ProjectReference Include="../Application/FoodDiary.Modules.Identity.Application.csproj" />
     <ProjectReference Include="../Application/Abstractions/FoodDiary.Modules.Identity.Application.Abstractions.csproj" />

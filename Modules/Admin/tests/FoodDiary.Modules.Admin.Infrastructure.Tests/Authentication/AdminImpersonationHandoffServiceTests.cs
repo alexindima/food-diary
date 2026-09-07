@@ -6,6 +6,15 @@ namespace FoodDiary.Modules.Admin.Infrastructure.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public sealed class AdminImpersonationHandoffServiceTests {
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("  ")]
+    public async Task ConsumeCodeAsync_WithBlankCode_ReturnsNull(string? code) {
+        var service = new AdminImpersonationHandoffService(new InMemoryAdminSsoCodeStore(new FixedTimeProvider()));
+        Assert.Null(await service.ConsumeCodeAsync(code!));
+    }
+
     [Fact]
     public async Task ConsumeCodeAsync_WithCreatedCode_ReturnsTokenOnlyOnce() {
         var timeProvider = new FixedTimeProvider();

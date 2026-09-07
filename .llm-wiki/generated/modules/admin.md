@@ -43,14 +43,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AdminImpersonationSession
-- Public contract files: 23
+- Public contract files: 27
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 23
-- Interfaces: 9
+- Public contract types: 27
+- Interfaces: 10
 - DTO/read-model/projection types: 11
 - Enums: 0
 - Exported repository-shaped contracts: 7
@@ -58,6 +58,7 @@ No literal attribute-routed controller was associated with this module.
 - `class AdminMailInboxErrors`
 - `interface IAdminBillingReadRepository`
 - `interface IAdminBillingRepository`
+- `interface IAdminDashboardMetricsReader`
 - `interface IAdminImpersonationHandoffService`
 - `interface IAdminImpersonationSessionReadRepository`
 - `interface IAdminImpersonationSessionRepository`
@@ -71,6 +72,9 @@ No literal attribute-routed controller was associated with this module.
 - `record AdminBillingRevenueSummaryReadModel`
 - `record AdminBillingSubscriptionReadModel`
 - `record AdminBillingWebhookEventReadModel`
+- `record AdminDashboardMetrics`
+- `record AdminDashboardRevenuePoint`
+- `record AdminDashboardTrend`
 - `record AdminImpersonationSessionReadModel`
 - `record AdminMailInboxDmarcRecordModel`
 - `record AdminMailInboxDmarcReportModel`
@@ -84,6 +88,7 @@ No literal attribute-routed controller was associated with this module.
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs`
+- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminDashboardOverviewTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.LessonCommandTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.MappingTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs`
@@ -93,6 +98,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminValidatorTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/CreateAdminUserCommandHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/CreateAdminUserCommandValidatorTests.cs`
+- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/ExchangeAdminImpersonationTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/GetAdminUsersQueryHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/GetCollaborationAuditQueryHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs`
@@ -100,6 +106,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Domain.Tests/Domain/AdminInvariantTests.cs`
+- [integration] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminDashboardMetricsIntegrationTests.cs`
 - [integration] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminUserRoleAuditRepositoryIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/AdminPersistenceRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Authentication/AdminImpersonationHandoffServiceTests.cs`
@@ -110,7 +117,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoProtocolTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs`
 - [presentation] `Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AdminSsoControllerTests.cs`
-- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AdminModuleExtractionTests.cs`
 
 ## Working Rule
 

@@ -2,6 +2,8 @@ using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Identity.Authentication.Commands.Logout;
+using FoodDiary.Application.Identity.Authentication.Commands.RevokeSession;
+using FoodDiary.Application.Identity.Authentication.Commands.RevokeOtherSessions;
 using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Application.Identity.Authentication.Queries.GetActiveSessions;
 using FoodDiary.Domain.Entities.Users;
@@ -14,6 +16,36 @@ namespace FoodDiary.Application.Tests.Authentication;
 [ExcludeFromCodeCoverage]
 public sealed class ActiveSessionManagementTests {
     private static readonly DateTime FixedNow = new(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+
+    [Fact]
+    public async Task RevokeSession_ForwardsOwnerCurrentSessionClockAndCancellation() {
+        var userId = new UserId(Guid.NewGuid());
+        var currentSessionId = Guid.NewGuid();
+        var targetSessionId = Guid.NewGuid();
+        using var cancellation = new CancellationTokenSource();
+        IRefreshTokenSessionWriteRepository repository = Substitute.For<IRefreshTokenSessionWriteRepository>();
+        var handler = new RevokeSessionCommandHandler(repository, new FixedTimeProvider());
+
+        Result result = await handler.Handle(new RevokeSessionCommand(userId.Value, currentSessionId, targetSessionId), cancellation.Token);
+
+        ResultAssert.Success(result);
+        await repository.Received(1).RevokeOtherByIdAsync(targetSessionId, userId, currentSessionId, FixedNow, cancellation.Token);
+        await repository.DidNotReceiveWithAnyArgs().RevokeByIdAsync(default, default, default, default);
+    }
+
+    [Fact]
+    public async Task RevokeOtherSessions_ForwardsOwnerAndPreservesCurrentSession() {
+        var userId = new UserId(Guid.NewGuid());
+        var currentSessionId = Guid.NewGuid();
+        using var cancellation = new CancellationTokenSource();
+        IRefreshTokenSessionWriteRepository repository = Substitute.For<IRefreshTokenSessionWriteRepository>();
+        var handler = new RevokeOtherSessionsCommandHandler(repository, new FixedTimeProvider());
+
+        Result result = await handler.Handle(new RevokeOtherSessionsCommand(userId.Value, currentSessionId), cancellation.Token);
+
+        ResultAssert.Success(result);
+        await repository.Received(1).RevokeAllOtherAsync(userId, currentSessionId, FixedNow, cancellation.Token);
+    }
 
     [Fact]
     public async Task Logout_WithValidRefreshToken_RevokesSignedSession() {

@@ -14,6 +14,9 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
 
     [Theory]
     [InlineData("db.Users.Add(new User());")]
+    [InlineData("Action<User> add = db.Users.Add;")]
+    [InlineData("db.AddRange(new User[] { new User() });")]
+    [InlineData("db.AddRange(new List<User> { new User() });")]
     [InlineData("db.Add(new User());")]
     [InlineData("Action<object> add = db.Add; add(new User());")]
     [InlineData("Action<User> entry = db.Entry<User>; entry(new User());")]
@@ -33,6 +36,9 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
 
     [Theory]
     [InlineData("db.Products.Add(new Product());")]
+    [InlineData("Action<Product> add = db.Products.Add;")]
+    [InlineData("Func<int, Product> find = db.Find<Product>;")]
+    [InlineData("Action action = () => { }; action();")]
     [InlineData("db.Add(new Product());")]
     [InlineData("db.Entry(new Product());")]
     [InlineData("Action<Product> entry = db.Entry<Product>; entry(new Product());")]
@@ -132,6 +138,8 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
                 public object ChangeTracker => new();
                 public DbSet<T> Set<T>() => new();
                 public void Add(object value) { }
+                public void AddRange(User[] values) { }
+                public void AddRange(List<User> values) { }
                 public void Entry<T>(T value) { }
                 public T Find<T>(int id) => default!;
                 public int SaveChanges() => 0;

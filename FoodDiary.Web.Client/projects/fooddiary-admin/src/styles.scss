@@ -24,3 +24,11 @@ body {
 .cdk-overlay-pane.fd-admin-email-template-dialog .fd-ui-dialog {
     --fd-dialog-max-height: var(--fd-size-dialog-max-height-admin);
 }
+
+@media (max-width: 600px) {
+    .cdk-overlay-pane.fd-admin-mail-message-dialog .fd-ui-dialog {
+        height: 100dvh;
+        max-height: 100dvh;
+        border-radius: 0;
+    }
+}

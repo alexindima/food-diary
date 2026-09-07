@@ -11,6 +11,30 @@ namespace FoodDiary.BugTriage.Tests;
 
 public sealed class MailInboxBugSourceTests {
     [Fact]
+    public async Task ScanCapsNewImports_AndResumesAfterPersistedReceipts() {
+        IMailInboxExportClient client = Substitute.For<IMailInboxExportClient>();
+        IBugReportStore store = Substitute.For<IBugReportStore>();
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        var first = new MailInboxExportEntryResponse(Guid.NewGuid(), now, ContentAvailable: false);
+        var second = new MailInboxExportEntryResponse(Guid.NewGuid(), now.AddMinutes(-1), ContentAvailable: false);
+        client.GetPageAsync("bugs@fooddiary.club", beforeReceivedAtUtc: null, beforeId: null, Arg.Any<CancellationToken>()).Returns([first, second]);
+        client.GetPageAsync("bugs@fooddiary.club", second.ReceivedAtUtc, second.Id, Arg.Any<CancellationToken>()).Returns([]);
+        var source = new MailInboxBugSource(client, store,
+            Microsoft.Extensions.Options.Options.Create(new BugTriageOptions { MaxImportsPerPoll = 1 }));
+        var reports = new List<ImportedReport>();
+        await foreach (ImportedReport report in source.ReadNewAsync(CancellationToken.None)) {
+            reports.Add(report);
+        }
+        Assert.Equal(first.Id, Assert.Single(reports).SourceMessageId);
+        store.ContainsAsync(first.Id, Arg.Any<CancellationToken>()).Returns(returnThis: true);
+        reports.Clear();
+        await foreach (ImportedReport report in source.ReadNewAsync(CancellationToken.None)) {
+            reports.Add(report);
+        }
+        Assert.Equal(second.Id, Assert.Single(reports).SourceMessageId);
+    }
+
+    [Fact]
     public async Task ScanTraversesPages_SkipsReceipts_AndHandlesPurgedContent() {
         IMailInboxExportClient client = Substitute.For<IMailInboxExportClient>();
         IBugReportStore store = Substitute.For<IBugReportStore>();

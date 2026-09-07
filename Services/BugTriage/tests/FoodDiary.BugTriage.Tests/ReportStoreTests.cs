@@ -66,6 +66,28 @@ public sealed class ReportStoreTests : IAsyncLifetime {
         Assert.True(await reader.IsDBNullAsync(3));
     }
 
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    public async Task ConcurrentClaimsAcrossDifferentReports_RespectCapacity_AndCompletionReleasesSlot(int capacity) {
+        _store = new NpgsqlBugReportStore(_dataSource, Microsoft.Extensions.Options.Options.Create(
+            new FoodDiary.BugTriage.Infrastructure.Options.BugTriageOptions { MaxConcurrentReports = capacity }));
+        for (int index = 0; index < 6; index++) {
+            await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddSeconds(index), "Bug", "Steps", [1]),
+                Now.AddDays(1), CancellationToken.None);
+        }
+        ReportLease?[] claims = await Task.WhenAll(Enumerable.Range(0, 6).Select(_ =>
+            _store.ClaimAsync(Now, TimeSpan.FromMinutes(5), 3, CancellationToken.None)));
+        ReportLease[] active = [.. claims.OfType<ReportLease>()];
+        Assert.Equal(capacity, active.Length);
+        ReportLease first = active[0];
+        Assert.True(await _store.CompleteAsync(first.Id, first.LeaseToken,
+            new ReportCompletion(ReportOutcome.NotConfirmed, "Checked", MergeRequestUrl: null), Now, CancellationToken.None));
+        ReportLease? next = await _store.ClaimAsync(Now, TimeSpan.FromMinutes(5), 3, CancellationToken.None);
+        Assert.NotNull(next);
+        Assert.NotEqual(first.Id, next.Id);
+    }
+
     [Fact]
     public async Task ExpiredAttemptsStopAtConfiguredLimit() {
         await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now, "Bug", "Steps", [1]), Now.AddDays(1), CancellationToken.None);

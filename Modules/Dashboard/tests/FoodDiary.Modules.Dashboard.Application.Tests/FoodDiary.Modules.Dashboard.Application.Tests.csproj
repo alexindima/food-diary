@@ -10,6 +10,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="System.Diagnostics.CodeAnalysis" />
     <Using Include="FoodDiary.Application.Tests.Support" />
     <Using Include="NSubstitute" />

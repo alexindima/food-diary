@@ -4,5 +4,5 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
 
-public sealed record GetAdminMailInboxMessagesQuery(int Limit)
+public sealed record GetAdminMailInboxMessagesQuery(int Limit, string? Recipient = null, string? Category = null, bool? Unread = null)
     : IQuery<Result<IReadOnlyList<AdminMailInboxMessageSummaryModel>>>;

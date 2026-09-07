@@ -2,10 +2,12 @@ using FoodDiary.BugTriage.Application.Abstractions;
 using FoodDiary.BugTriage.Application.Reports;
 using Npgsql;
 using NpgsqlTypes;
+using FoodDiary.BugTriage.Infrastructure.Options;
+using Microsoft.Extensions.Options;
 
 namespace FoodDiary.BugTriage.Infrastructure.Persistence;
 
-public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource) : IBugReportStore {
+public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource, IOptions<BugTriageOptions>? options = null) : IBugReportStore {
     public async Task<IReadOnlyList<ReportSummary>> GetRecentAsync(DateTimeOffset now, CancellationToken cancellationToken) {
         NpgsqlCommand command = dataSource.CreateCommand("""
             select id, status, attempt, summary, merge_request_url from bugtriage_reports
@@ -49,7 +51,17 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource) : IBugRepo
     }
 
     public async Task<ReportLease?> ClaimAsync(DateTimeOffset now, TimeSpan duration, int maxAttempts, CancellationToken cancellationToken) {
-        NpgsqlCommand command = dataSource.CreateCommand("""
+        // Lock before taking the claim snapshot: concurrent service instances must share the same capacity limit.
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable connectionScope = connection.ConfigureAwait(false);
+        NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable transactionScope = transaction.ConfigureAwait(false);
+        {
+            var gate = new NpgsqlCommand("select pg_advisory_xact_lock(724936129)", connection, transaction);
+            await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable gateScope = gate.ConfigureAwait(false);
+            await gate.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+        }
+        NpgsqlCommand command = new("""
             with exhausted as (
                 update bugtriage_reports set status = 'failed', summary = 'Attempt limit reached.',
                     lease_token = null, lease_expires_at_utc = null
@@ -59,24 +71,30 @@ public sealed class NpgsqlBugReportStore(NpgsqlDataSource dataSource) : IBugRepo
                 select id from bugtriage_reports
                 where (status = 'pending' or (status = 'in_progress' and lease_expires_at_utc <= @now))
                     and expires_at_utc > @now and attempt < @max_attempts
+                    and (select count(*) from bugtriage_reports
+                        where status = 'in_progress' and lease_expires_at_utc > @now and expires_at_utc > @now) < @capacity
                 order by received_at_utc, id for update skip locked limit 1
             )
             update bugtriage_reports r set status = 'in_progress', attempt = attempt + 1,
                 lease_token = @token, lease_expires_at_utc = least(@expires, expires_at_utc)
             from candidate c where r.id = c.id
             returning r.id, source_message_id, subject, text_body, lease_token, lease_expires_at_utc, attempt, expires_at_utc
-            """);
+            """, connection, transaction);
         await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable commandScope = command.ConfigureAwait(false);
         command.Parameters.AddWithValue("now", now);
         command.Parameters.AddWithValue("expires", now.Add(duration));
         command.Parameters.AddWithValue("token", Guid.NewGuid());
         command.Parameters.AddWithValue("max_attempts", maxAttempts);
+        command.Parameters.AddWithValue("capacity", options?.Value.MaxConcurrentReports ?? 1);
         NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
         await using System.Runtime.CompilerServices.ConfiguredAsyncDisposable readerScope = reader.ConfigureAwait(false);
-        return await reader.ReadAsync(cancellationToken).ConfigureAwait(false)
+        ReportLease? lease = await reader.ReadAsync(cancellationToken).ConfigureAwait(false)
             ? new ReportLease(reader.GetGuid(0), reader.GetGuid(1), reader.GetString(2), reader.GetString(3),
                 reader.GetGuid(4), await reader.GetFieldValueAsync<DateTimeOffset>(5, cancellationToken).ConfigureAwait(false), reader.GetInt32(6),
                 await reader.GetFieldValueAsync<DateTimeOffset>(7, cancellationToken).ConfigureAwait(false)) : null;
+        await reader.CloseAsync().ConfigureAwait(false);
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+        return lease;
     }
 
     public async Task<bool> RenewAsync(Guid id, Guid token, DateTimeOffset now, TimeSpan duration, CancellationToken cancellationToken) {

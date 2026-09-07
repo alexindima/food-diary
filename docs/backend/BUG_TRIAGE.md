@@ -23,6 +23,8 @@ Create a **separate** PostgreSQL database named `fooddiary_bugtriage`. Supply se
 | `BugTriage__PollInterval` | Default five minutes; between ten seconds and one day |
 | `BugTriage__ImportTimeout` | Default ten minutes; cancels an unsuccessful scan so it can retry |
 | `BugTriage__ContentRetention` | Default thirty days from receipt; configurable 1–90 days |
+| `BugTriage__MaxConcurrentReports` | Default one live report lease across all service instances; configurable 1–10 |
+| `BugTriage__MaxImportsPerPoll` | Default 100 new reports per scan; configurable 1–1000 |
 | `BugTriageHttp__LeaseDuration` | Default thirty minutes; renew at least every ten minutes |
 | `BugTriageHttp__MaxAttempts` | Default three abandoned lease attempts |
 
@@ -89,6 +91,10 @@ An abandoned lease becomes claimable again until the attempt limit; exhausted re
 Imports rescan retained mail in descending `(received_at_utc,id)` pages rather than fetching just the newest N messages. Unique stored IDs prevent SMTP retries or repeat scans from creating duplicate work. An import failure retries next cycle; tune the scan timeout if retained mail volume prevents a full traversal. Content already purged by MailInbox becomes `content_unavailable` and is not assigned to a worker.
 
 ## Verification and rollout
+
+Claims serialize capacity checks with a PostgreSQL transaction advisory lock, so the configured live-lease limit applies across instances using the same database. Configure the same limit on each instance. Completion or lease expiry releases capacity; an idle claim returns 204 while capacity is occupied. Imports stop after `MaxImportsPerPoll` new receipts and revisit retained mail on the next scan. Existing receipts do not consume that budget. These limits bound processing load; they do not classify spam or authenticate senders.
+
+The queue limits require a service restart with the updated build, but no schema migration. Existing configuration uses the defaults above. Under sustained arrivals exceeding the import budget, older mail may wait until traffic subsides or retention expires; monitor the backlog and adjust the budget deliberately.
 
 ```powershell
 dotnet test Services/BugTriage/tests/FoodDiary.BugTriage.Tests

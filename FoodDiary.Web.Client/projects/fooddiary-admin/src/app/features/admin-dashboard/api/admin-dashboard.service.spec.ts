@@ -46,4 +46,19 @@ describe('AdminDashboardService', () => {
         expect(req.request.method).toBe('GET');
         req.flush(summary);
     });
+
+    it('sends inclusive dates to overview', () => {
+        service.getOverview({ from: '2026-08-01', to: '2026-08-31' }).subscribe();
+        const req = httpMock.expectOne(request => request.url === `${baseUrl}/overview`);
+        expect(req.request.params.get('from')).toBe('2026-08-01');
+        expect(req.request.params.get('to')).toBe('2026-08-31');
+        req.flush({});
+    });
+
+    it('omits stale date parameters for all time', () => {
+        service.getOverview({ allTime: true, from: '2026-08-01' }).subscribe();
+        const req = httpMock.expectOne(`${baseUrl}/overview?allTime=true`);
+        expect(req.request.params.has('from')).toBe(false);
+        req.flush({});
+    });
 });

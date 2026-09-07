@@ -21,6 +21,26 @@ public sealed class EmailOutboxTests {
     private static readonly DateTime Now = new(2026, 7, 8, 10, 0, 0, DateTimeKind.Utc);
 
     [Fact]
+    public void MarkReplayed_ClearsFailureAndLeaseWithoutRestoringPurgedContent() {
+        var message = EmailOutboxMessage.Create(CreateEmailMessage(), Now);
+        message.MarkDeadLettered("delivery failed", Now);
+        message.MarkClaimed(Now.AddMinutes(1), "worker");
+
+        message.MarkReplayed(Now.AddMinutes(2));
+
+        Assert.Multiple(
+            () => Assert.Equal(Now.AddMinutes(2), message.NextAttemptOnUtc),
+            () => Assert.Null(message.DeadLetteredOnUtc),
+            () => Assert.Null(message.LockedUntilUtc),
+            () => Assert.Null(message.LockedBy),
+            () => Assert.Null(message.LastError),
+            () => Assert.Equal(1, message.AttemptCount),
+            () => Assert.Empty(message.Subject),
+            () => Assert.Empty(message.HtmlBody),
+            () => Assert.Equal("[]", message.ToAddressesJson));
+    }
+
+    [Fact]
     public async Task EnqueueAsync_PersistsDueMessage() {
         await using FoodDiaryDbContext context = CreateContext();
         var outbox = new EmailOutbox(context, new FixedDateTimeProvider(Now));

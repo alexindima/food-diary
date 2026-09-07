@@ -192,14 +192,14 @@
       "pageSha256": "0d6adba3c4d6595ca442a79350bfcadafa1ea8364a359782139747dcf9a11608",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
-          "sha256": "15b5103295aef7ee0cb643ccebcd35d70c273561893a9fa7969d20c6f9e65b87"
+          "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "7a2c065cf5b4a43d3b50b5d0bc91c73dd50c5747ed9dd0c7f3903ddcdfd5e4ae"
         }
       ],
-      "reason": "The canonical API compatibility facade now handles staged and exact-content unstaged DTO moves, including ignored feature directories, and reports zero contract changes; regression and HTTP suites pass.",
-      "baseRef": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T14:41:39.1946332Z"
+      "reason": "Reviewed the full snapshot diff: additive Admin dashboard overview route and new response schemas, with existing dashboard/Billing contracts unchanged. Three actual Swagger snapshot tests pass after regeneration; date boundaries and validation have focused application and PostgreSQL coverage. The documented additive compatibility workflow remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "cac2cc87722cb077c6f534446b5c3fc1a2fad959",
+      "reviewedAtUtc": "2026-09-07T22:03:08.4573782Z"
     },
     {
       "pageId": "workflow-architecture-health-review",

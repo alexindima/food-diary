@@ -1,13 +1,30 @@
 <div class="admin-mail-inbox fd-grid fd-gap-md">
     <div class="toolbar fd-row fd-gap-sm fd-justify-end fd-wrap">
-        <div class="toolbar__field fd-grid fd-gap-xxs fd-ui-helper-strong">
-            <label for="admin-mail-inbox-category-filter">Type</label>
-            <select id="admin-mail-inbox-category-filter" [value]="categoryFilter()" (change)="setCategoryFilter(getSelectValue($event))">
-                <option value="all">All</option>
-                <option value="dmarc-report">DMARC reports</option>
-                <option value="general">Other mail</option>
-            </select>
-        </div>
+        <fd-ui-input
+            [label]="'ADMIN_MAIL_INBOX.RECIPIENT_FILTER' | translate"
+            [value]="recipientFilter()"
+            (valueChange)="recipientFilter.set($event?.toString() || '')"
+        />
+        <fd-ui-select
+            [label]="'ADMIN_MAIL_INBOX.TYPE_FILTER' | translate"
+            [value]="categoryFilter()"
+            [options]="[
+                { value: 'all', label: 'ADMIN_MAIL_INBOX.ALL' | translate },
+                { value: 'general', label: 'ADMIN_MAIL_INBOX.MAIL' | translate },
+                { value: 'dmarc-report', label: 'DMARC' },
+            ]"
+            (valueChange)="setCategoryFilter($event)"
+        />
+        <fd-ui-select
+            [label]="'ADMIN_MAIL_INBOX.READ_FILTER' | translate"
+            [options]="[
+                { value: 'all', label: 'ADMIN_MAIL_INBOX.ALL' | translate },
+                { value: 'unread', label: 'ADMIN_MAIL_INBOX.UNREAD' | translate },
+                { value: 'read', label: 'ADMIN_MAIL_INBOX.READ' | translate },
+            ]"
+            [(value)]="unreadFilter"
+            (valueChange)="loadMessages()"
+        />
         <fd-ui-input label="Message limit" type="number" [value]="limit()" (valueChange)="updateLimit($event)" />
         <fd-ui-button type="button" variant="secondary" (click)="loadMessages()">Refresh</fd-ui-button>
     </div>
@@ -16,6 +33,8 @@
         <section class="mail-list" aria-label="Inbound mail messages">
             @if (isLoading()) {
                 <p>Loading messages...</p>
+            } @else if (loadFailed()) {
+                <p role="alert">{{ 'ADMIN_MAIL_INBOX.LIST_LOAD_ERROR' | translate }}</p>
             } @else {
                 <table class="mail-table">
                     <thead>
@@ -25,16 +44,13 @@
                             <th>{{ 'ADMIN_MAIL_INBOX.HEADER_FROM' | translate }}</th>
                             <th>Subject</th>
                             <th>Read</th>
-                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         @for (message of filteredMessages(); track message.id) {
                             <tr
                                 class="mail-table__row"
-                                [class.mail-table__row--active]="selectedMessage()?.id === message.id"
                                 [class.mail-table__row--unread]="message.readAtUtc === null || message.readAtUtc === undefined"
-                                (click)="selectMessage(message)"
                             >
                                 <td>{{ message.receivedAtUtc | date: 'short' }}</td>
                                 <td>
@@ -49,7 +65,12 @@
                                     {{ message.fromAddress || '-' }}
                                     <span class="mail-verification-warning">{{ 'ADMIN_MAIL_INBOX.UNVERIFIED_SHORT' | translate }}</span>
                                 </td>
-                                <td>{{ message.subject || '(no subject)' }}</td>
+                                <td>
+                                    <button type="button" class="mail-subject" (click)="selectMessage(message)">
+                                        {{ message.subject || '(no subject)' }}
+                                    </button>
+                                    <div class="fd-ui-body-xs">{{ message.toRecipients.join(', ') }}</div>
+                                </td>
                                 <td>
                                     <span
                                         class="mail-read-state fd-ui-helper-strong"
@@ -58,145 +79,14 @@
                                         {{ message.readStateLabel }}
                                     </span>
                                 </td>
-                                <td>{{ message.status }}</td>
                             </tr>
                         } @empty {
                             <tr>
-                                <td colspan="6">No inbound messages found.</td>
+                                <td colspan="5">No inbound messages found.</td>
                             </tr>
                         }
                     </tbody>
                 </table>
-            }
-        </section>
-
-        <section class="mail-details fd-grid fd-gap-md" aria-label="Inbound mail message details">
-            @if (isDetailsLoading()) {
-                <p>Loading message...</p>
-            } @else if (selectedMessageDetails(); as message) {
-                <div class="mail-details__header fd-row fd-align-start fd-justify-between fd-gap-md">
-                    <div>
-                        <div class="mail-details__subject fd-ui-title-sm">{{ message.subject || '(no subject)' }}</div>
-                        <div class="mail-details__meta fd-ui-body-xs">{{ message.receivedAtUtc | date: 'medium' }}</div>
-                    </div>
-                    <div class="mail-details__badges fd-row fd-align-start fd-justify-end fd-gap-xs fd-wrap">
-                        <span class="mail-badge fd-ui-helper-strong" [class.mail-badge--dmarc]="message.category === 'dmarc-report'">
-                            {{ message.categoryLabel }}
-                        </span>
-                        <span
-                            class="mail-read-state fd-ui-helper-strong"
-                            [class.mail-read-state--unread]="message.readAtUtc === null || message.readAtUtc === undefined"
-                        >
-                            {{ message.readStateLabel }}
-                        </span>
-                        <span class="mail-details__status fd-ui-helper-strong">{{ message.status }}</span>
-                    </div>
-                </div>
-
-                <dl class="mail-fields fd-grid fd-gap-sm">
-                    <div class="fd-grid fd-gap-xxs">
-                        <dt class="fd-ui-helper-strong">{{ 'ADMIN_MAIL_INBOX.HEADER_FROM' | translate }}</dt>
-                        <dd>{{ message.fromAddress || '-' }}</dd>
-                    </div>
-                    <div class="fd-grid fd-gap-xxs">
-                        <dt class="fd-ui-helper-strong">{{ 'ADMIN_MAIL_INBOX.ENVELOPE_FROM' | translate }}</dt>
-                        <dd>{{ message.envelopeFromAddress || '-' }}</dd>
-                    </div>
-                    <div class="fd-grid fd-gap-xxs">
-                        <dt class="fd-ui-helper-strong">{{ 'ADMIN_MAIL_INBOX.PROVENANCE' | translate }}</dt>
-                        <dd>
-                            {{
-                                (message.isTrustedRelay ? 'ADMIN_MAIL_INBOX.TRUSTED_RELAY' : 'ADMIN_MAIL_INBOX.UNTRUSTED_RELAY')
-                                    | translate
-                            }};
-                            {{ 'ADMIN_MAIL_INBOX.HEADER_FROM_UNVERIFIED' | translate }}
-                        </dd>
-                    </div>
-                    <div class="fd-grid fd-gap-xxs">
-                        <dt class="fd-ui-helper-strong">To</dt>
-                        <dd>{{ message.toRecipientsLabel }}</dd>
-                    </div>
-                    <div class="fd-grid fd-gap-xxs">
-                        <dt class="fd-ui-helper-strong">Message ID</dt>
-                        <dd>{{ message.messageId || '-' }}</dd>
-                    </div>
-                </dl>
-
-                @if (message.dmarcReport; as report) {
-                    <section class="dmarc-report fd-grid fd-gap-sm" aria-label="DMARC report summary">
-                        <p class="dmarc-report__warning" role="alert">
-                            {{ 'ADMIN_MAIL_INBOX.DMARC_UNVERIFIED_WARNING' | translate }}
-                        </p>
-                        <div class="dmarc-report__header fd-row fd-align-start fd-justify-between fd-gap-md">
-                            <div>
-                                <h3 class="fd-ui-body">DMARC report</h3>
-                                <p class="fd-ui-body-xs">
-                                    {{ report.domain || '-' }} | {{ report.organizationName || '-' }} |
-                                    {{ report.dateRangeStartUtc | date: 'mediumDate' }} - {{ report.dateRangeEndUtc | date: 'mediumDate' }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="dmarc-report__table-wrap">
-                            <table class="dmarc-report__table">
-                                <thead>
-                                    <tr>
-                                        <th>Source IP</th>
-                                        <th>Count</th>
-                                        <th>Disposition</th>
-                                        <th>DKIM</th>
-                                        <th>SPF</th>
-                                        <th>Header from</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for (record of report.records; track `${record.sourceIp}-${$index}`) {
-                                        <tr>
-                                            <td>{{ record.sourceIp || '-' }}</td>
-                                            <td>{{ record.count }}</td>
-                                            <td>{{ record.disposition || '-' }}</td>
-                                            <td>{{ record.dkim || record.dkimResult || '-' }}</td>
-                                            <td>{{ record.spf || record.spfResult || '-' }}</td>
-                                            <td>{{ record.headerFrom || '-' }}</td>
-                                        </tr>
-                                    } @empty {
-                                        <tr>
-                                            <td colspan="6">No DMARC records found.</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-                }
-
-                <div class="body-switcher fd-row fd-gap-xs fd-wrap" role="group" aria-label="Message body view">
-                    <fd-ui-button
-                        type="button"
-                        [variant]="selectedBodyMode() === 'text' ? 'primary' : 'secondary'"
-                        (click)="setBodyMode('text')"
-                    >
-                        Text
-                    </fd-ui-button>
-                    <fd-ui-button
-                        type="button"
-                        [variant]="selectedBodyMode() === 'html' ? 'primary' : 'secondary'"
-                        (click)="setBodyMode('html')"
-                    >
-                        HTML
-                    </fd-ui-button>
-                    <fd-ui-button
-                        type="button"
-                        [variant]="selectedBodyMode() === 'raw' ? 'primary' : 'secondary'"
-                        (click)="setBodyMode('raw')"
-                    >
-                        Raw
-                    </fd-ui-button>
-                </div>
-
-                <pre class="mail-body">{{ selectedBody() || 'No body content.' }}</pre>
-            } @else {
-                <p>Select a message to view details.</p>
             }
         </section>
     </div>

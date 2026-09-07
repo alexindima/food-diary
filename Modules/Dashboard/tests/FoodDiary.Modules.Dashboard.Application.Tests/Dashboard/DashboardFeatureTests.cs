@@ -32,6 +32,22 @@ namespace FoodDiary.Application.Tests.Dashboard;
 [ExcludeFromCodeCoverage]
 public class DashboardFeatureTests {
     [Fact]
+    public async Task GetDashboardSnapshot_WhenProfileLookupFails_DoesNotBuildSnapshot() {
+        var userId = UserId.New();
+        IDashboardUserContextService access = Substitute.For<IDashboardUserContextService>();
+        Error error = Errors.Authentication.InvalidToken;
+        access.GetAccessibleDashboardUserAsync(userId, Arg.Any<CancellationToken>()).Returns(Result.Failure<DashboardUserContextModel>(error));
+        IDashboardSnapshotBuilder builder = Substitute.For<IDashboardSnapshotBuilder>();
+        var handler = new GetDashboardSnapshotQueryHandler(builder, access);
+
+        Result<DashboardSnapshotModel> result = await handler.Handle(new GetDashboardSnapshotQuery(userId.Value,
+            DateTime.UtcNow, Page: 1, PageSize: 10, Locale: "en", TrendDays: 7), CancellationToken.None);
+
+        ResultAssert.Failure(result, error.Code);
+        await builder.DidNotReceiveWithAnyArgs().BuildAsync(default!, default);
+    }
+
+    [Fact]
     public async Task GetDashboardSnapshotQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetDashboardSnapshotQueryValidator();
         var query = new GetDashboardSnapshotQuery(

@@ -8,8 +8,8 @@ import type { AdminMailInboxMessageDetails, AdminMailInboxMessageSummary } from 
 export class AdminMailInboxFacade {
     private readonly mailInboxService = inject(AdminMailInboxService);
 
-    public getMessages(limit: number): Observable<AdminMailInboxMessageSummary[]> {
-        return this.mailInboxService.getMessages(limit);
+    public getMessages(limit: number, recipient = '', category = '', unread?: boolean): Observable<AdminMailInboxMessageSummary[]> {
+        return this.mailInboxService.getMessages(limit, recipient, category, unread);
     }
 
     public getMessage(id: string): Observable<AdminMailInboxMessageDetails> {

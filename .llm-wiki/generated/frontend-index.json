@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1584,
-    "symbols": 617,
+    "typescriptFiles": 1587,
+    "symbols": 619,
     "routes": 86,
     "features": 37,
     "specs": 562,
     "localeFiles": 5,
     "roles": {
-      "Component": 422,
+      "Component": 424,
       "Directive": 12,
       "Facade": 54,
       "Other": 17,
@@ -119,6 +119,7 @@
       "root": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard",
       "symbols": [
         "AdminDashboardComponent",
+        "AdminDashboardContentComponent",
         "AdminDashboardFacade",
         "AdminDashboardService",
         "AdminTelemetryService"
@@ -173,7 +174,8 @@
       "symbols": [
         "AdminMailInboxComponent",
         "AdminMailInboxFacade",
-        "AdminMailInboxService"
+        "AdminMailInboxService",
+        "AdminMailMessageDialogComponent"
       ],
       "routes": [
         ""
@@ -1890,7 +1892,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/api/admin-dashboard.service.ts",
-      "line": 9
+      "line": 10
     },
     {
       "name": "AdminTelemetryService",
@@ -1900,18 +1902,25 @@
       "line": 11
     },
     {
+      "name": "AdminDashboardContentComponent",
+      "role": "Component",
+      "selector": "fd-admin-dashboard-content",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/components/admin-dashboard-content.ts",
+      "line": 21
+    },
+    {
       "name": "AdminDashboardFacade",
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/lib/admin-dashboard.facade.ts",
-      "line": 38
+      "line": 9
     },
     {
       "name": "AdminDashboardComponent",
       "role": "Component",
       "selector": "fd-admin-dashboard",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-dashboard/pages/admin-dashboard.ts",
-      "line": 14
+      "line": 35
     },
     {
       "name": "AdminEmailTemplatesService",
@@ -1977,6 +1986,13 @@
       "line": 9
     },
     {
+      "name": "AdminMailMessageDialogComponent",
+      "role": "Component",
+      "selector": "fd-admin-mail-message-dialog",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
+      "line": 25
+    },
+    {
       "name": "AdminMailInboxFacade",
       "role": "Facade",
       "selector": null,
@@ -1988,7 +2004,7 @@
       "role": "Component",
       "selector": "fd-admin-mail-inbox",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.ts",
-      "line": 32
+      "line": 30
     },
     {
       "name": "AdminModerationService",
@@ -6013,8 +6029,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 603,
-      "russianProperties": 603,
+      "englishProperties": 656,
+      "russianProperties": 656,
       "countsMatch": true
     },
     {

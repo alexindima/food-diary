@@ -5,13 +5,16 @@
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="../../Presentation/FoodDiary.Modules.OpenFoodFacts.Presentation.csproj" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../../Presentation/FoodDiary.Modules.OpenFoodFacts.Presentation.csproj" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
     <Compile Include="../../../../tests/FoodDiary.Presentation.Api.Tests/CapturedSender.cs" Link="Support/CapturedSender.cs" />

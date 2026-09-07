@@ -12,15 +12,22 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly MailInboxClientOptions _options = options.Value;
 
-    public async Task<IReadOnlyList<InboundMailMessageSummaryResponse>> GetMessagesAsync(
-        int? limit,
-        CancellationToken cancellationToken) {
+    public Task<IReadOnlyList<InboundMailMessageSummaryResponse>> GetMessagesAsync(int? limit, CancellationToken cancellationToken) =>
+        GetFilteredMessagesAsync(limit, recipient: null, category: null, unread: null, cancellationToken);
+
+    public async Task<IReadOnlyList<InboundMailMessageSummaryResponse>> GetFilteredMessagesAsync(
+        int? limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) {
         EnsureBaseAddress();
 
         string path = limit.HasValue
             ? string.Create(CultureInfo.InvariantCulture, $"/api/mail-inbox/messages?limit={limit.Value}"
 )
             : "/api/mail-inbox/messages";
+        var filters = new List<string>();
+        if (!string.IsNullOrWhiteSpace(recipient)) { filters.Add($"recipient={Uri.EscapeDataString(recipient.Trim())}"); }
+        if (!string.IsNullOrWhiteSpace(category)) { filters.Add($"category={Uri.EscapeDataString(category)}"); }
+        if (unread.HasValue) { filters.Add($"unread={unread.Value.ToString().ToLowerInvariant()}"); }
+        if (filters.Count > 0) { path += (path.Contains('?', StringComparison.Ordinal) ? "&" : "?") + string.Join('&', filters); }
         using HttpRequestMessage request = CreateRequest(HttpMethod.Get, path, _options.MetadataApiKey);
         using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();

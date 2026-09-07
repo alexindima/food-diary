@@ -17,6 +17,9 @@
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj" />
     <ProjectReference Include="../Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" />
     <ProjectReference Include="../Modules/Ai/Application/FoodDiary.Modules.Ai.Application.csproj" />

@@ -4,4 +4,4 @@ using FoodDiary.Mediator;
 
 namespace FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessages;
 
-public sealed record GetInboundMailMessagesQuery(int Limit) : IRequest<Result<IReadOnlyList<InboundMailMessageSummary>>>;
+public sealed record GetInboundMailMessagesQuery(int Limit, string? Recipient = null, string? Category = null, bool? Unread = null) : IRequest<Result<IReadOnlyList<InboundMailMessageSummary>>>;

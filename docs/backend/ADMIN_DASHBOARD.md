@@ -1,0 +1,15 @@
+# Admin dashboard overview
+
+`GET /api/v1/admin/dashboard/overview` requires the Admin role. The original dashboard endpoint remains compatible. The overview accepts inclusive UTC `from` and `to` dates, or `allTime=true` without dates. Default: current month through today. Invalid, future or reversed dates return 400; custom ranges are bounded to 3661 inclusive days. All time starts at the Unix epoch and has no previous-period comparison. Other ranges compare the immediately preceding equal number of calendar days, not the previous calendar month. Today's data is partial.
+
+The response separates period metrics from current total accounts, Premium accounts and pending moderation reports. These current counters do not represent historical snapshots. Premium is an entitlement, not a paid subscriber count. Registrations are based on retained accounts; permanently purged accounts cannot be reconstructed. Paying users are distinct users with positive completed transaction amounts in the range.
+
+Revenue totals reuse the Admin Billing repository, including refunds, credits, chargebacks and reversals. Amounts remain separated by currency; net here is before taxes and fees, not profit. Payment charts show gross completed transaction amounts using occurred time with creation time as fallback. AI charts aggregate stored input/output token usage, not estimated monetary cost. No historical exchange rates or model prices are invented.
+
+Periods of up to 90 days use daily buckets, longer periods use monthly buckets; partial boundary months retain the requested date predicates. Missing buckets are filled with zero. The all-time empty result has no trend points. Data unavailable due to request failure is shown as an error, not zeros. The screen cancels obsolete requests and stores the date selection in its URL.
+
+Admin Infrastructure owns the no-tracking aggregate reader, consistent with the existing Admin billing reporting boundary and ADR 0029. Explicit Users/Billing/Ai domain references document the types already available through the shared context, without granting write access. Its capabilities are reviewed in the persistence manifest. No new storage, migration, external call or deployment topology is introduced. Aggregates are sequential reads, not an atomic financial ledger snapshot; concurrent transactions may briefly affect adjacent cards differently.
+
+Verification: overview query date validation/comparison tests, PostgreSQL currency/deduplication/boundary/empty-bucket tests, actual OpenAPI snapshots, admin build/unit tests, and synthetic browser checks. Deploy the API before the new admin bundle. Rollback the bundle first if the overview endpoint is unavailable. Existing billing and legacy dashboard contracts remain usable.
+
+Mail moderation statuses and sender suspension remain a separate unfinished feature; the overview links to the inbox without presenting invented queue counts. Login activity and fasting telemetry are no longer fetched by the dashboard.

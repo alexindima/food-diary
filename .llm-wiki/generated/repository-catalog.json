@@ -22,7 +22,7 @@
     "controllers": 10,
     "endpoints": 21,
     "agentGuides": 251,
-    "documentationPages": 168
+    "documentationPages": 169
   },
   "dotnet": {
     "projects": [
@@ -758,8 +758,11 @@
           "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj",
+          "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj",
+          "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
+          "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj"
@@ -930,6 +933,8 @@
         "projectReferences": [
           "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
+          "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj",
+          "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -14276,6 +14281,7 @@
       "docs/architecture/Exception-vs-Result.md",
       "docs/architecture/architecture-improvements-20260905.md",
       "docs/architecture/infrastructure-boundary-audit.md",
+      "docs/backend/ADMIN_DASHBOARD.md",
       "docs/backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md",
       "docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md",
       "docs/backend/BACKEND_CRITICAL_FLOW_MATRIX.md",

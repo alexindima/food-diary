@@ -13,6 +13,17 @@ namespace FoodDiary.Modules.Identity.Infrastructure.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class IdentityPersistenceRegistrationTests {
     [Fact]
+    public void AddIdentityPersistence_ReadModelRepositorySharesScopedSessionRepository() {
+        var services = new ServiceCollection();
+        services.AddDbContext<FoodDiaryDbContext>();
+        services.AddIdentityPersistence();
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+        Assert.Same(scope.ServiceProvider.GetRequiredService<IRefreshTokenSessionRepository>(),
+            scope.ServiceProvider.GetRequiredService<IRefreshTokenSessionReadModelRepository>());
+    }
+
+    [Fact]
     public void AddIdentityPersistence_LoginEventAliasesShareOneInstancePerScope() {
         var services = new ServiceCollection();
         services.AddSingleton(TimeProvider.System);

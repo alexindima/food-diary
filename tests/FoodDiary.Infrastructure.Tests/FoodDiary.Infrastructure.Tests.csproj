@@ -5,15 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj" />
-    <ProjectReference Include="../../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />
-    <ProjectReference Include="../../Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj" />
-    <ProjectReference Include="../../Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Modules\Products\Domain.Contracts\FoodDiary.Modules.Products.Domain.Contracts.csproj" />
-    <ProjectReference Include="../../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
-    <ProjectReference Include="../../Modules/RecentItems/Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj" />
-    <ProjectReference Include="../../Modules/Users/Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
@@ -24,6 +15,18 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Modules/Meals/Domain.Contracts/FoodDiary.Modules.Meals.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Modules/Meals/Infrastructure/FoodDiary.Modules.Meals.Infrastructure.csproj" />
+    <ProjectReference Include="../../Shared/FoodDiary.Integrations.Http/FoodDiary.Integrations.Http.csproj" />
+    <ProjectReference Include="../../Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="../../Modules/Images/Infrastructure/FoodDiary.Modules.Images.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Products\Domain.Contracts\FoodDiary.Modules.Products.Domain.Contracts.csproj" />
+    <ProjectReference Include="../../Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj" />
+    <ProjectReference Include="../../Modules/RecentItems/Infrastructure/FoodDiary.Modules.RecentItems.Infrastructure.csproj" />
+    <ProjectReference Include="../../Modules/Users/Infrastructure/FoodDiary.Modules.Users.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Billing\Infrastructure\FoodDiary.Modules.Billing.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\OpenFoodFacts\Infrastructure\FoodDiary.Modules.OpenFoodFacts.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Usda\Infrastructure\FoodDiary.Modules.Usda.Infrastructure.csproj" />

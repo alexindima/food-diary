@@ -12,6 +12,9 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../Modules/Ai/Infrastructure/FoodDiary.Modules.Ai.Infrastructure.csproj" />
     <ProjectReference Include="../../Modules/Billing/Application/Abstractions/FoodDiary.Modules.Billing.Application.Abstractions.csproj" />
     <ProjectReference Include="../../Modules/Dietologist/Application/Abstractions/FoodDiary.Modules.Dietologist.Application.Abstractions.csproj" />
