@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4869,
+    "productionFiles": 4870,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 786,
@@ -37511,6 +37511,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 38.26
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpMessageStoreAdapter.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/InitializerCommand.cs",

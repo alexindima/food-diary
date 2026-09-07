@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3643,
-    "symbols": 3583,
+    "sourceFiles": 3644,
+    "symbols": 3584,
     "interfaceImplementationLinks": 242,
     "dependencyInjectionRegistrations": 154,
     "kinds": {
-      "class": 1871,
+      "class": 1872,
       "enum": 63,
       "interface": 440,
       "record": 1089,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 66,
-      "Other": 1418,
+      "Other": 1419,
       "Query": 162,
       "QueryHandler": 124,
       "ReadModelRepository": 30,
@@ -23174,6 +23174,13 @@
       "role": "Other",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs",
       "line": 18
+    },
+    {
+      "name": "SmtpMessageStoreAdapter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpMessageStoreAdapter.cs",
+      "line": 10
     },
     {
       "name": "InitializerCommand",

@@ -68716,7 +68716,7 @@
       "consumerArea": "MailInbox",
       "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/MailInboxHostedServiceTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 5
     },
     {
       "contract": "IInboundMailStore",

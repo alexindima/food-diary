@@ -18,6 +18,53 @@ namespace FoodDiary.MailInbox.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxHostedServiceTests {
+    [Fact]
+    public async Task SmtpHostedService_WhenMultipleMessagesArrive_AcceptsSameAndSeparateSessions() {
+        int port = GetFreeTcpPort();
+        using CertificateFiles certificateFiles = CreateCertificateFiles("localhost");
+        var store = new RecordingDeliveryStore();
+        using MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
+            ServerName = "localhost",
+            ListenAddress = System.Net.IPAddress.Loopback.ToString(),
+            Port = port,
+            CertificatePath = certificateFiles.CertificatePath,
+            PrivateKeyPath = certificateFiles.PrivateKeyPath,
+        }, store);
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+        await service.StartAsync(timeout.Token);
+        try {
+            await WaitForPortAsync(port, timeout.Token);
+            for (int session = 0; session < 2; session++) {
+                using var client = new TcpClient();
+                await client.ConnectAsync(System.Net.IPAddress.Loopback, port, timeout.Token);
+                using var reader = new StreamReader(client.GetStream(), Encoding.ASCII);
+                await using var writer = new StreamWriter(client.GetStream(), Encoding.ASCII, leaveOpen: true) {
+                    AutoFlush = true,
+                    NewLine = "\r\n",
+                };
+                Assert.StartsWith("220", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
+                await writer.WriteLineAsync("HELO localhost");
+                Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
+                for (int message = 0; message < 2; message++) {
+                    await writer.WriteLineAsync("MAIL FROM:<sender@example.com>");
+                    Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
+                    await writer.WriteLineAsync("RCPT TO:<bugs@fooddiary.club>");
+                    Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
+                    await writer.WriteLineAsync("DATA");
+                    Assert.StartsWith("354", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
+                    await writer.WriteLineAsync("From: sender@example.com\r\nTo: bugs@fooddiary.club\r\nSubject: \r\n\r\nSynthetic message\r\n.");
+                    Assert.StartsWith("250", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
+                }
+                await writer.WriteLineAsync("QUIT");
+                Assert.StartsWith("221", await reader.ReadLineAsync(timeout.Token), StringComparison.Ordinal);
+            }
+            Assert.Equal(4, store.Messages.Count);
+            Assert.All(store.Messages, message => Assert.Contains("Synthetic message", message.TextBody, StringComparison.Ordinal));
+        } finally {
+            await service.StopAsync(CancellationToken.None);
+        }
+    }
+
     [Theory]
     [InlineData("session")]
     [InlineData("source")]
@@ -453,12 +500,12 @@ public sealed class MailInboxHostedServiceTests {
     private static readonly DateTimeOffset FixedNow = new(2026, 8, 17, 6, 0, 0, TimeSpan.Zero);
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();
 
-    private static MailInboxSmtpHostedService CreateSmtpHostedService(MailInboxSmtpOptions options) {
+    private static MailInboxSmtpHostedService CreateSmtpHostedService(MailInboxSmtpOptions options, IInboundMailStore? store = null) {
         Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> optionsWrapper =
             Microsoft.Extensions.Options.Options.Create(options);
         var rateLimiter = new MailInboxSlidingWindowRateLimiter(optionsWrapper, TimeProvider.System);
         var messageStore = new SmtpInboundMessageStore(
-            new ThrowingInboundMailStore(),
+            store ?? new ThrowingInboundMailStore(),
             optionsWrapper,
             rateLimiter,
             TimeProvider.System,
@@ -583,8 +630,8 @@ public sealed class MailInboxHostedServiceTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class ThrowingInboundMailStore : IInboundMailStore {
-        public Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) =>
+    private class ThrowingInboundMailStore : IInboundMailStore {
+        public virtual Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
 
         public Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(
@@ -604,6 +651,15 @@ public sealed class MailInboxHostedServiceTests {
             int batchSize,
             CancellationToken cancellationToken) =>
             throw new NotSupportedException();
+    }
+
+    private sealed class RecordingDeliveryStore : ThrowingInboundMailStore {
+        public List<InboundMailMessage> Messages { get; } = [];
+
+        public override Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) {
+            Messages.Add(message);
+            return Task.FromResult(new InboundMailSaveResult(Guid.NewGuid(), WasDuplicate: false));
+        }
     }
 
     [ExcludeFromCodeCoverage]

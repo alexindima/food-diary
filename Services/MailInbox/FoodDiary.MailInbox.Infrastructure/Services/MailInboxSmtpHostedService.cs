@@ -41,7 +41,7 @@ public sealed class MailInboxSmtpHostedService(
             .Build();
 
         var serviceProvider = new ServiceProvider();
-        serviceProvider.Add(new DelegatingMessageStoreFactory(_ => messageStore));
+        serviceProvider.Add(new DelegatingMessageStoreFactory(_ => new SmtpMessageStoreAdapter(messageStore)));
         serviceProvider.Add(new DelegatingMailboxFilterFactory(_ => mailboxFilter));
         serviceProvider.Add(endpointListenerFactory);
 
