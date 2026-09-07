@@ -9,7 +9,7 @@ namespace FoodDiary.Presentation.Api.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class ControllerSurfaceGapTests {
     public static TheoryData<Type, string, int> ControllerContracts => new() {
-        { typeof(AdminDashboardController), "api/v{version:apiVersion}/admin/dashboard", 1 },
+        { typeof(AdminDashboardController), "api/v{version:apiVersion}/admin/dashboard", 2 },
         { typeof(FastingReadController), "api/v{version:apiVersion}/fasting", 3 },
         { typeof(UserOverviewController), "api/v{version:apiVersion}/users", 1 },
         { typeof(WaistGoalsController), "api/v{version:apiVersion}/users/waist-goals", 1 },

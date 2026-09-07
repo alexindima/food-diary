@@ -3391,7 +3391,7 @@
       "kind": "record",
       "role": "Query",
       "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagesHttpQuery.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "GetAdminUserLoginEventsHttpQuery",

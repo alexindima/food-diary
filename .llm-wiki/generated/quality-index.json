@@ -14498,11 +14498,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagesHttpQuery.cs",
-      "nonBlankLines": 4,
+      "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
+      "structuralRiskScore": 0.16
     },
     {
       "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminUserLoginEventsHttpQuery.cs",
