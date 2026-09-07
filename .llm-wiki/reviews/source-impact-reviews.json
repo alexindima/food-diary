@@ -900,13 +900,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "81e0fb06333d3038ecbed7b103a05b9f27bf4fd2cc58c5b39d759c7f8fed7c7a"
+          "sha256": "fb6cd19ca6ce5daee1a2febbe208f3dd72a0b90612ab53b2f480fad90839dfe1"
         }
       ],
-      "reason": "Runtime topology diff changes only its source fingerprint after MCP edits; services, providers, jobs, cancellation and telemetry declarations are unchanged.",
+      "reason": "Reviewed the regenerated WebPush topology against the sender and focused cancellation tests: the existing 35-second deadline now uses the injected TimeProvider, caller cancellation still propagates, and no client, worker, retry, subscription deletion, or deployment endpoint was added. The runtime-impact guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
-      "reviewedAtUtc": "2026-09-06T20:28:43.0277763Z"
+      "gitHead": "3dcd9d98b18b3d645f8ff9aad9bbc45560825756",
+      "reviewedAtUtc": "2026-09-07T01:16:36.4687198Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,18 +914,14 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "437a448ff463ea3c0310190954e8acd8730c7fde4d8136a2e288a7afc60dbee7"
-        },
-        {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "81e0fb06333d3038ecbed7b103a05b9f27bf4fd2cc58c5b39d759c7f8fed7c7a"
+          "sha256": "fb6cd19ca6ce5daee1a2febbe208f3dd72a0b90612ab53b2f480fad90839dfe1"
         }
       ],
-      "reason": "Reviewed the quality-count and topology-fingerprint refresh: no security boundary or runtime declaration changed; evidence remains navigation, with actual ranking regression tests recorded separately.",
+      "reason": "Reviewed the added timeout-policy candidate against WebPushNotificationSender and the controlled timer test. This is a navigation signal for an existing deadline, not a new SSRF or exposure claim; endpoint/IP checks, privacy boundaries, certificate validation, and dependency findings are unchanged. The security-review evidence limits remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
-      "reviewedAtUtc": "2026-09-06T20:28:43.8122006Z"
+      "gitHead": "3dcd9d98b18b3d645f8ff9aad9bbc45560825756",
+      "reviewedAtUtc": "2026-09-07T01:16:38.9000010Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

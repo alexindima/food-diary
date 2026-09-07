@@ -76,8 +76,8 @@ public sealed class WebPushNotificationSender(
         var invalidSubscriptions = new ConcurrentBag<WebPushDeliverySubscription>();
         int deliveredCount = 0;
 
-        using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        deadline.CancelAfter(DeliveryDeadline);
+        using var deliveryTimeout = new CancellationTokenSource(DeliveryDeadline, timeProvider);
+        using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, deliveryTimeout.Token);
         try {
             await Parallel.ForEachAsync(
                 subscriptions.Take(WebPushDeliveryLimits.MaximumSubscriptionsPerUser),

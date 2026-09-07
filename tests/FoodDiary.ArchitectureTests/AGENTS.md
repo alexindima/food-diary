@@ -21,6 +21,7 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 - `ClientPackageBoundaryTests` protects MailRelay/MailInbox client packages from server-side coupling.
 - `HostCompositionBoundaryTests` protects host-only concerns from leaking into application/presentation/resource projects.
 - `ContainerSupplyChainGuardrailTests` requires production images to carry provenance and SBOM metadata, resolve to image indexes, and be signed and verified before deployment.
+- `DockerfileDependencyTests` checks explicit project/source copies and shared compiler `AdditionalFiles` from `Directory.Build.props` before publish. Docker builds must include the reviewed persistence manifest; separate restore/build stages keep the modular project graph below filesystem overlay mount limits without broadening source copies.
 - `ProjectFileConventionTests` keeps unconditional `ProjectReference` items in one `ItemGroup` and rejects empty `ItemGroup` elements.
 - `SolutionModuleFolderTests` rejects empty solution-folder subtrees, duplicate folders/projects and missing project files; keeps module tests under `/Modules/<Owner>/tests/` and service tests under `/Services/<Owner>/Tests/`; and prevents redundant `Application/Core` and `Tests/Core` wrappers. Physical test directories alone do not provide solution grouping: each test project must be listed inside the corresponding solution folder. Folders with content in descendants (including solution files) and meaningful single-child groups remain valid.
 

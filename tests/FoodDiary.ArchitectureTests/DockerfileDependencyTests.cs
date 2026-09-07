@@ -17,14 +17,46 @@ public sealed class DockerfileDependencyTests {
     [Fact]
     public void DotNetDockerfiles_CopyAllTransitiveProjectReferencesBeforeRestoreAndPublish() {
         string root = GetRepositoryRoot();
-        string[] violations = [.. Directory.GetFiles(root, "Dockerfile", SearchOption.AllDirectories)
-            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}FoodDiary.Web.Client{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
-            .Where(static path => Directory.GetFiles(Path.GetDirectoryName(path)!, "*.csproj", SearchOption.TopDirectoryOnly).Length > 0)
+        string[] violations = [.. GetDotNetDockerfiles(root)
             .SelectMany(dockerfile => FindMissingCopies(root, dockerfile))
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
+
+    [Fact]
+    public void DotNetDockerfiles_CopySharedCompilerAdditionalFilesBeforePublish() {
+        string root = GetRepositoryRoot();
+        const string rootPrefix = "$(MSBuildThisFileDirectory)";
+        string[] compilerInputs = [.. XDocument.Load(Path.Combine(root, "Directory.Build.props"))
+            .Descendants("AdditionalFiles")
+            .Select(static element => (string?)element.Attribute("Include"))
+            .OfType<string>()];
+        Assert.NotEmpty(compilerInputs);
+
+        foreach (string input in compilerInputs) {
+            Assert.StartsWith(rootPrefix, input, StringComparison.Ordinal);
+            string relativeInput = input[rootPrefix.Length..].Replace('\\', '/');
+            Assert.True(File.Exists(Path.Combine(root, relativeInput)), $"Compiler input does not exist: {relativeInput}");
+            string directory = Path.GetDirectoryName(relativeInput)!.Replace('\\', '/');
+            string destination = directory.Length == 0 ? "./" : directory + "/";
+            string expectedCopy = $"COPY {relativeInput} {destination}";
+            foreach (string dockerfile in GetDotNetDockerfiles(root)) {
+                string[] lines = File.ReadAllLines(dockerfile);
+                int publishLine = Array.FindIndex(lines, static line => line.StartsWith("RUN dotnet publish ", StringComparison.Ordinal));
+                Assert.True(publishLine >= 0, $"{Path.GetRelativePath(root, dockerfile)} has no publish command.");
+                Assert.True(
+                    lines.Take(publishLine).Any(line => string.Equals(line.Trim(), expectedCopy, StringComparison.Ordinal)),
+                    $"{Path.GetRelativePath(root, dockerfile)} must copy compiler input before publish: {expectedCopy}");
+            }
+        }
+    }
+
+    private static IEnumerable<string> GetDotNetDockerfiles(string root) =>
+        Directory.GetFiles(root, "Dockerfile", SearchOption.AllDirectories)
+            .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
+            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}FoodDiary.Web.Client{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+            .Where(static path => Directory.GetFiles(Path.GetDirectoryName(path)!, "*.csproj", SearchOption.TopDirectoryOnly).Length > 0);
 
     private static IEnumerable<string> FindMissingCopies(string root, string dockerfile) {
         string projectDirectory = Path.GetDirectoryName(dockerfile)!;

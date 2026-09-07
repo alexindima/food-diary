@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:620e765fe18186c08399f7aa978f79f04b6bbf0ee1b3b8a91e2d5c9619e59da1 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:620e765fe18186c08399f7aa978f79f04b6bbf0ee1b3b8a91e2d5c9619e59da1 AS restore
 
 WORKDIR /src
 
@@ -16,6 +16,13 @@ COPY MailRelay/FoodDiary.MailRelay.Presentation/*.csproj MailRelay/FoodDiary.Mai
 COPY MailRelay/FoodDiary.MailRelay.WebApi/*.csproj MailRelay/FoodDiary.MailRelay.WebApi/
 
 RUN dotnet restore MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj --locked-mode
+
+# Keep restore and source-copy layers below filesystem overlay mount limits.
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine@sha256:620e765fe18186c08399f7aa978f79f04b6bbf0ee1b3b8a91e2d5c9619e59da1 AS build
+WORKDIR /src
+COPY --from=restore /root/.nuget/packages/ /root/.nuget/packages/
+COPY --from=restore /src/ /src/
+COPY docs/architecture/persistence-technical-sources.txt docs/architecture/
 
 COPY Shared/FoodDiary.Domain.Primitives/ Shared/FoodDiary.Domain.Primitives/
 COPY FoodDiary.Analyzers/ FoodDiary.Analyzers/

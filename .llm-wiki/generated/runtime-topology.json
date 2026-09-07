@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "dd28cead5fcfa2a43c2f57ba490e8f38da5bc765a4554efff2e7f91a84c3d9ff",
+    "sourceFingerprint": "a0b701a467fb64178f98a2df3af942883652adb59d40ecd99162d66d1e17979a",
     "sourceFileCount": 3615
   },
   "summary": {
@@ -1484,6 +1484,7 @@
       "path": "Modules/Notifications/Infrastructure/Services/WebPushNotificationSender.cs",
       "securitySignals": [
         "ip-address-policy",
+        "timeout-policy",
         "uri-policy"
       ],
       "behaviorSignals": [

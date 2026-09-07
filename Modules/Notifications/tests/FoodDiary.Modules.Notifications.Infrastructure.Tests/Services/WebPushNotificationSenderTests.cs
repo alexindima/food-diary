@@ -26,6 +26,7 @@ public sealed class WebPushNotificationSenderTests {
     public void GetClientConfiguration_ReturnsEnabledOnlyWhenConfigured(bool enabled, string publicKey, bool expectedEnabled) {
         var subscriptionRepository = new RecordingSubscriptionRepository();
         WebPushNotificationSender sender = CreateSender(
+            FixedTime,
             subscriptionRepository,
             new NullUserRepository(),
             new WebPushOptions {
@@ -46,7 +47,7 @@ public sealed class WebPushNotificationSenderTests {
     public async Task SendAsync_WhenMasterPushDisabled_DoesNotLoadSubscriptions() {
         var user = User.Create("user@example.com", "hash");
         var subscriptionRepository = new RecordingSubscriptionRepository();
-        WebPushNotificationSender sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
+        WebPushNotificationSender sender = CreateSender(FixedTime, subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}");
 
         await sender.SendAsync(notification, CancellationToken.None);
@@ -60,6 +61,7 @@ public sealed class WebPushNotificationSenderTests {
         var userRepository = new RecordingUserRepository(user);
         var subscriptionRepository = new RecordingSubscriptionRepository();
         WebPushNotificationSender sender = CreateSender(
+            FixedTime,
             subscriptionRepository,
             userRepository,
             new WebPushOptions {
@@ -84,7 +86,7 @@ public sealed class WebPushNotificationSenderTests {
             PushNotificationsEnabled: true,
             FastingPushNotificationsEnabled: false));
         var subscriptionRepository = new RecordingSubscriptionRepository();
-        WebPushNotificationSender sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
+        WebPushNotificationSender sender = CreateSender(FixedTime, subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}");
 
         await sender.SendAsync(notification, CancellationToken.None);
@@ -99,7 +101,7 @@ public sealed class WebPushNotificationSenderTests {
             PushNotificationsEnabled: true,
             SocialPushNotificationsEnabled: true));
         var subscriptionRepository = new RecordingSubscriptionRepository();
-        WebPushNotificationSender sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
+        WebPushNotificationSender sender = CreateSender(FixedTime, subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.NewComment, "{}");
 
         await sender.SendAsync(notification, CancellationToken.None);
@@ -151,7 +153,7 @@ public sealed class WebPushNotificationSenderTests {
     public async Task SendAsync_WhenUserMissing_DoesNotLoadSubscriptions() {
         var userId = UserId.New();
         var subscriptionRepository = new RecordingSubscriptionRepository();
-        WebPushNotificationSender sender = CreateSender(subscriptionRepository, new NullUserRepository());
+        WebPushNotificationSender sender = CreateSender(FixedTime, subscriptionRepository, new NullUserRepository());
         var notification = Notification.Create(userId, NotificationTypes.FastingCompleted, "{}");
 
         await sender.SendAsync(notification, CancellationToken.None);
@@ -174,7 +176,7 @@ public sealed class WebPushNotificationSenderTests {
             "en",
             "Chrome");
         var subscriptionRepository = new RecordingSubscriptionRepository([activeSubscription]);
-        WebPushNotificationSender sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
+        WebPushNotificationSender sender = CreateSender(FixedTime, subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}");
         using var cancellationTokenSource = new CancellationTokenSource();
         await cancellationTokenSource.CancelAsync();
@@ -201,7 +203,7 @@ public sealed class WebPushNotificationSenderTests {
             "en",
             "Chrome");
         var subscriptionRepository = new RecordingSubscriptionRepository([expiredSubscription]);
-        WebPushNotificationSender sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
+        WebPushNotificationSender sender = CreateSender(FixedTime, subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}");
 
         await sender.SendAsync(notification, CancellationToken.None);
@@ -215,6 +217,7 @@ public sealed class WebPushNotificationSenderTests {
     public void BuildPayload_UsesResolvedAbsoluteTargetUrl() {
         var user = User.Create("user@example.com", "hash");
         WebPushNotificationSender sender = CreateSender(
+            FixedTime,
             new RecordingSubscriptionRepository(),
             new SingleUserRepository(user),
             new WebPushOptions {
@@ -248,6 +251,7 @@ public sealed class WebPushNotificationSenderTests {
     public void ResolveUrl_WhenDefaultUrlIsRelative_ReturnsRelativePath() {
         var user = User.Create("user@example.com", "hash");
         WebPushNotificationSender sender = CreateSender(
+            FixedTime,
             new RecordingSubscriptionRepository(),
             new SingleUserRepository(user),
             new WebPushOptions {
@@ -308,6 +312,7 @@ public sealed class WebPushNotificationSenderTests {
     }
 
     private static WebPushNotificationSender CreateSender(
+        TimeProvider timeProvider,
         RecordingSubscriptionRepository subscriptionRepository,
         IUserRepository userRepository,
         WebPushOptions? options = null,
@@ -324,7 +329,7 @@ public sealed class WebPushNotificationSenderTests {
                 DefaultUrl = "/",
             }),
             webPushClient ?? new StubWebPushClientAdapter(),
-            FixedTime,
+            timeProvider,
             NullLogger<WebPushNotificationSender>.Instance) {
             DeliveryDeadline = deliveryDeadline ?? TimeSpan.FromSeconds(35),
         };
@@ -418,6 +423,7 @@ public sealed class WebPushNotificationSenderTests {
         var repository = new RecordingSubscriptionRepository([subscription]);
         var webPushClient = new StubWebPushClientAdapter(new InvalidOperationException("transport failed"));
         WebPushNotificationSender sender = CreateSender(
+            FixedTime,
             repository,
             new SingleUserRepository(user),
             webPushClient: webPushClient);
@@ -440,6 +446,7 @@ public sealed class WebPushNotificationSenderTests {
         var repository = new RecordingSubscriptionRepository([subscription]);
         var webPushClient = new BlockingWebPushClientAdapter();
         WebPushNotificationSender sender = CreateSender(
+            FixedTime,
             repository,
             new SingleUserRepository(user),
             webPushClient: webPushClient);
@@ -464,19 +471,35 @@ public sealed class WebPushNotificationSenderTests {
         WebPushSubscription subscription = CreateActiveSubscription(user, "deadline");
         var repository = new RecordingSubscriptionRepository([subscription]);
         var webPushClient = new BlockingWebPushClientAdapter();
+        TimeProvider timeProvider = Substitute.For<TimeProvider>();
+        timeProvider.GetUtcNow().Returns(new DateTimeOffset(FixedNow));
+        Action? expireDeadline = null;
+        timeProvider.CreateTimer(
+            Arg.Any<TimerCallback>(), Arg.Any<object?>(), Arg.Any<TimeSpan>(), Arg.Any<TimeSpan>())
+            .Returns(call => {
+                TimerCallback callback = call.ArgAt<TimerCallback>(0);
+                object? state = call.ArgAt<object?>(1);
+                expireDeadline = () => callback(state);
+                return Substitute.For<ITimer>();
+            });
         WebPushNotificationSender sender = CreateSender(
+            timeProvider,
             repository,
             new SingleUserRepository(user),
-            webPushClient: webPushClient,
-            // Leave enough scheduling headroom for loaded CI runners while still
-            // keeping the deadline test fast.
-            deliveryDeadline: TimeSpan.FromMilliseconds(250));
+            webPushClient: webPushClient);
 
-        await sender.SendAsync(
+        Task sendTask = sender.SendAsync(
             Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}"),
             CancellationToken.None);
 
-        Assert.True(webPushClient.Started.Task.IsCompleted);
+        await webPushClient.Started.Task.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+        Assert.False(sendTask.IsCompleted);
+        Assert.NotNull(expireDeadline);
+        expireDeadline();
+        await sendTask.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+
+        timeProvider.Received(1).CreateTimer(
+            Arg.Any<TimerCallback>(), Arg.Any<object?>(), TimeSpan.FromSeconds(35), Timeout.InfiniteTimeSpan);
         Assert.Empty(repository.DeletedSubscriptions);
     }
 
