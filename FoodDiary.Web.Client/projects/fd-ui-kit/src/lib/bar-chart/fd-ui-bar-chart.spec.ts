@@ -109,3 +109,26 @@ describe('FdUiBarChartComponent', () => {
         return element.textContent.trim();
     }
 });
+
+describe('FdUiBarChartComponent accessibility', () => {
+    it.each(['single', 'grouped', 'stacked'] as const)(
+        'exposes focusable categorical bars to assistive technology in %s layout',
+        async layout => {
+            await TestBed.configureTestingModule({ imports: [FdUiBarChartComponent] }).compileComponents();
+            const fixture = TestBed.createComponent(FdUiBarChartComponent);
+            const host = fixture.nativeElement as HTMLElement;
+            fixture.componentRef.setInput('layout', layout);
+            fixture.componentRef.setInput('categories', [{ label: 'Monday', values: [{ label: 'Calories', value: PROTEIN_VALUE }] }]);
+            fixture.detectChanges();
+
+            const bar = host.querySelector<HTMLElement>('.fd-ui-bar-chart__categorical-bar');
+            expect(bar).not.toBeNull();
+            expect(bar?.getAttribute('role')).toBe('img');
+            expect(bar?.getAttribute('aria-label')).toContain('Monday');
+            expect(bar?.tabIndex).toBe(0);
+            expect(bar?.closest('[aria-hidden="true"]')).toBeNull();
+            bar?.focus();
+            expect(document.activeElement).toBe(bar);
+        },
+    );
+});

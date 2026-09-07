@@ -90,6 +90,8 @@ Compact four-step level indicator for difficulty, proficiency, signal strength, 
 
 Responsive bar chart for simple comparisons and scaled categorical time series. Categorical mode supports single, grouped, and stacked bars, missing categories, Y-axis labels, units, highlighted labels, and reference lines.
 
+Categorical bars are keyboard-focusable and expose their category and values through accessible labels. Their container remains visible to assistive technology; duplicate axis and category labels are hidden.
+
 **Inputs**
 
 - `title?: string`
