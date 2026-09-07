@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1083,
+    "contracts": 1091,
     "ambiguousContracts": 0,
-    "consumerEdges": 7818,
-    "productionConsumerEdges": 4630,
-    "testConsumerEdges": 3188,
-    "consumedContracts": 1083,
+    "consumerEdges": 7845,
+    "productionConsumerEdges": 4650,
+    "testConsumerEdges": 3195,
+    "consumedContracts": 1091,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -1587,6 +1587,23 @@
       ],
       "definitionPaths": [
         "Modules/Fasting/Presentation/Features/Logs/Requests/ClientTelemetryLogHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "CompleteReportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -7729,6 +7746,40 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IBugMailSource",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugMailSource.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IBugReportStore",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IChangeSetSnapshotService",
       "roles": [
         "Service"
@@ -9803,6 +9854,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "IInboundMailExportStore",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "MailInbox"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailExportStore.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "IInboundMailStore",
       "roles": [
         "Other"
@@ -9968,6 +10036,23 @@
       ],
       "definitionPaths": [
         "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/IMailInboxDmarcReportParser.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "IMailInboxExportClient",
+      "roles": [
+        "Other"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "MailInbox"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -10597,6 +10682,23 @@
       ],
       "definitionPaths": [
         "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IMxResolver.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "InboundMailExportEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "MailInbox"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/InboundMailExportEntryHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -14533,6 +14635,23 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "MailInboxExportEntryResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "MailInbox"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Client/Models/MailInboxExportEntryResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "MailInboxHealthHttpResponse",
       "roles": [
         "Response"
@@ -15923,6 +16042,23 @@
       ],
       "definitionPaths": [
         "Modules/Notifications/Presentation/Features/Notifications/Requests/RemoveWebPushSubscriptionHttpRequest.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "RenewReportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -24160,6 +24296,32 @@
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/FrontendObservabilityIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "CompleteReportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CompleteReportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/tests/FoodDiary.BugTriage.Tests/ContractSnapshotTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "ConfirmImageUploadCommand",
@@ -49239,6 +49401,136 @@
       "referenceCount": 1
     },
     {
+      "contract": "IBugMailSource",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugMailSource.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Application/Reports/ImportBugReports.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBugMailSource",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugMailSource.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Infrastructure/Extensions/BugTriageInfrastructureExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBugMailSource",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugMailSource.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Infrastructure/Mail/MailInboxBugSource.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBugReportStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Application/Reports/ImportBugReports.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBugReportStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Infrastructure/Extensions/BugTriageInfrastructureExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBugReportStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Infrastructure/Mail/MailInboxBugSource.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBugReportStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportStore.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBugReportStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IBugReportStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/tests/FoodDiary.BugTriage.Tests/BugReportsHttpTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IBugReportStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/tests/FoodDiary.BugTriage.Tests/MailInboxBugSourceTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IChangeSetSnapshotService",
       "roles": [
         "Service"
@@ -68258,6 +68550,58 @@
       "referenceCount": 1
     },
     {
+      "contract": "IInboundMailExportStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailExportStore.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IInboundMailExportStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailExportStore.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailExportStore.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IInboundMailExportStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailExportStore.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IInboundMailExportStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailExportStore.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/MailInboxExportIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IInboundMailStore",
       "roles": [
         "Other"
@@ -69086,6 +69430,58 @@
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/NpgsqlInboundMailStoreIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IMailInboxExportClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Infrastructure/Extensions/BugTriageInfrastructureExtensions.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMailInboxExportClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Infrastructure/Mail/MailInboxBugSource.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMailInboxExportClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Client/Export/MailInboxExportClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMailInboxExportClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/tests/FoodDiary.BugTriage.Tests/MailInboxBugSourceTests.cs",
       "isTest": true,
       "referenceCount": 2
     },
@@ -72273,6 +72669,19 @@
       "consumerPath": "MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/SmtpRelayDeliveryTransportTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "InboundMailExportEntryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/InboundMailExportEntryHttpResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "isTest": false,
+      "referenceCount": 2
     },
     {
       "contract": "InboundMailMessageDetailsHttpResponse",
@@ -103357,6 +103766,71 @@
       "referenceCount": 4
     },
     {
+      "contract": "MailInboxExportEntryResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Client/Models/MailInboxExportEntryResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Infrastructure/Mail/MailInboxBugSource.cs",
+      "isTest": false,
+      "referenceCount": 3
+    },
+    {
+      "contract": "MailInboxExportEntryResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Client/Models/MailInboxExportEntryResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MailInboxExportEntryResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Client/Models/MailInboxExportEntryResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "MailInbox/FoodDiary.MailInbox.Client/Export/MailInboxExportClient.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "MailInboxExportEntryResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Client/Models/MailInboxExportEntryResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/tests/FoodDiary.BugTriage.Tests/ContractSnapshotTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "MailInboxExportEntryResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "MailInbox/FoodDiary.MailInbox.Client/Models/MailInboxExportEntryResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/tests/FoodDiary.BugTriage.Tests/MailInboxBugSourceTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
       "contract": "MailInboxHealthHttpResponse",
       "roles": [
         "Response"
@@ -109906,6 +110380,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Notifications/tests/FoodDiary.Modules.Notifications.Presentation.Tests/NotificationPushControllerTests.cs",
       "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RenewReportHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
+      "isTest": false,
       "referenceCount": 1
     },
     {

@@ -6,7 +6,7 @@ Rules for `MailInbox/FoodDiary.MailInbox.Application/`.
 ## Role
 - Own inbound mail use cases, application models, and abstractions.
 - Keep HTTP, PostgreSQL, SMTP listener, MIME parsing implementation, and host configuration out of this project.
-- Keep AI task suggestion orchestration here once that workflow is added.
+- Keep mail export generic. Bug investigation and AI task orchestration belong to the independent BugTriage service.
 - Depend only on `MailInbox/FoodDiary.MailInbox.Domain`, `Shared/FoodDiary.Results`, and `Shared/FoodDiary.Mediator` among local production projects.
 
 ## Structure

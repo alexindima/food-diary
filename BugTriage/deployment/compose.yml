@@ -1,0 +1,60 @@
+name: fooddiary-bugtriage
+services:
+  bugtriage-postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fooddiary_bugtriage
+      POSTGRES_USER: bugtriage_owner
+      POSTGRES_PASSWORD: ${BUGTRIAGE_OWNER_PASSWORD:?Required}
+    volumes:
+      - data:/var/lib/postgresql/data
+    networks:
+      - database
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bugtriage_owner -d fooddiary_bugtriage"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+  initialize:
+    image: ${BUGTRIAGE_IMAGE_REF:?Required}
+    command: ["--initialize"]
+    environment:
+      ConnectionStrings__BugTriage: Host=bugtriage-postgres;Database=fooddiary_bugtriage;Username=bugtriage_owner;Password=${BUGTRIAGE_OWNER_PASSWORD:?Required}
+    networks:
+      - database
+    depends_on:
+      bugtriage-postgres:
+        condition: service_healthy
+    profiles: ["initialize"]
+  api:
+    image: ${BUGTRIAGE_IMAGE_REF:?Required}
+    restart: unless-stopped
+    read_only: true
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs:
+      - /tmp:size=16m,mode=1777,nosuid,nodev
+    ports:
+      - "127.0.0.1:5099:5099"
+    environment:
+      URLS: http://+:5099
+      ConnectionStrings__BugTriage: Host=bugtriage-postgres;Database=fooddiary_bugtriage;Username=bugtriage_runtime;Password=${BUGTRIAGE_RUNTIME_PASSWORD:?Required}
+      MailInboxClient__BaseUrl: https://mail.fooddiary.club:5098
+      MailInboxClient__MetadataApiKey: ${MAIL_INBOX_METADATA_API_KEY:?Required}
+      MailInboxClient__ContentApiKey: ${MAIL_INBOX_CONTENT_API_KEY:?Required}
+      BugTriageHttp__ApiKey: ${BUGTRIAGE_API_KEY:?Required}
+    networks:
+      - database
+      - mail
+    depends_on:
+      bugtriage-postgres:
+        condition: service_healthy
+networks:
+  database:
+    internal: true
+  mail:
+    external: true
+    name: fooddiary_default
+volumes:
+  data:

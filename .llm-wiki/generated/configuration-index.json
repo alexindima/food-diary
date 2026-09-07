@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 58,
-    "configurationFiles": 7,
-    "configurationKeys": 263,
+    "optionTypes": 60,
+    "configurationFiles": 8,
+    "configurationKeys": 268,
     "environmentVariables": 188
   },
   "optionTypes": [
@@ -116,6 +116,27 @@
         "Provider"
       ],
       "path": "FoodDiary.JobManager/Services/BillingRenewalOptions.cs"
+    },
+    {
+      "type": "BugTriageHttpOptions",
+      "section": null,
+      "properties": [
+        "ApiKey",
+        "LeaseDuration",
+        "MaxAttempts"
+      ],
+      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs"
+    },
+    {
+      "type": "BugTriageOptions",
+      "section": null,
+      "properties": [
+        "ContentRetention",
+        "ImportTimeout",
+        "PollInterval",
+        "Recipient"
+      ],
+      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Options/BugTriageOptions.cs"
     },
     {
       "type": "ClientTaskReminderOptions",
@@ -700,6 +721,18 @@
     }
   ],
   "configurationFiles": [
+    {
+      "path": "BugTriage/FoodDiary.BugTriage.WebApi/appsettings.json",
+      "keys": [
+        "BugTriage:ContentRetention",
+        "BugTriage:PollInterval",
+        "BugTriage:Recipient",
+        "Logging:LogLevel:Default",
+        "Logging:LogLevel:Microsoft.AspNetCore",
+        "Logging:LogLevel:System.Net.Http.HttpClient",
+        "Urls"
+      ]
+    },
     {
       "path": "FoodDiary.JobManager/appsettings.json",
       "keys": [

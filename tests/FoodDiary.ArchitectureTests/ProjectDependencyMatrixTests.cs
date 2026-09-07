@@ -58,6 +58,10 @@ public sealed class ProjectDependencyMatrixTests {
 
     private static readonly IReadOnlyDictionary<string, string[]> AllowedProductionProjectReferences =
         new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            ["FoodDiary.BugTriage.Application"] = [],
+            ["FoodDiary.BugTriage.Infrastructure"] = ["FoodDiary.BugTriage.Application", "FoodDiary.MailInbox.Client"],
+            ["FoodDiary.BugTriage.Presentation"] = ["FoodDiary.BugTriage.Application"],
+            ["FoodDiary.BugTriage.WebApi"] = ["FoodDiary.BugTriage.Infrastructure", "FoodDiary.BugTriage.Presentation"],
             ["FoodDiary.Modules.Meals.Service.Contracts"] = ["FoodDiary.Application.Contracts", "FoodDiary.Modules.Favorites.Domain.Contracts", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Results"],
             ["FoodDiary.Modules.Gamification.Contracts"] = ["FoodDiary.Results"],
             ["FoodDiary.Modules.Tdee.Contracts"] = ["FoodDiary.Application.Contracts", "FoodDiary.Results"],
@@ -314,6 +318,7 @@ public sealed class ProjectDependencyMatrixTests {
 
     private static readonly IReadOnlyDictionary<string, string[]> AllowedTestProjectReferences =
         new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            ["FoodDiary.BugTriage.Tests"] = ["FoodDiary.BugTriage.Application", "FoodDiary.BugTriage.Infrastructure", "FoodDiary.BugTriage.Presentation", "FoodDiary.BugTriage.WebApi", "FoodDiary.MailInbox.Client"],
             ["FoodDiary.Analyzers.Tests"] = ["FoodDiary.Analyzers"],
             ["FoodDiary.Application.Tests"] = ["FoodDiary.Application.BodyMetrics", "FoodDiary.Application.Contracts", "FoodDiary.Application.Exercises", "FoodDiary.Application.Favorites", "FoodDiary.Application.Notifications", "FoodDiary.Application.RecipeCommunity", "FoodDiary.Application.Runtime", "FoodDiary.Application.Usda", "FoodDiary.Audit.Contracts", "FoodDiary.Authentication.Contracts", "FoodDiary.Domain.Primitives", "FoodDiary.Email.Contracts", "FoodDiary.Modules.Admin.Application", "FoodDiary.Modules.Admin.Application.Abstractions", "FoodDiary.Modules.Ai.Application", "FoodDiary.Modules.Ai.Application.Abstractions", "FoodDiary.Modules.Billing.Application.Abstractions", "FoodDiary.Modules.ContentReports.Application", "FoodDiary.Modules.ContentReports.Application.Abstractions", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.Dashboard.Application", "FoodDiary.Modules.Dietologist.Application", "FoodDiary.Modules.Dietologist.Application.Abstractions", "FoodDiary.Modules.Export.Application", "FoodDiary.Modules.Fasting.Contracts", "FoodDiary.Modules.Favorites.Application.Abstractions", "FoodDiary.Modules.Hydration.Application", "FoodDiary.Modules.Hydration.Infrastructure", "FoodDiary.Modules.Identity.Application", "FoodDiary.Modules.Identity.Application.Abstractions", "FoodDiary.Modules.Images.Application.Abstractions", "FoodDiary.Modules.Images.Service.Contracts", "FoodDiary.Modules.Lessons.Application", "FoodDiary.Modules.Lessons.Application.Abstractions", "FoodDiary.Modules.Lessons.Contracts", "FoodDiary.Modules.MealPlanning.Application.Abstractions", "FoodDiary.Modules.Meals.Application", "FoodDiary.Modules.Meals.Application.Abstractions", "FoodDiary.Modules.Meals.Service.Contracts", "FoodDiary.Modules.Notifications.Application.Abstractions", "FoodDiary.Modules.OpenFoodFacts.Application", "FoodDiary.Modules.OpenFoodFacts.Application.Abstractions", "FoodDiary.Modules.Products.Application", "FoodDiary.Modules.Products.Application.Abstractions", "FoodDiary.Modules.Products.Contracts", "FoodDiary.Modules.Products.Domain", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Recipes.Application", "FoodDiary.Modules.Recipes.Application.Abstractions", "FoodDiary.Modules.Recipes.Contracts", "FoodDiary.Modules.Statistics.Application", "FoodDiary.Modules.Usda.Application.Abstractions", "FoodDiary.Modules.Users.Application", "FoodDiary.Modules.Users.Application.Abstractions", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Wearables.Application.Abstractions", "FoodDiary.Nutrition.Contracts"],
             ["FoodDiary.ArchitectureTests"] = ["FoodDiary.Application.Contracts", "FoodDiary.Domain.Primitives", "FoodDiary.Email.Contracts", "FoodDiary.Infrastructure", "FoodDiary.Modules.ContentReports.Domain", "FoodDiary.Modules.Cycles.Domain", "FoodDiary.Modules.Images.Service.Contracts", "FoodDiary.Modules.MealPlanning.Domain", "FoodDiary.Modules.Meals.Domain", "FoodDiary.Modules.Meals.Domain.Contracts", "FoodDiary.Modules.Products.Domain", "FoodDiary.Modules.Products.Domain.Contracts", "FoodDiary.Modules.Usda.Domain", "FoodDiary.Modules.Users.Contracts", "FoodDiary.Modules.Users.Domain", "FoodDiary.Modules.Users.Domain.Contracts", "FoodDiary.Nutrition.Contracts"],
@@ -510,7 +515,8 @@ public sealed class ProjectDependencyMatrixTests {
         IReadOnlyDictionary<string, string[]> actualReferencesByProject = ProjectReferenceReader.ReadProductionProjectReferences();
         string[] coreProjects = [.. actualReferencesByProject.Keys
             .Where(static projectName => !projectName.StartsWith("FoodDiary.MailRelay.", StringComparison.Ordinal))
-            .Where(static projectName => !projectName.StartsWith("FoodDiary.MailInbox.", StringComparison.Ordinal))];
+            .Where(static projectName => !projectName.StartsWith("FoodDiary.MailInbox.", StringComparison.Ordinal))
+            .Where(static projectName => !projectName.StartsWith("FoodDiary.BugTriage.", StringComparison.Ordinal))];
 
         var allowedMailClientOwners = new Dictionary<string, string>(StringComparer.Ordinal) {
             ["FoodDiary.MailInbox.Client"] = "FoodDiary.Modules.Admin.Infrastructure",
@@ -534,6 +540,7 @@ public sealed class ProjectDependencyMatrixTests {
         string[] coreSourceRoots = [.. ProjectReferenceReader.ReadProductionProjectNames()
             .Where(static projectName => !projectName.StartsWith("FoodDiary.MailRelay.", StringComparison.Ordinal))
             .Where(static projectName => !projectName.StartsWith("FoodDiary.MailInbox.", StringComparison.Ordinal))
+            .Where(static projectName => !projectName.StartsWith("FoodDiary.BugTriage.", StringComparison.Ordinal))
             .Where(static projectName => !string.Equals(projectName, "FoodDiary.Email.MailRelay", StringComparison.Ordinal))
             .Where(static projectName => !string.Equals(projectName, "FoodDiary.Modules.Admin.Infrastructure", StringComparison.Ordinal))
             .Select(projectName => ArchitectureTestPaths.FromRoot(ProjectFolderFromProjectName(projectName)))];

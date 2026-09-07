@@ -262,3 +262,7 @@ See [ADR 0033](adr/0033-retry-safe-outbox-and-consumer-contracts.md) for retry-s
 ## Current execution and projection boundaries
 
 Products and Recipes use Serializable top-level transactions with whole-attempt retries, replacing the global composition lock. Users supplies persisted no-tracking consumer profiles; its tracked aggregate service remains owner-local. Meals owns the tenant-scoped batch ingredient display projection consumed by Dashboard. See ADR 0035 for invariants, verification and coordinated rollout.
+
+## Bug triage supporting service
+
+`BugTriage/` is an independent operational service with its own database. Only its Infrastructure references MailInbox.Client. MailInbox exports generic mail data and never owns defect investigation or Git execution. See ADR 0036 and `docs/backend/BUG_TRIAGE.md`.

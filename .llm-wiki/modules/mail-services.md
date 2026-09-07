@@ -10,6 +10,9 @@ sources:
   - MailInbox/FoodDiary.MailInbox.Infrastructure/AGENTS.md
   - MailInbox/FoodDiary.MailInbox.Presentation/AGENTS.md
   - MailInbox/FoodDiary.MailInbox.WebApi/AGENTS.md
+  - BugTriage/AGENTS.md
+  - docs/backend/BUG_TRIAGE.md
+  - docs/adr/0036-independent-bug-triage-service.md
 ---
 
 # Mail Services
@@ -32,9 +35,17 @@ API remains a host-only project.
 ## Core Integration Boundary
 
 Primary FoodDiary projects interact with these services only through their
-client packages. Current cross-service access belongs in
-`FoodDiary.Integrations`; server-side service projects must not leak into the
-primary backend dependency graph.
+client packages. Admin Infrastructure owns the MailInbox bridge and
+`Shared/FoodDiary.Email.MailRelay` owns outbound transport; server-side service
+projects must not leak into the primary backend dependency graph.
+
+## BugTriage Consumer
+
+BugTriage is an independent operational service with a separate database. Its
+Infrastructure consumes MailInbox.Client's recipient-filtered export and binary
+MIME routes. It owns report leases and outcomes; local Codex tasks own code
+investigation and draft publication. MailInbox remains generic and has no
+BugTriage dependency. See [the runbook](../../docs/backend/BUG_TRIAGE.md).
 
 See the canonical [architecture](../../docs/ARCHITECTURE.md) and
 [module map](../../docs/BACKEND_MODULE_MAP.md) before changing these boundaries.

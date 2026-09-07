@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1341,
+    "productionProjectEdges": 1346,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 96,
     "routedStandaloneComponents": 55,
     "componentsWithoutDirectSpecs": 128,
-    "criticalSymbolsWithoutTestReferences": 19,
+    "criticalSymbolsWithoutTestReferences": 21,
     "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
@@ -4833,6 +4833,26 @@
       "role": "CommandHandler",
       "path": "Modules/Identity/Application/Authentication/Commands/RevokeSession/RevokeSessionCommandHandler.cs",
       "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "BugReportsController",
+      "role": "Controller",
+      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
+      "line": 17,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "MailInboxExportController",
+      "role": "Controller",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "line": 14,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",

@@ -377,6 +377,15 @@
     <Project Path="FoodDiary.Web.Api/FoodDiary.Web.Api.csproj" />
   </Folder>
   <Folder Name="/Services/" />
+  <Folder Name="/Services/BugTriage/">
+    <Project Path="BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj" />
+    <Project Path="BugTriage/FoodDiary.BugTriage.Infrastructure/FoodDiary.BugTriage.Infrastructure.csproj" />
+    <Project Path="BugTriage/FoodDiary.BugTriage.Presentation/FoodDiary.BugTriage.Presentation.csproj" />
+    <Project Path="BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/Services/BugTriage/Tests/">
+    <Project Path="BugTriage/tests/FoodDiary.BugTriage.Tests/FoodDiary.BugTriage.Tests.csproj" />
+  </Folder>
   <Folder Name="/Services/MailInbox/">
     <Project Path="MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj" />
     <Project Path="MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj" />

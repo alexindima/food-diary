@@ -31,7 +31,13 @@ sources:
 
 ## HTTP Surface
 
-No literal attribute-routed controller was associated with this module.
+### MailInboxExportController
+
+Source: `MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs`
+
+- `GET /api/mail-inbox/export`
+- `GET /api/mail-inbox/export/{id:guid}/mime`
+
 ## Boundary Health
 
 - Role: read-composer

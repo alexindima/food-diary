@@ -38,6 +38,7 @@ public static class MailInboxServiceCollectionExtensions {
         });
 
         services.AddSingleton<NpgsqlInboundMailStore>();
+        services.AddSingleton<IInboundMailExportStore, NpgsqlInboundMailExportStore>();
         services.AddSingleton<NpgsqlMailInboxRuntimeRoleValidator>();
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton<DmarcReportParser>();

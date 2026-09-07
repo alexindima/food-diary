@@ -1,0 +1,6 @@
+{
+  "claim": ["id", "sourceMessageId", "subject", "textBody", "leaseToken", "leaseExpiresAtUtc", "attempt", "contentExpiresAtUtc"],
+  "completion": ["leaseToken", "outcome", "summary", "mergeRequestUrl"],
+  "summary": ["id", "status", "attempt", "summary", "mergeRequestUrl"],
+  "mailExportEntry": ["id", "receivedAtUtc", "contentAvailable"]
+}

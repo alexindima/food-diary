@@ -352,3 +352,5 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Gamification consumer API: `Modules/Gamification/Contracts/AGENTS.md`
 
 - Meals consumer API: `Modules/Meals/Service.Contracts/AGENTS.md`
+
+- Bug triage service: `BugTriage/AGENTS.md`

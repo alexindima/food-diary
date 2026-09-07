@@ -322,3 +322,7 @@ API remain shared/compatible. See `docs/adr/0031-acyclic-contracts-and-scalar-ag
 Retry and image-reference boundaries follow [ADR 0032](adr/0032-retry-isolation-and-image-reference-integrity.md): fresh attempt state, isolated orphan cleanup, restrictive image FKs and immutable Images service contracts.
 
 See [ADR 0033](adr/0033-retry-safe-outbox-and-consumer-contracts.md) for retry-safe Wearables/replay, outbox claim-owner fencing and the narrow cross-module consumer APIs.
+
+## BugTriage
+
+Independent bug-report processing service under `BugTriage/`. Application owns report lifecycle and ports; Infrastructure owns PostgreSQL, the MailInbox.Client adapter and polling; Presentation owns the processor API; WebApi is composition-only. No primary module references it. See `docs/backend/BUG_TRIAGE.md`.

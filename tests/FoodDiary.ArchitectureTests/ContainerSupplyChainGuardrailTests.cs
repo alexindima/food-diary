@@ -8,6 +8,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
         "db-init", "mailrelay-db-init", "mailinbox-db-init", "api", "mail-relay", "telegram-bot", "job-manager", "client", "nginx",
     ];
     private static readonly string[] ExpectedProductionProjects = [
+        "BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj",
         "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
         "FoodDiary.JobManager/FoodDiary.JobManager.csproj",
         "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
@@ -19,6 +20,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
     ];
 
     private static readonly string[] ExpectedDockerfiles = [
+        "BugTriage/FoodDiary.BugTriage.WebApi/Dockerfile",
         "FoodDiary.Initializer/Dockerfile",
         "FoodDiary.JobManager/Dockerfile",
         "FoodDiary.Telegram.Bot/Dockerfile",
@@ -31,6 +33,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
     ];
 
     private static readonly string[] ExpectedBuildIds = [
+        "build_bugtriage",
         "build_api",
         "build_telegram_bot",
         "build_initializer",
@@ -268,7 +271,7 @@ public sealed class ContainerSupplyChainGuardrailTests {
             .. ExpectedDockerfiles.Select(path => ArchitectureTestPaths.FromRoot(path.Split('/'))),
         ];
 
-        Assert.Equal(9, dockerfiles.Length);
+        Assert.Equal(10, dockerfiles.Length);
         foreach (string dockerfile in dockerfiles) {
             string contents = File.ReadAllText(dockerfile);
             string[] fromLines = [

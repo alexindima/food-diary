@@ -69,6 +69,8 @@ public sealed class ClientPackageBoundaryTests {
                 return !relative.StartsWith($"Models{Path.DirectorySeparatorChar}", StringComparison.Ordinal) &&
                        !relative.StartsWith($"Options{Path.DirectorySeparatorChar}", StringComparison.Ordinal) &&
                        !relative.StartsWith($"Extensions{Path.DirectorySeparatorChar}", StringComparison.Ordinal) &&
+                       !(string.Equals(projectName, "FoodDiary.MailInbox.Client", StringComparison.Ordinal) &&
+                         relative.StartsWith($"Export{Path.DirectorySeparatorChar}", StringComparison.Ordinal)) &&
                        !allowedRootFiles.Contains(relative);
             })
             .Select(path => Path.GetRelativePath(root, path))

@@ -126,6 +126,7 @@ public sealed class MailInboxArchitectureTests {
                 "Telemetry",
             ],
             ["MailInbox/FoodDiary.MailInbox.Client"] = [
+                "Export",
                 "Extensions",
                 "Models",
                 "Options",

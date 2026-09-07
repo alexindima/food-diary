@@ -1,0 +1,74 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net10.0": {
+      "Meziantou.Analyzer": {
+        "type": "Direct",
+        "requested": "[3.0.195, )",
+        "resolved": "3.0.195",
+        "contentHash": "+OzBSeXP1nXzQiLOIvZp6G9ldu8QkCTZjyVBAbn7dEBnEeWvDLUW1Py61cQ12OsYf45YpZ6Pel1rQ+cedWQR2Q=="
+      },
+      "Roslynator.Analyzers": {
+        "type": "Direct",
+        "requested": "[4.16.1, )",
+        "resolved": "4.16.1",
+        "contentHash": "AGzq3UZvIwTGSh9xyIna+Q9F666S8UaLlX/Pk3Iz21qIAWjL8iYporVCcX1k/oi5chrRZ8VJRahup4me4HZptw=="
+      },
+      "BouncyCastle.Cryptography": {
+        "type": "Transitive",
+        "resolved": "2.6.2",
+        "contentHash": "7oWOcvnntmMKNzDLsdxAYqApt+AjpRpP2CShjMfIa3umZ42UQMvH0tl1qAliYPNYO6vTdcGMqnRrCPmsfzTI1w=="
+      },
+      "MimeKit": {
+        "type": "Transitive",
+        "resolved": "4.17.0",
+        "contentHash": "h/KXsCreJf8RpR/PSAtlbvYtZFndp9N8Wn1Bs248AL7ITyhn+AiIY5bLTvt60tbN2mu6g8KadtBNWygTji2lqg==",
+        "dependencies": {
+          "BouncyCastle.Cryptography": "2.6.2",
+          "System.Security.Cryptography.Pkcs": "10.0.0"
+        }
+      },
+      "System.Security.Cryptography.Pkcs": {
+        "type": "Transitive",
+        "resolved": "10.0.0",
+        "contentHash": "UPWqLSygJlFerRi9XNIuM0a1VC8gHUIufyP24xQ0sc+XimqUAEcjpOz9DhKpyDjH+5B/wO3RpC0KpkEeDj/ddg=="
+      },
+      "fooddiary.bugtriage.application": {
+        "type": "Project"
+      },
+      "fooddiary.bugtriage.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.BugTriage.Application": "[1.0.0, )",
+          "FoodDiary.MailInbox.Client": "[1.0.0, )",
+          "MailKit": "[4.17.0, )",
+          "Npgsql": "[10.0.3, )"
+        }
+      },
+      "fooddiary.bugtriage.presentation": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.BugTriage.Application": "[1.0.0, )"
+        }
+      },
+      "fooddiary.mailinbox.client": {
+        "type": "Project"
+      },
+      "MailKit": {
+        "type": "CentralTransitive",
+        "requested": "[4.17.0, )",
+        "resolved": "4.17.0",
+        "contentHash": "1nUAVLxM9fhT/78we6/AGsCesnpn5dRNLLeRqOfr52Wnk87pzVwo5YMTMyqnmoXrYc7piGhmayiMA/OgDluIjg==",
+        "dependencies": {
+          "MimeKit": "4.17.0"
+        }
+      },
+      "Npgsql": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.3, )",
+        "resolved": "10.0.3",
+        "contentHash": "7nb5YzXuvWWJxB0J8DiyL3we+X4FOctZrt0fIBnucOIaIevFEEwGQVZKtiu9olXdlNAK1eNgqSral6r/jlhI4w=="
+      }
+    }
+  }
+}

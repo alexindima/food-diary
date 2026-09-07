@@ -297,6 +297,28 @@ jobs:
             echo "FAILED_TARGET=Build and push Mail Inbox Initializer"
           } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
 
+      - name: Build and push BugTriage
+        id: build_bugtriage
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
+        with:
+          context: .
+          file: BugTriage/FoodDiary.BugTriage.WebApi/Dockerfile
+          push: true
+          provenance: mode=max
+          sbom: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/bugtriage:latest
+            ${{ env.IMAGE_PREFIX }}/bugtriage:sha-${{ env.SOURCE_COMMIT_SHA }}
+
+      - name: Record failure step
+        if: always() && steps.build_bugtriage.outcome == 'failure'
+        shell: bash
+        run: |
+          {
+            echo "FAILED_AREA=deploy"
+            echo "FAILED_TARGET=Build and push BugTriage"
+          } > "${RUNNER_TEMP}/deploy-logs/failure-meta.env"
+
       - name: Build and push Client
         id: build_client
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
@@ -357,6 +379,7 @@ jobs:
             "mail-inbox=${{ steps.build_mail_inbox.outputs.digest }}" \
             "mailinbox-postgres-tls-init=${{ steps.build_mailinbox_postgres_tls_init.outputs.digest }}" \
             "mailinbox-initializer=${{ steps.build_mailinbox_initializer.outputs.digest }}" \
+            "bugtriage=${{ steps.build_bugtriage.outputs.digest }}" \
             "client=${{ steps.build_client.outputs.digest }}" \
             "tech-radar=${{ steps.build_tech_radar.outputs.digest }}"
 
@@ -513,6 +536,8 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" | $SSH_CMD "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
           $SSH_CMD "mkdir -p /opt/fooddiary/nginx/sites-enabled /opt/fooddiary/MailInbox/FoodDiary.MailInbox.WebApi /opt/fooddiary/scripts /var/www/storybook.fooddiary.club /var/log/nginx"
           $SCP_CMD docker-compose.yml root@${{ env.SERVER_IP }}:/opt/fooddiary/docker-compose.yml
+          $SSH_CMD "install -d -m 0700 /opt/fooddiary/bugtriage"
+          $SCP_CMD BugTriage/deployment/compose.yml BugTriage/deployment/deploy.py root@${{ env.SERVER_IP }}:/opt/fooddiary/bugtriage/
           $SCP_CMD MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf
           $SCP_CMD nginx.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx.conf
           $SCP_CMD nginx/sites-enabled/fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/fooddiary.club
@@ -570,6 +595,7 @@ jobs:
           docker compose --profile backend up -d redis
           docker compose --profile backend up -d --force-recreate --no-deps mail-relay
           docker compose --profile mail-inbox up -d --force-recreate --no-deps mail-inbox
+          python3 /opt/fooddiary/bugtriage/deploy.py '${{ env.IMAGE_PREFIX }}/bugtriage@${{ steps.build_bugtriage.outputs.digest }}'
           docker compose --profile backend up -d --force-recreate --no-deps api
           docker compose --profile full up -d --force-recreate --no-deps telegram-bot
           docker compose --profile full up -d --force-recreate --no-deps job-manager

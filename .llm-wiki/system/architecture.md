@@ -24,6 +24,8 @@ in [the architecture document](../../docs/ARCHITECTURE.md).
 - `FoodDiary.JobManager` runs scheduled and background work.
 - `FoodDiary.Telegram.Bot` is a separate transport adapter.
 - MailRelay and MailInbox have separate hosts and databases.
+- BugTriage owns a separate bug queue and consumes MailInbox through its client;
+  code investigation and draft publication run on a local workstation.
 - PostgreSQL, RabbitMQ, and Redis provide persistence, messaging, and caching.
 
 ## Boundary Model

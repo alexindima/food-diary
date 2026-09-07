@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <UserSecretsId>fooddiary-bugtriage</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../FoodDiary.BugTriage.Infrastructure/FoodDiary.BugTriage.Infrastructure.csproj" />
+    <ProjectReference Include="../FoodDiary.BugTriage.Presentation/FoodDiary.BugTriage.Presentation.csproj" />
+  </ItemGroup>
+</Project>

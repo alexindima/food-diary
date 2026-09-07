@@ -50,6 +50,7 @@ public sealed class MailInboxSmtpOptions {
 
     public string[] AllowedRecipients { get; init; } = [
         "admin@fooddiary.club",
+        "bugs@fooddiary.club",
         "dmarc@fooddiary.club",
         "feedback@fooddiary.club",
         "support@fooddiary.club",

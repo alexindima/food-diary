@@ -1,0 +1,77 @@
+using FoodDiary.BugTriage.Application.Reports;
+using FoodDiary.BugTriage.Infrastructure.Persistence;
+using Npgsql;
+using Testcontainers.PostgreSql;
+
+namespace FoodDiary.BugTriage.Tests;
+
+public sealed class ReportStoreTests : IAsyncLifetime {
+    private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:17-alpine")
+        .WithDatabase("fooddiary_bugtriage").Build();
+    private NpgsqlDataSource _dataSource = null!;
+    private NpgsqlBugReportStore _store = null!;
+    private static readonly DateTimeOffset Now = new(2026, 9, 7, 12, 0, 0, TimeSpan.Zero);
+
+    public async Task InitializeAsync() {
+        await _postgres.StartAsync().ConfigureAwait(false);
+        _dataSource = NpgsqlDataSource.Create(_postgres.GetConnectionString());
+        await BugTriageSchema.InitializeAsync(_dataSource, CancellationToken.None).ConfigureAwait(false);
+        await BugTriageSchema.InitializeAsync(_dataSource, CancellationToken.None).ConfigureAwait(false);
+        _store = new NpgsqlBugReportStore(_dataSource);
+    }
+
+    public async Task DisposeAsync() {
+        await _dataSource.DisposeAsync().ConfigureAwait(false);
+        await _postgres.DisposeAsync().ConfigureAwait(false);
+    }
+
+    [Fact]
+    public async Task ConcurrentImportsAndClaims_ProduceOneLease_AndFenceStaleCompletion() {
+        var report = new ImportedReport(Guid.NewGuid(), Now, "Broken button", "Steps", [1, 2, 3]);
+        await Task.WhenAll(Enumerable.Range(0, 6).Select(_ => _store.ImportAsync(report, Now.AddDays(1), CancellationToken.None)));
+        ReportLease?[] claims = await Task.WhenAll(Enumerable.Range(0, 6).Select(_ =>
+            _store.ClaimAsync(Now, TimeSpan.FromMinutes(5), 3, CancellationToken.None)));
+        ReportLease first = Assert.Single(claims.OfType<ReportLease>());
+        ReportLease? second = await _store.ClaimAsync(Now.AddMinutes(6), TimeSpan.FromMinutes(5), 3, CancellationToken.None);
+        Assert.NotNull(second);
+        var completion = new ReportCompletion(ReportOutcome.DraftReady, "Regression tested", "https://github.com/example/repo/pull/1");
+        Assert.False(await _store.CompleteAsync(first.Id, first.LeaseToken, completion, Now.AddMinutes(6), CancellationToken.None));
+        Assert.False(await _store.RenewAsync(first.Id, first.LeaseToken, Now.AddMinutes(6), TimeSpan.FromMinutes(5), CancellationToken.None));
+        Assert.True(await _store.CompleteAsync(second.Id, second.LeaseToken, completion, Now.AddMinutes(6), CancellationToken.None));
+        Assert.True(await _store.CompleteAsync(second.Id, second.LeaseToken, completion, Now.AddMinutes(7), CancellationToken.None));
+        Assert.False(await _store.CompleteAsync(second.Id, second.LeaseToken, completion with { Summary = "Changed" }, Now.AddMinutes(7), CancellationToken.None));
+        Assert.Null(await _store.ClaimAsync(Now.AddHours(1), TimeSpan.FromMinutes(5), 3, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task RetentionPurgesContentButKeepsReceipt_AndCannotReviveLease() {
+        var report = new ImportedReport(Guid.NewGuid(), Now, "Private", "Private body", [5, 6, 7]);
+        await _store.ImportAsync(report, Now.AddMinutes(3), CancellationToken.None);
+        ReportLease? lease = await _store.ClaimAsync(Now, TimeSpan.FromMinutes(30), 3, CancellationToken.None);
+        Assert.NotNull(lease);
+        Assert.Equal(Now.AddMinutes(3), lease.LeaseExpiresAtUtc);
+        Assert.Equal(report.RawMime, await _store.GetMimeAsync(lease.Id, lease.LeaseToken, Now, CancellationToken.None));
+        Assert.Null(await _store.GetMimeAsync(lease.Id, Guid.NewGuid(), Now, CancellationToken.None));
+        await _store.PurgeAsync(Now.AddMinutes(4), CancellationToken.None);
+        Assert.True(await _store.ContainsAsync(report.SourceMessageId, CancellationToken.None));
+        await _store.ImportAsync(report, Now.AddDays(1), CancellationToken.None);
+        Assert.Null(await _store.ClaimAsync(Now.AddMinutes(4), TimeSpan.FromMinutes(30), 3, CancellationToken.None));
+        Assert.Null(await _store.GetMimeAsync(lease.Id, lease.LeaseToken, Now.AddMinutes(4), CancellationToken.None));
+        await using NpgsqlCommand command = _dataSource.CreateCommand("select subject, text_body, raw_mime, summary from bugtriage_reports");
+        await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+        Assert.True(await reader.ReadAsync());
+        Assert.Equal(string.Empty, reader.GetString(0));
+        Assert.Equal(string.Empty, reader.GetString(1));
+        Assert.True(await reader.IsDBNullAsync(2));
+        Assert.True(await reader.IsDBNullAsync(3));
+    }
+
+    [Fact]
+    public async Task ExpiredAttemptsStopAtConfiguredLimit() {
+        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now, "Bug", "Steps", [1]), Now.AddDays(1), CancellationToken.None);
+        Assert.NotNull(await _store.ClaimAsync(Now, TimeSpan.FromMinutes(1), 1, CancellationToken.None));
+        Assert.Null(await _store.ClaimAsync(Now.AddMinutes(2), TimeSpan.FromMinutes(1), 1, CancellationToken.None));
+        await using NpgsqlCommand command = _dataSource.CreateCommand("select status from bugtriage_reports");
+        Assert.Equal("failed", await command.ExecuteScalarAsync());
+    }
+}

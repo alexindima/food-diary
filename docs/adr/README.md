@@ -54,3 +54,5 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 - [ADR 0032: Retry isolation and image reference integrity](0032-retry-isolation-and-image-reference-integrity.md)
 
 - [0035: Runtime boundaries and owner projections](0035-runtime-boundaries-and-owner-projections.md)
+
+- [0036: Independent bug triage service](0036-independent-bug-triage-service.md)

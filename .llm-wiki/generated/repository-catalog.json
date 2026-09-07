@@ -13,19 +13,148 @@
     "docs/**/*.md"
   ],
   "summary": {
-    "dotnetProjects": 409,
-    "testProjects": 156,
+    "dotnetProjects": 414,
+    "testProjects": 157,
     "frontendProjects": 4,
     "applicationModules": 1,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 34,
-    "controllers": 9,
-    "endpoints": 19,
-    "agentGuides": 249,
-    "documentationPages": 165
+    "controllers": 10,
+    "endpoints": 21,
+    "agentGuides": 250,
+    "documentationPages": 167
   },
   "dotnet": {
     "projects": [
+      {
+        "name": "FoodDiary.BugTriage.Application",
+        "assemblyName": "FoodDiary.BugTriage.Application",
+        "path": "BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.BugTriage.Infrastructure",
+        "assemblyName": "FoodDiary.BugTriage.Infrastructure",
+        "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/FoodDiary.BugTriage.Infrastructure.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj",
+          "MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "MailKit",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Hosting",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.BugTriage.Presentation",
+        "assemblyName": "FoodDiary.BugTriage.Presentation",
+        "path": "BugTriage/FoodDiary.BugTriage.Presentation/FoodDiary.BugTriage.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.BugTriage.WebApi",
+        "assemblyName": "FoodDiary.BugTriage.WebApi",
+        "path": "BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj",
+        "sdk": "Microsoft.NET.Sdk.Web",
+        "outputType": "Exe",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "BugTriage/FoodDiary.BugTriage.Infrastructure/FoodDiary.BugTriage.Infrastructure.csproj",
+          "BugTriage/FoodDiary.BugTriage.Presentation/FoodDiary.BugTriage.Presentation.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.BugTriage.Tests",
+        "assemblyName": "FoodDiary.BugTriage.Tests",
+        "path": "BugTriage/tests/FoodDiary.BugTriage.Tests/FoodDiary.BugTriage.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj",
+          "BugTriage/FoodDiary.BugTriage.Infrastructure/FoodDiary.BugTriage.Infrastructure.csproj",
+          "BugTriage/FoodDiary.BugTriage.Presentation/FoodDiary.BugTriage.Presentation.csproj",
+          "BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj",
+          "MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.AspNetCore.Mvc.Testing",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "NSubstitute",
+            "version": null
+          },
+          {
+            "name": "SSH.NET",
+            "version": null
+          },
+          {
+            "name": "Testcontainers.PostgreSql",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
       {
         "name": "FoodDiary.Analyzers",
         "assemblyName": "FoodDiary.Analyzers",
@@ -13238,6 +13367,7 @@
       }
     ],
     "testProjects": [
+      "BugTriage/tests/FoodDiary.BugTriage.Tests/FoodDiary.BugTriage.Tests.csproj",
       "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj",
       "MailInbox/tests/FoodDiary.MailInbox.Client.Tests/FoodDiary.MailInbox.Client.Tests.csproj",
       "MailInbox/tests/FoodDiary.MailInbox.Domain.Tests/FoodDiary.MailInbox.Domain.Tests.csproj",
@@ -13607,6 +13737,23 @@
         ]
       },
       {
+        "name": "MailInboxExportController",
+        "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+        "routePrefix": "api/mail-inbox/export",
+        "endpoints": [
+          {
+            "verb": "GET",
+            "route": "/api/mail-inbox/export",
+            "line": 15
+          },
+          {
+            "verb": "GET",
+            "route": "/api/mail-inbox/export/{id:guid}/mime",
+            "line": 31
+          }
+        ]
+      },
+      {
         "name": "MailInboxHealthController",
         "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/MailInboxHealthController.cs",
         "routePrefix": "",
@@ -13752,6 +13899,7 @@
   "knowledgeSources": {
     "agentGuides": [
       "AGENTS.md",
+      "BugTriage/AGENTS.md",
       "FoodDiary.Analyzers/AGENTS.md",
       "FoodDiary.Application.Runtime/AGENTS.md",
       "FoodDiary.Development.Mcp/AGENTS.md",
@@ -14042,6 +14190,7 @@
       "docs/adr/0033-retry-safe-outbox-and-consumer-contracts.md",
       "docs/adr/0034-revision-finalization-and-scalar-consumer-boundaries.md",
       "docs/adr/0035-runtime-boundaries-and-owner-projections.md",
+      "docs/adr/0036-independent-bug-triage-service.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/CODE_REVIEW.md",
@@ -14139,6 +14288,7 @@
       "docs/backend/BACKEND_RUNBOOKS.md",
       "docs/backend/BACKEND_SECURITY_HARDENING.md",
       "docs/backend/BACKEND_TIME_POLICY.md",
+      "docs/backend/BUG_TRIAGE.md",
       "docs/backend/MAILINBOX_DATA_LIFECYCLE.md",
       "docs/backend/MARKETING_ATTRIBUTION_RUNBOOK.md",
       "docs/backend/MODULE_EXTRACTION_READINESS.md",

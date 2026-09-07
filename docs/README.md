@@ -57,3 +57,5 @@ This directory contains long-form repository documentation. Keep root-level mark
 `archive/` contains outdated or historical root documents that are not current operational guidance. Do not use archived files as source of truth unless a current guide explicitly references them.
 
 Codex Cloud smoke test completed.
+
+- [Email bug triage](backend/BUG_TRIAGE.md)

@@ -486,6 +486,7 @@ jobs:
             "MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj"
             "MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"
             "MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj"
+            "BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj"
             "MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"
           )
 
@@ -573,6 +574,7 @@ jobs:
             "MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj"
             "MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"
             "MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj"
+            "BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj"
             "MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"
           )
 

@@ -52,18 +52,14 @@
       "pageSha256": "19b4a19aacfe2c095a6a1dd83977162a2d3cc4f203f30f546a8eeb8ffffa5673",
       "sources": [
         {
-          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-          "sha256": "3715be1f4fca90f2c36af507aae51c86af839c44534baa99adad1bc1cc3c9850"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "98b253ba8222742b103d507ca9d0f11bab487199107a9499c0024d682997fee3"
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "b8626f6fd03e635ee0584ec32cbdb0f3fd9776836785f2505a492653ecd829e2"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:39.5711945Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:01:16.2169458Z"
     },
     {
       "pageId": "system.architecture",
@@ -120,14 +116,22 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
+          "path": "AGENTS.md",
+          "sha256": "f3a838c35e9686a4c0877783e3962bae93dc16d5a2db9278e9c8b16a242d4d17"
+        },
+        {
           "path": "docs/adr/README.md",
-          "sha256": "48823bb1f00d4ef53d5b4ea6fe462d6a79085fa173aebe82d4b6c3c633d3d169"
+          "sha256": "f471785c5bb353f297c1be6e638de25d2ec397c79360f1c694f04b35341b520a"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "77c120d4191dc679b3e85ec41036121af209ed428a0223184521996db10bf440"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:39.9568156Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:01:17.9039924Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -196,17 +200,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "bc0feafd5d0290a93647f4c8cfeda3d31781d52536ff9f18598811501720d74a"
+          "sha256": "69db3261465f3cce2ae952b672d7e331c58b386667bd0bb12fac5dfe933e5a50"
         },
         {
           "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "502eb90091e81873e027cd022fc7b4f1e2aa2d945429be2bd1ce386b16d70220"
+          "sha256": "99f8f5adf51fa9d956d37d0a5b1d48adf09f0ecf556892fa04a7abde14d09ab9"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:40.1450521Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:01:19.6572034Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -214,14 +218,14 @@
       "pageSha256": "c89b4c5cb13fefe0a1c6171804cc91b5f6c9ce69753e8d4de9fda0bb2514b052",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "49e36a7b499b3a44c1768bc5c7e38ac57f19bb7c8fb7ce75c3e5e102683e0499"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "ed298beda0d8cffd964dda0e824b8c655b3777a3ffbfc3a190122676320f8084"
         }
       ],
-      "reason": "Reviewed final context-ranking changes: physical paths, projection lineage, backend contract/privacy/impact queries and stale states remain intact. Shared/module selectors preserve roles; compound identifiers and explicit-test morphology reuse bounded ranking. Frozen path-only edits have verified Git rename evidence.",
+      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
-      "reviewedAtUtc": "2026-09-06T20:27:46.4131637Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:01:21.1548263Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -445,13 +449,13 @@
       "sources": [
         {
           "path": "docs/adr/README.md",
-          "sha256": "48823bb1f00d4ef53d5b4ea6fe462d6a79085fa173aebe82d4b6c3c633d3d169"
+          "sha256": "f471785c5bb353f297c1be6e638de25d2ec397c79360f1c694f04b35341b520a"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:40.9743688Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:01:22.7223487Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -459,14 +463,14 @@
       "pageSha256": "b8326a8fc44d9de804aa9a021771d97014a2ead8b3db08959f38add670525ba4",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
+          "path": ".llm-wiki/generated/configuration-index.json",
+          "sha256": "0d722aab65e0f292f7b28d384af5b46abbd92fcdeafbd53ec609433d74c8e391"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:31:54.6041627Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:01:25.5232794Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -771,14 +775,14 @@
       "pageSha256": "78aa14b84fb0cb0d89ccb14af14b45659440ebc5989802a96986908f26653657",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "49e36a7b499b3a44c1768bc5c7e38ac57f19bb7c8fb7ce75c3e5e102683e0499"
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "ebd7234d028fa85e366e9c4050cb1af84c9b561d8c3e0e2a7630e93ce1777212"
         }
       ],
-      "reason": "Reviewed final context-ranking changes: physical paths, projection lineage, backend contract/privacy/impact queries and stale states remain intact. Shared/module selectors preserve roles; compound identifiers and explicit-test morphology reuse bounded ranking. Frozen path-only edits have verified Git rename evidence.",
+      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
-      "reviewedAtUtc": "2026-09-06T20:27:47.5443176Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:01:26.5787651Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -817,13 +821,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "437a448ff463ea3c0310190954e8acd8730c7fde4d8136a2e288a7afc60dbee7"
+          "sha256": "84a57883ae8bc1b93e76293e1f549676d0cd5c7bbc1e190c1321621d77312089"
         }
       ],
-      "reason": "Reviewed regenerated MCP complexity counts for the bounded selector and identifier changes. 109 focused reader tests passed, including synthetic negative boundaries; static reference counts are not presented as execution coverage.",
+      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
-      "reviewedAtUtc": "2026-09-06T20:28:42.2614307Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:01:28.2089813Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -900,13 +904,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "fb6cd19ca6ce5daee1a2febbe208f3dd72a0b90612ab53b2f480fad90839dfe1"
+          "sha256": "6d224803264b5cd3142dbaed850fe25d9245800bc3141d8712c8e5ed0291663f"
         }
       ],
-      "reason": "Reviewed the regenerated WebPush topology against the sender and focused cancellation tests: the existing 35-second deadline now uses the injected TimeProvider, caller cancellation still propagates, and no client, worker, retry, subscription deletion, or deployment endpoint was added. The runtime-impact guidance remains accurate.",
+      "reason": "Final source review: generic MailInbox export and isolated BugTriage are documented in ADR 0036/runbook and mail/system navigation. Generated indexes reflect the four new production projects, optional mail export client and bounded token API; existing primary modules and workflow authority remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "3dcd9d98b18b3d645f8ff9aad9bbc45560825756",
-      "reviewedAtUtc": "2026-09-07T01:16:36.4687198Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:06:42.8510047Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -914,14 +918,22 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "84a57883ae8bc1b93e76293e1f549676d0cd5c7bbc1e190c1321621d77312089"
+        },
+        {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "fb6cd19ca6ce5daee1a2febbe208f3dd72a0b90612ab53b2f480fad90839dfe1"
+          "sha256": "6d224803264b5cd3142dbaed850fe25d9245800bc3141d8712c8e5ed0291663f"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "ebd7234d028fa85e366e9c4050cb1af84c9b561d8c3e0e2a7630e93ce1777212"
         }
       ],
-      "reason": "Reviewed the added timeout-policy candidate against WebPushNotificationSender and the controlled timer test. This is a navigation signal for an existing deadline, not a new SSRF or exposure claim; endpoint/IP checks, privacy boundaries, certificate validation, and dependency findings are unchanged. The security-review evidence limits remain accurate.",
+      "reason": "Final source review: generic MailInbox export and isolated BugTriage are documented in ADR 0036/runbook and mail/system navigation. Generated indexes reflect the four new production projects, optional mail export client and bounded token API; existing primary modules and workflow authority remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "3dcd9d98b18b3d645f8ff9aad9bbc45560825756",
-      "reviewedAtUtc": "2026-09-07T01:16:38.9000010Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:06:43.5007981Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1091,17 +1103,17 @@
     {
       "pageId": "workflow.change-policy",
       "pagePath": ".llm-wiki/workflows/change-policy.md",
-      "pageSha256": "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
+      "pageSha256": "5a76c906b2df2376fbdf59ad6c1f5eead5e7056deda2e4eaa69a24f00491cca0",
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "5905eedef807f38bd9e6c61e4dad5c5bfd87bb6c99b70b7f0155b45c7c3ad416"
+          "sha256": "f3a838c35e9686a4c0877783e3962bae93dc16d5a2db9278e9c8b16a242d4d17"
         }
       ],
-      "reason": "ADR 0034, root/scoped guides, actual contract ownership, exact matrix and three Docker graphs agree; regenerated module/catalog indexes describe current source owners.",
+      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "6acdf08c5aa0b4c1e575f61df6b92ed4d499fcdd",
-      "reviewedAtUtc": "2026-09-06T13:37:07.8441478Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:01:21.9666162Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1151,17 +1163,21 @@
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "b02a224234a8bae3ea587d8d51aef2c46a32b1a59647c07d1256c2f191a49a8a",
+      "pageSha256": "31d7171d7feb8c70d3bca4652b01ca7b2e728901878069ff810ba852bbb6c49f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "f2ef7f3eb915e2284755b355085a5c6173ba83fd2881c487c65ba5828c346555"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "f3a838c35e9686a4c0877783e3962bae93dc16d5a2db9278e9c8b16a242d4d17"
         }
       ],
-      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
+      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
-      "reviewedAtUtc": "2026-09-06T18:03:01.2113268Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:01:28.8433747Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1169,14 +1185,14 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
+          "path": "AGENTS.md",
+          "sha256": "f3a838c35e9686a4c0877783e3962bae93dc16d5a2db9278e9c8b16a242d4d17"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:31:59.1276895Z"
+      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
+      "reviewedAtUtc": "2026-09-07T03:01:29.8486407Z"
     }
   ]
 }

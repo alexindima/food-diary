@@ -52,6 +52,7 @@ authoritative.
   all modules with dependencies, consumers, endpoints, source areas, and tests.
 - [Mail services](modules/mail-services.md) — MailRelay and MailInbox service
   boundaries.
+- [Bug triage](../docs/backend/BUG_TRIAGE.md) — independent email-to-bug queue and local worker setup.
 - [Frontend](modules/frontend.md) — Angular application, admin application,
   UI kit, and tour engine.
 

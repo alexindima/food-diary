@@ -6,17 +6,45 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1395,
-    "credential": 146,
-    "identity": 154,
+    "candidateFields": 1401,
+    "credential": 150,
+    "identity": 156,
     "health": 670,
     "financial": 120,
     "privateContent": 305,
-    "boundaryFiles": 161,
+    "boundaryFiles": 165,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
   "fields": [
+    {
+      "category": "credential",
+      "name": "LeaseToken",
+      "type": "Guid",
+      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ReportLease.cs",
+      "line": 4
+    },
+    {
+      "category": "credential",
+      "name": "LeaseToken",
+      "type": "Guid",
+      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs",
+      "line": 5
+    },
+    {
+      "category": "credential",
+      "name": "LeaseToken",
+      "type": "Guid",
+      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs",
+      "line": 3
+    },
+    {
+      "category": "credential",
+      "name": "ApiKey",
+      "type": "string",
+      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs",
+      "line": 4
+    },
     {
       "category": "credential",
       "name": "SecretKey",
@@ -6578,6 +6606,20 @@
     },
     {
       "category": "identity",
+      "name": "EmailAddress",
+      "type": "Required,",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "line": 19
+    },
+    {
+      "category": "identity",
+      "name": "EmailAddress",
+      "type": "Required,",
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "line": 35
+    },
+    {
+      "category": "identity",
       "name": "Email",
       "type": "string",
       "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
@@ -9785,6 +9827,27 @@
   ],
   "boundaryFiles": [
     {
+      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
       "categories": [
         "credential"
@@ -9825,6 +9888,13 @@
         "credential"
       ],
       "fieldCount": 3
+    },
+    {
+      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 2
     },
     {
       "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
