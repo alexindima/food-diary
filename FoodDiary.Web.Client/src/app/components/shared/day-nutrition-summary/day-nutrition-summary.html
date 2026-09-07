@@ -32,8 +32,8 @@
                     <div
                         class="day-summary__nutrient"
                         tabindex="0"
-                        [attr.aria-describedby]="'day-summary-tooltip-' + bar.id"
-                        [attr.aria-label]="bar.labelText + ': ' + bar.comparisonText"
+                        [attr.aria-describedby]="`day-summary-tooltip-${bar.id}`"
+                        [attr.aria-label]="`${bar.labelText}: ${bar.comparisonText}`"
                         [style.--day-summary-index]="$index"
                     >
                         <div class="day-summary__nutrient-header">
@@ -64,7 +64,7 @@
                                 ></span>
                             }
                         </div>
-                        <span class="day-summary__tooltip" role="tooltip" [id]="'day-summary-tooltip-' + bar.id">
+                        <span class="day-summary__tooltip" role="tooltip" [id]="`day-summary-tooltip-${bar.id}`">
                             {{ bar.comparisonText }}
                         </span>
                     </div>

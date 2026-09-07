@@ -360,7 +360,7 @@ Assert-Wiki (@($qualityBrief.quality.changedFiles).Count -eq 1) 'Task brief did 
 Assert-Wiki (@($qualityBrief.risk.reasons) -contains 'high structural hotspot') 'Task brief did not elevate a known structural hotspot.'
 
 $runtimeBriefJson = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
-    -ChangedPath @('MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs') `
+    -ChangedPath @('Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs') `
     -Format Json
 $runtimeBrief = $runtimeBriefJson | ConvertFrom-Json
 Assert-Wiki (@($runtimeBrief.runtimeImpact.hostedServices).Count -eq 1) 'Task brief did not attach changed runtime worker impact.'
@@ -736,7 +736,7 @@ Assert-Wiki (@($scopedPrivacy.items | Where-Object { $_.PSObject.Properties['pro
 
 $securityReview = & (Join-Path $toolsRoot 'Find-LlmWikiSecurityReview.ps1') -Limit 20 -Format Json | ConvertFrom-Json
 Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs' -and [int]$_.rank -le 3 }).Count -gt 0) 'Security review did not rank the WebPush connect-time network boundary in the top three.'
-Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs' -and [int]$_.rank -le 3 }).Count -gt 0) 'Security review did not rank the Mailgun webhook authorization boundary in the top three.'
+Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'Services/MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs' -and [int]$_.rank -le 3 }).Count -gt 0) 'Security review did not rank the Mailgun webhook authorization boundary in the top three.'
 Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -eq 'FoodDiary.Web.Client/src/app/services/token-storage.service.ts' -and [int]$_.rank -le 3 }).Count -gt 0) 'Security review did not rank browser token persistence in the top three.'
 Assert-Wiki (@($securityReview.contextLeads | Where-Object { $_.path -in @('nginx.conf', 'nginx/sites-enabled/fooddiary.club') -and [int]$_.rank -le 4 }).Count -gt 0) 'Security review did not rank nginx transport configuration in the top four.'
 Assert-Wiki (@($securityReview.securityTestSignals).Count -gt 0 -and @($securityReview.limitations).Count -ge 3) 'Security review omitted test signals or evidence limitations.'

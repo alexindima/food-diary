@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "freshness": {
-    "sourceFingerprint": "3b8c704ead6f396934c1e56d408d4cbcedbc8643eb4d552c9ff55c34652e9366",
+    "sourceFingerprint": "99d181521ce36c5330c1e7fff4f9b41ed786d6d952b1c2842ee88179376d548f",
     "sourceFileCount": 3644
   },
   "summary": {
@@ -138,7 +138,7 @@
     {
       "name": "mail-inbox",
       "image": "${MAIL_INBOX_IMAGE_REF:-ghcr.io/alexindima/food-diary/mail-inbox:local}",
-      "dockerfile": "MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile",
+      "dockerfile": "Services/MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile",
       "dependsOn": [
         "mailinbox-db-init"
       ],
@@ -180,7 +180,7 @@
     {
       "name": "mail-relay",
       "image": "${MAIL_RELAY_IMAGE_REF:-ghcr.io/alexindima/food-diary/mail-relay:local}",
-      "dockerfile": "MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile",
+      "dockerfile": "Services/MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile",
       "dependsOn": [
         "mailrelay-db-init",
         "rabbitmq"
@@ -212,7 +212,7 @@
     {
       "name": "mailinbox-db-init",
       "image": "${MAIL_INBOX_INITIALIZER_IMAGE_REF:-ghcr.io/alexindima/food-diary/mailinbox-initializer:local}",
-      "dockerfile": "MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile",
+      "dockerfile": "Services/MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile",
       "dependsOn": [
         "mailinbox-postgres"
       ],
@@ -257,7 +257,7 @@
       "volumeMounts": [
         "mailinbox-postgres-data:/var/lib/postgresql/data",
         "mailinbox-postgres-server-tls:/run/postgresql-tls:ro",
-        "./MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf:/etc/postgresql/mailinbox-pg_hba.conf:ro"
+        "./Services/MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf:/etc/postgresql/mailinbox-pg_hba.conf:ro"
       ],
       "readOnlyRootFilesystem": false,
       "dropsAllCapabilities": false,
@@ -267,7 +267,7 @@
     {
       "name": "mailinbox-postgres-tls-init",
       "image": "${MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF:-fooddiary-mailinbox-postgres-tls-init:local}",
-      "dockerfile": "MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile.postgres-tls-init",
+      "dockerfile": "Services/MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile.postgres-tls-init",
       "dependsOn": [],
       "ports": [],
       "profiles": [
@@ -287,7 +287,7 @@
     {
       "name": "mailrelay-db-init",
       "image": "${MAIL_RELAY_INITIALIZER_IMAGE_REF:-ghcr.io/alexindima/food-diary/mailrelay-initializer:local}",
-      "dockerfile": "MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile",
+      "dockerfile": "Services/MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile",
       "dependsOn": [
         "mailrelay-postgres"
       ],
@@ -468,7 +468,7 @@
     {
       "name": "BugMailImportWorker",
       "baseType": "BackgroundService",
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Workers/BugMailImportWorker.cs",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Workers/BugMailImportWorker.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "retry-or-resilience",
@@ -479,7 +479,7 @@
     {
       "name": "MailInboxRetentionHostedService",
       "baseType": "BackgroundService",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate"
       ],
@@ -488,7 +488,7 @@
     {
       "name": "MailInboxSmtpHostedService",
       "baseType": "BackgroundService",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "timeout-or-delay"
@@ -498,7 +498,7 @@
     {
       "name": "MailRelayOutboxPublisherHostedService",
       "baseType": "BackgroundService",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayOutboxPublisherHostedService.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayOutboxPublisherHostedService.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "outbox-delivery",
@@ -509,7 +509,7 @@
     {
       "name": "MailRelayQueueProcessorHostedService",
       "baseType": "BackgroundService",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "timeout-or-delay"
@@ -519,7 +519,7 @@
     {
       "name": "MailRelaySchemaInitializerHostedService",
       "baseType": "IHostedService",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelaySchemaInitializerHostedService.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelaySchemaInitializerHostedService.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate"
       ],
@@ -538,7 +538,7 @@
     {
       "name": "RabbitMqMailRelayBootstrapHostedService",
       "baseType": "IHostedService",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBootstrapHostedService.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBootstrapHostedService.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "retry-or-resilience",
@@ -549,7 +549,7 @@
     {
       "name": "RabbitMqMailRelayConsumerHostedService",
       "baseType": "BackgroundService",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs",
       "behaviorSignals": [
         "cancellation-propagation-candidate",
         "retry-or-resilience"
@@ -604,7 +604,7 @@
     {
       "contract": "IMailInboxClient",
       "implementation": "MailInboxClient",
-      "registrationPath": "MailInbox/FoodDiary.MailInbox.Client/Extensions/MailInboxClientServiceCollectionExtensions.cs",
+      "registrationPath": "Services/MailInbox/FoodDiary.MailInbox.Client/Extensions/MailInboxClientServiceCollectionExtensions.cs",
       "behaviorSignals": [
         "timeout-or-delay"
       ],
@@ -613,7 +613,7 @@
     {
       "contract": "IMailInboxExportClient",
       "implementation": "MailInboxExportClient",
-      "registrationPath": "BugTriage/FoodDiary.BugTriage.Infrastructure/Extensions/BugTriageInfrastructureExtensions.cs",
+      "registrationPath": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Extensions/BugTriageInfrastructureExtensions.cs",
       "behaviorSignals": [
         "timeout-or-delay"
       ],
@@ -622,7 +622,7 @@
     {
       "contract": "IMailRelayClient",
       "implementation": "MailRelayClient",
-      "registrationPath": "MailRelay/FoodDiary.MailRelay.Client/Extensions/MailRelayClientServiceCollectionExtensions.cs",
+      "registrationPath": "Services/MailRelay/FoodDiary.MailRelay.Client/Extensions/MailRelayClientServiceCollectionExtensions.cs",
       "behaviorSignals": [
         "timeout-or-delay"
       ],
@@ -708,7 +708,7 @@
   "webhooks": [
     {
       "name": "AwsSesSnsWebhookHttpMappings",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs",
       "securitySignals": [],
       "behaviorSignals": "duplicate-or-replay-control",
       "behaviorSignalScope": "class-window",
@@ -861,7 +861,7 @@
     },
     {
       "name": "MailgunWebhookHttpMappings",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs",
       "securitySignals": [],
       "behaviorSignals": "duplicate-or-replay-control",
       "behaviorSignalScope": "class-window",
@@ -895,7 +895,7 @@
     },
     {
       "name": "ProviderWebhookAuthorizer",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs",
       "securitySignals": [
         "freshness-validation",
         "signature-validation"
@@ -1049,7 +1049,7 @@
   "networkPolicies": [
     {
       "name": "ConfigurableRelayDeliveryTransport",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfigurableRelayDeliveryTransport.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfigurableRelayDeliveryTransport.cs",
       "securitySignals": [
         "ip-address-policy"
       ],
@@ -1104,7 +1104,7 @@
     },
     {
       "name": "DirectMxRelayDeliveryTransport",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxRelayDeliveryTransport.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxRelayDeliveryTransport.cs",
       "securitySignals": [
         "ip-address-policy",
         "timeout-policy",
@@ -1123,7 +1123,7 @@
     },
     {
       "name": "DirectMxSmtpClientAdapter",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientAdapter.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientAdapter.cs",
       "securitySignals": [
         "ip-address-policy",
         "uri-policy"
@@ -1178,7 +1178,7 @@
     },
     {
       "name": "MailInboxClient",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
       "securitySignals": [
         "ip-address-policy",
         "uri-policy"
@@ -1195,7 +1195,7 @@
     },
     {
       "name": "MailInboxLocalTlsHealthCheck",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs",
       "securitySignals": [
         "connect-time-address-control",
         "ip-address-policy",
@@ -1216,7 +1216,7 @@
     },
     {
       "name": "MailRelayClient",
-      "path": "MailRelay/FoodDiary.MailRelay.Client/MailRelayClient.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/MailRelayClient.cs",
       "securitySignals": [
         "ip-address-policy"
       ],
@@ -1358,7 +1358,7 @@
     },
     {
       "name": "ProviderWebhookAuthorizer",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs",
       "securitySignals": [
         "ip-address-policy",
         "uri-policy"
@@ -1410,7 +1410,7 @@
     },
     {
       "name": "SmtpRelayDeliveryTransport",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/SmtpRelayDeliveryTransport.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/SmtpRelayDeliveryTransport.cs",
       "securitySignals": [
         "ip-address-policy",
         "timeout-policy",

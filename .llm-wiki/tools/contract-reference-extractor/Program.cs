@@ -128,8 +128,8 @@ static string CanonicalJson<T>(T value, JsonSerializerOptions serializerOptions)
 }
 
 static string Area(string path) {
-    if (path.StartsWith("MailInbox/", StringComparison.OrdinalIgnoreCase)) return "MailInbox";
-    if (path.StartsWith("MailRelay/", StringComparison.OrdinalIgnoreCase)) return "MailRelay";
+    if (path.StartsWith("Services/MailInbox/", StringComparison.OrdinalIgnoreCase)) return "MailInbox";
+    if (path.StartsWith("Services/MailRelay/", StringComparison.OrdinalIgnoreCase)) return "MailRelay";
     if (path.StartsWith("Shared/", StringComparison.OrdinalIgnoreCase)) return "Shared";
     return "FoodDiary";
 }

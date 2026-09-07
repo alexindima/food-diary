@@ -66,7 +66,7 @@
     "roleScoreOverrides": {"consumers": 120, "factory": 240},
     "roleTerms": ["attribute", "binder", "configuration", "consumer", "consumers", "controller", "dialog", "entity", "exception", "facade", "factory", "gateway", "handler", "interceptor", "mapping", "middleware", "options", "plan", "provider", "remove", "renderer", "repository", "result", "sender", "service", "store", "tracker", "validator", "worker"],
     "domainIntentTerms": ["domain", "entity"],
-    "domainPathPrefixes": ["FoodDiary.Domain/", "MailInbox/FoodDiary.MailInbox.Domain/", "MailRelay/FoodDiary.MailRelay.Domain/"],
+    "domainPathPrefixes": ["FoodDiary.Domain/", "Services/MailInbox/FoodDiary.MailInbox.Domain/", "Services/MailRelay/FoodDiary.MailRelay.Domain/"],
     "domainScore": 220,
     "apiIntentTerms": ["api", "endpoint", "http", "controller", "response", "mapping"],
     "apiPathFragments": ["FoodDiary.Presentation.Api/", "FoodDiary.Web.Api/", ".Presentation/", "/Presentation/"],
@@ -78,7 +78,7 @@
     "adminPathFragments": ["/Admin/", "/admin-", "admin-", "/fooddiary-admin/"],
     "adminScore": 140,
     "integrationIntentTerms": ["adapter", "client", "external", "gateway", "integration", "provider"],
-    "integrationPathPrefixes": ["FoodDiary.Integrations/", "MailInbox/FoodDiary.MailInbox.Client/", "MailRelay/FoodDiary.MailRelay.Client/"],
+    "integrationPathPrefixes": ["FoodDiary.Integrations/", "Services/MailInbox/FoodDiary.MailInbox.Client/", "Services/MailRelay/FoodDiary.MailRelay.Client/"],
     "integrationScore": 180,
     "infrastructureIntentTerms": ["implementation", "persistence", "provider", "storage", "store"],
     "infrastructureMinimumMatches": 2,
@@ -464,7 +464,7 @@
       "id": "mailgun-webhook-security",
       "queryTerms": ["mailgun", "webhook", "replay", "idempotency"],
       "minimumMatches": 2,
-      "pathPrefixes": ["MailRelay/"],
+      "pathPrefixes": ["Services/MailRelay/"],
       "score": 300
     },
     {
@@ -541,7 +541,7 @@
       "id": "mail-provider-events",
       "queryTerms": ["mail", "provider", "delivery", "event"],
       "minimumMatches": 3,
-      "pathPrefixes": ["MailRelay/"],
+      "pathPrefixes": ["Services/MailRelay/"],
       "score": 180
     },
     {
@@ -627,7 +627,7 @@
       "id": "mail-inbox-module-intent",
       "queryTerms": ["mail", "inbox", "received"],
       "minimumMatches": 2,
-      "pathPrefixes": ["MailInbox/"],
+      "pathPrefixes": ["Services/MailInbox/"],
       "score": 180,
       "directOnly": true
     },
@@ -3596,7 +3596,7 @@
       "affinityDirectOnly": false,
       "changeTypes": ["Backend"],
       "recordTypes": ["code"],
-      "pathPrefixes": ["FoodDiary.Domain/Entities/", "MailInbox/FoodDiary.MailInbox.Domain/", "MailRelay/FoodDiary.MailRelay.Domain/"],
+      "pathPrefixes": ["FoodDiary.Domain/Entities/", "Services/MailInbox/FoodDiary.MailInbox.Domain/", "Services/MailRelay/FoodDiary.MailRelay.Domain/"],
       "pathSuffixes": [".cs"],
       "excludedQueryTerms": ["guard", "security", "pusher", "send", "notification"],
       "excludeTests": true

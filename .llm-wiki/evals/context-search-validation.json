@@ -198,55 +198,55 @@
       "id": "ru-mail-inbox-smtp-host",
       "query": "фоновый SMTP сервис принимает входящие письма в mail inbox",
       "changeType": "Backend",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs"]
     },
     {
       "id": "mail-inbox-rate-limiter",
       "query": "sliding window limits inbound SMTP attempts by sender",
       "changeType": "Backend",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSlidingWindowRateLimiter.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSlidingWindowRateLimiter.cs"]
     },
     {
       "id": "mail-inbox-tls-health",
       "query": "health check validates local TLS readiness for the inbox",
       "changeType": "Backend",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs"]
     },
     {
       "id": "mail-relay-outbox-publisher",
       "query": "hosted service publishes pending mail relay outbox messages",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayOutboxPublisherHostedService.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayOutboxPublisherHostedService.cs"]
     },
     {
       "id": "mail-relay-queue-processor",
       "query": "background processor claims and delivers queued relay emails",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs"]
     },
     {
       "id": "provider-webhook-authorizer",
       "query": "authorize incoming mail provider webhook requests",
       "changeType": "Api",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs"]
     },
     {
       "id": "create-mail-suppression-command",
       "query": "command adds a recipient to the mail relay suppression list",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandHandler.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandHandler.cs"]
     },
     {
       "id": "mail-relay-readiness-query",
       "query": "query checks whether the mail relay is ready",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQueryHandler.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQueryHandler.cs"]
     },
     {
       "id": "mail-relay-message-details-query",
       "query": "query loads details for one queued relay message",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryHandler.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryHandler.cs"]
     },
     {
       "id": "wiki-verification-planner-workflow",

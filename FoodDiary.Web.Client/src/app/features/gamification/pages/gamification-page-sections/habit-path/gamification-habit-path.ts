@@ -1,3 +1,4 @@
+import { UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent, FdUiIconComponent, FdUiProgressRingComponent } from 'fd-ui-kit';
@@ -29,7 +30,15 @@ const RECENT_ACHIEVEMENT_LIMIT = 2;
 
 @Component({
     selector: 'fd-gamification-habit-path',
-    imports: [TranslatePipe, LocalizedDatePipe, FdUiButtonComponent, FdUiCardComponent, FdUiIconComponent, FdUiProgressRingComponent],
+    imports: [
+        UpperCasePipe,
+        TranslatePipe,
+        LocalizedDatePipe,
+        FdUiButtonComponent,
+        FdUiCardComponent,
+        FdUiIconComponent,
+        FdUiProgressRingComponent,
+    ],
     templateUrl: './gamification-habit-path.html',
     styleUrl: './gamification-habit-path.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

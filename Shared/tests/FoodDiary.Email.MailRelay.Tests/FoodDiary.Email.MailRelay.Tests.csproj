@@ -3,7 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="../../FoodDiary.Email.MailRelay/FoodDiary.Email.MailRelay.csproj" />
     <ProjectReference Include="../../FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj" />
-    <ProjectReference Include="../../../MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj" />
+    <ProjectReference Include="../../../Services/MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

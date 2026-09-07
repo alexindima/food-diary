@@ -14,7 +14,7 @@
                 </span>
                 <strong class="fasting-redesign__time">{{ isActive() ? elapsedFormatted() : protocolLabel() }}</strong>
                 <strong class="fasting-redesign__percent">{{
-                    isActive() ? (progress() | number: '1.0-0') + '%' : ('FASTING.REDESIGN.SELECTED' | translate)
+                    isActive() ? `${(progress() | number: '1.0-0')}%` : ('FASTING.REDESIGN.SELECTED' | translate)
                 }}</strong>
                 @if (isActive()) {
                     <span class="fasting-redesign__protocol">{{ protocolLabel() }}</span>
@@ -170,7 +170,7 @@
                 @for (day of rhythmDays(); track day.dayKey) {
                     <div class="fasting-redesign__day">
                         <span>{{ day.dayKey | translate }}</span>
-                        <span class="fasting-redesign__day-ring" [style.--fd-fasting-day-progress]="day.progress + '%'">
+                        <span class="fasting-redesign__day-ring" [style.--fd-fasting-day-progress]="`${day.progress}%`">
                             @if (day.completed) {
                                 <fd-ui-icon name="check" />
                             }
@@ -209,7 +209,7 @@
                                 [class.fasting-redesign__status--skipped]="item.status === 'Skipped'"
                                 [class.fasting-redesign__status--postponed]="item.status === 'Postponed'"
                             >
-                                {{ 'FASTING.BADGE_' + item.status.toUpperCase() | translate }}
+                                {{ `FASTING.BADGE_${(item.status | uppercase)}` | translate }}
                             </span>
                             <fd-ui-icon name="chevron_right" />
                         </button>

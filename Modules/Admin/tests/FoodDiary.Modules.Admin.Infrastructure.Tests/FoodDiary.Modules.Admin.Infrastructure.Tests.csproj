@@ -4,7 +4,7 @@
     <ProjectReference Include="../../Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj" />
     <ProjectReference Include="../../Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj" />
     <ProjectReference Include="../../../../Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj" />
-    <ProjectReference Include="../../../../MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj" />
+    <ProjectReference Include="../../../../Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj" />
     <ProjectReference Include="../../../Identity/Application/FoodDiary.Modules.Identity.Application.csproj" />
     <ProjectReference Include="../../../Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj" />
   </ItemGroup>

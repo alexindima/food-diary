@@ -782,7 +782,7 @@ $brief = [pscustomobject]@{
         Select-Object -ExpandProperty guide -Unique |
         Where-Object {
             @($diff.scopes) -contains 'Backend' -or
-            $_ -notmatch '^(FoodDiary\.(Application|Domain|Infrastructure)|MailInbox/|MailRelay/)'
+            $_ -notmatch '^(FoodDiary\.(Application|Domain|Infrastructure)|Services/MailInbox/|Services/MailRelay/)'
         })
     contextPages = @($diff.wikiPages | ForEach-Object { if ($_.PSObject.Properties['path']) { $_.path } } | Where-Object { $_ })
     focusedTests = @($testPlan.focusedTestFiles)

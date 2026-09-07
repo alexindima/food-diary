@@ -19,7 +19,7 @@
                 <span class="fd-ui-bar-chart__axis-unit">{{ axisUnit() }}</span>
             }
             @for (tick of categoricalTicks(); track $index) {
-                <span class="fd-ui-bar-chart__axis-label" [style.top.%]="($index / (categoricalTicks().length - 1)) * 100">
+                <span class="fd-ui-bar-chart__axis-label" [style.top.%]="($index / ($count - 1)) * 100">
                     {{ axisValueFormatter()(tick) }}
                 </span>
             }
@@ -49,7 +49,7 @@
                 class="fd-ui-bar-chart__categories"
                 [class.fd-ui-bar-chart__categories--grouped]="layout() === 'grouped'"
                 [class.fd-ui-bar-chart__categories--stacked]="layout() === 'stacked'"
-                [style.grid-template-columns]="'repeat(' + categoryViews().length + ', minmax(0, 1fr))'"
+                [style.grid-template-columns]="`repeat(${categoryViews().length}, minmax(0, 1fr))`"
             >
                 @for (category of categoryViews(); track $index) {
                     <div class="fd-ui-bar-chart__category">
@@ -80,7 +80,7 @@
             <div
                 class="fd-ui-bar-chart__categorical-labels"
                 aria-hidden="true"
-                [style.grid-template-columns]="'repeat(' + categoryViews().length + ', minmax(0, 1fr))'"
+                [style.grid-template-columns]="`repeat(${categoryViews().length}, minmax(0, 1fr))`"
             >
                 @for (category of categoryViews(); track $index) {
                     <span [class.fd-ui-bar-chart__categorical-label--highlighted]="category.highlighted">{{ category.label }}</span>

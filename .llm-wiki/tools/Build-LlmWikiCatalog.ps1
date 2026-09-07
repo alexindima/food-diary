@@ -165,8 +165,8 @@ foreach ($moduleProperty in @($moduleGraph.modules.PSObject.Properties | Sort-Ob
 
 $presentationRoots = @(
     'FoodDiary.Presentation.Api',
-    'MailRelay/FoodDiary.MailRelay.Presentation',
-    'MailInbox/FoodDiary.MailInbox.Presentation'
+    'Services/MailRelay/FoodDiary.MailRelay.Presentation',
+    'Services/MailInbox/FoodDiary.MailInbox.Presentation'
 )
 $controllerFiles = @(
     foreach ($presentationRoot in $presentationRoots) {

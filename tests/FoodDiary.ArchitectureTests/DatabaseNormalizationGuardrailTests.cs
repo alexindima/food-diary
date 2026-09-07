@@ -56,8 +56,8 @@ public sealed class DatabaseNormalizationGuardrailTests {
     };
 
     private static readonly HashSet<string> AllowedRawSqlDocumentColumns = new(StringComparer.Ordinal) {
-        "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs:to_recipients_json",
-        "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueSchema.cs:to_recipients_json",
+        "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs:to_recipients_json",
+        "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueSchema.cs:to_recipients_json",
     };
 
     private static readonly BusinessKeyExpectation[] ExpectedBusinessKeys = [
@@ -108,8 +108,8 @@ public sealed class DatabaseNormalizationGuardrailTests {
     [Fact]
     public void FirstNormalForm_RawSqlSchemasDoNotIntroduceUnapprovedJsonColumns() {
         string[] violations = [.. SourceScanner.SourceFiles([
-                ArchitectureTestPaths.FromRoot("MailInbox/FoodDiary.MailInbox.Infrastructure"),
-                ArchitectureTestPaths.FromRoot("MailRelay/FoodDiary.MailRelay.Infrastructure"),
+                ArchitectureTestPaths.FromRoot("Services/MailInbox/FoodDiary.MailInbox.Infrastructure"),
+                ArchitectureTestPaths.FromRoot("Services/MailRelay/FoodDiary.MailRelay.Infrastructure"),
             ])
             .SelectMany(ReadRawSqlJsonColumns)
             .Where(column => !AllowedRawSqlDocumentColumns.Contains(column))

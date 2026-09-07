@@ -680,8 +680,8 @@ $testRoots = if ($ChangeType -eq 'Frontend') {
 } else {
     @(
         Join-Path $repositoryRoot 'tests'
-        Join-Path $repositoryRoot 'MailRelay/tests'
-        Join-Path $repositoryRoot 'MailInbox/tests'
+        Join-Path $repositoryRoot 'Services/MailRelay/tests'
+        Join-Path $repositoryRoot 'Services/MailInbox/tests'
     )
 }
 $existingTestRoots = @($testRoots | Where-Object { Test-Path -LiteralPath $_ -PathType Container })
@@ -698,7 +698,7 @@ $testSearchTokens = @(
 $testFiles = @()
 if ($existingTestRoots.Count -gt 0 -and $testSearchTokens.Count -gt 0) {
     $candidatePaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
-    $trackedTestPaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--', 'tests/**/*.cs', 'MailRelay/tests/**/*.cs', 'MailInbox/tests/**/*.cs') -FailureMessage 'Unable to enumerate tracked backend test files.')
+    $trackedTestPaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--', 'tests/**/*.cs', 'Services/MailRelay/tests/**/*.cs', 'Services/MailInbox/tests/**/*.cs') -FailureMessage 'Unable to enumerate tracked backend test files.')
     foreach ($trackedTestPath in $trackedTestPaths) {
         $normalizedTestPath = $trackedTestPath.Replace('\', '/')
         if (@($testSearchTokens | Where-Object { $normalizedTestPath.IndexOf($_, [StringComparison]::OrdinalIgnoreCase) -ge 0 }).Count -gt 0) {

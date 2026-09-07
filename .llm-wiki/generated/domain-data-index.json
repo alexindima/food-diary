@@ -1610,91 +1610,91 @@
       "area": "MailInbox",
       "name": "InboundMailMessage",
       "role": "domain-type",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
       "line": 7
     },
     {
       "area": "MailInbox",
       "name": "InboundMailMessageId",
       "role": "domain-type",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageId.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageId.cs",
       "line": 4
     },
     {
       "area": "MailInbox",
       "name": "InboundMailMessageReceivedDomainEvent",
       "role": "domain-type",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Events/InboundMailMessageReceivedDomainEvent.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Events/InboundMailMessageReceivedDomainEvent.cs",
       "line": 5
     },
     {
       "area": "MailInbox",
       "name": "InboundMailMessageStatus",
       "role": "domain-type",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageStatus.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageStatus.cs",
       "line": 2
     },
     {
       "area": "MailRelay",
       "name": "CreateSuppressionRequest",
       "role": "domain-type",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/CreateSuppressionRequest.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/CreateSuppressionRequest.cs",
       "line": 2
     },
     {
       "area": "MailRelay",
       "name": "IngestMailEventRequest",
       "role": "domain-type",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/IngestMailEventRequest.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/IngestMailEventRequest.cs",
       "line": 2
     },
     {
       "area": "MailRelay",
       "name": "MailRelayDeliveryEventEntry",
       "role": "domain-type",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventEntry.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventEntry.cs",
       "line": 2
     },
     {
       "area": "MailRelay",
       "name": "MailRelaySuppressionEntry",
       "role": "domain-type",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelaySuppressionEntry.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelaySuppressionEntry.cs",
       "line": 2
     },
     {
       "area": "MailRelay",
       "name": "QueuedEmail",
       "role": "domain-type",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs",
       "line": 4
     },
     {
       "area": "MailRelay",
       "name": "QueuedEmailFailureDecision",
       "role": "domain-type",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailFailureDecision.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailFailureDecision.cs",
       "line": 2
     },
     {
       "area": "MailRelay",
       "name": "QueuedEmailId",
       "role": "domain-type",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailId.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailId.cs",
       "line": 4
     },
     {
       "area": "MailRelay",
       "name": "QueuedEmailMessage",
       "role": "domain-type",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailMessage.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailMessage.cs",
       "line": 2
     },
     {
       "area": "MailRelay",
       "name": "RelayEmailMessageRequest",
       "role": "domain-type",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageRequest.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageRequest.cs",
       "line": 2
     }
   ],
@@ -5189,42 +5189,42 @@
       "area": "MailInbox",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Raw MIME content is required.\", nameof(rawMime))",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
       "line": 48
     },
     {
       "area": "MailInbox",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"At least one recipient is required.\", nameof(toRecipients))",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
       "line": 72
     },
     {
       "area": "MailInbox",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Raw MIME content is required.\", nameof(rawMimeBytes))",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
       "line": 76
     },
     {
       "area": "MailInbox",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Recipient cannot be empty.\", nameof(recipient))",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
       "line": 117
     },
     {
       "area": "MailInbox",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), \"Unknown inbound mail message status.\"),",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageStatus.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageStatus.cs",
       "line": 17
     },
     {
       "area": "MailRelay",
       "type": "ArgumentException.ThrowIfNullOrWhiteSpace",
       "message": "ArgumentException.ThrowIfNullOrWhiteSpace(error)",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs",
       "line": 84
     }
   ],

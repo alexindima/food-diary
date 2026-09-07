@@ -34,7 +34,7 @@
                         <strong>{{
                             (reward.key === 'weekly_goal'
                                 ? 'GAMIFICATION.HABIT_PATH.WEEKLY_GOAL'
-                                : 'GAMIFICATION.BADGE_' + reward.key.toUpperCase()
+                                : `GAMIFICATION.BADGE_${(reward.key | uppercase)}`
                             ) | translate
                         }}</strong>
                         <span>{{ reward.current }} / {{ reward.target }}</span>
@@ -69,10 +69,10 @@
                             <strong>{{
                                 (goal.key === 'weekly_goal'
                                     ? 'GAMIFICATION.HABIT_PATH.WEEKLY_GOAL'
-                                    : 'GAMIFICATION.BADGE_' + goal.key.toUpperCase()
+                                    : `GAMIFICATION.BADGE_${(goal.key | uppercase)}`
                                 ) | translate
                             }}</strong>
-                            <small>{{ 'GAMIFICATION.HABIT_PATH.GOAL_HINT_' + goal.category.toUpperCase() | translate }}</small>
+                            <small>{{ `GAMIFICATION.HABIT_PATH.GOAL_HINT_${(goal.category | uppercase)}` | translate }}</small>
                         </div>
                         <div class="habit-path__goal-progress">
                             <strong
@@ -131,7 +131,7 @@
             <div class="habit-path__filters" role="group" [attr.aria-label]="'GAMIFICATION.HABIT_PATH.FILTERS' | translate">
                 @for (filter of filters; track filter) {
                     <button type="button" [class.habit-path__filter--active]="activeFilter() === filter" (click)="setFilter(filter)">
-                        {{ 'GAMIFICATION.HABIT_PATH.FILTER_' + filter.toUpperCase() | translate }}
+                        {{ `GAMIFICATION.HABIT_PATH.FILTER_${(filter | uppercase)}` | translate }}
                     </button>
                 }
             </div>

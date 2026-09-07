@@ -68,7 +68,7 @@ services:
     image: ${MAIL_RELAY_INITIALIZER_IMAGE_REF:-ghcr.io/alexindima/food-diary/mailrelay-initializer:local}
     build:
       context: .
-      dockerfile: MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile
+      dockerfile: Services/MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile
     command: ["update"]
     read_only: true
     cap_drop:
@@ -92,7 +92,7 @@ services:
     image: ${MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF:-fooddiary-mailinbox-postgres-tls-init:local}
     build:
       context: .
-      dockerfile: MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile.postgres-tls-init
+      dockerfile: Services/MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile.postgres-tls-init
     user: "0:0"
     volumes:
       - mailinbox-postgres-server-tls:/server
@@ -113,7 +113,7 @@ services:
     volumes:
       - mailinbox-postgres-data:/var/lib/postgresql/data
       - mailinbox-postgres-server-tls:/run/postgresql-tls:ro
-      - ./MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf:/etc/postgresql/mailinbox-pg_hba.conf:ro
+      - ./Services/MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf:/etc/postgresql/mailinbox-pg_hba.conf:ro
     command:
       - postgres
       - -c
@@ -143,7 +143,7 @@ services:
     image: ${MAIL_INBOX_INITIALIZER_IMAGE_REF:-ghcr.io/alexindima/food-diary/mailinbox-initializer:local}
     build:
       context: .
-      dockerfile: MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile
+      dockerfile: Services/MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile
     command: ["update"]
     read_only: true
     cap_drop:
@@ -259,7 +259,7 @@ services:
     image: ${MAIL_RELAY_IMAGE_REF:-ghcr.io/alexindima/food-diary/mail-relay:local}
     build:
       context: .
-      dockerfile: MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile
+      dockerfile: Services/MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile
     restart: unless-stopped
     read_only: true
     cap_drop:
@@ -302,7 +302,7 @@ services:
     image: ${MAIL_INBOX_IMAGE_REF:-ghcr.io/alexindima/food-diary/mail-inbox:local}
     build:
       context: .
-      dockerfile: MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile
+      dockerfile: Services/MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile
     restart: unless-stopped
     user: "0:0"
     read_only: true

@@ -4,17 +4,29 @@
     {
       "pageId": "index",
       "pagePath": ".llm-wiki/index.md",
-      "pageSha256": "7015afab5198613243f2efb9ccc7e1de12cf6ca76c293d97b3e3f6c2d43edeaa",
+      "pageSha256": "eaac3733a7811ffabb1a5249aafa3cb7f3f6e9f476b14ad0d231f371c4653e9d",
       "sources": [
         {
+          "path": "AGENTS.md",
+          "sha256": "46c9267dcac0e3ff46cab1fe15c0414d363710c0ec1e3ceaceccec2f5269af9d"
+        },
+        {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "32996547dd548b39c14d1e2a9d7159fd7fcb89a9cdef8f6e5b536ec0fb55c0eb"
+          "sha256": "ea1fe5a5840b8e60766310ff0864cd5213f423559671988c6be84521c3a6b885"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "69a4bd947e2e2dd9ba2194eb343aef18c0b33c08f9b3014d90eeb2d7f1450b0f"
+        },
+        {
+          "path": "docs/README.md",
+          "sha256": "e06894c16cbe8ac81eb4630259fce77bcd52f73e6d9d154a9815423d6be7912e"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed the physical Services relocation and regenerated source indexes. Solution and project references resolve; 128 focused architecture checks and the regenerated catalog guardrails passed. Docker build inputs and deployment bind paths preserve existing service behavior and data volumes. Frontend fixes retain Angular ESLint 22.2, replace template casts with typed references and uppercase calls with pipes, and cap 27 pre-existing complex templates at their measured counts while retaining the default limit of five. The real-rule sanity fixture and full ESLint pass; production build generated 18 routes plus Russian variants. Technology Radar source evidence and inventory were updated and its build passed.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:39.1769404Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T06:03:28.1255944Z"
     },
     {
       "pageId": "module.frontend",
@@ -53,32 +65,32 @@
       "sources": [
         {
           "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "b8626f6fd03e635ee0584ec32cbdb0f3fd9776836785f2505a492653ecd829e2"
+          "sha256": "69a4bd947e2e2dd9ba2194eb343aef18c0b33c08f9b3014d90eeb2d7f1450b0f"
         }
       ],
-      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:01:16.2169458Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:02.4091458Z"
     },
     {
       "pageId": "system.architecture",
       "pagePath": ".llm-wiki/system/architecture.md",
-      "pageSha256": "aecbc40ebd932d3500222bca6a84cbdaefaa0a2adf07b24580e0557a329ca8f7",
+      "pageSha256": "392102fa284f635352d7abba0f8f998cc678c5678a2cf8c72054ab8e4365ee89",
       "sources": [
         {
           "path": "docs/ARCHITECTURE.md",
-          "sha256": "32996547dd548b39c14d1e2a9d7159fd7fcb89a9cdef8f6e5b536ec0fb55c0eb"
+          "sha256": "ea1fe5a5840b8e60766310ff0864cd5213f423559671988c6be84521c3a6b885"
         },
         {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "502eb90091e81873e027cd022fc7b4f1e2aa2d945429be2bd1ce386b16d70220"
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "69a4bd947e2e2dd9ba2194eb343aef18c0b33c08f9b3014d90eeb2d7f1450b0f"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:39.7561036Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:04.6551276Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -117,21 +129,17 @@
       "sources": [
         {
           "path": "AGENTS.md",
-          "sha256": "f3a838c35e9686a4c0877783e3962bae93dc16d5a2db9278e9c8b16a242d4d17"
-        },
-        {
-          "path": "docs/adr/README.md",
-          "sha256": "f471785c5bb353f297c1be6e638de25d2ec397c79360f1c694f04b35341b520a"
+          "sha256": "46c9267dcac0e3ff46cab1fe15c0414d363710c0ec1e3ceaceccec2f5269af9d"
         },
         {
           "path": "docs/README.md",
-          "sha256": "77c120d4191dc679b3e85ec41036121af209ed428a0223184521996db10bf440"
+          "sha256": "e06894c16cbe8ac81eb4630259fce77bcd52f73e6d9d154a9815423d6be7912e"
         }
       ],
-      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
+      "reason": "Reviewed the physical Services relocation and regenerated source indexes. Solution and project references resolve; 128 focused architecture checks and the regenerated catalog guardrails passed. Docker build inputs and deployment bind paths preserve existing service behavior and data volumes. Frontend fixes retain Angular ESLint 22.2, replace template casts with typed references and uppercase calls with pipes, and cap 27 pre-existing complex templates at their measured counts while retaining the default limit of five. The real-rule sanity fixture and full ESLint pass; production build generated 18 routes plus Russian variants. Technology Radar source evidence and inventory were updated and its build passed.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:01:17.9039924Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T06:03:29.0125355Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -139,14 +147,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": "Directory.Packages.props",
-          "sha256": "b0ceaaf76e951981b516c0adf319dd6ea08422fffbd3e4836be3f2afa0a5de6a"
+          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+          "sha256": "92484183b8d2e71cedf993036d78a04eefaaa3b6bfdf18fdd4045930435cea64"
         }
       ],
-      "reason": "Integrated reviewed PRs 325-341 on current module layout; synchronized dependency locks, signing action guardrail and moved Admin test fixtures; reviewed existing metrics and push subscription contracts.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
-      "reviewedAtUtc": "2026-09-06T16:55:19.5952106Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:34:50.3753688Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -170,13 +178,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
+          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
         }
       ],
-      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
-      "reviewedAtUtc": "2026-09-06T18:02:59.3710321Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:34:51.6267949Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -200,17 +208,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "69db3261465f3cce2ae952b672d7e331c58b386667bd0bb12fac5dfe933e5a50"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "99f8f5adf51fa9d956d37d0a5b1d48adf09f0ecf556892fa04a7abde14d09ab9"
+          "sha256": "cb92167edd4a022ea334dd3113486260fc80cdc896fcc3d7a3b6e5062fede67d"
         }
       ],
-      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:01:19.6572034Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:34:52.5139893Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -219,13 +223,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "ed298beda0d8cffd964dda0e824b8c655b3777a3ffbfc3a190122676320f8084"
+          "sha256": "7d95825d6829ef878b8e337b2a5925716c1c3ad44b13b7737ffc53c428f579bd"
         }
       ],
-      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:01:21.1548263Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:34:54.3119528Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -234,13 +238,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
+          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
         }
       ],
-      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
-      "reviewedAtUtc": "2026-09-06T18:02:59.5287674Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:34:54.8543727Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -249,40 +253,88 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
+          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:31:52.75566Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:10.3132672Z"
     },
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "8125215f523313db4f5d24a8398ee62bcbe5d6e2533066a2a1b5f53b12bd3491",
+      "pageSha256": "d8f8cde33f2fbba74cbc925e19aa6caad5bae9760dacf5fefc2d02e2ed94a1ff",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-generalization.json",
+          "sha256": "bfe668f8d430da577d3370b536620181798f608102f7fb8d7f2f82ef10d62e07"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-holdout-100.json",
+          "sha256": "0451b67c129e11f013c405ca2cd7200d04b54b07255305f40567e63ec890e796"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-holdout.json",
+          "sha256": "7f29a1e9f99de0060db9ea4ce0800c3663526b439af857e160c481f43ed88c54"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe-2.json",
+          "sha256": "610a5ab5c9bbc8e491f9b38bcf0a57929b461a70faed029ee2d4cdc1a67bc4be"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe-3.json",
+          "sha256": "43e7951d3d3d9f9274397e87ded3c29ffcb79839d414b665277c2509ce8ec499"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-probe-6.json",
+          "sha256": "f6571bc1d77a42dd622f6735c22c5c33821f917eaab1916a005fd70295fd08de"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "f269b22a9dbc52ff7ceab0d8a5ed8618fa62ba2c41f51b1275a080c2ca2331e3"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-validation.json",
+          "sha256": "6676081b2dd3543346d4a0c7534b407981c5414386d9ed0183e59a96ec3652e5"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search.json",
+          "sha256": "844b25336aff258603ac3b3671794858b0d277430c45632501144413b316734a"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "045f0b00f9b51a57cbfae927cc79973c47097fe4348bbf1cff3fe024cd185205"
+        },
+        {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "a1cf4b79ef10c31f818bfaa6fa70281d50e949288895465b6afbde534a6c81d4"
+          "sha256": "9981ba14bacb17c399f3f9f7fd5f392fc679af2407219ad4564127b11028477b"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
+          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1",
-          "sha256": "6f3036ea2211b7b1396303db49274b75c8c8aadafb6a07ff99682c7cd693fbc6"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          "sha256": "c5ab2e40979a49922752a3ef93feadbd7928d75c29d2dfd5597e4a8d7ca3196b"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
-          "sha256": "b11cc34134f7a771f90d0c28417340ecfb5543861aad6935c1c771ad13952e49"
+          "sha256": "064918be1eb5385e2e3032e93b3727e3f1071c02048ce7ddaa4fe6c3e1ae94b6"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:31:53.3473111Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:12.8259861Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -321,17 +373,21 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "a1cf4b79ef10c31f818bfaa6fa70281d50e949288895465b6afbde534a6c81d4"
+          "sha256": "9981ba14bacb17c399f3f9f7fd5f392fc679af2407219ad4564127b11028477b"
         },
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
+          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
+          "sha256": "3609439f485159343cf37b591784e346a67c0d5082e52061af3fa2126eced5c3"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:31:53.9556261Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:13.6786219Z"
     },
     {
       "pageId": "workflow-context-quality-benchmark",
@@ -464,13 +520,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "0d722aab65e0f292f7b28d384af5b46abbd92fcdeafbd53ec609433d74c8e391"
+          "sha256": "ac78b4e98684d9dd772255d0cb24fc88fbf84e51cb0f0f9372bf5829677bed0b"
+        },
+        {
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
         }
       ],
-      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:01:25.5232794Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:14.4797546Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -498,17 +558,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "125d723ade1c52de1217c7e17183d198ec7b5b47f6a258b74992907107b96d98"
-        },
-        {
-          "path": "FoodDiary.Infrastructure/AGENTS.md",
-          "sha256": "98b253ba8222742b103d507ca9d0f11bab487199107a9499c0024d682997fee3"
+          "sha256": "cacac0c7d0e180b31f847b486f3cab3169c185efea67576154a461269fb5ac20"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:41.2759192Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:15.3620269Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -562,13 +618,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "ecd5e562475b0e545177da1888ed6b354bad090efda26a8280d14298914efad0"
+          "sha256": "788e0ef3cb5b657b656c5fec1c560c87259618c67cb7f6c019116aa2b9674ea5"
         }
       ],
-      "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
+      "reason": "Reviewed the physical Services relocation and regenerated source indexes. Solution and project references resolve; 128 focused architecture checks and the regenerated catalog guardrails passed. Docker build inputs and deployment bind paths preserve existing service behavior and data volumes. Frontend fixes retain Angular ESLint 22.2, replace template casts with typed references and uppercase calls with pipes, and cap 27 pre-existing complex templates at their measured counts while retaining the default limit of five. The real-rule sanity fixture and full ESLint pass; production build generated 18 routes plus Russian variants. Technology Radar source evidence and inventory were updated and its build passed.",
       "baseRef": "HEAD",
-      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
-      "reviewedAtUtc": "2026-09-06T17:13:37.5710154Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T06:03:30.0429029Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -591,14 +647,18 @@
       "pageSha256": "995df7b3f6ad527c4094a25bf33831f1c30fae3ebff5aa469fa92f71f02bab43",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "49e36a7b499b3a44c1768bc5c7e38ac57f19bb7c8fb7ce75c3e5e102683e0499"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
         }
       ],
-      "reason": "Reviewed final context-ranking changes: physical paths, projection lineage, backend contract/privacy/impact queries and stale states remain intact. Shared/module selectors preserve roles; compound identifiers and explicit-test morphology reuse bounded ranking. Frozen path-only edits have verified Git rename evidence.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "08652ce87773bdeb8a94294c657fde8f1ff585ca",
-      "reviewedAtUtc": "2026-09-06T20:27:46.9427562Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:19.5877027Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -607,13 +667,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
+          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
         }
       ],
-      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
-      "reviewedAtUtc": "2026-09-06T18:03:00.4220788Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:20.5007593Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -636,14 +696,22 @@
       "pageSha256": "ca4122ad45c7918953e4e7acf1974a72586f53a72a9d3f06fe574edb9a5f8533",
       "sources": [
         {
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "c83858169f264b169ea80eb5102ae17aa4e24bebd15930353e825318b353b737"
+        },
+        {
+          "path": ".llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1",
+          "sha256": "40cce4575a458525966fcdbcf7075551917d6b89a5f34bb9da03825140277049"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "15a4b69d7cb49bc9cc068fdc488db71756ea71033cfca395fbf8455f54c6deba"
+          "sha256": "8864d52acc5546c317334dd4fb207e1a4684c08c2164b66605b3e633d767625b"
         }
       ],
-      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
+      "reason": "Integrated the reviewed Job Manager registration fix from 45b58f5: AddMealsModule supplies the application reader required by achievement reconciliation; its registration guard is updated, without changing schedules or retry policy. Also repaired intent-only PostgreSQL test selection so unrelated UI consumers cannot displace provider-backed tests; the complete precision/session-routing regression passes, including a synthetic unrelated UI diff. Service relocation, existing API contracts, private SSH access and dependency versions remain as previously reviewed.",
       "baseRef": "HEAD",
-      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
-      "reviewedAtUtc": "2026-09-06T18:03:00.7042889Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T06:50:33.2911672Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -667,13 +735,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "ae93a3f325c39785d12657a602eaba465777fb6d22a1aaf582d44d46aeb8f4f3"
+          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
         }
       ],
-      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
-      "reviewedAtUtc": "2026-09-06T18:03:00.9881096Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:23.1544345Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -682,13 +750,13 @@
       "sources": [
         {
           "path": ".llm-wiki/evals/cases.json",
-          "sha256": "29aba37db801a1f64f4611dfed9f4f1572c361fefb903efd05f0e5b1434545db"
+          "sha256": "1b0db260fec3eb6c9a5086034b4d7561a8eaafe69e45d277467890152ff60204"
         }
       ],
-      "reason": "Reviewed current architecture, module-map, ownership and scoped-guide text against the final 32 module Presentation projects, one Presentation.Contracts project and the central Version-only kernel.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "c25f6b2d3dfb80e338159fde7ce3af95b7ae3f41",
-      "reviewedAtUtc": "2026-09-05T13:44:49.5292832Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:24.1776870Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -731,13 +799,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
+          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:31:57.5105005Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:25.8348861Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -776,13 +844,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "ebd7234d028fa85e366e9c4050cb1af84c9b561d8c3e0e2a7630e93ce1777212"
+          "sha256": "b36d5edb9f003f124f721e5796f6870b847b348d8ec33c03fa2fa4d43b1dd518"
+        },
+        {
+          "path": "docs/privacy/PRIVACY_RELEASE_CHECKLIST.md",
+          "sha256": "1fb94f920ed3b394d8e752ce264e68a081ce51802bea97d8c70db0fa1fc0428c"
         }
       ],
-      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:01:26.5787651Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:26.6309123Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -821,13 +893,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "84a57883ae8bc1b93e76293e1f549676d0cd5c7bbc1e190c1321621d77312089"
+          "sha256": "cec3c4b654ba79b361a44a1cdad1d0147f6995b189b4c61b53d2840db15456be"
         }
       ],
-      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
+      "reason": "Integrated the reviewed Job Manager registration fix from 45b58f5: AddMealsModule supplies the application reader required by achievement reconciliation; its registration guard is updated, without changing schedules or retry policy. Also repaired intent-only PostgreSQL test selection so unrelated UI consumers cannot displace provider-backed tests; the complete precision/session-routing regression passes, including a synthetic unrelated UI diff. Service relocation, existing API contracts, private SSH access and dependency versions remain as previously reviewed.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:01:28.2089813Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T06:50:34.2157960Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -873,14 +945,14 @@
       "pageSha256": "5e6a677aea63de29735a1273138f3aaab35e410cb1f930a49d44d9270d162480",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "e376094eb6b3a27464d6c3d72ec59c254d02de2332afc029a860845a278b881b"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "c83858169f264b169ea80eb5102ae17aa4e24bebd15930353e825318b353b737"
         }
       ],
-      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
-      "reviewedAtUtc": "2026-08-28T20:48:30.4041702Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:32.3077895Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -904,13 +976,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6d224803264b5cd3142dbaed850fe25d9245800bc3141d8712c8e5ed0291663f"
+          "sha256": "dd4b9ae5760764e8f15f98cb28b5ab54a834ab16ea5d45b1eed01bf8c3a7903e"
+        },
+        {
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
         }
       ],
-      "reason": "Final source review: generic MailInbox export and isolated BugTriage are documented in ADR 0036/runbook and mail/system navigation. Generated indexes reflect the four new production projects, optional mail export client and bounded token API; existing primary modules and workflow authority remain unchanged.",
+      "reason": "Integrated the reviewed Job Manager registration fix from 45b58f5: AddMealsModule supplies the application reader required by achievement reconciliation; its registration guard is updated, without changing schedules or retry policy. Also repaired intent-only PostgreSQL test selection so unrelated UI consumers cannot displace provider-backed tests; the complete precision/session-routing regression passes, including a synthetic unrelated UI diff. Service relocation, existing API contracts, private SSH access and dependency versions remain as previously reviewed.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:06:42.8510047Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T06:50:35.0121671Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -919,21 +995,25 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "84a57883ae8bc1b93e76293e1f549676d0cd5c7bbc1e190c1321621d77312089"
+          "sha256": "cec3c4b654ba79b361a44a1cdad1d0147f6995b189b4c61b53d2840db15456be"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "6d224803264b5cd3142dbaed850fe25d9245800bc3141d8712c8e5ed0291663f"
+          "sha256": "dd4b9ae5760764e8f15f98cb28b5ab54a834ab16ea5d45b1eed01bf8c3a7903e"
         },
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "ebd7234d028fa85e366e9c4050cb1af84c9b561d8c3e0e2a7630e93ce1777212"
+          "sha256": "b36d5edb9f003f124f721e5796f6870b847b348d8ec33c03fa2fa4d43b1dd518"
+        },
+        {
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "045f0b00f9b51a57cbfae927cc79973c47097fe4348bbf1cff3fe024cd185205"
         }
       ],
-      "reason": "Final source review: generic MailInbox export and isolated BugTriage are documented in ADR 0036/runbook and mail/system navigation. Generated indexes reflect the four new production projects, optional mail export client and bounded token API; existing primary modules and workflow authority remain unchanged.",
+      "reason": "Integrated the reviewed Job Manager registration fix from 45b58f5: AddMealsModule supplies the application reader required by achievement reconciliation; its registration guard is updated, without changing schedules or retry policy. Also repaired intent-only PostgreSQL test selection so unrelated UI consumers cannot displace provider-backed tests; the complete precision/session-routing regression passes, including a synthetic unrelated UI diff. Service relocation, existing API contracts, private SSH access and dependency versions remain as previously reviewed.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:06:43.5007981Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T06:50:36.0706036Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -957,13 +1037,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
+          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:32:01.3252363Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:35.4592038Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1016,14 +1100,14 @@
       "pageSha256": "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskDecomposition.ps1",
+          "sha256": "3609439f485159343cf37b591784e346a67c0d5082e52061af3fa2126eced5c3"
         }
       ],
-      "reason": "Reviewed generated navigation against merged project/DI sources, 831 architecture tests, full MCP231, failure-before5/11 and pass-after11/11 layout regression, bounded Git batching and module-owned test selection. Exact Git rename audit proves125 target-only substitutions; queries, scores, thresholds and historical metrics unchanged. Full Wiki outcome is recorded separately, not inferred from reviews.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:44.284443Z"
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "baseRef": "HEAD",
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:36.6527749Z"
     },
     {
       "pageId": "workflow-task-workspace",
@@ -1043,17 +1127,25 @@
     {
       "pageId": "workflow-test-plan",
       "pagePath": ".llm-wiki/workflows/test-plan.md",
-      "pageSha256": "034a7fbc5f124bcf40175e3a37f52338dfec658615c7b91245322232f61f08d6",
+      "pageSha256": "fbad4475bf490cec00599b47d28beddd83436d11f9fba47b7eadfc0f03b528f5",
       "sources": [
         {
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "15a4b69d7cb49bc9cc068fdc488db71756ea71033cfca395fbf8455f54c6deba"
+          "sha256": "8864d52acc5546c317334dd4fb207e1a4684c08c2164b66605b3e633d767625b"
+        },
+        {
+          "path": "docs/TESTING_STRATEGY.md",
+          "sha256": "112a8962aa33be3e32a22bb45ac95fde340f6ce057c36a5b304598437a3eb255"
         }
       ],
-      "reason": "Repair module-owned Identity session grounding and select the existing application test project after extraction",
+      "reason": "Integrated the reviewed Job Manager registration fix from 45b58f5: AddMealsModule supplies the application reader required by achievement reconciliation; its registration guard is updated, without changing schedules or retry policy. Also repaired intent-only PostgreSQL test selection so unrelated UI consumers cannot displace provider-backed tests; the complete precision/session-routing regression passes, including a synthetic unrelated UI diff. Service relocation, existing API contracts, private SSH access and dependency versions remain as previously reviewed.",
       "baseRef": "HEAD",
-      "gitHead": "9a5638db7070bb42f6368e227a83a37b385caa00",
-      "reviewedAtUtc": "2026-09-06T18:03:01.7302642Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T06:50:37.1744566Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1077,13 +1169,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
+          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:32:01.8348524Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:38.7280464Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
@@ -1106,14 +1198,18 @@
       "pageSha256": "5a76c906b2df2376fbdf59ad6c1f5eead5e7056deda2e4eaa69a24f00491cca0",
       "sources": [
         {
+          "path": ".llm-wiki/policies/change-policies.json",
+          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
+        },
+        {
           "path": "AGENTS.md",
-          "sha256": "f3a838c35e9686a4c0877783e3962bae93dc16d5a2db9278e9c8b16a242d4d17"
+          "sha256": "46c9267dcac0e3ff46cab1fe15c0414d363710c0ec1e3ceaceccec2f5269af9d"
         }
       ],
-      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:01:21.9666162Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:11.3818829Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1121,14 +1217,18 @@
       "pageSha256": "50ed04637edde217df4523303843af0ba9259b09af6ed1903b66160fc32b97b8",
       "sources": [
         {
+          "path": ".llm-wiki/evals/cases.json",
+          "sha256": "1b0db260fec3eb6c9a5086034b4d7561a8eaafe69e45d277467890152ff60204"
+        },
+        {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "7e69ad6d4e80d86dc4ac3bab34141aa2a1b060050b9de4bc4461e6f2d45a7254"
+          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:31:55.2540646Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:16.8286169Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1137,13 +1237,13 @@
       "sources": [
         {
           "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "f66fb23da5094aecf6dbd9de835dae414df9e4c79e796fc3bbbbfb0a5af155ab"
+          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
         }
       ],
-      "reason": "Reviewed module-map context and domain policy routing, provider-sharing lead semantics, and current module-owned fixtures. Core audit and SQL/JSON privacy parity pass; documentation preserves evidence limits and current ownership.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "0d8bd823d4f1a651de7e86bba9b67bfa3cb43874",
-      "reviewedAtUtc": "2026-09-06T19:31:56.0374305Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:17.7558166Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",
@@ -1166,18 +1266,46 @@
       "pageSha256": "31d7171d7feb8c70d3bca4652b01ca7b2e728901878069ff810ba852bbb6c49f",
       "sources": [
         {
+          "path": ".llm-wiki/evals/context-search-holdout-100.json",
+          "sha256": "0451b67c129e11f013c405ca2cd7200d04b54b07255305f40567e63ec890e796"
+        },
+        {
+          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
+          "sha256": "f269b22a9dbc52ff7ceab0d8a5ed8618fa62ba2c41f51b1275a080c2ca2331e3"
+        },
+        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "f2ef7f3eb915e2284755b355085a5c6173ba83fd2881c487c65ba5828c346555"
+          "sha256": "61020fe15c4980450521f759eb44cf6a129eb340f6b3ddc6b291d62889f75576"
+        },
+        {
+          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+          "sha256": "92484183b8d2e71cedf993036d78a04eefaaa3b6bfdf18fdd4045930435cea64"
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "9981ba14bacb17c399f3f9f7fd5f392fc679af2407219ad4564127b11028477b"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
+          "sha256": "064918be1eb5385e2e3032e93b3727e3f1071c02048ce7ddaa4fe6c3e1ae94b6"
         },
         {
           "path": "AGENTS.md",
-          "sha256": "f3a838c35e9686a4c0877783e3962bae93dc16d5a2db9278e9c8b16a242d4d17"
+          "sha256": "46c9267dcac0e3ff46cab1fe15c0414d363710c0ec1e3ceaceccec2f5269af9d"
         }
       ],
-      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
+      "reason": "Reviewed the physical Services relocation and regenerated source indexes. Solution and project references resolve; 128 focused architecture checks and the regenerated catalog guardrails passed. Docker build inputs and deployment bind paths preserve existing service behavior and data volumes. Frontend fixes retain Angular ESLint 22.2, replace template casts with typed references and uppercase calls with pipes, and cap 27 pre-existing complex templates at their measured counts while retaining the default limit of five. The real-rule sanity fixture and full ESLint pass; production build generated 18 routes plus Russian variants. Technology Radar source evidence and inventory were updated and its build passed.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:01:28.8433747Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T06:03:33.0407154Z"
     },
     {
       "pageId": "workflow.review-diff",
@@ -1185,14 +1313,18 @@
       "pageSha256": "f188b44a8d2edc4e6f903a733f523f8ffd38f6b7ba4cc58a7e7c3ac247d2f92f",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
+        },
+        {
           "path": "AGENTS.md",
-          "sha256": "f3a838c35e9686a4c0877783e3962bae93dc16d5a2db9278e9c8b16a242d4d17"
+          "sha256": "46c9267dcac0e3ff46cab1fe15c0414d363710c0ec1e3ceaceccec2f5269af9d"
         }
       ],
-      "reason": "Reviewed ADR 0036 and current source: BugTriage is a separate service using only MailInbox.Client; primary runtime ownership is unchanged. Updated mail-services and system navigation to reflect the consumer and existing Admin/shared email adapter owners. Generated indexes add service contracts, configuration and graph edges; generic workflow instructions and knowledge authority rules remain applicable.",
+      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
-      "gitHead": "28d1e672e789736f7bf095f1ed80d4babc5ba8a7",
-      "reviewedAtUtc": "2026-09-07T03:01:29.8486407Z"
+      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
+      "reviewedAtUtc": "2026-09-07T05:38:31.2134984Z"
     }
   ]
 }

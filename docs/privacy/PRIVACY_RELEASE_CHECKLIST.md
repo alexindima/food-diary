@@ -37,7 +37,7 @@ production-enabled/disabled decision and, when enabled, matching policy text:
 | --- | --- | --- |
 | OpenAI | `Modules/Ai/Infrastructure/Providers/Services/OpenAi` | Which inputs are sent, which models/region are used, and what provider retention setting is active? |
 | S3-compatible object storage | `Modules/Images/Infrastructure/Providers/Services/S3*` | Where is the bucket hosted, who operates it, and how are deleted objects/backups expired? |
-| MailRelay and downstream SMTP/MX delivery | `Shared/FoodDiary.Email.MailRelay/RelayEmailTransport.cs` and `MailRelay/` | Which delivery operators receive addresses/content and what logs are retained? |
+| MailRelay and downstream SMTP/MX delivery | `Shared/FoodDiary.Email.MailRelay/RelayEmailTransport.cs` and `Services/MailRelay/` | Which delivery operators receive addresses/content and what logs are retained? |
 | Web Push | `Modules/Notifications/Infrastructure/Services/WebPush*` | Which browser push services receive subscription endpoints and payload metadata? |
 | Google identity | `Modules/Identity/Infrastructure/Providers/Authentication/GoogleTokenValidator.cs` | Is Google login enabled and which identity claims are stored? |
 | Fitbit | `Modules/Wearables/Infrastructure/Providers/Wearables/FitbitClient.cs` | Is wearable import enabled, which scopes are requested, and how can access be revoked? |

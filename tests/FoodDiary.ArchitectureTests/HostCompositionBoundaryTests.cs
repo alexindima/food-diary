@@ -146,8 +146,8 @@ public sealed class HostCompositionBoundaryTests {
     public void WebApiHosts_DoNotMapApiFeatureEndpointsDirectly() {
         string[] hostRoots = [
             ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api"),
-            ArchitectureTestPaths.FromRoot("MailInbox/FoodDiary.MailInbox.WebApi"),
-            ArchitectureTestPaths.FromRoot("MailRelay/FoodDiary.MailRelay.WebApi"),
+            ArchitectureTestPaths.FromRoot("Services/MailInbox/FoodDiary.MailInbox.WebApi"),
+            ArchitectureTestPaths.FromRoot("Services/MailRelay/FoodDiary.MailRelay.WebApi"),
         ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(hostRoots, [
@@ -218,11 +218,11 @@ public sealed class HostCompositionBoundaryTests {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string[] hostRoots = [
             ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api"),
-            ArchitectureTestPaths.FromRoot("MailInbox/FoodDiary.MailInbox.WebApi"),
-            ArchitectureTestPaths.FromRoot("MailRelay/FoodDiary.MailRelay.WebApi"),
+            ArchitectureTestPaths.FromRoot("Services/MailInbox/FoodDiary.MailInbox.WebApi"),
+            ArchitectureTestPaths.FromRoot("Services/MailRelay/FoodDiary.MailRelay.WebApi"),
             ArchitectureTestPaths.FromRoot("FoodDiary.Initializer"),
-            ArchitectureTestPaths.FromRoot("MailInbox/FoodDiary.MailInbox.Initializer"),
-            ArchitectureTestPaths.FromRoot("MailRelay/FoodDiary.MailRelay.Initializer"),
+            ArchitectureTestPaths.FromRoot("Services/MailInbox/FoodDiary.MailInbox.Initializer"),
+            ArchitectureTestPaths.FromRoot("Services/MailRelay/FoodDiary.MailRelay.Initializer"),
         ];
         string[] violations = [.. SourceScanner.SourceFiles(hostRoots)
             .SelectMany(path => File.ReadLines(path)
@@ -243,8 +243,8 @@ public sealed class HostCompositionBoundaryTests {
     public void InitializerSource_DoesNotReferenceHttpPresentationOrMediatorSurface() {
         string[] initializerRoots = [
             ArchitectureTestPaths.FromRoot("FoodDiary.Initializer"),
-            ArchitectureTestPaths.FromRoot("MailInbox/FoodDiary.MailInbox.Initializer"),
-            ArchitectureTestPaths.FromRoot("MailRelay/FoodDiary.MailRelay.Initializer"),
+            ArchitectureTestPaths.FromRoot("Services/MailInbox/FoodDiary.MailInbox.Initializer"),
+            ArchitectureTestPaths.FromRoot("Services/MailRelay/FoodDiary.MailRelay.Initializer"),
         ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(initializerRoots, [

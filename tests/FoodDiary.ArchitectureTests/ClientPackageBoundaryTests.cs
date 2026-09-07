@@ -3,8 +3,8 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class ClientPackageBoundaryTests {
     [Theory]
-    [InlineData("FoodDiary.MailRelay.Client", "MailRelay/FoodDiary.MailRelay.Client")]
-    [InlineData("FoodDiary.MailInbox.Client", "MailInbox/FoodDiary.MailInbox.Client")]
+    [InlineData("FoodDiary.MailRelay.Client", "Services/MailRelay/FoodDiary.MailRelay.Client")]
+    [InlineData("FoodDiary.MailInbox.Client", "Services/MailInbox/FoodDiary.MailInbox.Client")]
     public void ClientPackages_DoNotReferenceServerSideNamespaces(string projectName, string projectFolder) {
         string clientRoot = ArchitectureTestPaths.FromRoot(projectFolder);
         string boundedContextPrefix = projectName[..projectName.LastIndexOf('.')];
@@ -31,8 +31,8 @@ public sealed class ClientPackageBoundaryTests {
     }
 
     [Theory]
-    [InlineData("MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj")]
-    [InlineData("MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj")]
+    [InlineData("Services/MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj")]
+    [InlineData("Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj")]
     public void ClientPackages_DoNotReferenceServerSidePackages(string relativeProjectPath) {
         var forbiddenPackages = new HashSet<string>(StringComparer.Ordinal) {
             "Microsoft.AspNetCore.App",
@@ -52,8 +52,8 @@ public sealed class ClientPackageBoundaryTests {
     }
 
     [Theory]
-    [InlineData("FoodDiary.MailRelay.Client", "MailRelay/FoodDiary.MailRelay.Client")]
-    [InlineData("FoodDiary.MailInbox.Client", "MailInbox/FoodDiary.MailInbox.Client")]
+    [InlineData("FoodDiary.MailRelay.Client", "Services/MailRelay/FoodDiary.MailRelay.Client")]
+    [InlineData("FoodDiary.MailInbox.Client", "Services/MailInbox/FoodDiary.MailInbox.Client")]
     public void ClientPackages_ExposeOnlyClientModelsOptionsAndRegistrationSurface(string projectName, string projectFolder) {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string clientRoot = ArchitectureTestPaths.FromRoot(projectFolder);

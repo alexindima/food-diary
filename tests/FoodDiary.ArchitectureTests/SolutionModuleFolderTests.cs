@@ -154,14 +154,14 @@ public sealed class SolutionModuleFolderTests {
     [InlineData("Modules/Example/tests/P.csproj", "/Modules/Example/testsExtra/", true, false)]
     [InlineData("Modules/Example/Domain/P.csproj", "/Modules/Other/", true, false)]
     [InlineData("Modules/Example/Domain/P.csproj", "/Modules/ExampleExtra/", true, false)]
-    [InlineData("MailInbox/Application/P.csproj", "/Services/MailInbox/", false, true)]
-    [InlineData("MailRelay/Application/P.csproj", "/Services/MailRelay/", false, true)]
-    [InlineData("MailInbox/tests/P.csproj", "/Services/MailInbox/Tests/", false, true)]
-    [InlineData("MailRelay/tests/P.csproj", "/Services/MailRelay/Tests/Integration/", false, true)]
-    [InlineData("MailInbox/tests/P.csproj", "/Tests/MailInbox/", false, false)]
-    [InlineData("MailRelay/tests/P.csproj", "/Services/MailRelay/", false, false)]
-    [InlineData("MailInbox/tests/P.csproj", "/Services/MailInbox/TestsExtra/", false, false)]
-    [InlineData("MailInbox/Application/P.csproj", "/Services/MailRelay/", false, false)]
+    [InlineData("Services/MailInbox/Application/P.csproj", "/Services/MailInbox/", false, true)]
+    [InlineData("Services/MailRelay/Application/P.csproj", "/Services/MailRelay/", false, true)]
+    [InlineData("Services/MailInbox/tests/P.csproj", "/Services/MailInbox/Tests/", false, true)]
+    [InlineData("Services/MailRelay/tests/P.csproj", "/Services/MailRelay/Tests/Integration/", false, true)]
+    [InlineData("Services/MailInbox/tests/P.csproj", "/Tests/MailInbox/", false, false)]
+    [InlineData("Services/MailRelay/tests/P.csproj", "/Services/MailRelay/", false, false)]
+    [InlineData("Services/MailInbox/tests/P.csproj", "/Services/MailInbox/TestsExtra/", false, false)]
+    [InlineData("Services/MailInbox/Application/P.csproj", "/Services/MailRelay/", false, false)]
     [InlineData("Shared/tests/P.csproj", "/Shared/tests/", false, true)]
     [InlineData("Tooling/tests/P.csproj", "/Tooling/tests/", false, true)]
     [InlineData("Tooling\\tests\\P.csproj", "/tooling/Tests/Integration/", false, true)]
@@ -184,7 +184,7 @@ public sealed class SolutionModuleFolderTests {
 
     [Fact]
     public void OwnershipDetection_RejectsOwnedProjectsPlacedAtSolutionRoot() {
-        XDocument solution = ParseSolution("<Project Path='Modules/Example/Application/P.csproj' /><Project Path='MailInbox/tests/P.csproj' />");
+        XDocument solution = ParseSolution("<Project Path='Modules/Example/Application/P.csproj' /><Project Path='Services/MailInbox/tests/P.csproj' />");
 
         Assert.Multiple(
             () => Assert.Single(FindMisplacedProjects(solution, modules: true)),
@@ -247,10 +247,12 @@ public sealed class SolutionModuleFolderTests {
                 if (segments.Length > 2 && string.Equals(segments[2], "tests", StringComparison.OrdinalIgnoreCase)) {
                     expectedPrefix += "tests/";
                 }
-            } else if (!modules && (string.Equals(segments[0], "MailInbox", StringComparison.OrdinalIgnoreCase) ||
-                                    string.Equals(segments[0], "MailRelay", StringComparison.OrdinalIgnoreCase))) {
-                expectedPrefix = $"/Services/{segments[0]}/";
-                if (string.Equals(segments[1], "tests", StringComparison.OrdinalIgnoreCase)) {
+            } else if (!modules && string.Equals(segments[0], "Services", StringComparison.OrdinalIgnoreCase) &&
+                       (string.Equals(segments[1], "MailInbox", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(segments[1], "MailRelay", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(segments[1], "BugTriage", StringComparison.OrdinalIgnoreCase))) {
+                expectedPrefix = $"/Services/{segments[1]}/";
+                if (segments.Length > 2 && string.Equals(segments[2], "tests", StringComparison.OrdinalIgnoreCase)) {
                     expectedPrefix += "Tests/";
                 }
             } else if (!modules &&

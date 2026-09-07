@@ -5,12 +5,12 @@ status: current
 sources:
   - docs/ARCHITECTURE.md
   - docs/BACKEND_MODULE_MAP.md
-  - MailRelay/AGENTS.md
-  - MailInbox/FoodDiary.MailInbox.Application/AGENTS.md
-  - MailInbox/FoodDiary.MailInbox.Infrastructure/AGENTS.md
-  - MailInbox/FoodDiary.MailInbox.Presentation/AGENTS.md
-  - MailInbox/FoodDiary.MailInbox.WebApi/AGENTS.md
-  - BugTriage/AGENTS.md
+  - Services/MailRelay/AGENTS.md
+  - Services/MailInbox/FoodDiary.MailInbox.Application/AGENTS.md
+  - Services/MailInbox/FoodDiary.MailInbox.Infrastructure/AGENTS.md
+  - Services/MailInbox/FoodDiary.MailInbox.Presentation/AGENTS.md
+  - Services/MailInbox/FoodDiary.MailInbox.WebApi/AGENTS.md
+  - Services/BugTriage/AGENTS.md
   - docs/backend/BUG_TRIAGE.md
   - docs/adr/0036-independent-bug-triage-service.md
 ---

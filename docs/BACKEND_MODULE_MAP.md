@@ -325,4 +325,4 @@ See [ADR 0033](adr/0033-retry-safe-outbox-and-consumer-contracts.md) for retry-s
 
 ## BugTriage
 
-Independent bug-report processing service under `BugTriage/`. Application owns report lifecycle and ports; Infrastructure owns PostgreSQL, the MailInbox.Client adapter and polling; Presentation owns the processor API; WebApi is composition-only. No primary module references it. See `docs/backend/BUG_TRIAGE.md`.
+Independent bug-report processing service under `Services/BugTriage/`. Application owns report lifecycle and ports; Infrastructure owns PostgreSQL, the MailInbox.Client adapter and polling; Presentation owns the processor API; WebApi is composition-only. No primary module references it. See `docs/backend/BUG_TRIAGE.md`.

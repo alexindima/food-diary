@@ -48,153 +48,6 @@
   },
   "symbols": [
     {
-      "name": "IBugMailSource",
-      "kind": "interface",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugMailSource.cs",
-      "line": 4
-    },
-    {
-      "name": "IBugReportStore",
-      "kind": "interface",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs",
-      "line": 4
-    },
-    {
-      "name": "ImportBugReports",
-      "kind": "class",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ImportBugReports.cs",
-      "line": 4
-    },
-    {
-      "name": "ImportedReport",
-      "kind": "record",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ImportedReport.cs",
-      "line": 2
-    },
-    {
-      "name": "ReportCompletion",
-      "kind": "record",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ReportCompletion.cs",
-      "line": 2
-    },
-    {
-      "name": "ReportLease",
-      "kind": "record",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ReportLease.cs",
-      "line": 2
-    },
-    {
-      "name": "ReportOutcome",
-      "kind": "class",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ReportOutcome.cs",
-      "line": 2
-    },
-    {
-      "name": "ReportSummary",
-      "kind": "record",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ReportSummary.cs",
-      "line": 2
-    },
-    {
-      "name": "BugTriageInfrastructureExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Extensions/BugTriageInfrastructureExtensions.cs",
-      "line": 15
-    },
-    {
-      "name": "MailInboxBugSource",
-      "kind": "class",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Mail/MailInboxBugSource.cs",
-      "line": 11
-    },
-    {
-      "name": "BugTriageOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Options/BugTriageOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "BugTriageSchema",
-      "kind": "class",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/BugTriageSchema.cs",
-      "line": 4
-    },
-    {
-      "name": "NpgsqlBugReportStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportStore.cs",
-      "line": 7
-    },
-    {
-      "name": "BugMailImportWorker",
-      "kind": "class",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Workers/BugMailImportWorker.cs",
-      "line": 8
-    },
-    {
-      "name": "BugTriagePresentationExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Extensions/BugTriagePresentationExtensions.cs",
-      "line": 10
-    },
-    {
-      "name": "BugReportsController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
-      "line": 17
-    },
-    {
-      "name": "CompleteReportHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs",
-      "line": 4
-    },
-    {
-      "name": "RenewReportHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "BugTriageHttpOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "BugTriageAuthorizationFilter",
-      "kind": "class",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Security/BugTriageAuthorizationFilter.cs",
-      "line": 9
-    },
-    {
-      "name": "Program",
-      "kind": "class",
-      "role": "Other",
-      "path": "BugTriage/FoodDiary.BugTriage.WebApi/Program.cs",
-      "line": 30
-    },
-    {
       "name": "ExpressionTreeSpanOverloadAnalyzer",
       "kind": "class",
       "role": "Other",
@@ -1957,1889 +1810,6 @@
       "role": "Other",
       "path": "FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs",
       "line": 13
-    },
-    {
-      "name": "IInboundMailExportStore",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailExportStore.cs",
-      "line": 4
-    },
-    {
-      "name": "IInboundMailStore",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs",
-      "line": 5
-    },
-    {
-      "name": "IMailInboxReadinessChecker",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxReadinessChecker.cs",
-      "line": 2
-    },
-    {
-      "name": "IMailInboxSchemaInitializer",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxSchemaInitializer.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxLoggingBehavior",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Common/Behaviors/MailInboxLoggingBehavior.cs",
-      "line": 7
-    },
-    {
-      "name": "MailInboxValidationBehavior",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Common/Behaviors/MailInboxValidationBehavior.cs",
-      "line": 9
-    },
-    {
-      "name": "MailInboxErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Common/Results/MailInboxErrors.cs",
-      "line": 4
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "CheckMailInboxReadinessQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Health/CheckMailInboxReadinessQuery.cs",
-      "line": 5
-    },
-    {
-      "name": "CheckMailInboxReadinessQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Health/CheckMailInboxReadinessQueryHandler.cs",
-      "line": 6
-    },
-    {
-      "name": "MarkInboundMailMessageReadCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommand.cs",
-      "line": 5
-    },
-    {
-      "name": "MarkInboundMailMessageReadCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "MarkInboundMailMessageReadCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "DmarcReportPreview",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/DmarcReportPreview.cs",
-      "line": 2
-    },
-    {
-      "name": "DmarcReportRecordPreview",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/DmarcReportRecordPreview.cs",
-      "line": 2
-    },
-    {
-      "name": "InboundMailAdmission",
-      "kind": "record struct",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailAdmission.cs",
-      "line": 2
-    },
-    {
-      "name": "InboundMailExportEntry",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailExportEntry.cs",
-      "line": 2
-    },
-    {
-      "name": "InboundMailMessageCategories",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageCategories.cs",
-      "line": 2
-    },
-    {
-      "name": "InboundMailMessageDetails",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageDetails.cs",
-      "line": 2
-    },
-    {
-      "name": "InboundMailMessageSummary",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageSummary.cs",
-      "line": 2
-    },
-    {
-      "name": "InboundMailRetentionResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailRetentionResult.cs",
-      "line": 2
-    },
-    {
-      "name": "InboundMailSaveResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailSaveResult.cs",
-      "line": 2
-    },
-    {
-      "name": "GetInboundMailMessageDetailsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetInboundMailMessageDetailsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
-      "line": 8
-    },
-    {
-      "name": "GetInboundMailMessagesQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs",
-      "line": 6
-    },
-    {
-      "name": "GetInboundMailMessagesQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryHandler.cs",
-      "line": 7
-    },
-    {
-      "name": "GetInboundMailMessagesQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "MailInboxAdmissionOutcome",
-      "kind": "enum",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxAdmissionOutcome.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxIngestionOutcome",
-      "kind": "enum",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxIngestionOutcome.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxRetentionOutcome",
-      "kind": "enum",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxRetentionOutcome.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxTelemetry",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxTelemetry.cs",
-      "line": 5
-    },
-    {
-      "name": "IMailInboxExportClient",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs",
-      "line": 4
-    },
-    {
-      "name": "MailInboxExportClient",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Export/MailInboxExportClient.cs",
-      "line": 9
-    },
-    {
-      "name": "MailInboxClientServiceCollectionExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Extensions/MailInboxClientServiceCollectionExtensions.cs",
-      "line": 6
-    },
-    {
-      "name": "IMailInboxClient",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/IMailInboxClient.cs",
-      "line": 4
-    },
-    {
-      "name": "MailInboxClient",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
-      "line": 10
-    },
-    {
-      "name": "DmarcReportRecordResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Models/DmarcReportRecordResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "DmarcReportResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Models/DmarcReportResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "InboundMailMessageDetailsResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageDetailsResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "InboundMailMessageSummaryResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageSummaryResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxExportEntryResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Models/MailInboxExportEntryResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxClientOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "InboundMailMessageReceivedDomainEvent",
-      "kind": "record",
-      "role": "Event",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Events/InboundMailMessageReceivedDomainEvent.cs",
-      "line": 5
-    },
-    {
-      "name": "InboundMailMessage",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
-      "line": 7
-    },
-    {
-      "name": "InboundMailMessageId",
-      "kind": "record struct",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageId.cs",
-      "line": 4
-    },
-    {
-      "name": "InboundMailMessageStatus",
-      "kind": "record struct",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxServiceCollectionExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
-      "line": 14
-    },
-    {
-      "name": "MailInboxTelemetryPrivacyProcessor",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxTelemetryPrivacyProcessor.cs",
-      "line": 7
-    },
-    {
-      "name": "MailInboxDatabaseConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxDatabaseConfiguration.cs",
-      "line": 4
-    },
-    {
-      "name": "MailInboxNetworkRange",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxNetworkRange.cs",
-      "line": 5
-    },
-    {
-      "name": "MailInboxSmtpOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs",
-      "line": 5
-    },
-    {
-      "name": "MailInboxStorageOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxStorageOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "OpenTelemetryOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "OtlpOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs",
-      "line": 29
-    },
-    {
-      "name": "DmarcReportParser",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
-      "line": 11
-    },
-    {
-      "name": "IMailInboxDmarcReportParser",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/IMailInboxDmarcReportParser.cs",
-      "line": 4
-    },
-    {
-      "name": "InboundMailStorageQuotaExceededException",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/InboundMailStorageQuotaExceededException.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxEndpointListenerFactory",
-      "kind": "class",
-      "role": "Factory",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxEndpointListenerFactory.cs",
-      "line": 12
-    },
-    {
-      "name": "MailInboxLocalTlsHealthCheck",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs",
-      "line": 5
-    },
-    {
-      "name": "MailInboxMailboxFilter",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs",
-      "line": 12
-    },
-    {
-      "name": "MailInboxNetworkIdentity",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxNetworkIdentity.cs",
-      "line": 4
-    },
-    {
-      "name": "MailInboxRetentionHostedService",
-      "kind": "class",
-      "role": "Service",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs",
-      "line": 10
-    },
-    {
-      "name": "MailInboxSlidingWindowRateLimiter",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSlidingWindowRateLimiter.cs",
-      "line": 8
-    },
-    {
-      "name": "MailInboxSmtpHostedService",
-      "kind": "class",
-      "role": "Service",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs",
-      "line": 16
-    },
-    {
-      "name": "MailInboxStoredMessageLimits",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxStoredMessageLimits.cs",
-      "line": 5
-    },
-    {
-      "name": "NpgsqlExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlExtensions.cs",
-      "line": 4
-    },
-    {
-      "name": "NpgsqlInboundMailExportStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailExportStore.cs",
-      "line": 8
-    },
-    {
-      "name": "NpgsqlInboundMailStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
-      "line": 13
-    },
-    {
-      "name": "NpgsqlMailInboxReadinessChecker",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxReadinessChecker.cs",
-      "line": 5
-    },
-    {
-      "name": "NpgsqlMailInboxRuntimeRoleProvisioner",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleProvisioner.cs",
-      "line": 5
-    },
-    {
-      "name": "NpgsqlMailInboxRuntimeRoleValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "SmtpInboundMessageStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs",
-      "line": 18
-    },
-    {
-      "name": "InitializerCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerCommand.cs",
-      "line": 2
-    },
-    {
-      "name": "InitializerServiceCollectionExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerServiceCollectionExtensions.cs",
-      "line": 10
-    },
-    {
-      "name": "MailInboxRuntimeDatabaseOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs",
-      "line": 4
-    },
-    {
-      "name": "Program",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "line": 155
-    },
-    {
-      "name": "AuthorizedMailInboxEndpointBase",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Controllers/AuthorizedMailInboxEndpointBase.cs",
-      "line": 8
-    },
-    {
-      "name": "MailInboxControllerBase",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Controllers/MailInboxControllerBase.cs",
-      "line": 9
-    },
-    {
-      "name": "MailInboxEndpointRouteBuilderExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxEndpointRouteBuilderExtensions.cs",
-      "line": 5
-    },
-    {
-      "name": "MailInboxPresentationServiceCollectionExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxPresentationServiceCollectionExtensions.cs",
-      "line": 9
-    },
-    {
-      "name": "MailInboxResultExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxResultExtensions.cs",
-      "line": 7
-    },
-    {
-      "name": "InboundMailExportEntryHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/InboundMailExportEntryHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxExportController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
-      "line": 14
-    },
-    {
-      "name": "MailInboxHealthController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/MailInboxHealthController.cs",
-      "line": 15
-    },
-    {
-      "name": "MailInboxHealthHttpMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/Mappings/MailInboxHealthHttpMappings.cs",
-      "line": 5
-    },
-    {
-      "name": "MailInboxHealthHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/Responses/MailInboxHealthHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxMessagesController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
-      "line": 19
-    },
-    {
-      "name": "InboundMailHttpMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Mappings/InboundMailHttpMappings.cs",
-      "line": 6
-    },
-    {
-      "name": "DmarcReportHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/DmarcReportHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "DmarcReportRecordHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/DmarcReportRecordHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "InboundMailMessageDetailsHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessageDetailsHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "InboundMailMessageSummaryHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessageSummaryHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxApiKeyAuthorizationFilter",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxApiKeyAuthorizationFilter.cs",
-      "line": 9
-    },
-    {
-      "name": "MailInboxExceptionFilter",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxExceptionFilter.cs",
-      "line": 8
-    },
-    {
-      "name": "MailInboxMessageDetailConcurrencyFilter",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageDetailConcurrencyFilter.cs",
-      "line": 7
-    },
-    {
-      "name": "MailInboxMessageDetailConcurrencyGate",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageDetailConcurrencyGate.cs",
-      "line": 5
-    },
-    {
-      "name": "MailInboxMessageMetadataConcurrencyFilter",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageMetadataConcurrencyFilter.cs",
-      "line": 7
-    },
-    {
-      "name": "MailInboxMessageMetadataConcurrencyGate",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageMetadataConcurrencyGate.cs",
-      "line": 5
-    },
-    {
-      "name": "MailInboxReadinessConcurrencyFilter",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxReadinessConcurrencyFilter.cs",
-      "line": 7
-    },
-    {
-      "name": "MailInboxReadinessConcurrencyGate",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxReadinessConcurrencyGate.cs",
-      "line": 5
-    },
-    {
-      "name": "MailInboxHttpOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxApiErrorDetailsMapper",
-      "kind": "class",
-      "role": "Mapper",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorDetailsMapper.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxApiErrorHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs",
-      "line": 4
-    },
-    {
-      "name": "MailInboxPermission",
-      "kind": "enum",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxPermission.cs",
-      "line": 2
-    },
-    {
-      "name": "MailInboxRequestAuthorizer",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxRequestAuthorizer.cs",
-      "line": 8
-    },
-    {
-      "name": "RequireMailInboxPermissionAttribute",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Security/RequireMailInboxPermissionAttribute.cs",
-      "line": 4
-    },
-    {
-      "name": "MailInboxHostConfiguration",
-      "kind": "class",
-      "role": "Configuration",
-      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 7
-    },
-    {
-      "name": "Program",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailInbox/FoodDiary.MailInbox.WebApi/Program.cs",
-      "line": 47
-    },
-    {
-      "name": "IMailRelayDeliveryPolicy",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayDeliveryPolicy.cs",
-      "line": 2
-    },
-    {
-      "name": "IMailRelayDispatchNotifier",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayDispatchNotifier.cs",
-      "line": 2
-    },
-    {
-      "name": "IMailRelayQueueStore",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
-      "line": 2
-    },
-    {
-      "name": "IMailRelayReadinessChecker",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayReadinessChecker.cs",
-      "line": 2
-    },
-    {
-      "name": "IMailRelaySchemaInitializer",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelaySchemaInitializer.cs",
-      "line": 2
-    },
-    {
-      "name": "IRelayDeliveryTransport",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IRelayDeliveryTransport.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayLoggingBehavior",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Common/Behaviors/MailRelayLoggingBehavior.cs",
-      "line": 7
-    },
-    {
-      "name": "MailRelayValidationBehavior",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Common/Behaviors/MailRelayValidationBehavior.cs",
-      "line": 8
-    },
-    {
-      "name": "MailRelayErrors",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Common/Results/MailRelayErrors.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayDeliveryEventIngestionService",
-      "kind": "class",
-      "role": "Service",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/DeliveryEvents/Services/MailRelayDeliveryEventIngestionService.cs",
-      "line": 2
-    },
-    {
-      "name": "DependencyInjection",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/DependencyInjection.cs",
-      "line": 8
-    },
-    {
-      "name": "CreateMailRelaySuppressionCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs",
-      "line": 4
-    },
-    {
-      "name": "CreateMailRelaySuppressionCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "CreateMailRelaySuppressionCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "EnqueueMailRelayEmailCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs",
-      "line": 4
-    },
-    {
-      "name": "EnqueueMailRelayEmailCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "EnqueueMailRelayEmailCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "IngestMailRelayDeliveryEventCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs",
-      "line": 4
-    },
-    {
-      "name": "IngestMailRelayDeliveryEventCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "IngestMailRelayDeliveryEventCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "IngestManyMailRelayDeliveryEventsCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs",
-      "line": 4
-    },
-    {
-      "name": "IngestManyMailRelayDeliveryEventsCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "IngestManyMailRelayDeliveryEventsCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "RemoveMailRelaySuppressionCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
-      "line": 4
-    },
-    {
-      "name": "RemoveMailRelaySuppressionCommandHandler",
-      "kind": "class",
-      "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "RemoveMailRelaySuppressionCommandValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "MailRelayMessageDetails",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Models/MailRelayMessageDetails.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayQueueStats",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Models/MailRelayQueueStats.cs",
-      "line": 2
-    },
-    {
-      "name": "GetMailRelayDeliveryEventsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs",
-      "line": 4
-    },
-    {
-      "name": "GetMailRelayDeliveryEventsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "GetMailRelayDeliveryEventsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetMailRelayMessageDetailsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQuery.cs",
-      "line": 4
-    },
-    {
-      "name": "GetMailRelayMessageDetailsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "GetMailRelayMessageDetailsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "GetMailRelayQueueStatsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQuery.cs",
-      "line": 4
-    },
-    {
-      "name": "GetMailRelayQueueStatsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQueryHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "GetMailRelaySuppressionsQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs",
-      "line": 4
-    },
-    {
-      "name": "GetMailRelaySuppressionsQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "GetMailRelaySuppressionsQueryValidator",
-      "kind": "class",
-      "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
-      "line": 4
-    },
-    {
-      "name": "MailRelayEmailUseCases",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayEmailUseCases.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayMessageProcessor",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayMessageProcessor.cs",
-      "line": 4
-    },
-    {
-      "name": "NoOpMailRelayDeliveryPolicy",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Services/NoOpMailRelayDeliveryPolicy.cs",
-      "line": 2
-    },
-    {
-      "name": "SmtpSubmissionService",
-      "kind": "class",
-      "role": "Service",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Services/SmtpSubmissionService.cs",
-      "line": 2
-    },
-    {
-      "name": "CheckMailRelayReadinessQuery",
-      "kind": "record",
-      "role": "Query",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQuery.cs",
-      "line": 4
-    },
-    {
-      "name": "CheckMailRelayReadinessQueryHandler",
-      "kind": "class",
-      "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQueryHandler.cs",
-      "line": 4
-    },
-    {
-      "name": "MailRelayOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayInboxClaimResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayInboxClaimResult.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayOutboxMessage",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayOutboxMessage.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayProcessResult",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayProcessResult.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayTelemetry",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Telemetry/MailRelayTelemetry.cs",
-      "line": 5
-    },
-    {
-      "name": "MailRelayClientServiceCollectionExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Client/Extensions/MailRelayClientServiceCollectionExtensions.cs",
-      "line": 6
-    },
-    {
-      "name": "IMailRelayClient",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Client/IMailRelayClient.cs",
-      "line": 4
-    },
-    {
-      "name": "MailRelayClient",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Client/MailRelayClient.cs",
-      "line": 8
-    },
-    {
-      "name": "EnqueueMailRelayEmailRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Client/Models/EnqueueMailRelayEmailRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "EnqueueMailRelayEmailResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailRelay/FoodDiary.MailRelay.Client/Models/EnqueueMailRelayEmailResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayClientOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailRelay/FoodDiary.MailRelay.Client/Options/MailRelayClientOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "AssemblyMarker",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/AssemblyMarker.cs",
-      "line": 2
-    },
-    {
-      "name": "IngestMailEventRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/IngestMailEventRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayBounceClassification",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayBounceClassification.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayDeliveryEventEntry",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventEntry.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayDeliveryEventType",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventType.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelaySuppressionPolicy",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelaySuppressionPolicy.cs",
-      "line": 2
-    },
-    {
-      "name": "CreateSuppressionRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/CreateSuppressionRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelaySuppressionEntry",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelaySuppressionEntry.cs",
-      "line": 2
-    },
-    {
-      "name": "QueuedEmail",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs",
-      "line": 4
-    },
-    {
-      "name": "QueuedEmailFailureDecision",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailFailureDecision.cs",
-      "line": 2
-    },
-    {
-      "name": "QueuedEmailId",
-      "kind": "record struct",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailId.cs",
-      "line": 4
-    },
-    {
-      "name": "QueuedEmailMessage",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailMessage.cs",
-      "line": 2
-    },
-    {
-      "name": "QueuedEmailStatus",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailStatus.cs",
-      "line": 2
-    },
-    {
-      "name": "RelayEmailMessageRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayServiceCollectionExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
-      "line": 8
-    },
-    {
-      "name": "MailRelayTelemetryPrivacyProcessor",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayTelemetryPrivacyProcessor.cs",
-      "line": 7
-    },
-    {
-      "name": "DirectMxOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/DirectMxOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayBrokerOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayBrokerOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayDeliveryOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDeliveryOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayDkimOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDkimOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayQueueOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayQueueOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelaySmtpOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelaySmtpOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "OpenTelemetryOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/OpenTelemetryOptions.cs",
-      "line": 2
-    },
-    {
-      "name": "OtlpOptions",
-      "kind": "class",
-      "role": "Options",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/OpenTelemetryOptions.cs",
-      "line": 12
-    },
-    {
-      "name": "ConfigurableRelayDeliveryTransport",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfigurableRelayDeliveryTransport.cs",
-      "line": 4
-    },
-    {
-      "name": "ConfiguredMailRelayDeliveryPolicy",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfiguredMailRelayDeliveryPolicy.cs",
-      "line": 7
-    },
-    {
-      "name": "DirectMxEndpointConnector",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxEndpointConnector.cs",
-      "line": 5
-    },
-    {
-      "name": "DirectMxRelayDeliveryTransport",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxRelayDeliveryTransport.cs",
-      "line": 10
-    },
-    {
-      "name": "DirectMxSmtpClientAdapter",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientAdapter.cs",
-      "line": 10
-    },
-    {
-      "name": "DirectMxSmtpClientFactory",
-      "kind": "class",
-      "role": "Factory",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientFactory.cs",
-      "line": 2
-    },
-    {
-      "name": "DkimSigningService",
-      "kind": "class",
-      "role": "Service",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DkimSigningService.cs",
-      "line": 7
-    },
-    {
-      "name": "DnsClientMxResolver",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DnsClientMxResolver.cs",
-      "line": 4
-    },
-    {
-      "name": "IDirectMxEndpointConnector",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxEndpointConnector.cs",
-      "line": 4
-    },
-    {
-      "name": "IDirectMxSmtpClient",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxSmtpClient.cs",
-      "line": 6
-    },
-    {
-      "name": "IDirectMxSmtpClientFactory",
-      "kind": "interface",
-      "role": "Factory",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxSmtpClientFactory.cs",
-      "line": 2
-    },
-    {
-      "name": "IMxResolver",
-      "kind": "interface",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IMxResolver.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayOutboxPublisherHostedService",
-      "kind": "class",
-      "role": "Service",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayOutboxPublisherHostedService.cs",
-      "line": 4
-    },
-    {
-      "name": "MailRelayPostgresExecutor",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
-      "line": 7
-    },
-    {
-      "name": "MailRelayQueueProcessorHostedService",
-      "kind": "class",
-      "role": "Service",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs",
-      "line": 4
-    },
-    {
-      "name": "MailRelayQueueRowMapper",
-      "kind": "class",
-      "role": "Mapper",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueRowMapper.cs",
-      "line": 5
-    },
-    {
-      "name": "MailRelayQueueSchema",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueSchema.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayQueueStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs",
-      "line": 6
-    },
-    {
-      "name": "MailRelayQueueStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.DeliveryEvents.cs",
-      "line": 4
-    },
-    {
-      "name": "MailRelayQueueStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Inbox.cs",
-      "line": 4
-    },
-    {
-      "name": "MailRelayQueueStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Outbox.cs",
-      "line": 5
-    },
-    {
-      "name": "MailRelayQueueStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Queue.cs",
-      "line": 5
-    },
-    {
-      "name": "MailRelayQueueStore",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Suppressions.cs",
-      "line": 5
-    },
-    {
-      "name": "MailRelayReadinessChecker",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayReadinessChecker.cs",
-      "line": 5
-    },
-    {
-      "name": "MailRelaySchemaInitializerHostedService",
-      "kind": "class",
-      "role": "Service",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelaySchemaInitializerHostedService.cs",
-      "line": 2
-    },
-    {
-      "name": "MxRecord",
-      "kind": "record",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MxRecord.cs",
-      "line": 2
-    },
-    {
-      "name": "NoOpMailRelayDispatchNotifier",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/NoOpMailRelayDispatchNotifier.cs",
-      "line": 2
-    },
-    {
-      "name": "RabbitMqMailRelayBootstrapHostedService",
-      "kind": "class",
-      "role": "Service",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBootstrapHostedService.cs",
-      "line": 4
-    },
-    {
-      "name": "RabbitMqMailRelayBroker",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBroker.cs",
-      "line": 7
-    },
-    {
-      "name": "RabbitMqMailRelayConsumerHostedService",
-      "kind": "class",
-      "role": "Service",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs",
-      "line": 7
-    },
-    {
-      "name": "RabbitMqMailRelayDispatchNotifier",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayDispatchNotifier.cs",
-      "line": 2
-    },
-    {
-      "name": "SmtpRelayDeliveryTransport",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/SmtpRelayDeliveryTransport.cs",
-      "line": 10
-    },
-    {
-      "name": "InitializerCommand",
-      "kind": "record",
-      "role": "Command",
-      "path": "MailRelay/FoodDiary.MailRelay.Initializer/InitializerCommand.cs",
-      "line": 2
-    },
-    {
-      "name": "InitializerServiceCollectionExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Initializer/InitializerServiceCollectionExtensions.cs",
-      "line": 9
-    },
-    {
-      "name": "Program",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
-      "line": 142
-    },
-    {
-      "name": "AuthorizedMailRelayController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Controllers/AuthorizedMailRelayController.cs",
-      "line": 8
-    },
-    {
-      "name": "MailRelayControllerBase",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Controllers/MailRelayControllerBase.cs",
-      "line": 10
-    },
-    {
-      "name": "MailRelayMappedRequest",
-      "kind": "class",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Controllers/MailRelayMappedRequest.cs",
-      "line": 5
-    },
-    {
-      "name": "MailRelayMappedRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Controllers/MailRelayMappedRequest.cs",
-      "line": 13
-    },
-    {
-      "name": "MailRelayPresentationApplicationBuilderExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Extensions/MailRelayPresentationApplicationBuilderExtensions.cs",
-      "line": 4
-    },
-    {
-      "name": "MailRelayPresentationServiceCollectionExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Extensions/MailRelayPresentationServiceCollectionExtensions.cs",
-      "line": 8
-    },
-    {
-      "name": "MailRelayResultExtensions",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Extensions/MailRelayResultExtensions.cs",
-      "line": 7
-    },
-    {
-      "name": "MailRelayDeliveryEventsController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayDeliveryEventsController.cs",
-      "line": 13
-    },
-    {
-      "name": "MailRelayMessagesController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
-      "line": 11
-    },
-    {
-      "name": "MailRelayProviderEventsController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayProviderEventsController.cs",
-      "line": 14
-    },
-    {
-      "name": "MailRelayQueueController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs",
-      "line": 12
-    },
-    {
-      "name": "MailRelaySuppressionsController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelaySuppressionsController.cs",
-      "line": 12
-    },
-    {
-      "name": "AwsSesSnsWebhookHttpMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs",
-      "line": 5
-    },
-    {
-      "name": "MailgunWebhookHttpMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs",
-      "line": 5
-    },
-    {
-      "name": "MailRelayEmailHttpMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
-      "line": 7
-    },
-    {
-      "name": "AwsSesBouncedRecipientHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesBouncedRecipientHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "AwsSesBounceHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesBounceHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "AwsSesComplainedRecipientHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesComplainedRecipientHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "AwsSesComplaintHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesComplaintHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "AwsSesMailHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesMailHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "AwsSesNotificationHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesNotificationHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "AwsSesSnsWebhookHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesSnsWebhookHttpRequest.cs",
-      "line": 4
-    },
-    {
-      "name": "CreateMailRelaySuppressionHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/CreateMailRelaySuppressionHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "IngestMailRelayDeliveryEventHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/IngestMailRelayDeliveryEventHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "MailgunEventDataHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunEventDataHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "MailgunMessageHeadersHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHeadersHttpRequest.cs",
-      "line": 4
-    },
-    {
-      "name": "MailgunMessageHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "MailgunSignatureHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunSignatureHttpRequest.cs",
-      "line": 2
-    },
-    {
-      "name": "MailgunWebhookHttpRequest",
-      "kind": "record",
-      "role": "Request",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunWebhookHttpRequest.cs",
-      "line": 4
-    },
-    {
-      "name": "MailRelayDeliveryEventHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayDeliveryEventHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayMessageDetailsHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayMessageDetailsHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayProviderIngestionHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayProviderIngestionHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayQueueStatsHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayQueueStatsHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelaySuppressionCreatedHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionCreatedHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelaySuppressionHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayHealthController",
-      "kind": "class",
-      "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/MailRelayHealthController.cs",
-      "line": 11
-    },
-    {
-      "name": "MailRelayHealthHttpMappings",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/Mappings/MailRelayHealthHttpMappings.cs",
-      "line": 4
-    },
-    {
-      "name": "MailRelayHealthHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/Responses/MailRelayHealthHttpResponse.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayTelemetryActionFilter",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Filters/MailRelayTelemetryActionFilter.cs",
-      "line": 7
-    },
-    {
-      "name": "RelayApiKeyAuthorizationFilter",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Filters/RelayApiKeyAuthorizationFilter.cs",
-      "line": 8
-    },
-    {
-      "name": "MailRelayApiErrorDetailsMapper",
-      "kind": "class",
-      "role": "Mapper",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Responses/MailRelayApiErrorDetailsMapper.cs",
-      "line": 2
-    },
-    {
-      "name": "MailRelayApiErrorHttpResponse",
-      "kind": "record",
-      "role": "Response",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Responses/MailRelayApiErrorHttpResponse.cs",
-      "line": 4
-    },
-    {
-      "name": "ProducesMailRelayApiErrorResponseAttribute",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Responses/ProducesMailRelayApiErrorResponseAttribute.cs",
-      "line": 6
-    },
-    {
-      "name": "ProviderWebhookAuthorizer",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs",
-      "line": 9
-    },
-    {
-      "name": "RelayRequestAuthorizer",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Security/RelayRequestAuthorizer.cs",
-      "line": 5
-    },
-    {
-      "name": "Program",
-      "kind": "class",
-      "role": "Other",
-      "path": "MailRelay/FoodDiary.MailRelay.WebApi/Program.cs",
-      "line": 28
     },
     {
       "name": "AdminMailInboxErrors",
@@ -24555,6 +22525,2036 @@
       "line": 14
     },
     {
+      "name": "IBugMailSource",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugMailSource.cs",
+      "line": 4
+    },
+    {
+      "name": "IBugReportStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs",
+      "line": 4
+    },
+    {
+      "name": "ImportBugReports",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ImportBugReports.cs",
+      "line": 4
+    },
+    {
+      "name": "ImportedReport",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ImportedReport.cs",
+      "line": 2
+    },
+    {
+      "name": "ReportCompletion",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ReportCompletion.cs",
+      "line": 2
+    },
+    {
+      "name": "ReportLease",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ReportLease.cs",
+      "line": 2
+    },
+    {
+      "name": "ReportOutcome",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ReportOutcome.cs",
+      "line": 2
+    },
+    {
+      "name": "ReportSummary",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ReportSummary.cs",
+      "line": 2
+    },
+    {
+      "name": "BugTriageInfrastructureExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Extensions/BugTriageInfrastructureExtensions.cs",
+      "line": 15
+    },
+    {
+      "name": "MailInboxBugSource",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Mail/MailInboxBugSource.cs",
+      "line": 11
+    },
+    {
+      "name": "BugTriageOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Options/BugTriageOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "BugTriageSchema",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/BugTriageSchema.cs",
+      "line": 4
+    },
+    {
+      "name": "NpgsqlBugReportStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportStore.cs",
+      "line": 7
+    },
+    {
+      "name": "BugMailImportWorker",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Workers/BugMailImportWorker.cs",
+      "line": 8
+    },
+    {
+      "name": "BugTriagePresentationExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Extensions/BugTriagePresentationExtensions.cs",
+      "line": 10
+    },
+    {
+      "name": "BugReportsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
+      "line": 17
+    },
+    {
+      "name": "CompleteReportHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "RenewReportHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "BugTriageHttpOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "BugTriageAuthorizationFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Security/BugTriageAuthorizationFilter.cs",
+      "line": 9
+    },
+    {
+      "name": "Program",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.WebApi/Program.cs",
+      "line": 30
+    },
+    {
+      "name": "IInboundMailExportStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailExportStore.cs",
+      "line": 4
+    },
+    {
+      "name": "IInboundMailStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs",
+      "line": 5
+    },
+    {
+      "name": "IMailInboxReadinessChecker",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxReadinessChecker.cs",
+      "line": 2
+    },
+    {
+      "name": "IMailInboxSchemaInitializer",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxSchemaInitializer.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxLoggingBehavior",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Common/Behaviors/MailInboxLoggingBehavior.cs",
+      "line": 7
+    },
+    {
+      "name": "MailInboxValidationBehavior",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Common/Behaviors/MailInboxValidationBehavior.cs",
+      "line": 9
+    },
+    {
+      "name": "MailInboxErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Common/Results/MailInboxErrors.cs",
+      "line": 4
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "CheckMailInboxReadinessQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Health/CheckMailInboxReadinessQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "CheckMailInboxReadinessQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Health/CheckMailInboxReadinessQueryHandler.cs",
+      "line": 6
+    },
+    {
+      "name": "MarkInboundMailMessageReadCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "MarkInboundMailMessageReadCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "MarkInboundMailMessageReadCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "DmarcReportPreview",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/DmarcReportPreview.cs",
+      "line": 2
+    },
+    {
+      "name": "DmarcReportRecordPreview",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/DmarcReportRecordPreview.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailAdmission",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailAdmission.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailExportEntry",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailExportEntry.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailMessageCategories",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageCategories.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailMessageDetails",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageDetails.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailMessageSummary",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageSummary.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailRetentionResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailRetentionResult.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailSaveResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailSaveResult.cs",
+      "line": 2
+    },
+    {
+      "name": "GetInboundMailMessageDetailsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetInboundMailMessageDetailsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetInboundMailMessagesQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetInboundMailMessagesQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetInboundMailMessagesQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "MailInboxAdmissionOutcome",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxAdmissionOutcome.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxIngestionOutcome",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxIngestionOutcome.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxRetentionOutcome",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxRetentionOutcome.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxTelemetry.cs",
+      "line": 5
+    },
+    {
+      "name": "IMailInboxExportClient",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs",
+      "line": 4
+    },
+    {
+      "name": "MailInboxExportClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Export/MailInboxExportClient.cs",
+      "line": 9
+    },
+    {
+      "name": "MailInboxClientServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Extensions/MailInboxClientServiceCollectionExtensions.cs",
+      "line": 6
+    },
+    {
+      "name": "IMailInboxClient",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/IMailInboxClient.cs",
+      "line": 4
+    },
+    {
+      "name": "MailInboxClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
+      "line": 10
+    },
+    {
+      "name": "DmarcReportRecordResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/DmarcReportRecordResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "DmarcReportResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/DmarcReportResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailMessageDetailsResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageDetailsResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailMessageSummaryResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageSummaryResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxExportEntryResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/MailInboxExportEntryResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxClientOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailMessageReceivedDomainEvent",
+      "kind": "record",
+      "role": "Event",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Events/InboundMailMessageReceivedDomainEvent.cs",
+      "line": 5
+    },
+    {
+      "name": "InboundMailMessage",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
+      "line": 7
+    },
+    {
+      "name": "InboundMailMessageId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageId.cs",
+      "line": 4
+    },
+    {
+      "name": "InboundMailMessageStatus",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
+      "line": 14
+    },
+    {
+      "name": "MailInboxTelemetryPrivacyProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxTelemetryPrivacyProcessor.cs",
+      "line": 7
+    },
+    {
+      "name": "MailInboxDatabaseConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxDatabaseConfiguration.cs",
+      "line": 4
+    },
+    {
+      "name": "MailInboxNetworkRange",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxNetworkRange.cs",
+      "line": 5
+    },
+    {
+      "name": "MailInboxSmtpOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs",
+      "line": 5
+    },
+    {
+      "name": "MailInboxStorageOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxStorageOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "OpenTelemetryOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "OtlpOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs",
+      "line": 29
+    },
+    {
+      "name": "DmarcReportParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
+      "line": 11
+    },
+    {
+      "name": "IMailInboxDmarcReportParser",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/IMailInboxDmarcReportParser.cs",
+      "line": 4
+    },
+    {
+      "name": "InboundMailStorageQuotaExceededException",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/InboundMailStorageQuotaExceededException.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxEndpointListenerFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxEndpointListenerFactory.cs",
+      "line": 12
+    },
+    {
+      "name": "MailInboxLocalTlsHealthCheck",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs",
+      "line": 5
+    },
+    {
+      "name": "MailInboxMailboxFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs",
+      "line": 12
+    },
+    {
+      "name": "MailInboxNetworkIdentity",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxNetworkIdentity.cs",
+      "line": 4
+    },
+    {
+      "name": "MailInboxRetentionHostedService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs",
+      "line": 10
+    },
+    {
+      "name": "MailInboxSlidingWindowRateLimiter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSlidingWindowRateLimiter.cs",
+      "line": 8
+    },
+    {
+      "name": "MailInboxSmtpHostedService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs",
+      "line": 16
+    },
+    {
+      "name": "MailInboxStoredMessageLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxStoredMessageLimits.cs",
+      "line": 5
+    },
+    {
+      "name": "NpgsqlExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlExtensions.cs",
+      "line": 4
+    },
+    {
+      "name": "NpgsqlInboundMailExportStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailExportStore.cs",
+      "line": 8
+    },
+    {
+      "name": "NpgsqlInboundMailStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
+      "line": 13
+    },
+    {
+      "name": "NpgsqlMailInboxReadinessChecker",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxReadinessChecker.cs",
+      "line": 5
+    },
+    {
+      "name": "NpgsqlMailInboxRuntimeRoleProvisioner",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleProvisioner.cs",
+      "line": 5
+    },
+    {
+      "name": "NpgsqlMailInboxRuntimeRoleValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "SmtpInboundMessageStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs",
+      "line": 18
+    },
+    {
+      "name": "InitializerCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/InitializerCommand.cs",
+      "line": 2
+    },
+    {
+      "name": "InitializerServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/InitializerServiceCollectionExtensions.cs",
+      "line": 10
+    },
+    {
+      "name": "MailInboxRuntimeDatabaseOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs",
+      "line": 4
+    },
+    {
+      "name": "Program",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
+      "line": 155
+    },
+    {
+      "name": "AuthorizedMailInboxEndpointBase",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Controllers/AuthorizedMailInboxEndpointBase.cs",
+      "line": 8
+    },
+    {
+      "name": "MailInboxControllerBase",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Controllers/MailInboxControllerBase.cs",
+      "line": 9
+    },
+    {
+      "name": "MailInboxEndpointRouteBuilderExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxEndpointRouteBuilderExtensions.cs",
+      "line": 5
+    },
+    {
+      "name": "MailInboxPresentationServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxPresentationServiceCollectionExtensions.cs",
+      "line": 9
+    },
+    {
+      "name": "MailInboxResultExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxResultExtensions.cs",
+      "line": 7
+    },
+    {
+      "name": "InboundMailExportEntryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/InboundMailExportEntryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxExportController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "line": 14
+    },
+    {
+      "name": "MailInboxHealthController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/MailInboxHealthController.cs",
+      "line": 15
+    },
+    {
+      "name": "MailInboxHealthHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/Mappings/MailInboxHealthHttpMappings.cs",
+      "line": 5
+    },
+    {
+      "name": "MailInboxHealthHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/Responses/MailInboxHealthHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxMessagesController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
+      "line": 19
+    },
+    {
+      "name": "InboundMailHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Mappings/InboundMailHttpMappings.cs",
+      "line": 6
+    },
+    {
+      "name": "DmarcReportHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/DmarcReportHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "DmarcReportRecordHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/DmarcReportRecordHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailMessageDetailsHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessageDetailsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailMessageSummaryHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessageSummaryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxApiKeyAuthorizationFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxApiKeyAuthorizationFilter.cs",
+      "line": 9
+    },
+    {
+      "name": "MailInboxExceptionFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxExceptionFilter.cs",
+      "line": 8
+    },
+    {
+      "name": "MailInboxMessageDetailConcurrencyFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageDetailConcurrencyFilter.cs",
+      "line": 7
+    },
+    {
+      "name": "MailInboxMessageDetailConcurrencyGate",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageDetailConcurrencyGate.cs",
+      "line": 5
+    },
+    {
+      "name": "MailInboxMessageMetadataConcurrencyFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageMetadataConcurrencyFilter.cs",
+      "line": 7
+    },
+    {
+      "name": "MailInboxMessageMetadataConcurrencyGate",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageMetadataConcurrencyGate.cs",
+      "line": 5
+    },
+    {
+      "name": "MailInboxReadinessConcurrencyFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxReadinessConcurrencyFilter.cs",
+      "line": 7
+    },
+    {
+      "name": "MailInboxReadinessConcurrencyGate",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxReadinessConcurrencyGate.cs",
+      "line": 5
+    },
+    {
+      "name": "MailInboxHttpOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxApiErrorDetailsMapper",
+      "kind": "class",
+      "role": "Mapper",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorDetailsMapper.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxApiErrorHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "name": "MailInboxPermission",
+      "kind": "enum",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxPermission.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxRequestAuthorizer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxRequestAuthorizer.cs",
+      "line": 8
+    },
+    {
+      "name": "RequireMailInboxPermissionAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Security/RequireMailInboxPermissionAttribute.cs",
+      "line": 4
+    },
+    {
+      "name": "MailInboxHostConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "Program",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/Program.cs",
+      "line": 47
+    },
+    {
+      "name": "IMailRelayDeliveryPolicy",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayDeliveryPolicy.cs",
+      "line": 2
+    },
+    {
+      "name": "IMailRelayDispatchNotifier",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayDispatchNotifier.cs",
+      "line": 2
+    },
+    {
+      "name": "IMailRelayQueueStore",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
+      "line": 2
+    },
+    {
+      "name": "IMailRelayReadinessChecker",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayReadinessChecker.cs",
+      "line": 2
+    },
+    {
+      "name": "IMailRelaySchemaInitializer",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelaySchemaInitializer.cs",
+      "line": 2
+    },
+    {
+      "name": "IRelayDeliveryTransport",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IRelayDeliveryTransport.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayLoggingBehavior",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Common/Behaviors/MailRelayLoggingBehavior.cs",
+      "line": 7
+    },
+    {
+      "name": "MailRelayValidationBehavior",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Common/Behaviors/MailRelayValidationBehavior.cs",
+      "line": 8
+    },
+    {
+      "name": "MailRelayErrors",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Common/Results/MailRelayErrors.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayDeliveryEventIngestionService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/DeliveryEvents/Services/MailRelayDeliveryEventIngestionService.cs",
+      "line": 2
+    },
+    {
+      "name": "DependencyInjection",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/DependencyInjection.cs",
+      "line": 8
+    },
+    {
+      "name": "CreateMailRelaySuppressionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs",
+      "line": 4
+    },
+    {
+      "name": "CreateMailRelaySuppressionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "CreateMailRelaySuppressionCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "EnqueueMailRelayEmailCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs",
+      "line": 4
+    },
+    {
+      "name": "EnqueueMailRelayEmailCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "EnqueueMailRelayEmailCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "IngestMailRelayDeliveryEventCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs",
+      "line": 4
+    },
+    {
+      "name": "IngestMailRelayDeliveryEventCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "IngestMailRelayDeliveryEventCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "IngestManyMailRelayDeliveryEventsCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs",
+      "line": 4
+    },
+    {
+      "name": "IngestManyMailRelayDeliveryEventsCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "IngestManyMailRelayDeliveryEventsCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "RemoveMailRelaySuppressionCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
+      "line": 4
+    },
+    {
+      "name": "RemoveMailRelaySuppressionCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "RemoveMailRelaySuppressionCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "MailRelayMessageDetails",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Models/MailRelayMessageDetails.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayQueueStats",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Models/MailRelayQueueStats.cs",
+      "line": 2
+    },
+    {
+      "name": "GetMailRelayDeliveryEventsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs",
+      "line": 4
+    },
+    {
+      "name": "GetMailRelayDeliveryEventsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "GetMailRelayDeliveryEventsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetMailRelayMessageDetailsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQuery.cs",
+      "line": 4
+    },
+    {
+      "name": "GetMailRelayMessageDetailsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "GetMailRelayMessageDetailsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetMailRelayQueueStatsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQuery.cs",
+      "line": 4
+    },
+    {
+      "name": "GetMailRelayQueueStatsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQueryHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "GetMailRelaySuppressionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs",
+      "line": 4
+    },
+    {
+      "name": "GetMailRelaySuppressionsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "GetMailRelaySuppressionsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "MailRelayEmailUseCases",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayEmailUseCases.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayMessageProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayMessageProcessor.cs",
+      "line": 4
+    },
+    {
+      "name": "NoOpMailRelayDeliveryPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/NoOpMailRelayDeliveryPolicy.cs",
+      "line": 2
+    },
+    {
+      "name": "SmtpSubmissionService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/SmtpSubmissionService.cs",
+      "line": 2
+    },
+    {
+      "name": "CheckMailRelayReadinessQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQuery.cs",
+      "line": 4
+    },
+    {
+      "name": "CheckMailRelayReadinessQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQueryHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "MailRelayOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayInboxClaimResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayInboxClaimResult.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayOutboxMessage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayOutboxMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayProcessResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayProcessResult.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Telemetry/MailRelayTelemetry.cs",
+      "line": 5
+    },
+    {
+      "name": "MailRelayClientServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Extensions/MailRelayClientServiceCollectionExtensions.cs",
+      "line": 6
+    },
+    {
+      "name": "IMailRelayClient",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/IMailRelayClient.cs",
+      "line": 4
+    },
+    {
+      "name": "MailRelayClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/MailRelayClient.cs",
+      "line": 8
+    },
+    {
+      "name": "EnqueueMailRelayEmailRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Models/EnqueueMailRelayEmailRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "EnqueueMailRelayEmailResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Models/EnqueueMailRelayEmailResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayClientOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Options/MailRelayClientOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "AssemblyMarker",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/AssemblyMarker.cs",
+      "line": 2
+    },
+    {
+      "name": "IngestMailEventRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/IngestMailEventRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayBounceClassification",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayBounceClassification.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayDeliveryEventEntry",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventEntry.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayDeliveryEventType",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventType.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelaySuppressionPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelaySuppressionPolicy.cs",
+      "line": 2
+    },
+    {
+      "name": "CreateSuppressionRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/CreateSuppressionRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelaySuppressionEntry",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelaySuppressionEntry.cs",
+      "line": 2
+    },
+    {
+      "name": "QueuedEmail",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs",
+      "line": 4
+    },
+    {
+      "name": "QueuedEmailFailureDecision",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailFailureDecision.cs",
+      "line": 2
+    },
+    {
+      "name": "QueuedEmailId",
+      "kind": "record struct",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailId.cs",
+      "line": 4
+    },
+    {
+      "name": "QueuedEmailMessage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailMessage.cs",
+      "line": 2
+    },
+    {
+      "name": "QueuedEmailStatus",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "RelayEmailMessageRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
+      "line": 8
+    },
+    {
+      "name": "MailRelayTelemetryPrivacyProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayTelemetryPrivacyProcessor.cs",
+      "line": 7
+    },
+    {
+      "name": "DirectMxOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/DirectMxOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayBrokerOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayBrokerOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayDeliveryOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDeliveryOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayDkimOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDkimOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayQueueOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayQueueOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelaySmtpOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelaySmtpOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "OpenTelemetryOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/OpenTelemetryOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "OtlpOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/OpenTelemetryOptions.cs",
+      "line": 12
+    },
+    {
+      "name": "ConfigurableRelayDeliveryTransport",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfigurableRelayDeliveryTransport.cs",
+      "line": 4
+    },
+    {
+      "name": "ConfiguredMailRelayDeliveryPolicy",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfiguredMailRelayDeliveryPolicy.cs",
+      "line": 7
+    },
+    {
+      "name": "DirectMxEndpointConnector",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxEndpointConnector.cs",
+      "line": 5
+    },
+    {
+      "name": "DirectMxRelayDeliveryTransport",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxRelayDeliveryTransport.cs",
+      "line": 10
+    },
+    {
+      "name": "DirectMxSmtpClientAdapter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientAdapter.cs",
+      "line": 10
+    },
+    {
+      "name": "DirectMxSmtpClientFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientFactory.cs",
+      "line": 2
+    },
+    {
+      "name": "DkimSigningService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DkimSigningService.cs",
+      "line": 7
+    },
+    {
+      "name": "DnsClientMxResolver",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DnsClientMxResolver.cs",
+      "line": 4
+    },
+    {
+      "name": "IDirectMxEndpointConnector",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxEndpointConnector.cs",
+      "line": 4
+    },
+    {
+      "name": "IDirectMxSmtpClient",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxSmtpClient.cs",
+      "line": 6
+    },
+    {
+      "name": "IDirectMxSmtpClientFactory",
+      "kind": "interface",
+      "role": "Factory",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxSmtpClientFactory.cs",
+      "line": 2
+    },
+    {
+      "name": "IMxResolver",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IMxResolver.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayOutboxPublisherHostedService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayOutboxPublisherHostedService.cs",
+      "line": 4
+    },
+    {
+      "name": "MailRelayPostgresExecutor",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
+      "line": 7
+    },
+    {
+      "name": "MailRelayQueueProcessorHostedService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs",
+      "line": 4
+    },
+    {
+      "name": "MailRelayQueueRowMapper",
+      "kind": "class",
+      "role": "Mapper",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueRowMapper.cs",
+      "line": 5
+    },
+    {
+      "name": "MailRelayQueueSchema",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueSchema.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayQueueStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs",
+      "line": 6
+    },
+    {
+      "name": "MailRelayQueueStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.DeliveryEvents.cs",
+      "line": 4
+    },
+    {
+      "name": "MailRelayQueueStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Inbox.cs",
+      "line": 4
+    },
+    {
+      "name": "MailRelayQueueStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Outbox.cs",
+      "line": 5
+    },
+    {
+      "name": "MailRelayQueueStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Queue.cs",
+      "line": 5
+    },
+    {
+      "name": "MailRelayQueueStore",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Suppressions.cs",
+      "line": 5
+    },
+    {
+      "name": "MailRelayReadinessChecker",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayReadinessChecker.cs",
+      "line": 5
+    },
+    {
+      "name": "MailRelaySchemaInitializerHostedService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelaySchemaInitializerHostedService.cs",
+      "line": 2
+    },
+    {
+      "name": "MxRecord",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MxRecord.cs",
+      "line": 2
+    },
+    {
+      "name": "NoOpMailRelayDispatchNotifier",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/NoOpMailRelayDispatchNotifier.cs",
+      "line": 2
+    },
+    {
+      "name": "RabbitMqMailRelayBootstrapHostedService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBootstrapHostedService.cs",
+      "line": 4
+    },
+    {
+      "name": "RabbitMqMailRelayBroker",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBroker.cs",
+      "line": 7
+    },
+    {
+      "name": "RabbitMqMailRelayConsumerHostedService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs",
+      "line": 7
+    },
+    {
+      "name": "RabbitMqMailRelayDispatchNotifier",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayDispatchNotifier.cs",
+      "line": 2
+    },
+    {
+      "name": "SmtpRelayDeliveryTransport",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/SmtpRelayDeliveryTransport.cs",
+      "line": 10
+    },
+    {
+      "name": "InitializerCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/InitializerCommand.cs",
+      "line": 2
+    },
+    {
+      "name": "InitializerServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/InitializerServiceCollectionExtensions.cs",
+      "line": 9
+    },
+    {
+      "name": "Program",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
+      "line": 142
+    },
+    {
+      "name": "AuthorizedMailRelayController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Controllers/AuthorizedMailRelayController.cs",
+      "line": 8
+    },
+    {
+      "name": "MailRelayControllerBase",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Controllers/MailRelayControllerBase.cs",
+      "line": 10
+    },
+    {
+      "name": "MailRelayMappedRequest",
+      "kind": "class",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Controllers/MailRelayMappedRequest.cs",
+      "line": 5
+    },
+    {
+      "name": "MailRelayMappedRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Controllers/MailRelayMappedRequest.cs",
+      "line": 13
+    },
+    {
+      "name": "MailRelayPresentationApplicationBuilderExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Extensions/MailRelayPresentationApplicationBuilderExtensions.cs",
+      "line": 4
+    },
+    {
+      "name": "MailRelayPresentationServiceCollectionExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Extensions/MailRelayPresentationServiceCollectionExtensions.cs",
+      "line": 8
+    },
+    {
+      "name": "MailRelayResultExtensions",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Extensions/MailRelayResultExtensions.cs",
+      "line": 7
+    },
+    {
+      "name": "MailRelayDeliveryEventsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayDeliveryEventsController.cs",
+      "line": 13
+    },
+    {
+      "name": "MailRelayMessagesController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
+      "line": 11
+    },
+    {
+      "name": "MailRelayProviderEventsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayProviderEventsController.cs",
+      "line": 14
+    },
+    {
+      "name": "MailRelayQueueController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs",
+      "line": 12
+    },
+    {
+      "name": "MailRelaySuppressionsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelaySuppressionsController.cs",
+      "line": 12
+    },
+    {
+      "name": "AwsSesSnsWebhookHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs",
+      "line": 5
+    },
+    {
+      "name": "MailgunWebhookHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs",
+      "line": 5
+    },
+    {
+      "name": "MailRelayEmailHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
+      "line": 7
+    },
+    {
+      "name": "AwsSesBouncedRecipientHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesBouncedRecipientHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "AwsSesBounceHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesBounceHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "AwsSesComplainedRecipientHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesComplainedRecipientHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "AwsSesComplaintHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesComplaintHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "AwsSesMailHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesMailHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "AwsSesNotificationHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesNotificationHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "AwsSesSnsWebhookHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesSnsWebhookHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "CreateMailRelaySuppressionHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/CreateMailRelaySuppressionHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "IngestMailRelayDeliveryEventHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/IngestMailRelayDeliveryEventHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "MailgunEventDataHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunEventDataHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "MailgunMessageHeadersHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHeadersHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "MailgunMessageHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "MailgunSignatureHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunSignatureHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "MailgunWebhookHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunWebhookHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "MailRelayDeliveryEventHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayDeliveryEventHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayMessageDetailsHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayMessageDetailsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayProviderIngestionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayProviderIngestionHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayQueueStatsHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayQueueStatsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelaySuppressionCreatedHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionCreatedHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelaySuppressionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayHealthController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/MailRelayHealthController.cs",
+      "line": 11
+    },
+    {
+      "name": "MailRelayHealthHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/Mappings/MailRelayHealthHttpMappings.cs",
+      "line": 4
+    },
+    {
+      "name": "MailRelayHealthHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/Responses/MailRelayHealthHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayTelemetryActionFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Filters/MailRelayTelemetryActionFilter.cs",
+      "line": 7
+    },
+    {
+      "name": "RelayApiKeyAuthorizationFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Filters/RelayApiKeyAuthorizationFilter.cs",
+      "line": 8
+    },
+    {
+      "name": "MailRelayApiErrorDetailsMapper",
+      "kind": "class",
+      "role": "Mapper",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Responses/MailRelayApiErrorDetailsMapper.cs",
+      "line": 2
+    },
+    {
+      "name": "MailRelayApiErrorHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Responses/MailRelayApiErrorHttpResponse.cs",
+      "line": 4
+    },
+    {
+      "name": "ProducesMailRelayApiErrorResponseAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Responses/ProducesMailRelayApiErrorResponseAttribute.cs",
+      "line": 6
+    },
+    {
+      "name": "ProviderWebhookAuthorizer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs",
+      "line": 9
+    },
+    {
+      "name": "RelayRequestAuthorizer",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Security/RelayRequestAuthorizer.cs",
+      "line": 5
+    },
+    {
+      "name": "Program",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.WebApi/Program.cs",
+      "line": 28
+    },
+    {
       "name": "IDomainEventPublisher",
       "kind": "interface",
       "role": "Other",
@@ -25650,16 +25650,16 @@
     },
     {
       "interface": "IDirectMxEndpointConnector",
-      "interfacePath": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxEndpointConnector.cs",
+      "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxEndpointConnector.cs",
       "implementation": "DirectMxEndpointConnector",
-      "implementationPath": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxEndpointConnector.cs",
+      "implementationPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxEndpointConnector.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IDirectMxSmtpClientFactory",
-      "interfacePath": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxSmtpClientFactory.cs",
+      "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxSmtpClientFactory.cs",
       "implementation": "DirectMxSmtpClientFactory",
-      "implementationPath": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientFactory.cs",
+      "implementationPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientFactory.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25993,72 +25993,72 @@
     },
     {
       "interface": "IMailInboxClient",
-      "interfacePath": "MailInbox/FoodDiary.MailInbox.Client/IMailInboxClient.cs",
+      "interfacePath": "Services/MailInbox/FoodDiary.MailInbox.Client/IMailInboxClient.cs",
       "implementation": "MailInboxClient",
-      "implementationPath": "MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
+      "implementationPath": "Services/MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMailInboxExportClient",
-      "interfacePath": "MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs",
+      "interfacePath": "Services/MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs",
       "implementation": "MailInboxExportClient",
-      "implementationPath": "MailInbox/FoodDiary.MailInbox.Client/Export/MailInboxExportClient.cs",
+      "implementationPath": "Services/MailInbox/FoodDiary.MailInbox.Client/Export/MailInboxExportClient.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMailRelayClient",
-      "interfacePath": "MailRelay/FoodDiary.MailRelay.Client/IMailRelayClient.cs",
+      "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Client/IMailRelayClient.cs",
       "implementation": "MailRelayClient",
-      "implementationPath": "MailRelay/FoodDiary.MailRelay.Client/MailRelayClient.cs",
+      "implementationPath": "Services/MailRelay/FoodDiary.MailRelay.Client/MailRelayClient.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMailRelayQueueStore",
-      "interfacePath": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
+      "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
       "implementation": "MailRelayQueueStore",
-      "implementationPath": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs",
+      "implementationPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMailRelayQueueStore",
-      "interfacePath": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
+      "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
       "implementation": "MailRelayQueueStore",
-      "implementationPath": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.DeliveryEvents.cs",
+      "implementationPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.DeliveryEvents.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMailRelayQueueStore",
-      "interfacePath": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
+      "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
       "implementation": "MailRelayQueueStore",
-      "implementationPath": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Inbox.cs",
+      "implementationPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Inbox.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMailRelayQueueStore",
-      "interfacePath": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
+      "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
       "implementation": "MailRelayQueueStore",
-      "implementationPath": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Outbox.cs",
+      "implementationPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Outbox.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMailRelayQueueStore",
-      "interfacePath": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
+      "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
       "implementation": "MailRelayQueueStore",
-      "implementationPath": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Queue.cs",
+      "implementationPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Queue.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMailRelayQueueStore",
-      "interfacePath": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
+      "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
       "implementation": "MailRelayQueueStore",
-      "implementationPath": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Suppressions.cs",
+      "implementationPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Suppressions.cs",
       "confidence": "naming-convention"
     },
     {
       "interface": "IMailRelayReadinessChecker",
-      "interfacePath": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayReadinessChecker.cs",
+      "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayReadinessChecker.cs",
       "implementation": "MailRelayReadinessChecker",
-      "implementationPath": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayReadinessChecker.cs",
+      "implementationPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayReadinessChecker.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26988,69 +26988,6 @@
       "line": 176
     },
     {
-      "service": "IInboundMailExportStore",
-      "implementation": "NpgsqlInboundMailExportStore",
-      "lifetime": "Singleton",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
-      "line": 41
-    },
-    {
-      "service": "IMailInboxReadinessChecker",
-      "implementation": "NpgsqlMailInboxReadinessChecker",
-      "lifetime": "Singleton",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
-      "line": 48
-    },
-    {
-      "service": "IMailInboxReadinessChecker",
-      "implementation": "NpgsqlMailInboxReadinessChecker",
-      "lifetime": "Singleton",
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerServiceCollectionExtensions.cs",
-      "line": 29
-    },
-    {
-      "service": "IMailRelayDeliveryPolicy",
-      "implementation": "NoOpMailRelayDeliveryPolicy",
-      "lifetime": "Singleton",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/DependencyInjection.cs",
-      "line": 22
-    },
-    {
-      "service": "IMailRelayReadinessChecker",
-      "implementation": "MailRelayReadinessChecker",
-      "lifetime": "Singleton",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
-      "line": 68
-    },
-    {
-      "service": "IMailRelayDeliveryPolicy",
-      "implementation": "ConfiguredMailRelayDeliveryPolicy",
-      "lifetime": "Singleton",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
-      "line": 72
-    },
-    {
-      "service": "IMxResolver",
-      "implementation": "DnsClientMxResolver",
-      "lifetime": "Singleton",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
-      "line": 73
-    },
-    {
-      "service": "IRelayDeliveryTransport",
-      "implementation": "ConfigurableRelayDeliveryTransport",
-      "lifetime": "Singleton",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
-      "line": 74
-    },
-    {
-      "service": "IMailRelayDispatchNotifier",
-      "implementation": "RabbitMqMailRelayDispatchNotifier",
-      "lifetime": "Singleton",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
-      "line": 76
-    },
-    {
       "service": "IAdminAiUsageReadService",
       "implementation": "AdminAiUsageReadService",
       "lifetime": "Scoped",
@@ -27896,6 +27833,69 @@
       "lifetime": "Scoped",
       "path": "Modules/WeeklyGoals/Application/DependencyInjection.cs",
       "line": 15
+    },
+    {
+      "service": "IInboundMailExportStore",
+      "implementation": "NpgsqlInboundMailExportStore",
+      "lifetime": "Singleton",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
+      "line": 41
+    },
+    {
+      "service": "IMailInboxReadinessChecker",
+      "implementation": "NpgsqlMailInboxReadinessChecker",
+      "lifetime": "Singleton",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
+      "line": 48
+    },
+    {
+      "service": "IMailInboxReadinessChecker",
+      "implementation": "NpgsqlMailInboxReadinessChecker",
+      "lifetime": "Singleton",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/InitializerServiceCollectionExtensions.cs",
+      "line": 29
+    },
+    {
+      "service": "IMailRelayDeliveryPolicy",
+      "implementation": "NoOpMailRelayDeliveryPolicy",
+      "lifetime": "Singleton",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/DependencyInjection.cs",
+      "line": 22
+    },
+    {
+      "service": "IMailRelayReadinessChecker",
+      "implementation": "MailRelayReadinessChecker",
+      "lifetime": "Singleton",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
+      "line": 68
+    },
+    {
+      "service": "IMailRelayDeliveryPolicy",
+      "implementation": "ConfiguredMailRelayDeliveryPolicy",
+      "lifetime": "Singleton",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
+      "line": 72
+    },
+    {
+      "service": "IMxResolver",
+      "implementation": "DnsClientMxResolver",
+      "lifetime": "Singleton",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
+      "line": 73
+    },
+    {
+      "service": "IRelayDeliveryTransport",
+      "implementation": "ConfigurableRelayDeliveryTransport",
+      "lifetime": "Singleton",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
+      "line": 74
+    },
+    {
+      "service": "IMailRelayDispatchNotifier",
+      "implementation": "RabbitMqMailRelayDispatchNotifier",
+      "lifetime": "Singleton",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
+      "line": 76
     },
     {
       "service": "IMediator",

@@ -135,11 +135,9 @@
                                     'WEIGHT_HISTORY.LAST_GOAL_CHANGE'
                                         | translate
                                             : {
-                                                  value:
-                                                      (lastGoal.change > 0 ? '+' : '') +
-                                                      (lastGoal.change | number: '1.0-2') +
-                                                      ' ' +
-                                                      ('weight' | measurementUnit | translate),
+                                                  value: `${
+                                                      (lastGoal.change > 0 ? '+' : '') + (lastGoal.change | number: '1.0-2')
+                                                  } ${('weight' | measurementUnit | translate)}`,
                                               }
                                 }}
                             </div>

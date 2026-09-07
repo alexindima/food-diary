@@ -19,14 +19,14 @@
 - `FoodDiary.Web.Api.IntegrationTests`:
   - API-level integration tests via `WebApplicationFactory`.
   - Uses in-memory database setup in test host.
-- `MailRelay/tests/FoodDiary.MailRelay.*.Tests`:
+- `Services/MailRelay/tests/FoodDiary.MailRelay.*.Tests`:
   - Unit tests split by domain, application, client, infrastructure, initializer, and presentation layers.
-- `MailRelay/tests/FoodDiary.MailRelay.IntegrationTests`:
+- `Services/MailRelay/tests/FoodDiary.MailRelay.IntegrationTests`:
   - Relay-level integration tests via `WebApplicationFactory`.
   - Uses PostgreSQL + RabbitMQ Testcontainers and a fake delivery transport.
-- `MailInbox/tests/FoodDiary.MailInbox.*.Tests`:
+- `Services/MailInbox/tests/FoodDiary.MailInbox.*.Tests`:
   - Unit tests split by domain, application, client, infrastructure, initializer, and presentation layers.
-- `MailInbox/tests/FoodDiary.MailInbox.IntegrationTests`:
+- `Services/MailInbox/tests/FoodDiary.MailInbox.IntegrationTests`:
   - PostgreSQL-backed mail inbox persistence tests.
 
 ## Where To Add New Tests
@@ -36,7 +36,7 @@
 - New infrastructure behavior requiring PostgreSQL/Testcontainers: `FoodDiary.Infrastructure.IntegrationTests/Integration/*`
 - New Web.Api host/middleware/service unit behavior: `FoodDiary.Web.Api.Tests/*`
 - New API endpoint flow/auth contract: `FoodDiary.Web.Api.IntegrationTests/*`
-- New mail relay broker/queue flow: `MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/*`
+- New mail relay broker/queue flow: `Services/MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/*`
 - New architecture rule: `FoodDiary.ArchitectureTests/*`
 - Backend HTTP contract changes should also review/update snapshots and PR notes per `../docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md`
 - Swagger/OpenAPI contract changes must update the checked-in snapshot files in `FoodDiary.Web.Api.IntegrationTests/Snapshots/`

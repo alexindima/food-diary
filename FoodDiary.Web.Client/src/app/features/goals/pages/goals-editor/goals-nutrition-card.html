@@ -34,16 +34,16 @@
         <div class="goals-editor-form-row">
             <div class="goals-editor-form-row__copy">
                 <fd-ui-icon class="goals-editor-form-row__icon" size="sm" [name]="macro.icon" [style.color]="macro.accent" />
-                <label [for]="'goals-editor-' + macro.key">
+                <label [for]="`goals-editor-${macro.key}`">
                     <strong>{{ macro.labelKey | translate }}</strong
-                    ><small>{{ 'GOALS_PAGE.EDITOR.MACRO_HINTS.' + macro.key.toUpperCase() | translate }}</small>
+                    ><small>{{ `GOALS_PAGE.EDITOR.MACRO_HINTS.${(macro.key | uppercase)}` | translate }}</small>
                 </label>
             </div>
             <div class="goals-editor-input">
                 <input
                     type="number"
                     min="0"
-                    [id]="'goals-editor-' + macro.key"
+                    [id]="`goals-editor-${macro.key}`"
                     [value]="macro.value"
                     (input)="emitNumber($event, value => macroChange.emit({ key: macro.key, value }))"
                 /><span>{{ 'GENERAL.UNITS.G' | translate }}</span>

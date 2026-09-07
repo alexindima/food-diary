@@ -1,3 +1,4 @@
+import { UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
@@ -27,6 +28,7 @@ type RecommendationViewModel = DietologistRecommendation & {
 @Component({
     selector: 'fd-recommendations-page',
     imports: [
+        UpperCasePipe,
         LocalizedDatePipe,
         TranslatePipe,
         FdUiHintDirective,

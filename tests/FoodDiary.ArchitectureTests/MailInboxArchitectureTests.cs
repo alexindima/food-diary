@@ -6,7 +6,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxDomainProject_DoesNotReferenceOtherMailInboxLayers() {
-        HashSet<string> references = GetProjectReferences("MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj");
 
         Assert.DoesNotContain("FoodDiary.MailInbox.Application", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.Client", references);
@@ -17,7 +17,7 @@ public sealed class MailInboxArchitectureTests {
 
     [Fact]
     public void MailInboxApplicationProject_ReferencesDomainOnlyAmongMailInboxLayers() {
-        HashSet<string> references = GetProjectReferences("MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj");
 
         Assert.Contains("FoodDiary.MailInbox.Domain", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.Client", references);
@@ -28,7 +28,7 @@ public sealed class MailInboxArchitectureTests {
 
     [Fact]
     public void MailInboxClientProject_DoesNotReferenceMailInboxLayers() {
-        HashSet<string> references = GetProjectReferences("MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj");
 
         Assert.DoesNotContain("FoodDiary.MailInbox.Application", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.Domain", references);
@@ -39,7 +39,7 @@ public sealed class MailInboxArchitectureTests {
 
     [Fact]
     public void MailInboxInfrastructureProject_ReferencesApplicationButNotPresentationOrWebApi() {
-        HashSet<string> references = GetProjectReferences("MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj");
 
         Assert.Contains("FoodDiary.MailInbox.Application", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.Presentation", references);
@@ -48,7 +48,7 @@ public sealed class MailInboxArchitectureTests {
 
     [Fact]
     public void MailInboxInitializerProject_ReferencesApplicationAndInfrastructureOnlyAmongMailInboxLayers() {
-        HashSet<string> references = GetProjectReferences("MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj");
 
         Assert.Contains("FoodDiary.MailInbox.Application", references);
         Assert.Contains("FoodDiary.MailInbox.Infrastructure", references);
@@ -59,7 +59,7 @@ public sealed class MailInboxArchitectureTests {
 
     [Fact]
     public void MailInboxPresentationProject_ReferencesApplicationButNotInfrastructureOrWebApi() {
-        HashSet<string> references = GetProjectReferences("MailInbox/FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailInbox/FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj");
 
         Assert.Contains("FoodDiary.MailInbox.Application", references);
         Assert.DoesNotContain("FoodDiary.MailInbox.Infrastructure", references);
@@ -68,7 +68,7 @@ public sealed class MailInboxArchitectureTests {
 
     [Fact]
     public void MailInboxWebApiProject_IsHostAndReferencesApplicationInfrastructureAndPresentation() {
-        HashSet<string> references = GetProjectReferences("MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj");
 
         Assert.Contains("FoodDiary.MailInbox.Application", references);
         Assert.Contains("FoodDiary.MailInbox.Infrastructure", references);
@@ -79,17 +79,17 @@ public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxProductionProjects_UseOnlyApprovedPackagesForTheirLayer() {
         var expectedPackagesByProject = new Dictionary<string, string[]>(StringComparer.Ordinal) {
-            ["MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj"] = [
+            ["Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj"] = [
                 "FluentValidation",
                 "FluentValidation.DependencyInjectionExtensions",
                 "Microsoft.Extensions.Logging.Abstractions",
             ],
-            ["MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj"] = [
+            ["Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj"] = [
                 "Microsoft.Extensions.Http",
                 "Microsoft.Extensions.Options.ConfigurationExtensions",
             ],
-            ["MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj"] = [],
-            ["MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj"] = [
+            ["Services/MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj"] = [],
+            ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj"] = [
                 "MailKit",
                 "Npgsql",
                 "Npgsql.OpenTelemetry",
@@ -98,13 +98,13 @@ public sealed class MailInboxArchitectureTests {
                 "OpenTelemetry.Instrumentation.AspNetCore",
                 "SmtpServer",
             ],
-            ["MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"] = [
+            ["Services/MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"] = [
                 "Microsoft.Extensions.Hosting",
                 "Microsoft.Extensions.Options.ConfigurationExtensions",
                 "Npgsql",
             ],
-            ["MailInbox/FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj"] = [],
-            ["MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj"] = [],
+            ["Services/MailInbox/FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj"] = [],
+            ["Services/MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj"] = [],
         };
 
         foreach ((string? relativeProjectPath, string[]? expectedPackages) in expectedPackagesByProject) {
@@ -118,34 +118,34 @@ public sealed class MailInboxArchitectureTests {
     public void MailInboxProductionProjectRootFolders_StayLimitedToLayerStructure() {
         string root = GetRepositoryRoot();
         var allowedRootFoldersByProject = new Dictionary<string, string[]>(StringComparer.Ordinal) {
-            ["MailInbox/FoodDiary.MailInbox.Application"] = [
+            ["Services/MailInbox/FoodDiary.MailInbox.Application"] = [
                 "Abstractions",
                 "Common",
                 "Health",
                 "Messages",
                 "Telemetry",
             ],
-            ["MailInbox/FoodDiary.MailInbox.Client"] = [
+            ["Services/MailInbox/FoodDiary.MailInbox.Client"] = [
                 "Export",
                 "Extensions",
                 "Models",
                 "Options",
             ],
-            ["MailInbox/FoodDiary.MailInbox.Domain"] = [
+            ["Services/MailInbox/FoodDiary.MailInbox.Domain"] = [
                 "Common",
                 "Events",
                 "Messages",
             ],
-            ["MailInbox/FoodDiary.MailInbox.Infrastructure"] = [
+            ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure"] = [
                 "Extensions",
                 "Options",
                 "Services",
             ],
-            ["MailInbox/FoodDiary.MailInbox.Initializer"] = [
+            ["Services/MailInbox/FoodDiary.MailInbox.Initializer"] = [
                 "Options",
                 "Properties",
             ],
-            ["MailInbox/FoodDiary.MailInbox.Presentation"] = [
+            ["Services/MailInbox/FoodDiary.MailInbox.Presentation"] = [
                 "Controllers",
                 "Extensions",
                 "Features",
@@ -154,7 +154,7 @@ public sealed class MailInboxArchitectureTests {
                 "Responses",
                 "Security",
             ],
-            ["MailInbox/FoodDiary.MailInbox.WebApi"] = [
+            ["Services/MailInbox/FoodDiary.MailInbox.WebApi"] = [
                 "Properties",
             ],
         };
@@ -169,7 +169,7 @@ public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxDomainSource_DoesNotReferenceFrameworkOrInfrastructureTypes() {
         string root = GetRepositoryRoot();
-        string domainRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Domain");
+        string domainRoot = Path.Combine(root, "Services", "MailInbox", "FoodDiary.MailInbox.Domain");
         string[] forbiddenPatterns = [
             "Microsoft.",
             "Npgsql",
@@ -189,7 +189,7 @@ public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxApplicationSource_DoesNotReferenceTransportPersistenceOrConfigurationTypes() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Application");
+        string applicationRoot = Path.Combine(root, "Services", "MailInbox", "FoodDiary.MailInbox.Application");
         string[] forbiddenPatterns = [
             "Microsoft.AspNetCore",
             "Microsoft.Extensions.Options",
@@ -213,7 +213,7 @@ public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxPresentationSource_DoesNotReferenceInfrastructureLayer() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Presentation");
+        string presentationRoot = Path.Combine(root, "Services", "MailInbox", "FoodDiary.MailInbox.Presentation");
         string[] forbiddenPatterns = [
             "FoodDiary.MailInbox.Infrastructure",
             "Npgsql",
@@ -230,7 +230,7 @@ public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxWebApiProgram_UsesMvcControllersForEndpoints() {
         string root = GetRepositoryRoot();
-        string programPath = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.WebApi", "Program.cs");
+        string programPath = Path.Combine(root, "Services", "MailInbox", "FoodDiary.MailInbox.WebApi", "Program.cs");
         string content = File.ReadAllText(programPath);
 
         Assert.DoesNotContain("MapGet", content, StringComparison.Ordinal);
@@ -242,7 +242,7 @@ public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxWebApiHost_DoesNotDeclareHttpTransportSurface() {
         string root = GetRepositoryRoot();
-        string webApiRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.WebApi");
+        string webApiRoot = Path.Combine(root, "Services", "MailInbox", "FoodDiary.MailInbox.WebApi");
 
         string[] violations = SourceScanner.FindLinePatternViolations(webApiRoot, [
             "[ApiController]",
@@ -260,7 +260,7 @@ public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxPresentationControllers_AreKeptInFeatureFolders() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Presentation");
+        string presentationRoot = Path.Combine(root, "Services", "MailInbox", "FoodDiary.MailInbox.Presentation");
         var allowedControllerFiles = new HashSet<string>(StringComparer.Ordinal) {
             Path.Combine("Controllers", "MailInboxControllerBase.cs"),
         };
@@ -281,7 +281,7 @@ public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxPresentationFeatureFiles_FollowHttpNamingConventions() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Presentation");
+        string presentationRoot = Path.Combine(root, "Services", "MailInbox", "FoodDiary.MailInbox.Presentation");
 
         var conventions = new[] {
             new { Folder = "Requests", Suffix = "HttpRequest.cs" },
@@ -307,21 +307,21 @@ public sealed class MailInboxArchitectureTests {
     public void MailInboxOptions_AreKeptInOwningLayerOptionsFolders() {
         string root = GetRepositoryRoot();
         string[] mailInboxRoots = [
-            "MailInbox/FoodDiary.MailInbox.Application",
-            "MailInbox/FoodDiary.MailInbox.Client",
-            "MailInbox/FoodDiary.MailInbox.Domain",
-            "MailInbox/FoodDiary.MailInbox.Infrastructure",
-            "MailInbox/FoodDiary.MailInbox.Initializer",
-            "MailInbox/FoodDiary.MailInbox.Presentation",
-            "MailInbox/FoodDiary.MailInbox.WebApi",
+            "Services/MailInbox/FoodDiary.MailInbox.Application",
+            "Services/MailInbox/FoodDiary.MailInbox.Client",
+            "Services/MailInbox/FoodDiary.MailInbox.Domain",
+            "Services/MailInbox/FoodDiary.MailInbox.Infrastructure",
+            "Services/MailInbox/FoodDiary.MailInbox.Initializer",
+            "Services/MailInbox/FoodDiary.MailInbox.Presentation",
+            "Services/MailInbox/FoodDiary.MailInbox.WebApi",
         ];
         var allowedOptionFiles = new HashSet<string>(StringComparer.Ordinal) {
-            Path.Combine("MailInbox", "FoodDiary.MailInbox.Client", "Options", "MailInboxClientOptions.cs"),
-            Path.Combine("MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "MailInboxSmtpOptions.cs"),
-            Path.Combine("MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "MailInboxStorageOptions.cs"),
-            Path.Combine("MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "OpenTelemetryOptions.cs"),
-            Path.Combine("MailInbox", "FoodDiary.MailInbox.Initializer", "Options", "MailInboxRuntimeDatabaseOptions.cs"),
-            Path.Combine("MailInbox", "FoodDiary.MailInbox.Presentation", "Options", "MailInboxHttpOptions.cs"),
+            Path.Combine("Services", "MailInbox", "FoodDiary.MailInbox.Client", "Options", "MailInboxClientOptions.cs"),
+            Path.Combine("Services", "MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "MailInboxSmtpOptions.cs"),
+            Path.Combine("Services", "MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "MailInboxStorageOptions.cs"),
+            Path.Combine("Services", "MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "OpenTelemetryOptions.cs"),
+            Path.Combine("Services", "MailInbox", "FoodDiary.MailInbox.Initializer", "Options", "MailInboxRuntimeDatabaseOptions.cs"),
+            Path.Combine("Services", "MailInbox", "FoodDiary.MailInbox.Presentation", "Options", "MailInboxHttpOptions.cs"),
         };
 
         string[] violations = [.. mailInboxRoots
@@ -339,7 +339,7 @@ public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxApplicationInterfaces_AsyncMethodsAcceptCancellationToken() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Application");
+        string applicationRoot = Path.Combine(root, "Services", "MailInbox", "FoodDiary.MailInbox.Application");
 
         string[] violations = [.. Directory.GetFiles(applicationRoot, "I*.cs", SearchOption.AllDirectories)
             .Where(static path => !IsGeneratedPath(path))
@@ -353,7 +353,7 @@ public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxApplication_DoesNotUseFlatServicesFolder() {
         string root = GetRepositoryRoot();
-        string servicesRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Application", "Services");
+        string servicesRoot = Path.Combine(root, "Services", "MailInbox", "FoodDiary.MailInbox.Application", "Services");
 
         Assert.False(
             Directory.Exists(servicesRoot) &&
@@ -364,7 +364,7 @@ public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxInfrastructure_UsesTimeProviderInsteadOfDirectUtcNow() {
         string root = GetRepositoryRoot();
-        string infrastructureRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Infrastructure");
+        string infrastructureRoot = Path.Combine(root, "Services", "MailInbox", "FoodDiary.MailInbox.Infrastructure");
 
         string[] violations = SourceScanner.FindLinePatternViolations(infrastructureRoot, [
             "DateTime.UtcNow",
@@ -377,7 +377,7 @@ public sealed class MailInboxArchitectureTests {
     [Fact]
     public void MailInboxRuntimeConfiguration_UsesSeparateDatabase() {
         string root = GetRepositoryRoot();
-        string appsettingsPath = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.WebApi", "appsettings.json");
+        string appsettingsPath = Path.Combine(root, "Services", "MailInbox", "FoodDiary.MailInbox.WebApi", "appsettings.json");
         string composePath = Path.Combine(root, "docker-compose.yml");
 
         string appsettings = File.ReadAllText(appsettingsPath);
@@ -390,7 +390,7 @@ public sealed class MailInboxArchitectureTests {
         Assert.Contains("Host=mailinbox-postgres", compose, StringComparison.Ordinal);
         Assert.Contains("MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox", compose, StringComparison.Ordinal);
         Assert.Contains("mailinbox-db-init:", compose, StringComparison.Ordinal);
-        Assert.Contains("MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile", compose, StringComparison.Ordinal);
+        Assert.Contains("Services/MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile", compose, StringComparison.Ordinal);
         Assert.Contains("service_completed_successfully", compose, StringComparison.Ordinal);
     }
 

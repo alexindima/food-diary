@@ -202,8 +202,8 @@ COPY Modules/Hydration/Contracts/*.csproj Modules/Hydration/Contracts/
 COPY Modules/Hydration/Domain/*.csproj Modules/Hydration/Domain/
 COPY Modules/Hydration/Infrastructure/*.csproj Modules/Hydration/Infrastructure/
 COPY Modules/Hydration/Infrastructure/Model/*.csproj Modules/Hydration/Infrastructure/Model/
-COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
-COPY MailRelay/FoodDiary.MailRelay.Client/*.csproj MailRelay/FoodDiary.MailRelay.Client/
+COPY Services/MailInbox/FoodDiary.MailInbox.Client/*.csproj Services/MailInbox/FoodDiary.MailInbox.Client/
+COPY Services/MailRelay/FoodDiary.MailRelay.Client/*.csproj Services/MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
 COPY FoodDiary.Initializer/*.csproj FoodDiary.Initializer/
 
@@ -422,8 +422,8 @@ COPY Modules/Hydration/Contracts/ Modules/Hydration/Contracts/
 COPY Modules/Hydration/Domain/ Modules/Hydration/Domain/
 COPY Modules/Hydration/Infrastructure/ Modules/Hydration/Infrastructure/
 COPY Modules/Hydration/Infrastructure/Model/ Modules/Hydration/Infrastructure/Model/
-COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/
-COPY MailRelay/FoodDiary.MailRelay.Client/ MailRelay/FoodDiary.MailRelay.Client/
+COPY Services/MailInbox/FoodDiary.MailInbox.Client/ Services/MailInbox/FoodDiary.MailInbox.Client/
+COPY Services/MailRelay/FoodDiary.MailRelay.Client/ Services/MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/
 COPY FoodDiary.Initializer/ FoodDiary.Initializer/
 

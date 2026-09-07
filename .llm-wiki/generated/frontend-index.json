@@ -3024,7 +3024,7 @@
       "role": "Component",
       "selector": "fd-client-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "line": 123
+      "line": 125
     },
     {
       "name": "ClientDashboardFastingCardComponent",
@@ -3416,7 +3416,7 @@
       "role": "Component",
       "selector": "fd-gamification-habit-path",
       "path": "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.ts",
-      "line": 37
+      "line": 46
     },
     {
       "name": "GamificationPageComponent",
@@ -3479,7 +3479,7 @@
       "role": "Component",
       "selector": "fd-goals-nutrition-card",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "GoalsSideCardsComponent",
@@ -4641,7 +4641,7 @@
       "role": "Component",
       "selector": "fd-recommendations-page",
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/pages/recommendations-page/recommendations-page.ts",
-      "line": 45
+      "line": 47
     },
     {
       "name": "ShoppingListService",
@@ -4697,7 +4697,7 @@
       "role": "Component",
       "selector": "fd-statistics-diet-stability-card",
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-diet-stability-card/statistics-diet-stability-card.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "StatisticsMealStructureCardComponent",

@@ -1,3 +1,4 @@
+import { UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
@@ -9,7 +10,7 @@ import type { GoalsMacroDraft } from './goals-editor.models';
 
 @Component({
     selector: 'fd-goals-nutrition-card',
-    imports: [TranslatePipe, FdUiSelectComponent, FdUiIconComponent],
+    imports: [UpperCasePipe, TranslatePipe, FdUiSelectComponent, FdUiIconComponent],
     templateUrl: './goals-nutrition-card.html',
     styleUrl: './goals-editor.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

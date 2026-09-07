@@ -1,4 +1,4 @@
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -32,7 +32,7 @@ const DEFAULT_CYCLIC_FAST_HOURS = 16;
 
 @Component({
     selector: 'fd-fasting-redesign-preview',
-    imports: [DatePipe, DecimalPipe, TranslatePipe, FdUiButtonComponent, FdUiIconComponent, FdUiProgressRingComponent],
+    imports: [UpperCasePipe, DatePipe, DecimalPipe, TranslatePipe, FdUiButtonComponent, FdUiIconComponent, FdUiProgressRingComponent],
     templateUrl: './fasting-redesign-preview.html',
     styleUrl: './fasting-redesign-preview.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

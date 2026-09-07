@@ -32,10 +32,10 @@ They also guard the allowed reference graph between test projects, so shared tes
 | `Modules/Billing/tests/FoodDiary.Modules.Billing.Domain.Tests` | Billing subscription, payment and webhook-event invariants. |
 | `Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests` | Billing provider boundary, authenticity and resilience behavior. |
 | `tests/FoodDiary.Telegram.Bot.Tests` | Bot parsing, command/callback behavior, worker edge cases. |
-| `MailRelay/tests/FoodDiary.MailRelay.*.Tests` | MailRelay unit tests split by domain, application, client, infrastructure, initializer, and presentation. |
-| `MailRelay/tests/FoodDiary.MailRelay.IntegrationTests` | MailRelay host, PostgreSQL, RabbitMQ, and queue behavior. |
-| `MailInbox/tests/FoodDiary.MailInbox.*.Tests` | MailInbox unit tests split by domain, application, client, infrastructure, initializer, and presentation. |
-| `MailInbox/tests/FoodDiary.MailInbox.IntegrationTests` | MailInbox PostgreSQL persistence behavior. |
+| `Services/MailRelay/tests/FoodDiary.MailRelay.*.Tests` | MailRelay unit tests split by domain, application, client, infrastructure, initializer, and presentation. |
+| `Services/MailRelay/tests/FoodDiary.MailRelay.IntegrationTests` | MailRelay host, PostgreSQL, RabbitMQ, and queue behavior. |
+| `Services/MailInbox/tests/FoodDiary.MailInbox.*.Tests` | MailInbox unit tests split by domain, application, client, infrastructure, initializer, and presentation. |
+| `Services/MailInbox/tests/FoodDiary.MailInbox.IntegrationTests` | MailInbox PostgreSQL persistence behavior. |
 | `Shared/tests/FoodDiary.Mediator.Tests` | Shared mediator behavior. |
 | `Shared/tests/FoodDiary.Domain.Primitives.Tests` | Generic domain primitives, guards and value contracts. |
 | `Shared/tests/FoodDiary.Results.Tests` | Shared result and error contracts. |

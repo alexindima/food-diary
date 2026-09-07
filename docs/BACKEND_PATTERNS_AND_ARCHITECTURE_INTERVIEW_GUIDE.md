@@ -14,7 +14,7 @@ Evidence: `docs/ARCHITECTURE.md`, `docs/adr/0001-modular-monolith-with-supportin
 
 MailRelay and MailInbox are separate deployable bounded contexts with their own databases, hosts and client packages. They were extracted because SMTP, queues, retries and inbound listeners have a genuinely different operational lifecycle, not merely because they form separate folders. JobManager and Telegram Bot are also separate runtime adapters.
 
-Evidence: `docs/adr/0002-mailrelay-mailinbox-as-separate-services.md`, `MailRelay/`, `MailInbox/`, `FoodDiary.JobManager/`, `FoodDiary.Telegram.Bot/`.
+Evidence: `docs/adr/0002-mailrelay-mailinbox-as-separate-services.md`, `Services/MailRelay/`, `Services/MailInbox/`, `FoodDiary.JobManager/`, `FoodDiary.Telegram.Bot/`.
 
 ### 3. Bounded contexts and explicit service contracts
 

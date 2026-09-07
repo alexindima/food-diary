@@ -242,8 +242,8 @@ if ($changedTypeNames.Count -gt 0) {
     $testRoots.Add('tests')
     $testRoots.Add('FoodDiary.Web.Client/src')
     foreach ($moduleTestRoot in $moduleTestRoots) { $testRoots.Add($moduleTestRoot) }
-    if (@($effectivePaths | Where-Object { $_ -match '^MailRelay/' }).Count -gt 0) { $testRoots.Add('MailRelay/tests') }
-    if (@($effectivePaths | Where-Object { $_ -match '^MailInbox/' }).Count -gt 0) { $testRoots.Add('MailInbox/tests') }
+    if (@($effectivePaths | Where-Object { $_ -match '^Services/MailRelay/' }).Count -gt 0) { $testRoots.Add('Services/MailRelay/tests') }
+    if (@($effectivePaths | Where-Object { $_ -match '^Services/MailInbox/' }).Count -gt 0) { $testRoots.Add('Services/MailInbox/tests') }
     foreach ($testRoot in $testRoots) {
         $absoluteTestRoot = Join-Path $repositoryRoot $testRoot
         if (-not (Test-Path -LiteralPath $absoluteTestRoot)) { continue }
@@ -306,7 +306,7 @@ if (-not [string]::IsNullOrWhiteSpace($Intent) -and $Intent -match '(?i)idempote
     $behaviorAffinity = @($effectivePaths | ForEach-Object {
         [regex]::Matches(([string]$_).ToLowerInvariant(), '[a-z0-9]+') | ForEach-Object Value
     } | Where-Object { $_.Length -ge 5 -and $_ -notin @('fooddiary', 'modules', 'application', 'infrastructure', 'presentation', 'services') } | Sort-Object -Unique)
-    foreach ($testRoot in (@('tests', 'MailRelay/tests', 'MailInbox/tests') + $moduleTestRoots)) {
+    foreach ($testRoot in (@('tests', 'Services/MailRelay/tests', 'Services/MailInbox/tests') + $moduleTestRoots)) {
         $absoluteTestRoot = Join-Path $repositoryRoot $testRoot
         if (-not (Test-Path -LiteralPath $absoluteTestRoot -PathType Container)) { continue }
         foreach ($testFile in Get-ChildItem -LiteralPath $absoluteTestRoot -Recurse -File -Filter '*.cs' -ErrorAction SilentlyContinue) {
@@ -333,9 +333,9 @@ if ($repositoryAssessment) {
         'Modules/Billing/tests/FoodDiary.Modules.Billing.Infrastructure.Tests/Services/BillingGatewayTests.cs'
         'tests/FoodDiary.Web.Api.Tests/Extensions/RateLimiterOptionsSetupTests.cs'
         'tests/FoodDiary.ArchitectureTests/ContainerSupplyChainGuardrailTests.cs'
-        'MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayMessageProcessorTests.cs'
-        'MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs'
-        'MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/NpgsqlInboundMailStoreIntegrationTests.cs'
+        'Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayMessageProcessorTests.cs'
+        'Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs'
+        'Services/MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/NpgsqlInboundMailStoreIntegrationTests.cs'
         'FoodDiary.Web.Client/src/app/services/auth.service.spec.ts'
         'FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard.service.spec.ts'
     )) {
@@ -403,10 +403,10 @@ $affineDownstreamTests = @($diff.focusedTests | Where-Object {
     $scopeAffinityTokens.Count -eq 0 -or @($scopeAffinityTokens | Where-Object { $normalizedTestPath.Contains($_) }).Count -gt 0
 } | ForEach-Object { if ($_ -is [string]) { [string]$_ } else { [string]$_.path } })
 Add-RankedTests $affineDownstreamTests 40 'downstream-context-with-path-affinity'
-$selectedFocusedTests = if ($identitySessionIntent -and $callerPathCount -eq 0) {
-    # Intent-only session planning uses the reviewed regression set. Generic
-    # symbol references (for example UserId or Session) otherwise displace the
-    # authentication tests with unrelated application modules.
+$selectedFocusedTests = if (($identitySessionIntent -or $databaseIntent) -and $callerPathCount -eq 0) {
+    # Intent-only database/session planning uses the reviewed regression set.
+    # Unrelated dirty-worktree component consumers and generic symbol references
+    # must not displace provider-backed or authentication tests.
     @($rankedFocusedTests | Where-Object { $behavioralIntentTests.Contains([string]$_.path) } | Select-Object -First $Limit)
 } else {
     @($rankedFocusedTests | Select-Object -First $Limit)

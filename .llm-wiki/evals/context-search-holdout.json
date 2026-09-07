@@ -54,7 +54,7 @@
       "id": "ru-inbound-smtp-store",
       "query": "куда сохраняется входящее письмо принятое по SMTP",
       "changeType": "Backend",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs"]
     },
     {
       "id": "ru-web-push-audience",
@@ -255,7 +255,7 @@
       "id": "mail-relay-provider-events-api",
       "query": "HTTP API receives delivery events from the mail provider",
       "changeType": "Api",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayProviderEventsController.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayProviderEventsController.cs"]
     }
   ]
 }

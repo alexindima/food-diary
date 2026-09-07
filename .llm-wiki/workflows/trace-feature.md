@@ -38,7 +38,7 @@ Use `-TraceView Frontend` or `-TraceView Backend` to force a view. Use
 Backend-oriented natural-language queries automatically use the SQLite graph
 when they contain terms such as SMTP, persistence, readiness, outbox, hosted
 service, or telemetry. Narrow ambiguous searches explicitly with `-Layer
-Backend`, `-Module MailInbox`, `-PathPrefix 'MailInbox/'`, and optional
+Backend`, `-Module MailInbox`, `-PathPrefix 'Services/MailInbox/'`, and optional
 `-SymbolKind HostedService|Service|Handler|Controller|Repository`. A broad
 graph result returns ranked candidates with confidence and concrete scoring
 reasons. Candidate filters retain an explicit backend/frontend layer and match

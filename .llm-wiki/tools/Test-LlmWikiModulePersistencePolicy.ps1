@@ -11,7 +11,7 @@ $cases = @(
     @{ path = 'Modules/Products/Infrastructure/Services/ProductLookupReadService.cs'; expected = $true; exists = $false }
     @{ path = 'Modules/Recipes/Infrastructure/Repositories/RecipeRows.cs'; expected = $true; exists = $false }
     @{ path = 'FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs'; expected = $true; exists = $true }
-    @{ path = 'MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs'; expected = $true; exists = $true }
+    @{ path = 'Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs'; expected = $true; exists = $true }
     @{ path = 'Modules/Products/Domain/ProductRepository.cs'; expected = $false; exists = $false }
     @{ path = 'Modules/Products/Application/ProductReadService.cs'; expected = $false; exists = $false }
     @{ path = 'Modules/Products/Contracts/ProductStore.cs'; expected = $false; exists = $false }
@@ -22,7 +22,7 @@ $cases = @(
     @{ path = 'Modules/Products/Infrastructure/Persistence/Migrations/ProductRows.cs'; expected = $false; exists = $false }
     @{ path = 'Modules/Products/Nested/Infrastructure/Persistence/ProductRepository.cs'; expected = $false; exists = $false }
     @{ path = 'FoodDiary.Infrastructure/Migrations/ProductRepository.cs'; expected = $false; exists = $false }
-    @{ path = 'MailInbox/FoodDiary.MailInbox.Infrastructure/Migrations/InboundMailStore.cs'; expected = $false; exists = $false }
+    @{ path = 'Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Migrations/InboundMailStore.cs'; expected = $false; exists = $false }
 )
 
 foreach ($case in $cases) {

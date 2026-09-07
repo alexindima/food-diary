@@ -8,28 +8,28 @@ public sealed class ContainerSupplyChainGuardrailTests {
         "db-init", "mailrelay-db-init", "mailinbox-db-init", "api", "mail-relay", "telegram-bot", "job-manager", "client", "nginx",
     ];
     private static readonly string[] ExpectedProductionProjects = [
-        "BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj",
+        "Services/BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj",
         "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
         "FoodDiary.JobManager/FoodDiary.JobManager.csproj",
         "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
         "FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj",
-        "MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj",
-        "MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj",
-        "MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj",
-        "MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj",
+        "Services/MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj",
+        "Services/MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj",
+        "Services/MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj",
+        "Services/MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj",
     ];
 
     private static readonly string[] ExpectedDockerfiles = [
-        "BugTriage/FoodDiary.BugTriage.WebApi/Dockerfile",
+        "Services/BugTriage/FoodDiary.BugTriage.WebApi/Dockerfile",
         "FoodDiary.Initializer/Dockerfile",
         "FoodDiary.JobManager/Dockerfile",
         "FoodDiary.Telegram.Bot/Dockerfile",
         "FoodDiary.Web.Api/Dockerfile",
         "FoodDiary.Web.Client/Dockerfile",
-        "MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile",
-        "MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile",
-        "MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile",
-        "MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile",
+        "Services/MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile",
+        "Services/MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile",
+        "Services/MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile",
+        "Services/MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile",
     ];
 
     private static readonly string[] ExpectedBuildIds = [
@@ -345,13 +345,13 @@ public sealed class ContainerSupplyChainGuardrailTests {
     public void DeployWorkflow_ProvisionsMailInboxPostgresTlsBeforeDatabaseInitialization() {
         string workflow = ReadDeployWorkflow();
         string tlsInitializerDockerfile = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "MailInbox",
+            "Services", "MailInbox",
             "FoodDiary.MailInbox.WebApi",
             "Dockerfile.postgres-tls-init"));
 
         Assert.Matches(@"(?m)^FROM postgres:18-alpine@sha256:[0-9a-f]{64}\r?$", tlsInitializerDockerfile);
         Assert.Contains("MAIL_INBOX_POSTGRES_TLS_INIT_IMAGE_REF=\"${{ env.IMAGE_PREFIX }}/mailinbox-postgres-tls-init@${{ steps.build_mailinbox_postgres_tls_init.outputs.digest }}\"", workflow, StringComparison.Ordinal);
-        Assert.Contains("$SCP_CMD MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf", workflow, StringComparison.Ordinal);
+        Assert.Contains("$SCP_CMD Services/MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf", workflow, StringComparison.Ordinal);
 
         int postgresStart = workflow.IndexOf("docker compose --profile mail-inbox up -d mailinbox-postgres", StringComparison.Ordinal);
         int databaseInitialization = workflow.IndexOf("docker compose --profile mail-inbox run -T --rm mailinbox-db-init update", StringComparison.Ordinal);

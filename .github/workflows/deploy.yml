@@ -192,7 +192,7 @@ jobs:
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
-          file: MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile
+          file: Services/MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile
           push: true
           provenance: mode=max
           sbom: true
@@ -214,7 +214,7 @@ jobs:
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
-          file: MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile
+          file: Services/MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile
           push: true
           provenance: mode=max
           sbom: true
@@ -236,7 +236,7 @@ jobs:
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
-          file: MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile
+          file: Services/MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile
           push: true
           provenance: mode=max
           sbom: true
@@ -258,7 +258,7 @@ jobs:
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
-          file: MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile.postgres-tls-init
+          file: Services/MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile.postgres-tls-init
           push: true
           provenance: mode=max
           sbom: true
@@ -280,7 +280,7 @@ jobs:
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
-          file: MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile
+          file: Services/MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile
           push: true
           provenance: mode=max
           sbom: true
@@ -302,7 +302,7 @@ jobs:
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
-          file: BugTriage/FoodDiary.BugTriage.WebApi/Dockerfile
+          file: Services/BugTriage/FoodDiary.BugTriage.WebApi/Dockerfile
           push: true
           provenance: mode=max
           sbom: true
@@ -534,11 +534,11 @@ jobs:
           SCP_CMD="scp -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o ConnectTimeout=30"
 
           echo "${{ secrets.GITHUB_TOKEN }}" | $SSH_CMD "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
-          $SSH_CMD "mkdir -p /opt/fooddiary/nginx/sites-enabled /opt/fooddiary/MailInbox/FoodDiary.MailInbox.WebApi /opt/fooddiary/scripts /var/www/storybook.fooddiary.club /var/log/nginx"
+          $SSH_CMD "mkdir -p /opt/fooddiary/nginx/sites-enabled /opt/fooddiary/Services/MailInbox/FoodDiary.MailInbox.WebApi /opt/fooddiary/scripts /var/www/storybook.fooddiary.club /var/log/nginx"
           $SCP_CMD docker-compose.yml root@${{ env.SERVER_IP }}:/opt/fooddiary/docker-compose.yml
           $SSH_CMD "install -d -m 0700 /opt/fooddiary/bugtriage"
-          $SCP_CMD BugTriage/deployment/compose.yml BugTriage/deployment/deploy.py root@${{ env.SERVER_IP }}:/opt/fooddiary/bugtriage/
-          $SCP_CMD MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf
+          $SCP_CMD Services/BugTriage/deployment/compose.yml Services/BugTriage/deployment/deploy.py root@${{ env.SERVER_IP }}:/opt/fooddiary/bugtriage/
+          $SCP_CMD Services/MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/Services/MailInbox/FoodDiary.MailInbox.WebApi/mailinbox-pg_hba.conf
           $SCP_CMD nginx.conf root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx.conf
           $SCP_CMD nginx/sites-enabled/fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/fooddiary.club
           $SCP_CMD nginx/sites-enabled/grafana.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/grafana.fooddiary.club

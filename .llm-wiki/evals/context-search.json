@@ -117,13 +117,13 @@
       "id": "mailbox-smtp-filter",
       "query": "rate limit suspicious SMTP mailbox senders",
       "changeType": "Backend",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs"]
     },
     {
       "id": "mail-relay-rabbit-consumer",
       "query": "consume queued email delivery messages from RabbitMQ",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs"]
     },
     {
       "id": "diary-export-read-service",
@@ -309,7 +309,7 @@
       "id": "smtp-inbound-store",
       "query": "store an inbound SMTP message in the mailbox",
       "changeType": "Backend",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs"]
     },
     {
       "id": "wiki-read-only-guard",

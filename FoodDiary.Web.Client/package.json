@@ -58,7 +58,7 @@
         "start:staging": "ng serve --configuration=staging",
         "start:admin": "ng serve fooddiary-admin",
         "watch": "ng build --watch --configuration development",
-        "lint": "eslint .",
+        "lint": "node scripts/verify-template-lint.mjs && eslint .",
         "lint:fix": "eslint . --fix",
         "lint:deps": "depcruise --config .dependency-cruiser.cjs --ignore-known .dependency-cruiser-known-violations.json src/app projects/fooddiary-admin/src/app projects/fd-ui-kit/src/lib projects/fd-tour/src/lib",
         "lint:deps:strict": "depcruise --config .dependency-cruiser.cjs src/app projects/fooddiary-admin/src/app projects/fd-ui-kit/src/lib projects/fd-tour/src/lib",

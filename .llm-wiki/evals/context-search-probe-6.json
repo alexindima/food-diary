@@ -78,13 +78,13 @@
       "id": "mail-inbox-request-authorizer-probe-6",
       "query": "authorize a mail inbox request by hashing the API key and using fixed-time comparison per permission",
       "changeType": "Backend",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxRequestAuthorizer.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxRequestAuthorizer.cs"]
     },
     {
       "id": "mail-relay-api-key-filter-probe-6",
       "query": "фильтр авторизации Mail Relay возвращает стабильный UnauthorizedObjectResult при неверном API key",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Presentation/Filters/RelayApiKeyAuthorizationFilter.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Presentation/Filters/RelayApiKeyAuthorizationFilter.cs"]
     },
     {
       "id": "unsaved-changes-service-probe-6",

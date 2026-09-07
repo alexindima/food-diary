@@ -99,7 +99,7 @@ function Get-BucketKey([string]$Path) {
         return 'frontend-app'
     }
     if ($top -eq 'tests' -and $segments.Count -gt 1) { return "tests-$($segments[1])" }
-    if ($top -in @('MailInbox', 'MailRelay', 'Shared') -and $segments.Count -gt 1) { return "$top-$($segments[1])" }
+    if ($top -in @('Services', 'Shared') -and $segments.Count -gt 1) { return "$top-$($segments[1])" }
     if ($top -in @('docs', '.llm-wiki', '.github') -or $Path -match '(^|/)AGENTS\.md$') { return 'governance-docs' }
     return $top
 }

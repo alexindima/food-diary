@@ -90,19 +90,19 @@
       "id": "smtp-relay-delivery-transport-probe-3",
       "query": "SMTP transport sends relay email and converts HTML body to text",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/SmtpRelayDeliveryTransport.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/SmtpRelayDeliveryTransport.cs"]
     },
     {
       "id": "mail-inbox-runtime-role-validator-probe-3",
       "query": "validate PostgreSQL runtime role permissions for the mail inbox",
       "changeType": "Database",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleValidator.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleValidator.cs"]
     },
     {
       "id": "relay-request-authorizer-probe-3",
       "query": "authorize inbound mail relay HTTP requests",
       "changeType": "Api",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Presentation/Security/RelayRequestAuthorizer.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Presentation/Security/RelayRequestAuthorizer.cs"]
     },
     {
       "id": "browser-window-service-probe-3",

@@ -70,13 +70,13 @@ $mailInboxTrace = & (Join-Path $PSScriptRoot '../wiki.ps1') trace `
     -Query 'MailInbox SMTP receive persistence readiness telemetry' `
     -Layer Backend `
     -Module MailInbox `
-    -PathPrefix 'MailInbox/' `
+    -PathPrefix 'Services/MailInbox/' `
     -Limit 8 `
     -Format Json | ConvertFrom-Json
 $rankedCandidates = @($mailInboxTrace.candidates)
 $exactSymbols = @($mailInboxTrace.symbols)
 $firstBackendMatch = if ($rankedCandidates.Count -gt 0) { $rankedCandidates[0] } elseif ($exactSymbols.Count -gt 0) { $exactSymbols[0] } else { $null }
-if ($null -eq $firstBackendMatch -or $firstBackendMatch.path -notmatch '^MailInbox/' -or $firstBackendMatch.path -match '/tests?/' -or $firstBackendMatch.path -match 'Web\.Client') {
+if ($null -eq $firstBackendMatch -or $firstBackendMatch.path -notmatch '^Services/MailInbox/' -or $firstBackendMatch.path -match '/tests?/' -or $firstBackendMatch.path -match 'Web\.Client') {
     throw 'Backend trace filters did not rank a production MailInbox candidate first.'
 }
 if ($rankedCandidates.Count -gt 0 -and (-not $rankedCandidates[0].PSObject.Properties['confidence'] -or @($rankedCandidates[0].reasons).Count -eq 0)) {

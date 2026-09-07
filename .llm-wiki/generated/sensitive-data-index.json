@@ -19,34 +19,6 @@
   "fields": [
     {
       "category": "credential",
-      "name": "LeaseToken",
-      "type": "Guid",
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ReportLease.cs",
-      "line": 4
-    },
-    {
-      "category": "credential",
-      "name": "LeaseToken",
-      "type": "Guid",
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs",
-      "line": 5
-    },
-    {
-      "category": "credential",
-      "name": "LeaseToken",
-      "type": "Guid",
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs",
-      "line": 3
-    },
-    {
-      "category": "credential",
-      "name": "ApiKey",
-      "type": "string",
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs",
-      "line": 4
-    },
-    {
-      "category": "credential",
       "name": "SecretKey",
       "type": "string",
       "path": "FoodDiary.Infrastructure/Options/JwtOptions.cs",
@@ -121,167 +93,6 @@
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
       "line": 51
-    },
-    {
-      "category": "credential",
-      "name": "MetadataApiKey",
-      "type": "string",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
-      "line": 14
-    },
-    {
-      "category": "credential",
-      "name": "ContentApiKey",
-      "type": "string",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
-      "line": 15
-    },
-    {
-      "category": "credential",
-      "name": "StateApiKey",
-      "type": "string",
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
-      "line": 16
-    },
-    {
-      "category": "credential",
-      "name": "Password",
-      "type": "string",
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs",
-      "line": 12
-    },
-    {
-      "category": "credential",
-      "name": "ConnectionStrings__DefaultConnection",
-      "type": "Set",
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "line": 49
-    },
-    {
-      "category": "credential",
-      "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
-      "type": "set",
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "line": 49
-    },
-    {
-      "category": "credential",
-      "name": "MAILINBOX_ConnectionStrings__DefaultConnection",
-      "type": "set",
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "line": 49
-    },
-    {
-      "category": "credential",
-      "name": "MetadataApiKey",
-      "type": "string",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "line": 13
-    },
-    {
-      "category": "credential",
-      "name": "ContentApiKey",
-      "type": "string",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "line": 14
-    },
-    {
-      "category": "credential",
-      "name": "StateApiKey",
-      "type": "string",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "line": 15
-    },
-    {
-      "category": "credential",
-      "name": "DatabasePasswordKeys",
-      "type": "in",
-      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 130
-    },
-    {
-      "category": "credential",
-      "name": "ConnectionString",
-      "type": "string?",
-      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "line": 158
-    },
-    {
-      "category": "credential",
-      "name": "RequireApiKey",
-      "type": "bool",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
-      "line": 6
-    },
-    {
-      "category": "credential",
-      "name": "ApiKey",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
-      "line": 7
-    },
-    {
-      "category": "credential",
-      "name": "MailgunWebhookSigningKey",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
-      "line": 9
-    },
-    {
-      "category": "credential",
-      "name": "ApiKey",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Client/Options/MailRelayClientOptions.cs",
-      "line": 7
-    },
-    {
-      "category": "credential",
-      "name": "Password",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayBrokerOptions.cs",
-      "line": 12
-    },
-    {
-      "category": "credential",
-      "name": "Password",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelaySmtpOptions.cs",
-      "line": 10
-    },
-    {
-      "category": "credential",
-      "name": "ConnectionString",
-      "type": "string?",
-      "path": "MailRelay/FoodDiary.MailRelay.Initializer/InitializerCommand.cs",
-      "line": 3
-    },
-    {
-      "category": "credential",
-      "name": "ConnectionStrings__DefaultConnection",
-      "type": "set",
-      "path": "MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
-      "line": 44
-    },
-    {
-      "category": "credential",
-      "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
-      "type": "set",
-      "path": "MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
-      "line": 44
-    },
-    {
-      "category": "credential",
-      "name": "MAILRELAY_ConnectionStrings__DefaultConnection",
-      "type": "set",
-      "path": "MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
-      "line": 44
-    },
-    {
-      "category": "credential",
-      "name": "Token",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunSignatureHttpRequest.cs",
-      "line": 5
     },
     {
       "category": "credential",
@@ -1062,6 +873,195 @@
     },
     {
       "category": "credential",
+      "name": "LeaseToken",
+      "type": "Guid",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ReportLease.cs",
+      "line": 4
+    },
+    {
+      "category": "credential",
+      "name": "LeaseToken",
+      "type": "Guid",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs",
+      "line": 5
+    },
+    {
+      "category": "credential",
+      "name": "LeaseToken",
+      "type": "Guid",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs",
+      "line": 3
+    },
+    {
+      "category": "credential",
+      "name": "ApiKey",
+      "type": "string",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs",
+      "line": 4
+    },
+    {
+      "category": "credential",
+      "name": "MetadataApiKey",
+      "type": "string",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
+      "line": 14
+    },
+    {
+      "category": "credential",
+      "name": "ContentApiKey",
+      "type": "string",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
+      "line": 15
+    },
+    {
+      "category": "credential",
+      "name": "StateApiKey",
+      "type": "string",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
+      "line": 16
+    },
+    {
+      "category": "credential",
+      "name": "Password",
+      "type": "string",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs",
+      "line": 12
+    },
+    {
+      "category": "credential",
+      "name": "ConnectionStrings__DefaultConnection",
+      "type": "Set",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
+      "line": 49
+    },
+    {
+      "category": "credential",
+      "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
+      "type": "set",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
+      "line": 49
+    },
+    {
+      "category": "credential",
+      "name": "MAILINBOX_ConnectionStrings__DefaultConnection",
+      "type": "set",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
+      "line": 49
+    },
+    {
+      "category": "credential",
+      "name": "MetadataApiKey",
+      "type": "string",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
+      "line": 13
+    },
+    {
+      "category": "credential",
+      "name": "ContentApiKey",
+      "type": "string",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
+      "line": 14
+    },
+    {
+      "category": "credential",
+      "name": "StateApiKey",
+      "type": "string",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
+      "line": 15
+    },
+    {
+      "category": "credential",
+      "name": "DatabasePasswordKeys",
+      "type": "in",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
+      "line": 130
+    },
+    {
+      "category": "credential",
+      "name": "ConnectionString",
+      "type": "string?",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
+      "line": 158
+    },
+    {
+      "category": "credential",
+      "name": "RequireApiKey",
+      "type": "bool",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
+      "line": 6
+    },
+    {
+      "category": "credential",
+      "name": "ApiKey",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
+      "line": 7
+    },
+    {
+      "category": "credential",
+      "name": "MailgunWebhookSigningKey",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
+      "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "ApiKey",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Options/MailRelayClientOptions.cs",
+      "line": 7
+    },
+    {
+      "category": "credential",
+      "name": "Password",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayBrokerOptions.cs",
+      "line": 12
+    },
+    {
+      "category": "credential",
+      "name": "Password",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelaySmtpOptions.cs",
+      "line": 10
+    },
+    {
+      "category": "credential",
+      "name": "ConnectionString",
+      "type": "string?",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/InitializerCommand.cs",
+      "line": 3
+    },
+    {
+      "category": "credential",
+      "name": "ConnectionStrings__DefaultConnection",
+      "type": "set",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
+      "line": 44
+    },
+    {
+      "category": "credential",
+      "name": "FOODDIARY_ConnectionStrings__DefaultConnection",
+      "type": "set",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
+      "line": 44
+    },
+    {
+      "category": "credential",
+      "name": "MAILRELAY_ConnectionStrings__DefaultConnection",
+      "type": "set",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
+      "line": 44
+    },
+    {
+      "category": "credential",
+      "name": "Token",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunSignatureHttpRequest.cs",
+      "line": 5
+    },
+    {
+      "category": "credential",
       "name": "PasswordResetPath",
       "type": "string",
       "path": "Shared/FoodDiary.Email.Contracts/Email/Common/EmailOptions.cs",
@@ -1080,13 +1080,6 @@
       "type": "FixedWindowPolicyOptions",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
       "line": 56
-    },
-    {
-      "category": "financial",
-      "name": "NpgsqlTransaction",
-      "type": "Func<NpgsqlConnection,",
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
-      "line": 61
     },
     {
       "category": "financial",
@@ -1899,6 +1892,13 @@
       "type": "IReadOnlyList<WebPushSubscriptionHttpResponse>",
       "path": "Modules/Users/Presentation/Features/Users/Responses/ProfileOverviewHttpResponse.cs",
       "line": 9
+    },
+    {
+      "category": "financial",
+      "name": "NpgsqlTransaction",
+      "type": "Func<NpgsqlConnection,",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
+      "line": 61
     },
     {
       "category": "financial",
@@ -6606,125 +6606,6 @@
     },
     {
       "category": "identity",
-      "name": "EmailAddress",
-      "type": "Required,",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
-      "line": 19
-    },
-    {
-      "category": "identity",
-      "name": "EmailAddress",
-      "type": "Required,",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
-      "line": 35
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
-      "line": 5
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string?",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs",
-      "line": 5
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string?",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs",
-      "line": 5
-    },
-    {
-      "category": "identity",
-      "name": "RequireMailgunWebhookSignature",
-      "type": "bool",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
-      "line": 8
-    },
-    {
-      "category": "identity",
-      "name": "EmailId",
-      "type": "Guid",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayOutboxMessage.cs",
-      "line": 5
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/IngestMailEventRequest.cs",
-      "line": 5
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventEntry.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/CreateSuppressionRequest.cs",
-      "line": 4
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelaySuppressionEntry.cs",
-      "line": 4
-    },
-    {
-      "category": "identity",
-      "name": "EmailAddress",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesBouncedRecipientHttpRequest.cs",
-      "line": 4
-    },
-    {
-      "category": "identity",
-      "name": "EmailAddress",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesComplainedRecipientHttpRequest.cs",
-      "line": 4
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/CreateMailRelaySuppressionHttpRequest.cs",
-      "line": 4
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/IngestMailRelayDeliveryEventHttpRequest.cs",
-      "line": 5
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayDeliveryEventHttpResponse.cs",
-      "line": 6
-    },
-    {
-      "category": "identity",
-      "name": "Email",
-      "type": "string",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionHttpResponse.cs",
-      "line": 4
-    },
-    {
-      "category": "identity",
       "name": "UserEmail",
       "type": "string",
       "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingPaymentReadModel.cs",
@@ -7688,6 +7569,125 @@
       "type": "bool",
       "path": "Modules/Users/Presentation/Features/Users/Responses/UserHttpResponse.cs",
       "line": 39
+    },
+    {
+      "category": "identity",
+      "name": "EmailAddress",
+      "type": "Required,",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "line": 19
+    },
+    {
+      "category": "identity",
+      "name": "EmailAddress",
+      "type": "Required,",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "line": 35
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string?",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string?",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "RequireMailgunWebhookSignature",
+      "type": "bool",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
+      "line": 8
+    },
+    {
+      "category": "identity",
+      "name": "EmailId",
+      "type": "Guid",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayOutboxMessage.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/IngestMailEventRequest.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventEntry.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/CreateSuppressionRequest.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelaySuppressionEntry.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "EmailAddress",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesBouncedRecipientHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "EmailAddress",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesComplainedRecipientHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/CreateMailRelaySuppressionHttpRequest.cs",
+      "line": 4
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/IngestMailRelayDeliveryEventHttpRequest.cs",
+      "line": 5
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayDeliveryEventHttpResponse.cs",
+      "line": 6
+    },
+    {
+      "category": "identity",
+      "name": "Email",
+      "type": "string",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionHttpResponse.cs",
+      "line": 4
     },
     {
       "category": "privateContent",
@@ -9827,27 +9827,6 @@
   ],
   "boundaryFiles": [
     {
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
       "path": "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
       "categories": [
         "credential"
@@ -9865,203 +9844,6 @@
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
       "categories": [
         "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 3
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 3
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 2
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 3
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
-      "categories": [
-        "credential",
-        "identity"
-      ],
-      "fieldCount": 4
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayOutboxMessage.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Client/Options/MailRelayClientOptions.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/IngestMailEventRequest.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventEntry.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/CreateSuppressionRequest.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelaySuppressionEntry.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayBrokerOptions.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelaySmtpOptions.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
-      "categories": [
-        "financial"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Initializer/InitializerCommand.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 3
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesBouncedRecipientHttpRequest.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesComplainedRecipientHttpRequest.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/CreateMailRelaySuppressionHttpRequest.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/IngestMailRelayDeliveryEventHttpRequest.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunSignatureHttpRequest.cs",
-      "categories": [
-        "credential"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayDeliveryEventHttpResponse.cs",
-      "categories": [
-        "identity"
-      ],
-      "fieldCount": 1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionHttpResponse.cs",
-      "categories": [
-        "identity"
       ],
       "fieldCount": 1
     },
@@ -11017,6 +10799,224 @@
         "health"
       ],
       "fieldCount": 3
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 3
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 3
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 3
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
+      "categories": [
+        "credential",
+        "identity"
+      ],
+      "fieldCount": 4
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayOutboxMessage.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Options/MailRelayClientOptions.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/IngestMailEventRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventEntry.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/CreateSuppressionRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelaySuppressionEntry.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayBrokerOptions.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelaySmtpOptions.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
+      "categories": [
+        "financial"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/InitializerCommand.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 3
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesBouncedRecipientHttpRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesComplainedRecipientHttpRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/CreateMailRelaySuppressionHttpRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/IngestMailRelayDeliveryEventHttpRequest.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunSignatureHttpRequest.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayDeliveryEventHttpResponse.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionHttpResponse.cs",
+      "categories": [
+        "identity"
+      ],
+      "fieldCount": 1
     }
   ],
   "potentialLogging": [

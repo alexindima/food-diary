@@ -12,8 +12,8 @@ function ConvertTo-RepositoryPath([string]$Path) {
 }
 
 function Get-Area([string]$Path) {
-    if ($Path -match '^MailInbox/') { return 'MailInbox' }
-    if ($Path -match '^MailRelay/') { return 'MailRelay' }
+    if ($Path -match '^Services/MailInbox/') { return 'MailInbox' }
+    if ($Path -match '^Services/MailRelay/') { return 'MailRelay' }
     return 'FoodDiary'
 }
 
@@ -30,8 +30,8 @@ $moduleDomainRoots = @(
 $domainRoots = @(
     'FoodDiary.Domain'
     $moduleDomainRoots
-    'MailInbox/FoodDiary.MailInbox.Domain'
-    'MailRelay/FoodDiary.MailRelay.Domain'
+    'Services/MailInbox/FoodDiary.MailInbox.Domain'
+    'Services/MailRelay/FoodDiary.MailRelay.Domain'
     'Shared/FoodDiary.Domain.Primitives'
 )
 $domainTypes = [System.Collections.Generic.List[object]]::new()

@@ -152,7 +152,7 @@
     {
       "id": "runtime-message-consumer",
       "changedPaths": [
-        "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs"
+        "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs"
       ],
       "expectedModules": [],
       "expectedScopes": ["Backend"],

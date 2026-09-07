@@ -15,6 +15,8 @@ import sonarjsPlugin from 'eslint-plugin-sonarjs';
 import storybook from 'eslint-plugin-storybook';
 import unicornPlugin from 'eslint-plugin-unicorn';
 
+import templateComplexityBaseline from './eslint.template-complexity-baseline.json' with { type: 'json' };
+
 const securityRecommendedRules = Object.fromEntries(
     Object.keys(securityPlugin.configs.recommended.rules).map(ruleName => [ruleName, 'error']),
 );
@@ -2684,6 +2686,16 @@ export default [
             'local/form-requires-form-root': 'error',
         },
     },
+    // Angular ESLint 22.2 exposes control-flow complexity that the previous
+    // duplicated compiler instances missed. Keep the default limit of five for
+    // other templates and prevent growth in these existing templates while they
+    // are split into smaller components. Reduce entries when simplifying them.
+    ...Object.entries(templateComplexityBaseline).map(([file, maxComplexity]) => ({
+        files: [file],
+        rules: {
+            '@angular-eslint/template/cyclomatic-complexity': ['error', { maxComplexity }],
+        },
+    })),
     ...storybook.configs['flat/recommended'],
     {
         files: [

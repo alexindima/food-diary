@@ -33,10 +33,10 @@
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
       "nonBlankLines": 872,
-      "decisionPoints": 172,
+      "decisionPoints": 171,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 277.44
+      "structuralRiskScore": 275.94
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
@@ -615,7 +615,7 @@
       "structuralRiskScore": 87.68
     },
     {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
       "nonBlankLines": 766,
       "decisionPoints": 48,
       "criticalSymbols": 0,
@@ -655,7 +655,7 @@
       "structuralRiskScore": 85.48
     },
     {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
       "nonBlankLines": 295,
       "decisionPoints": 52,
       "criticalSymbols": 0,
@@ -760,11 +760,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "nonBlankLines": 625,
+      "nonBlankLines": 627,
       "decisionPoints": 42,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 75.5
+      "structuralRiskScore": 75.54
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/fasting/lib/fasting.facade.ts",
@@ -1427,10 +1427,10 @@
     {
       "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
       "nonBlankLines": 872,
-      "decisionPoints": 172,
+      "decisionPoints": 171,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 277.44
+      "structuralRiskScore": 275.94
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiToolingContext.ps1",
@@ -2439,174 +2439,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 614.52
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugMailSource.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ImportBugReports.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.76
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ImportedReport.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ReportCompletion.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.68
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ReportLease.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ReportOutcome.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Application/Reports/ReportSummary.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Extensions/BugTriageInfrastructureExtensions.cs",
-      "nonBlankLines": 49,
-      "decisionPoints": 10,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 15.98
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Mail/MailInboxBugSource.cs",
-      "nonBlankLines": 55,
-      "decisionPoints": 10,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.1
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Options/BugTriageOptions.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/BugTriageSchema.cs",
-      "nonBlankLines": 35,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.7
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportStore.cs",
-      "nonBlankLines": 130,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.1
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Workers/BugMailImportWorker.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.98
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Extensions/BugTriagePresentationExtensions.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.58
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
-      "nonBlankLines": 45,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 10.9
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Security/BugTriageAuthorizationFilter.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.86
-    },
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.WebApi/Program.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.08
     },
     {
       "path": "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
@@ -7954,11 +7786,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "nonBlankLines": 625,
+      "nonBlankLines": 627,
       "decisionPoints": 42,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 75.5
+      "structuralRiskScore": 75.54
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/components/client-dashboard-fasting-card.ts",
@@ -8666,11 +8498,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page-sections/habit-path/gamification-habit-path.ts",
-      "nonBlankLines": 117,
+      "nonBlankLines": 126,
       "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.34
+      "structuralRiskScore": 17.52
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/gamification/pages/gamification-page/gamification-page.ts",
@@ -8786,11 +8618,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-nutrition-card.ts",
-      "nonBlankLines": 28,
+      "nonBlankLines": 29,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.06
+      "structuralRiskScore": 2.08
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.ts",
@@ -10882,11 +10714,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/pages/recommendations-page/recommendations-page.ts",
-      "nonBlankLines": 189,
+      "nonBlankLines": 191,
       "decisionPoints": 7,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.28
+      "structuralRiskScore": 14.32
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/recommendations/pages/recommendations-page/recommendations-tour.ts",
@@ -11010,11 +10842,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-diet-stability-card/statistics-diet-stability-card.ts",
-      "nonBlankLines": 19,
+      "nonBlankLines": 20,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.88
+      "structuralRiskScore": 1.9
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/statistics/components/statistics-meal-structure-card/statistics-meal-structure-card.ts",
@@ -12823,2166 +12655,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailExportStore.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.66
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxReadinessChecker.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxSchemaInitializer.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Common/Behaviors/MailInboxLoggingBehavior.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.76
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Common/Behaviors/MailInboxValidationBehavior.cs",
-      "nonBlankLines": 75,
-      "decisionPoints": 11,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Common/Results/MailInboxErrors.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/DependencyInjection.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.38
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Health/CheckMailInboxReadinessQuery.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Health/CheckMailInboxReadinessQueryHandler.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.22
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommand.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.3
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandValidator.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.16
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/DmarcReportPreview.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/DmarcReportRecordPreview.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailAdmission.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailExportEntry.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageCategories.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageDetails.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageSummary.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailRetentionResult.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailSaveResult.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.34
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryHandler.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.28
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryValidator.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.16
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxAdmissionOutcome.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxIngestionOutcome.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxRetentionOutcome.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxTelemetry.cs",
-      "nonBlankLines": 63,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.76
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Export/MailInboxExportClient.cs",
-      "nonBlankLines": 49,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.48
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Extensions/MailInboxClientServiceCollectionExtensions.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.54
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Client/IMailInboxClient.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
-      "nonBlankLines": 83,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.66
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Models/DmarcReportRecordResponse.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Models/DmarcReportResponse.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageDetailsResponse.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageSummaryResponse.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Models/MailInboxExportEntryResponse.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
-      "nonBlankLines": 40,
-      "decisionPoints": 14,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 21.8
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Events/InboundMailMessageReceivedDomainEvent.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.7
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
-      "nonBlankLines": 100,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageId.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageStatus.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.88
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
-      "nonBlankLines": 88,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.76
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxTelemetryPrivacyProcessor.cs",
-      "nonBlankLines": 55,
-      "decisionPoints": 12,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.1
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxDatabaseConfiguration.cs",
-      "nonBlankLines": 45,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.4
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxNetworkRange.cs",
-      "nonBlankLines": 63,
-      "decisionPoints": 12,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.26
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs",
-      "nonBlankLines": 67,
-      "decisionPoints": 14,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.34
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxStorageOptions.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 13,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.24
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.02
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
-      "nonBlankLines": 295,
-      "decisionPoints": 52,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 83.9
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/IMailInboxDmarcReportParser.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/InboundMailStorageQuotaExceededException.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxEndpointListenerFactory.cs",
-      "nonBlankLines": 110,
-      "decisionPoints": 10,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.2
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs",
-      "nonBlankLines": 44,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.38
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs",
-      "nonBlankLines": 124,
-      "decisionPoints": 18,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 29.48
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxNetworkIdentity.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.78
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs",
-      "nonBlankLines": 67,
-      "decisionPoints": 10,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.34
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSlidingWindowRateLimiter.cs",
-      "nonBlankLines": 210,
-      "decisionPoints": 26,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 43.2
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs",
-      "nonBlankLines": 97,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.94
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxStoredMessageLimits.cs",
-      "nonBlankLines": 42,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.34
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlExtensions.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailExportStore.cs",
-      "nonBlankLines": 42,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.34
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
-      "nonBlankLines": 766,
-      "decisionPoints": 48,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 87.32
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxReadinessChecker.cs",
-      "nonBlankLines": 257,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.14
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleProvisioner.cs",
-      "nonBlankLines": 188,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.26
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleValidator.cs",
-      "nonBlankLines": 113,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.26
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs",
-      "nonBlankLines": 188,
-      "decisionPoints": 23,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.26
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerCommand.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.84
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerServiceCollectionExtensions.cs",
-      "nonBlankLines": 31,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.62
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.24
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
-      "nonBlankLines": 134,
-      "decisionPoints": 14,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 23.68
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Controllers/AuthorizedMailInboxEndpointBase.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Controllers/MailInboxControllerBase.cs",
-      "nonBlankLines": 51,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.02
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxEndpointRouteBuilderExtensions.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxPresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 46,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.92
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxResultExtensions.cs",
-      "nonBlankLines": 52,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.54
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/InboundMailExportEntryHttpResponse.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 9.26
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/MailInboxHealthController.cs",
-      "nonBlankLines": 40,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.3
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/Mappings/MailInboxHealthHttpMappings.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/Responses/MailInboxHealthHttpResponse.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
-      "nonBlankLines": 87,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.74
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Mappings/InboundMailHttpMappings.cs",
-      "nonBlankLines": 61,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.72
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/DmarcReportHttpResponse.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/DmarcReportRecordHttpResponse.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessageDetailsHttpResponse.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessageSummaryHttpResponse.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxApiKeyAuthorizationFilter.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.5
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxExceptionFilter.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.48
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageDetailConcurrencyFilter.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.98
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageDetailConcurrencyGate.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.94
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageMetadataConcurrencyFilter.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.98
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageMetadataConcurrencyGate.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.94
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxReadinessConcurrencyFilter.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.98
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxReadinessConcurrencyGate.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.94
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
-      "nonBlankLines": 56,
-      "decisionPoints": 23,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 35.62
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorDetailsMapper.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.78
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxPermission.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxRequestAuthorizer.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.46
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Security/RequireMailInboxPermissionAttribute.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
-      "nonBlankLines": 138,
-      "decisionPoints": 22,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 35.76
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.WebApi/Program.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.24
-    },
-    {
-      "path": "MailInbox/FoodDiary.MailInbox.WebApi/Properties/AssemblyInfo.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayDeliveryPolicy.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayDispatchNotifier.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
-      "nonBlankLines": 32,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.64
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayReadinessChecker.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelaySchemaInitializer.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Abstractions/IRelayDeliveryTransport.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Common/Behaviors/MailRelayLoggingBehavior.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.76
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Common/Behaviors/MailRelayValidationBehavior.cs",
-      "nonBlankLines": 74,
-      "decisionPoints": 11,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.98
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Common/Results/MailRelayErrors.cs",
-      "nonBlankLines": 23,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.96
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/DeliveryEvents/Services/MailRelayDeliveryEventIngestionService.cs",
-      "nonBlankLines": 34,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.18
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/DependencyInjection.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandHandler.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.18
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandValidator.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 1,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.84
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandHandler.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.16
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.4
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandHandler.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.4
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandValidator.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.5
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandHandler.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.22
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandValidator.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.18
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Models/MailRelayMessageDetails.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Models/MailRelayQueueStats.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryHandler.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.22
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQuery.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryHandler.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.26
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryValidator.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.16
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQuery.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQueryHandler.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.18
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryHandler.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.22
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayEmailUseCases.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.24
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayMessageProcessor.cs",
-      "nonBlankLines": 51,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.52
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Services/NoOpMailRelayDeliveryPolicy.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Services/SmtpSubmissionService.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/GlobalUsings.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQuery.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQueryHandler.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.18
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.44
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayInboxClaimResult.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayOutboxMessage.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayProcessResult.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Telemetry/MailRelayTelemetry.cs",
-      "nonBlankLines": 39,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.28
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Client/Extensions/MailRelayClientServiceCollectionExtensions.cs",
-      "nonBlankLines": 25,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Client/IMailRelayClient.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Client/MailRelayClient.cs",
-      "nonBlankLines": 36,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.22
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Client/Models/EnqueueMailRelayEmailRequest.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Client/Models/EnqueueMailRelayEmailResponse.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Client/Options/MailRelayClientOptions.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 10.9
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/AssemblyMarker.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/IngestMailEventRequest.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayBounceClassification.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.74
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventEntry.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventType.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.36
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelaySuppressionPolicy.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.4
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/CreateSuppressionRequest.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelaySuppressionEntry.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs",
-      "nonBlankLines": 87,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.74
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailFailureDecision.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailId.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailMessage.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailStatus.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageRequest.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
-      "nonBlankLines": 121,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.42
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayTelemetryPrivacyProcessor.cs",
-      "nonBlankLines": 72,
-      "decisionPoints": 13,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 20.94
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/GlobalUsings.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/DirectMxOptions.cs",
-      "nonBlankLines": 28,
-      "decisionPoints": 9,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.06
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayBrokerOptions.cs",
-      "nonBlankLines": 51,
-      "decisionPoints": 16,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25.02
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDeliveryOptions.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDkimOptions.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.9
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayQueueOptions.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.3
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelaySmtpOptions.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/OpenTelemetryOptions.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.74
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfigurableRelayDeliveryTransport.cs",
-      "nonBlankLines": 18,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.86
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfiguredMailRelayDeliveryPolicy.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.9
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxEndpointConnector.cs",
-      "nonBlankLines": 76,
-      "decisionPoints": 18,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 28.52
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxRelayDeliveryTransport.cs",
-      "nonBlankLines": 100,
-      "decisionPoints": 11,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.5
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientAdapter.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.02
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientFactory.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DkimSigningService.cs",
-      "nonBlankLines": 40,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 11.3
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DnsClientMxResolver.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.26
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxEndpointConnector.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxSmtpClient.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxSmtpClientFactory.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IMxResolver.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayOutboxPublisherHostedService.cs",
-      "nonBlankLines": 37,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.74
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
-      "nonBlankLines": 82,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.14
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs",
-      "nonBlankLines": 29,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.58
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueRowMapper.cs",
-      "nonBlankLines": 91,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.32
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueSchema.cs",
-      "nonBlankLines": 125,
-      "decisionPoints": 15,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 25
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.DeliveryEvents.cs",
-      "nonBlankLines": 101,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 14.02
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Inbox.cs",
-      "nonBlankLines": 112,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.24
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Outbox.cs",
-      "nonBlankLines": 72,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.94
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Queue.cs",
-      "nonBlankLines": 356,
-      "decisionPoints": 14,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 28.12
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Suppressions.cs",
-      "nonBlankLines": 110,
-      "decisionPoints": 7,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.7
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs",
-      "nonBlankLines": 51,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.52
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayReadinessChecker.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.92
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelaySchemaInitializerHostedService.cs",
-      "nonBlankLines": 10,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MxRecord.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/NoOpMailRelayDispatchNotifier.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBootstrapHostedService.cs",
-      "nonBlankLines": 43,
-      "decisionPoints": 8,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 12.86
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBroker.cs",
-      "nonBlankLines": 160,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs",
-      "nonBlankLines": 142,
-      "decisionPoints": 16,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 26.84
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayDispatchNotifier.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.24
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/SmtpRelayDeliveryTransport.cs",
-      "nonBlankLines": 51,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.52
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Initializer/InitializerCommand.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 6,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 9.52
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Initializer/InitializerServiceCollectionExtensions.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.48
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
-      "nonBlankLines": 122,
-      "decisionPoints": 11,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 18.94
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Controllers/AuthorizedMailRelayController.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.12
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Controllers/MailRelayControllerBase.cs",
-      "nonBlankLines": 68,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.86
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Controllers/MailRelayMappedRequest.cs",
-      "nonBlankLines": 12,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.24
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Extensions/MailRelayPresentationApplicationBuilderExtensions.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Extensions/MailRelayPresentationServiceCollectionExtensions.cs",
-      "nonBlankLines": 38,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.76
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Extensions/MailRelayResultExtensions.cs",
-      "nonBlankLines": 54,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayDeliveryEventsController.cs",
-      "nonBlankLines": 24,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.48
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.3
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayProviderEventsController.cs",
-      "nonBlankLines": 49,
-      "decisionPoints": 2,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.98
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs",
-      "nonBlankLines": 22,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.44
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelaySuppressionsController.cs",
-      "nonBlankLines": 27,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.54
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs",
-      "nonBlankLines": 91,
-      "decisionPoints": 10,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 16.82
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
-      "nonBlankLines": 111,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.72
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs",
-      "nonBlankLines": 42,
-      "decisionPoints": 5,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.34
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesBounceHttpRequest.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesBouncedRecipientHttpRequest.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesComplainedRecipientHttpRequest.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesComplaintHttpRequest.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesMailHttpRequest.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesNotificationHttpRequest.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesSnsWebhookHttpRequest.cs",
-      "nonBlankLines": 15,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.3
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/CreateMailRelaySuppressionHttpRequest.cs",
-      "nonBlankLines": 6,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/IngestMailRelayDeliveryEventHttpRequest.cs",
-      "nonBlankLines": 9,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.18
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunEventDataHttpRequest.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHeadersHttpRequest.cs",
-      "nonBlankLines": 4,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHttpRequest.cs",
-      "nonBlankLines": 3,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.06
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunSignatureHttpRequest.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunWebhookHttpRequest.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayDeliveryEventHttpResponse.cs",
-      "nonBlankLines": 11,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayMessageDetailsHttpResponse.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayProviderIngestionHttpResponse.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayQueueStatsHttpResponse.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionCreatedHttpResponse.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionHttpResponse.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/MailRelayHealthController.cs",
-      "nonBlankLines": 19,
-      "decisionPoints": 0,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.38
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/Mappings/MailRelayHealthHttpMappings.cs",
-      "nonBlankLines": 7,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/Responses/MailRelayHealthHttpResponse.cs",
-      "nonBlankLines": 2,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.04
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Filters/MailRelayTelemetryActionFilter.cs",
-      "nonBlankLines": 56,
-      "decisionPoints": 4,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.12
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Filters/RelayApiKeyAuthorizationFilter.cs",
-      "nonBlankLines": 17,
-      "decisionPoints": 1,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.84
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/GlobalUsings.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.28
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Responses/MailRelayApiErrorDetailsMapper.cs",
-      "nonBlankLines": 14,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.28
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Responses/MailRelayApiErrorHttpResponse.cs",
-      "nonBlankLines": 8,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.16
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Responses/ProducesMailRelayApiErrorResponseAttribute.cs",
-      "nonBlankLines": 5,
-      "decisionPoints": 0,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.1
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs",
-      "nonBlankLines": 185,
-      "decisionPoints": 41,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 65.2
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Security/RelayRequestAuthorizer.cs",
-      "nonBlankLines": 13,
-      "decisionPoints": 3,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.76
-    },
-    {
-      "path": "MailRelay/FoodDiary.MailRelay.WebApi/Program.cs",
-      "nonBlankLines": 21,
-      "decisionPoints": 2,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.42
     },
     {
       "path": "Modules/Admin/Application/Abstractions/Admin/Common/AdminMailInboxErrors.cs",
@@ -39105,6 +36777,2334 @@
       "structuralRiskScore": 2.48
     },
     {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugMailSource.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ImportBugReports.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.76
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ImportedReport.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ReportCompletion.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.68
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ReportLease.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ReportOutcome.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/ReportSummary.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Extensions/BugTriageInfrastructureExtensions.cs",
+      "nonBlankLines": 49,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.98
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Mail/MailInboxBugSource.cs",
+      "nonBlankLines": 55,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 16.1
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Options/BugTriageOptions.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/BugTriageSchema.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.7
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportStore.cs",
+      "nonBlankLines": 130,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.1
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Workers/BugMailImportWorker.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.98
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Extensions/BugTriagePresentationExtensions.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.58
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
+      "nonBlankLines": 45,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 10.9
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/RenewReportHttpRequest.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Security/BugTriageAuthorizationFilter.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.86
+    },
+    {
+      "path": "Services/BugTriage/FoodDiary.BugTriage.WebApi/Program.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.08
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailExportStore.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.66
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxReadinessChecker.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxSchemaInitializer.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Common/Behaviors/MailInboxLoggingBehavior.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.76
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Common/Behaviors/MailInboxValidationBehavior.cs",
+      "nonBlankLines": 75,
+      "decisionPoints": 11,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 18
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Common/Results/MailInboxErrors.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/DependencyInjection.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.38
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Health/CheckMailInboxReadinessQuery.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Health/CheckMailInboxReadinessQueryHandler.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.22
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.3
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandValidator.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.16
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/DmarcReportPreview.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/DmarcReportRecordPreview.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailAdmission.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailExportEntry.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageCategories.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageDetails.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageSummary.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailRetentionResult.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailSaveResult.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.34
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryHandler.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.28
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryValidator.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.16
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxAdmissionOutcome.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxIngestionOutcome.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxRetentionOutcome.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxTelemetry.cs",
+      "nonBlankLines": 63,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.76
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Export/MailInboxExportClient.cs",
+      "nonBlankLines": 49,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.48
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Extensions/MailInboxClientServiceCollectionExtensions.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.54
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/IMailInboxClient.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
+      "nonBlankLines": 83,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.66
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/DmarcReportRecordResponse.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/DmarcReportResponse.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageDetailsResponse.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageSummaryResponse.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/MailInboxExportEntryResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 14,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 21.8
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Events/InboundMailMessageReceivedDomainEvent.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.7
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
+      "nonBlankLines": 100,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageId.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessageStatus.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.88
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
+      "nonBlankLines": 88,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.76
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxTelemetryPrivacyProcessor.cs",
+      "nonBlankLines": 55,
+      "decisionPoints": 12,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 19.1
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxDatabaseConfiguration.cs",
+      "nonBlankLines": 45,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.4
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxNetworkRange.cs",
+      "nonBlankLines": 63,
+      "decisionPoints": 12,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 19.26
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs",
+      "nonBlankLines": 67,
+      "decisionPoints": 14,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 22.34
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxStorageOptions.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 13,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 20.24
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.02
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
+      "nonBlankLines": 295,
+      "decisionPoints": 52,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 83.9
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/IMailInboxDmarcReportParser.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/InboundMailStorageQuotaExceededException.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxEndpointListenerFactory.cs",
+      "nonBlankLines": 110,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 17.2
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxLocalTlsHealthCheck.cs",
+      "nonBlankLines": 44,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.38
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs",
+      "nonBlankLines": 124,
+      "decisionPoints": 18,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 29.48
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxNetworkIdentity.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.78
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs",
+      "nonBlankLines": 67,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 16.34
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSlidingWindowRateLimiter.cs",
+      "nonBlankLines": 210,
+      "decisionPoints": 26,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 43.2
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxSmtpHostedService.cs",
+      "nonBlankLines": 97,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 13.94
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxStoredMessageLimits.cs",
+      "nonBlankLines": 42,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.34
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlExtensions.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailExportStore.cs",
+      "nonBlankLines": 42,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.34
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
+      "nonBlankLines": 766,
+      "decisionPoints": 48,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 87.32
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxReadinessChecker.cs",
+      "nonBlankLines": 257,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.14
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleProvisioner.cs",
+      "nonBlankLines": 188,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.26
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleValidator.cs",
+      "nonBlankLines": 113,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.26
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs",
+      "nonBlankLines": 188,
+      "decisionPoints": 23,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 38.26
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/InitializerCommand.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.84
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/InitializerServiceCollectionExtensions.cs",
+      "nonBlankLines": 31,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.62
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.24
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/Program.cs",
+      "nonBlankLines": 134,
+      "decisionPoints": 14,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 23.68
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Controllers/AuthorizedMailInboxEndpointBase.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Controllers/MailInboxControllerBase.cs",
+      "nonBlankLines": 51,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.02
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxEndpointRouteBuilderExtensions.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxPresentationServiceCollectionExtensions.cs",
+      "nonBlankLines": 46,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.92
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxResultExtensions.cs",
+      "nonBlankLines": 52,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.54
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/InboundMailExportEntryHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 9.26
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/MailInboxHealthController.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.3
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/Mappings/MailInboxHealthHttpMappings.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/Responses/MailInboxHealthHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
+      "nonBlankLines": 87,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.74
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Mappings/InboundMailHttpMappings.cs",
+      "nonBlankLines": 61,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.72
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/DmarcReportHttpResponse.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/DmarcReportRecordHttpResponse.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessageDetailsHttpResponse.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessageSummaryHttpResponse.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxApiKeyAuthorizationFilter.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.5
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxExceptionFilter.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.48
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageDetailConcurrencyFilter.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.98
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageDetailConcurrencyGate.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.94
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageMetadataConcurrencyFilter.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.98
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxMessageMetadataConcurrencyGate.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.94
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxReadinessConcurrencyFilter.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.98
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Filters/MailInboxReadinessConcurrencyGate.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.94
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs",
+      "nonBlankLines": 56,
+      "decisionPoints": 23,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 35.62
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorDetailsMapper.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.78
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Responses/MailInboxApiErrorHttpResponse.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxPermission.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Security/MailInboxRequestAuthorizer.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.46
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Security/RequireMailInboxPermissionAttribute.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs",
+      "nonBlankLines": 138,
+      "decisionPoints": 22,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 35.76
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/Program.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.24
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/Properties/AssemblyInfo.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayDeliveryPolicy.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayDispatchNotifier.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
+      "nonBlankLines": 32,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.64
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayReadinessChecker.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelaySchemaInitializer.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IRelayDeliveryTransport.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Common/Behaviors/MailRelayLoggingBehavior.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.76
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Common/Behaviors/MailRelayValidationBehavior.cs",
+      "nonBlankLines": 74,
+      "decisionPoints": 11,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 17.98
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Common/Results/MailRelayErrors.cs",
+      "nonBlankLines": 23,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.96
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/DeliveryEvents/Services/MailRelayDeliveryEventIngestionService.cs",
+      "nonBlankLines": 34,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.18
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/DependencyInjection.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.48
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommand.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandHandler.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandValidator.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.84
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommand.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandHandler.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.16
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.4
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandHandler.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.4
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandValidator.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.5
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommand.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandHandler.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.22
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandValidator.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Models/MailRelayMessageDetails.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Models/MailRelayQueueStats.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQuery.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryHandler.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.22
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQuery.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryHandler.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.26
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryValidator.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.16
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQuery.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQueryHandler.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQuery.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryHandler.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.22
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayEmailUseCases.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.24
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayMessageProcessor.cs",
+      "nonBlankLines": 51,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.52
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/NoOpMailRelayDeliveryPolicy.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/SmtpSubmissionService.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/GlobalUsings.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQuery.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQueryHandler.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.44
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayInboxClaimResult.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayOutboxMessage.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Queue/Models/MailRelayProcessResult.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Telemetry/MailRelayTelemetry.cs",
+      "nonBlankLines": 39,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.28
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Extensions/MailRelayClientServiceCollectionExtensions.cs",
+      "nonBlankLines": 25,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/IMailRelayClient.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/MailRelayClient.cs",
+      "nonBlankLines": 36,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.22
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Models/EnqueueMailRelayEmailRequest.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Models/EnqueueMailRelayEmailResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Options/MailRelayClientOptions.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 10.9
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/AssemblyMarker.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/IngestMailEventRequest.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayBounceClassification.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.74
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventEntry.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelayDeliveryEventType.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.36
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelaySuppressionPolicy.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.4
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/CreateSuppressionRequest.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/MailRelaySuppressionEntry.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs",
+      "nonBlankLines": 87,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.74
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailFailureDecision.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailId.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailMessage.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmailStatus.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/RelayEmailMessageRequest.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
+      "nonBlankLines": 121,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.42
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayTelemetryPrivacyProcessor.cs",
+      "nonBlankLines": 72,
+      "decisionPoints": 13,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 20.94
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/GlobalUsings.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/DirectMxOptions.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.06
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayBrokerOptions.cs",
+      "nonBlankLines": 51,
+      "decisionPoints": 16,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 25.02
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDeliveryOptions.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDkimOptions.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.9
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayQueueOptions.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.3
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelaySmtpOptions.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/OpenTelemetryOptions.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.74
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfigurableRelayDeliveryTransport.cs",
+      "nonBlankLines": 18,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.86
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfiguredMailRelayDeliveryPolicy.cs",
+      "nonBlankLines": 20,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.9
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxEndpointConnector.cs",
+      "nonBlankLines": 76,
+      "decisionPoints": 18,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 28.52
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxRelayDeliveryTransport.cs",
+      "nonBlankLines": 100,
+      "decisionPoints": 11,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 18.5
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientAdapter.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.02
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientFactory.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DkimSigningService.cs",
+      "nonBlankLines": 40,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 11.3
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DnsClientMxResolver.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.26
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxEndpointConnector.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxSmtpClient.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxSmtpClientFactory.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IMxResolver.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayOutboxPublisherHostedService.cs",
+      "nonBlankLines": 37,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.74
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayPostgresExecutor.cs",
+      "nonBlankLines": 82,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.14
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueProcessorHostedService.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.58
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueRowMapper.cs",
+      "nonBlankLines": 91,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.32
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueSchema.cs",
+      "nonBlankLines": 125,
+      "decisionPoints": 15,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 25
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.DeliveryEvents.cs",
+      "nonBlankLines": 101,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 14.02
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Inbox.cs",
+      "nonBlankLines": 112,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.24
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Outbox.cs",
+      "nonBlankLines": 72,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.94
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Queue.cs",
+      "nonBlankLines": 356,
+      "decisionPoints": 14,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 28.12
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.Suppressions.cs",
+      "nonBlankLines": 110,
+      "decisionPoints": 7,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.7
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs",
+      "nonBlankLines": 51,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.52
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayReadinessChecker.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.92
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelaySchemaInitializerHostedService.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MxRecord.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/NoOpMailRelayDispatchNotifier.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBootstrapHostedService.cs",
+      "nonBlankLines": 43,
+      "decisionPoints": 8,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 12.86
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBroker.cs",
+      "nonBlankLines": 160,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayConsumerHostedService.cs",
+      "nonBlankLines": 142,
+      "decisionPoints": 16,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 26.84
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayDispatchNotifier.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.24
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/SmtpRelayDeliveryTransport.cs",
+      "nonBlankLines": 51,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.52
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/InitializerCommand.cs",
+      "nonBlankLines": 26,
+      "decisionPoints": 6,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.52
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/InitializerServiceCollectionExtensions.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.48
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/Program.cs",
+      "nonBlankLines": 122,
+      "decisionPoints": 11,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 18.94
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Controllers/AuthorizedMailRelayController.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.12
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Controllers/MailRelayControllerBase.cs",
+      "nonBlankLines": 68,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.86
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Controllers/MailRelayMappedRequest.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.24
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Extensions/MailRelayPresentationApplicationBuilderExtensions.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Extensions/MailRelayPresentationServiceCollectionExtensions.cs",
+      "nonBlankLines": 38,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.76
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Extensions/MailRelayResultExtensions.cs",
+      "nonBlankLines": 54,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayDeliveryEventsController.cs",
+      "nonBlankLines": 24,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.48
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.3
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayProviderEventsController.cs",
+      "nonBlankLines": 49,
+      "decisionPoints": 2,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.98
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs",
+      "nonBlankLines": 22,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.44
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelaySuppressionsController.cs",
+      "nonBlankLines": 27,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.54
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs",
+      "nonBlankLines": 91,
+      "decisionPoints": 10,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 16.82
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
+      "nonBlankLines": 111,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.72
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs",
+      "nonBlankLines": 42,
+      "decisionPoints": 5,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 8.34
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesBounceHttpRequest.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesBouncedRecipientHttpRequest.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesComplainedRecipientHttpRequest.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesComplaintHttpRequest.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesMailHttpRequest.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesNotificationHttpRequest.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/AwsSesSnsWebhookHttpRequest.cs",
+      "nonBlankLines": 15,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.3
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/CreateMailRelaySuppressionHttpRequest.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/IngestMailRelayDeliveryEventHttpRequest.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunEventDataHttpRequest.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHeadersHttpRequest.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunMessageHttpRequest.cs",
+      "nonBlankLines": 3,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.06
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunSignatureHttpRequest.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/MailgunWebhookHttpRequest.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayDeliveryEventHttpResponse.cs",
+      "nonBlankLines": 11,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.22
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayMessageDetailsHttpResponse.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayProviderIngestionHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelayQueueStatsHttpResponse.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionCreatedHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Responses/MailRelaySuppressionHttpResponse.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/MailRelayHealthController.cs",
+      "nonBlankLines": 19,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.38
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/Mappings/MailRelayHealthHttpMappings.cs",
+      "nonBlankLines": 7,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.14
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/Responses/MailRelayHealthHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Filters/MailRelayTelemetryActionFilter.cs",
+      "nonBlankLines": 56,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.12
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Filters/RelayApiKeyAuthorizationFilter.cs",
+      "nonBlankLines": 17,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 1.84
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/GlobalUsings.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Responses/MailRelayApiErrorDetailsMapper.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.28
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Responses/MailRelayApiErrorHttpResponse.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.16
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Responses/ProducesMailRelayApiErrorResponseAttribute.cs",
+      "nonBlankLines": 5,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.1
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs",
+      "nonBlankLines": 185,
+      "decisionPoints": 41,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 65.2
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Security/RelayRequestAuthorizer.cs",
+      "nonBlankLines": 13,
+      "decisionPoints": 3,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.76
+    },
+    {
+      "path": "Services/MailRelay/FoodDiary.MailRelay.WebApi/Program.cs",
+      "nonBlankLines": 21,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.42
+    },
+    {
       "path": "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Events/IDomainEventPublisher.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
@@ -40163,11 +40163,11 @@
     {
       "name": "CreateMailRelaySuppressionCommandHandler",
       "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandHandler.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandHandler.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40610,11 +40610,11 @@
     {
       "name": "EnqueueMailRelayEmailCommandHandler",
       "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandHandler.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandHandler.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40695,11 +40695,11 @@
     {
       "name": "IngestMailRelayDeliveryEventCommandHandler",
       "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandHandler.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandHandler.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40707,11 +40707,11 @@
     {
       "name": "IngestManyMailRelayDeliveryEventsCommandHandler",
       "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -40825,11 +40825,11 @@
     {
       "name": "MarkInboundMailMessageReadCommandHandler",
       "role": "CommandHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs",
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -41023,11 +41023,11 @@
     {
       "name": "RemoveMailRelaySuppressionCommandHandler",
       "role": "CommandHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandHandler.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandHandler.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42079,7 +42079,7 @@
     {
       "name": "AuthorizedMailRelayController",
       "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Controllers/AuthorizedMailRelayController.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Controllers/AuthorizedMailRelayController.cs",
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
@@ -42136,7 +42136,7 @@
     {
       "name": "BugReportsController",
       "role": "Controller",
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
       "line": 17,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -42474,7 +42474,7 @@
     {
       "name": "MailInboxExportController",
       "role": "Controller",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
       "line": 14,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -42484,12 +42484,12 @@
     {
       "name": "MailInboxHealthController",
       "role": "Controller",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/MailInboxHealthController.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/MailInboxHealthController.cs",
       "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
-        "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
-        "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxReadinessConcurrencyTests.cs"
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxReadinessConcurrencyTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42497,14 +42497,14 @@
     {
       "name": "MailInboxMessagesController",
       "role": "Controller",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
       "line": 19,
       "testReferenceCount": 4,
       "testReferences": [
-        "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxMessageDetailConcurrencyTests.cs",
-        "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxMessageMetadataConcurrencyTests.cs",
-        "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationSecurityTests.cs",
-        "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs"
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxMessageDetailConcurrencyTests.cs",
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxMessageMetadataConcurrencyTests.cs",
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationSecurityTests.cs",
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42512,11 +42512,11 @@
     {
       "name": "MailRelayDeliveryEventsController",
       "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayDeliveryEventsController.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayDeliveryEventsController.cs",
       "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayControllerSurfaceTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayControllerSurfaceTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42524,11 +42524,11 @@
     {
       "name": "MailRelayHealthController",
       "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/MailRelayHealthController.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/MailRelayHealthController.cs",
       "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42536,11 +42536,11 @@
     {
       "name": "MailRelayMessagesController",
       "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
       "line": 11,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayControllerSurfaceTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayControllerSurfaceTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42548,11 +42548,11 @@
     {
       "name": "MailRelayProviderEventsController",
       "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayProviderEventsController.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayProviderEventsController.cs",
       "line": 14,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42560,11 +42560,11 @@
     {
       "name": "MailRelayQueueController",
       "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs",
       "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -42572,11 +42572,11 @@
     {
       "name": "MailRelaySuppressionsController",
       "role": "Controller",
-      "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelaySuppressionsController.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelaySuppressionsController.cs",
       "line": 12,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43058,11 +43058,11 @@
     {
       "name": "CheckMailInboxReadinessQueryHandler",
       "role": "QueryHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Health/CheckMailInboxReadinessQueryHandler.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Health/CheckMailInboxReadinessQueryHandler.cs",
       "line": 6,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43070,11 +43070,11 @@
     {
       "name": "CheckMailRelayReadinessQueryHandler",
       "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQueryHandler.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Health/CheckMailRelayReadinessQueryHandler.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43703,11 +43703,11 @@
     {
       "name": "GetInboundMailMessageDetailsQueryHandler",
       "role": "QueryHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
       "line": 8,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43715,11 +43715,11 @@
     {
       "name": "GetInboundMailMessagesQueryHandler",
       "role": "QueryHandler",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryHandler.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryHandler.cs",
       "line": 7,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43807,11 +43807,11 @@
     {
       "name": "GetMailRelayDeliveryEventsQueryHandler",
       "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryHandler.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryHandler.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43819,11 +43819,11 @@
     {
       "name": "GetMailRelayMessageDetailsQueryHandler",
       "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryHandler.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryHandler.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43831,11 +43831,11 @@
     {
       "name": "GetMailRelayQueueStatsQueryHandler",
       "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQueryHandler.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayQueueStats/GetMailRelayQueueStatsQueryHandler.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43843,11 +43843,11 @@
     {
       "name": "GetMailRelaySuppressionsQueryHandler",
       "role": "QueryHandler",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryHandler.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryHandler.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44967,11 +44967,11 @@
     {
       "name": "CreateMailRelaySuppressionCommandValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/CreateMailRelaySuppression/CreateMailRelaySuppressionCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45271,7 +45271,7 @@
     {
       "name": "EnqueueMailRelayEmailCommandValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -45563,11 +45563,11 @@
     {
       "name": "GetInboundMailMessagesQueryValidator",
       "role": "Validator",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryValidator.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -45611,7 +45611,7 @@
     {
       "name": "GetMailRelayDeliveryEventsQueryValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -45621,7 +45621,7 @@
     {
       "name": "GetMailRelayMessageDetailsQueryValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -45631,7 +45631,7 @@
     {
       "name": "GetMailRelaySuppressionsQueryValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -46038,7 +46038,7 @@
     {
       "name": "IngestMailRelayDeliveryEventCommandValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -46048,11 +46048,11 @@
     {
       "name": "IngestManyMailRelayDeliveryEventsCommandValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEvents/IngestManyMailRelayDeliveryEventsCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46161,11 +46161,11 @@
     {
       "name": "MarkInboundMailMessageReadCommandValidator",
       "role": "Validator",
-      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandValidator.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46218,12 +46218,12 @@
     {
       "name": "NpgsqlMailInboxRuntimeRoleValidator",
       "role": "Validator",
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleValidator.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxRuntimeRoleValidator.cs",
       "line": 4,
       "testReferenceCount": 2,
       "testReferences": [
-        "MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/MailInboxCoverageGapTests.cs",
-        "MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/NpgsqlInboundMailStoreIntegrationTests.cs"
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/MailInboxCoverageGapTests.cs",
+        "Services/MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/NpgsqlInboundMailStoreIntegrationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -46450,11 +46450,11 @@
     {
       "name": "RemoveMailRelaySuppressionCommandValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/RemoveMailRelaySuppression/RemoveMailRelaySuppressionCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 1,
       "testReferences": [
-        "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationValidationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

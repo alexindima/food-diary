@@ -50,7 +50,7 @@
                         class="statistics-diet-stability-card__day-marker"
                         [class.statistics-diet-stability-card__day-marker--stable]="day.status === 'stable'"
                         [class.statistics-diet-stability-card__day-marker--deviation]="day.status === 'deviation'"
-                        [attr.aria-label]="'STATISTICS.DASHBOARD.STABILITY.STATUS.' + day.status.toUpperCase() | translate"
+                        [attr.aria-label]="`STATISTICS.DASHBOARD.STABILITY.STATUS.${(day.status | uppercase)}` | translate"
                     ></span>
                     <span class="fd-ui-caption fd-ui-text-muted">{{ day.label }}</span>
                 </div>

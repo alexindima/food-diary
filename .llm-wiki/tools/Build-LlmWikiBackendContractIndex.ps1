@@ -29,8 +29,8 @@ $inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInput
 if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Backend contract index cache hit: inputs, generator, and output are unchanged.'; exit 0 }
 
 function Get-Area([string]$Path) {
-    if ($Path -match '^MailInbox/') { return 'MailInbox' }
-    if ($Path -match '^MailRelay/') { return 'MailRelay' }
+    if ($Path -match '^Services/MailInbox/') { return 'MailInbox' }
+    if ($Path -match '^Services/MailRelay/') { return 'MailRelay' }
     if ($Path -match '^Shared/') { return 'Shared' }
     return 'FoodDiary'
 }

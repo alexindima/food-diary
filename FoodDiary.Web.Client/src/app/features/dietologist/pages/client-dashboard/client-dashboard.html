@@ -131,7 +131,7 @@
                                 <div class="fd-row fd-justify-between fd-gap-sm">
                                     <strong>{{ task.title }}</strong>
                                     <span class="fd-ui-pill fd-ui-caption">
-                                        {{ 'CLIENT_TASKS.STATUS.' + task.status.toUpperCase() | translate }}
+                                        {{ `CLIENT_TASKS.STATUS.${(task.status | uppercase)}` | translate }}
                                     </span>
                                 </div>
                                 @if (task.details) {

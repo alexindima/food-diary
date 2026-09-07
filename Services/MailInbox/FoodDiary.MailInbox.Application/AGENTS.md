@@ -1,0 +1,25 @@
+# Mail Inbox Application Guidelines
+
+## Scope
+Rules for `Services/MailInbox/FoodDiary.MailInbox.Application/`.
+
+## Role
+- Own inbound mail use cases, application models, and abstractions.
+- Keep HTTP, PostgreSQL, SMTP listener, MIME parsing implementation, and host configuration out of this project.
+- Keep mail export generic. Bug investigation and AI task orchestration belong to the independent BugTriage service.
+- Depend only on `Services/MailInbox/FoodDiary.MailInbox.Domain`, `Shared/FoodDiary.Results`, and `Shared/FoodDiary.Mediator` among local production projects.
+
+## Structure
+- Organize by feature or purpose folders, not a flat `Services/` bucket.
+- Keep namespaces aligned with folder paths.
+
+## Rules
+- Do not reference MailInbox client, infrastructure, presentation, or host projects.
+- Do not reference ASP.NET, EF Core/Npgsql, MailKit/MimeKit, SmtpServer, `IConfiguration`, or `IOptions<T>`.
+- Async application interfaces should accept `CancellationToken`.
+- Keep service-wide metric instruments and activity sources under `Telemetry/`.
+- Telemetry dimensions must be bounded and must not contain message content, addresses, subjects, or identifiers.
+
+## Commands
+- Build: `dotnet build Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj`
+- Tests: `dotnet test Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj`

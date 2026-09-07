@@ -91,7 +91,7 @@
       "query": "storage or provider implementation for mail inbox mail transport inbound message store",
       "changeType": "Any",
       "expectedPaths": [
-        "MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/SmtpInboundMessageStoreTests.cs"
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/SmtpInboundMessageStoreTests.cs"
       ]
     },
     {
@@ -253,7 +253,7 @@
       "query": "storage or provider implementation for message broker message queue mail relay broker",
       "changeType": "Any",
       "expectedPaths": [
-        "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBroker.cs"
+        "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/RabbitMqMailRelayBroker.cs"
       ]
     },
     {
@@ -362,7 +362,7 @@
       "query": "storage or provider implementation for i direct mail exchange endpoint connector",
       "changeType": "Any",
       "expectedPaths": [
-        "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxEndpointConnector.cs"
+        "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/IDirectMxEndpointConnector.cs"
       ]
     },
     {
@@ -488,7 +488,7 @@
       "query": "implementation contract for mail inbox result extensions",
       "changeType": "Any",
       "expectedPaths": [
-        "MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxResultExtensions.cs"
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation/Extensions/MailInboxResultExtensions.cs"
       ]
     },
     {
@@ -578,7 +578,7 @@
       "query": "storage or provider implementation for direct mail exchange mail transport client factory",
       "changeType": "Any",
       "expectedPaths": [
-        "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientFactory.cs"
+        "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DirectMxSmtpClientFactory.cs"
       ]
     },
     {
@@ -596,7 +596,7 @@
       "query": "implementation contract for cloud notification email provider webhook notification webhook http mappings",
       "changeType": "Any",
       "expectedPaths": [
-        "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs"
+        "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/AwsSesSnsWebhookHttpMappings.cs"
       ]
     },
     {
@@ -740,7 +740,7 @@
       "query": "storage or provider implementation for open telemetry options",
       "changeType": "Any",
       "expectedPaths": [
-        "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs"
+        "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs"
       ]
     },
     {
@@ -758,7 +758,7 @@
       "query": "implementation contract for mail relay client",
       "changeType": "Any",
       "expectedPaths": [
-        "MailRelay/tests/FoodDiary.MailRelay.Client.Tests/MailRelayClientTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Client.Tests/MailRelayClientTests.cs"
       ]
     },
     {

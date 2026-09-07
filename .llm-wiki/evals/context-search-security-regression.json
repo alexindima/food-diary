@@ -27,7 +27,7 @@
       "cohort": "security-boundaries",
       "query": "Mailgun webhook authorizer signature timestamp replay",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Presentation/Security/ProviderWebhookAuthorizer.cs"]
     },
     {
       "id": "security-browser-token-storage",

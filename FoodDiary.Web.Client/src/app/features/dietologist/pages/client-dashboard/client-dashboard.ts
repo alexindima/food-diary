@@ -1,3 +1,4 @@
+import { UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, maxLength, required } from '@angular/forms/signals';
@@ -98,6 +99,7 @@ type TaskFormModel = {
     selector: 'fd-client-dashboard',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        UpperCasePipe,
         LocalizedDatePipe,
         FormField,
         FormRoot,

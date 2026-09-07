@@ -172,19 +172,19 @@ dotnet_diagnostic.RCS1170.severity = none
 [FoodDiary.Domain/Common/Entity.cs]
 dotnet_diagnostic.IDE0032.severity = none
 
-[MailInbox/FoodDiary.MailInbox.Domain/**/*.cs]
+[Services/MailInbox/FoodDiary.MailInbox.Domain/**/*.cs]
 dotnet_diagnostic.MA0048.severity = error
 
-[MailInbox/FoodDiary.MailInbox.Domain/Common/Entity.cs]
+[Services/MailInbox/FoodDiary.MailInbox.Domain/Common/Entity.cs]
 dotnet_diagnostic.IDE0032.severity = none
 
-[MailRelay/FoodDiary.MailRelay.Domain/**/*.cs]
+[Services/MailRelay/FoodDiary.MailRelay.Domain/**/*.cs]
 dotnet_diagnostic.MA0048.severity = error
 
-[MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs]
+[Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs]
 dotnet_diagnostic.RCS1170.severity = none
 
-[MailRelay/FoodDiary.MailRelay.Domain/Common/Entity.cs]
+[Services/MailRelay/FoodDiary.MailRelay.Domain/Common/Entity.cs]
 dotnet_diagnostic.IDE0032.severity = none
 
 [FoodDiary.Application.Abstractions/**/*.cs]
@@ -409,13 +409,13 @@ dotnet_diagnostic.FD0004.severity = error
 [FoodDiary.Application/**/*.cs]
 dotnet_diagnostic.FD0012.severity = error
 
-[MailInbox/FoodDiary.MailInbox.{Application,Client,Domain,Infrastructure,Presentation,WebApi}/**/*.cs]
+[Services/MailInbox/FoodDiary.MailInbox.{Application,Client,Domain,Infrastructure,Presentation,WebApi}/**/*.cs]
 dotnet_diagnostic.FD0002.severity = error
 dotnet_diagnostic.FD0003.severity = error
 dotnet_diagnostic.FD0004.severity = error
 dotnet_diagnostic.FD0012.severity = error
 
-[MailRelay/FoodDiary.MailRelay.{Application,Client,Domain,Infrastructure,Initializer,Presentation,WebApi}/**/*.cs]
+[Services/MailRelay/FoodDiary.MailRelay.{Application,Client,Domain,Infrastructure,Initializer,Presentation,WebApi}/**/*.cs]
 dotnet_diagnostic.FD0002.severity = error
 dotnet_diagnostic.FD0003.severity = error
 dotnet_diagnostic.FD0004.severity = error
@@ -434,10 +434,10 @@ dotnet_diagnostic.FD0012.severity = error
 [FoodDiary.{Application,Application.Abstractions,Domain,Infrastructure,Presentation.Api}/**/*.cs]
 dotnet_diagnostic.FD0008.severity = error
 
-[MailInbox/FoodDiary.MailInbox.{Application,Infrastructure,Presentation}/**/*.cs]
+[Services/MailInbox/FoodDiary.MailInbox.{Application,Infrastructure,Presentation}/**/*.cs]
 dotnet_diagnostic.FD0008.severity = error
 
-[MailRelay/FoodDiary.MailRelay.{Application,Infrastructure,Presentation}/**/*.cs]
+[Services/MailRelay/FoodDiary.MailRelay.{Application,Infrastructure,Presentation}/**/*.cs]
 dotnet_diagnostic.FD0008.severity = error
 
 # Adopt C# 14 extension blocks incrementally.

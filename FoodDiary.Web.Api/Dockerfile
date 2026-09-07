@@ -235,8 +235,8 @@ COPY Modules/Users/Presentation/*.csproj Modules/Users/Presentation/
 COPY Modules/Wearables/Presentation/*.csproj Modules/Wearables/Presentation/
 COPY Modules/WeeklyCheckIn/Presentation/*.csproj Modules/WeeklyCheckIn/Presentation/
 COPY Modules/WeeklyGoals/Presentation/*.csproj Modules/WeeklyGoals/Presentation/
-COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
-COPY MailRelay/FoodDiary.MailRelay.Client/*.csproj MailRelay/FoodDiary.MailRelay.Client/
+COPY Services/MailInbox/FoodDiary.MailInbox.Client/*.csproj Services/MailInbox/FoodDiary.MailInbox.Client/
+COPY Services/MailRelay/FoodDiary.MailRelay.Client/*.csproj Services/MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
 COPY FoodDiary.Presentation.Api/*.csproj FoodDiary.Presentation.Api/
 COPY FoodDiary.Web.Api/*.csproj FoodDiary.Web.Api/
@@ -489,8 +489,8 @@ COPY Modules/Users/Presentation/ Modules/Users/Presentation/
 COPY Modules/Wearables/Presentation/ Modules/Wearables/Presentation/
 COPY Modules/WeeklyCheckIn/Presentation/ Modules/WeeklyCheckIn/Presentation/
 COPY Modules/WeeklyGoals/Presentation/ Modules/WeeklyGoals/Presentation/
-COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/
-COPY MailRelay/FoodDiary.MailRelay.Client/ MailRelay/FoodDiary.MailRelay.Client/
+COPY Services/MailInbox/FoodDiary.MailInbox.Client/ Services/MailInbox/FoodDiary.MailInbox.Client/
+COPY Services/MailRelay/FoodDiary.MailRelay.Client/ Services/MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/
 COPY FoodDiary.Presentation.Api/ FoodDiary.Presentation.Api/
 COPY FoodDiary.Web.Api/ FoodDiary.Web.Api/

@@ -10,28 +10,28 @@ public sealed class TelemetrySecurityGuardrailTests {
     private static readonly string[] TelemetryProjectPaths = [
         "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
         "FoodDiary.JobManager/FoodDiary.JobManager.csproj",
-        "MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj",
-        "MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj",
+        "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj",
+        "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj",
     ];
 
     private static readonly string[] TelemetrySourceRoots = [
         "FoodDiary.Web.Api",
         "FoodDiary.Presentation.Api",
         "FoodDiary.JobManager",
-        "MailRelay/FoodDiary.MailRelay.Application",
-        "MailRelay/FoodDiary.MailRelay.Infrastructure",
-        "MailRelay/FoodDiary.MailRelay.Presentation",
-        "MailInbox/FoodDiary.MailInbox.Application",
-        "MailInbox/FoodDiary.MailInbox.Infrastructure",
-        "MailInbox/FoodDiary.MailInbox.Presentation",
+        "Services/MailRelay/FoodDiary.MailRelay.Application",
+        "Services/MailRelay/FoodDiary.MailRelay.Infrastructure",
+        "Services/MailRelay/FoodDiary.MailRelay.Presentation",
+        "Services/MailInbox/FoodDiary.MailInbox.Application",
+        "Services/MailInbox/FoodDiary.MailInbox.Infrastructure",
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation",
     ];
 
     [Fact]
     public void RuntimeHosts_RegisterExpectedAutomaticTraceInstrumentation() {
         string api = ReadSource("FoodDiary.Web.Api/Extensions/ApiTelemetryServiceCollectionExtensions.cs");
         string jobManager = ReadSource("FoodDiary.JobManager/Services/JobManagerTelemetryServiceCollectionExtensions.cs");
-        string mailRelay = ReadSource("MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs");
-        string mailInbox = ReadSource("MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs");
+        string mailRelay = ReadSource("Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs");
+        string mailInbox = ReadSource("Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs");
 
         Assert.Multiple(
             () => Assert.Contains(".AddAspNetCoreInstrumentation(", api, StringComparison.Ordinal),
@@ -55,8 +55,8 @@ public sealed class TelemetrySecurityGuardrailTests {
     public void AutomaticHttpTracing_ExcludesHealthAndUsesPrivacyProcessors() {
         string api = ReadSource("FoodDiary.Web.Api/Extensions/ApiTelemetryServiceCollectionExtensions.cs");
         string apiProcessor = ReadSource("FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs");
-        string mailRelay = ReadSource("MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs");
-        string mailInbox = ReadSource("MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs");
+        string mailRelay = ReadSource("Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs");
+        string mailInbox = ReadSource("Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs");
 
         Assert.Multiple(
             () => Assert.Contains("options.Filter = TelemetryPrivacyProcessor.ShouldCollectRequest", api, StringComparison.Ordinal),

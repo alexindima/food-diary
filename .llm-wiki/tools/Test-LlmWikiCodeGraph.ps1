@@ -157,7 +157,7 @@ if (-not $compiledContext.ready -or
 }
 foreach ($searchCase in @(
     @{ Query = 'MCP PowerShell command stage telemetry'; ExpectedPath = 'FoodDiary.Development.Mcp/Wiki/PowerShellWikiCommandExecutor.cs' }
-    @{ Query = 'Mail inbox SMTP rate limiter'; ExpectedPath = 'MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs' }
+    @{ Query = 'Mail inbox SMTP rate limiter'; ExpectedPath = 'Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs' }
     @{ Query = 'weight history measurements'; ExpectedPath = 'FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.ts' }
     @{ Query = 'periodic cleanup fasting telemetry registration'; ExpectedPath = 'FoodDiary.JobManager/Services/FastingTelemetryCleanupJob.cs' }
     @{ Query = 'регистрация resource renderer для уведомлений в JobManager'; ExpectedPath = 'Modules/Notifications/Infrastructure/ModuleRegistration.cs' }

@@ -125,7 +125,7 @@
         "LeaseDuration",
         "MaxAttempts"
       ],
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs"
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs"
     },
     {
       "type": "BugTriageOptions",
@@ -136,7 +136,7 @@
         "PollInterval",
         "Recipient"
       ],
-      "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/Options/BugTriageOptions.cs"
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Options/BugTriageOptions.cs"
     },
     {
       "type": "ClientTaskReminderOptions",
@@ -166,7 +166,7 @@
         "Port",
         "UseStartTlsWhenAvailable"
       ],
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/DirectMxOptions.cs"
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/DirectMxOptions.cs"
     },
     {
       "type": "EmailOptions",
@@ -284,7 +284,7 @@
         "StateApiKey",
         "Timeout"
       ],
-      "path": "MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs"
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs"
     },
     {
       "type": "MailInboxHostConfigurationOptions",
@@ -296,7 +296,7 @@
         "RuntimeRoleName",
         "TrustedRelayNetworks"
       ],
-      "path": "MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs"
+      "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/MailInboxHostConfiguration.cs"
     },
     {
       "type": "MailInboxHttpOptions",
@@ -315,7 +315,7 @@
         "ReadinessQueueTimeout",
         "StateApiKey"
       ],
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs"
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Options/MailInboxHttpOptions.cs"
     },
     {
       "type": "MailInboxRuntimeDatabaseOptions",
@@ -325,7 +325,7 @@
         "ProvisionRole",
         "RoleName"
       ],
-      "path": "MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs"
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/Options/MailInboxRuntimeDatabaseOptions.cs"
     },
     {
       "type": "MailInboxSmtpOptions",
@@ -356,7 +356,7 @@
         "SessionTimeout",
         "TrustedRelayNetworks"
       ],
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs"
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs"
     },
     {
       "type": "MailInboxStorageOptions",
@@ -373,7 +373,7 @@
         "MaxUntrustedRawBytesPerDay",
         "MetadataRetention"
       ],
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxStorageOptions.cs"
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxStorageOptions.cs"
     },
     {
       "type": "MailRelayBrokerOptions",
@@ -399,7 +399,7 @@
         "UserName",
         "VirtualHost"
       ],
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayBrokerOptions.cs"
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayBrokerOptions.cs"
     },
     {
       "type": "MailRelayClientOptions",
@@ -410,7 +410,7 @@
         "BaseUrl",
         "Timeout"
       ],
-      "path": "MailRelay/FoodDiary.MailRelay.Client/Options/MailRelayClientOptions.cs"
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Options/MailRelayClientOptions.cs"
     },
     {
       "type": "MailRelayDeliveryOptions",
@@ -418,7 +418,7 @@
       "properties": [
         "Mode"
       ],
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDeliveryOptions.cs"
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDeliveryOptions.cs"
     },
     {
       "type": "MailRelayDkimOptions",
@@ -430,7 +430,7 @@
         "PrivateKeyPem",
         "Selector"
       ],
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDkimOptions.cs"
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDkimOptions.cs"
     },
     {
       "type": "MailRelayOptions",
@@ -443,7 +443,7 @@
         "RequireAwsSesSnsSignature",
         "RequireMailgunWebhookSignature"
       ],
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs"
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Options/MailRelayOptions.cs"
     },
     {
       "type": "MailRelayQueueOptions",
@@ -456,7 +456,7 @@
         "MaxRetryDelaySeconds",
         "PollIntervalSeconds"
       ],
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayQueueOptions.cs"
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayQueueOptions.cs"
     },
     {
       "type": "MailRelaySmtpOptions",
@@ -468,7 +468,7 @@
         "UseSsl",
         "User"
       ],
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelaySmtpOptions.cs"
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelaySmtpOptions.cs"
     },
     {
       "type": "MarketingAttributionCleanupOptions",
@@ -552,7 +552,7 @@
         "Otlp",
         "OtlpOptions"
       ],
-      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs"
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs"
     },
     {
       "type": "OpenTelemetryOptions",
@@ -562,7 +562,7 @@
         "Otlp",
         "OtlpOptions"
       ],
-      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/OpenTelemetryOptions.cs"
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/OpenTelemetryOptions.cs"
     },
     {
       "type": "OutboxProcessingOptions",
@@ -721,18 +721,6 @@
     }
   ],
   "configurationFiles": [
-    {
-      "path": "BugTriage/FoodDiary.BugTriage.WebApi/appsettings.json",
-      "keys": [
-        "BugTriage:ContentRetention",
-        "BugTriage:PollInterval",
-        "BugTriage:Recipient",
-        "Logging:LogLevel:Default",
-        "Logging:LogLevel:Microsoft.AspNetCore",
-        "Logging:LogLevel:System.Net.Http.HttpClient",
-        "Urls"
-      ]
-    },
     {
       "path": "FoodDiary.JobManager/appsettings.json",
       "keys": [
@@ -946,7 +934,19 @@
       ]
     },
     {
-      "path": "MailInbox/FoodDiary.MailInbox.WebApi/appsettings.Development.json",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.WebApi/appsettings.json",
+      "keys": [
+        "BugTriage:ContentRetention",
+        "BugTriage:PollInterval",
+        "BugTriage:Recipient",
+        "Logging:LogLevel:Default",
+        "Logging:LogLevel:Microsoft.AspNetCore",
+        "Logging:LogLevel:System.Net.Http.HttpClient",
+        "Urls"
+      ]
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/appsettings.Development.json",
       "keys": [
         "ConnectionStrings:DefaultConnection",
         "Logging:LogLevel:Default",
@@ -955,7 +955,7 @@
       ]
     },
     {
-      "path": "MailInbox/FoodDiary.MailInbox.WebApi/appsettings.json",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/appsettings.json",
       "keys": [
         "AllowedHosts",
         "ConnectionStrings:DefaultConnection",
@@ -1006,7 +1006,7 @@
       ]
     },
     {
-      "path": "MailRelay/FoodDiary.MailRelay.WebApi/appsettings.json",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.WebApi/appsettings.json",
       "keys": [
         "AllowedHosts",
         "ConnectionStrings:DefaultConnection",

@@ -1,3 +1,4 @@
+import { UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit';
@@ -8,7 +9,7 @@ const STABILITY_DEVIATION_TOLERANCE_PERCENT = 20;
 
 @Component({
     selector: 'fd-statistics-diet-stability-card',
-    imports: [TranslatePipe, FdUiCardComponent],
+    imports: [UpperCasePipe, TranslatePipe, FdUiCardComponent],
     templateUrl: './statistics-diet-stability-card.html',
     styleUrl: './statistics-diet-stability-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

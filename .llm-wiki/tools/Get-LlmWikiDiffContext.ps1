@@ -207,7 +207,7 @@ $compiledIndexDiagnostics['roundTripDurationMs'] = [Math]::Round($compiledIndexS
 $scopes = [ordered]@{
     Backend = @($changedPaths | Where-Object {
         $_ -match '\.cs$|\.csproj$|Directory\.(Build|Packages)\.props$' -or
-        $_ -match '^(?:FoodDiary\.(?:Domain|Application(?:\.[^/]+)?|Infrastructure|Presentation\.Api|Web\.Api)|MailInbox/FoodDiary\.[^/]+|MailRelay/FoodDiary\.[^/]+)(?:/)?$'
+        $_ -match '^(?:FoodDiary\.(?:Domain|Application(?:\.[^/]+)?|Infrastructure|Presentation\.Api|Web\.Api)|Services/MailInbox/FoodDiary\.[^/]+|Services/MailRelay/FoodDiary\.[^/]+)(?:/)?$'
     }).Count -gt 0
     Api = @($changedPaths | Where-Object {
         $_ -match 'Presentation|Web\.Api(?:/|$)|Controller\.cs$|/Snapshots/'

@@ -134,6 +134,23 @@ if (@($databasePlan.commands | Where-Object source -eq 'database-intent').Count 
     throw 'Database/index intent omitted EF model-sync or provider-backed verification commands.'
 }
 
+$databasePlanWithUnrelatedUiDiff = & $tool `
+    -Intent 'Plan PostgreSQL indexes' `
+    -NoBaseline `
+    -DiffInput ([pscustomobject]@{
+        changedPaths = @('FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts')
+        scopes = @('frontend')
+        focusedTests = @()
+        recommendedChecks = @()
+        modules = @()
+    }) `
+    -PolicyInput ([pscustomobject]@{ matchedRules = @(); requiredChecks = @(); reviewObligations = @() }) `
+    -Format Json | ConvertFrom-Json
+if (@($databasePlanWithUnrelatedUiDiff.focusedTestFiles) -notcontains 'tests/FoodDiary.Infrastructure.IntegrationTests/Integration/QueryPlanIntegrationTests.cs' -or
+    @($databasePlanWithUnrelatedUiDiff.focusedTestFiles | Where-Object { $_ -like 'FoodDiary.Web.Client/*' }).Count -gt 0) {
+    throw 'An unrelated UI diff displaced the intent-only PostgreSQL regression set.'
+}
+
 $sessionIntent = 'Управление активными пользовательскими сессиями и отзыв refresh-токенов'
 $sessionJourney = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
     -Query $sessionIntent `

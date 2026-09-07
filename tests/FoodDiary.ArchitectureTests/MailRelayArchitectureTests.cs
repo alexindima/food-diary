@@ -7,7 +7,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayDomainProject_DoesNotReferenceOtherMailRelayLayers() {
-        HashSet<string> references = GetProjectReferences("MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj");
 
         Assert.DoesNotContain("FoodDiary.MailRelay.Application", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Client", references);
@@ -18,7 +18,7 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayApplicationProject_ReferencesDomainOnlyAmongMailRelayLayers() {
-        HashSet<string> references = GetProjectReferences("MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj");
 
         Assert.Contains("FoodDiary.MailRelay.Domain", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Client", references);
@@ -29,7 +29,7 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayClientProject_DoesNotReferenceMailRelayLayers() {
-        HashSet<string> references = GetProjectReferences("MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj");
 
         Assert.DoesNotContain("FoodDiary.MailRelay.Application", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Domain", references);
@@ -40,7 +40,7 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayInfrastructureProject_ReferencesApplicationButNotPresentationOrWebApi() {
-        HashSet<string> references = GetProjectReferences("MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj");
 
         Assert.Contains("FoodDiary.MailRelay.Application", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Presentation", references);
@@ -49,7 +49,7 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayInitializerProject_ReferencesApplicationAndInfrastructureOnlyAmongMailRelayLayers() {
-        HashSet<string> references = GetProjectReferences("MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj");
 
         Assert.Contains("FoodDiary.MailRelay.Application", references);
         Assert.Contains("FoodDiary.MailRelay.Infrastructure", references);
@@ -60,7 +60,7 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayPresentationProject_ReferencesApplicationAndClientButNotInfrastructureOrWebApi() {
-        HashSet<string> references = GetProjectReferences("MailRelay/FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailRelay/FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj");
 
         Assert.Contains("FoodDiary.MailRelay.Application", references);
         Assert.Contains("FoodDiary.MailRelay.Client", references);
@@ -70,7 +70,7 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayWebApiProject_IsHostAndReferencesApplicationInfrastructureAndPresentation() {
-        HashSet<string> references = GetProjectReferences("MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj");
+        HashSet<string> references = GetProjectReferences("Services/MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj");
 
         Assert.Contains("FoodDiary.MailRelay.Application", references);
         Assert.Contains("FoodDiary.MailRelay.Infrastructure", references);
@@ -81,17 +81,17 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayProductionProjects_UseOnlyApprovedPackagesForTheirLayer() {
         var expectedPackagesByProject = new Dictionary<string, string[]>(StringComparer.Ordinal) {
-            ["MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj"] = [
+            ["Services/MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj"] = [
                 "FluentValidation",
                 "FluentValidation.DependencyInjectionExtensions",
                 "Microsoft.Extensions.Logging.Abstractions",
             ],
-            ["MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj"] = [
+            ["Services/MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj"] = [
                 "Microsoft.Extensions.Http",
                 "Microsoft.Extensions.Options.ConfigurationExtensions",
             ],
-            ["MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj"] = [],
-            ["MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj"] = [
+            ["Services/MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj"] = [],
+            ["Services/MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj"] = [
                 "DnsClient",
                 "MailKit",
                 "Npgsql",
@@ -102,13 +102,13 @@ public sealed class MailRelayArchitectureTests {
                 "OpenTelemetry.Instrumentation.Http",
                 "RabbitMQ.Client",
             ],
-            ["MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"] = [
+            ["Services/MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"] = [
                 "Microsoft.Extensions.Hosting",
                 "Microsoft.Extensions.Options.ConfigurationExtensions",
                 "Npgsql",
             ],
-            ["MailRelay/FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj"] = [],
-            ["MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj"] = [],
+            ["Services/MailRelay/FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj"] = [],
+            ["Services/MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj"] = [],
         };
 
         foreach ((string? relativeProjectPath, string[]? expectedPackages) in expectedPackagesByProject) {
@@ -122,7 +122,7 @@ public sealed class MailRelayArchitectureTests {
     public void MailRelayProductionProjectRootFolders_StayLimitedToLayerStructure() {
         string root = GetRepositoryRoot();
         var allowedRootFoldersByProject = new Dictionary<string, string[]>(StringComparer.Ordinal) {
-            ["MailRelay/FoodDiary.MailRelay.Application"] = [
+            ["Services/MailRelay/FoodDiary.MailRelay.Application"] = [
                 "Abstractions",
                 "Common",
                 "DeliveryEvents",
@@ -132,25 +132,25 @@ public sealed class MailRelayArchitectureTests {
                 "Queue",
                 "Telemetry",
             ],
-            ["MailRelay/FoodDiary.MailRelay.Client"] = [
+            ["Services/MailRelay/FoodDiary.MailRelay.Client"] = [
                 "Extensions",
                 "Models",
                 "Options",
             ],
-            ["MailRelay/FoodDiary.MailRelay.Domain"] = [
+            ["Services/MailRelay/FoodDiary.MailRelay.Domain"] = [
                 "Common",
                 "DeliveryEvents",
                 "Emails",
             ],
-            ["MailRelay/FoodDiary.MailRelay.Infrastructure"] = [
+            ["Services/MailRelay/FoodDiary.MailRelay.Infrastructure"] = [
                 "Extensions",
                 "Options",
                 "Services",
             ],
-            ["MailRelay/FoodDiary.MailRelay.Initializer"] = [
+            ["Services/MailRelay/FoodDiary.MailRelay.Initializer"] = [
                 "Properties",
             ],
-            ["MailRelay/FoodDiary.MailRelay.Presentation"] = [
+            ["Services/MailRelay/FoodDiary.MailRelay.Presentation"] = [
                 "Controllers",
                 "Extensions",
                 "Features",
@@ -159,7 +159,7 @@ public sealed class MailRelayArchitectureTests {
                 "Security",
                 "Services",
             ],
-            ["MailRelay/FoodDiary.MailRelay.WebApi"] = [
+            ["Services/MailRelay/FoodDiary.MailRelay.WebApi"] = [
                 "Properties",
             ],
         };
@@ -174,7 +174,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayDomainSource_DoesNotReferenceFrameworkOrInfrastructureTypes() {
         string root = GetRepositoryRoot();
-        string domainRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Domain");
+        string domainRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Domain");
         string[] forbiddenPatterns = [
             "Microsoft.",
             "Npgsql",
@@ -195,7 +195,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayApplicationSource_DoesNotReferenceTransportPersistenceOrConfigurationTypes() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Application");
+        string applicationRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Application");
         string[] forbiddenPatterns = [
             "Microsoft.AspNetCore",
             "Microsoft.Extensions.Options",
@@ -220,7 +220,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayPresentationSource_DoesNotReferenceInfrastructureLayer() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Presentation");
+        string presentationRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Presentation");
         string[] forbiddenPatterns = [
             "FoodDiary.MailRelay.Infrastructure",
             "MailRelayQueueStore",
@@ -238,7 +238,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayPresentationControllers_UseMediatorInsteadOfApplicationServicesDirectly() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Presentation");
+        string presentationRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Presentation");
         string[] forbiddenPatterns = [
             "MailRelayEmailUseCases",
             "MailRelayDeliveryEventIngestionService",
@@ -254,7 +254,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayEmailControllers_RequireRelayApiKeyThroughAuthorizedBaseController() {
         string root = GetRepositoryRoot();
-        string emailFeatureRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Presentation", "Features", "Email");
+        string emailFeatureRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Presentation", "Features", "Email");
 
         string[] violations = [.. Directory.GetFiles(emailFeatureRoot, "*Controller.cs", SearchOption.AllDirectories)
             .Where(static path => !IsGeneratedPath(path))
@@ -268,7 +268,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayWebApiProgram_UsesMvcControllersForEmailEndpoints() {
         string root = GetRepositoryRoot();
-        string programPath = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.WebApi", "Program.cs");
+        string programPath = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.WebApi", "Program.cs");
         string content = File.ReadAllText(programPath);
 
         Assert.DoesNotContain("MapGet", content, StringComparison.Ordinal);
@@ -282,7 +282,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayWebApiHost_DoesNotDeclareHttpTransportSurface() {
         string root = GetRepositoryRoot();
-        string webApiRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.WebApi");
+        string webApiRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.WebApi");
 
         string[] violations = SourceScanner.FindLinePatternViolations(webApiRoot, [
             "[ApiController]",
@@ -300,7 +300,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayPresentationControllers_AreKeptInFeatureFolders() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Presentation");
+        string presentationRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Presentation");
         var allowedControllerFiles = new HashSet<string>(StringComparer.Ordinal) {
             Path.Combine("Controllers", "MailRelayControllerBase.cs"),
             Path.Combine("Controllers", "AuthorizedMailRelayController.cs"),
@@ -322,7 +322,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayPresentationFeatureFiles_FollowHttpNamingConventions() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Presentation");
+        string presentationRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Presentation");
 
         var conventions = new[] {
             new { Folder = "Requests", Suffix = "HttpRequest.cs" },
@@ -347,7 +347,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayPresentationControllers_UseHttpMappingsInsteadOfConstructingApplicationRequests() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Presentation");
+        string presentationRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Presentation");
         string[] forbiddenPatterns = [
             "new GetMailRelay",
             "new EnqueueMailRelay",
@@ -366,17 +366,17 @@ public sealed class MailRelayArchitectureTests {
     public void MailRelayInfrastructureOptions_AreKeptInInfrastructureOptionsFolderExceptListenOptions() {
         string root = GetRepositoryRoot();
         string[] mailRelayRoots = [
-            "MailRelay/FoodDiary.MailRelay.Application",
-            "MailRelay/FoodDiary.MailRelay.Client",
-            "MailRelay/FoodDiary.MailRelay.Domain",
-            "MailRelay/FoodDiary.MailRelay.Infrastructure",
-            "MailRelay/FoodDiary.MailRelay.Initializer",
-            "MailRelay/FoodDiary.MailRelay.Presentation",
-            "MailRelay/FoodDiary.MailRelay.WebApi",
+            "Services/MailRelay/FoodDiary.MailRelay.Application",
+            "Services/MailRelay/FoodDiary.MailRelay.Client",
+            "Services/MailRelay/FoodDiary.MailRelay.Domain",
+            "Services/MailRelay/FoodDiary.MailRelay.Infrastructure",
+            "Services/MailRelay/FoodDiary.MailRelay.Initializer",
+            "Services/MailRelay/FoodDiary.MailRelay.Presentation",
+            "Services/MailRelay/FoodDiary.MailRelay.WebApi",
         ];
         var allowedOptionFiles = new HashSet<string>(StringComparer.Ordinal) {
-            Path.Combine("MailRelay", "FoodDiary.MailRelay.Application", "Options", "MailRelayOptions.cs"),
-            Path.Combine("MailRelay", "FoodDiary.MailRelay.Client", "Options", "MailRelayClientOptions.cs"),
+            Path.Combine("Services", "MailRelay", "FoodDiary.MailRelay.Application", "Options", "MailRelayOptions.cs"),
+            Path.Combine("Services", "MailRelay", "FoodDiary.MailRelay.Client", "Options", "MailRelayClientOptions.cs"),
         };
 
         string[] violations = [.. mailRelayRoots
@@ -384,7 +384,7 @@ public sealed class MailRelayArchitectureTests {
             .Where(Directory.Exists)
             .SelectMany(directory => Directory.GetFiles(directory, "*Options.cs", SearchOption.AllDirectories))
             .Where(path => !IsGeneratedPath(path))
-            .Where(path => !path.StartsWith(Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Infrastructure", "Options"), StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.StartsWith(Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Infrastructure", "Options"), StringComparison.OrdinalIgnoreCase))
             .Where(path => !allowedOptionFiles.Contains(Path.GetRelativePath(root, path)))
             .Select(path => Path.GetRelativePath(root, path))
             .Order(StringComparer.Ordinal)];
@@ -395,7 +395,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayApplicationInterfaces_AsyncMethodsAcceptCancellationToken() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Application");
+        string applicationRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Application");
 
         string[] violations = [.. Directory.GetFiles(applicationRoot, "I*.cs", SearchOption.AllDirectories)
             .Where(static path => !IsGeneratedPath(path))
@@ -409,7 +409,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayApplication_DoesNotUseFlatServicesFolder() {
         string root = GetRepositoryRoot();
-        string servicesRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Application", "Services");
+        string servicesRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Application", "Services");
 
         Assert.False(
             Directory.Exists(servicesRoot) &&
@@ -420,7 +420,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayQueueStore_UsesTimeProviderInsteadOfDirectUtcNow() {
         string root = GetRepositoryRoot();
-        string servicesRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Infrastructure", "Services");
+        string servicesRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Infrastructure", "Services");
 
         string[] violations = [.. SourceScanner.SourceFiles(servicesRoot)
             .Where(static path => Path.GetFileName(path).StartsWith("MailRelayQueueStore", StringComparison.Ordinal))
@@ -440,7 +440,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayInfrastructure_UsesTimeProviderInsteadOfDirectUtcNow() {
         string root = GetRepositoryRoot();
-        string infrastructureRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Infrastructure");
+        string infrastructureRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Infrastructure");
 
         string[] violations = SourceScanner.FindLinePatternViolations(infrastructureRoot, [
             "DateTime.UtcNow",
@@ -453,7 +453,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayPresentation_UsesTimeProviderInsteadOfDirectUtcNow() {
         string root = GetRepositoryRoot();
-        string presentationRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Presentation");
+        string presentationRoot = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.Presentation");
 
         string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, [
             "DateTime.UtcNow",
@@ -490,7 +490,7 @@ public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayRuntimeConfiguration_UsesSeparateDatabase() {
         string root = GetRepositoryRoot();
-        string appsettingsPath = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.WebApi", "appsettings.json");
+        string appsettingsPath = Path.Combine(root, "Services", "MailRelay", "FoodDiary.MailRelay.WebApi", "appsettings.json");
         string composePath = Path.Combine(root, "docker-compose.yml");
 
         string appsettings = File.ReadAllText(appsettingsPath);
@@ -503,7 +503,7 @@ public sealed class MailRelayArchitectureTests {
         Assert.Contains("Host=mailrelay-postgres", compose, StringComparison.Ordinal);
         Assert.Contains("MAIL_RELAY_POSTGRES_DB:-fooddiary_mailrelay", compose, StringComparison.Ordinal);
         Assert.Contains("mailrelay-db-init:", compose, StringComparison.Ordinal);
-        Assert.Contains("MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile", compose, StringComparison.Ordinal);
+        Assert.Contains("Services/MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile", compose, StringComparison.Ordinal);
         Assert.Contains("service_completed_successfully", compose, StringComparison.Ordinal);
     }
 

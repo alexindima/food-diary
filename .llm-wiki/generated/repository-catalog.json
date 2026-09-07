@@ -21,140 +21,11 @@
     "backendBusinessModules": 34,
     "controllers": 10,
     "endpoints": 21,
-    "agentGuides": 250,
-    "documentationPages": 167
+    "agentGuides": 251,
+    "documentationPages": 168
   },
   "dotnet": {
     "projects": [
-      {
-        "name": "FoodDiary.BugTriage.Application",
-        "assemblyName": "FoodDiary.BugTriage.Application",
-        "path": "BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [],
-        "packageReferences": []
-      },
-      {
-        "name": "FoodDiary.BugTriage.Infrastructure",
-        "assemblyName": "FoodDiary.BugTriage.Infrastructure",
-        "path": "BugTriage/FoodDiary.BugTriage.Infrastructure/FoodDiary.BugTriage.Infrastructure.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj",
-          "MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "MailKit",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Hosting",
-            "version": null
-          },
-          {
-            "name": "Npgsql",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.BugTriage.Presentation",
-        "assemblyName": "FoodDiary.BugTriage.Presentation",
-        "path": "BugTriage/FoodDiary.BugTriage.Presentation/FoodDiary.BugTriage.Presentation.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj"
-        ],
-        "packageReferences": []
-      },
-      {
-        "name": "FoodDiary.BugTriage.WebApi",
-        "assemblyName": "FoodDiary.BugTriage.WebApi",
-        "path": "BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj",
-        "sdk": "Microsoft.NET.Sdk.Web",
-        "outputType": "Exe",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "BugTriage/FoodDiary.BugTriage.Infrastructure/FoodDiary.BugTriage.Infrastructure.csproj",
-          "BugTriage/FoodDiary.BugTriage.Presentation/FoodDiary.BugTriage.Presentation.csproj"
-        ],
-        "packageReferences": []
-      },
-      {
-        "name": "FoodDiary.BugTriage.Tests",
-        "assemblyName": "FoodDiary.BugTriage.Tests",
-        "path": "BugTriage/tests/FoodDiary.BugTriage.Tests/FoodDiary.BugTriage.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj",
-          "BugTriage/FoodDiary.BugTriage.Infrastructure/FoodDiary.BugTriage.Infrastructure.csproj",
-          "BugTriage/FoodDiary.BugTriage.Presentation/FoodDiary.BugTriage.Presentation.csproj",
-          "BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj",
-          "MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.AspNetCore.Mvc.Testing",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "Npgsql",
-            "version": null
-          },
-          {
-            "name": "NSubstitute",
-            "version": null
-          },
-          {
-            "name": "SSH.NET",
-            "version": null
-          },
-          {
-            "name": "Testcontainers.PostgreSql",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
       {
         "name": "FoodDiary.Analyzers",
         "assemblyName": "FoodDiary.Analyzers",
@@ -780,891 +651,6 @@
         ]
       },
       {
-        "name": "FoodDiary.MailInbox.Application",
-        "assemblyName": "FoodDiary.MailInbox.Application",
-        "path": "MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj",
-          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
-          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "FluentValidation",
-            "version": null
-          },
-          {
-            "name": "FluentValidation.DependencyInjectionExtensions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailInbox.Client",
-        "assemblyName": "FoodDiary.MailInbox.Client",
-        "path": "MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [],
-        "packageReferences": [
-          {
-            "name": "Microsoft.Extensions.Http",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailInbox.Domain",
-        "assemblyName": "FoodDiary.MailInbox.Domain",
-        "path": "MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
-        ],
-        "packageReferences": []
-      },
-      {
-        "name": "FoodDiary.MailInbox.Infrastructure",
-        "assemblyName": "FoodDiary.MailInbox.Infrastructure",
-        "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "MailKit",
-            "version": null
-          },
-          {
-            "name": "Npgsql",
-            "version": null
-          },
-          {
-            "name": "Npgsql.OpenTelemetry",
-            "version": null
-          },
-          {
-            "name": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
-            "version": null
-          },
-          {
-            "name": "OpenTelemetry.Extensions.Hosting",
-            "version": null
-          },
-          {
-            "name": "OpenTelemetry.Instrumentation.AspNetCore",
-            "version": null
-          },
-          {
-            "name": "SmtpServer",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailInbox.Initializer",
-        "assemblyName": "FoodDiary.MailInbox.Initializer",
-        "path": "MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Exe",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
-          "MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "Microsoft.Extensions.Hosting",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
-            "version": null
-          },
-          {
-            "name": "Npgsql",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailInbox.Presentation",
-        "assemblyName": "FoodDiary.MailInbox.Presentation",
-        "path": "MailInbox/FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj"
-        ],
-        "packageReferences": []
-      },
-      {
-        "name": "FoodDiary.MailInbox.WebApi",
-        "assemblyName": "FoodDiary.MailInbox.WebApi",
-        "path": "MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj",
-        "sdk": "Microsoft.NET.Sdk.Web",
-        "outputType": "Exe",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
-          "MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj",
-          "MailInbox/FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj"
-        ],
-        "packageReferences": []
-      },
-      {
-        "name": "FoodDiary.MailInbox.Application.Tests",
-        "assemblyName": "FoodDiary.MailInbox.Application.Tests",
-        "path": "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
-          "MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailInbox.Client.Tests",
-        "assemblyName": "FoodDiary.MailInbox.Client.Tests",
-        "path": "MailInbox/tests/FoodDiary.MailInbox.Client.Tests/FoodDiary.MailInbox.Client.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailInbox.Domain.Tests",
-        "assemblyName": "FoodDiary.MailInbox.Domain.Tests",
-        "path": "MailInbox/tests/FoodDiary.MailInbox.Domain.Tests/FoodDiary.MailInbox.Domain.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailInbox.Infrastructure.Tests",
-        "assemblyName": "FoodDiary.MailInbox.Infrastructure.Tests",
-        "path": "MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/FoodDiary.MailInbox.Infrastructure.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
-          "MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj",
-          "MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "Npgsql",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailInbox.Initializer.Tests",
-        "assemblyName": "FoodDiary.MailInbox.Initializer.Tests",
-        "path": "MailInbox/tests/FoodDiary.MailInbox.Initializer.Tests/FoodDiary.MailInbox.Initializer.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailInbox.IntegrationTests",
-        "assemblyName": "FoodDiary.MailInbox.IntegrationTests",
-        "path": "MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/FoodDiary.MailInbox.IntegrationTests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
-          "MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj",
-          "MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj",
-          "MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj",
-          "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.AspNetCore.Mvc.Testing",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "Npgsql",
-            "version": null
-          },
-          {
-            "name": "SSH.NET",
-            "version": null
-          },
-          {
-            "name": "Testcontainers.PostgreSql",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailInbox.Presentation.Tests",
-        "assemblyName": "FoodDiary.MailInbox.Presentation.Tests",
-        "path": "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/FoodDiary.MailInbox.Presentation.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
-          "MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj",
-          "MailInbox/FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailRelay.Application",
-        "assemblyName": "FoodDiary.MailRelay.Application",
-        "path": "MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj",
-          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
-          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "FluentValidation",
-            "version": null
-          },
-          {
-            "name": "FluentValidation.DependencyInjectionExtensions",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging.Abstractions",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailRelay.Client",
-        "assemblyName": "FoodDiary.MailRelay.Client",
-        "path": "MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [],
-        "packageReferences": [
-          {
-            "name": "Microsoft.Extensions.Http",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailRelay.Domain",
-        "assemblyName": "FoodDiary.MailRelay.Domain",
-        "path": "MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
-        ],
-        "packageReferences": []
-      },
-      {
-        "name": "FoodDiary.MailRelay.Infrastructure",
-        "assemblyName": "FoodDiary.MailRelay.Infrastructure",
-        "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "DnsClient",
-            "version": null
-          },
-          {
-            "name": "MailKit",
-            "version": null
-          },
-          {
-            "name": "Npgsql",
-            "version": null
-          },
-          {
-            "name": "Npgsql.OpenTelemetry",
-            "version": null
-          },
-          {
-            "name": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
-            "version": null
-          },
-          {
-            "name": "OpenTelemetry.Extensions.Hosting",
-            "version": null
-          },
-          {
-            "name": "OpenTelemetry.Instrumentation.AspNetCore",
-            "version": null
-          },
-          {
-            "name": "OpenTelemetry.Instrumentation.Http",
-            "version": null
-          },
-          {
-            "name": "RabbitMQ.Client",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailRelay.Initializer",
-        "assemblyName": "FoodDiary.MailRelay.Initializer",
-        "path": "MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Exe",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
-          "MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "Microsoft.Extensions.Hosting",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
-            "version": null
-          },
-          {
-            "name": "Npgsql",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailRelay.Presentation",
-        "assemblyName": "FoodDiary.MailRelay.Presentation",
-        "path": "MailRelay/FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
-          "MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj"
-        ],
-        "packageReferences": []
-      },
-      {
-        "name": "FoodDiary.MailRelay.WebApi",
-        "assemblyName": "FoodDiary.MailRelay.WebApi",
-        "path": "MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj",
-        "sdk": "Microsoft.NET.Sdk.Web",
-        "outputType": "Exe",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": false,
-        "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
-          "MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj",
-          "MailRelay/FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj"
-        ],
-        "packageReferences": []
-      },
-      {
-        "name": "FoodDiary.MailRelay.Application.Tests",
-        "assemblyName": "FoodDiary.MailRelay.Application.Tests",
-        "path": "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/FoodDiary.MailRelay.Application.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
-          "MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.DependencyInjection",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Logging",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailRelay.Client.Tests",
-        "assemblyName": "FoodDiary.MailRelay.Client.Tests",
-        "path": "MailRelay/tests/FoodDiary.MailRelay.Client.Tests/FoodDiary.MailRelay.Client.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailRelay.Domain.Tests",
-        "assemblyName": "FoodDiary.MailRelay.Domain.Tests",
-        "path": "MailRelay/tests/FoodDiary.MailRelay.Domain.Tests/FoodDiary.MailRelay.Domain.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailRelay.Infrastructure.Tests",
-        "assemblyName": "FoodDiary.MailRelay.Infrastructure.Tests",
-        "path": "MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/FoodDiary.MailRelay.Infrastructure.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
-          "MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj",
-          "MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj",
-          "MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "Npgsql",
-            "version": null
-          },
-          {
-            "name": "RabbitMQ.Client",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailRelay.Initializer.Tests",
-        "assemblyName": "FoodDiary.MailRelay.Initializer.Tests",
-        "path": "MailRelay/tests/FoodDiary.MailRelay.Initializer.Tests/FoodDiary.MailRelay.Initializer.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailRelay.IntegrationTests",
-        "assemblyName": "FoodDiary.MailRelay.IntegrationTests",
-        "path": "MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
-          "MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj",
-          "MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj",
-          "MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj",
-          "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.AspNetCore.Mvc.Testing",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "Npgsql",
-            "version": null
-          },
-          {
-            "name": "RabbitMQ.Client",
-            "version": null
-          },
-          {
-            "name": "SSH.NET",
-            "version": null
-          },
-          {
-            "name": "Testcontainers.PostgreSql",
-            "version": null
-          },
-          {
-            "name": "Testcontainers.RabbitMq",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
-        "name": "FoodDiary.MailRelay.Presentation.Tests",
-        "assemblyName": "FoodDiary.MailRelay.Presentation.Tests",
-        "path": "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/FoodDiary.MailRelay.Presentation.Tests.csproj",
-        "sdk": "Microsoft.NET.Sdk",
-        "outputType": "Library",
-        "targetFrameworks": [
-          "net10.0"
-        ],
-        "isTestProject": true,
-        "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
-          "MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj",
-          "MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj",
-          "MailRelay/FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj"
-        ],
-        "packageReferences": [
-          {
-            "name": "coverlet.collector",
-            "version": null
-          },
-          {
-            "name": "Microsoft.NET.Test.Sdk",
-            "version": null
-          },
-          {
-            "name": "xunit",
-            "version": null
-          },
-          {
-            "name": "xunit.runner.visualstudio",
-            "version": null
-          }
-        ]
-      },
-      {
         "name": "FoodDiary.Modules.Admin.Application.Abstractions",
         "assemblyName": "FoodDiary.Modules.Admin.Application.Abstractions",
         "path": "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
@@ -1769,12 +755,12 @@
         "isTestProject": false,
         "projectReferences": [
           "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
-          "MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj",
           "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Application/FoodDiary.Modules.Admin.Application.csproj",
           "Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj",
           "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj"
         ],
@@ -1997,11 +983,11 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj",
           "Modules/Admin/Application/Abstractions/FoodDiary.Modules.Admin.Application.Abstractions.csproj",
           "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
           "Modules/Identity/Application/FoodDiary.Modules.Identity.Application.csproj",
           "Modules/Identity/Infrastructure/FoodDiary.Modules.Identity.Infrastructure.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj",
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj"
         ],
         "packageReferences": [
@@ -11986,6 +10972,1020 @@
         ]
       },
       {
+        "name": "FoodDiary.BugTriage.Application",
+        "assemblyName": "FoodDiary.BugTriage.Application",
+        "path": "Services/BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.BugTriage.Infrastructure",
+        "assemblyName": "FoodDiary.BugTriage.Infrastructure",
+        "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/FoodDiary.BugTriage.Infrastructure.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "MailKit",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Hosting",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.BugTriage.Presentation",
+        "assemblyName": "FoodDiary.BugTriage.Presentation",
+        "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/FoodDiary.BugTriage.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.BugTriage.WebApi",
+        "assemblyName": "FoodDiary.BugTriage.WebApi",
+        "path": "Services/BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj",
+        "sdk": "Microsoft.NET.Sdk.Web",
+        "outputType": "Exe",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/FoodDiary.BugTriage.Infrastructure.csproj",
+          "Services/BugTriage/FoodDiary.BugTriage.Presentation/FoodDiary.BugTriage.Presentation.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.BugTriage.Tests",
+        "assemblyName": "FoodDiary.BugTriage.Tests",
+        "path": "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/FoodDiary.BugTriage.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/BugTriage/FoodDiary.BugTriage.Application/FoodDiary.BugTriage.Application.csproj",
+          "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/FoodDiary.BugTriage.Infrastructure.csproj",
+          "Services/BugTriage/FoodDiary.BugTriage.Presentation/FoodDiary.BugTriage.Presentation.csproj",
+          "Services/BugTriage/FoodDiary.BugTriage.WebApi/FoodDiary.BugTriage.WebApi.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.AspNetCore.Mvc.Testing",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "NSubstitute",
+            "version": null
+          },
+          {
+            "name": "SSH.NET",
+            "version": null
+          },
+          {
+            "name": "Testcontainers.PostgreSql",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailInbox.Application",
+        "assemblyName": "FoodDiary.MailInbox.Application",
+        "path": "Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "FluentValidation",
+            "version": null
+          },
+          {
+            "name": "FluentValidation.DependencyInjectionExtensions",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Logging.Abstractions",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailInbox.Client",
+        "assemblyName": "FoodDiary.MailInbox.Client",
+        "path": "Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [],
+        "packageReferences": [
+          {
+            "name": "Microsoft.Extensions.Http",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailInbox.Domain",
+        "assemblyName": "FoodDiary.MailInbox.Domain",
+        "path": "Services/MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.MailInbox.Infrastructure",
+        "assemblyName": "FoodDiary.MailInbox.Infrastructure",
+        "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "MailKit",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "Npgsql.OpenTelemetry",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Extensions.Hosting",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Instrumentation.AspNetCore",
+            "version": null
+          },
+          {
+            "name": "SmtpServer",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailInbox.Initializer",
+        "assemblyName": "FoodDiary.MailInbox.Initializer",
+        "path": "Services/MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Exe",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.Extensions.Hosting",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailInbox.Presentation",
+        "assemblyName": "FoodDiary.MailInbox.Presentation",
+        "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.MailInbox.WebApi",
+        "assemblyName": "FoodDiary.MailInbox.WebApi",
+        "path": "Services/MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj",
+        "sdk": "Microsoft.NET.Sdk.Web",
+        "outputType": "Exe",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.MailInbox.Application.Tests",
+        "assemblyName": "FoodDiary.MailInbox.Application.Tests",
+        "path": "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.DependencyInjection",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailInbox.Client.Tests",
+        "assemblyName": "FoodDiary.MailInbox.Client.Tests",
+        "path": "Services/MailInbox/tests/FoodDiary.MailInbox.Client.Tests/FoodDiary.MailInbox.Client.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailInbox.Domain.Tests",
+        "assemblyName": "FoodDiary.MailInbox.Domain.Tests",
+        "path": "Services/MailInbox/tests/FoodDiary.MailInbox.Domain.Tests/FoodDiary.MailInbox.Domain.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailInbox.Infrastructure.Tests",
+        "assemblyName": "FoodDiary.MailInbox.Infrastructure.Tests",
+        "path": "Services/MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/FoodDiary.MailInbox.Infrastructure.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailInbox.Initializer.Tests",
+        "assemblyName": "FoodDiary.MailInbox.Initializer.Tests",
+        "path": "Services/MailInbox/tests/FoodDiary.MailInbox.Initializer.Tests/FoodDiary.MailInbox.Initializer.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailInbox.IntegrationTests",
+        "assemblyName": "FoodDiary.MailInbox.IntegrationTests",
+        "path": "Services/MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/FoodDiary.MailInbox.IntegrationTests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj",
+          "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.AspNetCore.Mvc.Testing",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "SSH.NET",
+            "version": null
+          },
+          {
+            "name": "Testcontainers.PostgreSql",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailInbox.Presentation.Tests",
+        "assemblyName": "FoodDiary.MailInbox.Presentation.Tests",
+        "path": "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/FoodDiary.MailInbox.Presentation.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj",
+          "Services/MailInbox/FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailRelay.Application",
+        "assemblyName": "FoodDiary.MailRelay.Application",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "FluentValidation",
+            "version": null
+          },
+          {
+            "name": "FluentValidation.DependencyInjectionExtensions",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Logging.Abstractions",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailRelay.Client",
+        "assemblyName": "FoodDiary.MailRelay.Client",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [],
+        "packageReferences": [
+          {
+            "name": "Microsoft.Extensions.Http",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailRelay.Domain",
+        "assemblyName": "FoodDiary.MailRelay.Domain",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.MailRelay.Infrastructure",
+        "assemblyName": "FoodDiary.MailRelay.Infrastructure",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "DnsClient",
+            "version": null
+          },
+          {
+            "name": "MailKit",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "Npgsql.OpenTelemetry",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Extensions.Hosting",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Instrumentation.AspNetCore",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Instrumentation.Http",
+            "version": null
+          },
+          {
+            "name": "RabbitMQ.Client",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailRelay.Initializer",
+        "assemblyName": "FoodDiary.MailRelay.Initializer",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Exe",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "Microsoft.Extensions.Hosting",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailRelay.Presentation",
+        "assemblyName": "FoodDiary.MailRelay.Presentation",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.MailRelay.WebApi",
+        "assemblyName": "FoodDiary.MailRelay.WebApi",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj",
+        "sdk": "Microsoft.NET.Sdk.Web",
+        "outputType": "Exe",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": false,
+        "projectReferences": [
+          "Services/MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj"
+        ],
+        "packageReferences": []
+      },
+      {
+        "name": "FoodDiary.MailRelay.Application.Tests",
+        "assemblyName": "FoodDiary.MailRelay.Application.Tests",
+        "path": "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/FoodDiary.MailRelay.Application.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.DependencyInjection",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Logging",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailRelay.Client.Tests",
+        "assemblyName": "FoodDiary.MailRelay.Client.Tests",
+        "path": "Services/MailRelay/tests/FoodDiary.MailRelay.Client.Tests/FoodDiary.MailRelay.Client.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailRelay.Domain.Tests",
+        "assemblyName": "FoodDiary.MailRelay.Domain.Tests",
+        "path": "Services/MailRelay/tests/FoodDiary.MailRelay.Domain.Tests/FoodDiary.MailRelay.Domain.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailRelay.Infrastructure.Tests",
+        "assemblyName": "FoodDiary.MailRelay.Infrastructure.Tests",
+        "path": "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/FoodDiary.MailRelay.Infrastructure.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "RabbitMQ.Client",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailRelay.Initializer.Tests",
+        "assemblyName": "FoodDiary.MailRelay.Initializer.Tests",
+        "path": "Services/MailRelay/tests/FoodDiary.MailRelay.Initializer.Tests/FoodDiary.MailRelay.Initializer.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailRelay.IntegrationTests",
+        "assemblyName": "FoodDiary.MailRelay.IntegrationTests",
+        "path": "Services/MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj",
+          "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.AspNetCore.Mvc.Testing",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "RabbitMQ.Client",
+            "version": null
+          },
+          {
+            "name": "SSH.NET",
+            "version": null
+          },
+          {
+            "name": "Testcontainers.PostgreSql",
+            "version": null
+          },
+          {
+            "name": "Testcontainers.RabbitMq",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
+        "name": "FoodDiary.MailRelay.Presentation.Tests",
+        "assemblyName": "FoodDiary.MailRelay.Presentation.Tests",
+        "path": "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/FoodDiary.MailRelay.Presentation.Tests.csproj",
+        "sdk": "Microsoft.NET.Sdk",
+        "outputType": "Library",
+        "targetFrameworks": [
+          "net10.0"
+        ],
+        "isTestProject": true,
+        "projectReferences": [
+          "Services/MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj"
+        ],
+        "packageReferences": [
+          {
+            "name": "coverlet.collector",
+            "version": null
+          },
+          {
+            "name": "Microsoft.NET.Test.Sdk",
+            "version": null
+          },
+          {
+            "name": "xunit",
+            "version": null
+          },
+          {
+            "name": "xunit.runner.visualstudio",
+            "version": null
+          }
+        ]
+      },
+      {
         "name": "FoodDiary.Application.Contracts",
         "assemblyName": "FoodDiary.Application.Contracts",
         "path": "Shared/FoodDiary.Application.Contracts/FoodDiary.Application.Contracts.csproj",
@@ -12089,7 +12089,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj",
           "Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj"
         ],
         "packageReferences": [
@@ -12280,7 +12280,7 @@
         ],
         "isTestProject": true,
         "projectReferences": [
-          "MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj",
+          "Services/MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj",
           "Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj",
           "Shared/FoodDiary.Email.MailRelay/FoodDiary.Email.MailRelay.csproj"
         ],
@@ -13367,21 +13367,6 @@
       }
     ],
     "testProjects": [
-      "BugTriage/tests/FoodDiary.BugTriage.Tests/FoodDiary.BugTriage.Tests.csproj",
-      "MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj",
-      "MailInbox/tests/FoodDiary.MailInbox.Client.Tests/FoodDiary.MailInbox.Client.Tests.csproj",
-      "MailInbox/tests/FoodDiary.MailInbox.Domain.Tests/FoodDiary.MailInbox.Domain.Tests.csproj",
-      "MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/FoodDiary.MailInbox.Infrastructure.Tests.csproj",
-      "MailInbox/tests/FoodDiary.MailInbox.Initializer.Tests/FoodDiary.MailInbox.Initializer.Tests.csproj",
-      "MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/FoodDiary.MailInbox.IntegrationTests.csproj",
-      "MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/FoodDiary.MailInbox.Presentation.Tests.csproj",
-      "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/FoodDiary.MailRelay.Application.Tests.csproj",
-      "MailRelay/tests/FoodDiary.MailRelay.Client.Tests/FoodDiary.MailRelay.Client.Tests.csproj",
-      "MailRelay/tests/FoodDiary.MailRelay.Domain.Tests/FoodDiary.MailRelay.Domain.Tests.csproj",
-      "MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/FoodDiary.MailRelay.Infrastructure.Tests.csproj",
-      "MailRelay/tests/FoodDiary.MailRelay.Initializer.Tests/FoodDiary.MailRelay.Initializer.Tests.csproj",
-      "MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj",
-      "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/FoodDiary.MailRelay.Presentation.Tests.csproj",
       "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FoodDiary.Modules.Admin.Application.Tests.csproj",
       "Modules/Admin/tests/FoodDiary.Modules.Admin.Domain.Tests/FoodDiary.Modules.Admin.Domain.Tests.csproj",
       "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests.csproj",
@@ -13507,6 +13492,21 @@
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests/FoodDiary.Modules.WeeklyGoals.Domain.Tests.csproj",
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests/FoodDiary.Modules.WeeklyGoals.Infrastructure.Tests.csproj",
       "Modules/WeeklyGoals/tests/FoodDiary.Modules.WeeklyGoals.Presentation.Tests/FoodDiary.Modules.WeeklyGoals.Presentation.Tests.csproj",
+      "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/FoodDiary.BugTriage.Tests.csproj",
+      "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/FoodDiary.MailInbox.Application.Tests.csproj",
+      "Services/MailInbox/tests/FoodDiary.MailInbox.Client.Tests/FoodDiary.MailInbox.Client.Tests.csproj",
+      "Services/MailInbox/tests/FoodDiary.MailInbox.Domain.Tests/FoodDiary.MailInbox.Domain.Tests.csproj",
+      "Services/MailInbox/tests/FoodDiary.MailInbox.Infrastructure.Tests/FoodDiary.MailInbox.Infrastructure.Tests.csproj",
+      "Services/MailInbox/tests/FoodDiary.MailInbox.Initializer.Tests/FoodDiary.MailInbox.Initializer.Tests.csproj",
+      "Services/MailInbox/tests/FoodDiary.MailInbox.IntegrationTests/FoodDiary.MailInbox.IntegrationTests.csproj",
+      "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/FoodDiary.MailInbox.Presentation.Tests.csproj",
+      "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/FoodDiary.MailRelay.Application.Tests.csproj",
+      "Services/MailRelay/tests/FoodDiary.MailRelay.Client.Tests/FoodDiary.MailRelay.Client.Tests.csproj",
+      "Services/MailRelay/tests/FoodDiary.MailRelay.Domain.Tests/FoodDiary.MailRelay.Domain.Tests.csproj",
+      "Services/MailRelay/tests/FoodDiary.MailRelay.Infrastructure.Tests/FoodDiary.MailRelay.Infrastructure.Tests.csproj",
+      "Services/MailRelay/tests/FoodDiary.MailRelay.Initializer.Tests/FoodDiary.MailRelay.Initializer.Tests.csproj",
+      "Services/MailRelay/tests/FoodDiary.MailRelay.IntegrationTests/FoodDiary.MailRelay.IntegrationTests.csproj",
+      "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/FoodDiary.MailRelay.Presentation.Tests.csproj",
       "Shared/tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj",
       "Shared/tests/FoodDiary.Email.MailRelay.Tests/FoodDiary.Email.MailRelay.Tests.csproj",
       "Shared/tests/FoodDiary.Integrations.Http.Tests/FoodDiary.Integrations.Http.Tests.csproj",
@@ -13738,7 +13738,7 @@
       },
       {
         "name": "MailInboxExportController",
-        "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+        "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
         "routePrefix": "api/mail-inbox/export",
         "endpoints": [
           {
@@ -13755,7 +13755,7 @@
       },
       {
         "name": "MailInboxHealthController",
-        "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/MailInboxHealthController.cs",
+        "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Health/MailInboxHealthController.cs",
         "routePrefix": "",
         "endpoints": [
           {
@@ -13772,7 +13772,7 @@
       },
       {
         "name": "MailInboxMessagesController",
-        "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
+        "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
         "routePrefix": "api/mail-inbox/messages",
         "endpoints": [
           {
@@ -13794,7 +13794,7 @@
       },
       {
         "name": "MailRelayDeliveryEventsController",
-        "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayDeliveryEventsController.cs",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayDeliveryEventsController.cs",
         "routePrefix": "api/email/events",
         "endpoints": [
           {
@@ -13811,7 +13811,7 @@
       },
       {
         "name": "MailRelayMessagesController",
-        "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
         "routePrefix": "api/email/messages",
         "endpoints": [
           {
@@ -13823,7 +13823,7 @@
       },
       {
         "name": "MailRelayProviderEventsController",
-        "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayProviderEventsController.cs",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayProviderEventsController.cs",
         "routePrefix": "api/email/providers",
         "endpoints": [
           {
@@ -13840,7 +13840,7 @@
       },
       {
         "name": "MailRelayQueueController",
-        "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs",
         "routePrefix": "api/email",
         "endpoints": [
           {
@@ -13857,7 +13857,7 @@
       },
       {
         "name": "MailRelaySuppressionsController",
-        "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelaySuppressionsController.cs",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelaySuppressionsController.cs",
         "routePrefix": "api/email/suppressions",
         "endpoints": [
           {
@@ -13879,7 +13879,7 @@
       },
       {
         "name": "MailRelayHealthController",
-        "path": "MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/MailRelayHealthController.cs",
+        "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Health/MailRelayHealthController.cs",
         "routePrefix": "",
         "endpoints": [
           {
@@ -13899,7 +13899,6 @@
   "knowledgeSources": {
     "agentGuides": [
       "AGENTS.md",
-      "BugTriage/AGENTS.md",
       "FoodDiary.Analyzers/AGENTS.md",
       "FoodDiary.Application.Runtime/AGENTS.md",
       "FoodDiary.Development.Mcp/AGENTS.md",
@@ -13917,22 +13916,6 @@
       "FoodDiary.Web.Client/projects/fooddiary-admin/AGENTS.md",
       "FoodDiary.Web.Client/src/app/AGENTS.md",
       "FoodDiary.Web.Client/src/app/features/AGENTS.md",
-      "MailInbox/FoodDiary.MailInbox.Application/AGENTS.md",
-      "MailInbox/FoodDiary.MailInbox.Client/AGENTS.md",
-      "MailInbox/FoodDiary.MailInbox.Domain/AGENTS.md",
-      "MailInbox/FoodDiary.MailInbox.Infrastructure/AGENTS.md",
-      "MailInbox/FoodDiary.MailInbox.Initializer/AGENTS.md",
-      "MailInbox/FoodDiary.MailInbox.Presentation/AGENTS.md",
-      "MailInbox/FoodDiary.MailInbox.WebApi/AGENTS.md",
-      "MailRelay/AGENTS.md",
-      "MailRelay/FoodDiary.MailRelay.Application/AGENTS.md",
-      "MailRelay/FoodDiary.MailRelay.Client/AGENTS.md",
-      "MailRelay/FoodDiary.MailRelay.Domain/AGENTS.md",
-      "MailRelay/FoodDiary.MailRelay.Infrastructure/AGENTS.md",
-      "MailRelay/FoodDiary.MailRelay.Initializer/AGENTS.md",
-      "MailRelay/FoodDiary.MailRelay.Presentation/AGENTS.md",
-      "MailRelay/FoodDiary.MailRelay.WebApi/AGENTS.md",
-      "MailRelay/tests/AGENTS.md",
       "Modules/AGENTS.md",
       "Modules/Admin/AGENTS.md",
       "Modules/Admin/Application/AGENTS.md",
@@ -14129,6 +14112,24 @@
       "Modules/WeeklyGoals/Domain/AGENTS.md",
       "Modules/WeeklyGoals/Infrastructure/AGENTS.md",
       "Modules/WeeklyGoals/Infrastructure/Model/AGENTS.md",
+      "Services/AGENTS.md",
+      "Services/BugTriage/AGENTS.md",
+      "Services/MailInbox/FoodDiary.MailInbox.Application/AGENTS.md",
+      "Services/MailInbox/FoodDiary.MailInbox.Client/AGENTS.md",
+      "Services/MailInbox/FoodDiary.MailInbox.Domain/AGENTS.md",
+      "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/AGENTS.md",
+      "Services/MailInbox/FoodDiary.MailInbox.Initializer/AGENTS.md",
+      "Services/MailInbox/FoodDiary.MailInbox.Presentation/AGENTS.md",
+      "Services/MailInbox/FoodDiary.MailInbox.WebApi/AGENTS.md",
+      "Services/MailRelay/AGENTS.md",
+      "Services/MailRelay/FoodDiary.MailRelay.Application/AGENTS.md",
+      "Services/MailRelay/FoodDiary.MailRelay.Client/AGENTS.md",
+      "Services/MailRelay/FoodDiary.MailRelay.Domain/AGENTS.md",
+      "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/AGENTS.md",
+      "Services/MailRelay/FoodDiary.MailRelay.Initializer/AGENTS.md",
+      "Services/MailRelay/FoodDiary.MailRelay.Presentation/AGENTS.md",
+      "Services/MailRelay/FoodDiary.MailRelay.WebApi/AGENTS.md",
+      "Services/MailRelay/tests/AGENTS.md",
       "Shared/FoodDiary.Application.Contracts/AGENTS.md",
       "Shared/FoodDiary.Audit.Contracts/AGENTS.md",
       "Shared/FoodDiary.Audit.PersistenceModel/AGENTS.md",
@@ -14300,6 +14301,7 @@
       "docs/frontend/DESIGN_SYSTEM_REVIEW.md",
       "docs/frontend/FRONTEND_ARCHITECTURE.md",
       "docs/frontend/FRONTEND_OBSERVABILITY_BASELINE.md",
+      "docs/frontend/TEMPLATE_LINTING.md",
       "docs/frontend/angular-22-tech-debt.md",
       "docs/plans/ADAPTIVE_COACH_MVP_PLAN.md",
       "docs/plans/README.md",

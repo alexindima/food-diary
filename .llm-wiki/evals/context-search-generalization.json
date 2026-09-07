@@ -66,25 +66,25 @@
       "id": "dkim-signing",
       "query": "sign outgoing relay email with DKIM",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DkimSigningService.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DkimSigningService.cs"]
     },
     {
       "id": "ru-mail-relay-queue-store",
       "query": "где физически храним очередь исходящих писем mail relay",
       "changeType": "Database",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs"]
     },
     {
       "id": "mx-dns-resolver",
       "query": "resolve recipient domain MX records through DNS",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DnsClientMxResolver.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DnsClientMxResolver.cs"]
     },
     {
       "id": "mail-relay-delivery-policy",
       "query": "configured policy decides how mail relay delivers messages",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfiguredMailRelayDeliveryPolicy.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/ConfiguredMailRelayDeliveryPolicy.cs"]
     },
     {
       "id": "web-push-endpoint-validation",
@@ -270,49 +270,49 @@
       "id": "mail-inbox-messages-controller",
       "query": "mail inbox HTTP API exposes received message metadata and details",
       "changeType": "Api",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs"]
     },
     {
       "id": "mark-inbound-message-read",
       "query": "command marks a received inbox email as read",
       "changeType": "Backend",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Commands/MarkInboundMailMessageRead/MarkInboundMailMessageReadCommandHandler.cs"]
     },
     {
       "id": "dmarc-report-parser",
       "query": "parse an aggregate DMARC XML report received by email",
       "changeType": "Backend",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs"]
     },
     {
       "id": "mail-inbox-retention-job",
       "query": "hosted service removes inbox messages after retention expires",
       "changeType": "Backend",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs"]
     },
     {
       "id": "mail-relay-queue-controller",
       "query": "HTTP API shows mail relay queue status and queued messages",
       "changeType": "Api",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayQueueController.cs"]
     },
     {
       "id": "enqueue-mail-relay-email",
       "query": "command accepts a new email into the mail relay queue",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandHandler.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandHandler.cs"]
     },
     {
       "id": "delivery-event-ingestion",
       "query": "ingest provider delivery and bounce events into mail relay",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Application/DeliveryEvents/Services/MailRelayDeliveryEventIngestionService.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Application/DeliveryEvents/Services/MailRelayDeliveryEventIngestionService.cs"]
     },
     {
       "id": "mail-relay-suppression-policy",
       "query": "decide whether a recipient is suppressed from mail delivery",
       "changeType": "Backend",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelaySuppressionPolicy.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Domain/DeliveryEvents/MailRelaySuppressionPolicy.cs"]
     },
     {
       "id": "frontend-theme-service",

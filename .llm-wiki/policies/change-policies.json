@@ -5,7 +5,7 @@
       "id": "backend-boundaries",
       "description": "Production backend changes must preserve architectural boundaries.",
       "pathPatterns": [
-        "^(FoodDiary\\.|Shared/|MailRelay/FoodDiary\\.|MailInbox/FoodDiary\\.).+\\.cs$",
+        "^(FoodDiary\\.|Shared/|Services/MailRelay/FoodDiary\\.|Services/MailInbox/FoodDiary\\.).+\\.cs$",
         "^Modules/[^/]+/.+\\.cs$"
       ],
       "excludePatterns": [

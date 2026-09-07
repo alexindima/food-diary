@@ -107,7 +107,7 @@
                                 [attr.aria-pressed]="dayForm().pain().value() === pain"
                                 (click)="setPain(pain)"
                             >
-                                {{ 'CYCLE_TRACKING.PAIN_LEVEL_' + pain | translate }}
+                                {{ `CYCLE_TRACKING.PAIN_LEVEL_${pain}` | translate }}
                             </button>
                         }
                     </div>

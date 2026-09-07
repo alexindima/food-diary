@@ -108,13 +108,13 @@
       "id": "mail-inbox-listener-factory-probe-2",
       "query": "factory creates the network listener for inbound SMTP endpoints",
       "changeType": "Backend",
-      "expectedPaths": ["MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxEndpointListenerFactory.cs"]
+      "expectedPaths": ["Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxEndpointListenerFactory.cs"]
     },
     {
       "id": "mail-relay-row-mapper-probe-2",
       "query": "map database rows into queued mail relay messages",
       "changeType": "Database",
-      "expectedPaths": ["MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueRowMapper.cs"]
+      "expectedPaths": ["Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueRowMapper.cs"]
     },
     {
       "id": "viewport-service-probe-2",

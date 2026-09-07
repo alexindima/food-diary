@@ -29,7 +29,7 @@ public sealed class JobManagerGuardrailTests {
             "AddIdentityModule",
             "AddImagesModule",
             "AddMarketingModule",
-            "AddMealsPersistence",
+            "AddMealsModule",
             "AddNotificationsModule",
             "AddRecentItemsModule",
             "AddUsersModule",
@@ -39,7 +39,7 @@ public sealed class JobManagerGuardrailTests {
             .Select(static line => line.Trim())
             .Where(static line => line.StartsWith("builder.Services.Add", StringComparison.Ordinal))
             .Select(static line => line[(line.IndexOf(".Add", StringComparison.Ordinal) + 1)..line.IndexOf('(', StringComparison.Ordinal)])
-            .Where(static method => method is "AddApplicationRuntime" or "AddMealsPersistence" || method.EndsWith("Module", StringComparison.Ordinal))
+            .Where(static method => method is "AddApplicationRuntime" || method.EndsWith("Module", StringComparison.Ordinal))
             .Order(StringComparer.Ordinal)];
 
         Assert.Equal(expectedRegistrations.Order(StringComparer.Ordinal), actualRegistrations, StringComparer.Ordinal);

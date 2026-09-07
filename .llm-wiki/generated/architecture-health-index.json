@@ -4841,7 +4841,7 @@
     {
       "name": "BugReportsController",
       "role": "Controller",
-      "path": "BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
       "line": 17,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -4851,7 +4851,7 @@
     {
       "name": "MailInboxExportController",
       "role": "Controller",
-      "path": "MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Export/MailInboxExportController.cs",
       "line": 14,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -4861,7 +4861,7 @@
     {
       "name": "EnqueueMailRelayEmailCommandValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -4881,7 +4881,7 @@
     {
       "name": "GetMailRelayDeliveryEventsQueryValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayDeliveryEvents/GetMailRelayDeliveryEventsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -4891,7 +4891,7 @@
     {
       "name": "GetMailRelayMessageDetailsQueryValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelayMessageDetails/GetMailRelayMessageDetailsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -4901,7 +4901,7 @@
     {
       "name": "GetMailRelaySuppressionsQueryValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -4931,7 +4931,7 @@
     {
       "name": "IngestMailRelayDeliveryEventCommandValidator",
       "role": "Validator",
-      "path": "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEvent/IngestMailRelayDeliveryEventCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
