@@ -114,13 +114,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/angular.json",
-          "sha256": "c4787d4722c73ec364c5bf74aefecab22e7d1342d8d83f973b32ffcb69e2f864"
+          "sha256": "62d3735db5537c13167e0b9350ad7a60880bd302617ea692dd973838d29e35c1"
         }
       ],
-      "reason": "Reviewed the 48-path security, MailRelay, frontend, repository-guidance, and Wiki tooling diff against the affected navigation/workflow pages; regenerated all 12 affected indexes and the code graph, and confirmed the documented source-of-truth hierarchy, read-only query semantics, deployment/configuration warnings, review flow, and quality-risk guidance remain accurate.",
+      "reason": "Admin CSS optimization changed; frontend routes, contracts and project structure remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "3b29c209f0d33fe9af2e2dc29a7ae2ee839ecb6d",
-      "reviewedAtUtc": "2026-08-26T18:45:54.5815669Z"
+      "gitHead": "40aeff70b24e16921316b223c5ce5a98b798a034",
+      "reviewedAtUtc": "2026-09-07T14:46:33.9117794Z"
     },
     {
       "pageId": "system.knowledge-model",
@@ -147,14 +147,14 @@
       "pageSha256": "aabfdb629d4df286eead0306722e47ba58d72d76589d79058ca642c2efbfa0fd",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-          "sha256": "92484183b8d2e71cedf993036d78a04eefaaa3b6bfdf18fdd4045930435cea64"
+          "path": "FoodDiary.Web.Client/angular.json",
+          "sha256": "62d3735db5537c13167e0b9350ad7a60880bd302617ea692dd973838d29e35c1"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Admin CSS optimization changed; repository project inventory and build commands remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:34:50.3753688Z"
+      "gitHead": "40aeff70b24e16921316b223c5ce5a98b798a034",
+      "reviewedAtUtc": "2026-09-07T14:46:36.2634556Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
