@@ -51,7 +51,11 @@ run_frontend_checks() {
 
 run_backend_checks() {
   command dotnet build FoodDiary.slnx --artifacts-path "$PRE_PUSH_ARTIFACTS_PATH" || return 1
-  command dotnet test FoodDiary.slnx --no-restore --no-build --maxcpucount:1 --artifacts-path "$PRE_PUSH_ARTIFACTS_PATH"
+  # Integration namespaces/classes and the slow MCP process suite run in CI.
+  # Keep unit and architecture tests locally; also honor explicit test categories.
+  echo "Running backend unit and architecture tests; integration/slow suites run in CI."
+  command dotnet test FoodDiary.slnx --no-restore --no-build --maxcpucount:1 --artifacts-path "$PRE_PUSH_ARTIFACTS_PATH" \
+    --filter 'FullyQualifiedName!~IntegrationTests&FullyQualifiedName!~FoodDiary.Development.Mcp.Tests&Category!=Integration&Category!=Slow'
 }
 
 hook_step_start "Frontend and backend checks (parallel)"

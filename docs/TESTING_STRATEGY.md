@@ -12,6 +12,27 @@ dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj
 These tests are also the best executable documentation for backend boundaries.
 They also guard the allowed reference graph between test projects, so shared test helpers should be added through `tests/FoodDiary.Testing` instead of ad hoc cross-test-project references.
 
+## Local Git Hooks and CI
+
+`pre-commit` checks formatting, linters, and conditional builds without running tests.
+`pre-push` retains the backend solution build, unit and architecture tests, and
+frontend checks/app unit tests. Its backend filter excludes fully qualified names
+containing `IntegrationTests`, the slow `FoodDiary.Development.Mcp.Tests` suite,
+and tests with `Category=Integration` or `Category=Slow`. The name filter covers
+dedicated integration namespaces and repository integration classes in mixed
+unit-test projects. New integration tests should follow that convention or carry
+the explicit category.
+
+`.github/workflows/ci-tests.yml` runs the full backend solution without this
+filter, plus PostgreSQL critical-flow and frontend/E2E jobs. Local builds and
+remaining tests still take time; removing integration execution does not remove
+the solution build. When changing an integration boundary, run the affected test
+project manually before publishing. To run the complete backend suite locally:
+
+```bash
+dotnet test FoodDiary.slnx --maxcpucount:1
+```
+
 ## Backend Test Projects
 
 | Project | Purpose |
