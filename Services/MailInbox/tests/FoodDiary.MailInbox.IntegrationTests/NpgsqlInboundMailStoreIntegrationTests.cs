@@ -13,6 +13,36 @@ namespace FoodDiary.MailInbox.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixture fixture) {
     [RequiresDockerFact]
+    public async Task GetMessagePageAsync_CountsFilteredRowsAndKeepsStablePages() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        using NpgsqlInboundMailStore store = CreateStore(dataSource);
+        DateTimeOffset now = FixedTime.GetUtcNow();
+        for (int index = 0; index < 3; index++) {
+            var message = InboundMailMessage.Receive(Guid.NewGuid().ToString(), "sender@example.com", ["page@example.com"],
+                "Bug", "Details", htmlBody: null, Encoding.UTF8.GetBytes(Guid.NewGuid().ToString()), now);
+            await store.SaveAsync(message, CancellationToken.None);
+        }
+        InboundMailMessagePage first = await store.GetMessagePageAsync(1, 2, "page@example.com", "general", unread: true, CancellationToken.None);
+        InboundMailMessagePage second = await store.GetMessagePageAsync(2, 2, "page@example.com", "general", unread: true, CancellationToken.None);
+        Assert.Equal(3, first.TotalItems);
+        Assert.Equal(3, second.TotalItems);
+        Assert.Equal(2, first.Items.Count);
+        Assert.Single(second.Items);
+        Assert.Equal(3, first.Items.Concat(second.Items).Select(static item => item.Id).Distinct().Count());
+        InboundMailMessagePage beyond = await store.GetMessagePageAsync(int.MaxValue, 200, "page@example.com", "general", unread: true, CancellationToken.None);
+        Assert.Empty(beyond.Items);
+        Assert.Equal(3, beyond.TotalItems);
+        await store.MarkAsReadAsync(second.Items[0].Id, now, CancellationToken.None);
+        InboundMailMessagePage read = await store.GetMessagePageAsync(1, 2, "page@example.com", "general", unread: false, CancellationToken.None);
+        Assert.Equal(second.Items[0].Id, Assert.Single(read.Items).Id);
+        Assert.Equal(1, read.TotalItems);
+        InboundMailMessagePage empty = await store.GetMessagePageAsync(1, 2, "missing@example.com", "general", unread: true, CancellationToken.None);
+        Assert.Empty(empty.Items);
+        Assert.Equal(0, empty.TotalItems);
+    }
+
+    [RequiresDockerFact]
     public async Task GetFilteredMessagesAsync_FiltersBeforeLimitAndUsesDeliveryRecipients() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();

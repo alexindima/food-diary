@@ -15,6 +15,11 @@
     cursor: pointer;
 }
 
+.mail-table__row:focus-visible {
+    outline: var(--fd-outline-focus);
+    outline-offset: calc(0px - var(--fd-border-width-strong));
+}
+
 .mail-table__row--unread {
     font-weight: var(--fd-font-weight-bold);
 }

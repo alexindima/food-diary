@@ -17,36 +17,38 @@
     } @else {
         <div class="summary fd-ui-action-text">Total login events: {{ totalItems() }}</div>
 
-        <table class="users-table" aria-label="User login activity">
-            <thead>
-                <tr>
-                    <th>Logged in</th>
-                    <th>User</th>
-                    <th>Provider</th>
-                    <th>Device</th>
-                    <th>Browser</th>
-                    <th>OS</th>
-                    <th>IP</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (event of events(); track event.id) {
+        <div class="users-table-scroll">
+            <table class="users-table" aria-label="User login activity">
+                <thead>
                     <tr>
-                        <td>{{ event.loggedInAtUtc | date: 'medium' }}</td>
-                        <td>{{ event.userEmail }}</td>
-                        <td>{{ event.authProvider }}</td>
-                        <td>{{ event.deviceType || '-' }}</td>
-                        <td>{{ event.browserName || '-' }} {{ event.browserVersion || '' }}</td>
-                        <td>{{ event.operatingSystem || '-' }}</td>
-                        <td>{{ event.maskedIpAddress || '-' }}</td>
+                        <th>Logged in</th>
+                        <th>User</th>
+                        <th>Provider</th>
+                        <th>Device</th>
+                        <th>Browser</th>
+                        <th>OS</th>
+                        <th>IP</th>
                     </tr>
-                } @empty {
-                    <tr>
-                        <td colspan="7">No login activity found.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @for (event of events(); track event.id) {
+                        <tr>
+                            <td>{{ event.loggedInAtUtc | date: 'medium' }}</td>
+                            <td>{{ event.userEmail }}</td>
+                            <td>{{ event.authProvider }}</td>
+                            <td>{{ event.deviceType || '-' }}</td>
+                            <td>{{ event.browserName || '-' }} {{ event.browserVersion || '' }}</td>
+                            <td>{{ event.operatingSystem || '-' }}</td>
+                            <td>{{ event.maskedIpAddress || '-' }}</td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="7">No login activity found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
         <fd-ui-pagination
             [length]="totalItems()"

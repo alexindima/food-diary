@@ -3,6 +3,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 import { AdminEmailTemplatesComponent } from './admin-email-templates';
@@ -39,6 +40,7 @@ describe('AdminEmailTemplatesComponent', () => {
         await TestBed.configureTestingModule({
             imports: [AdminEmailTemplatesComponent],
             providers: [
+                ...provideTranslateTesting(),
                 { provide: AdminEmailTemplatesFacade, useValue: templatesService },
                 { provide: FdUiDialogService, useValue: dialogService },
             ],
@@ -51,6 +53,16 @@ describe('AdminEmailTemplatesComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('pages the list and clamps the last page after records are removed', () => {
+        component['templates'].set(Array.from({ length: 21 }, (_, index) => ({ ...templates[0], id: `t${index}` })));
+        expect(component['pageItems']()).toHaveLength(component['pageSize']);
+        component['requestedPage'].set(1);
+        expect(component['pageItems']().map(item => item.id)).toEqual(['t20']);
+        component['templates'].set(templates);
+        expect(component['pageIndex']()).toBe(0);
+        expect(component['pageItems']()).toEqual(templates);
     });
 
     it('should load templates on init', () => {

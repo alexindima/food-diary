@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3662,
-    "symbols": 3602,
+    "sourceFiles": 3674,
+    "symbols": 3614,
     "interfaceImplementationLinks": 244,
     "dependencyInjectionRegistrations": 155,
     "kinds": {
-      "class": 1876,
+      "class": 1880,
       "enum": 63,
       "interface": 442,
-      "record": 1101,
+      "record": 1109,
       "record struct": 120
     },
     "roles": {
@@ -32,16 +32,16 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 66,
-      "Other": 1427,
-      "Query": 164,
-      "QueryHandler": 125,
+      "Other": 1429,
+      "Query": 167,
+      "QueryHandler": 127,
       "ReadModelRepository": 30,
       "ReadRepository": 47,
       "Repository": 103,
       "Request": 138,
-      "Response": 188,
+      "Response": 191,
       "Service": 296,
-      "Validator": 206,
+      "Validator": 208,
       "ValueObject": 114,
       "WriteRepository": 46
     }
@@ -1980,6 +1980,13 @@
       "line": 2
     },
     {
+      "name": "AdminMailInboxMessagePageModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxMessagePageModel.cs",
+      "line": 2
+    },
+    {
       "name": "AdminMailInboxMessageSummaryModel",
       "kind": "record",
       "role": "Other",
@@ -2799,6 +2806,27 @@
       "line": 4
     },
     {
+      "name": "GetAdminMailInboxMessagePageQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminMailInboxMessagePageQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminMailInboxMessagePageQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryValidator.cs",
+      "line": 4
+    },
+    {
       "name": "GetAdminMailInboxMessagesQuery",
       "kind": "record",
       "role": "Query",
@@ -3387,6 +3415,13 @@
       "line": 5
     },
     {
+      "name": "GetAdminMailInboxMessagePageHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagePageHttpQuery.cs",
+      "line": 5
+    },
+    {
       "name": "GetAdminMailInboxMessagesHttpQuery",
       "kind": "record",
       "role": "Query",
@@ -3636,6 +3671,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessageDetailsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminMailInboxMessagePageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessagePageHttpResponse.cs",
       "line": 2
     },
     {
@@ -22931,6 +22973,13 @@
       "line": 2
     },
     {
+      "name": "InboundMailMessagePage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessagePage.cs",
+      "line": 2
+    },
+    {
       "name": "InboundMailMessageSummary",
       "kind": "record",
       "role": "Other",
@@ -22964,6 +23013,27 @@
       "role": "QueryHandler",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
       "line": 8
+    },
+    {
+      "name": "GetInboundMailMessagePageQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetInboundMailMessagePageQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetInboundMailMessagePageQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryValidator.cs",
+      "line": 4
     },
     {
       "name": "GetInboundMailMessagesQuery",
@@ -23068,6 +23138,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageDetailsResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailMessagePageResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessagePageResponse.cs",
       "line": 2
     },
     {
@@ -23439,6 +23516,13 @@
       "kind": "record",
       "role": "Response",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessageDetailsHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailMessagePageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessagePageHttpResponse.cs",
       "line": 2
     },
     {

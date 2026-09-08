@@ -7,7 +7,7 @@
         @if (isLoading()) {
             <p>{{ 'ADMIN_ACHIEVEMENTS.LOADING' | translate }}</p>
         } @else {
-            @for (definition of definitions(); track definition.id) {
+            @for (definition of pageItems(); track definition.id) {
                 <button class="definition-card" type="button" (click)="edit(definition)">
                     <span class="definition-icon" aria-hidden="true">{{ definition.icon }}</span>
                     <span
@@ -22,6 +22,15 @@
                 <p>{{ 'ADMIN_ACHIEVEMENTS.EMPTY' | translate }}</p>
             }
         }
+        <p class="fd-ui-body-xs">
+            {{ 'ADMIN_PAGINATION.RANGE' | translate: { start: rangeStart(), end: rangeEnd(), total: definitions().length } }}
+        </p>
+        <fd-ui-pagination
+            [length]="definitions().length"
+            [pageSize]="pageSize"
+            [pageIndex]="pageIndex()"
+            (pageIndexChange)="requestedPage.set($event)"
+        />
     </section>
 
     <form class="editor fd-grid fd-gap-md" [formRoot]="form" (submit)="save()">

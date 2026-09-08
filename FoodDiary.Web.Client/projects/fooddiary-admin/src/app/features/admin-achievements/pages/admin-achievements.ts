@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, FormRoot, min, pattern, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
@@ -30,7 +31,16 @@ const EMPTY_MODEL: CreateAdminAchievementDefinitionRequest = {
 
 @Component({
     selector: 'fd-admin-achievements',
-    imports: [FormField, FormRoot, FdUiButtonComponent, FdUiInputComponent, FdUiSelectComponent, FdUiTextareaComponent, TranslatePipe],
+    imports: [
+        FdUiPaginationComponent,
+        FormField,
+        FormRoot,
+        FdUiButtonComponent,
+        FdUiInputComponent,
+        FdUiSelectComponent,
+        FdUiTextareaComponent,
+        TranslatePipe,
+    ],
     templateUrl: './admin-achievements.html',
     styleUrl: './admin-achievements.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,6 +78,17 @@ export class AdminAchievementsComponent {
         required(path.icon);
         min(path.sortOrder, 0);
     });
+
+    protected readonly pageSize = 20;
+    protected readonly requestedPage = signal(0);
+    protected readonly pageIndex = computed(() =>
+        Math.min(this.requestedPage(), Math.max(0, Math.ceil(this.definitions().length / this.pageSize) - 1)),
+    );
+    protected readonly pageItems = computed(() =>
+        this.definitions().slice(this.pageIndex() * this.pageSize, (this.pageIndex() + 1) * this.pageSize),
+    );
+    protected readonly rangeStart = computed(() => (this.definitions().length === 0 ? 0 : this.pageIndex() * this.pageSize + 1));
+    protected readonly rangeEnd = computed(() => Math.min((this.pageIndex() + 1) * this.pageSize, this.definitions().length));
 
     public constructor() {
         this.load();

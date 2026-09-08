@@ -5,12 +5,12 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4891,
+    "productionFiles": 4903,
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
-    "criticalSymbols": 787,
-    "criticalSymbolsWithTestReferences": 770,
-    "criticalSymbolsWithoutTestReferences": 17,
+    "criticalSymbols": 791,
+    "criticalSymbolsWithTestReferences": 771,
+    "criticalSymbolsWithoutTestReferences": 20,
     "debtMarkers": 11
   },
   "hotspots": [
@@ -495,6 +495,14 @@
       "structuralRiskScore": 95.32
     },
     {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
+      "nonBlankLines": 800,
+      "decisionPoints": 52,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 94
+    },
+    {
       "path": "Modules/Notifications/Infrastructure/Services/WebPushSocketsHttpHandlerFactory.cs",
       "nonBlankLines": 116,
       "decisionPoints": 61,
@@ -533,14 +541,6 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 92.1
-    },
-    {
-      "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
-      "nonBlankLines": 778,
-      "decisionPoints": 51,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 92.06
     },
     {
       "path": "FoodDiary.Analyzers/ModulePersistenceBoundaryAnalyzer.cs",
@@ -5610,11 +5610,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts",
-      "nonBlankLines": 150,
+      "nonBlankLines": 170,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.5
+      "structuralRiskScore": 7.9
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/admin-acquisition.routes.ts",
@@ -5914,11 +5914,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/pages/admin-email-templates.ts",
-      "nonBlankLines": 81,
+      "nonBlankLines": 93,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.62
+      "structuralRiskScore": 4.86
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/admin-lessons.routes.ts",
@@ -5962,11 +5962,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.ts",
-      "nonBlankLines": 203,
+      "nonBlankLines": 215,
       "decisionPoints": 20,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 34.06
+      "structuralRiskScore": 34.3
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/admin-mail-inbox.routes.ts",
@@ -5978,11 +5978,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.ts",
-      "nonBlankLines": 29,
-      "decisionPoints": 3,
+      "nonBlankLines": 48,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.08
+      "structuralRiskScore": 9.96
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/dialogs/admin-mail-message-dialog.ts",
@@ -5994,27 +5994,27 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/lib/admin-mail-inbox.facade.ts",
-      "nonBlankLines": 17,
+      "nonBlankLines": 25,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.5
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/models/admin-mail-inbox.data.ts",
-      "nonBlankLines": 41,
+      "nonBlankLines": 43,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.82
+      "structuralRiskScore": 0.86
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.ts",
-      "nonBlankLines": 104,
-      "decisionPoints": 3,
+      "nonBlankLines": 118,
+      "decisionPoints": 5,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 6.58
+      "structuralRiskScore": 9.86
     },
     {
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/admin-moderation.routes.ts",
@@ -12746,11 +12746,11 @@
     },
     {
       "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 20,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.36
+      "structuralRiskScore": 3.4
     },
     {
       "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditReadRepository.cs",
@@ -12871,6 +12871,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxMessagePageModel.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxMessageSummaryModel.cs",
@@ -13817,6 +13825,30 @@
       "structuralRiskScore": 2.18
     },
     {
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryHandler.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.24
+    },
+    {
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryValidator.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.2
+    },
+    {
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQuery.cs",
       "nonBlankLines": 6,
       "decisionPoints": 0,
@@ -14050,11 +14082,11 @@
     },
     {
       "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/MailInboxClientAdminMailInboxReader.cs",
-      "nonBlankLines": 82,
+      "nonBlankLines": 86,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.64
+      "structuralRiskScore": 4.72
     },
     {
       "path": "Modules/Admin/Infrastructure/Model/AdminPersistenceModelRegistration.cs",
@@ -14202,11 +14234,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Features/Admin/AdminMailInboxController.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 37,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.62
+      "structuralRiskScore": 2.74
     },
     {
       "path": "Modules/Admin/Presentation/Features/Admin/AdminModerationController.cs",
@@ -14497,6 +14529,14 @@
       "structuralRiskScore": 0.14
     },
     {
+      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagePageHttpQuery.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
       "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagesHttpQuery.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
@@ -14783,6 +14823,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessagePageHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessageSummaryHttpResponse.cs",
@@ -37122,11 +37170,11 @@
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs",
-      "nonBlankLines": 24,
+      "nonBlankLines": 26,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.48
+      "structuralRiskScore": 3.52
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IMailInboxReadinessChecker.cs",
@@ -37265,6 +37313,14 @@
       "structuralRiskScore": 0.36
     },
     {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessagePage.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
+    },
+    {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailMessageSummary.cs",
       "nonBlankLines": 12,
       "decisionPoints": 0,
@@ -37303,6 +37359,30 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.34
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQuery.cs",
+      "nonBlankLines": 6,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.12
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryHandler.cs",
+      "nonBlankLines": 12,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 1,
+      "structuralRiskScore": 7.24
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryValidator.cs",
+      "nonBlankLines": 10,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.2
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs",
@@ -37386,19 +37466,19 @@
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/IMailInboxClient.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 20,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.36
+      "structuralRiskScore": 3.4
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
-      "nonBlankLines": 89,
-      "decisionPoints": 12,
+      "nonBlankLines": 102,
+      "decisionPoints": 16,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.78
+      "structuralRiskScore": 26.04
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/DmarcReportRecordResponse.cs",
@@ -37423,6 +37503,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessagePageResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageSummaryResponse.cs",
@@ -37642,11 +37730,11 @@
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
-      "nonBlankLines": 778,
-      "decisionPoints": 51,
+      "nonBlankLines": 800,
+      "decisionPoints": 52,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 92.06
+      "structuralRiskScore": 94
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlMailInboxReadinessChecker.cs",
@@ -37802,11 +37890,11 @@
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
-      "nonBlankLines": 87,
+      "nonBlankLines": 97,
       "decisionPoints": 3,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.24
+      "structuralRiskScore": 8.44
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Mappings/InboundMailHttpMappings.cs",
@@ -37839,6 +37927,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.36
+    },
+    {
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessagePageHttpResponse.cs",
+      "nonBlankLines": 2,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.04
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessageSummaryHttpResponse.cs",
@@ -43482,6 +43578,16 @@
       "coveredThrough": []
     },
     {
+      "name": "GetAdminMailInboxMessagePageQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "GetAdminMailInboxMessagesQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQueryHandler.cs",
@@ -43907,6 +44013,16 @@
         "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetInboundMailMessagePageQueryHandler",
+      "role": "QueryHandler",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
       "coveredThrough": []
     },
     {
@@ -45574,6 +45690,16 @@
       "coveredThrough": []
     },
     {
+      "name": "GetAdminMailInboxMessagePageQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "GetAdminMailInboxMessagesQueryValidator",
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQueryValidator.cs",
@@ -45755,6 +45881,18 @@
       "testReferences": [
         "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationFeatureTests.cs",
         "Modules/Hydration/tests/FoodDiary.Modules.Hydration.Application.Tests/Hydration/HydrationValidatorTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetInboundMailMessagePageQueryValidator",
+      "role": "Validator",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryValidator.cs",
+      "line": 4,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MessagePageValidationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []

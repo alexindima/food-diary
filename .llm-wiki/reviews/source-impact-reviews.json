@@ -193,13 +193,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "7a2c065cf5b4a43d3b50b5d0bc91c73dd50c5747ed9dd0c7f3903ddcdfd5e4ae"
+          "sha256": "b087eee0754ece1e801b8259b0b1166a0d1507dc310f2c2027954bb6a497b997"
         }
       ],
-      "reason": "Reviewed the full snapshot diff: additive Admin dashboard overview route and new response schemas, with existing dashboard/Billing contracts unchanged. Three actual Swagger snapshot tests pass after regeneration; date boundaries and validation have focused application and PostgreSQL coverage. The documented additive compatibility workflow remains accurate.",
+      "reason": "Reviewed additive mail page endpoint and items/totalItems response; old endpoint preserved. Three OpenAPI snapshots passed after rebuild.",
       "baseRef": "HEAD",
-      "gitHead": "cac2cc87722cb077c6f534446b5c3fc1a2fad959",
-      "reviewedAtUtc": "2026-09-07T22:03:08.4573782Z"
+      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
+      "reviewedAtUtc": "2026-09-08T06:37:36.4098733Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -208,13 +208,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "cb92167edd4a022ea334dd3113486260fc80cdc896fcc3d7a3b6e5062fede67d"
+          "sha256": "cb362ab4166f6d79f8ba6b5bd0215f5d3c8433ac2766a86894fed755b12c4b63"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "No new project references or ownership changes; 1202 architecture tests pass. New page types stay in their owning layers.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:34:52.5139893Z"
+      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
+      "reviewedAtUtc": "2026-09-08T06:37:37.5505520Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -223,13 +223,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7d95825d6829ef878b8e337b2a5925716c1c3ad44b13b7737ffc53c428f579bd"
+          "sha256": "6f8f4324449410dc1cbddf5d8702d4b8bbcc5d0018e78739bb1864feec7715d1"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed page models across MailInbox store, client and Admin reader. All mappings preserve metadata fields; deploy MailInbox before API and frontend. Existing list contracts retained.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:34:54.3119528Z"
+      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
+      "reviewedAtUtc": "2026-09-08T06:37:39.0070954Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -893,13 +893,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cec3c4b654ba79b361a44a1cdad1d0147f6995b189b4c61b53d2840db15456be"
+          "sha256": "2dc08527fb41db7edc4e3b6657045b65e8d829fb7095f19726b4f0f22a1c6984"
         }
       ],
-      "reason": "Integrated the reviewed Job Manager registration fix from 45b58f5: AddMealsModule supplies the application reader required by achievement reconciliation; its registration guard is updated, without changing schedules or retry policy. Also repaired intent-only PostgreSQL test selection so unrelated UI consumers cannot displace provider-backed tests; the complete precision/session-routing regression passes, including a synthetic unrelated UI diff. Service relocation, existing API contracts, private SSH access and dependency versions remain as previously reviewed.",
+      "reason": "Added regression tests for PostgreSQL filtered totals and stable pages, validation bounds, client page parameters and frontend pagination; focused suites pass.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T06:50:34.2157960Z"
+      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
+      "reviewedAtUtc": "2026-09-08T06:37:33.7383571Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -976,17 +976,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dd4b9ae5760764e8f15f98cb28b5ab54a834ab16ea5d45b1eed01bf8c3a7903e"
-        },
-        {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
+          "sha256": "3e2419c4b1c2f4b882c16f5578ae289badfd2d5b47f7be4a03ce876d9886a2e3"
         }
       ],
-      "reason": "Integrated the reviewed Job Manager registration fix from 45b58f5: AddMealsModule supplies the application reader required by achievement reconciliation; its registration guard is updated, without changing schedules or retry policy. Also repaired intent-only PostgreSQL test selection so unrelated UI consumers cannot displace provider-backed tests; the complete precision/session-routing regression passes, including a synthetic unrelated UI diff. Service relocation, existing API contracts, private SSH access and dependency versions remain as previously reviewed.",
+      "reason": "Read-only metadata page operation retains metadata permission, concurrency filter, timeout and cancellation. No workers, credentials or ingestion changes.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T06:50:35.0121671Z"
+      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
+      "reviewedAtUtc": "2026-09-08T06:37:32.1652518Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -995,25 +991,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "cec3c4b654ba79b361a44a1cdad1d0147f6995b189b4c61b53d2840db15456be"
+          "sha256": "2dc08527fb41db7edc4e3b6657045b65e8d829fb7095f19726b4f0f22a1c6984"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "dd4b9ae5760764e8f15f98cb28b5ab54a834ab16ea5d45b1eed01bf8c3a7903e"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "b36d5edb9f003f124f721e5796f6870b847b348d8ec33c03fa2fa4d43b1dd518"
-        },
-        {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "045f0b00f9b51a57cbfae927cc79973c47097fe4348bbf1cff3fe024cd185205"
+          "sha256": "3e2419c4b1c2f4b882c16f5578ae289badfd2d5b47f7be4a03ce876d9886a2e3"
         }
       ],
-      "reason": "Integrated the reviewed Job Manager registration fix from 45b58f5: AddMealsModule supplies the application reader required by achievement reconciliation; its registration guard is updated, without changing schedules or retry policy. Also repaired intent-only PostgreSQL test selection so unrelated UI consumers cannot displace provider-backed tests; the complete precision/session-routing regression passes, including a synthetic unrelated UI diff. Service relocation, existing API contracts, private SSH access and dependency versions remain as previously reviewed.",
+      "reason": "Reviewed new page operation: Admin role and MailInbox metadata permission remain enforced; parameterized filters, bounded page size, no message bodies in page payload.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T06:50:36.0706036Z"
+      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
+      "reviewedAtUtc": "2026-09-08T06:37:41.4263228Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1150,17 +1138,21 @@
     {
       "pageId": "workflow-trace-feature",
       "pagePath": ".llm-wiki/workflows/trace-feature.md",
-      "pageSha256": "d7293e263ab1875a26b0f5a9d91ec9d835ce3c5a912a3aae0accc1c8a197a8f2",
+      "pageSha256": "a0810645611569287dbdf6001b403f168d87acc926b142faffa6793bffde5677",
       "sources": [
         {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "91f57a06c332b8fd9fd7464dd27aea280c13ce129a0266979812d2e08ccc3797"
+        },
+        {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "0f1176f45369b5745fda56dc9bbed13550768b0179ff6dce94803a6395cbe730"
+          "sha256": "167cb2708c802674486d36a7865022887679f29c143210976207bc0836bb9bb8"
         }
       ],
-      "reason": "Reviewed consolidated PRs and authorized Dependabot package fixes; verified patched URI/QS/XML behavior, preserved symlinks and legitimate AJV/plist consumers, unchanged runtime and API contracts, updated regression grouping.",
+      "reason": "New mail page API chain and catalog component pagination are reflected in regenerated indexes; trace tooling and public component bindings remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "687a425be82897bcd1a4e4ab5665b933ab2b8026",
-      "reviewedAtUtc": "2026-09-06T17:13:38.961442Z"
+      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
+      "reviewedAtUtc": "2026-09-08T06:37:42.7608598Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1252,13 +1244,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "dae7de23fd9830821c335c964ad1b59e379e3fc5d80aa1667f1e7689de572b18"
+          "sha256": "91f57a06c332b8fd9fd7464dd27aea280c13ce129a0266979812d2e08ccc3797"
         }
       ],
-      "reason": "Reviewed the regenerated frontend contract index against the active-sessions service, facade, security-card template, translations, and passing frontend verification; the workflow remains accurate.",
+      "reason": "Four lists use existing pagination primitive. Mail requests server pages; catalog lists slice full data. Browser checks cover page six, filter reset, full lesson export and Russian mobile rendering.",
       "baseRef": "HEAD",
-      "gitHead": "917897f931bde49605c14df5a10b0af015f3fc0f",
-      "reviewedAtUtc": "2026-08-29T04:18:40.2003462Z"
+      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
+      "reviewedAtUtc": "2026-09-08T06:37:40.1720615Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1266,46 +1258,14 @@
       "pageSha256": "31d7171d7feb8c70d3bca4652b01ca7b2e728901878069ff810ba852bbb6c49f",
       "sources": [
         {
-          "path": ".llm-wiki/evals/context-search-holdout-100.json",
-          "sha256": "0451b67c129e11f013c405ca2cd7200d04b54b07255305f40567e63ec890e796"
-        },
-        {
-          "path": ".llm-wiki/evals/context-search-unseen-20260826.json",
-          "sha256": "f269b22a9dbc52ff7ceab0d8a5ed8618fa62ba2c41f51b1275a080c2ca2331e3"
-        },
-        {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "61020fe15c4980450521f759eb44cf6a129eb340f6b3ddc6b291d62889f75576"
-        },
-        {
-          "path": ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-          "sha256": "92484183b8d2e71cedf993036d78a04eefaaa3b6bfdf18fdd4045930435cea64"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "9981ba14bacb17c399f3f9f7fd5f392fc679af2407219ad4564127b11028477b"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTaskBriefSqlParity.ps1",
-          "sha256": "064918be1eb5385e2e3032e93b3727e3f1071c02048ce7ddaa4fe6c3e1ae94b6"
-        },
-        {
-          "path": "AGENTS.md",
-          "sha256": "46c9267dcac0e3ff46cab1fe15c0414d363710c0ec1e3ceaceccec2f5269af9d"
+          "sha256": "af025cb6ae8007ff658b6e95795bc64cc5f781a3c98db0fee28b19796b21c61f"
         }
       ],
-      "reason": "Reviewed the physical Services relocation and regenerated source indexes. Solution and project references resolve; 128 focused architecture checks and the regenerated catalog guardrails passed. Docker build inputs and deployment bind paths preserve existing service behavior and data volumes. Frontend fixes retain Angular ESLint 22.2, replace template casts with typed references and uppercase calls with pipes, and cap 27 pre-existing complex templates at their measured counts while retaining the default limit of five. The real-rule sanity fixture and full ESLint pass; production build generated 18 routes plus Russian variants. Technology Radar source evidence and inventory were updated and its build passed.",
+      "reason": "Catalog adds the literal MailInbox page route; discovery commands and guidance remain valid, no scanner behavior changed.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T06:03:33.0407154Z"
+      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
+      "reviewedAtUtc": "2026-09-08T06:37:35.2474102Z"
     },
     {
       "pageId": "workflow.review-diff",

@@ -389,7 +389,17 @@ public sealed class NpgsqlInboundMailStore(
 
     public async Task<IReadOnlyList<InboundMailMessageSummary>> GetFilteredMessagesAsync(
         int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) {
+        InboundMailMessagePage result = await GetMessagePageAsync(1, limit, recipient, category, unread, cancellationToken).ConfigureAwait(false);
+        return result.Items;
+    }
+
+    public async Task<InboundMailMessagePage> GetMessagePageAsync(
+        int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) {
+        ArgumentOutOfRangeException.ThrowIfLessThan(page, 1);
+        ArgumentOutOfRangeException.ThrowIfLessThan(limit, 1);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(limit, 200);
         const string sql = """
+                           with filtered as not materialized (
                            select id, from_address, to_recipients_json::text, subject, status, read_at_utc, received_at_utc,
                                envelope_from_address, is_trusted_relay
                            from mailinbox_messages
@@ -399,22 +409,35 @@ public sealed class NpgsqlInboundMailStore(
                                  to_recipients_json @> '["dmarc@fooddiary.club"]'::jsonb
                                  or subject ilike '%DMARC%' or subject ilike '%Report Domain:%'
                                  then 'dmarc-report' else 'general' end)
-                           order by received_at_utc desc
-                           limit @limit;
+                           )
+                           select page.*, totals.total
+                           from (select count(*) as total from filtered) totals
+                           left join lateral (
+                               select * from filtered
+                               order by received_at_utc desc, id desc
+                               limit @limit offset @offset
+                           ) page on true
+                           order by page.received_at_utc desc, page.id desc;
                            """;
 
         NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         var messages = new List<InboundMailMessageSummary>();
+        long totalItems = 0;
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("limit", limit);
+                command.Parameters.AddWithValue("offset", ((long)page - 1) * limit);
                 command.Parameters.AddWithValue("recipient", NpgsqlDbType.Jsonb, recipient is null ? DBNull.Value : JsonSerializer.Serialize(new[] { recipient.Trim().ToLowerInvariant() }));
                 command.Parameters.AddWithValue("category", NpgsqlDbType.Text, (object?)category ?? DBNull.Value);
                 command.Parameters.AddWithValue("unread", NpgsqlDbType.Boolean, (object?)unread ?? DBNull.Value);
                 NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
                 await using (reader.ConfigureAwait(false)) {
                     while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                        totalItems = reader.GetInt64(9);
+                        if (await reader.IsDBNullAsync(0, cancellationToken).ConfigureAwait(false)) {
+                            continue;
+                        }
                         IReadOnlyList<string> recipients = DeserializeRecipients(reader.GetString(2));
                         string? subject = reader.GetNullableString(3);
                         messages.Add(new InboundMailMessageSummary(
@@ -433,7 +456,7 @@ public sealed class NpgsqlInboundMailStore(
             }
         }
 
-        return messages;
+        return new InboundMailMessagePage(messages, totalItems);
     }
 
     public async Task<InboundMailMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) {

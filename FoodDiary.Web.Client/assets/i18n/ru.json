@@ -1,4 +1,7 @@
 {
+    "ADMIN_PAGINATION": {
+        "RANGE": "{{start}}–{{end}} из {{total}}"
+    },
     "ADMIN_OVERVIEW": {
         "REGISTRATIONS_HINT": "Аккаунты, созданные за период",
         "PAYING_HINT": "Уникальные пользователи с успешной оплатой больше нуля",

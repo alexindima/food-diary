@@ -3,6 +3,9 @@ using FoodDiary.MailInbox.Client.Models;
 namespace FoodDiary.MailInbox.Client;
 
 public interface IMailInboxClient {
+    Task<InboundMailMessagePageResponse> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) =>
+        throw new NotSupportedException("Paged message queries are not implemented.");
+
     Task<IReadOnlyList<InboundMailMessageSummaryResponse>> GetMessagesAsync(
         int? limit,
         CancellationToken cancellationToken);

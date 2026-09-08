@@ -41,7 +41,7 @@
                 </tr>
             </thead>
             <tbody>
-                @for (lesson of lessons(); track lesson.id) {
+                @for (lesson of pageItems(); track lesson.id) {
                     <tr>
                         <td>{{ lesson.title }}</td>
                         <td>{{ lesson.locale }}</td>
@@ -62,5 +62,14 @@
                 }
             </tbody>
         </table>
+        <p class="fd-ui-body-xs">
+            {{ 'ADMIN_PAGINATION.RANGE' | translate: { start: rangeStart(), end: rangeEnd(), total: lessons().length } }}
+        </p>
+        <fd-ui-pagination
+            [length]="lessons().length"
+            [pageSize]="pageSize"
+            [pageIndex]="pageIndex()"
+            (pageIndexChange)="requestedPage.set($event)"
+        />
     }
 </div>

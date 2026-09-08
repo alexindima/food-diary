@@ -12,6 +12,20 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly MailInboxClientOptions _options = options.Value;
 
+    public async Task<InboundMailMessagePageResponse> GetMessagePageAsync(
+        int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) {
+        EnsureBaseAddress();
+        string path = string.Create(CultureInfo.InvariantCulture, $"/api/mail-inbox/messages/page?page={page}&limit={limit}");
+        if (!string.IsNullOrWhiteSpace(recipient)) { path += $"&recipient={Uri.EscapeDataString(recipient.Trim())}"; }
+        if (!string.IsNullOrWhiteSpace(category)) { path += $"&category={Uri.EscapeDataString(category)}"; }
+        if (unread.HasValue) { path += $"&unread={unread.Value.ToString().ToLowerInvariant()}"; }
+        using HttpRequestMessage request = CreateRequest(HttpMethod.Get, path, _options.MetadataApiKey);
+        using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<InboundMailMessagePageResponse>(JsonOptions, cancellationToken).ConfigureAwait(false)
+            ?? throw new InvalidOperationException("MailInbox returned an empty message page response.");
+    }
+
     public Task<IReadOnlyList<InboundMailMessageSummaryResponse>> GetMessagesAsync(int? limit, CancellationToken cancellationToken) =>
         GetFilteredMessagesAsync(limit, recipient: null, category: null, unread: null, cancellationToken);
 

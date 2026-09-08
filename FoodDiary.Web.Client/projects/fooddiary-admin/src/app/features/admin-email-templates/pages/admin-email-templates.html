@@ -18,7 +18,7 @@
                 </tr>
             </thead>
             <tbody>
-                @for (template of templates(); track template.id) {
+                @for (template of pageItems(); track template.id) {
                     <tr>
                         <td>{{ template.key }}</td>
                         <td>{{ template.locale }}</td>
@@ -36,5 +36,14 @@
                 }
             </tbody>
         </table>
+        <p class="fd-ui-body-xs">
+            {{ 'ADMIN_PAGINATION.RANGE' | translate: { start: rangeStart(), end: rangeEnd(), total: templates().length } }}
+        </p>
+        <fd-ui-pagination
+            [length]="templates().length"
+            [pageSize]="pageSize"
+            [pageIndex]="pageIndex()"
+            (pageIndexChange)="requestedPage.set($event)"
+        />
     }
 </div>

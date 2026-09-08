@@ -12,8 +12,8 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 97,
     "routedStandaloneComponents": 55,
-    "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 17,
+    "componentsWithoutDirectSpecs": 129,
+    "criticalSymbolsWithoutTestReferences": 20,
     "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
@@ -1173,16 +1173,6 @@
       "feature": "admin-lessons",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.html",
-      "inputs": [],
-      "outputs": [],
-      "specPath": null
-    },
-    {
-      "class": "AdminMailInboxComponent",
-      "selector": "fd-admin-mail-inbox",
-      "feature": "admin-mail-inbox",
-      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.ts",
-      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.html",
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -4863,9 +4853,39 @@
       "coveredThrough": []
     },
     {
+      "name": "GetAdminMailInboxMessagePageQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetInboundMailMessagePageQueryHandler",
+      "role": "QueryHandler",
+      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "EnqueueMailRelayEmailCommandValidator",
       "role": "Validator",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminMailInboxMessagePageQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],

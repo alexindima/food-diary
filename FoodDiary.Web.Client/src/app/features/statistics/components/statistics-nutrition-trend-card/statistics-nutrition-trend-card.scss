@@ -88,9 +88,6 @@
         --fd-line-chart-height: calc(300px - var(--statistics-trend-date-height));
         --fd-line-chart-stacked-axis-height: var(--statistics-trend-date-height);
         --fd-line-chart-x-axis-label-offset: var(--fd-space-xs);
-        --fd-line-chart-y-axis-gap: 0;
-        --fd-line-chart-y-axis-label-right: var(--fd-space-sm);
-        --fd-line-chart-y-axis-width: var(--statistics-trend-axis-width);
         display: block;
     }
 

@@ -10,6 +10,19 @@ namespace FoodDiary.MailInbox.Client.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxClientTests {
+    [Fact]
+    public async Task GetMessagePageAsync_ForwardsPaginationFiltersAndMetadataKey() {
+        var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent.Create(new InboundMailMessagePageResponse([], 123)),
+        });
+        using var httpClient = new HttpClient(handler) { BaseAddress = new Uri("https://inbox.example.test") };
+        var client = new MailInboxClient(httpClient, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
+        InboundMailMessagePageResponse result = await client.GetMessagePageAsync(3, 50, " bugs+one@example.test ", "general", unread: false, CancellationToken.None);
+        Assert.Equal(123, result.TotalItems);
+        Assert.Empty(result.Items);
+        Assert.Equal("/api/mail-inbox/messages/page?page=3&limit=50&recipient=bugs%2Bone%40example.test&category=general&unread=false", handler.Request?.RequestUri?.PathAndQuery);
+    }
+
     [Theory]
     [InlineData(null, null, null)]
     [InlineData("recipient", null, null)]

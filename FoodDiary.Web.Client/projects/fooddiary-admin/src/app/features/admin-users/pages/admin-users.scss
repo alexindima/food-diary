@@ -18,15 +18,19 @@
     color: var(--fd-color-text-muted);
 }
 
-.users-table {
-    display: block;
+.users-table-scroll {
+    min-width: 0;
     width: 100%;
     max-width: 100%;
     overflow-x: auto;
+}
+
+.users-table {
+    width: 100%;
     border-collapse: collapse;
 }
 
-.users-table:where(:focus-visible) {
+.users-table-scroll:where(:focus-visible) {
     outline: var(--fd-outline-focus);
     outline-offset: calc(0px - var(--fd-border-width-strong));
 }
@@ -36,6 +40,19 @@
     padding: var(--fd-space-sm);
     border-bottom: var(--fd-border-default);
     text-align: left;
+    vertical-align: top;
+}
+
+.users-table th {
+    white-space: nowrap;
+}
+
+.users-table__row:hover {
+    background: var(--fd-bg-surface-muted);
+}
+
+.admin-users__section-header {
+    flex-wrap: wrap;
 }
 
 .users-table__reason {

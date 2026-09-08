@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1100,
+    "contracts": 1106,
     "ambiguousContracts": 0,
-    "consumerEdges": 7910,
-    "productionConsumerEdges": 4677,
-    "testConsumerEdges": 3233,
-    "consumedContracts": 1100,
+    "consumerEdges": 7933,
+    "productionConsumerEdges": 4698,
+    "testConsumerEdges": 3235,
+    "consumedContracts": 1106,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -788,6 +788,23 @@
       ],
       "definitionPaths": [
         "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessageDetailsHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "AdminMailInboxMessagePageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessagePageHttpResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -4363,6 +4380,40 @@
       "collisionClassification": "unique"
     },
     {
+      "name": "GetAdminMailInboxMessagePageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagePageHttpQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetAdminMailInboxMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
       "name": "GetAdminMailInboxMessagesHttpQuery",
       "roles": [
         "Query"
@@ -5208,6 +5259,23 @@
       ],
       "definitionPaths": [
         "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQuery.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "GetInboundMailMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "MailInbox"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQuery.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -10886,6 +10954,40 @@
       ],
       "definitionPaths": [
         "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageDetailsResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "InboundMailMessagePageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "MailInbox"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessagePageHttpResponse.cs"
+      ],
+      "ambiguous": false,
+      "collisionClassification": "unique"
+    },
+    {
+      "name": "InboundMailMessagePageResponse",
+      "roles": [
+        "Response"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "MailInbox"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessagePageResponse.cs"
       ],
       "ambiguous": false,
       "collisionClassification": "unique"
@@ -21162,6 +21264,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "AdminMailInboxMessagePageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessagePageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Features/Admin/AdminMailInboxController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
       "contract": "AdminMailInboxMessageSummaryHttpResponse",
       "roles": [
         "Response"
@@ -21186,6 +21301,19 @@
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminMailInboxHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "AdminMailInboxMessageSummaryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessageSummaryHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessagePageHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "AdminMailInboxMessageSummaryHttpResponse",
@@ -35215,6 +35343,58 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetAdminMailInboxMessagePageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagePageHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Features/Admin/AdminMailInboxController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminMailInboxMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetAdminMailInboxMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminMailInboxMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Features/Admin/AdminMailInboxController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetAdminMailInboxMessagesHttpQuery",
       "roles": [
         "Query"
@@ -38502,6 +38682,58 @@
       "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "GetInboundMailMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQuery.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetInboundMailMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQuery.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetInboundMailMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQuery.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetInboundMailMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQuery.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MessagePageValidationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
     },
     {
       "contract": "GetInboundMailMessagesQuery",
@@ -45714,6 +45946,19 @@
         "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAdminMailInboxReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -50136,7 +50381,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/BugMailImportWorkerTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 5
     },
     {
       "contract": "IBugMailSource",
@@ -50227,7 +50472,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/BugMailImportWorkerTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
     },
     {
       "contract": "IBugReportStore",
@@ -69465,6 +69710,19 @@
         "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs"
       ],
       "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IInboundMailStore",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Application/Abstractions/IInboundMailStore.cs"
+      ],
+      "consumerArea": "MailInbox",
       "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
@@ -73643,6 +73901,71 @@
       "referenceCount": 4
     },
     {
+      "contract": "InboundMailMessagePageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessagePageHttpResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "InboundMailMessagePageResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessagePageResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Infrastructure/Integrations/MailInbox/MailInboxClientAdminMailInboxReader.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "InboundMailMessagePageResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessagePageResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Client/IMailInboxClient.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "InboundMailMessagePageResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessagePageResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "InboundMailMessagePageResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessagePageResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Client.Tests/MailInboxClientTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "InboundMailMessageReceivedDomainEvent",
       "roles": [
         "Event"
@@ -73703,6 +74026,19 @@
         "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessageSummaryHttpResponse.cs"
       ],
       "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessagePageHttpResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "InboundMailMessageSummaryHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessageSummaryHttpResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
       "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs",
       "isTest": true,
       "referenceCount": 4
@@ -73745,6 +74081,19 @@
       "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Client/MailInboxClient.cs",
       "isTest": false,
       "referenceCount": 4
+    },
+    {
+      "contract": "InboundMailMessageSummaryResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageSummaryResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessagePageResponse.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "InboundMailMessageSummaryResponse",
@@ -80566,6 +80915,19 @@
         "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -82062,6 +82424,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminMailInboxMessageDetails/GetAdminMailInboxMessageDetailsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IQueryHandler",
+      "roles": [
+        "QueryHandler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Application.Contracts/Common/Abstractions/Messaging/IQueryHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -87521,6 +87896,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQuery.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "MailInbox",
       "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessages/GetInboundMailMessagesQuery.cs",
       "isTest": false,
       "referenceCount": 1
@@ -88653,6 +89041,19 @@
       ],
       "consumerArea": "MailInbox",
       "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessageDetails/GetInboundMailMessageDetailsQueryHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequestHandler",
+      "roles": [
+        "Handler"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequestHandler.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -104592,7 +104993,7 @@
       "consumerArea": "MailInbox",
       "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
       "isTest": false,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "MailInboxApiErrorHttpResponse",

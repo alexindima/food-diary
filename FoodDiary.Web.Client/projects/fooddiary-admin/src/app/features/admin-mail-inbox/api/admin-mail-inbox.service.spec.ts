@@ -122,3 +122,28 @@ describe('AdminMailInboxService', () => {
         expect(completed).toBe(true);
     });
 });
+
+describe('AdminMailInboxService pagination', () => {
+    it('requests a server page with filters and preserves the filtered total', () => {
+        TestBed.configureTestingModule({ providers: [AdminMailInboxService, provideHttpClient(), provideHttpClientTesting()] });
+        const service = TestBed.inject(AdminMailInboxService);
+        const httpMock = TestBed.inject(HttpTestingController);
+        const baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/mail-inbox/messages`;
+        const page = 6;
+        const pageSize = 50;
+        const response = { items: [messageDetailsResponse], totalItems: 327 };
+        service
+            .getMessagePage(page, pageSize, { recipient: ' bugs@example.com ', category: 'general', unread: false })
+            .subscribe(result => {
+                expect(result).toEqual(response);
+            });
+        const request = httpMock.expectOne(req => req.url === `${baseUrl}/page`);
+        expect(request.request.params.get('page')).toBe('6');
+        expect(request.request.params.get('limit')).toBe('50');
+        expect(request.request.params.get('recipient')).toBe('bugs@example.com');
+        expect(request.request.params.get('category')).toBe('general');
+        expect(request.request.params.get('unread')).toBe('false');
+        request.flush(response);
+        httpMock.verify();
+    });
+});

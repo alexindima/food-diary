@@ -2,8 +2,8 @@
     --fd-line-chart-angled-axis-height: 40px;
     --fd-line-chart-stacked-axis-height: calc(1lh + var(--fd-line-chart-x-axis-label-offset));
     --fd-line-chart-x-axis-label-offset: var(--fd-space-sm);
-    --fd-line-chart-y-axis-gap: 0;
-    --fd-line-chart-y-axis-label-right: calc(var(--fd-space-sm) * -1);
+    --fd-line-chart-y-axis-gap: var(--fd-space-md);
+    --fd-line-chart-y-axis-label-right: 0;
     --fd-line-chart-y-axis-width: fit-content(112px);
     --fd-line-chart-height: 180px;
     container-type: inline-size;

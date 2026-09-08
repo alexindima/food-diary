@@ -139,6 +139,9 @@ Responsive line chart for compact trends and sparklines.
 **CSS variables**
 
 - `--fd-line-chart-height`
+- `--fd-line-chart-y-axis-gap` (defaults to `--fd-space-md`, reserving room between Y labels and edge markers)
+- `--fd-line-chart-y-axis-label-right` (defaults to `0`; positive values inset labels inside the axis column)
+- `--fd-line-chart-y-axis-width` (defaults to `fit-content(112px)`)
 
 ### Inputs
 

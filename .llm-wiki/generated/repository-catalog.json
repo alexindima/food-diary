@@ -20,7 +20,7 @@
     "extractedApplicationModules": 33,
     "backendBusinessModules": 34,
     "controllers": 10,
-    "endpoints": 21,
+    "endpoints": 22,
     "agentGuides": 251,
     "documentationPages": 169
   },
@@ -13782,18 +13782,23 @@
         "endpoints": [
           {
             "verb": "GET",
-            "route": "/api/mail-inbox/messages",
+            "route": "/api/mail-inbox/messages/page",
             "line": 22
           },
           {
             "verb": "GET",
+            "route": "/api/mail-inbox/messages",
+            "line": 33
+          },
+          {
+            "verb": "GET",
             "route": "/api/mail-inbox/messages/{id:guid}",
-            "line": 35
+            "line": 46
           },
           {
             "verb": "POST",
             "route": "/api/mail-inbox/messages/{id:guid}/read",
-            "line": 49
+            "line": 60
           }
         ]
       },

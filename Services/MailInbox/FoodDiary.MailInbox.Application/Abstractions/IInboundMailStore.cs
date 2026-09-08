@@ -4,6 +4,9 @@ using FoodDiary.MailInbox.Domain.Messages;
 namespace FoodDiary.MailInbox.Application.Abstractions;
 
 public interface IInboundMailStore {
+    Task<InboundMailMessagePage> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) =>
+        throw new NotSupportedException("Paged message queries are not implemented.");
+
     Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken);
 
     Task<InboundMailSaveResult> SaveAsync(

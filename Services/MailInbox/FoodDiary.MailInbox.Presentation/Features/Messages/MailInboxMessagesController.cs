@@ -19,6 +19,17 @@ namespace FoodDiary.MailInbox.Presentation.Features.Messages;
 public sealed class MailInboxMessagesController(
     ISender sender,
     IOptions<MailInboxHttpOptions> options) : AuthorizedMailInboxEndpointBase(sender) {
+    [HttpGet("page")]
+    [RequireMailInboxPermission(MailInboxPermission.Metadata)]
+    [ServiceFilter(typeof(MailInboxMessageMetadataConcurrencyFilter))]
+    [ProducesResponseType<InboundMailMessagePageHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<MailInboxApiErrorHttpResponse>(StatusCodes.Status429TooManyRequests)]
+    [ProducesResponseType<MailInboxApiErrorHttpResponse>(StatusCodes.Status503ServiceUnavailable)]
+    public Task<IActionResult> GetPage([FromQuery] int page = 1, [FromQuery] int limit = 50, [FromQuery] string? recipient = null, [FromQuery] string? category = null, [FromQuery] bool? unread = null) =>
+        ExecuteMetadataOperationAsync(cancellationToken => HandleOk(
+            new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage.GetInboundMailMessagePageQuery(page, limit, recipient, category, unread),
+            static value => new InboundMailMessagePageHttpResponse(value.Items.ToHttpResponse(), value.TotalItems), cancellationToken));
+
     [HttpGet]
     [RequireMailInboxPermission(MailInboxPermission.Metadata)]
     [ServiceFilter(typeof(MailInboxMessageMetadataConcurrencyFilter))]

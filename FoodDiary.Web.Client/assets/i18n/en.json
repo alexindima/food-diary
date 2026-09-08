@@ -1,4 +1,7 @@
 {
+    "ADMIN_PAGINATION": {
+        "RANGE": "{{start}}–{{end}} of {{total}}"
+    },
     "ADMIN_OVERVIEW": {
         "REGISTRATIONS_HINT": "Accounts created in this period",
         "PAYING_HINT": "Unique users with a positive successful payment",

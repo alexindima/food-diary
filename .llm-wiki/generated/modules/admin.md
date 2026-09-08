@@ -43,15 +43,15 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AdminImpersonationSession
-- Public contract files: 27
+- Public contract files: 28
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 27
+- Public contract types: 28
 - Interfaces: 10
-- DTO/read-model/projection types: 11
+- DTO/read-model/projection types: 12
 - Enums: 0
 - Exported repository-shaped contracts: 7
 - Contracts referencing domain entities: 1
@@ -79,6 +79,7 @@ No literal attribute-routed controller was associated with this module.
 - `record AdminMailInboxDmarcRecordModel`
 - `record AdminMailInboxDmarcReportModel`
 - `record AdminMailInboxMessageDetailsModel`
+- `record AdminMailInboxMessagePageModel`
 - `record AdminMailInboxMessageSummaryModel`
 - `record AdminUserRoleAuditEventReadModel`
 - `record ExchangeAdminImpersonationCommand`

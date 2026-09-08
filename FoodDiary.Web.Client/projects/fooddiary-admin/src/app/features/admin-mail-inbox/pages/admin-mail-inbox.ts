@@ -4,7 +4,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
+import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { FdUiSelectComponent } from 'fd-ui-kit/select/fd-ui-select';
 import type { Subscription } from 'rxjs';
 
@@ -18,11 +19,10 @@ type AdminMailInboxMessageSummaryViewModel = {
 } & AdminMailInboxMessageSummary;
 
 const DEFAULT_MAIL_INBOX_LIMIT = 50;
-const MAX_MAIL_INBOX_LIMIT = 200;
 
 @Component({
     selector: 'fd-admin-mail-inbox',
-    imports: [CommonModule, FdUiButtonComponent, FdUiInputComponent, FdUiSelectComponent, TranslatePipe],
+    imports: [CommonModule, FdUiButtonComponent, FdUiInputComponent, FdUiSelectComponent, TranslatePipe, FdUiPaginationComponent],
     templateUrl: './admin-mail-inbox.html',
     styleUrl: './admin-mail-inbox.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,7 +36,11 @@ export class AdminMailInboxComponent {
     protected readonly loadFailed = signal(false);
     protected readonly messages = signal<AdminMailInboxMessageSummary[]>([]);
     protected readonly isLoading = signal(false);
-    protected readonly limit = signal(DEFAULT_MAIL_INBOX_LIMIT);
+    protected readonly pageSize = DEFAULT_MAIL_INBOX_LIMIT;
+    protected readonly page = signal(1);
+    protected readonly totalItems = signal(0);
+    protected readonly rangeStart = computed(() => (this.messages().length === 0 ? 0 : (this.page() - 1) * this.pageSize + 1));
+    protected readonly rangeEnd = computed(() => (this.messages().length === 0 ? 0 : this.rangeStart() + this.messages().length - 1));
     protected readonly recipientFilter = signal('');
     protected readonly unreadFilter = signal<string | null>('all');
     protected readonly categoryFilter = signal<'all' | 'dmarc-report' | 'general'>('all');
@@ -53,26 +57,36 @@ export class AdminMailInboxComponent {
         this.loadMessages();
     }
 
-    protected loadMessages(): void {
+    protected loadMessages(resetPage = false): void {
+        if (resetPage) {
+            this.page.set(1);
+        }
         this.listRequest?.unsubscribe();
         this.loadFailed.set(false);
         this.isLoading.set(true);
         this.listRequest = this.mailInboxFacade
-            .getMessages(
-                this.limit(),
-                this.recipientFilter(),
-                this.categoryFilter() === 'all' ? '' : this.categoryFilter(),
-                this.unreadFilter() === 'all' ? undefined : this.unreadFilter() === 'unread',
-            )
+            .getMessagePage(this.page(), this.pageSize, {
+                recipient: this.recipientFilter(),
+                category: this.categoryFilter() === 'all' ? '' : this.categoryFilter(),
+                unread: this.unreadFilter() === 'all' ? undefined : this.unreadFilter() === 'unread',
+            })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
-                    this.messages.set(response);
+                    this.totalItems.set(response.totalItems);
+                    const lastPage = Math.max(1, Math.ceil(response.totalItems / this.pageSize));
+                    if (this.page() > lastPage) {
+                        this.page.set(lastPage);
+                        this.loadMessages();
+                        return;
+                    }
+                    this.messages.set(response.items);
                     this.isLoading.set(false);
                 },
                 error: () => {
                     this.loadFailed.set(true);
                     this.messages.set([]);
+                    this.totalItems.set(0);
                     this.isLoading.set(false);
                 },
             });
@@ -88,23 +102,22 @@ export class AdminMailInboxComponent {
                 subject: message.subject,
                 onRead: (id: string, readAtUtc: string) => {
                     this.messages.update(messages => messages.map(item => (item.id === id ? { ...item, readAtUtc } : item)));
+                    if (this.unreadFilter() === 'unread') {
+                        this.loadMessages();
+                    }
                 },
             },
         });
     }
 
-    protected updateLimit(value: FdUiInputValue): void {
-        const parsed = Number.parseInt(fdUiCoerceInputTextValue(value), 10);
-        if (!Number.isFinite(parsed)) {
-            return;
-        }
-
-        this.limit.set(Math.max(1, Math.min(parsed, MAX_MAIL_INBOX_LIMIT)));
+    protected goToPage(index: number): void {
+        this.page.set(index + 1);
+        this.loadMessages();
     }
 
     protected setCategoryFilter(value: string | null): void {
         this.categoryFilter.set(value === 'dmarc-report' || value === 'general' ? value : 'all');
-        this.loadMessages();
+        this.loadMessages(true);
     }
 
     private formatCategory(category: string): string {

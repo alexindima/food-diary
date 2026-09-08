@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1587,
+    "typescriptFiles": 1588,
     "symbols": 619,
     "routes": 86,
     "features": 37,
-    "specs": 562,
+    "specs": 563,
     "localeFiles": 5,
     "roles": {
       "Component": 424,
@@ -181,7 +181,8 @@
         ""
       ],
       "tests": [
-        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.spec.ts"
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.spec.ts",
+        "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/pages/admin-mail-inbox.spec.ts"
       ]
     },
     {
@@ -1780,7 +1781,7 @@
       "role": "Component",
       "selector": "fd-admin-achievements",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-achievements/pages/admin-achievements.ts",
-      "line": 38
+      "line": 48
     },
     {
       "name": "AdminAcquisitionService",
@@ -1948,7 +1949,7 @@
       "role": "Component",
       "selector": "fd-admin-email-templates",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-email-templates/pages/admin-email-templates.ts",
-      "line": 18
+      "line": 20
     },
     {
       "name": "AdminLessonsService",
@@ -1976,14 +1977,14 @@
       "role": "Component",
       "selector": "fd-admin-lessons",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-lessons/pages/admin-lessons.ts",
-      "line": 23
+      "line": 25
     },
     {
       "name": "AdminMailInboxService",
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/api/admin-mail-inbox.service.ts",
-      "line": 9
+      "line": 14
     },
     {
       "name": "AdminMailMessageDialogComponent",
@@ -1997,7 +1998,7 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-mail-inbox/lib/admin-mail-inbox.facade.ts",
-      "line": 8
+      "line": 13
     },
     {
       "name": "AdminMailInboxComponent",
@@ -6029,8 +6030,8 @@
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 656,
-      "russianProperties": 656,
+      "englishProperties": 658,
+      "russianProperties": 658,
       "countsMatch": true
     },
     {

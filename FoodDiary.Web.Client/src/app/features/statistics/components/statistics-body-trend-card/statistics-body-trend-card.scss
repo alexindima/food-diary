@@ -6,7 +6,6 @@
 }
 
 .statistics-body-trend-card {
-    --statistics-body-axis-width: calc(var(--fd-space-xl) + var(--fd-space-sm));
     --statistics-body-chart-gap: var(--fd-space-sm);
     --statistics-body-date-height: calc(var(--fd-space-xl) + var(--fd-space-xs));
 
@@ -33,9 +32,6 @@
         --fd-line-chart-height: calc(300px - var(--statistics-body-date-height));
         --fd-line-chart-stacked-axis-height: var(--statistics-body-date-height);
         --fd-line-chart-x-axis-label-offset: var(--fd-space-xs);
-        --fd-line-chart-y-axis-gap: 0;
-        --fd-line-chart-y-axis-label-right: var(--fd-space-sm);
-        --fd-line-chart-y-axis-width: var(--statistics-body-axis-width);
         display: block;
     }
 

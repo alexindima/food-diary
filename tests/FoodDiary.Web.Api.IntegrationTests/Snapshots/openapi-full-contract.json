@@ -1503,6 +1503,92 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/mail-inbox/messages/page",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminMailInboxMessagePageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminMailInboxMessagePageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminMailInboxMessagePageHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Category",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 64
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 200
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 2147483647
+            },
+            {
+              "Name": "Recipient",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 320
+            },
+            {
+              "Name": "Unread",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/mail-inbox/messages/{id}",
       "Operations": [
         {
@@ -17502,6 +17588,25 @@
           "Type": "array",
           "Nullable": true,
           "ItemType": "string"
+        }
+      ]
+    },
+    {
+      "Name": "AdminMailInboxMessagePageHttpResponse",
+      "Properties": [
+        {
+          "Name": "items",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/AdminMailInboxMessageSummaryHttpResponse"
+        },
+        {
+          "Name": "totalItems",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int64",
+          "Nullable": false
         }
       ]
     },

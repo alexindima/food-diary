@@ -15,6 +15,13 @@ namespace FoodDiary.Presentation.Api.Features.Admin;
 [Route("api/v{version:apiVersion}/admin/mail-inbox/messages")]
 [Authorize(Roles = PresentationRoleNames.Admin)]
 public sealed class AdminMailInboxController(ISender mediator) : BaseApiController(mediator) {
+    [HttpGet("page")]
+    [ProducesResponseType<AdminMailInboxMessagePageHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetPage([FromQuery] GetAdminMailInboxMessagePageHttpQuery query) =>
+        HandleOk(new FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessagePage.GetAdminMailInboxMessagePageQuery(query.Page, query.Limit, query.Recipient, query.Category, query.Unread),
+            static value => new AdminMailInboxMessagePageHttpResponse(value.Items.Select(item => item.ToHttpResponse()).ToList(), value.TotalItems));
+
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<AdminMailInboxMessageSummaryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
