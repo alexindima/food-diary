@@ -15,9 +15,9 @@
         "@microsoft/signalr": {
             "ws": "7.5.11"
         },
-        "hono": "4.12.34",
+        "hono": "4.13.5",
         "ip-address": "10.3.1",
-        "js-yaml": "4.3.1",
+        "js-yaml": "4.3.2",
         "lighthouse": {
             "ws": "7.5.11"
         },
