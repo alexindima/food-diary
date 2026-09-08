@@ -711,6 +711,15 @@
   ],
   "identityBoosts": [
     {
+      "id": "explicit-dkim-signing",
+      "queryTerms": ["dkim", "sign"],
+      "minimumMatches": 2,
+      "identityTerms": ["dkim", "sign"],
+      "minimumIdentityMatches": 2,
+      "identityScope": "file",
+      "score": 180
+    },
+    {
       "id": "background-job-intent",
       "queryTerms": ["job", "recurring", "background"],
       "minimumMatches": 1,

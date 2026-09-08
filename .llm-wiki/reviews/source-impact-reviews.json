@@ -530,7 +530,7 @@
       "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
       "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:36.3618800Z"
+      "reviewedAtUtc": "2026-09-08T21:31:36.36188Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -697,21 +697,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "c83858169f264b169ea80eb5102ae17aa4e24bebd15930353e825318b353b737"
-        },
-        {
-          "path": ".llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1",
-          "sha256": "40cce4575a458525966fcdbcf7075551917d6b89a5f34bb9da03825140277049"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "8864d52acc5546c317334dd4fb207e1a4684c08c2164b66605b3e633d767625b"
+          "sha256": "3dbe392e30a9c010ed253935d21e953792c7f5abad0eaa93a3b8963ddaf5b7c7"
         }
       ],
-      "reason": "Integrated the reviewed Job Manager registration fix from 45b58f5: AddMealsModule supplies the application reader required by achievement reconciliation; its registration guard is updated, without changing schedules or retry policy. Also repaired intent-only PostgreSQL test selection so unrelated UI consumers cannot displace provider-backed tests; the complete precision/session-routing regression passes, including a synthetic unrelated UI diff. Service relocation, existing API contracts, private SSH access and dependency versions remain as previously reviewed.",
+      "reason": "Reviewed the CI change against pipeline documentation: verification commands, ordering, profiles, and failure gates remain unchanged. The new failure-only artifact step preserves existing stage logs and new per-case search diagnostics.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T06:50:33.2911672Z"
+      "gitHead": "7e53cd70f4006f7a3307173c5c90e96fbcfce055",
+      "reviewedAtUtc": "2026-09-08T23:06:19.0429384Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -756,7 +748,7 @@
       "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
       "baseRef": "HEAD",
       "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:24.1776870Z"
+      "reviewedAtUtc": "2026-09-07T05:38:24.177687Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -942,13 +934,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "c83858169f264b169ea80eb5102ae17aa4e24bebd15930353e825318b353b737"
+          "sha256": "3dbe392e30a9c010ed253935d21e953792c7f5abad0eaa93a3b8963ddaf5b7c7"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed CI report publication: the report command and job summary contract remain unchanged. A failure-only upload now retains Wiki diagnostic logs and evaluation JSON; it does not replace or weaken the change review report.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:32.3077895Z"
+      "gitHead": "7e53cd70f4006f7a3307173c5c90e96fbcfce055",
+      "reviewedAtUtc": "2026-09-08T23:06:19.3132673Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -986,22 +978,14 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1fa7e5d2f77e1dc7b130180785b25a61e4515ac572fdadc9bd8b907035deacc7"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3b92edba57400930902da65b968d0e153b040e5066d00db4c7acbc0392b67084"
-        },
-        {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "55cbaa9fb45f2c6703bfc99216d1d2b12dddd770c24e8af3da2249069fa270e4"
+          "path": ".llm-wiki/policies/context-search-ranking.json",
+          "sha256": "6a3165956f5c0fc614f125a45d513aafb658920bf7b0c700cb2f80c44be0ab43"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Reviewed the unchanged security evidence compiler contract: the ranking policy now recognizes explicit DKIM signing identity; no security finding semantics, source trust, or scanner claims changed. Full context evaluation and runtime parity passed.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:41.9394072Z"
+      "gitHead": "7e53cd70f4006f7a3307173c5c90e96fbcfce055",
+      "reviewedAtUtc": "2026-09-08T22:54:44.1522104Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "description": "DKIM signing must remain discoverable as unrelated outgoing-mail journal code grows. Options queries must retain their distinct target.",
+  "diagnosticLimit": 100,
+  "thresholds": {
+    "minimumTop1Rate": 1.0,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 1.0
+  },
+  "cases": [
+    {
+      "id": "dkim-outgoing",
+      "query": "sign outgoing relay email with DKIM",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DkimSigningService.cs"
+      ]
+    },
+    {
+      "id": "dkim-signing",
+      "query": "DKIM signing service",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DkimSigningService.cs"
+      ]
+    },
+    {
+      "id": "dkim-mail",
+      "query": "sign mail with DKIM",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/DkimSigningService.cs"
+      ]
+    },
+    {
+      "id": "dkim-options",
+      "query": "MailRelayDkimOptions",
+      "changeType": "Backend",
+      "expectedPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Options/MailRelayDkimOptions.cs"
+      ]
+    }
+  ],
+  "switchCriteria": {
+    "minimumCaseCount": 4,
+    "minimumTop1Rate": 1.0,
+    "minimumTop10Rate": 1.0,
+    "minimumMeanReciprocalRank": 1.0
+  }
+}

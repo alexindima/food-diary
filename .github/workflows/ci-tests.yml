@@ -65,6 +65,20 @@ jobs:
             -OutputPath $reviewReport
           Get-Content -LiteralPath $reviewReport | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
+
+      - name: Upload Wiki failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: llm-wiki-failure-logs
+          include-hidden-files: true
+          path: |
+            .artifacts/llm-wiki/**/*.log
+            .artifacts/llm-wiki/verify-runs/**/summary.*
+            .artifacts/llm-wiki/context-evaluation/*.json
+          if-no-files-found: warn
+          retention-days: 7
+
   tech-radar:
     name: Technology Radar build and evidence validation
     runs-on: ubuntu-latest

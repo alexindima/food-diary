@@ -8,6 +8,8 @@ $challengeCorpus = Join-Path $PSScriptRoot '../evals/context-search-holdout.json
 $challengeEvaluation = & $measure -CorpusPath $challengeCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $generalizationCorpus = Join-Path $PSScriptRoot '../evals/context-search-generalization.json'
 $generalizationEvaluation = & $measure -CorpusPath $generalizationCorpus -SkipBuild -Format Json | ConvertFrom-Json
+$mailRegressionCorpus = Join-Path $PSScriptRoot '../evals/context-search-mail-regression.json'
+$mailRegressionEvaluation = & $measure -CorpusPath $mailRegressionCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $validationCorpus = Join-Path $PSScriptRoot '../evals/context-search-validation.json'
 $validationEvaluation = & $measure -CorpusPath $validationCorpus -SkipBuild -Format Json | ConvertFrom-Json
 $imageWikiRegressionCorpus = Join-Path $PSScriptRoot '../evals/context-search-image-wiki-regression.json'
@@ -81,7 +83,18 @@ if ($normalizationRuleCount -gt 400 -or $rankingRuleCount -gt 400 -or
     ($normalizationRuleCount + $rankingRuleCount) -gt 700 -or $null -eq $rankingPolicy.genericAffinities) {
     throw "Context search exceeded its staged complexity budget or lost generic affinities: normalization=$normalizationRuleCount/400; ranking=$rankingRuleCount/400; combined=$($normalizationRuleCount + $rankingRuleCount)/700."
 }
-$allEvaluations = @($primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $imageWikiRegressionEvaluation, $securityRegressionEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
+$allEvaluations = @($mailRegressionEvaluation, $primaryEvaluation, $challengeEvaluation, $generalizationEvaluation, $validationEvaluation, $imageWikiRegressionEvaluation, $securityRegressionEvaluation, $probeEvaluation, $probe2Evaluation, $probe3Evaluation, $probe4Evaluation, $probe5Evaluation, $probe6Evaluation, $probe7Evaluation)
+# Persist per-case rankings before enforcing thresholds so CI failures are actionable.
+$failedEvaluations = @(@($allEvaluations) + @($businessWikiRegressionEvaluation) | Where-Object { -not $_.passed })
+if ($failedEvaluations.Count -gt 0) {
+    $diagnosticRoot = Join-Path $PSScriptRoot '../../.artifacts/llm-wiki/context-evaluation'
+    $null = New-Item -ItemType Directory -Path $diagnosticRoot -Force
+    foreach ($failedEvaluation in $failedEvaluations) {
+        $diagnosticPath = Join-Path $diagnosticRoot ([IO.Path]::GetFileName([string]$failedEvaluation.corpusPath))
+        [IO.File]::WriteAllText($diagnosticPath, ($failedEvaluation | ConvertTo-Json -Depth 30), [Text.UTF8Encoding]::new($false))
+        Write-Host "Context evaluation failure details: $diagnosticPath"
+    }
+}
 foreach ($evaluation in $allEvaluations) {
     if (-not $evaluation.passed) {
         $missIds = @($evaluation.misses | ForEach-Object {

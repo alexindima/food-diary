@@ -33,6 +33,7 @@ sources:
   - .llm-wiki/evals/context-search.json
   - .llm-wiki/evals/context-search-holdout.json
   - .llm-wiki/evals/context-search-generalization.json
+  - .llm-wiki/evals/context-search-mail-regression.json
   - .llm-wiki/evals/context-search-validation.json
   - .llm-wiki/evals/context-search-probe.json
   - .llm-wiki/evals/context-search-probe-2.json
@@ -292,6 +293,12 @@ run the combined gate:
 ./.llm-wiki/tools/Measure-LlmWikiSqlContextEvaluation.ps1 -FailOnRegression
 ./.llm-wiki/tools/Test-LlmWikiSqlContextEvaluation.ps1
 ```
+
+The mail regression corpus protects explicit DKIM signing intent against growth
+in outgoing journal code, with a separate options-query control. Failed corpus
+evaluations retain per-case rankings in `.artifacts/llm-wiki/context-evaluation/`;
+the CI Wiki job uploads those JSON reports and tool logs on failure. Original
+generalization thresholds remain unchanged.
 
 Each evaluation reports top-1 accuracy, top-10 recall, mean reciprocal rank,
 SQL timing, per-query misses, and metrics grouped by the optional case `cohort`.
