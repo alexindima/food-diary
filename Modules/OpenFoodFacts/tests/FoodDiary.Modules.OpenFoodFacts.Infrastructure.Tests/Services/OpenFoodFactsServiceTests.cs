@@ -12,6 +12,39 @@ namespace FoodDiary.Modules.OpenFoodFacts.Infrastructure.Tests.Services;
 [ExcludeFromCodeCoverage]
 [Collection("OpenFoodFacts shared state")]
 public sealed class OpenFoodFactsServiceTests {
+    [Fact]
+    public async Task SearchAsync_WhenAnotherCallerRefreshesAfterInitialLookup_RechecksCacheWithoutHttp() {
+        string query = $"refresh-race-{Guid.NewGuid():N}";
+        string key = OpenFoodFactsService.GetSearchCacheKey(query, 10);
+        OpenFoodFactsService writer = CreateService(new SuccessHttpMessageHandler("{}"));
+        System.Reflection.MethodInfo cache = typeof(OpenFoodFactsService).GetMethod("CacheSearchResult", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        IReadOnlyList<OpenFoodFactsProductModel> oldProducts = [CreateProductModel("1", "Old")];
+        IReadOnlyList<OpenFoodFactsProductModel> freshProducts = [CreateProductModel("2", "Fresh")];
+        cache.Invoke(writer, [key, oldProducts]);
+        MakeOpenFoodFactsSearchCacheStale(query, 10, TimeSpan.FromHours(1));
+        var http = new CountingHttpMessageHandler("{}");
+        var clock = new RefreshDuringLookupClock(() => cache.Invoke(writer, [key, freshProducts]));
+        OpenFoodFactsService reader = CreateServiceWithTimeProvider(http, clock);
+
+        IReadOnlyList<OpenFoodFactsProductModel> result = await reader.SearchAsync(query);
+
+        Assert.Equal(freshProducts, result);
+        Assert.Equal(0, http.RequestCount);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RefreshDuringLookupClock(Action refresh) : TimeProvider {
+        private bool _refreshed;
+
+        public override DateTimeOffset GetUtcNow() {
+            if (!_refreshed) {
+                _refreshed = true;
+                refresh();
+            }
+            return FixedTime.GetUtcNow();
+        }
+    }
+
     private const string IntegrationsMeterName = "FoodDiary.Integrations";
 
     [Fact]

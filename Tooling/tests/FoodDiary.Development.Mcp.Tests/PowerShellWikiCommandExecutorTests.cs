@@ -18,7 +18,7 @@ public sealed class PowerShellWikiCommandExecutorTests {
         Assert.Equal(expected, await operation);
     }
 
-    [Fact]
+    [PowerShellFact]
     public async Task ExecuteAsync_WhenWikiCommandFails_RecordsFailureAndThrows() {
         WikiRuntimeTelemetry telemetry = new();
         PowerShellWikiCommandExecutor executor = new(telemetry);
@@ -72,7 +72,7 @@ public sealed class PowerShellWikiCommandExecutorTests {
         Assert.True(result.RuntimeMetrics.ContextRouting.PersistenceHealthy);
     }
 
-    [Fact]
+    [PowerShellFact]
     public async Task ExecuteAsync_ReturnsFocusedTestPlan() {
         WikiRuntimeTelemetry telemetry = new();
         PowerShellWikiCommandExecutor executor = new(telemetry);
@@ -101,7 +101,7 @@ public sealed class PowerShellWikiCommandExecutorTests {
             timing => AssertStage(timing, "result-processing"));
     }
 
-    [Fact]
+    [PowerShellFact]
     public async Task ExecuteAsync_CompactBrief_IgnoresFacadeOnlyNoBaselineFlag() {
         PowerShellWikiCommandExecutor executor = new();
         using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(60));
@@ -121,7 +121,7 @@ public sealed class PowerShellWikiCommandExecutorTests {
         Assert.StartsWith("{", result.RawOutput, StringComparison.Ordinal);
     }
 
-    [Fact]
+    [PowerShellFact]
     public async Task ExecuteAsync_UsesRequestFileForLongUnicodeScope() {
         PowerShellWikiCommandExecutor executor = new();
         using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(60));

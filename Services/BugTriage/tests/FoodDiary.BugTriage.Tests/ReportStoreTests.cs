@@ -5,7 +5,25 @@ using Testcontainers.PostgreSql;
 
 namespace FoodDiary.BugTriage.Tests;
 
+[Collection("BugTriage initialization environment")]
 public sealed class ReportStoreTests : IAsyncLifetime {
+    [Fact]
+    public async Task InitializeEntryPoint_CreatesSchemaInProcess() {
+        await using (NpgsqlCommand drop = _dataSource.CreateCommand("drop table bugtriage_reports")) {
+            await drop.ExecuteNonQueryAsync();
+        }
+        const string connectionKey = "ConnectionStrings__BugTriage";
+        string? previous = Environment.GetEnvironmentVariable(connectionKey);
+        try {
+            Environment.SetEnvironmentVariable(connectionKey, _postgres.GetConnectionString());
+            System.Reflection.MethodInfo entryPoint = typeof(Program).Assembly.EntryPoint!;
+            await Task.Run(() => entryPoint.Invoke(null, [new[] { "--initialize" }]));
+            Assert.Empty(await _store.GetRecentAsync(Now, CancellationToken.None));
+        } finally {
+            Environment.SetEnvironmentVariable(connectionKey, previous);
+        }
+    }
+
     [Fact]
     public async Task InitializeCommand_CreatesSchemaAndExitsWithoutStartingServer() {
         await using (NpgsqlCommand drop = _dataSource.CreateCommand("drop table bugtriage_reports")) {

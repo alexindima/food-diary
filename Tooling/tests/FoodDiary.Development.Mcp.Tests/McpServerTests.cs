@@ -120,7 +120,7 @@ public sealed class McpServerTests {
             $"Concurrent clients created multiple content-addressed runtimes: {string.Join(", ", newSessions)}");
     }
 
-    [Fact]
+    [PowerShellFact]
     public async Task ConfiguredServer_AggregatesContextWithoutLockingBuildOutput() {
         string repositoryRoot = FindRepositoryRoot();
         using CancellationTokenSource preparationTimeout = new(TimeSpan.FromMinutes(2));
@@ -168,7 +168,7 @@ public sealed class McpServerTests {
         Assert.True(build.ExitCode == 0, build.Output);
     }
 
-    [Fact]
+    [PowerShellFact]
     public async Task ConfiguredServer_ExecutesEveryContextToolWithDetailedRawOutput() {
         string repositoryRoot = FindRepositoryRoot();
         var configuration = CodexMcpTestConfiguration.Load(repositoryRoot);
@@ -219,7 +219,7 @@ public sealed class McpServerTests {
         });
     }
 
-    [Fact]
+    [PowerShellFact]
     public async Task ConfiguredServer_ReturnsCompactChangeContextByDefault() {
         string repositoryRoot = FindRepositoryRoot();
         var configuration = CodexMcpTestConfiguration.Load(repositoryRoot);

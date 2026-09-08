@@ -3,6 +3,19 @@
 Local, read-only stdio MCP server that exposes stable `.llm-wiki/wiki.ps1`
 analysis entrypoints without replacing repository source-of-truth checks.
 
+## PowerShell prerequisite
+
+Wiki commands require PowerShell 7 (`pwsh`) on the launching process's `PATH`.
+Locally, the seven process tests marked `PowerShellFact` are skipped with a
+reason when `pwsh` is missing or older than version 7. Other tests still run.
+CI (`CI=true`, `CI=1`, or `GITHUB_ACTIONS=true`) does not skip these tests.
+The availability probe is cached per test process; unexpected startup errors
+and timeouts remain failures.
+
+The Windows MCP launcher uses `powershell.exe`, so server startup and status
+calls can succeed without `pwsh`. Codex and an IDE can also inherit different
+`PATH` values. After installing PowerShell 7, restart the IDE and test runner.
+
 ## Tools
 
 - `get_change_context` wraps `wiki.ps1 brief`.

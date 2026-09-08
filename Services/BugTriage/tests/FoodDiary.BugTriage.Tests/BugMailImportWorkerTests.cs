@@ -10,6 +10,39 @@ namespace FoodDiary.BugTriage.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class BugMailImportWorkerTests {
     [Fact]
+    public async Task SuccessfulImport_ContinuesPollingWithoutWarning() {
+        IBugReportStore store = Substitute.For<IBugReportStore>();
+        IBugMailSource source = Substitute.For<IBugMailSource>();
+        source.ReadNewAsync(Arg.Any<CancellationToken>()).Returns(call => EmptyReports(call.Arg<CancellationToken>()));
+        var secondPoll = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        int polls = 0;
+        store.PurgeAsync(Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns(async call => {
+            if (Interlocked.Increment(ref polls) == 1) { return; }
+            secondPoll.TrySetResult();
+            await Task.Delay(Timeout.InfiniteTimeSpan, call.Arg<CancellationToken>()).ConfigureAwait(false);
+        });
+        var logger = new RecordingLogger();
+        using var worker = new BugMailImportWorker(new ImportBugReports(source, store, TimeProvider.System),
+            Microsoft.Extensions.Options.Options.Create(new BugTriageOptions { PollInterval = TimeSpan.Zero }), logger);
+
+        await worker.StartAsync(CancellationToken.None);
+        await secondPoll.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        await worker.StopAsync(CancellationToken.None);
+
+        Assert.Equal(2, polls);
+        Assert.Empty(logger.Messages);
+        source.Received(1).ReadNewAsync(Arg.Any<CancellationToken>());
+        Assert.True(worker.ExecuteTask!.IsCompletedSuccessfully);
+    }
+
+    private static async IAsyncEnumerable<ImportedReport> EmptyReports(
+        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken) {
+        await Task.CompletedTask.ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+        yield break;
+    }
+
+    [Fact]
     public async Task ExecuteAsync_WhenAlreadyCanceled_DoesNotStartImport() {
         IBugReportStore store = Substitute.For<IBugReportStore>();
         using var cancellation = new CancellationTokenSource();
