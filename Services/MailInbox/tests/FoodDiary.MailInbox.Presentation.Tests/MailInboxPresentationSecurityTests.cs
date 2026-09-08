@@ -115,7 +115,7 @@ public sealed class MailInboxPresentationSecurityTests {
                 .Cast<ResponseCacheAttribute>());
 
         Assert.Multiple(
-            () => Assert.Equal(3, actions.Length),
+            () => Assert.Equal(4, actions.Length),
             () => Assert.All(actions, action => Assert.Contains(
                 action.FilterDescriptors,
                 descriptor => descriptor.Filter is ServiceFilterAttribute serviceFilter &&
