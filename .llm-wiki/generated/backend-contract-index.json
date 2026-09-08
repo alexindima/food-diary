@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1106,
     "ambiguousContracts": 0,
-    "consumerEdges": 7933,
-    "productionConsumerEdges": 4698,
+    "consumerEdges": 7934,
+    "productionConsumerEdges": 4699,
     "testConsumerEdges": 3235,
     "consumedContracts": 1106,
     "unconsumedContracts": 0
@@ -35356,6 +35356,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetAdminMailInboxMessagePageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagePageHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetAdminMailInboxMessagePageQuery",
       "roles": [
         "Query"
@@ -35390,9 +35403,9 @@
         "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQuery.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "Modules/Admin/Presentation/Features/Admin/AdminMailInboxController.cs",
+      "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "GetAdminMailInboxMessagesHttpQuery",

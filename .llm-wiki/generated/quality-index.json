@@ -14338,11 +14338,11 @@
     },
     {
       "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
-      "nonBlankLines": 126,
+      "nonBlankLines": 132,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.02
+      "structuralRiskScore": 4.14
     },
     {
       "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpResponseMappings.cs",

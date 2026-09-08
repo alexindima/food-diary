@@ -19,7 +19,7 @@ public sealed class AdminMailInboxController(ISender mediator) : BaseApiControll
     [ProducesResponseType<AdminMailInboxMessagePageHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetPage([FromQuery] GetAdminMailInboxMessagePageHttpQuery query) =>
-        HandleOk(new FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessagePage.GetAdminMailInboxMessagePageQuery(query.Page, query.Limit, query.Recipient, query.Category, query.Unread),
+        HandleOk(query.ToQuery(),
             static value => new AdminMailInboxMessagePageHttpResponse(value.Items.Select(item => item.ToHttpResponse()).ToList(), value.TotalItems));
 
     [HttpGet]
