@@ -15,6 +15,18 @@ namespace FoodDiary.Application.Tests.Authentication;
 [ExcludeFromCodeCoverage]
 public sealed class RefreshTokenCommandHandlerTests {
     [Fact]
+    public void LegacyJwtGenerator_DefaultSessionOverloadPreservesTokenArguments() {
+        var user = UserId.New();
+        DateTime expiry = new(2030, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var generator = new FakeJwtTokenGenerator(user, "test@example.com");
+        IJwtTokenGenerator contract = generator;
+
+        string token = contract.GenerateAccessToken(user, "test@example.com", ["Admin"], expiry, 12, Guid.NewGuid());
+
+        Assert.Equal("unused-access-token", token);
+        Assert.Equal((user, "test@example.com", "Admin", expiry, 12L), generator.AccessCall);
+    }
+    [Fact]
     public async Task Handle_WithStoredRefreshToken_RotatesTokens() {
         User user = CreateUser("refresh@example.com");
         var repository = new InMemoryUserRepository(user);
@@ -342,6 +354,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FakeJwtTokenGenerator(UserId userId, string email) : IJwtTokenGenerator {
+        public (UserId, string, string, DateTime?, long)? AccessCall { get; private set; }
         public Guid RefreshSessionId { get; } = Guid.Parse("f48a7411-0e37-4b0f-8094-c6b7c8bdb931");
 
         public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, long securityVersion = 0) => "unused-access-token";
@@ -350,7 +363,10 @@ public sealed class RefreshTokenCommandHandlerTests {
             string email,
             IReadOnlyCollection<string> roles,
             DateTime? expiresAtUtc,
-            long securityVersion = 0) => "unused-access-token";
+            long securityVersion = 0) {
+            AccessCall = (userId, email, string.Join(',', roles), expiresAtUtc, securityVersion);
+            return "unused-access-token";
+        }
         public string GenerateAccessToken(
             UserId userId,
             string email,

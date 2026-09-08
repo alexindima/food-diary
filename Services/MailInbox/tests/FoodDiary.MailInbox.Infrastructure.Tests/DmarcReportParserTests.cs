@@ -278,10 +278,10 @@ public sealed class DmarcReportParserTests {
     public void TryParse_WhenAggregateExpandedCharactersExceedBudget_ReturnsNull() {
         const int documentCharacters = 1_900_000;
         string rawMime = CreateRawMessage(
-            CreateGzipAttachment(new string('a', documentCharacters)),
-            CreateGzipAttachment(new string('b', documentCharacters)),
-            CreateGzipAttachment(new string('c', documentCharacters)),
-            CreateGzipAttachment(new string('d', documentCharacters)));
+            CreateGzipAttachment("<root><!--" + new string('a', documentCharacters) + "--></root>"),
+            CreateGzipAttachment("<root><!--" + new string('b', documentCharacters) + "--></root>"),
+            CreateGzipAttachment("<root><!--" + new string('c', documentCharacters) + "--></root>"),
+            CreateGzipAttachment("<root><!--" + new string('d', documentCharacters) + "--></root>"));
         var parser = new DmarcReportParser();
 
         DmarcReportPreview? report = parser.TryParse(rawMime);

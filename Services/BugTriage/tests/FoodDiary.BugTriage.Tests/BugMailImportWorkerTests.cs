@@ -9,6 +9,20 @@ namespace FoodDiary.BugTriage.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BugMailImportWorkerTests {
+    [Fact]
+    public async Task ExecuteAsync_WhenAlreadyCanceled_DoesNotStartImport() {
+        IBugReportStore store = Substitute.For<IBugReportStore>();
+        using var cancellation = new CancellationTokenSource();
+        await cancellation.CancelAsync();
+        using var worker = new BugMailImportWorker(new ImportBugReports(Substitute.For<IBugMailSource>(), store, TimeProvider.System),
+            Microsoft.Extensions.Options.Options.Create(new BugTriageOptions()), new RecordingLogger());
+
+        // BackgroundService short-circuits canceled startup before invoking the worker's entrypoint.
+        System.Reflection.MethodInfo execute = typeof(BugMailImportWorker).GetMethod("ExecuteAsync", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        await ((Task)execute.Invoke(worker, [cancellation.Token])!).WaitAsync(TimeSpan.FromSeconds(10));
+
+        Assert.Empty(store.ReceivedCalls());
+    }
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

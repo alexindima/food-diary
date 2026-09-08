@@ -11,6 +11,20 @@ namespace FoodDiary.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public sealed class UserAdministrationMutationServiceTests {
+    [Theory]
+    [InlineData("Owner")]
+    [InlineData("unknown")]
+    public async Task CreateAsync_RejectsProtectedOrUnknownRoleBeforeCatalogLookup(string role) {
+        IUserLookupRepository lookup = Substitute.For<IUserLookupRepository>();
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        IUserRoleCatalogService roles = Substitute.For<IUserRoleCatalogService>();
+
+        Result<UserAdminReadModel> result = await CreateService(lookup, writer, roles).CreateAsync(CreateRequest() with { Roles = [role] });
+
+        ResultAssert.Failure(result, "Validation.Invalid");
+        Assert.Empty(roles.ReceivedCalls());
+        Assert.Empty(writer.ReceivedCalls());
+    }
     [Fact]
     public async Task CreateAsync_WhenEmailExists_ReturnsConflictWithoutWriting() {
         IUserLookupRepository lookup = Substitute.For<IUserLookupRepository>();

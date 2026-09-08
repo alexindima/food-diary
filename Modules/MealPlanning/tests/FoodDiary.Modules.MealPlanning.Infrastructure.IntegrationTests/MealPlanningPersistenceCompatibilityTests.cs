@@ -12,6 +12,33 @@ namespace FoodDiary.Modules.MealPlanning.Infrastructure.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class MealPlanningPersistenceCompatibilityTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task GetPlanWithDays_LoadsProductIngredientSnapshotsForEachRecipe() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"plan-snapshot-{Guid.NewGuid():N}@example.com", "hash");
+        var product = Product.Create(user.Id, "Rice", MeasurementUnit.G, 100, 100, 120, 3, 1, 20, 2, 0);
+        var recipe = FoodDiary.Domain.Entities.Recipes.Recipe.Create(user.Id, "Rice dish", 2);
+        recipe.AddStep(1, "Cook").AddProductIngredient(product.Id, 250);
+        var plan = FoodDiary.Domain.Entities.MealPlans.MealPlan.CreateForUser(user.Id, "Week", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
+        plan.AddDay(1).AddMeal(MealType.Lunch, recipe.Id, 1);
+        context.AddRange(user, product, recipe, plan);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        FoodDiary.Domain.Entities.MealPlans.MealPlan? loaded = await new FoodDiary.Infrastructure.Persistence.MealPlans.MealPlanRepository(context).GetByIdAsync(plan.Id, includeDays: true);
+
+        Assert.NotNull(loaded);
+        FoodDiary.Domain.Entities.MealPlans.MealPlanRecipeSnapshot? snapshot = Assert.Single(Assert.Single(loaded.Days).Meals).RecipeSnapshot;
+        Assert.NotNull(snapshot);
+        Assert.Equal(recipe.Id, snapshot.Id);
+        Assert.Equal("Rice dish", snapshot.Name);
+        Assert.Equal(2, snapshot.Servings);
+        FoodDiary.Domain.Entities.MealPlans.MealPlanRecipeIngredientSnapshot ingredient = Assert.Single(snapshot.Ingredients);
+        Assert.Equal(product.Id, ingredient.ProductId);
+        Assert.Equal(250, ingredient.Amount);
+        Assert.Equal("Rice", ingredient.Name);
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+    [RequiresDockerFact]
     public async Task ShoppingListMappings_PreserveScalarUserForeignKeyProvenanceAndDeletionSemantics() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"planning-mapping-{Guid.NewGuid():N}@example.com", "hash");

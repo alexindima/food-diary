@@ -17,6 +17,9 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
     [InlineData("Action<User> add = db.Users.Add;")]
     [InlineData("db.AddRange(new User[] { new User() });")]
     [InlineData("db.AddRange(new List<User> { new User() });")]
+    [InlineData("IEnumerable<User> users = new List<User>(); db.AddRange(users);")]
+    [InlineData("Action<IQueryable<User>> delete = EntityFrameworkQueryableExtensions.ExecuteDelete<User>;")]
+    [InlineData("Action<IQueryable> update = EntityFrameworkQueryableExtensions.ExecuteUpdate;")]
     [InlineData("db.Add(new User());")]
     [InlineData("Action<object> add = db.Add; add(new User());")]
     [InlineData("Action<User> entry = db.Entry<User>; entry(new User());")]
@@ -39,6 +42,8 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
     [InlineData("Action<Product> add = db.Products.Add;")]
     [InlineData("Func<int, Product> find = db.Find<Product>;")]
     [InlineData("Action action = () => { }; action();")]
+    [InlineData("Func<string> trim = string.Empty.Trim;")]
+    [InlineData("Func<IQueryable<User>, IQueryable<User>> read = EntityFrameworkQueryableExtensions.AsNoTracking<User>;")]
     [InlineData("db.Add(new Product());")]
     [InlineData("db.Entry(new Product());")]
     [InlineData("Action<Product> entry = db.Entry<Product>; entry(new Product());")]
@@ -56,6 +61,8 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
         Assert.Contains(await AnalyzeAsync("var tracker = db.ChangeTracker;"),
             diagnostic => string.Equals(diagnostic.Id, ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
         Assert.Contains(await AnalyzeAsync("Func<int> save = db.SaveChanges; save();"),
+            diagnostic => string.Equals(diagnostic.Id, ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
+        Assert.Contains(await AnalyzeAsync("Action begin = new DatabaseFacade().BeginTransaction;"),
             diagnostic => string.Equals(diagnostic.Id, ModulePersistenceBoundaryAnalyzer.TechnicalDiagnosticId, StringComparison.Ordinal));
     }
 
@@ -152,9 +159,13 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
                 public void Add(object value) { }
                 public void AddRange(User[] values) { }
                 public void AddRange(List<User> values) { }
+                public void AddRange(IEnumerable<User> values) { }
                 public void Entry<T>(T value) { }
                 public T Find<T>(int id) => default!;
                 public int SaveChanges() => 0;
+            }
+            public class DatabaseFacade {
+                public void BeginTransaction() { }
             }
             public class DbSet<TEntity> : IQueryable<TEntity> {
                 public void Add(TEntity value) { }
@@ -169,6 +180,7 @@ public sealed class ModulePersistenceBoundaryAnalyzerTests {
                 public static IQueryable<T> AsTracking<T>(this IQueryable<T> query) => query;
                 public static void ExecuteDelete<T>(this IQueryable<T> query) { }
                 public static void ExecuteUpdate<T>(this IQueryable<T> query) { }
+                public static void ExecuteUpdate(IQueryable query) { }
             }
         }
         """;

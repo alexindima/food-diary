@@ -21,6 +21,19 @@ namespace FoodDiary.Application.Tests.Ai;
 
 [ExcludeFromCodeCoverage]
 public class AiValidatorsTests {
+    [Fact]
+    public async Task AnalyzeFoodImageHandler_MapsExplicitForbiddenWithoutCallingProvider() {
+        IImageAssetAccessService images = Substitute.For<IImageAssetAccessService>();
+        images.ResolveOptionalAsync(Arg.Any<ImageAssetId?>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<FoodDiary.Application.Abstractions.Images.Models.ImageAssetReadModel?>(new Error("Image.Forbidden", "Denied", ErrorKind.Forbidden)));
+        IOpenAiFoodService provider = CreateOpenAiFoodService(out OpenAiFoodServiceCalls calls);
+        var handler = new AnalyzeFoodImageCommandHandler(images, CreateAiUserContextService(user: null), provider);
+
+        Result<FoodVisionModel> result = await handler.Handle(new AnalyzeFoodImageCommand(Guid.NewGuid(), Guid.NewGuid(), Description: null, RequestId), CancellationToken.None);
+
+        Assert.Equal("Ai.Forbidden", result.Error.Code);
+        Assert.False(calls.WasAnalyzeFoodImageCalled);
+    }
     private const string RequestId = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
     [Fact]

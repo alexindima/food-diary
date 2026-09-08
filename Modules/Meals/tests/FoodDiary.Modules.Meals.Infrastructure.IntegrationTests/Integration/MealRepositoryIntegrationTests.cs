@@ -19,6 +19,27 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task Projection_LoadsAiImageAndLegacyRecipeWithoutTrackingForeignEntities() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"projection-{Guid.NewGuid():N}@example.com", "hash");
+        var image = FoodDiary.Domain.Entities.Assets.ImageAsset.Create(user.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
+        var recipe = FoodDiary.Domain.Entities.Recipes.Recipe.Create(user.Id, "Legacy recipe", 2);
+        var meal = Meal.Create(user.Id, DateTime.UtcNow);
+        meal.AddRecipe(recipe.Id, 1);
+        meal.AddAiSession(image.Id, AiRecognitionSource.Photo, DateTime.UtcNow, notes: null,
+            [MealAiItemData.Create("Apple", nameLocal: null, 100, "g", 52, 0.3, 0.2, 14, 2.4, 0)]);
+        context.AddRange(user, image, recipe, meal);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        MealProjectionReadModel? result = await new MealRepository(context).GetByIdMealProjectionAsync(meal.Id, user.Id);
+
+        Assert.NotNull(result);
+        Assert.Equal("Legacy recipe", Assert.Single(result.Items).RecipeName);
+        Assert.Equal(image.Url, Assert.Single(result.AiSessions).ImageUrl);
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+    [RequiresDockerFact]
     public async Task MealUser_ScalarForeignKey_RetainsSoftDeletedMealsAndCascadesOnPurge() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"meal-owner-{Guid.NewGuid():N}@example.com", "hash");

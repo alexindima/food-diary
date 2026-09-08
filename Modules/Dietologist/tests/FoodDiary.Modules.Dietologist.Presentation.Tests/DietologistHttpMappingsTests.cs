@@ -21,6 +21,18 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class DietologistHttpMappingsTests {
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ProfileRelationship_MapsAllFields(bool accepted) {
+        DateTime now = new(2030, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var model = new FoodDiary.Application.Abstractions.Users.Models.ProfileDietologistRelationshipModel(
+            Guid.NewGuid(), accepted ? "Accepted" : "Pending", "diet@example.com", "First", "Last", accepted ? Guid.NewGuid() : null,
+            new(ShareMeals: true, ShareStatistics: false, ShareWeight: true, ShareWaist: false, ShareGoals: true, ShareHydration: false, ShareProfile: true, ShareFasting: false), now, now.AddDays(2), accepted ? now.AddDays(1) : null);
+
+        Assert.Equal(new DietologistRelationshipHttpResponse(model.InvitationId, model.Status, model.Email, model.FirstName, model.LastName,
+            model.DietologistUserId, new(ShareMeals: true, ShareStatistics: false, ShareWeight: true, ShareWaist: false, ShareGoals: true, ShareHydration: false, ShareProfile: true, ShareFasting: false), model.CreatedAtUtc, model.ExpiresAtUtc, model.AcceptedAtUtc), model.ToHttpResponse());
+    }
     [Fact]
     public void InviteDietologistRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();

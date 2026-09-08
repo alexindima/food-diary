@@ -13,6 +13,42 @@ namespace FoodDiary.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class AchievementPersistenceTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Processor_WhenClaimIsRemovedOrTakenOver_DoesNotReleaseAnotherClaim(bool removed) {
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString("N")).Options;
+        await using var context = new FoodDiaryDbContext(options);
+        var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now);
+        context.Add(message);
+        await context.SaveChangesAsync();
+        IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
+        handler.ReconcileAsync(message.UserId, message.CreatedOnUtc, Arg.Any<CancellationToken>()).Returns(async _ => {
+            await using var writer = new FoodDiaryDbContext(options);
+            AchievementEvaluationOutboxMessage current = await writer.AchievementEvaluationOutbox.SingleAsync();
+            if (removed) {
+                writer.Remove(current);
+            } else {
+                current.RequestEvaluation(Now.AddMinutes(1));
+                current.MarkClaimed(Now.AddMinutes(5), "new-worker");
+            }
+            await writer.SaveChangesAsync();
+        });
+        var processor = new AchievementEvaluationOutboxProcessor(context, handler,
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()), TimeProvider.System,
+            NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
+
+        Assert.Equal(0, await processor.ProcessDueAsync(1));
+        AchievementEvaluationOutboxMessage? remaining = await context.AchievementEvaluationOutbox.AsNoTracking().SingleOrDefaultAsync();
+        if (removed) {
+            Assert.Null(remaining);
+        } else {
+            Assert.NotNull(remaining);
+            Assert.Equal("new-worker", remaining.LockedBy);
+            Assert.Null(remaining.ProcessedOnUtc);
+        }
+    }
     private static readonly DateTime Now = new(2026, 8, 11, 0, 0, 0, DateTimeKind.Utc);
 
     [Fact]

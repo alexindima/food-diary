@@ -9,8 +9,10 @@ namespace FoodDiary.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class DashboardReadServiceTests {
-    [Fact]
-    public async Task GetSnapshotDataAsync_WhenStatisticsFails_ReturnsFailure() {
+    [Theory]
+    [InlineData(1)]
+    [InlineData(7)]
+    public async Task GetSnapshotDataAsync_WhenStatisticsFails_ReturnsFailure(int periodDays) {
         Error error = Errors.Validation.Invalid("statistics", "Statistics failed.");
         IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
         statisticsReadService
@@ -23,7 +25,7 @@ public sealed class DashboardReadServiceTests {
             DateTime.UtcNow.Date,
             DateTime.UtcNow.Date,
             DateTime.UtcNow.Date,
-            periodDays: 1,
+            periodDays,
             page: 1,
             pageSize: 10,
             Sections(includeStatistics: true),

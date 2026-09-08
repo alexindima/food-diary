@@ -218,8 +218,10 @@ public class ImagesFeatureTests {
         Assert.Contains("has not completed", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-    [Fact]
-    public async Task ConfirmImageUploadCommandHandler_WhenRollbackDeleteAlsoFails_PreservesOriginalPersistenceFailure() {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task ConfirmImageUploadCommandHandler_WhenPersistenceFails_PreservesOriginalFailureAfterRollback(bool rollbackFails) {
         var repository = new FakeImageAssetRepository();
         var owner = UserId.New();
         var asset = ImageAsset.Create(owner, "images/rollback.jpg", "https://cdn.example/rollback.jpg");
@@ -228,7 +230,7 @@ public class ImagesFeatureTests {
         var persistenceFailure = new InvalidOperationException("Database unavailable.");
         unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.FromException(persistenceFailure));
         var handler = new ConfirmImageUploadCommandHandler(
-            repository, CreateSelectivelyThrowingImageStorageService(asset.ObjectKey), new FakeImageObjectDeletionOutbox(), unitOfWork);
+            repository, rollbackFails ? CreateSelectivelyThrowingImageStorageService(asset.ObjectKey) : CreateImageStorageService(), new FakeImageObjectDeletionOutbox(), unitOfWork);
 
         InvalidOperationException thrown = await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), CancellationToken.None));

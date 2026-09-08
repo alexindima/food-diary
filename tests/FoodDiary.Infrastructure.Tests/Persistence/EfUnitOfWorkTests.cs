@@ -12,6 +12,19 @@ namespace FoodDiary.Infrastructure.Tests.Persistence;
 [ExcludeFromCodeCoverage]
 public sealed class EfUnitOfWorkTests {
     [Fact]
+    public async Task TransactionBoundary_RejectsPendingPostCommitActionsWithoutDiscardingThem() {
+        await using FoodDiaryDbContext context = CreateContext();
+        FoodDiary.Application.Abstractions.Common.Abstractions.Persistence.IPostCommitActionQueue queue = Substitute.For<FoodDiary.Application.Abstractions.Common.Abstractions.Persistence.IPostCommitActionQueue>();
+        queue.HasActions.Returns(returnThis: true);
+
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() =>
+            FoodDiary.Infrastructure.Persistence.Shared.SharedTransactionBoundary.EnsureCleanEntry(context, queue));
+
+        Assert.Contains("pending post-commit actions", error.Message, StringComparison.Ordinal);
+        queue.DidNotReceive().Discard();
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+    [Fact]
     public async Task HasPendingChanges_ReflectsChangeTrackerAndSaveChangesPersistsChanges() {
         await using FoodDiaryDbContext context = CreateContext();
         IDomainEventPublisher publisher = Substitute.For<IDomainEventPublisher>();

@@ -334,8 +334,11 @@ internal sealed class OpenFoodFactsService(
             SearchCache[cacheKey] = result;
             SearchCacheSizeBytesValue += result.SizeBytes;
             while (SearchCache.Count > MaxSearchCacheEntries || SearchCacheSizeBytesValue > MaxSearchCacheSizeBytes) {
-                KeyValuePair<string, CachedSearchResult> oldest = SearchCache.MinBy(
-                    static entry => entry.Value.CachedAt);
+                // Keep the result being inserted even when timestamps tie or the clock moves back.
+                // It fits the byte budget by itself, so an over-budget cache has another victim.
+                KeyValuePair<string, CachedSearchResult> oldest = SearchCache
+                    .Where(entry => !string.Equals(entry.Key, cacheKey, StringComparison.Ordinal))
+                    .MinBy(static entry => entry.Value.CachedAt);
                 if (SearchCache.TryRemove(oldest.Key, out CachedSearchResult? removed)) {
                     SearchCacheSizeBytesValue -= removed.SizeBytes;
                 }

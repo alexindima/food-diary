@@ -10,6 +10,39 @@ namespace FoodDiary.Web.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class NotificationTestSchedulerTests {
+    [Fact]
+    public async Task DelayAndChangeCompletingTogether_DispatchesOnlyOnce() {
+        var completed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        ITestNotificationDeliveryDispatcher dispatcher = Substitute.For<ITestNotificationDeliveryDispatcher>();
+        dispatcher.DispatchAsync(Arg.Any<Guid>(), Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(_ => {
+            completed.TrySetResult();
+            return Task.CompletedTask;
+        });
+        await using ServiceProvider provider = CreateServiceProvider(dispatcher);
+        var clock = new ImmediateDelayClock();
+        using var scheduler = new NotificationTestScheduler(provider.GetRequiredService<IServiceScopeFactory>(), clock,
+            MsOptions.Create(new NotificationTestSchedulerOptions { MaxPending = 1 }), NullLogger<NotificationTestScheduler>.Instance);
+        var user = Guid.NewGuid();
+        await scheduler.ScheduleAsync(user, 1, NotificationTypes.FastingCompleted, CancellationToken.None);
+
+        await scheduler.StartAsync(CancellationToken.None);
+        await completed.Task.WaitAsync(TimeSpan.FromSeconds(10), TimeProvider.System);
+        await scheduler.StopAsync(CancellationToken.None);
+
+        await dispatcher.Received(1).DispatchAsync(user, NotificationTypes.FastingCompleted, Arg.Any<CancellationToken>());
+        Assert.True(scheduler.ExecuteTask!.IsCompletedSuccessfully);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ImmediateDelayClock : TimeProvider {
+        private DateTimeOffset _now = new(2030, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        public override DateTimeOffset GetUtcNow() => _now;
+        public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period) {
+            _now += dueTime;
+            callback(state);
+            return Substitute.For<ITimer>();
+        }
+    }
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

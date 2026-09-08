@@ -7,6 +7,35 @@ namespace FoodDiary.BugTriage.Tests;
 
 public sealed class ReportStoreTests : IAsyncLifetime {
     [Fact]
+    public async Task InitializeCommand_CreatesSchemaAndExitsWithoutStartingServer() {
+        await using (NpgsqlCommand drop = _dataSource.CreateCommand("drop table bugtriage_reports")) {
+            await drop.ExecuteNonQueryAsync();
+        }
+        var start = new System.Diagnostics.ProcessStartInfo("dotnet") {
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+        };
+        start.ArgumentList.Add(typeof(Program).Assembly.Location);
+        start.ArgumentList.Add("--initialize");
+        start.Environment["ConnectionStrings__BugTriage"] = _postgres.GetConnectionString();
+        using System.Diagnostics.Process process = System.Diagnostics.Process.Start(start)!;
+        Task<string> output = process.StandardOutput.ReadToEndAsync();
+        Task<string> errors = process.StandardError.ReadToEndAsync();
+        using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        try {
+            await process.WaitForExitAsync(deadline.Token);
+        } finally {
+            if (!process.HasExited) { process.Kill(entireProcessTree: true); }
+        }
+
+        Assert.Equal(0, process.ExitCode);
+        Assert.DoesNotContain("Now listening", await output, StringComparison.Ordinal);
+        Assert.Empty(await errors);
+        Assert.Empty(await _store.GetRecentAsync(Now, CancellationToken.None));
+    }
+    [Fact]
     public async Task RecentReports_ExcludeExpiredOrderNewestFirstAndMapCompletion() {
         Assert.Empty(await _store.GetRecentAsync(Now, CancellationToken.None));
         await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddMinutes(-2), "older", "body", [1]), Now.AddDays(1), CancellationToken.None);

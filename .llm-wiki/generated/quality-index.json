@@ -30890,11 +30890,11 @@
     },
     {
       "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs",
-      "nonBlankLines": 390,
+      "nonBlankLines": 393,
       "decisionPoints": 37,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 63.3
+      "structuralRiskScore": 63.36
     },
     {
       "path": "Modules/OpenFoodFacts/Presentation/Extensions/OpenFoodFactsPresentationServiceCollectionExtensions.cs",

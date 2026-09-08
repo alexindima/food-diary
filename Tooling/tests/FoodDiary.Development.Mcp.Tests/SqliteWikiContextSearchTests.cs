@@ -4,6 +4,83 @@ namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class SqliteWikiContextSearchTests : IDisposable {
+    [Theory]
+    [InlineData("stock mcp tests xx", false, false)]
+    [InlineData("stock excluded tests xx", false, false)]
+    [InlineData("stock tests xx", true, true)]
+    public async Task SearchAsync_RespectsExplicitMcpAndExcludedBoostTerms(string query, bool identityExpected, bool pathExpected) {
+        string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
+        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        policy["identityBoosts"] = System.Text.Json.Nodes.JsonNode.Parse("""
+            [{"id":"explicit-powershell-file-intent","queryTerms":["stock"],"minimumMatches":1,"identityTerms":["stock"],"minimumIdentityMatches":1,"score":300,"identityScope":"file","excludedQueryTerms":["excluded"]}]
+            """);
+        policy["pathBoosts"] = System.Text.Json.Nodes.JsonNode.Parse("""
+            [{"id":"stock-path","queryTerms":["stock"],"minimumMatches":1,"pathPrefixes":["Tooling/"],"score":300,"excludedQueryTerms":["excluded","mcp"]}]
+            """);
+        // Keep the short term in the query so it cannot be mistaken for a test subject.
+        policy["directFileNameAffinity"]!["minimumTermLength"] = 3;
+        await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            INSERT INTO context_search VALUES ('code','stock','Tooling/Stock.cs','stock','csharp','Stock','stock mcp excluded tests xx');
+            """;
+        await command.ExecuteNonQueryAsync();
+
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            query, 10, "Tests", module: null, scopePaths: null, CancellationToken.None, expectedChangeSetFingerprint: "fixture-change-set");
+
+        WikiContextSearchCandidate candidate = Assert.Single(result.Candidates);
+        Assert.Equal(identityExpected, candidate.Reasons.Contains("ranking policy explicit-powershell-file-intent", StringComparer.Ordinal));
+        Assert.Equal(pathExpected, candidate.Reasons.Any(reason => reason.Contains("stock-path", StringComparison.Ordinal)));
+    }
+
+    [Theory]
+    [InlineData("markers")]
+    [InlineData("roleTerms")]
+    public async Task SearchAsync_AllowsDisabledNegatedRolePolicy(string emptyProperty) {
+        string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
+        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        policy["negatedRolePenalty"]![emptyProperty] = new System.Text.Json.Nodes.JsonArray();
+        await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
+
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            "not validator lesson", 10, "Backend", module: null, scopePaths: null, CancellationToken.None, expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.True(result.Ready);
+        Assert.NotEmpty(result.Candidates);
+        Assert.All(result.Candidates, candidate => Assert.DoesNotContain(candidate.Reasons, reason => reason.StartsWith("negated role penalty", StringComparison.Ordinal)));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task SearchAsync_ScopeReplacementPreservesSoleRepresentativesAndHandlesMissingScopes(bool missingScope) {
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            DELETE FROM context_search;
+            INSERT INTO context_search VALUES
+              ('code','a1','Area/a/first.cs','a1','csharp','Probe','scopeprobe'),
+              ('code','a2','Area/a/second.cs','a2','csharp','Probe','scopeprobe'),
+              ('code','b','Area/b/only.cs','b','csharp','Probe','scopeprobe'),
+              ('code','c','Area/c/only.cs','c','csharp','Probe','scopeprobe');
+            """;
+        await command.ExecuteNonQueryAsync();
+
+        WikiContextSearchResult result = await new SqliteWikiContextSearch(_fixtureRoot, new WikiRuntimeTelemetry()).SearchAsync(
+            "scopeprobe", 3, "Backend", module: null, scopePaths: ["Area/a", "Area/b", missingScope ? "Area/missing" : "Area/c"],
+            CancellationToken.None, expectedChangeSetFingerprint: "fixture-change-set");
+
+        Assert.Equal(3, result.Candidates.Count);
+        Assert.Contains(result.Candidates, candidate => candidate.Path.StartsWith("Area/a/", StringComparison.Ordinal));
+        Assert.Contains(result.Candidates, candidate => candidate.Path.StartsWith("Area/b/", StringComparison.Ordinal));
+        if (!missingScope) { Assert.Contains(result.Candidates, candidate => candidate.Path.StartsWith("Area/c/", StringComparison.Ordinal)); }
+        Assert.Equal([1, 2, 3], result.Candidates.Select(candidate => candidate.Rank));
+    }
     private readonly string _fixtureRoot;
     private readonly string _databasePath;
 
@@ -146,6 +223,7 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
     [InlineData("Modules/Inventory/tests/FoodDiary.Modules.Inventory.Infrastructure.IntegrationTestsExtra/StockStoreTests.cs", false)]
     [InlineData("Tooling/tests/FoodDiary.Analyzers.Tests/StockStoreTests.cs", true, "tests/FoodDiary.Analyzers.Tests/")]
     [InlineData("Shared/tests/FoodDiary.Domain.Primitives.Tests/StockStoreTests.cs", true, "tests/FoodDiary.Domain.Primitives.Tests/")]
+    [InlineData("Shared/tests/Unrelated/StockStoreTests.cs", false, "tests/Unrelated/")]
     [InlineData("Shared/FoodDiary.Email.PersistenceModel/StockStoreTests.cs", true, "FoodDiary.Infrastructure/Persistence/Email/")]
     [InlineData("Shared/FoodDiary.Email.PersistenceModel/Configurations/StockStoreTests.cs", true, "FoodDiary.Infrastructure/Persistence/Configurations/Email/")]
     public async Task SearchAsync_PreservesIntegrationTestSelectorAfterModuleRelocation(string path, bool expectedMatch,

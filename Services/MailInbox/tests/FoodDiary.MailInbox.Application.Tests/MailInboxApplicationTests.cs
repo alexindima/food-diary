@@ -21,6 +21,26 @@ namespace FoodDiary.MailInbox.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxApplicationTests {
+    [Theory]
+    [InlineData(null, null, null)]
+    [InlineData("recipient", null, null)]
+    [InlineData(null, "category", null)]
+    [InlineData(null, null, false)]
+    public async Task DefaultFilteredQuery_ForwardsOnlyUnfilteredRequests(string? recipient, string? category, bool? unread) {
+        var store = new RecordingInboundMailStore();
+        using var cancellation = new CancellationTokenSource();
+        IInboundMailStore contract = store;
+        if (recipient is not null || category is not null || unread is not null) {
+            await Assert.ThrowsAsync<NotSupportedException>(() => contract.GetFilteredMessagesAsync(17, recipient, category, unread, cancellation.Token));
+            Assert.Equal(0, store.LastMessagesLimit);
+            return;
+        }
+
+        Assert.Same(store.MessageSummaries, await contract.GetFilteredMessagesAsync(17, recipient: null, category: null, unread: null, cancellation.Token));
+        Assert.Equal(17, store.LastMessagesLimit);
+        Assert.Equal(cancellation.Token, store.LastMessagesCancellationToken);
+    }
+
     [Fact]
     public async Task GetInboundMailMessagesHandler_ForwardsLimitAndCancellationToken() {
         using var cts = new CancellationTokenSource();

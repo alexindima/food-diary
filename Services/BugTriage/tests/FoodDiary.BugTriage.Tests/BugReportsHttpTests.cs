@@ -17,6 +17,45 @@ namespace FoodDiary.BugTriage.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class BugReportsHttpTests {
     [Fact]
+    public async Task ClientCancellation_AbortsPendingRequestWithoutServiceErrorResponse() {
+        await using var factory = new Factory();
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var canceled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        factory.Store.GetRecentAsync(Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns<Task<IReadOnlyList<ReportSummary>>>(async call => {
+            entered.TrySetResult();
+            try {
+                await Task.Delay(Timeout.InfiniteTimeSpan, call.Arg<CancellationToken>()).ConfigureAwait(false);
+            } finally {
+                canceled.TrySetResult();
+            }
+            return Array.Empty<ReportSummary>();
+        });
+        using HttpClient client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add("X-BugTriage-Key", Factory.Key);
+        using var cancellation = new CancellationTokenSource();
+        Task<HttpResponseMessage> request = client.GetAsync("/api/bug-reports", cancellation.Token);
+        await entered.Task.WaitAsync(TimeSpan.FromSeconds(10));
+
+        await cancellation.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => request);
+        await canceled.Task.WaitAsync(TimeSpan.FromSeconds(10));
+    }
+    [Fact]
+    public async Task RecentReports_ReturnsStoreResultsWithoutCaching() {
+        await using var factory = new Factory();
+        factory.Store.GetRecentAsync(Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns([]);
+        using HttpClient client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add("X-BugTriage-Key", Factory.Key);
+
+        using HttpResponseMessage response = await client.GetAsync("/api/bug-reports");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("[]", await response.Content.ReadAsStringAsync());
+        Assert.True(response.Headers.CacheControl?.NoStore);
+        await factory.Store.Received(1).GetRecentAsync(Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>());
+    }
+    [Fact]
     public async Task LeaseEndpoints_ReturnContentRenewCompleteAndProtectFailures() {
         await using var factory = new Factory();
         var id = Guid.NewGuid();

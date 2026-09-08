@@ -18,6 +18,39 @@ namespace FoodDiary.Infrastructure.Tests.Persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class EmailOutboxTests {
+    [Fact]
+    public async Task Processing_WhenClaimDisappearsDuringRevisionRelease_ReturnsLostClaim() {
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString("N")).Options;
+        await using var context = new FoodDiaryDbContext(options);
+        var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now);
+        context.Add(message);
+        await context.SaveChangesAsync();
+        bool releaseAttempted = false;
+
+        int processed = await OutboxProcessingEngine.ProcessDueAsync(context, context.AchievementEvaluationOutbox,
+            "AchievementEvaluationOutbox", "revision_race", 1, new OutboxProcessingOptions(), TimeProvider.System,
+            async (_, token) => {
+                await using var writer = new FoodDiaryDbContext(options);
+                AchievementEvaluationOutboxMessage current = await writer.AchievementEvaluationOutbox.SingleAsync(token);
+                current.RequestEvaluation(Now.AddMinutes(1));
+                await writer.SaveChangesAsync(token);
+            }, current => current.Id, NullLogger.Instance, tryReleaseUpdatedRevisionAsync: async (_, token) => {
+                releaseAttempted = true;
+                context.ChangeTracker.Clear();
+                AchievementEvaluationOutboxMessage current = await context.AchievementEvaluationOutbox.SingleAsync(token);
+                current.ReleaseForUpdatedRevision();
+                await using var writer = new FoodDiaryDbContext(options);
+                writer.Remove(await writer.AchievementEvaluationOutbox.SingleAsync(token));
+                await writer.SaveChangesAsync(token);
+                return OutboxCompletionResult.Requeued;
+            });
+
+        Assert.True(releaseAttempted);
+        Assert.Equal(0, processed);
+        Assert.Empty(context.ChangeTracker.Entries());
+        Assert.False(await context.AchievementEvaluationOutbox.AnyAsync());
+    }
     private static readonly DateTime Now = new(2026, 7, 8, 10, 0, 0, DateTimeKind.Utc);
 
     [Fact]

@@ -11,6 +11,36 @@ namespace FoodDiary.MailInbox.Client.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxClientTests {
     [Theory]
+    [InlineData(null, null, null)]
+    [InlineData("recipient", null, null)]
+    [InlineData(null, "category", null)]
+    [InlineData(null, null, false)]
+    public async Task DefaultFilteredQuery_ForwardsOnlyUnfilteredRequests(string? recipient, string? category, bool? unread) {
+        var client = new LegacyClient();
+        using var cancellation = new CancellationTokenSource();
+        IMailInboxClient contract = client;
+        if (recipient is not null || category is not null || unread is not null) {
+            await Assert.ThrowsAsync<NotSupportedException>(() => contract.GetFilteredMessagesAsync(17, recipient, category, unread, cancellation.Token));
+            Assert.Null(client.Call);
+            return;
+        }
+
+        Assert.Same(client.Messages, await contract.GetFilteredMessagesAsync(17, recipient: null, category: null, unread: null, cancellation.Token));
+        Assert.Equal((17, cancellation.Token), client.Call);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class LegacyClient : IMailInboxClient {
+        public IReadOnlyList<InboundMailMessageSummaryResponse> Messages { get; } = [];
+        public (int?, CancellationToken)? Call { get; private set; }
+        public Task<IReadOnlyList<InboundMailMessageSummaryResponse>> GetMessagesAsync(int? limit, CancellationToken cancellationToken) {
+            Call = (limit, cancellationToken);
+            return Task.FromResult(Messages);
+        }
+        public Task<InboundMailMessageDetailsResponse?> GetMessageAsync(Guid id, CancellationToken cancellationToken) => throw new NotSupportedException();
+        public Task<bool> MarkMessageReadAsync(Guid id, CancellationToken cancellationToken) => throw new NotSupportedException();
+    }
+    [Theory]
     [InlineData(null, true)]
     [InlineData(20, false)]
     public async Task GetFilteredMessagesAsync_EncodesFiltersAndUsesMetadataKey(int? limit, bool unread) {

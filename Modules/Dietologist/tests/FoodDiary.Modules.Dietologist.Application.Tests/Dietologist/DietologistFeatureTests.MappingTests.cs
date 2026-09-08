@@ -8,6 +8,13 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Tests.Dietologist;
 
 public partial class DietologistFeatureTests {
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void PermissionsMapping_PreservesEachPermission(bool enabled) {
+        var permissions = new FoodDiary.Domain.ValueObjects.DietologistPermissions(enabled, !enabled, enabled, !enabled, enabled, !enabled, enabled, !enabled);
+        Assert.Equal(new DietologistPermissionsModel(enabled, !enabled, enabled, !enabled, enabled, !enabled, enabled, !enabled), permissions.ToModel());
+    }
 
     [Fact]
     public void DietologistMappings_ToDietologistInfoModel_MapsAcceptedInvitation() {

@@ -663,6 +663,31 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     [Fact]
+    public async Task SearchAsync_WhenCacheIsFullAndClockMovesBackwards_KeepsNewResult() {
+        OpenFoodFactsService warmup = CreateServiceWithTimeProvider(
+            new SuccessHttpMessageHandler("""{"products": []}"""),
+            new TestTimeProvider(FixedNow.AddHours(1)));
+        string prefix = $"full-cache-{Guid.NewGuid():N}";
+        for (int index = 0; index < OpenFoodFactsService.MaxSearchCacheEntries; index++) {
+            await warmup.SearchAsync(string.Create(CultureInfo.InvariantCulture, $"{prefix}-{index}"));
+        }
+
+        var handler = new CountingHttpMessageHandler("""{"products":[{"code":"111","product_name":"Milk","nutriments":{}}]}""");
+        OpenFoodFactsService service = CreateService(handler);
+        string query = $"{prefix}-new";
+
+        IReadOnlyList<OpenFoodFactsProductModel> first = await service.SearchAsync(query);
+        IReadOnlyList<OpenFoodFactsProductModel> second = await service.SearchAsync(query);
+
+        Assert.Multiple(
+            () => Assert.Single(first),
+            () => Assert.Equal(first, second),
+            () => Assert.Equal(1, handler.RequestCount),
+            () => Assert.Equal(OpenFoodFactsService.MaxSearchCacheEntries, OpenFoodFactsService.SearchCacheEntryCount),
+            () => Assert.InRange(OpenFoodFactsService.SearchCacheSizeBytes, 1, OpenFoodFactsService.MaxSearchCacheSizeBytes));
+    }
+
+    [Fact]
     public async Task SearchAsync_WhenCacheByteBudgetIsExceeded_EvictsOldEntries() {
         string largeProductName = new('x', 700_000);
         string json = System.Text.Json.JsonSerializer.Serialize(new {

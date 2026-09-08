@@ -8933,14 +8933,14 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs",
-      "line": 408
+      "line": 411
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "Modules/OpenFoodFacts/Infrastructure/Providers/Services/OpenFoodFactsService.cs",
-      "line": 425
+      "line": 428
     },
     {
       "category": "privateContent",

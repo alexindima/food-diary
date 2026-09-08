@@ -15,6 +15,15 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingWebhookControllerTests {
+    [Theory]
+    [InlineData(null, false)]
+    [InlineData("::ffff:185.71.76.0", true)]
+    [InlineData("185.71.76.31", true)]
+    [InlineData("185.71.76.32", false)]
+    [InlineData("2a02:5180::1", true)]
+    [InlineData("2a02:5181::1", false)]
+    public void TrustedSource_HandlesMissingMappedAndNetworkBoundaryAddresses(string? address, bool trusted) =>
+        Assert.Equal(trusted, BillingWebhookHttpProcessor.IsTrustedYooKassaSource(address is null ? null : IPAddress.Parse(address)));
     [Fact]
     public void HandleWebhook_HasPaymentSpecificRequestBodyLimit() {
         MethodInfo method = typeof(BillingWebhookController).GetMethod(nameof(BillingWebhookController.HandleWebhook))!;

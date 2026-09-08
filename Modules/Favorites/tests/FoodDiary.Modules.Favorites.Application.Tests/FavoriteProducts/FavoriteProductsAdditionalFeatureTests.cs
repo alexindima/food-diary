@@ -23,6 +23,24 @@ namespace FoodDiary.Application.Tests.FavoriteProducts;
 [ExcludeFromCodeCoverage]
 public sealed class FavoriteProductsAdditionalFeatureTests {
     [Fact]
+    public async Task UpdateFavoriteProduct_WhenSourceAccessIsLost_DoesNotMutateFavorite() {
+        var user = User.Create("favorite@example.com", "hash");
+        var favorite = FavoriteProduct.Create(user.Id, ProductId.New(), "Original", 125);
+        IFavoriteProductWriteRepository repository = Substitute.For<IFavoriteProductWriteRepository>();
+        repository.GetByIdAsync(favorite.Id, user.Id, asTracking: true, Arg.Any<CancellationToken>()).Returns(favorite);
+        IFavoriteProductSourceReadService source = Substitute.For<IFavoriteProductSourceReadService>();
+        source.GetAccessibleAsync(favorite.ProductId, user.Id, Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<FavoriteProductSourceModel>(new Error("Product.Forbidden", "Denied", ErrorKind.Forbidden)));
+
+        Result<FavoriteProductModel> result = await new UpdateFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user), source)
+            .Handle(new UpdateFavoriteProductCommand(user.Id.Value, favorite.Id.Value, "Changed", 300), CancellationToken.None);
+
+        ResultAssert.Failure(result, "FavoriteProduct.NotFound");
+        Assert.Equal("Original", favorite.Name);
+        Assert.Equal(125, favorite.PreferredPortionAmount);
+        await repository.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
+    }
+    [Fact]
     public async Task AddFavoriteProduct_WithAccessibleProduct_PersistsAndReturnsModel() {
         var user = User.Create("favorite-product@example.com", "hash");
         Product product = CreateProduct(user.Id, "Greek Yogurt");
