@@ -182,6 +182,12 @@ internal sealed class OpenFoodFactsService(
         int normalizedLimit,
         string cacheKey,
         CancellationToken cancellationToken = default) {
+        // Another registration may have completed after this caller's initial cache miss.
+        // Recheck while owning the in-flight registration, before starting provider work.
+        if (TryGetCachedSearch(cacheKey, SearchCacheTtl, out IReadOnlyList<OpenFoodFactsProductModel> freshProducts)) {
+            return freshProducts;
+        }
+
         var stopwatch = Stopwatch.StartNew();
         string outcome = "success";
         string? errorType = null;

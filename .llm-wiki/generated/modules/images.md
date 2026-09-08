@@ -89,6 +89,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [integration] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.IntegrationTests/Integration/OutboxReplayStreamTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Integrations/ProviderOptionsTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Integrations/ProviderRegistrationTests.cs`
+- [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/ImageAssetCleanupBatchTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/S3ImageStorageServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/S3ObjectStorageClientTests.cs`
 - [behavioral-or-text-match] `Modules/Images/tests/FoodDiary.Modules.Images.Infrastructure.Tests/Services/UserProfileImageServiceTests.cs`

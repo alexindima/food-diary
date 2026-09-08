@@ -113,10 +113,10 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/MailInboxAdminReaderTests.cs`
 - [presentation] `Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminAchievementDefinitionsControllerTests.cs`
 - [presentation] `Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs`
+- [presentation] `Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminDashboardOverviewTests.cs`
 - [presentation] `Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminHttpMappingsTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoProtocolTests.cs`
 - [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs`
-- [presentation] `Modules/Identity/tests/FoodDiary.Modules.Identity.Presentation.Tests/AdminSsoControllerTests.cs`
 
 ## Working Rule
 
