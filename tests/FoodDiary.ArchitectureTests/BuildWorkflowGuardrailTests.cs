@@ -35,16 +35,18 @@ public sealed class BuildWorkflowGuardrailTests {
     }
 
     [Fact]
-    public void SuccessfulGitHooks_RemoveOnlyTheirGeneratedDotnetArtifacts() {
+    public void GitHooks_KeepCommitsFastAndIsolatePushArtifacts() {
         string preCommit = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-commit"));
         string prePush = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-push"));
 
         Assert.Multiple(
-            () => Assert.Contains("PRE_COMMIT_ARTIFACTS_PATH=\".artifacts/pre-commit/$$\"", preCommit, StringComparison.Ordinal),
+            () => Assert.Equal("# Keep local commits fast; full verification runs before push.\ngit diff --cached --check\n", preCommit.Replace("\r\n", "\n", StringComparison.Ordinal)),
             () => Assert.Contains("PRE_PUSH_ARTIFACTS_PATH=\".artifacts/pre-push/$$\"", prePush, StringComparison.Ordinal),
-            () => Assert.True(CountOccurrences(preCommit, "Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath") >= 2),
             () => Assert.True(CountOccurrences(prePush, "Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath") >= 2),
-            () => Assert.DoesNotContain("Clean-NestedDotnetArtifacts.ps1 -IncludeRoot", preCommit, StringComparison.Ordinal),
+            () => Assert.Equal(1, CountOccurrences(prePush, "dotnet build ")),
+            () => Assert.Contains("dotnet format FoodDiary.slnx --verify-no-changes --no-restore", prePush, StringComparison.Ordinal),
+            () => Assert.Contains("Invoke-LlmWikiIndexPipeline.ps1 -Check -AffectedOnly", prePush, StringComparison.Ordinal),
+            () => Assert.Contains("npm run build:storybook", prePush, StringComparison.Ordinal),
             () => Assert.DoesNotContain("Clean-NestedDotnetArtifacts.ps1 -IncludeRoot", prePush, StringComparison.Ordinal));
     }
 

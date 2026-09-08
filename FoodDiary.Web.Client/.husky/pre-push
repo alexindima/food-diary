@@ -2,6 +2,7 @@
 
 only_deletions=true
 saw_ref_update=false
+changed_paths=""
 while read -r local_ref local_object_name remote_ref remote_object_name; do
   if [ -z "$local_ref" ]; then
     continue
@@ -10,6 +11,13 @@ while read -r local_ref local_object_name remote_ref remote_object_name; do
   saw_ref_update=true
   if [ "$local_ref" != "(delete)" ] && [ "$local_object_name" != "0000000000000000000000000000000000000000" ]; then
     only_deletions=false
+    # New refs or unavailable remote objects require a conservative full inventory.
+    if [ "$remote_object_name" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$remote_object_name^{commit}" 2>/dev/null; then
+      ref_paths=$(git diff --name-only --diff-filter=ACMR "$remote_object_name" "$local_object_name") || exit 1
+    else
+      ref_paths=$(git ls-tree -r --name-only "$local_object_name") || exit 1
+    fi
+    changed_paths=$(printf '%s\n%s' "$changed_paths" "$ref_paths")
   fi
 done
 
@@ -18,13 +26,26 @@ if [ "$saw_ref_update" = true ] && [ "$only_deletions" = true ]; then
   exit 0
 fi
 
-hook_progress_init "pre-push" 2
+# Direct invocation has no ref input: check all tracked files.
+if [ "$saw_ref_update" = false ]; then
+  changed_paths=$(git ls-files) || exit 1
+fi
+changed_paths=$(printf '%s\n' "$changed_paths" | sort -u)
+hook_progress_init "pre-push" 3
 
 HOOK_POWERSHELL=$(command -v pwsh || true)
 if [ -z "$HOOK_POWERSHELL" ]; then
   echo "PowerShell 7 (pwsh) is required for Wiki SQLite tooling and .NET artifact cleanup."
   exit 1
 fi
+WIKI_PATH_FILE=".artifacts/llm-wiki/pre-push-paths-$$.txt"
+mkdir -p .artifacts/llm-wiki || exit 1
+printf '%s\n' "$changed_paths" > "$WIKI_PATH_FILE"
+hook_run "LLM Wiki affected index freshness" "$HOOK_POWERSHELL" -NoLogo -NoProfile -File .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check -AffectedOnly -ChangedPathFile "$WIKI_PATH_FILE" -ReuseUnchangedChecks
+WIKI_STATUS=$?
+rm -f "$WIKI_PATH_FILE"
+[ "$WIKI_STATUS" -eq 0 ] || exit "$WIKI_STATUS"
+
 PRE_PUSH_ARTIFACTS_PATH=".artifacts/pre-push/$$"
 hook_run "Scoped and nested .NET artifact cleanup" "$HOOK_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -RootArtifactPath "$PRE_PUSH_ARTIFACTS_PATH" || exit 1
 
@@ -47,10 +68,17 @@ run_frontend_checks() {
   npm run audit:design-tokens || return 1
   npm run test:ci:app || return 1
   npm run check:i18n || return 1
+  if printf '%s\n' "$changed_paths" | grep -Eq '^FoodDiary\.Web\.Client/(\.storybook/.*|projects/fd-ui-kit/src/.*\.stories\.(ts|mdx)|package\.json|angular\.json)$'; then
+    npm run build:storybook || return 1
+  fi
 }
 
 run_backend_checks() {
   command dotnet build FoodDiary.slnx --artifacts-path "$PRE_PUSH_ARTIFACTS_PATH" || return 1
+  # Format once, after restore/build; migrations are already part of the solution.
+  if printf '%s\n' "$changed_paths" | grep -Eq '\.cs$'; then
+    command dotnet format FoodDiary.slnx --verify-no-changes --no-restore || return 1
+  fi
   # Integration namespaces/classes and the slow MCP process suite run in CI.
   # Keep unit and architecture tests locally; also honor explicit test categories.
   echo "Running backend unit and architecture tests; integration/slow suites run in CI."

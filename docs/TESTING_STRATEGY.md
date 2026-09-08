@@ -14,9 +14,12 @@ They also guard the allowed reference graph between test projects, so shared tes
 
 ## Local Git Hooks and CI
 
-`pre-commit` checks formatting, linters, and conditional builds without running tests.
-`pre-push` retains the backend solution build, unit and architecture tests, and
-frontend checks/app unit tests. Its backend filter excludes fully qualified names
+`pre-commit` only runs `git diff --cached --check` so local commits stay fast.
+`pre-push` checks affected Wiki indexes, frontend checks/app unit tests, and
+Storybook when its inputs changed. It builds the backend solution once (including
+migrations), checks C# formatting when C# files changed, and runs unit and architecture
+tests. Changed paths cover every outgoing ref; new refs or missing remote objects
+use the full file inventory. Its backend filter excludes fully qualified names
 containing `IntegrationTests`, the slow `FoodDiary.Development.Mcp.Tests` suite,
 and tests with `Category=Integration` or `Category=Slow`. The name filter covers
 dedicated integration namespaces and repository integration classes in mixed
