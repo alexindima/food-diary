@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { disabled, email, form, FormField, FormRoot, required } from '@angular/forms/signals';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -10,7 +11,10 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { firstValueFrom } from 'rxjs';
 
+import { AdminTemplateHistoryComponent } from '../../admin-template-history/components/admin-template-history';
+import type { AdminTemplateRevision } from '../../admin-template-history/models/admin-template-revision';
 import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
+import { emailTemplateVariables } from '../lib/email-template-variables';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 
 type TemplateFormModel = {
@@ -29,6 +33,8 @@ type TestEmailFormModel = {
 @Component({
     selector: 'fd-admin-email-template-edit-dialog',
     imports: [
+        AdminTemplateHistoryComponent,
+        TranslatePipe,
         FormField,
         FormRoot,
         FdUiInputComponent,
@@ -54,7 +60,7 @@ export class AdminEmailTemplateEditDialogComponent {
     protected readonly previewMode = signal<'html' | 'text'>('html');
     protected readonly previewBrand = signal('FoodDiary');
     protected readonly previewClientName = signal('Alex Johnson');
-    protected readonly previewLink = signal(this.getDefaultPreviewLink(this.data.key));
+    protected readonly previewLink = computed(() => this.getDefaultPreviewLink(this.formModel().key));
     protected readonly testEmailModel = signal<TestEmailFormModel>({ email: '' });
     protected readonly testEmailForm = form(this.testEmailModel, path => {
         required(path.email);
@@ -103,9 +109,20 @@ export class AdminEmailTemplateEditDialogComponent {
         const { subject, textBody } = this.formModel();
         return this.applyTokens(textBody !== '' ? textBody : subject, this.previewLink(), this.previewBrand(), this.previewClientName());
     });
+    protected readonly supportedVariables = computed(() => emailTemplateVariables(this.formModel().key));
 
     protected onCancel(): void {
         this.dialogRef.close(false);
+    }
+
+    protected restoreRevision(revision: AdminTemplateRevision): void {
+        this.formModel.update(value => ({
+            ...value,
+            subject: revision.subject ?? '',
+            htmlBody: revision.htmlBody ?? '',
+            textBody: revision.textBody,
+            isActive: revision.isActive,
+        }));
     }
 
     protected onSave(): void {
@@ -174,13 +191,27 @@ export class AdminEmailTemplateEditDialogComponent {
     }
 
     private applyTokens(value: string, link: string, brand: string, clientName: string): string {
-        return value
-            .replaceAll(/{{\s*link\s*}}/gi, link)
-            .replaceAll(/{{\s*brand\s*}}/gi, brand)
-            .replaceAll(/{{\s*clientname\s*}}/gi, clientName);
+        const samples: Record<string, string> = {
+            link,
+            brand,
+            clientname: clientName,
+            email: 'example@example.com',
+            temporarypassword: 'Demo-only-password',
+            loginlink: 'https://fooddiary.club/login',
+        };
+        const supported = new Set(this.supportedVariables().map(name => name.toLowerCase()));
+        return value.replaceAll(/{{([a-z]+)}}/gi, (match: string, name: string) =>
+            supported.has(name.toLowerCase()) ? samples[name.toLowerCase()] : match,
+        );
     }
 
     private getDefaultPreviewLink(key: string): string {
+        if (key === 'account_created') {
+            return 'https://fooddiary.club/login';
+        }
+        if (key === 'password_reset') {
+            return 'https://fooddiary.club/reset-password?userId=demo&token=demo';
+        }
         return key === 'dietologist_invitation'
             ? 'https://fooddiary.club/dietologist/accept?invitationId=demo&token=demo'
             : 'https://fooddiary.club/verify-email?userId=demo&token=demo';

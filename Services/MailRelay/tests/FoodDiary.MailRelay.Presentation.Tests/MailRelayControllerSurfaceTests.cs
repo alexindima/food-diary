@@ -8,7 +8,7 @@ namespace FoodDiary.MailRelay.Presentation.Tests;
 public sealed class MailRelayControllerSurfaceTests {
     public static TheoryData<Type, string, int> ControllerContracts => new() {
         { typeof(MailRelayDeliveryEventsController), "api/email/events", 2 },
-        { typeof(MailRelayMessagesController), "api/email/messages", 1 },
+        { typeof(MailRelayMessagesController), "api/email/messages", 2 },
     };
 
     [Theory]

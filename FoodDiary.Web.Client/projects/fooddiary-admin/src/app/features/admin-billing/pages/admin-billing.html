@@ -1,4 +1,6 @@
 <div class="admin-billing fd-grid fd-gap-md">
+    <fd-admin-period />
+    <p role="alert" [hidden]="!billing.revenueFailed()">{{ 'ADMIN_BILLING.SUMMARY_ERROR' | translate }}</p>
     <div class="admin-billing__header fd-row fd-justify-end">
         <fd-ui-button type="button" variant="secondary" (click)="billing.load()"> Refresh </fd-ui-button>
     </div>
@@ -19,14 +21,10 @@
         [provider]="billing.provider()"
         [status]="billing.status()"
         [kind]="billing.kind()"
-        [fromDate]="billing.fromDate()"
-        [toDate]="billing.toDate()"
         (searchChange)="billing.search.set($event)"
         (providerChange)="billing.provider.set($event)"
         (statusChange)="billing.status.set($event)"
         (kindChange)="billing.kind.set($event)"
-        (fromDateChange)="billing.fromDate.set($event)"
-        (toDateChange)="billing.toDate.set($event)"
         (filtersApply)="billing.applyFilters()"
         (filtersReset)="billing.resetFilters()"
     />
@@ -34,6 +32,9 @@
     @if (billing.revenueSummary(); as summary) {
         <section class="admin-billing__revenue fd-grid fd-gap-sm" aria-labelledby="billing-revenue-title">
             <h2 id="billing-revenue-title">{{ 'ADMIN_BILLING.REVENUE.TITLE' | translate }}</h2>
+            <p>{{ 'ADMIN_BILLING.RENEWAL_RECORDS' | translate }}: {{ summary.renewalPaymentRecords ?? 0 }}</p>
+            <p>{{ 'ADMIN_BILLING.SCHEDULED_CANCELLATIONS' | translate }}: {{ summary.scheduledCancellations ?? 0 }}</p>
+            <p>{{ 'ADMIN_BILLING.OPERATIONS_DEFINITION' | translate }}</p>
             @if (summary.currencies.length === 0) {
                 <p>{{ 'ADMIN_BILLING.REVENUE.EMPTY' | translate }}</p>
             } @else {

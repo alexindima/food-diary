@@ -6,6 +6,11 @@ namespace FoodDiary.Application.Users.Services;
 
 public sealed class UserAdministrationReadService(IUserAdminReadModelRepository repository)
     : IUserAdministrationReadService {
+    public Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetFilteredPagedAsync(
+        string? search, int page, int limit, UserAccountStatusFilter status,
+        UserAdministrationFilter filter, CancellationToken cancellationToken) =>
+        repository.GetFilteredPagedReadModelsAsync(search, page, limit, status, filter, cancellationToken);
+
     public Task<UserAdminReadModel?> GetByIdIncludingDeletedAsync(
         UserId userId,
         CancellationToken cancellationToken) =>

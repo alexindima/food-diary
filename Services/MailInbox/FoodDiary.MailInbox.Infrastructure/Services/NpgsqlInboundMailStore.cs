@@ -394,7 +394,7 @@ public sealed class NpgsqlInboundMailStore(
     }
 
     public async Task<InboundMailMessagePage> GetMessagePageAsync(
-        int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) {
+        int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null) {
         ArgumentOutOfRangeException.ThrowIfLessThan(page, 1);
         ArgumentOutOfRangeException.ThrowIfLessThan(limit, 1);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(limit, 200);
@@ -404,16 +404,22 @@ public sealed class NpgsqlInboundMailStore(
                                envelope_from_address, is_trusted_relay
                            from mailinbox_messages
                            where (@recipient::jsonb is null or to_recipients_json @> @recipient)
-                             and (@unread::boolean is null or (read_at_utc is null) = @unread)
+                             and (@from::timestamptz is null or received_at_utc >= @from)
+                             and (@to::timestamptz is null or received_at_utc < @to)
+                             and (@id::uuid is null or id = @id)
+                             and (@search = '' or strpos(lower(coalesce(subject, '')), lower(@search)) > 0)
+                             and (@sender = '' or lower(coalesce(from_address, '')) = lower(@sender))
                              and (@category::text is null or @category = case when
                                  to_recipients_json @> '["dmarc@fooddiary.club"]'::jsonb
                                  or subject ilike '%DMARC%' or subject ilike '%Report Domain:%'
                                  then 'dmarc-report' else 'general' end)
                            )
-                           select page.*, totals.total
-                           from (select count(*) as total from filtered) totals
+                           select page.*, totals.total, totals.unread_count, totals.read_count
+                           from (select count(*) filter (where @unread::boolean is null or (read_at_utc is null) = @unread) as total,
+                               count(*) filter (where read_at_utc is null) as unread_count,
+                               count(*) filter (where read_at_utc is not null) as read_count from filtered) totals
                            left join lateral (
-                               select * from filtered
+                               select * from filtered where @unread::boolean is null or (read_at_utc is null) = @unread
                                order by received_at_utc desc, id desc
                                limit @limit offset @offset
                            ) page on true
@@ -423,9 +429,16 @@ public sealed class NpgsqlInboundMailStore(
         NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         var messages = new List<InboundMailMessageSummary>();
         long totalItems = 0;
+        long unreadCount = 0;
+        long readCount = 0;
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
+                command.Parameters.AddWithValue("from", NpgsqlDbType.TimestampTz, (object?)fromUtc?.ToUniversalTime() ?? DBNull.Value);
+                command.Parameters.AddWithValue("to", NpgsqlDbType.TimestampTz, (object?)toUtc?.ToUniversalTime() ?? DBNull.Value);
+                command.Parameters.AddWithValue("id", NpgsqlDbType.Uuid, (object?)id ?? DBNull.Value);
+                command.Parameters.AddWithValue("search", search?.Trim() ?? "");
+                command.Parameters.AddWithValue("sender", fromAddress?.Trim() ?? "");
                 command.Parameters.AddWithValue("limit", limit);
                 command.Parameters.AddWithValue("offset", ((long)page - 1) * limit);
                 command.Parameters.AddWithValue("recipient", NpgsqlDbType.Jsonb, recipient is null ? DBNull.Value : JsonSerializer.Serialize(new[] { recipient.Trim().ToLowerInvariant() }));
@@ -435,6 +448,8 @@ public sealed class NpgsqlInboundMailStore(
                 await using (reader.ConfigureAwait(false)) {
                     while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
                         totalItems = reader.GetInt64(9);
+                        unreadCount = reader.GetInt64(10);
+                        readCount = reader.GetInt64(11);
                         if (await reader.IsDBNullAsync(0, cancellationToken).ConfigureAwait(false)) {
                             continue;
                         }
@@ -456,7 +471,7 @@ public sealed class NpgsqlInboundMailStore(
             }
         }
 
-        return new InboundMailMessagePage(messages, totalItems);
+        return new InboundMailMessagePage(messages, totalItems, unreadCount, readCount);
     }
 
     public async Task<InboundMailMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) {

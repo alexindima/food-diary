@@ -10,14 +10,6 @@
     @if (activeTab() === 'payments') {
         <fd-ui-input label="Payment kind" [value]="kind()" (valueChange)="kindChange.emit(getControlTextValue($event))" />
     }
-    <div class="fd-grid fd-gap-xxs">
-        <label for="admin-billing-from-date">From</label>
-        <input id="admin-billing-from-date" type="date" [value]="fromDate()" (input)="fromDateChange.emit(getInputValue($event))" />
-    </div>
-    <div class="fd-grid fd-gap-xxs">
-        <label for="admin-billing-to-date">To</label>
-        <input id="admin-billing-to-date" type="date" [value]="toDate()" (input)="toDateChange.emit(getInputValue($event))" />
-    </div>
     <fd-ui-button type="button" (click)="filtersApply.emit()"> Apply </fd-ui-button>
     <fd-ui-button type="button" variant="secondary" (click)="filtersReset.emit()"> Reset </fd-ui-button>
 </section>

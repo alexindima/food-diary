@@ -8,7 +8,7 @@ import type { AdminAiUsageSummary } from '../models/admin-ai-usage.data';
 export class AdminAiUsageFacade {
     private readonly aiUsageService = inject(AdminAiUsageService);
 
-    public getSummary(): Observable<AdminAiUsageSummary> {
-        return this.aiUsageService.getSummary();
+    public getSummary(range: { from?: string; to?: string; userId?: string } = {}): Observable<AdminAiUsageSummary> {
+        return this.aiUsageService.getSummary(range);
     }
 }

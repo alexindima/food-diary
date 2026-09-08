@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, Subject, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -29,7 +30,12 @@ type BillingTestContext = {
 async function setupBillingAsync(billingApi: BillingApiMock = createBillingServiceMock()): Promise<BillingTestContext> {
     await TestBed.configureTestingModule({
         imports: [AdminBillingComponent],
-        providers: [provideTranslateTesting(), AdminBillingFacade, { provide: AdminBillingService, useValue: billingApi }],
+        providers: [
+            provideRouter([]),
+            provideTranslateTesting(),
+            AdminBillingFacade,
+            { provide: AdminBillingService, useValue: billingApi },
+        ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AdminBillingComponent);
@@ -119,7 +125,8 @@ const subscriptionsPage = {
 
 describe('AdminBillingComponent loading', () => {
     it('should load subscriptions on init', async () => {
-        const { billingApi, billing } = await setupBillingAsync();
+        const { billingApi, billing, fixture } = await setupBillingAsync();
+        await fixture.whenStable();
 
         expect(billingApi.getSubscriptions).toHaveBeenCalledWith(1, PAGE_SIZE, {
             provider: null,
@@ -136,7 +143,8 @@ describe('AdminBillingComponent loading', () => {
     });
 
     it('should clear state on load error', async () => {
-        const { billingApi, billing } = await setupBillingAsync();
+        const { billingApi, billing, fixture } = await setupBillingAsync();
+        await fixture.whenStable();
         billingApi.getSubscriptions.mockReturnValueOnce(throwError(() => new Error('network')));
 
         billing.load();
@@ -151,9 +159,11 @@ describe('AdminBillingComponent loading', () => {
         const billingApi = createBillingServiceMock();
         const pendingSubscriptions = new Subject<SubscriptionsPage>();
         billingApi.getSubscriptions.mockReturnValueOnce(pendingSubscriptions.asObservable());
-        const { billing } = await setupBillingAsync(billingApi);
+        const { billing, fixture } = await setupBillingAsync(billingApi);
+        await fixture.whenStable();
 
         billing.setTab('payments');
+        await fixture.whenStable();
         pendingSubscriptions.next({
             ...subscriptionsPage,
             totalItems: 99,
@@ -168,9 +178,11 @@ describe('AdminBillingComponent loading', () => {
 
 describe('AdminBillingComponent filters', () => {
     it('should switch to payments and include kind filter', async () => {
-        const { billingApi, billing } = await setupBillingAsync();
+        const { billingApi, billing, fixture } = await setupBillingAsync();
+        await fixture.whenStable();
         billing.kind.set('webhook');
         billing.setTab('payments');
+        await fixture.whenStable();
 
         expect(billing.activeTab()).toBe('payments');
         expect(billing.page()).toBe(1);
@@ -186,7 +198,8 @@ describe('AdminBillingComponent filters', () => {
     });
 
     it('should apply filters with utc day bounds', async () => {
-        const { billingApi, billing } = await setupBillingAsync();
+        const { billingApi, billing, fixture } = await setupBillingAsync();
+        await fixture.whenStable();
         billing.provider.set(' Paddle ');
         billing.status.set(' paid ');
         billing.search.set(' buyer@example.com ');
@@ -194,6 +207,7 @@ describe('AdminBillingComponent filters', () => {
         billing.toDate.set('2026-04-30');
 
         billing.applyFilters();
+        await fixture.whenStable();
 
         expect(billingApi.getSubscriptions).toHaveBeenLastCalledWith(1, PAGE_SIZE, {
             provider: 'Paddle',
@@ -208,7 +222,8 @@ describe('AdminBillingComponent filters', () => {
 
 describe('AdminBillingComponent metadata', () => {
     it('should format metadata json for side panel', async () => {
-        const { billing } = await setupBillingAsync();
+        const { billing, fixture } = await setupBillingAsync();
+        await fixture.whenStable();
         billing.showMetadata('{"payment_id":"pay_123"}');
 
         expect(billing.selectedMetadata()).toContain('"payment_id": "pay_123"');

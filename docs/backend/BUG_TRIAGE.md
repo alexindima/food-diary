@@ -112,3 +112,7 @@ The API binds only to server loopback port 5099. The provisioned workstation use
 After activation, send a synthetic bug with an image and verify import, claim, MIME retrieval, renewal and completion before scheduling unattended work. Enabling autonomous processing of arbitrary public mail requires an explicit admission policy; this deployment does not itself enable a Codex schedule.
 
 Rollback: stop BugTriage and the local task, revoke its token and retain the BugTriage database for diagnosis under the retention policy. MailInbox and the main application continue operating; no primary database schema or SSO change is involved.
+
+## Receipt acknowledgements and outgoing mail
+
+The primary application can send editable receipt acknowledgements for persisted bug mail, independently of the triage worker. See [Outgoing mail](OUTGOING_MAIL.md) for ownership, duplicate/auto-response handling, journal access and opt-in rollout.

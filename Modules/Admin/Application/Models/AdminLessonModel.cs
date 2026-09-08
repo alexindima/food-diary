@@ -11,4 +11,6 @@ public sealed record AdminLessonModel(
     int EstimatedReadMinutes,
     int SortOrder,
     DateTime CreatedOnUtc,
-    DateTime? ModifiedOnUtc);
+    DateTime? ModifiedOnUtc,
+    bool IsPublished = true,
+    int CompletedCount = 0);

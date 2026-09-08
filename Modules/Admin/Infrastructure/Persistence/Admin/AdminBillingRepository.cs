@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Admin;
@@ -34,7 +35,10 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
 
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
             string term = BuildSearchPattern(filter.Search);
+            bool hasId = Guid.TryParse(filter.Search.Trim(), out Guid recordId);
+            var userId = new UserId(recordId);
             query = query.Where(item =>
+                (hasId && (item.subscription.Id == recordId || item.user.Id == userId)) ||
                 EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.subscription.ExternalCustomerId, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.subscription.ExternalSubscriptionId ?? string.Empty, term, LikeEscapeCharacter) ||
@@ -43,7 +47,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
 
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<AdminBillingSubscriptionReadModel> items = await query
-            .OrderByDescending(item => item.subscription.CreatedOnUtc)
+            .OrderByDescending(item => item.subscription.CreatedOnUtc).ThenByDescending(item => item.subscription.Id)
             .Skip(GetSkipCount(filter))
             .Take(filter.Limit)
             .Select(item => new AdminBillingSubscriptionReadModel(
@@ -94,7 +98,10 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
         }
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
             string term = BuildSearchPattern(filter.Search);
+            bool hasId = Guid.TryParse(filter.Search.Trim(), out Guid recordId);
+            var userId = new UserId(recordId);
             query = query.Where(item =>
+                (hasId && (item.payment.Id == recordId || item.payment.BillingSubscriptionId == recordId || item.user.Id == userId)) ||
                 EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.payment.ExternalPaymentId, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.payment.ExternalCustomerId ?? string.Empty, term, LikeEscapeCharacter) ||
@@ -102,7 +109,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
         }
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<AdminBillingPaymentReadModel> items = await query
-            .OrderByDescending(item => item.payment.CreatedOnUtc)
+            .OrderByDescending(item => item.payment.CreatedOnUtc).ThenByDescending(item => item.payment.Id)
             .Skip(GetSkipCount(filter))
             .Take(filter.Limit)
             .Select(item => new AdminBillingPaymentReadModel(
@@ -156,7 +163,9 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
 
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
             string term = BuildSearchPattern(filter.Search);
+            bool hasId = Guid.TryParse(filter.Search.Trim(), out Guid recordId);
             query = query.Where(webhookEvent =>
+                (hasId && webhookEvent.Id == recordId) ||
                 EF.Functions.ILike(webhookEvent.EventId, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(webhookEvent.EventType, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(webhookEvent.ExternalObjectId ?? string.Empty, term, LikeEscapeCharacter));
@@ -164,7 +173,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
 
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<AdminBillingWebhookEventReadModel> items = await query
-            .OrderByDescending(webhookEvent => webhookEvent.ReceivedAtUtc)
+            .OrderByDescending(webhookEvent => webhookEvent.ReceivedAtUtc).ThenByDescending(webhookEvent => webhookEvent.Id)
             .Skip(GetSkipCount(filter))
             .Take(filter.Limit)
             .Select(webhookEvent => new AdminBillingWebhookEventReadModel(
@@ -234,6 +243,12 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 
+        int renewalRecords = await context.BillingPayments.AsNoTracking().CountAsync(payment =>
+            payment.Kind == BillingPaymentKinds.Renewal && (payment.OccurredAtUtc ?? payment.CreatedOnUtc) >= fromUtc &&
+            (payment.OccurredAtUtc ?? payment.CreatedOnUtc) < toUtc, cancellationToken).ConfigureAwait(false);
+        int cancellations = await context.BillingSubscriptions.AsNoTracking().CountAsync(subscription =>
+            subscription.CancelAtPeriodEnd && subscription.CurrentPeriodEndUtc >= fromUtc && subscription.CurrentPeriodEndUtc < toUtc,
+            cancellationToken).ConfigureAwait(false);
         return new AdminBillingRevenueSummaryReadModel(
             fromUtc,
             toUtc,
@@ -248,7 +263,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 row.Tax,
                 row.PaddleFees,
                 row.PaddleEarnings,
-                row.EarningsTrackedPayments))]);
+                row.EarningsTrackedPayments))], renewalRecords, cancellations);
     }
 
     private static int GetSkipCount(AdminBillingListFilter filter) =>

@@ -1,0 +1,124 @@
+- generic [ref=f6e1]:
+  - generic [ref=f6e3]:
+    - complementary [ref=f6e5]:
+      - generic [ref=f6e6]:
+        - generic [ref=f6e7]:
+          - generic [ref=f6e8]: FD
+          - generic [ref=f6e10]:
+            - generic [ref=f6e11]: FoodDiary
+            - generic [ref=f6e12]: Admin
+        - navigation [ref=f6e15]:
+          - link [ref=f6e151] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f6e19]: dashboard
+            - generic [ref=f6e20]: Dashboard
+        - generic [ref=f6e22]:
+          - button [expanded] [ref=f6e152] [cursor=pointer]:
+            - generic [ref=f6e24]: Users
+            - generic [ref=f6e26]: expand_more
+          - navigation [ref=f6e27]:
+            - link [ref=f6e153] [cursor=pointer]:
+              - /url: /users
+              - generic [ref=f6e31]: group
+              - generic [ref=f6e32]: Accounts
+            - link [ref=f6e154] [cursor=pointer]:
+              - /url: /users/login-activity
+              - generic [ref=f6e36]: login
+              - generic [ref=f6e37]: Login activity
+            - link [ref=f6e155] [cursor=pointer]:
+              - /url: /users/impersonation-sessions
+              - generic [ref=f6e41]: admin_panel_settings
+              - generic [ref=f6e42]: Impersonation sessions
+        - navigation [ref=f6e45]:
+          - link [ref=f6e156] [cursor=pointer]:
+            - /url: /ai-usage
+            - generic [ref=f6e49]: smart_toy
+            - generic [ref=f6e50]: AI usage
+          - link [ref=f6e157] [cursor=pointer]:
+            - /url: /analytics/retention
+            - generic [ref=f6e54]: timeline
+            - generic [ref=f6e55]: Retention
+          - link [ref=f6e158] [cursor=pointer]:
+            - /url: /audit
+            - generic [ref=f6e59]: history
+            - generic [ref=f6e60]: Audit
+          - link [ref=f6e159] [cursor=pointer]:
+            - /url: /bugs
+            - generic [ref=f6e64]: bug_report
+            - generic [ref=f6e65]: Bugs
+          - link [ref=f6e160] [cursor=pointer]:
+            - /url: /ai-prompts
+            - generic [ref=f6e69]: edit_note
+            - generic [ref=f6e70]: AI prompts
+          - link [ref=f6e161] [cursor=pointer]:
+            - /url: /acquisition
+            - generic [ref=f6e74]: campaign
+            - generic [ref=f6e75]: Acquisition
+          - link [ref=f6e162] [cursor=pointer]:
+            - /url: /billing
+            - generic [ref=f6e79]: payments
+            - generic [ref=f6e80]: Billing
+          - link [ref=f6e163] [cursor=pointer]:
+            - /url: /email-templates
+            - generic [ref=f6e84]: mail
+            - generic [ref=f6e85]: Email templates
+          - link [ref=f6e164] [cursor=pointer]:
+            - /url: /mail-inbox
+            - generic [ref=f6e89]: inbox
+            - generic [ref=f6e90]: Mail
+          - link [ref=f6e165] [cursor=pointer]:
+            - /url: /lessons
+            - generic [ref=f6e94]: school
+            - generic [ref=f6e95]: Lessons
+          - link [ref=f6e166] [cursor=pointer]:
+            - /url: /achievements
+            - generic [ref=f6e99]: emoji_events
+            - generic [ref=f6e100]: Achievements
+          - link [ref=f6e167] [cursor=pointer]:
+            - /url: /moderation
+            - generic [ref=f6e104]: gavel
+            - generic [ref=f6e105]: Moderation
+    - main [ref=f6e106]:
+      - generic [ref=f6e107]:
+        - heading [level=1] [ref=f6e168]: AI prompts
+        - paragraph [ref=f6e109]: Manage localized AI instructions.
+      - generic [ref=f6e110]:
+        - generic [ref=f6e111]:
+          - generic [ref=f6e113]:
+            - generic: Search
+            - textbox [ref=f6e169]
+          - button [ref=f6e170] [cursor=pointer]:
+            - generic [ref=f6e117]: New prompt
+        - generic [ref=f6e119]:
+          - button [pressed] [ref=f6e171]: meal_summary · en · v2 · Active
+          - generic [ref=f6e122]:
+            - generic [ref=f6e123]: Key
+            - textbox [ref=f6e172]: meal_summary
+            - generic [ref=f6e125]: Language
+            - combobox [ref=f6e173]
+            - generic [ref=f6e127]: Prompt text
+            - textbox [ref=f6e174]: Previous prompt text
+            - generic [ref=f6e129]: Active
+            - checkbox [checked] [ref=f6e175]
+            - button [ref=f6e176] [cursor=pointer]:
+              - generic [ref=f6e133]: Save
+          - generic [ref=f6e136]:
+            - heading [level=3] [ref=f6e177]: Revision history
+            - paragraph [ref=f6e138]: The 50 most recent previous revisions. History starts when a template is changed after this feature is enabled. Restoring fills the editor; save to apply it as a new revision.
+            - group [ref=f6e141]:
+              - generic [ref=f6e178]: Sep 1, 2026, 4:00:00 AM · 1
+              - paragraph [ref=f6e143]: Previous subject
+              - generic [ref=f6e144]: Previous prompt text
+              - group [ref=f6e145]:
+                - generic [ref=f6e179]: HTML
+              - button [ref=f6e180] [cursor=pointer]:
+                - generic [ref=f6e149]: Restore into editor
+  - dialog [ref=f6e184]:
+    - dialog [ref=f6e187]:
+      - banner [ref=f6e188]:
+        - heading "Unsaved changes" [level=2] [ref=f6e190]
+      - paragraph [ref=f6e192]: Discard the changes in this prompt editor?
+      - contentinfo [ref=f6e193]:
+        - generic [ref=f6e194]:
+          - button "Cancel" [active] [ref=f6e196] [cursor=pointer]
+          - button "Discard changes" [ref=f6e200] [cursor=pointer]

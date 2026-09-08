@@ -26,6 +26,7 @@ public static class BugTriageInfrastructureExtensions {
             return NpgsqlDataSource.Create(connectionString);
         });
         services.AddSingleton<IBugReportStore, NpgsqlBugReportStore>();
+        services.AddSingleton<IBugReportJournal, NpgsqlBugReportJournal>();
         services.AddSingleton<IBugMailSource, MailInboxBugSource>();
         services.AddSingleton<ImportBugReports>();
         services.AddOptions<BugTriageOptions>().Bind(configuration.GetSection("BugTriage"))

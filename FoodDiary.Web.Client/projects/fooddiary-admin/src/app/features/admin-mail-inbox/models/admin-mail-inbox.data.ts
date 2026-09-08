@@ -11,7 +11,12 @@ export type AdminMailInboxMessageSummary = {
     receivedAtUtc: string;
 };
 
-export type AdminMailInboxMessagePage = { items: AdminMailInboxMessageSummary[]; totalItems: number };
+export type AdminMailInboxMessagePage = {
+    items: AdminMailInboxMessageSummary[];
+    totalItems: number;
+    unreadCount?: number | null;
+    readCount?: number | null;
+};
 
 export type AdminMailInboxMessageDetails = AdminMailInboxMessageSummary & {
     messageId?: string | null;
@@ -45,4 +50,13 @@ export type AdminMailInboxDmarcRecord = {
     spfResult?: string | null;
 };
 
-export type AdminMailInboxFilters = { recipient?: string; category?: string; unread?: boolean };
+export type AdminMailInboxFilters = {
+    recipient?: string;
+    category?: string;
+    unread?: boolean;
+    fromUtc?: string;
+    toUtc?: string;
+    search?: string;
+    fromAddress?: string;
+    id?: string;
+};

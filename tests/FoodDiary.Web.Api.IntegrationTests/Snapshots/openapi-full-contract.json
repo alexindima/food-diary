@@ -184,6 +184,107 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/acquisition/range",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/MarketingAttributionRangeHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/MarketingAttributionRangeHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/MarketingAttributionRangeHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Channel",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 16
+            },
+            {
+              "Name": "EventType",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 32
+            },
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 320
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/acquisition/summary",
       "Operations": [
         {
@@ -364,6 +465,67 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/ai-prompts/{key}/{locale}/revisions",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminTemplateRevisionHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminTemplateRevisionHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminTemplateRevisionHttpResponse"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "key",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 64
+            },
+            {
+              "Name": "locale",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 10
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/ai-usage/summary",
       "Operations": [
         {
@@ -409,6 +571,188 @@
               "Required": false,
               "Type": "string",
               "Format": "date"
+            },
+            {
+              "Name": "UserId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/analytics/retention",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminRetentionReportHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminRetentionReportHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminRetentionReportHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "From",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
+              "Name": "To",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/audit",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminAuditPageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminAuditPageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminAuditPageHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "Action",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 200
+            },
+            {
+              "Name": "ActorUserId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            },
+            {
+              "Name": "SubjectClientUserId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "TargetId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 200
+            },
+            {
+              "Name": "TargetType",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
             }
           ],
           "PathParameters": [
@@ -855,6 +1199,107 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/bugs",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminBugReportPageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminBugReportPageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminBugReportPageHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Id",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 320
+            },
+            {
+              "Name": "Status",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 32
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/dashboard",
       "Operations": [
         {
@@ -1122,6 +1567,67 @@
               "MediaType": "text/plain",
               "Reference": "#/components/schemas/AdminEmailTemplateHttpResponse",
               "Nullable": false
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "key",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 64
+            },
+            {
+              "Name": "locale",
+              "Location": "path",
+              "Required": true,
+              "Type": "string",
+              "MaxLength": 10
+            },
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/admin/email-templates/{key}/{locale}/revisions",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminTemplateRevisionHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminTemplateRevisionHttpResponse"
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Type": "array",
+              "Nullable": false,
+              "ItemReference": "#/components/schemas/AdminTemplateRevisionHttpResponse"
             }
           ],
           "PathParameters": [
@@ -1544,6 +2050,27 @@
               "MaxLength": 64
             },
             {
+              "Name": "FromAddress",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 320
+            },
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Id",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
@@ -1569,6 +2096,20 @@
               "Required": false,
               "Type": "string",
               "MaxLength": 320
+            },
+            {
+              "Name": "Search",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 320
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
             },
             {
               "Name": "Unread",
@@ -1705,6 +2246,13 @@
           ],
           "QueryParameters": [
             {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
@@ -1725,6 +2273,13 @@
               "Maximum": 10000
             },
             {
+              "Name": "ReporterId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
               "Name": "Status",
               "Location": "query",
               "Required": false,
@@ -1735,6 +2290,27 @@
                 "reviewed",
                 "dismissed"
               ]
+            },
+            {
+              "Name": "TargetId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "TargetType",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 64
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
             }
           ],
           "PathParameters": [
@@ -1855,6 +2431,121 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/outgoing-emails",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "403",
+            "500"
+          ],
+          "SuccessResponses": [
+            {
+              "StatusCode": "200",
+              "MediaType": "application/json",
+              "Reference": "#/components/schemas/AdminOutgoingEmailPageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/json",
+              "Reference": "#/components/schemas/AdminOutgoingEmailPageHttpResponse",
+              "Nullable": false
+            },
+            {
+              "StatusCode": "200",
+              "MediaType": "text/plain",
+              "Reference": "#/components/schemas/AdminOutgoingEmailPageHttpResponse",
+              "Nullable": false
+            }
+          ],
+          "QueryParameters": [
+            {
+              "Name": "CorrelationId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 256
+            },
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "Id",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "50",
+              "Minimum": 1,
+              "Maximum": 100
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32",
+              "Default": "1",
+              "Minimum": 1,
+              "Maximum": 10000
+            },
+            {
+              "Name": "Purpose",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 64
+            },
+            {
+              "Name": "Recipient",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 320
+            },
+            {
+              "Name": "Status",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 32
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            }
+          ],
+          "PathParameters": [
+            {
+              "Name": "version",
+              "Location": "path",
+              "Required": true,
+              "Type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/telemetry/fasting",
       "Operations": [
         {
@@ -1944,11 +2635,38 @@
           ],
           "QueryParameters": [
             {
+              "Name": "EmailConfirmed",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "From",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
               "Name": "IncludeDeleted",
               "Location": "query",
               "Required": false,
               "Type": "boolean",
               "Default": "false"
+            },
+            {
+              "Name": "LastLoginFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
+              "Name": "LastLoginTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
             },
             {
               "Name": "Limit",
@@ -1971,6 +2689,13 @@
               "Maximum": 10000
             },
             {
+              "Name": "Role",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 64
+            },
+            {
               "Name": "Search",
               "Location": "query",
               "Required": false,
@@ -1989,6 +2714,13 @@
                 "inactive",
                 "deleted"
               ]
+            },
+            {
+              "Name": "To",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
             }
           ],
           "PathParameters": [
@@ -2164,6 +2896,20 @@
           ],
           "QueryParameters": [
             {
+              "Name": "ActorId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
@@ -2189,6 +2935,20 @@
               "Required": false,
               "Type": "string",
               "MaxLength": 128
+            },
+            {
+              "Name": "TargetId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
             }
           ],
           "PathParameters": [
@@ -2237,6 +2997,20 @@
           ],
           "QueryParameters": [
             {
+              "Name": "Device",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
+            },
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
@@ -2257,11 +3031,25 @@
               "Maximum": 10000
             },
             {
+              "Name": "Provider",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
+            },
+            {
               "Name": "Search",
               "Location": "query",
               "Required": false,
               "Type": "string",
               "MaxLength": 128
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
             },
             {
               "Name": "UserId",
@@ -15499,6 +16287,13 @@
       "Name": "AdminAchievementDefinitionHttpResponse",
       "Properties": [
         {
+          "Name": "awardedUsers",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
           "Name": "category",
           "Required": false,
           "Type": "string",
@@ -15872,6 +16667,25 @@
       ]
     },
     {
+      "Name": "AdminAuditPageHttpResponse",
+      "Properties": [
+        {
+          "Name": "items",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/AdminAuditEntryHttpResponse"
+        },
+        {
+          "Name": "totalItems",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        }
+      ]
+    },
+    {
       "Name": "AdminBillingPaymentHttpResponse",
       "Properties": [
         {
@@ -16183,6 +16997,20 @@
           "Nullable": false
         },
         {
+          "Name": "renewalPaymentRecords",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "scheduledCancellations",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
           "Name": "toUtc",
           "Required": false,
           "Type": "string",
@@ -16489,6 +17317,94 @@
       ]
     },
     {
+      "Name": "AdminBugReportHttpResponse",
+      "Properties": [
+        {
+          "Name": "attempt",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "contentExpired",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "mergeRequestUrl",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "receivedAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "sourceMessageId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "status",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "subject",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "summary",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "AdminBugReportPageHttpResponse",
+      "Properties": [
+        {
+          "Name": "isConfigured",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "items",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/AdminBugReportHttpResponse"
+        },
+        {
+          "Name": "totalItems",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int64",
+          "Nullable": false
+        }
+      ]
+    },
+    {
       "Name": "AdminContentReportHttpResponse",
       "Properties": [
         {
@@ -16532,7 +17448,20 @@
           "Nullable": true
         },
         {
+          "Name": "reviewedByUserId",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": true
+        },
+        {
           "Name": "status",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "targetExcerpt",
           "Required": false,
           "Type": "string",
           "Nullable": true
@@ -16543,6 +17472,12 @@
           "Type": "string",
           "Format": "uuid",
           "Nullable": false
+        },
+        {
+          "Name": "targetTitle",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
         },
         {
           "Name": "targetType",
@@ -17119,6 +18054,12 @@
           "Nullable": false
         },
         {
+          "Name": "isPublished",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
           "Name": "locale",
           "Required": false,
           "Type": "string",
@@ -17155,6 +18096,13 @@
           "Nullable": true
         },
         {
+          "Name": "completedCount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
           "Name": "content",
           "Required": false,
           "Type": "string",
@@ -17185,6 +18133,12 @@
           "Required": false,
           "Type": "string",
           "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "isPublished",
+          "Required": false,
+          "Type": "boolean",
           "Nullable": false
         },
         {
@@ -17250,6 +18204,12 @@
           "Nullable": false
         },
         {
+          "Name": "isPublished",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
           "Name": "locale",
           "Required": false,
           "Type": "string",
@@ -17302,6 +18262,12 @@
           "Required": false,
           "Type": "integer",
           "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "isPublished",
+          "Required": false,
+          "Type": "boolean",
           "Nullable": false
         },
         {
@@ -17602,11 +18568,25 @@
           "ItemReference": "#/components/schemas/AdminMailInboxMessageSummaryHttpResponse"
         },
         {
+          "Name": "readCount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int64",
+          "Nullable": true
+        },
+        {
           "Name": "totalItems",
           "Required": false,
           "Type": "integer",
           "Format": "int64",
           "Nullable": false
+        },
+        {
+          "Name": "unreadCount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int64",
+          "Nullable": true
         }
       ]
     },
@@ -17680,6 +18660,132 @@
       ]
     },
     {
+      "Name": "AdminOutgoingEmailHttpResponse",
+      "Properties": [
+        {
+          "Name": "attemptCount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "contentHidden",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "correlationId",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "createdAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "fromAddress",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "inReplyTo",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "maxAttempts",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "purpose",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "replyTo",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "sentAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "status",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "subject",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "textBody",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "to",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        }
+      ]
+    },
+    {
+      "Name": "AdminOutgoingEmailPageHttpResponse",
+      "Properties": [
+        {
+          "Name": "items",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/AdminOutgoingEmailHttpResponse"
+        },
+        {
+          "Name": "statusCounts",
+          "Required": false,
+          "Type": "object",
+          "Nullable": true
+        },
+        {
+          "Name": "totalItems",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int64",
+          "Nullable": false
+        }
+      ]
+    },
+    {
       "Name": "AdminReportActionHttpRequest",
       "Properties": [
         {
@@ -17687,6 +18793,119 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        }
+      ]
+    },
+    {
+      "Name": "AdminRetentionCohortHttpResponse",
+      "Properties": [
+        {
+          "Name": "activatedWithinSevenDays",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
+        },
+        {
+          "Name": "date",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "day1",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
+        },
+        {
+          "Name": "day30",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
+        },
+        {
+          "Name": "day7",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
+        },
+        {
+          "Name": "registered",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "AdminRetentionDayHttpResponse",
+      "Properties": [
+        {
+          "Name": "activeUsers",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "date",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "AdminRetentionReportHttpResponse",
+      "Properties": [
+        {
+          "Name": "activeUsersInPeriod",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "activityByDay",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/AdminRetentionDayHttpResponse"
+        },
+        {
+          "Name": "asOfUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "cohorts",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/AdminRetentionCohortHttpResponse"
+        },
+        {
+          "Name": "fromUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "toUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
         }
       ]
     },
@@ -17716,6 +18935,63 @@
           "Type": "string",
           "Format": "date-time",
           "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "AdminTemplateRevisionHttpResponse",
+      "Properties": [
+        {
+          "Name": "archivedOnUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "htmlBody",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "isActive",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "savedOnUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "subject",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "textBody",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "version",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
         }
       ]
     },
@@ -23541,6 +24817,91 @@
           "Required": false,
           "Type": "integer",
           "Format": "int32",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "MarketingAttributionDayHttpResponse",
+      "Properties": [
+        {
+          "Name": "date",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "premiumStarts",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "signups",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "visits",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        }
+      ]
+    },
+    {
+      "Name": "MarketingAttributionRangeHttpResponse",
+      "Properties": [
+        {
+          "Name": "byDay",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/MarketingAttributionDayHttpResponse"
+        },
+        {
+          "Name": "current",
+          "Required": false,
+          "Reference": "#/components/schemas/MarketingAttributionSummaryHttpResponse",
+          "Nullable": false
+        },
+        {
+          "Name": "eventTotal",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "fromUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "previous",
+          "Required": false,
+          "Reference": "#/components/schemas/MarketingAttributionSummaryHttpResponse",
+          "Nullable": false
+        },
+        {
+          "Name": "previousFromUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "toUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
           "Nullable": false
         }
       ]

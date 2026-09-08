@@ -8,6 +8,9 @@ export type AdminContentReport = {
     adminNote?: string | null;
     createdAtUtc: string;
     reviewedAtUtc?: string | null;
+    reviewedByUserId?: string | null;
+    targetTitle?: string | null;
+    targetExcerpt?: string | null;
 };
 
 export type AdminReportAction = {

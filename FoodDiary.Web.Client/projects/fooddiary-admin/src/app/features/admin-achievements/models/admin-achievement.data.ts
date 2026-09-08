@@ -14,6 +14,7 @@ export type AdminAchievementDefinition = {
     sortOrder: number;
     isActive: boolean;
     version: number;
+    awardedUsers?: number;
 };
 
 export type CreateAdminAchievementDefinitionRequest = Omit<AdminAchievementDefinition, 'id' | 'version'>;

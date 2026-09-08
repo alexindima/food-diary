@@ -17,7 +17,7 @@ public static class AdminContentHttpResponseMappings {
                 model.Status,
                 model.AdminNote,
                 model.CreatedAtUtc,
-                model.ReviewedAtUtc);
+                model.ReviewedAtUtc, model.ReviewedByUserId, model.TargetTitle, model.TargetExcerpt);
         }
     }
 

@@ -12,7 +12,6 @@ import type {
     AdminUserLoginEvent,
     AdminUserRoleAuditEvent,
     AdminUserSetPassword,
-    AdminUserStatusFilter,
     AdminUserUpdate,
     PagedResponse,
 } from '../models/admin-user.models';
@@ -29,9 +28,9 @@ export class AdminUsersFacade {
         page: number,
         limit: number,
         search?: string | null,
-        status?: AdminUserStatusFilter,
+        filters: Record<string, string> = {},
     ): Observable<PagedResponse<AdminUser>> {
-        return this.usersService.getUsers(page, limit, search, status);
+        return this.usersService.getUsers(page, limit, search, filters);
     }
 
     public updateUser(userId: string, payload: AdminUserUpdate): Observable<AdminUser> {
@@ -58,17 +57,18 @@ export class AdminUsersFacade {
         page: number,
         limit: number,
         search?: string | null,
+        filters: Record<string, string> = {},
     ): Observable<PagedResponse<AdminImpersonationSession>> {
-        return this.usersService.getImpersonationSessions(page, limit, search);
+        return this.usersService.getImpersonationSessions(page, limit, search, filters);
     }
 
     public getLoginEvents(
         page: number,
         limit: number,
         search?: string | null,
-        userId?: string | null,
+        filters: Record<string, string> = {},
     ): Observable<PagedResponse<AdminUserLoginEvent>> {
-        return this.usersService.getLoginEvents(page, limit, search, userId);
+        return this.usersService.getLoginEvents(page, limit, search, filters);
     }
 
     public getLoginSummary(): Observable<AdminUserLoginDeviceSummary[]> {

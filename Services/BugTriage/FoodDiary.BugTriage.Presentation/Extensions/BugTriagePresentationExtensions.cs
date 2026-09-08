@@ -16,6 +16,10 @@ public static class BugTriagePresentationExtensions {
                 o.MaxAttempts is >= 1 and <= 10, "A BugTriage key and bounded lease settings are required.")
             .ValidateOnStart();
         services.AddScoped<BugTriageAuthorizationFilter>();
+        services.AddScoped<BugTriageReadAuthorizationFilter>();
+        services.AddOptions<BugTriageHttpOptions>().Validate(static options => options.ReadApiKey.Length == 0 ||
+            (options.ReadApiKey.Length is >= 32 and <= 256 && !string.Equals(options.ReadApiKey, options.ApiKey, StringComparison.Ordinal)),
+            "The optional journal key must be distinct from the worker key and 32-256 characters long.");
         services.AddControllers().AddApplicationPart(typeof(BugTriagePresentationExtensions).Assembly);
         services.AddRateLimiter(o => {
             o.RejectionStatusCode = 429;

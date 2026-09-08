@@ -5,6 +5,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.Ai;
 
 public sealed class AiPromptTemplate : Entity<AiPromptTemplateId> {
+    private readonly List<AiPromptRevision> _revisions = [];
+    public IReadOnlyCollection<AiPromptRevision> Revisions => _revisions;
     private const int KeyMaxLength = 64;
     private const int LocaleMaxLength = 8;
     private const int PromptTextMaxLength = 4096;
@@ -37,23 +39,15 @@ public sealed class AiPromptTemplate : Entity<AiPromptTemplateId> {
 
     public void Update(string promptText, bool? isActive = null) {
         string normalizedText = NormalizeRequired(promptText, PromptTextMaxLength, nameof(promptText));
-        bool changed = false;
-
-        if (!string.Equals(PromptText, normalizedText, StringComparison.Ordinal)) {
-            int nextVersion = GetNextVersion();
-            PromptText = normalizedText;
-            Version = nextVersion;
-            changed = true;
-        }
-
-        if (isActive.HasValue && IsActive != isActive.Value) {
-            IsActive = isActive.Value;
-            changed = true;
-        }
-
-        if (changed) {
-            SetModified();
-        }
+        bool textChanged = !string.Equals(PromptText, normalizedText, StringComparison.Ordinal);
+        bool nextActive = isActive ?? IsActive;
+        if (!textChanged && nextActive == IsActive) { return; }
+        int nextVersion = textChanged ? GetNextVersion() : Version;
+        _revisions.Add(AiPromptRevision.Capture(this));
+        PromptText = normalizedText;
+        Version = nextVersion;
+        IsActive = nextActive;
+        SetModified();
     }
 
     private int GetNextVersion() {

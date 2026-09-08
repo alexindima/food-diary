@@ -1,12 +1,14 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
 import type { AdminUser } from '../models/admin-user.models';
 
 @Component({
     selector: 'fd-admin-users-table',
-    imports: [DatePipe, FdUiPaginationComponent],
+    imports: [DatePipe, FdUiPaginationComponent, RouterLink, TranslatePipe],
     templateUrl: './admin-users-table.html',
     styleUrl: './admin-users.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

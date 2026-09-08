@@ -7,5 +7,5 @@ public interface IAdminImpersonationSessionReadRepository {
         int page,
         int limit,
         string? search,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, Guid? actorId = null, Guid? targetId = null);
 }

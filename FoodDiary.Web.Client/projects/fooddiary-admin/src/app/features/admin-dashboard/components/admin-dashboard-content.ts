@@ -20,6 +20,11 @@ const DATE_MONTH_START = 5;
 })
 export class AdminDashboardContentComponent {
     public readonly data = input.required<AdminDashboardOverview>();
+    protected readonly periodParams = computed(() => ({
+        period: 'custom',
+        from: this.data().fromUtc.slice(0, DATE_LENGTH),
+        to: this.lastDate(this.data().toUtc),
+    }));
     protected readonly currency = signal<string | null>(null);
     protected readonly currencyOptions = computed(() =>
         [...new Set([...this.data().period.currencies, ...(this.data().previous?.currencies ?? [])].map(item => item.currency))]

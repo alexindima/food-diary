@@ -1,0 +1,21 @@
+.prompt-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: var(--fd-space-md);
+    margin-top: var(--fd-space-md);
+    align-items: start;
+}
+label {
+    display: grid;
+    gap: var(--fd-space-xs);
+}
+textarea,
+input,
+select {
+    max-width: 100%;
+    font: inherit;
+}
+button {
+    padding: var(--fd-space-sm);
+    text-align: left;
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 1349,
+    "productionProjectEdges": 1351,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -11,9 +11,9 @@
     "ambiguousBackendContracts": 0,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 97,
-    "routedStandaloneComponents": 55,
-    "componentsWithoutDirectSpecs": 129,
-    "criticalSymbolsWithoutTestReferences": 20,
+    "routedStandaloneComponents": 61,
+    "componentsWithoutDirectSpecs": 140,
+    "criticalSymbolsWithoutTestReferences": 41,
     "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
@@ -1042,6 +1042,42 @@
   ],
   "componentsWithoutDirectSpecs": [
     {
+      "class": "AdminAcquisitionComparisonComponent",
+      "selector": "fd-admin-acquisition-comparison",
+      "feature": "admin-acquisition",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/components/admin-acquisition-comparison.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-acquisition/components/admin-acquisition-comparison.html",
+      "inputs": [
+        {
+          "name": "report",
+          "type": "MarketingAttributionRange | null",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminAiPromptsPageComponent",
+      "selector": "fd-admin-ai-prompts",
+      "feature": "admin-ai-prompts",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-ai-prompts/pages/admin-ai-prompts.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminAuditPageComponent",
+      "selector": "fd-admin-audit",
+      "feature": "admin-audit",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-audit/pages/admin-audit.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-audit/pages/admin-audit.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "AdminBillingFiltersComponent",
       "selector": "fd-admin-billing-filters",
       "feature": "admin-billing",
@@ -1072,16 +1108,6 @@
           "name": "kind",
           "type": "string",
           "required": true
-        },
-        {
-          "name": "fromDate",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "toDate",
-          "type": "string",
-          "required": true
         }
       ],
       "outputs": [
@@ -1099,14 +1125,6 @@
         },
         {
           "name": "kindChange",
-          "type": "string"
-        },
-        {
-          "name": "fromDateChange",
-          "type": "string"
-        },
-        {
-          "name": "toDateChange",
           "type": "string"
         },
         {
@@ -1139,6 +1157,27 @@
           "type": ""
         }
       ],
+      "specPath": null
+    },
+    {
+      "class": "AdminBugReportCardComponent",
+      "selector": "fd-admin-bug-report-card",
+      "feature": "admin-bugs",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-bugs/components/admin-bug-report-card.html",
+      "inputs": [
+        {
+          "name": "report",
+          "type": "AdminBugReport",
+          "required": true
+        },
+        {
+          "name": "pullRequestUrl",
+          "type": "string | null",
+          "required": false
+        }
+      ],
+      "outputs": [],
       "specPath": null
     },
     {
@@ -1205,6 +1244,64 @@
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/pages/admin-moderation.html",
       "inputs": [],
       "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminModerationContextComponent",
+      "selector": "fd-admin-moderation-context",
+      "feature": "admin-moderation",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-context.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-moderation/components/admin-moderation-context.html",
+      "inputs": [
+        {
+          "name": "report",
+          "type": "AdminContentReport",
+          "required": true
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "OutgoingEmailDetailsComponent",
+      "selector": "fd-outgoing-email-details",
+      "feature": "admin-outgoing-emails",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/components/outgoing-email-details.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/components/outgoing-email-details.html",
+      "inputs": [
+        {
+          "name": "mail",
+          "type": "OutgoingEmail",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "closed",
+          "type": ""
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "OutgoingStatusCountsComponent",
+      "selector": "fd-outgoing-status-counts",
+      "feature": "admin-outgoing-emails",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/components/outgoing-status-counts.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-outgoing-emails/components/outgoing-status-counts.html",
+      "inputs": [
+        {
+          "name": "counts",
+          "type": "Record<string, number> | null",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "selected",
+          "type": "string"
+        }
+      ],
       "specPath": null
     },
     {
@@ -1323,6 +1420,16 @@
       "feature": "admin-users",
       "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.ts",
       "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-create-dialog.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminUserPageComponent",
+      "selector": "fd-admin-user-page",
+      "feature": "admin-users",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/features/admin-users/pages/admin-user-page.html",
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -3855,6 +3962,78 @@
       "specPath": null
     },
     {
+      "class": "AdminCatalogFilterComponent",
+      "selector": "fd-admin-catalog-filter",
+      "feature": "fooddiary-admin",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/catalog/admin-catalog-filter.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/catalog/admin-catalog-filter.html",
+      "inputs": [
+        {
+          "name": "categories",
+          "type": "string[]",
+          "required": false
+        },
+        {
+          "name": "showLocale",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "showState",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "activeLabel",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "inactiveLabel",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "AdminLoadErrorComponent",
+      "selector": "fd-admin-load-error",
+      "feature": "fooddiary-admin",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/feedback/admin-load-error.html",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "retry",
+          "type": ""
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "AdminPeriodControlComponent",
+      "selector": "fd-admin-period",
+      "feature": "fooddiary-admin",
+      "path": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.ts",
+      "templatePath": "FoodDiary.Web.Client/projects/fooddiary-admin/src/app/shared/period/admin-period-control.html",
+      "inputs": [
+        {
+          "name": "defaultPeriod",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [],
+      "specPath": null
+    },
+    {
       "class": "GamificationAchievementsDialogComponent",
       "selector": "fd-gamification-achievements-dialog",
       "feature": "gamification",
@@ -4833,6 +5012,56 @@
   ],
   "criticalSymbolsWithoutTestReferences": [
     {
+      "name": "AdminAuditController",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Features/Admin/AdminAuditController.cs",
+      "line": 18,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "AdminBugReportsController",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Features/Admin/AdminBugReportsController.cs",
+      "line": 18,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "AdminOutgoingEmailsController",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Features/Admin/AdminOutgoingEmailsController.cs",
+      "line": 18,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "AdminRetentionController",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Features/Admin/AdminRetentionController.cs",
+      "line": 18,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "BugReportJournalController",
+      "role": "Controller",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalController.cs",
+      "line": 14,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "BugReportsController",
       "role": "Controller",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
@@ -4853,9 +5082,59 @@
       "coveredThrough": []
     },
     {
+      "name": "GetAdminAuditQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQueryHandler.cs",
+      "line": 8,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminBugReportsQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQueryHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "GetAdminMailInboxMessagePageQueryHandler",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminOutgoingEmailsQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQueryHandler.cs",
+      "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminRetentionQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminRetention/GetAdminRetentionQueryHandler.cs",
+      "line": 8,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminTemplateRevisionsQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryHandler.cs",
       "line": 7,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -4873,6 +5152,26 @@
       "coveredThrough": []
     },
     {
+      "name": "GetMarketingAttributionRangeQueryHandler",
+      "role": "QueryHandler",
+      "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionRange/GetMarketingAttributionRangeQueryHandler.cs",
+      "line": 7,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetOutgoingEmailJournalQueryHandler",
+      "role": "QueryHandler",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQueryHandler.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "EnqueueMailRelayEmailCommandValidator",
       "role": "Validator",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
@@ -4883,9 +5182,89 @@
       "coveredThrough": []
     },
     {
+      "name": "GetAdminAuditQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQueryValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminBugReportsQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQueryValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminContentReportsQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminImpersonationSessionsQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQueryValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
       "name": "GetAdminMailInboxMessagePageQueryValidator",
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminOutgoingEmailsQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQueryValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminTemplateRevisionsQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminUserLoginEventsQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQueryValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetAdminUsersQueryValidator",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -4926,6 +5305,16 @@
       "name": "GetNotificationPreferencesQueryValidator",
       "role": "Validator",
       "path": "Modules/Notifications/Application/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": [],
+      "coverageKind": "none",
+      "coveredThrough": []
+    },
+    {
+      "name": "GetOutgoingEmailJournalQueryValidator",
+      "role": "Validator",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],

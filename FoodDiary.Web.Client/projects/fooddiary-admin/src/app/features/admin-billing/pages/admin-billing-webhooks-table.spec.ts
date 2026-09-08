@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
@@ -49,7 +50,7 @@ describe('AdminBillingWebhooksTableComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [AdminBillingWebhooksTableComponent],
-            providers: [provideTranslateTesting()],
+            providers: [provideRouter([]), provideTranslateTesting()],
         }).compileComponents();
     });
 

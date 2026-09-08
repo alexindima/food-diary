@@ -18,6 +18,8 @@ public static class DependencyInjection {
         services.AddScoped<IMarketingAttributionCleanupService, MarketingAttributionCleanupService>();
         services.AddScoped<IMarketingAttributionSummaryReadService, MarketingAttributionSummaryReadService>();
 
+        services.AddScoped<IMarketingAttributionRangeReadService, MarketingAttributionRangeReadService>();
+
         return services;
     }
 }

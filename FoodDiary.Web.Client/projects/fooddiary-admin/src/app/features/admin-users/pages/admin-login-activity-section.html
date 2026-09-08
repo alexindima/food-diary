@@ -34,7 +34,9 @@
                     @for (event of events(); track event.id) {
                         <tr>
                             <td>{{ event.loggedInAtUtc | date: 'medium' }}</td>
-                            <td>{{ event.userEmail }}</td>
+                            <td>
+                                <a queryParamsHandling="preserve" [routerLink]="['/users', event.userId]">{{ event.userEmail }}</a>
+                            </td>
                             <td>{{ event.authProvider }}</td>
                             <td>{{ event.deviceType || '-' }}</td>
                             <td>{{ event.browserName || '-' }} {{ event.browserVersion || '' }}</td>

@@ -9,4 +9,5 @@ public sealed record AdminContentReportHttpResponse(
     string Status,
     string? AdminNote,
     DateTime CreatedAtUtc,
-    DateTime? ReviewedAtUtc);
+    DateTime? ReviewedAtUtc,
+    Guid? ReviewedByUserId = null, string? TargetTitle = null, string? TargetExcerpt = null);

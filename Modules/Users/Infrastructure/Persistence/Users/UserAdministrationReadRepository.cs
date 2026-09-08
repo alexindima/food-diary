@@ -43,9 +43,45 @@ public sealed class UserAdministrationReadRepository(FoodDiaryDbContext context)
         int limit,
         UserAccountStatusFilter status,
         CancellationToken cancellationToken = default) {
+        return await GetFilteredPageAsync(search, page, limit, status, new UserAdministrationFilter(), cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetFilteredPagedReadModelsAsync(
+        string? search, int page, int limit, UserAccountStatusFilter status,
+        UserAdministrationFilter filter, CancellationToken cancellationToken) {
+        (IReadOnlyList<User> items, int totalItems) = await GetFilteredPageAsync(search, page, limit, status, filter, cancellationToken).ConfigureAwait(false);
+        return ([.. items.Select(ToAdminReadModel)], totalItems);
+    }
+
+    private async Task<(IReadOnlyList<User> Items, int TotalItems)> GetFilteredPageAsync(
+        string? search, int page, int limit, UserAccountStatusFilter status,
+        UserAdministrationFilter filter, CancellationToken cancellationToken) {
         int pageNumber = PaginationPolicy.NormalizePage(page);
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
         IQueryable<User> filteredQuery = context.Users.AsNoTracking();
+        if (filter.RegisteredFrom is { } registeredFrom) {
+            var start = registeredFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+            filteredQuery = filteredQuery.Where(user => user.CreatedOnUtc >= start);
+        }
+        if (filter.RegisteredTo is { } registeredTo) {
+            var end = registeredTo.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
+            filteredQuery = filteredQuery.Where(user => user.CreatedOnUtc <= end);
+        }
+        if (filter.LastLoginFrom is { } loginFrom) {
+            var start = loginFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+            filteredQuery = filteredQuery.Where(user => user.LastLoginAtUtc >= start);
+        }
+        if (filter.LastLoginTo is { } loginTo) {
+            var end = loginTo.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
+            filteredQuery = filteredQuery.Where(user => user.LastLoginAtUtc <= end);
+        }
+        if (filter.EmailConfirmed is { } confirmed) {
+            filteredQuery = filteredQuery.Where(user => user.IsEmailConfirmed == confirmed);
+        }
+        if (!string.IsNullOrWhiteSpace(filter.Role)) {
+            string role = filter.Role.Trim();
+            filteredQuery = filteredQuery.Where(user => user.UserRoles.Any(membership => membership.Role.Name == role));
+        }
 
         filteredQuery = status switch {
             UserAccountStatusFilter.Active => filteredQuery.Where(u => u.IsActive && u.DeletedAt == null),
@@ -66,6 +102,7 @@ public sealed class UserAdministrationReadRepository(FoodDiaryDbContext context)
         int total = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
         List<UserId> pageIds = await filteredQuery
             .OrderByDescending(u => u.CreatedOnUtc)
+            .ThenBy(u => u.Id)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(u => u.Id)

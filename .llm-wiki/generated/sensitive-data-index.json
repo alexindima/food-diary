@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1405,
-    "credential": 150,
+    "candidateFields": 1410,
+    "credential": 152,
     "identity": 156,
     "health": 670,
     "financial": 124,
-    "privateContent": 305,
-    "boundaryFiles": 167,
+    "privateContent": 308,
+    "boundaryFiles": 168,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 2
   },
@@ -149,6 +149,13 @@
       "type": "bool",
       "path": "Modules/Admin/Application/Models/AdminUserModel.cs",
       "line": 9
+    },
+    {
+      "category": "credential",
+      "name": "ReadApiKey",
+      "type": "string",
+      "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugTriageOptions.cs",
+      "line": 5
     },
     {
       "category": "credential",
@@ -898,6 +905,13 @@
       "type": "string",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs",
       "line": 4
+    },
+    {
+      "category": "credential",
+      "name": "ReadApiKey",
+      "type": "string",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs",
+      "line": 5
     },
     {
       "category": "credential",
@@ -7740,6 +7754,13 @@
     },
     {
       "category": "privateContent",
+      "name": "IsAiPrompt",
+      "type": "bool",
+      "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQuery.cs",
+      "line": 7
+    },
+    {
+      "category": "privateContent",
       "name": "PromptText",
       "type": "string",
       "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminAiPromptUpsertHttpRequest.cs",
@@ -7763,6 +7784,13 @@
       "category": "privateContent",
       "name": "PromptText",
       "type": "string",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Models/AiPromptRevisionReadModel.cs",
+      "line": 3
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
       "path": "Modules/Ai/Application/Abstractions/Ai/Models/AiPromptTemplateReadModel.cs",
       "line": 10
     },
@@ -7777,22 +7805,29 @@
       "category": "privateContent",
       "name": "PromptText",
       "type": "string",
+      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptRevision.cs",
+      "line": 5
+    },
+    {
+      "category": "privateContent",
+      "name": "PromptText",
+      "type": "string",
       "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
-      "line": 14
+      "line": 16
     },
     {
       "category": "privateContent",
       "name": "PromptTextMaxLength",
       "type": "promptText,",
       "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
-      "line": 30
+      "line": 32
     },
     {
       "category": "privateContent",
       "name": "PromptTextMaxLength",
       "type": "promptText,",
       "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
-      "line": 39
+      "line": 41
     },
     {
       "category": "privateContent",
@@ -9876,6 +9911,13 @@
       "fieldCount": 1
     },
     {
+      "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugTriageOptions.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "Modules/Admin/Presentation/Features/Admin/Requests/AdminAiPromptUpsertHttpRequest.cs",
       "categories": [
         "privateContent"
@@ -10861,7 +10903,7 @@
       "categories": [
         "credential"
       ],
-      "fieldCount": 1
+      "fieldCount": 2
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Client/Options/MailInboxClientOptions.cs",

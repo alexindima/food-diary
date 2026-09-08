@@ -11,8 +11,8 @@ public sealed class ContentReportAdministrationReadService(
         ReportStatus? status,
         int page,
         int limit,
-        CancellationToken cancellationToken) =>
-        readModelRepository.GetPagedAdminReadModelsAsync(status, page, limit, cancellationToken);
+        CancellationToken cancellationToken, ContentReportAdminFilter? filter = null) =>
+        readModelRepository.GetPagedAdminReadModelsAsync(status, page, limit, cancellationToken, filter);
 
     public Task<int> CountAsync(ReportStatus status, CancellationToken cancellationToken) =>
         readModelRepository.CountByStatusAsync(status, cancellationToken);

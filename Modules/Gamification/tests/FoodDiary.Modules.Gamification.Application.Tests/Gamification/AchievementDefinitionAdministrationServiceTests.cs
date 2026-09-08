@@ -18,9 +18,11 @@ public sealed class AchievementDefinitionAdministrationServiceTests {
         AchievementDefinition definition = CreateDefinition();
         IAchievementDefinitionStore store = Substitute.For<IAchievementDefinitionStore>();
         store.GetAllAsync(Arg.Any<CancellationToken>()).Returns([definition]);
+        store.GetAwardCountsAsync(Arg.Any<CancellationToken>()).Returns(new Dictionary<string, int>(StringComparer.Ordinal) { [definition.Key] = 3 });
         var service = new AchievementDefinitionAdministrationService(store);
 
         AchievementDefinitionAdminModel model = Assert.Single(await service.GetAllAsync(CancellationToken.None));
+        Assert.Equal(3, model.AwardedUsers);
 
         Assert.Multiple(
             () => Assert.Equal(definition.Id.Value, model.Id),

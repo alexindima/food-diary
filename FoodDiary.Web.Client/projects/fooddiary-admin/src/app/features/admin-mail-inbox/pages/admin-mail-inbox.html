@@ -1,4 +1,31 @@
 <div class="admin-mail-inbox fd-grid fd-gap-md">
+    <fd-admin-period />
+    <div class="fd-row fd-wrap fd-gap-sm">
+        <fd-ui-button variant="secondary" [hidden]="unreadCount() === null" (click)="unreadFilter.set('unread'); loadMessages(true)"
+            >{{ 'ADMIN_MAIL_INBOX.UNREAD' | translate }}: {{ unreadCount() }}</fd-ui-button
+        >
+        <fd-ui-button variant="secondary" [hidden]="readCount() === null" (click)="unreadFilter.set('read'); loadMessages(true)"
+            >{{ 'ADMIN_MAIL_INBOX.READ' | translate }}: {{ readCount() }}</fd-ui-button
+        >
+    </div>
+    @if (recordId()) {
+        <a routerLink="/mail-inbox" queryParamsHandling="merge" [queryParams]="{ id: null, page: 1 }">{{
+            'ADMIN_MAIL_INBOX.ALL_MESSAGES' | translate
+        }}</a>
+    }
+    <div class="fd-row fd-wrap fd-gap-sm">
+        <fd-ui-input
+            [label]="'ADMIN_MAIL_INBOX.SUBJECT_FILTER' | translate"
+            [value]="subjectFilter()"
+            (valueChange)="subjectFilter.set($event?.toString() ?? '')"
+        />
+        <fd-ui-input
+            [label]="'ADMIN_MAIL_INBOX.SENDER_FILTER' | translate"
+            [value]="senderFilter()"
+            (valueChange)="senderFilter.set($event?.toString() ?? '')"
+        />
+        <fd-ui-button (click)="loadMessages(true)">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
+    </div>
     <div class="toolbar fd-row fd-gap-sm fd-justify-end fd-wrap">
         <fd-ui-input
             [label]="'ADMIN_MAIL_INBOX.RECIPIENT_FILTER' | translate"
@@ -72,6 +99,13 @@
                                     <span class="mail-subject">
                                         {{ message.subject || '(no subject)' }}
                                     </span>
+                                    <a
+                                        routerLink="/mail-inbox"
+                                        queryParamsHandling="merge"
+                                        [queryParams]="{ id: message.id, page: 1 }"
+                                        (click)="$event.stopPropagation()"
+                                        >{{ 'ADMIN_MAIL_INBOX.PERMALINK' | translate }}</a
+                                    >
                                     <div class="fd-ui-body-xs">{{ message.toRecipients.join(', ') }}</div>
                                 </td>
                                 <td>

@@ -13,6 +13,28 @@ namespace FoodDiary.MailInbox.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixture fixture) {
     [RequiresDockerFact]
+    public async Task GetMessagePageAsync_FiltersDateSenderLiteralSubjectAndIdBeforePaging() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        using NpgsqlInboundMailStore store = CreateStore(dataSource);
+        DateTimeOffset now = FixedTime.GetUtcNow();
+        var included = InboundMailMessage.Receive("journal-included", "sender@example.com", ["journal@example.com"],
+            "Bug 100%_", "Details", htmlBody: null, Encoding.UTF8.GetBytes("included"), now);
+        InboundMailSaveResult saved = await store.SaveAsync(included, CancellationToken.None);
+        var excluded = InboundMailMessage.Receive("journal-excluded", "sender@example.com", ["journal@example.com"],
+            "Bug 100%_", "Details", htmlBody: null, Encoding.UTF8.GetBytes("excluded"), now.AddDays(1));
+        await store.SaveAsync(excluded, CancellationToken.None);
+        InboundMailMessagePage result = await store.GetMessagePageAsync(1, 1, "journal@example.com", "general", unread: null,
+            CancellationToken.None, fromUtc: now, toUtc: now.AddDays(1), search: "%_", fromAddress: "SENDER@example.com", id: saved.Id);
+        Assert.Equal(1, result.TotalItems);
+        Assert.Equal(saved.Id, Assert.Single(result.Items).Id);
+        InboundMailMessagePage empty = await store.GetMessagePageAsync(1, 1, "journal@example.com", "general", unread: null,
+            CancellationToken.None, fromUtc: now, toUtc: now.AddDays(1), search: "missing%_");
+        Assert.Equal(0, empty.TotalItems);
+        Assert.Empty(empty.Items);
+    }
+
+    [RequiresDockerFact]
     public async Task GetMessagePageAsync_CountsFilteredRowsAndKeepsStablePages() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
@@ -37,6 +59,8 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         InboundMailMessagePage read = await store.GetMessagePageAsync(1, 2, "page@example.com", "general", unread: false, CancellationToken.None);
         Assert.Equal(second.Items[0].Id, Assert.Single(read.Items).Id);
         Assert.Equal(1, read.TotalItems);
+        Assert.Equal(1, read.ReadCount);
+        Assert.Equal(2, read.UnreadCount);
         InboundMailMessagePage empty = await store.GetMessagePageAsync(1, 2, "missing@example.com", "general", unread: true, CancellationToken.None);
         Assert.Empty(empty.Items);
         Assert.Equal(0, empty.TotalItems);

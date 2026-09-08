@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -37,7 +38,7 @@ describe('AdminAchievementsComponent', () => {
         facade.update.mockClear();
         await TestBed.configureTestingModule({
             imports: [AdminAchievementsComponent],
-            providers: [provideTranslateTesting(), { provide: AdminAchievementsFacade, useValue: facade }],
+            providers: [provideRouter([]), provideTranslateTesting(), { provide: AdminAchievementsFacade, useValue: facade }],
         }).compileComponents();
         fixture = TestBed.createComponent(AdminAchievementsComponent);
         fixture.detectChanges();
@@ -51,7 +52,7 @@ describe('AdminAchievementsComponent', () => {
         card?.click();
         fixture.detectChanges();
 
-        const keyInput = host.querySelector<HTMLInputElement>('input');
+        const keyInput = host.querySelector<HTMLInputElement>('form input');
         expect(keyInput?.disabled).toBe(true);
         expect(host.textContent).toContain('ADMIN_ACHIEVEMENTS.EDIT');
     });

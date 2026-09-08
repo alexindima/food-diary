@@ -18,6 +18,9 @@
                 <td>
                     <strong>{{ event.eventType }}</strong>
                     <span>{{ event.eventIdText }}</span>
+                    <a routerLink="/billing" [queryParams]="{ tab: 'webhook-events', search: event.id }">{{
+                        'ADMIN_BILLING.RECORD_LINK' | translate
+                    }}</a>
                 </td>
                 <td>
                     <span class="admin-billing__badge">{{ event.status }}</span>

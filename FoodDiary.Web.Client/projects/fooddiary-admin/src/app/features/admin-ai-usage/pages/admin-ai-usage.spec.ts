@@ -1,7 +1,9 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminAiUsageFacade } from '../lib/admin-ai-usage.facade';
 import { AdminAiUsageComponent } from './admin-ai-usage';
 
@@ -30,7 +32,7 @@ describe('AdminAiUsageComponent', () => {
 
         await TestBed.configureTestingModule({
             imports: [AdminAiUsageComponent],
-            providers: [{ provide: AdminAiUsageFacade, useValue: aiUsageService }],
+            providers: [...provideTranslateTesting(), provideRouter([]), { provide: AdminAiUsageFacade, useValue: aiUsageService }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AdminAiUsageComponent);

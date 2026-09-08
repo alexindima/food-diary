@@ -1,0 +1,53 @@
+<p>{{ 'ADMIN_AUDIT.COVERAGE' | translate }}</p>
+<p>
+    <a routerLink="/users/impersonation-sessions">{{ 'ADMIN_NAV.SESSIONS' | translate }}</a>
+</p>
+<fd-admin-period />
+<form [formRoot]="form">
+    <fd-ui-input [label]="'ADMIN_AUDIT.ACTOR' | translate" [formField]="form.actorUserId" />
+    <fd-ui-input [label]="'ADMIN_AUDIT.SUBJECT' | translate" [formField]="form.subjectClientUserId" />
+    <fd-ui-input [label]="'ADMIN_AUDIT.ACTION' | translate" [formField]="form.action" />
+    <fd-ui-input [label]="'ADMIN_AUDIT.TYPE' | translate" [formField]="form.targetType" />
+    <fd-ui-input [label]="'ADMIN_AUDIT.TARGET' | translate" [formField]="form.targetId" />
+    <fd-ui-button type="submit">{{ 'ADMIN_CATALOG.APPLY' | translate }}</fd-ui-button>
+</form>
+@if (loading()) {
+    <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+} @else if (failed()) {
+    <fd-admin-load-error (retry)="retry()" />
+} @else if (result(); as data) {
+    <p>{{ 'ADMIN_AUDIT.TOTAL' | translate }}: {{ data.totalItems }}</p>
+    @for (entry of data.items; track entry.id) {
+        <article>
+            <h2>{{ entry.action }}</h2>
+            <p>{{ entry.createdAtUtc | date: 'medium' }} · {{ entry.targetType }} · {{ entry.targetId }}</p>
+            <p>
+                {{ 'ADMIN_AUDIT.ACTOR' | translate }}: <a [routerLink]="['/users', entry.actorUserId]">{{ entry.actorUserId }}</a>
+            </p>
+            @if (entry.subjectClientUserId) {
+                <p>
+                    {{ 'ADMIN_AUDIT.SUBJECT' | translate }}:
+                    <a [routerLink]="['/users', entry.subjectClientUserId]">{{ entry.subjectClientUserId }}</a>
+                </p>
+            }
+            @if (entry.metadata) {
+                <details>
+                    <summary>{{ 'ADMIN_AUDIT.DETAILS' | translate }}</summary>
+                    <pre>{{ entry.metadata }}</pre>
+                </details>
+            }
+        </article>
+    } @empty {
+        <p>{{ 'ADMIN_AUDIT.EMPTY' | translate }}</p>
+    }
+    <fd-ui-button [disabled]="page() <= 1" [disabledReason]="'ADMIN_COMMON.FIRST_PAGE' | translate" (click)="goToPage(page() - 1)">{{
+        'ADMIN_COMMON.PREVIOUS' | translate
+    }}</fd-ui-button>
+    <span>{{ page() }}</span>
+    <fd-ui-button
+        [disabled]="page() * 25 >= data.totalItems"
+        [disabledReason]="'ADMIN_COMMON.LAST_PAGE' | translate"
+        (click)="goToPage(page() + 1)"
+        >{{ 'ADMIN_COMMON.NEXT' | translate }}</fd-ui-button
+    >
+}

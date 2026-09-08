@@ -12,6 +12,7 @@ sources:
   - Services/MailInbox/FoodDiary.MailInbox.WebApi/AGENTS.md
   - Services/BugTriage/AGENTS.md
   - docs/backend/BUG_TRIAGE.md
+  - docs/backend/OUTGOING_MAIL.md
   - docs/adr/0036-independent-bug-triage-service.md
 ---
 
@@ -38,6 +39,13 @@ Primary FoodDiary projects interact with these services only through their
 client packages. Admin Infrastructure owns the MailInbox bridge and
 `Shared/FoodDiary.Email.MailRelay` owns outbound transport; server-side service
 projects must not leak into the primary backend dependency graph.
+
+The same shared MailRelay adapter exposes the outgoing journal to Admin through
+email contracts. Admin owns the optional bug acknowledgement poller and opaque
+MailInbox receipt IDs; Identity retains editable template ownership. Auto-reply
+headers and purpose metadata survive the relay queue. See the
+[outgoing-mail runbook](../../docs/backend/OUTGOING_MAIL.md) for privacy and opt-in
+activation; this does not change BugTriage's report lifecycle.
 
 ## BugTriage Consumer
 

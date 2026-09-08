@@ -17,7 +17,7 @@
             <tr>
                 <td>{{ payment.createdText }}</td>
                 <td>
-                    <strong>{{ payment.userEmail }}</strong>
+                    <a [routerLink]="['/users', payment.userId]">{{ payment.userEmail }}</a>
                     <span>{{ payment.userId }}</span>
                 </td>
                 <td>{{ payment.provider }}</td>
@@ -39,6 +39,21 @@
                     <span>Payment: {{ payment.externalPaymentIdText }}</span>
                     <span>Customer: {{ payment.externalCustomerIdText }}</span>
                     <span>Webhook: {{ payment.webhookEventIdText }}</span>
+                    <a routerLink="/billing" [queryParams]="{ tab: 'payments', search: payment.id }">{{
+                        'ADMIN_BILLING.RECORD_LINK' | translate
+                    }}</a>
+                    <a
+                        routerLink="/billing"
+                        [hidden]="!payment.billingSubscriptionId"
+                        [queryParams]="{ tab: 'subscriptions', search: payment.billingSubscriptionId }"
+                        >{{ 'ADMIN_BILLING.SUBSCRIPTION_LINK' | translate }}</a
+                    >
+                    <a
+                        routerLink="/billing"
+                        [hidden]="!payment.webhookEventId"
+                        [queryParams]="{ tab: 'webhook-events', search: payment.webhookEventId, provider: payment.provider }"
+                        >{{ 'ADMIN_BILLING.WEBHOOK_LINK' | translate }}</a
+                    >
                 </td>
                 <td>
                     <fd-ui-button

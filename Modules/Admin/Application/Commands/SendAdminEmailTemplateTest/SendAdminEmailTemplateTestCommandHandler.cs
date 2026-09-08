@@ -24,7 +24,7 @@ public sealed class SendAdminEmailTemplateTestCommandHandler(
                 [command.ToEmail],
                 subject,
                 htmlBody,
-                textBody),
+                textBody, Purpose: "template_test"),
             cancellationToken).ConfigureAwait(false);
         ApplicationEmailTelemetry.RecordEmailDispatch($"admin_template_test:{NormalizeKey(command.Key)}", "test", "success");
 
@@ -35,13 +35,19 @@ public sealed class SendAdminEmailTemplateTestCommandHandler(
         return value
             .Replace("{{link}}", link, StringComparison.OrdinalIgnoreCase)
             .Replace("{{brand}}", brand, StringComparison.OrdinalIgnoreCase)
-            .Replace("{{clientName}}", clientName, StringComparison.OrdinalIgnoreCase);
+            .Replace("{{clientName}}", clientName, StringComparison.OrdinalIgnoreCase)
+            .Replace("{{email}}", "demo@example.com", StringComparison.OrdinalIgnoreCase)
+            .Replace("{{temporaryPassword}}", "Demo-only-password", StringComparison.OrdinalIgnoreCase)
+            .Replace("{{loginLink}}", "https://fooddiary.club/login", StringComparison.OrdinalIgnoreCase);
     }
 
     private static string GetSampleLink(string key) {
-        return string.Equals(NormalizeKey(key), "dietologist_invitation", StringComparison.Ordinal)
-            ? "https://fooddiary.club/dietologist-invitations/demo"
-            : "https://fooddiary.club/verify-email?userId=demo&token=demo";
+        return NormalizeKey(key) switch {
+            "dietologist_invitation" => "https://fooddiary.club/dietologist-invitations/demo",
+            "account_created" => "https://fooddiary.club/login",
+            "password_reset" => "https://fooddiary.club/reset-password?userId=demo&token=demo",
+            _ => "https://fooddiary.club/verify-email?userId=demo&token=demo",
+        };
     }
 
     private static string NormalizeKey(string value) {

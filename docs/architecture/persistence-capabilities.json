@@ -59,11 +59,12 @@
     "Modules/Ai/Infrastructure/Persistence/Ai/AiPromptTemplateRepository.cs": {
       "module": "Ai",
       "capabilities": [
+        "entity:AiPromptRevision",
         "entity:AiPromptTemplate",
         "tracked:AiPromptTemplate",
         "write:AiPromptTemplate"
       ],
-      "reason": "Ai-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "Ai-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed. Reads at most 50 owned revision projections without tracking; snapshots are captured by the owning aggregate on update."
     },
     "Modules/Ai/Infrastructure/Persistence/Ai/AiQuotaRepository.cs": {
       "module": "Ai",
@@ -480,11 +481,12 @@
       "capabilities": [
         "context:Database",
         "entity:AchievementDefinition",
+        "entity:UserAchievement",
         "tracked:AchievementDefinition",
         "write:AchievementDefinition"
       ],
-      "reason": "Gamification owns achievement definitions; conflict-safe SQL insertion and owner updates preserve key uniqueness.",
-      "technicalSourceSha256": "91e874cc55fe5e1ac92a2ea86563a74db9dafa71414fa4d892bbfb66175d13b4"
+      "reason": "Gamification owns achievement definitions; conflict-safe SQL insertion and owner updates preserve key uniqueness. Added owner-only no-tracking aggregate of distinct award recipients by achievement key. Reviewed existing SQL insert, tracking lookup and update remain unchanged.",
+      "technicalSourceSha256": "402b020e4d61649b366b416e1957e5551d176562a7cf5f8286b26b098b086683"
     },
     "Modules/Gamification/Infrastructure/Persistence/AchievementEvaluationOutbox.cs": {
       "module": "Gamification",
@@ -577,10 +579,11 @@
         "call:EmailTemplate.Create",
         "call:EmailTemplate.Update",
         "entity:EmailTemplate",
+        "entity:EmailTemplateRevision",
         "tracked:EmailTemplate",
         "write:EmailTemplate"
       ],
-      "reason": "Identity-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+      "reason": "Identity-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed. Reads at most 50 owned revision projections without tracking; snapshots are captured by the owning aggregate on update."
     },
     "Modules/Identity/Infrastructure/Persistence/Authentication/TelegramAssertionReplayGuard.cs": {
       "module": "Identity",
@@ -1119,6 +1122,36 @@
         "write:WeeklyGoal"
       ],
       "reason": "WeeklyGoals-owned adapter persists/projects its declared owner entities or outbox records. Existing caller/shared engine retains SaveChanges and commit unless separately listed."
+    },
+    "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs": {
+      "module": "Admin",
+      "capabilities": [
+        "context:Entry",
+        "context:SaveChangesAsync",
+        "entity:BugAcknowledgementReceipt",
+        "tracked:BugAcknowledgementReceipt",
+        "write:BugAcknowledgementReceipt"
+      ],
+      "reason": "Admin-owned acknowledgement receipts contain only an opaque MailInbox ID. The dedicated background scope saves its receipt after durable MailRelay enqueue; duplicate inserts are detached and verified by existence lookup, other failures propagate. No foreign aggregate writes, raw SQL or message content persistence.",
+      "technicalSourceSha256": "9490110b75e80148b7f3e052f2de14b2239ce9c7d902ad174a9f77dce058479a"
+    },
+    "Modules/Admin/Infrastructure/Persistence/Admin/AdminRetentionReader.cs": {
+      "module": "Admin",
+      "capabilities": [
+        "entity:Meal",
+        "entity:User",
+        "tracked:Meal",
+        "tracked:User"
+      ],
+      "reason": "Admin-only aggregate retention projection. No-tracking reads of account registration and meal creation timestamps; counts distinct users and mature calendar cohorts without returning identities or diary content. No aggregate writes or context escape. Explicit Meals Domain reference follows the existing Admin reporting adapter boundary under ADR 0029. Scanner marks composed IQueryable aliases as potentially tracked; both roots explicitly use AsNoTracking and only aggregates are materialized."
+    },
+    "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.Reporting.cs": {
+      "module": "Marketing",
+      "capabilities": [
+        "entity:MarketingAttributionEvent",
+        "tracked:MarketingAttributionEvent"
+      ],
+      "reason": "Owner-only acquisition reporting over no-tracking event roots, with calendar aggregation and filtered journal pagination. Scanner conservatively marks composed IQueryable aliases as potentially tracked; only aggregate and event read models are materialized. No writes or context escapes."
     }
   }
 }

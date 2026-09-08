@@ -8,4 +8,5 @@ public sealed record ImportAdminLessonItem(
     string Category,
     string Difficulty,
     int EstimatedReadMinutes,
-    int SortOrder);
+    int SortOrder,
+    bool IsPublished = true);

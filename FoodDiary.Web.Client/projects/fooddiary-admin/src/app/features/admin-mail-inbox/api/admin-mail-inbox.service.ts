@@ -27,6 +27,12 @@ export class AdminMailInboxService {
         if (unread !== undefined) {
             params = params.set('unread', unread);
         }
+        for (const key of ['fromUtc', 'toUtc', 'search', 'fromAddress', 'id'] as const) {
+            const value = filters[key];
+            if (value !== undefined && value.length > 0) {
+                params = params.set(key, value);
+            }
+        }
         return this.http.get<AdminMailInboxMessagePage>(`${this.baseUrl}/page`, { params });
     }
 

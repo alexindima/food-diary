@@ -47,6 +47,13 @@
               "Required": false,
               "Type": "string",
               "Format": "date"
+            },
+            {
+              "Name": "UserId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
             }
           ]
         }
@@ -569,11 +576,38 @@
           ],
           "QueryParameters": [
             {
+              "Name": "EmailConfirmed",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "From",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
               "Name": "IncludeDeleted",
               "Location": "query",
               "Required": false,
               "Type": "boolean",
               "Default": "false"
+            },
+            {
+              "Name": "LastLoginFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
+            },
+            {
+              "Name": "LastLoginTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
             },
             {
               "Name": "Limit",
@@ -596,6 +630,13 @@
               "Maximum": 10000
             },
             {
+              "Name": "Role",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 64
+            },
+            {
               "Name": "Search",
               "Location": "query",
               "Required": false,
@@ -614,6 +655,13 @@
                 "inactive",
                 "deleted"
               ]
+            },
+            {
+              "Name": "To",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date"
             }
           ]
         },
@@ -707,6 +755,20 @@
           ],
           "QueryParameters": [
             {
+              "Name": "ActorId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
@@ -732,6 +794,20 @@
               "Required": false,
               "Type": "string",
               "MaxLength": 128
+            },
+            {
+              "Name": "TargetId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
             }
           ]
         }
@@ -772,6 +848,20 @@
           ],
           "QueryParameters": [
             {
+              "Name": "Device",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
+            },
+            {
+              "Name": "FromUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
               "Name": "Limit",
               "Location": "query",
               "Required": false,
@@ -792,11 +882,25 @@
               "Maximum": 10000
             },
             {
+              "Name": "Provider",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "MaxLength": 100
+            },
+            {
               "Name": "Search",
               "Location": "query",
               "Required": false,
               "Type": "string",
               "MaxLength": 128
+            },
+            {
+              "Name": "ToUtc",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
             },
             {
               "Name": "UserId",

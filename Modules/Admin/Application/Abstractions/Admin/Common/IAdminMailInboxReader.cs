@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Admin.Models;
 namespace FoodDiary.Application.Abstractions.Admin.Common;
 
 public interface IAdminMailInboxReader {
-    Task<AdminMailInboxMessagePageModel> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) =>
+    Task<AdminMailInboxMessagePageModel> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null) =>
         throw new NotSupportedException("Paged message queries are not implemented.");
 
     Task<IReadOnlyList<AdminMailInboxMessageSummaryModel>> GetMessagesAsync(

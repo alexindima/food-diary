@@ -1,0 +1,15 @@
+.mail-details {
+    padding: var(--fd-space-md);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-md);
+    overflow-wrap: anywhere;
+}
+.mail-body {
+    white-space: pre-wrap;
+}
+
+.mail-details p,
+.mail-details h2,
+.mail-details h3 {
+    margin: 0;
+}

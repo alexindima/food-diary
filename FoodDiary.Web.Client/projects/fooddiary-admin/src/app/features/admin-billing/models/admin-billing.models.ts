@@ -94,6 +94,8 @@ export type AdminBillingRevenueSummary = {
     fromUtc: string;
     toUtc: string;
     currencies: AdminBillingRevenueCurrency[];
+    renewalPaymentRecords?: number;
+    scheduledCancellations?: number;
 };
 
 export type PagedResponse<T> = {

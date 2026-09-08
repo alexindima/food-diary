@@ -8,4 +8,8 @@ public sealed record EnqueueMailRelayEmailRequest(
     string HtmlBody,
     string? TextBody,
     string? CorrelationId = null,
-    string? IdempotencyKey = null);
+    string? IdempotencyKey = null,
+    string Purpose = "other",
+    string? ReplyTo = null,
+    string? InReplyTo = null,
+    bool AutoSubmitted = false);

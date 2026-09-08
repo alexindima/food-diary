@@ -1,3 +1,4 @@
+<fd-admin-catalog-filter [categories]="categories()" [showState]="true" />
 <div class="admin-email-templates fd-grid fd-gap-md">
     <div class="toolbar fd-row fd-justify-end">
         <fd-ui-button type="button" (click)="openCreate()">Create template</fd-ui-button>
@@ -5,6 +6,8 @@
 
     @if (isLoading()) {
         <p>Loading templates...</p>
+    } @else if (loadFailed()) {
+        <fd-admin-load-error (retry)="loadTemplates()" />
     } @else {
         <table class="templates-table">
             <thead>
@@ -37,13 +40,13 @@
             </tbody>
         </table>
         <p class="fd-ui-body-xs">
-            {{ 'ADMIN_PAGINATION.RANGE' | translate: { start: rangeStart(), end: rangeEnd(), total: templates().length } }}
+            {{ 'ADMIN_PAGINATION.RANGE' | translate: { start: rangeStart(), end: rangeEnd(), total: filteredItems().length } }}
         </p>
         <fd-ui-pagination
-            [length]="templates().length"
+            [length]="filteredItems().length"
             [pageSize]="pageSize"
             [pageIndex]="pageIndex()"
-            (pageIndexChange)="requestedPage.set($event)"
+            (pageIndexChange)="goToPage($event)"
         />
     }
 </div>

@@ -22,6 +22,12 @@ internal static class MailRelayQueueSchema {
                                                last_error text null
                                            );
 
+                                           alter table mailrelay_outbound_emails add column if not exists purpose text not null default 'other';
+                                           alter table mailrelay_outbound_emails add column if not exists reply_to text null;
+                                           alter table mailrelay_outbound_emails add column if not exists in_reply_to text null;
+                                           alter table mailrelay_outbound_emails add column if not exists auto_submitted boolean not null default false;
+                                           create index if not exists ix_mailrelay_outbound_emails_journal on mailrelay_outbound_emails (created_at_utc desc, id desc);
+
                                            create unique index if not exists ux_mailrelay_outbound_emails_idempotency_key
                                                on mailrelay_outbound_emails (idempotency_key)
                                                where idempotency_key is not null;
@@ -139,5 +145,8 @@ internal static class MailRelayQueueSchema {
                                                 now()
                                             )
                                             on conflict (version) do nothing;
+                                           insert into mailrelay_schema_versions (version, description, applied_at_utc)
+                                           values (4, 'outgoing journal purpose and reply metadata', now())
+                                           on conflict (version) do nothing;
                                            """;
 }

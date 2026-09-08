@@ -87,6 +87,7 @@ public sealed class DirectMxRelayDeliveryTransport(
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress(request.FromName, request.FromAddress));
         message.Subject = request.Subject;
+        MailRelayReplyHeaders.Apply(message, request);
         message.To.AddRange(recipients);
         message.Body = CreateBody(request);
         message.Date = timeProvider.GetUtcNow();

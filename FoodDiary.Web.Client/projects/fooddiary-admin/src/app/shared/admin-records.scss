@@ -1,0 +1,26 @@
+:host {
+    display: block;
+}
+form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--fd-space-md);
+    align-items: end;
+    margin-block: var(--fd-space-md);
+}
+article {
+    padding: var(--fd-space-lg);
+    margin-block: var(--fd-space-md);
+    background: var(--fd-color-surface);
+    border: 1px solid var(--fd-color-border);
+    border-radius: var(--fd-radius-lg);
+    overflow-wrap: anywhere;
+}
+h2 {
+    margin-top: 0;
+    font-size: var(--fd-text-title-sm-size);
+}
+pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}

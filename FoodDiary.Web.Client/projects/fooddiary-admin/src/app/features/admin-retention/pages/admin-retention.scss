@@ -1,0 +1,15 @@
+.retention-table-wrap {
+    overflow-x: auto;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: var(--fd-space-sm);
+        text-align: start;
+        white-space: nowrap;
+    }
+}

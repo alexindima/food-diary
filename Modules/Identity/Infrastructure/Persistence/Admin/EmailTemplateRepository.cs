@@ -6,6 +6,13 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Admin;
 
 public sealed class EmailTemplateRepository(DbSet<EmailTemplate> emailTemplates) : IEmailTemplateRepository {
+    public async Task<IReadOnlyList<EmailTemplateRevisionReadModel>> GetRevisionsAsync(string key, string locale, CancellationToken cancellationToken) =>
+        await emailTemplates.AsNoTracking().Where(template => template.Key == key && template.Locale == locale)
+            .SelectMany(template => template.Revisions).OrderByDescending(revision => revision.ArchivedOnUtc).ThenByDescending(revision => revision.Id).Take(50)
+            .Select(revision => new EmailTemplateRevisionReadModel(revision.Id, revision.Subject, revision.HtmlBody,
+                revision.TextBody, revision.IsActive, revision.SavedOnUtc, revision.ArchivedOnUtc))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
     public async Task<IReadOnlyList<EmailTemplate>> GetAllAsync(CancellationToken cancellationToken = default) {
         return await emailTemplates
             .AsNoTracking()

@@ -15,7 +15,8 @@ public interface ILessonAdministrationService {
         LessonDifficulty difficulty,
         int estimatedReadMinutes,
         int sortOrder,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        bool isPublished = true);
 
     Task<Result<NutritionLesson>> UpdateAsync(
         NutritionLessonId lessonId,
@@ -27,7 +28,8 @@ public interface ILessonAdministrationService {
         LessonDifficulty difficulty,
         int estimatedReadMinutes,
         int sortOrder,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        bool isPublished = true);
 
     Task<Result> DeleteAsync(NutritionLessonId lessonId, CancellationToken cancellationToken);
 

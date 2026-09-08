@@ -8,4 +8,5 @@ public sealed record AdminLessonImportItemHttpRequest(
     string Category,
     string Difficulty,
     int EstimatedReadMinutes,
-    int SortOrder);
+    int SortOrder,
+    bool IsPublished = true);

@@ -1,10 +1,11 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { provideTranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { AppComponent } from './app';
 
-const ADMIN_ROUTE_COUNT = 11;
+const ADMIN_ROUTE_COUNT = 17;
 
 describe('AppComponent', () => {
     let component: AppComponent;
@@ -13,7 +14,7 @@ describe('AppComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [AppComponent],
-            providers: [provideRouter([])],
+            providers: [provideRouter([]), provideTranslateService()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AppComponent);
@@ -28,7 +29,7 @@ describe('AppComponent', () => {
     it('renders the current route as the page heading', () => {
         fixture.detectChanges();
 
-        expect((fixture.nativeElement as HTMLElement).querySelector('h1')?.textContent).toContain('Dashboard');
+        expect((fixture.nativeElement as HTMLElement).querySelector('h1')?.textContent).toContain('ADMIN_NAV.DASHBOARD');
     });
 
     it('provides every admin section through the mobile route selector', () => {

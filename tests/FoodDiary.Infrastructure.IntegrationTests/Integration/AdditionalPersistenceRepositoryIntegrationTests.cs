@@ -616,6 +616,10 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             ToUtc: DateTime.UtcNow.AddDays(1));
 
         Assert.Single((await adminBillingRepository.GetSubscriptionsAsync(filter)).Items);
+        Assert.Single((await adminBillingRepository.GetSubscriptionsAsync(filter with { Search = target.Id.Value.ToString() })).Items);
+        Assert.Single((await adminBillingRepository.GetPaymentsAsync(filter with { Search = subscription.Id.ToString() })).Items);
+        Assert.Single((await adminBillingRepository.GetPaymentsAsync(filter with { Search = target.Id.Value.ToString() })).Items);
+        Assert.Single((await adminBillingRepository.GetWebhookEventsAsync(filter with { Search = webhookEvent.Id.ToString() })).Items);
         Assert.Single((await adminBillingRepository.GetSubscriptionsAsync(filter with { Status = "active" })).Items);
         Assert.Single((await adminBillingRepository.GetPaymentsAsync(filter with { Status = "succeeded", Kind = "subscription" })).Items);
         Assert.Single((await adminBillingRepository.GetWebhookEventsAsync(filter with { Status = "processed", Search = webhookEvent.EventId })).Items);
@@ -744,5 +748,15 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.Contains(templateReadModels, item => string.Equals(item.Subject, "Welcome back", StringComparison.Ordinal));
         Assert.Equal("Welcome back", template.Subject);
         Assert.False(template.IsActive);
+        EmailTemplateRevisionReadModel revision = Assert.Single(await repository.GetRevisionsAsync("welcome", "en", CancellationToken.None));
+        Assert.Equal("Welcome", revision.Subject);
+        Assert.Equal("Hello", revision.TextBody);
+        Assert.True(revision.IsActive);
+        Assert.Empty(await repository.GetRevisionsAsync("welcome", "ru", CancellationToken.None));
+        context.ChangeTracker.Clear();
+        await repository.UpsertAsync("welcome", "en", revision.Subject, revision.HtmlBody, revision.TextBody, revision.IsActive);
+        await context.SaveChangesAsync();
+        Assert.Equal(2, (await repository.GetRevisionsAsync("welcome", "en", CancellationToken.None)).Count);
+        Assert.Equal("Welcome", (await repository.GetByKeyAsync("welcome", "en"))?.Subject);
     }
 }

@@ -559,6 +559,8 @@ public class CommonAbstractionsTests {
             return Task.FromResult<(IReadOnlyList<User>, int)>(([], 0));
         }
 
+        public Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetFilteredPagedReadModelsAsync(string? search, int page, int limit, UserAccountStatusFilter status, UserAdministrationFilter filter, CancellationToken cancellationToken) => throw new NotSupportedException();
+
         public Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetPagedReadModelsAsync(
             string? search,
             int page,

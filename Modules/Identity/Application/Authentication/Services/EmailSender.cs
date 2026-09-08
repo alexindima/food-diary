@@ -69,7 +69,7 @@ public sealed class EmailSender(
                 loginLink,
                 brand);
 
-            await DispatchAsync(message.ToEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
+            await DispatchAsync(message.ToEmail, subject, htmlBody, textBody, templateKey, cancellationToken).ConfigureAwait(false);
             ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "success");
         } catch (Exception ex) {
             ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "failure", ex.GetType().Name);
@@ -271,7 +271,7 @@ public sealed class EmailSender(
                 ? fallbackText
                 : ApplyTemplateTokens(template.TextBody, link, brand);
 
-            await DispatchAsync(toEmail, subject, htmlBody, textBody, cancellationToken).ConfigureAwait(false);
+            await DispatchAsync(toEmail, subject, htmlBody, textBody, templateKey, cancellationToken).ConfigureAwait(false);
             ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "success");
         } catch (Exception ex) {
             ApplicationEmailTelemetry.RecordEmailDispatch(templateKey, locale, "failure", ex.GetType().Name);
@@ -390,19 +390,19 @@ public sealed class EmailSender(
             [toEmail],
             subject,
             htmlBody,
-            string.IsNullOrWhiteSpace(textBody) ? null : textBody);
+            string.IsNullOrWhiteSpace(textBody) ? null : textBody, Purpose: "template_test");
 
         await emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task DispatchAsync(string toEmail, string subject, string htmlBody, string textBody, CancellationToken cancellationToken) {
+    private async Task DispatchAsync(string toEmail, string subject, string htmlBody, string textBody, string purpose, CancellationToken cancellationToken) {
         var message = new EmailMessage(
             options.FromAddress,
             options.FromName,
             [toEmail],
             subject,
             htmlBody,
-            string.IsNullOrWhiteSpace(textBody) ? null : textBody);
+            string.IsNullOrWhiteSpace(textBody) ? null : textBody, Purpose: purpose);
 
         await emailOutbox.EnqueueAsync(message, cancellationToken).ConfigureAwait(false);
     }

@@ -27,6 +27,10 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
         Status = status;
     }
 
+    public string Purpose { get; private set; } = "other";
+    public string? ReplyTo { get; private set; }
+    public string? InReplyTo { get; private set; }
+    public bool AutoSubmitted { get; private set; }
     public string FromAddress { get; }
     public string FromName { get; }
     public IReadOnlyList<string> To { get; }
@@ -51,6 +55,10 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
             message.AttemptCount,
             message.MaxAttempts,
             QueuedEmailStatus.Processing);
+        email.Purpose = message.Purpose;
+        email.ReplyTo = message.ReplyTo;
+        email.InReplyTo = message.InReplyTo;
+        email.AutoSubmitted = message.AutoSubmitted;
         email.SetCreated(message.CreatedAtUtc?.UtcDateTime ?? DomainTime.UtcNow);
         if (message.ModifiedAtUtc is { } modifiedAtUtc) {
             email.SetModified(modifiedAtUtc.UtcDateTime);
@@ -68,7 +76,8 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
             HtmlBody,
             TextBody,
             CorrelationId,
-            MessageId: CreateMessageId());
+            MessageId: CreateMessageId(),
+            Purpose: Purpose, ReplyTo: ReplyTo, InReplyTo: InReplyTo, AutoSubmitted: AutoSubmitted);
 
     public void MarkSent() {
         Status = QueuedEmailStatus.Sent;

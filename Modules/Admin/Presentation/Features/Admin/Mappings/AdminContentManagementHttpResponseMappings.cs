@@ -17,7 +17,7 @@ public static class AdminContentManagementHttpResponseMappings {
                 model.EstimatedReadMinutes,
                 model.SortOrder,
                 model.CreatedOnUtc,
-                model.ModifiedOnUtc);
+                model.ModifiedOnUtc, model.IsPublished, model.CompletedCount);
         }
     }
 

@@ -1,0 +1,7 @@
+:host {
+    display: block;
+    margin-block: var(--fd-space-md);
+}
+fd-ui-select {
+    width: min(100%, 22rem);
+}

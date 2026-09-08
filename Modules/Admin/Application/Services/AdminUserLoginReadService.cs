@@ -14,11 +14,11 @@ public sealed class AdminUserLoginReadService(IAuthenticationLoginEventReadServi
         int limit,
         Guid? userId,
         string? search,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? provider = null, string? device = null) {
         int normalizedPage = PaginationPolicy.NormalizePage(page);
         int normalizedLimit = PaginationPolicy.NormalizePageSizeOrDefault(limit);
         (IReadOnlyList<UserLoginEventReadModel> items, int totalItems) =
-            await readService.GetEventsAsync(normalizedPage, normalizedLimit, userId, search, cancellationToken).ConfigureAwait(false);
+            await readService.GetEventsAsync(normalizedPage, normalizedLimit, userId, search, cancellationToken, fromUtc, toUtc, provider, device).ConfigureAwait(false);
         AdminUserLoginEventModel[] models = [.. items.Select(ToModel)];
         int totalPages = (int)Math.Ceiling(totalItems / (double)normalizedLimit);
         return Result.Success(new PagedResponse<AdminUserLoginEventModel>(

@@ -8,6 +8,32 @@ namespace FoodDiary.BugTriage.Tests;
 [Collection("BugTriage initialization environment")]
 public sealed class ReportStoreTests : IAsyncLifetime {
     [Fact]
+    public async Task Journal_FiltersBeforePagingAndRedactsExpiredContentBeforePurge() {
+        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddMinutes(-2), "literal_%", "private", [1]), Now.AddDays(1), CancellationToken.None);
+        ReportLease lease = Assert.IsType<ReportLease>(await _store.ClaimAsync(Now, TimeSpan.FromMinutes(5), 3, CancellationToken.None));
+        await _store.CompleteAsync(lease.Id, lease.LeaseToken, new ReportCompletion(ReportOutcome.DraftReady, "private summary", "https://example.test/pull/1"), Now, CancellationToken.None);
+        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now.AddMinutes(-1), "literal_%", "private", [1]), Now.AddDays(1), CancellationToken.None);
+        await _store.ImportAsync(new ImportedReport(Guid.NewGuid(), Now, "other", "private", [1]), Now.AddDays(1), CancellationToken.None);
+        var journal = new NpgsqlBugReportJournal(_dataSource);
+        var filter = new BugReportJournalFilter(Page: 2, Limit: 1, FromUtc: Now.AddMinutes(-3), ToUtc: Now,
+            Status: null, Search: "_%", Id: null);
+
+        BugReportJournalPage page = await journal.GetPageAsync(filter, Now, CancellationToken.None);
+
+        Assert.Equal(2, page.TotalItems);
+        Assert.Equal(lease.Id, Assert.Single(page.Items).Id);
+        BugReportJournalPage expired = await journal.GetPageAsync(filter with { Page = 1, Search = null, Id = lease.Id }, Now.AddDays(2), CancellationToken.None);
+        BugReportJournalEntry entry = Assert.Single(expired.Items);
+        Assert.True(entry.ContentExpired);
+        Assert.Equal("expired", entry.Status);
+        Assert.Empty(entry.Subject);
+        Assert.Null(entry.Summary);
+        Assert.Null(entry.MergeRequestUrl);
+        BugReportJournalPage hiddenSearch = await journal.GetPageAsync(filter, Now.AddDays(2), CancellationToken.None);
+        Assert.Equal(0, hiddenSearch.TotalItems);
+    }
+
+    [Fact]
     public async Task InitializeEntryPoint_CreatesSchemaInProcess() {
         await using (NpgsqlCommand drop = _dataSource.CreateCommand("drop table bugtriage_reports")) {
             await drop.ExecuteNonQueryAsync();

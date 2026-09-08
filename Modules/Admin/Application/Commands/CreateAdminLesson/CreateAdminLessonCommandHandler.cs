@@ -33,7 +33,7 @@ public sealed class CreateAdminLessonCommandHandler(ILessonAdministrationService
             difficultyResult.Value,
             command.EstimatedReadMinutes,
             command.SortOrder,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken, command.IsPublished).ConfigureAwait(false);
 
         return lessonResult.IsSuccess
             ? Result.Success(lessonResult.Value.ToAdminModel())

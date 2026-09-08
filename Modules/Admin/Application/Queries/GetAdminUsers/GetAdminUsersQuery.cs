@@ -10,5 +10,6 @@ public sealed record GetAdminUsersQuery(
     int Page,
     int Limit,
     string? Search,
-    UserAccountStatusFilter Status)
+    UserAccountStatusFilter Status,
+    UserAdministrationFilter? Filter = null)
     : IQuery<Result<PagedResponse<AdminUserModel>>>;

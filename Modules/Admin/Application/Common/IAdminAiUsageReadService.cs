@@ -7,5 +7,5 @@ public interface IAdminAiUsageReadService {
     Task<Result<AdminAiUsageSummaryModel>> GetSummaryAsync(
         DateOnly? from,
         DateOnly? to,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken, Guid? userId = null);
 }

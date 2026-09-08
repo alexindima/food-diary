@@ -38,25 +38,32 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: MarketingAttributionEvent
-- Public contract files: 10
+- Public contract files: 17
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 10
-- Interfaces: 3
-- DTO/read-model/projection types: 3
+- Public contract types: 17
+- Interfaces: 4
+- DTO/read-model/projection types: 5
 - Enums: 0
-- Exported repository-shaped contracts: 3
+- Exported repository-shaped contracts: 4
 - Contracts referencing domain entities: 0
 - `interface IMarketingAttributionEventReadRepository`
 - `interface IMarketingAttributionEventRepository`
 - `interface IMarketingAttributionEventWriteRepository`
+- `interface IMarketingAttributionRangeReadRepository`
+- `record GetMarketingAttributionRangeQuery`
 - `record GetMarketingAttributionSummaryQuery`
 - `record MarketingAttributionBreakdownModel`
 - `record MarketingAttributionBreakdownRecord`
+- `record MarketingAttributionDayModel`
+- `record MarketingAttributionDayRecord`
 - `record MarketingAttributionEventRecord`
+- `record MarketingAttributionRangeFilter`
+- `record MarketingAttributionRangeModel`
+- `record MarketingAttributionRangeRecord`
 - `record MarketingAttributionRecentEventModel`
 - `record MarketingAttributionSummaryModel`
 - `record MarketingAttributionSummaryRecord`

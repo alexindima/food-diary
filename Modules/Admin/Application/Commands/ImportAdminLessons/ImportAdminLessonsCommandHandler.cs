@@ -42,7 +42,7 @@ public sealed class ImportAdminLessonsCommandHandler(ILessonAdministrationServic
                 categoryResult.Value,
                 difficultyResult.Value,
                 item.EstimatedReadMinutes,
-                item.SortOrder));
+                item.SortOrder, item.IsPublished));
         }
 
         Result<IReadOnlyList<NutritionLesson>> importResult = await lessonAdministrationService

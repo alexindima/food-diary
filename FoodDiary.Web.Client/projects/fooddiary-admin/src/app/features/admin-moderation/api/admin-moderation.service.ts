@@ -19,12 +19,22 @@ export class AdminModerationService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/moderation`;
 
-    public getReports(page: number, limit: number, status?: string | null): Observable<PagedResponse<AdminContentReport>> {
+    public getReports(
+        page: number,
+        limit: number,
+        status?: string | null,
+        filters: Record<string, string> = {},
+    ): Observable<PagedResponse<AdminContentReport>> {
         let params = new HttpParams().set('page', page).set('limit', limit);
         if (status !== null && status !== undefined && status.trim().length > 0) {
             params = params.set('status', status);
         }
 
+        for (const [key, value] of Object.entries(filters)) {
+            if (value.length > 0) {
+                params = params.set(key, value);
+            }
+        }
         return this.http.get<ApiPagedResponse<AdminContentReport>>(this.baseUrl, { params }).pipe(
             map(response => ({
                 items: response.data,

@@ -196,7 +196,7 @@ public sealed class ControllerSecurityContractTests {
         foreach (ParameterInfo parameter in requestTypes
             .SelectMany(static type => Assert.Single(type.GetConstructors()).GetParameters())
             .Where(static parameter => parameter.ParameterType == typeof(string))) {
-            Assert.NotNull(parameter.GetCustomAttribute<MaxLengthAttribute>());
+            Assert.True(parameter.GetCustomAttribute<MaxLengthAttribute>() is not null, $"{parameter.Member.DeclaringType?.Name}.{parameter.Name} needs MaxLength.");
             if (nullability.Create(parameter).ReadState == NullabilityState.NotNull) {
                 Assert.NotNull(parameter.GetCustomAttribute<RequiredAttribute>());
             }
@@ -221,7 +221,7 @@ public sealed class ControllerSecurityContractTests {
 
         Assert.NotEmpty(stringParameters);
         foreach (ParameterInfo parameter in stringParameters) {
-            Assert.NotNull(parameter.GetCustomAttribute<MaxLengthAttribute>());
+            Assert.True(parameter.GetCustomAttribute<MaxLengthAttribute>() is not null, $"{parameter.Member.DeclaringType?.Name}.{parameter.Name} needs MaxLength.");
             if (nullability.Create(parameter).ReadState == NullabilityState.NotNull) {
                 Assert.NotNull(parameter.GetCustomAttribute<RequiredAttribute>());
             }

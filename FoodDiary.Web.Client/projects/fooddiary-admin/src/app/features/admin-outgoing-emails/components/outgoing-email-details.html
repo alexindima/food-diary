@@ -1,0 +1,25 @@
+<section class="mail-details fd-grid fd-gap-sm" aria-live="polite">
+    <h2>{{ 'ADMIN_OUTGOING.DETAILS' | translate }}</h2>
+    <a routerLink="/mail-inbox" [hidden]="!sourceMessageId()" [queryParams]="{ id: sourceMessageId() }">{{
+        'ADMIN_BUGS.SOURCE' | translate
+    }}</a>
+    <p>{{ 'ADMIN_OUTGOING.FROM' | translate }}: {{ mail().fromAddress }}</p>
+    <p>{{ 'ADMIN_OUTGOING.RECIPIENT' | translate }}: {{ mail().to.join(', ') }}</p>
+    <p>{{ 'ADMIN_OUTGOING.ATTEMPTS' | translate }}: {{ mail().attemptCount }} / {{ mail().maxAttempts }}</p>
+    @if (mail().sentAtUtc) {
+        <p>{{ 'ADMIN_OUTGOING.SENT_AT' | translate }}: {{ mail().sentAtUtc | date: 'short' }}</p>
+    }
+    @if (mail().replyTo) {
+        <p>Reply-To: {{ mail().replyTo }}</p>
+    }
+    @if (mail().correlationId) {
+        <p>{{ 'ADMIN_OUTGOING.REFERENCE' | translate }}: {{ mail().correlationId }}</p>
+    }
+    @if (mail().contentHidden) {
+        <p>{{ 'ADMIN_OUTGOING.HIDDEN' | translate }}</p>
+    } @else {
+        <h3>{{ mail().subject }}</h3>
+        <p class="mail-body">{{ mail().textBody }}</p>
+    }
+    <fd-ui-button variant="outline" (click)="closed.emit()">{{ 'ADMIN_OUTGOING.CLOSE' | translate }}</fd-ui-button>
+</section>

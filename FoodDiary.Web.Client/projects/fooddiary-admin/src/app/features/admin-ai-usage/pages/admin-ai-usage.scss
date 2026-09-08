@@ -1,3 +1,23 @@
+:host {
+    display: grid;
+    gap: var(--fd-space-md);
+    min-width: 0;
+}
 .admin-ai-usage {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+}
+strong {
+    display: block;
+}
+.table-scroll {
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+th,
+td {
+    padding: var(--fd-space-sm);
 }

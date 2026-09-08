@@ -10,4 +10,5 @@ public sealed record GetAdminContentReportsHttpQuery(
         PresentationQueryValues.Reviewed,
         PresentationQueryValues.Dismissed)] string? Status = null,
     [OpenApiNumericRange(PresentationQueryLimits.MinimumPage, PresentationQueryLimits.MaximumPage)] int Page = 1,
-    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int Limit = 20);
+    [OpenApiNumericRange(PresentationQueryLimits.MinimumPageSize, PresentationQueryLimits.MaximumPageSize)] int Limit = 20, DateTime? FromUtc = null, DateTime? ToUtc = null,
+    [MaxLength(PresentationQueryLimits.MaximumFilterLength)] string? TargetType = null, Guid? ReporterId = null, Guid? TargetId = null);

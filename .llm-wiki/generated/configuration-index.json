@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 60,
+    "optionTypes": 62,
     "configurationFiles": 8,
     "configurationKeys": 270,
     "environmentVariables": 188
@@ -16,6 +16,16 @@
         "Enabled"
       ],
       "path": "FoodDiary.JobManager/Services/AchievementEvaluationOutboxOptions.cs"
+    },
+    {
+      "type": "AdminBugTriageOptions",
+      "section": null,
+      "properties": [
+        "AllowInsecureLoopback",
+        "BaseUrl",
+        "ReadApiKey"
+      ],
+      "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugTriageOptions.cs"
     },
     {
       "type": "ApiBuildInfoOptions",
@@ -118,12 +128,23 @@
       "path": "FoodDiary.JobManager/Services/BillingRenewalOptions.cs"
     },
     {
+      "type": "BugAcknowledgementOptions",
+      "section": null,
+      "properties": [
+        "Enabled",
+        "PollInterval",
+        "StartAtUtc"
+      ],
+      "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementOptions.cs"
+    },
+    {
       "type": "BugTriageHttpOptions",
       "section": null,
       "properties": [
         "ApiKey",
         "LeaseDuration",
-        "MaxAttempts"
+        "MaxAttempts",
+        "ReadApiKey"
       ],
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Options/BugTriageHttpOptions.cs"
     },

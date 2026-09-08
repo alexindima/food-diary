@@ -1,5 +1,8 @@
 <fd-ui-dialog size="xl" [title]="data.subject || ('ADMIN_MAIL_INBOX.NO_SUBJECT' | translate)">
     <section class="mail-details fd-grid fd-gap-md" aria-label="Inbound mail message details">
+        <a target="_blank" rel="noopener noreferrer" routerLink="/outgoing-emails" [queryParams]="{ correlationId: data.id }">{{
+            'ADMIN_MAIL_INBOX.RELATED_OUTGOING' | translate
+        }}</a>
         @if (isDetailsLoading()) {
             <p>Loading message...</p>
         } @else if (selectedMessageDetails(); as message) {

@@ -17,7 +17,7 @@ public sealed class AdminImpersonationSessionRepository(FoodDiaryDbContext conte
         int page,
         int limit,
         string? search,
-        CancellationToken cancellationToken = default) {
+        CancellationToken cancellationToken = default, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, Guid? actorId = null, Guid? targetId = null) {
         int pageNumber = PaginationPolicy.NormalizePage(page);
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
 
@@ -36,9 +36,14 @@ public sealed class AdminImpersonationSessionRepository(FoodDiaryDbContext conte
                 EF.Functions.ILike(item.session.ActorIpAddress ?? string.Empty, term, LikeEscapeCharacter));
         }
 
+        if (fromUtc.HasValue) { DateTime start = fromUtc.Value.UtcDateTime; query = query.Where(item => item.session.StartedAtUtc >= start); }
+        if (toUtc.HasValue) { DateTime end = toUtc.Value.UtcDateTime; query = query.Where(item => item.session.StartedAtUtc < end); }
+        if (actorId.HasValue) { var actor = new FoodDiary.Domain.ValueObjects.Ids.UserId(actorId.Value); query = query.Where(item => item.session.ActorUserId == actor); }
+        if (targetId.HasValue) { var target = new FoodDiary.Domain.ValueObjects.Ids.UserId(targetId.Value); query = query.Where(item => item.session.TargetUserId == target); }
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<AdminImpersonationSessionReadModel> items = await query
             .OrderByDescending(item => item.session.StartedAtUtc)
+            .ThenBy(item => item.session.Id)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(item => new AdminImpersonationSessionReadModel(

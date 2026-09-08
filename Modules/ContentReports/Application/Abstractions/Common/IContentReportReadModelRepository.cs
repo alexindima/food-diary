@@ -8,7 +8,7 @@ public interface IContentReportReadModelRepository {
         ReportStatus? status,
         int page,
         int limit,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default, ContentReportAdminFilter? filter = null);
 
     Task<int> CountByStatusAsync(ReportStatus status, CancellationToken cancellationToken = default);
 }

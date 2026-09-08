@@ -19,6 +19,13 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
     public LessonDifficulty Difficulty { get; private set; }
     public int EstimatedReadMinutes { get; private set; }
     public int SortOrder { get; private set; }
+    public bool IsPublished { get; private set; } = true;
+
+    public void SetPublication(bool isPublished) {
+        if (IsPublished == isPublished) { return; }
+        IsPublished = isPublished;
+        SetModified();
+    }
 
     private NutritionLesson() {
     }

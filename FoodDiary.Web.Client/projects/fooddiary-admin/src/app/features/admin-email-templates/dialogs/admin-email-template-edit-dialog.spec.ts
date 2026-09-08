@@ -1,10 +1,11 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
-import { of, throwError } from 'rxjs';
+import { type Observable, of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
+import { AdminTemplateHistoryFacade } from '../../admin-template-history/lib/admin-template-history.facade';
 import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import { AdminEmailTemplateEditDialogComponent } from './admin-email-template-edit-dialog';
 
@@ -43,6 +44,7 @@ async function setupEmailTemplateDialogAsync(): Promise<EmailTemplateDialogConte
         providers: [
             provideTranslateTesting(),
             { provide: AdminEmailTemplatesFacade, useValue: service },
+            { provide: AdminTemplateHistoryFacade, useValue: { getRevisions: (): Observable<never[]> => of([]) } },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: FD_UI_DIALOG_DATA, useValue: TEMPLATE },
         ],

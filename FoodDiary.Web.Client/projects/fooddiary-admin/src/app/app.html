@@ -8,28 +8,28 @@
     />
 
     <main class="admin-shell__content">
-        <nav class="admin-shell__mobile-nav" aria-label="Admin sections">
-            <label for="admin-mobile-route">Section</label>
-            <select id="admin-mobile-route" [value]="currentPath()" (change)="onMobileRouteChange($event)">
-                <option value="/">Dashboard</option>
-                <optgroup label="Users">
-                    <option value="/users">Accounts</option>
-                    <option value="/users/login-activity">Login activity</option>
-                    <option value="/users/impersonation-sessions">Impersonation sessions</option>
-                </optgroup>
-                <option value="/ai-usage">AI logs</option>
-                <option value="/acquisition">Acquisition</option>
-                <option value="/billing">Billing</option>
-                <option value="/email-templates">Email templates</option>
-                <option value="/mail-inbox">Mail inbox</option>
-                <option value="/lessons">Lessons</option>
-                <option value="/moderation">Moderation</option>
+        <nav class="admin-shell__mobile-nav" [attr.aria-label]="'ADMIN_NAV.SECTIONS' | translate">
+            <label for="admin-mobile-route">{{ 'ADMIN_NAV.SECTIONS' | translate }}</label>
+            <select id="admin-mobile-route" [value]="currentSection()" (change)="onMobileRouteChange($event)">
+                @for (item of mobileItems(); track item.id) {
+                    <option [value]="item.route">{{ item.label }}</option>
+                }
             </select>
         </nav>
-        @if (pageHeader(); as header) {
+        @if (isMailRoute()) {
+            <h1 class="fd-page-title">{{ 'ADMIN_OUTGOING.MAIL' | translate }}</h1>
+            <fd-ui-tabs
+                [tabs]="[
+                    { value: '/mail-inbox', labelKey: 'ADMIN_OUTGOING.INCOMING' },
+                    { value: '/outgoing-emails', labelKey: 'ADMIN_OUTGOING.OUTGOING' },
+                ]"
+                [selectedValue]="currentPath()"
+                (selectedValueChange)="navigateMail($event)"
+            />
+        } @else if (pageHeader(); as header) {
             <header class="admin-shell__page-header">
-                <h1 class="fd-page-title">{{ header.title }}</h1>
-                <p class="fd-page-subtitle">{{ header.subtitle }}</p>
+                <h1 class="fd-page-title">{{ header.title | translate }}</h1>
+                <p class="fd-page-subtitle">{{ header.subtitle | translate }}</p>
             </header>
         }
         <router-outlet />

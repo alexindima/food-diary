@@ -1,7 +1,9 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import { AdminImpersonationSessionsPageComponent } from './admin-impersonation-sessions-page';
 
@@ -30,7 +32,7 @@ describe('AdminImpersonationSessionsPageComponent', () => {
 
         await TestBed.configureTestingModule({
             imports: [AdminImpersonationSessionsPageComponent],
-            providers: [{ provide: AdminUsersFacade, useValue: usersService }],
+            providers: [...provideTranslateTesting(), provideRouter([]), { provide: AdminUsersFacade, useValue: usersService }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AdminImpersonationSessionsPageComponent);
@@ -40,6 +42,6 @@ describe('AdminImpersonationSessionsPageComponent', () => {
 
     it('should create and load impersonation sessions', () => {
         expect(component).toBeTruthy();
-        expect(usersService.getImpersonationSessions).toHaveBeenCalledWith(FIRST_PAGE, PAGE_SIZE, null);
+        expect(usersService.getImpersonationSessions).toHaveBeenCalledWith(FIRST_PAGE, PAGE_SIZE, null, { actorId: '', targetId: '' });
     });
 });

@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -8,25 +9,25 @@ import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';
 import { AdminEmailTemplatesComponent } from './admin-email-templates';
 
+const templates: AdminEmailTemplate[] = [
+    {
+        id: 't1',
+        key: 'email_verification',
+        locale: 'en',
+        subject: 'Verify email',
+        htmlBody: '<p>Hello</p>',
+        textBody: 'Hello',
+        isActive: true,
+        createdOnUtc: '2026-01-01T00:00:00Z',
+        updatedOnUtc: null,
+    },
+];
+
 describe('AdminEmailTemplatesComponent', () => {
     let component: AdminEmailTemplatesComponent;
     let fixture: ComponentFixture<AdminEmailTemplatesComponent>;
     let templatesService: { getAll: ReturnType<typeof vi.fn> };
     let dialogService: { open: ReturnType<typeof vi.fn> };
-
-    const templates: AdminEmailTemplate[] = [
-        {
-            id: 't1',
-            key: 'email_verification',
-            locale: 'en',
-            subject: 'Verify email',
-            htmlBody: '<p>Hello</p>',
-            textBody: 'Hello',
-            isActive: true,
-            createdOnUtc: '2026-01-01T00:00:00Z',
-            updatedOnUtc: null,
-        },
-    ];
 
     beforeEach(async () => {
         templatesService = { getAll: vi.fn() };
@@ -40,6 +41,7 @@ describe('AdminEmailTemplatesComponent', () => {
         await TestBed.configureTestingModule({
             imports: [AdminEmailTemplatesComponent],
             providers: [
+                provideRouter([]),
                 ...provideTranslateTesting(),
                 { provide: AdminEmailTemplatesFacade, useValue: templatesService },
                 { provide: FdUiDialogService, useValue: dialogService },

@@ -13,4 +13,10 @@ public sealed record GetAdminUsersHttpQuery(
         PresentationQueryValues.Active,
         PresentationQueryValues.Inactive,
         PresentationQueryValues.Deleted)] string? Status = null,
-    bool IncludeDeleted = false);
+    bool IncludeDeleted = false,
+    DateOnly? From = null,
+    DateOnly? To = null,
+    [MaxLength(PresentationQueryLimits.MaximumFilterLength)] string? Role = null,
+    bool? EmailConfirmed = null,
+    DateOnly? LastLoginFrom = null,
+    DateOnly? LastLoginTo = null);

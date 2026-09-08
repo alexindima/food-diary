@@ -1,0 +1,23 @@
+@if (report(); as data) {
+    <p>
+        {{ 'ADMIN_ACQUISITION.COMPARE' | translate }}: {{ data.previousFromUtc | date: 'mediumDate' : 'UTC' }} —
+        {{ data.fromUtc | date: 'mediumDate' : 'UTC' }} ({{ 'ADMIN_ACQUISITION.EXCLUSIVE_END' | translate }})
+    </p>
+    @for (metric of metrics(); track metric.key) {
+        <fd-ui-card>
+            <h2>{{ `ADMIN_ACQUISITION.${metric.key}` | translate }}</h2>
+            <p>
+                {{ metric.current | number }} · {{ 'ADMIN_ACQUISITION.PREVIOUS' | translate }}: {{ metric.previous | number }} · Δ
+                {{ metric.delta | number }}
+            </p>
+            <fd-ui-line-chart
+                [points]="metric.points"
+                [minValue]="0"
+                [showAxisLabels]="true"
+                [showGrid]="true"
+                [title]="`ADMIN_ACQUISITION.${metric.key}` | translate"
+            />
+        </fd-ui-card>
+    }
+    <p>{{ 'ADMIN_ACQUISITION.RETENTION_NOTE' | translate }}</p>
+}

@@ -13,7 +13,6 @@ import type {
     AdminUserLoginEvent,
     AdminUserRoleAuditEvent,
     AdminUserSetPassword,
-    AdminUserStatusFilter,
     AdminUserUpdate,
     PagedResponse,
 } from '../models/admin-user.models';
@@ -41,9 +40,17 @@ export class AdminUsersService {
         page: number,
         limit: number,
         search?: string | null,
-        status: AdminUserStatusFilter = 'active',
+        filters: Record<string, string> = {},
     ): Observable<PagedResponse<AdminUser>> {
-        let params = new HttpParams().set('page', page).set('limit', limit).set('status', status);
+        let params = new HttpParams()
+            .set('page', page)
+            .set('limit', limit)
+            .set('status', filters['status'] ?? 'active');
+        for (const [key, value] of Object.entries(filters)) {
+            if (value.length > 0) {
+                params = params.set(key, value);
+            }
+        }
 
         if (search !== null && search !== undefined && search.length > 0) {
             params = params.set('search', search);
@@ -85,8 +92,9 @@ export class AdminUsersService {
         page: number,
         limit: number,
         search?: string | null,
+        filters: Record<string, string> = {},
     ): Observable<PagedResponse<AdminImpersonationSession>> {
-        let params = new HttpParams().set('page', page).set('limit', limit);
+        let params = new HttpParams({ fromObject: filters }).set('page', page).set('limit', limit);
 
         if (search !== null && search !== undefined && search.length > 0) {
             params = params.set('search', search);
@@ -107,16 +115,12 @@ export class AdminUsersService {
         page: number,
         limit: number,
         search?: string | null,
-        userId?: string | null,
+        filters: Record<string, string> = {},
     ): Observable<PagedResponse<AdminUserLoginEvent>> {
-        let params = new HttpParams().set('page', page).set('limit', limit);
+        let params = new HttpParams({ fromObject: filters }).set('page', page).set('limit', limit);
 
         if (search !== null && search !== undefined && search.length > 0) {
             params = params.set('search', search);
-        }
-
-        if (userId !== null && userId !== undefined && userId.length > 0) {
-            params = params.set('userId', userId);
         }
 
         return this.http.get<ApiPagedResponse<AdminUserLoginEvent>>(`${this.baseUrl}/login-events`, { params }).pipe(

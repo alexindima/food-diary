@@ -1,13 +1,30 @@
 <div class="admin-users fd-grid fd-gap-md">
+    <fd-admin-period label="ADMIN_USER.REGISTRATION_PERIOD" />
     <div class="toolbar fd-row fd-gap-sm fd-wrap">
         <fd-ui-input label="Search users" placeholder="Email or username" [value]="search()" (valueChange)="onSearchChange($event)" />
 
         <fd-ui-select label="User status" [options]="statusOptions" [value]="status()" (valueChange)="onStatusChange($event)" />
         <fd-ui-button type="button" (click)="openCreate()">Create user</fd-ui-button>
     </div>
+    <div class="fd-row fd-wrap fd-gap-sm fd-align-end">
+        <fd-ui-input [label]="'ADMIN_USER.ROLES' | translate" [value]="role()" (valueChange)="role.set($event?.toString() || '')" />
+        <label for="admin-users-field-1">{{ 'ADMIN_USER.CONFIRMED' | translate }}</label
+        ><select id="admin-users-field-1" [value]="confirmed()" (change)="confirmed.set(controlValue($event))">
+            <option value="">{{ 'ADMIN_COMMON.ALL' | translate }}</option>
+            <option value="true">{{ 'ADMIN_USER.YES' | translate }}</option>
+            <option value="false">{{ 'ADMIN_USER.NO' | translate }}</option>
+        </select>
+        <label for="admin-users-field-2">{{ 'ADMIN_USER.LOGIN_FROM' | translate }}</label
+        ><input id="admin-users-field-2" type="date" [value]="lastLoginFrom()" (input)="lastLoginFrom.set(controlValue($event))" />
+        <label for="admin-users-field-3">{{ 'ADMIN_USER.LOGIN_TO' | translate }}</label
+        ><input id="admin-users-field-3" type="date" [value]="lastLoginTo()" (input)="lastLoginTo.set(controlValue($event))" />
+        <fd-ui-button (click)="page.set(1); applyFilters()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
+    </div>
 
     @if (isLoading()) {
         <p>Loading users...</p>
+    } @else if (loadFailed()) {
+        <fd-admin-load-error (retry)="loadUsers()" />
     } @else {
         <fd-admin-users-table
             [users]="users()"

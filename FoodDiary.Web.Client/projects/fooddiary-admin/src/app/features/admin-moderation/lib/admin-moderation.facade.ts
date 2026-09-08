@@ -9,8 +9,13 @@ import type { PagedResponse } from '../models/admin-moderation-page.models';
 export class AdminModerationFacade {
     private readonly moderationService = inject(AdminModerationService);
 
-    public getReports(page: number, limit: number, status?: string | null): Observable<PagedResponse<AdminContentReport>> {
-        return this.moderationService.getReports(page, limit, status);
+    public getReports(
+        page: number,
+        limit: number,
+        status?: string | null,
+        filters: Record<string, string> = {},
+    ): Observable<PagedResponse<AdminContentReport>> {
+        return this.moderationService.getReports(page, limit, status, filters);
     }
 
     public reviewReport(reportId: string, action: AdminReportAction): Observable<void> {

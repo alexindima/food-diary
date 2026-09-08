@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Modules.Marketing.Infrastructure.Persistence;
 
-public sealed class MarketingAttributionEventRepository(FoodDiaryDbContext context) : IMarketingAttributionEventRepository {
+public sealed partial class MarketingAttributionEventRepository(FoodDiaryDbContext context) : IMarketingAttributionEventRepository, IMarketingAttributionRangeReadRepository {
     public Task AddAsync(MarketingAttributionEventRecord record, CancellationToken cancellationToken = default) {
         var entity = MarketingAttributionEvent.Create(
             record.EventType,
@@ -54,6 +54,10 @@ public sealed class MarketingAttributionEventRepository(FoodDiaryDbContext conte
             .AsNoTracking()
             .Where(x => x.OccurredAtUtc >= sinceUtc);
 
+        return await LoadSummaryAsync(events, cancellationToken).ConfigureAwait(false);
+    }
+
+    private static async Task<MarketingAttributionSummaryRecord> LoadSummaryAsync(IQueryable<MarketingAttributionEvent> events, CancellationToken cancellationToken) {
         MarketingAttributionCounts counts = await events
             .GroupBy(static _ => 1)
             .Select(group => new MarketingAttributionCounts(

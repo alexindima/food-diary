@@ -16,6 +16,6 @@ public sealed class GetAdminUserLoginEventsQueryHandler(IAdminUserLoginReadServi
             query.Limit,
             query.UserId,
             query.Search,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken, query.FromUtc, query.ToUtc, query.Provider, query.Device).ConfigureAwait(false);
     }
 }

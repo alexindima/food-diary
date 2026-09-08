@@ -42,10 +42,10 @@ test.describe('admin smoke', () => {
         await expect(page.getByRole('textbox', { name: 'Search users' })).toBeVisible();
         await expect(page.getByText('Total users: 1')).toBeVisible();
 
-        await page.getByRole('link', { name: 'AI Logs' }).click();
+        await page.getByRole('link', { name: 'AI usage', exact: true }).click();
         await expect(page).toHaveURL(/\/ai-usage$/);
-        await expect(page.getByText('Total tokens')).toBeVisible();
-        await expect(page.getByText('12345')).toBeVisible();
+        await expect(page.locator('span').filter({ hasText: /^Total tokens$/ })).toBeVisible();
+        await expect(page.getByText('12,345', { exact: true })).toBeVisible();
 
         await page.getByRole('link', { name: 'Email templates' }).click();
         await expect(page).toHaveURL(/\/email-templates$/);
@@ -74,7 +74,7 @@ async function mockAdminApiAsync(page: Page): Promise<void> {
         await route.fulfill(jsonResponse(createDashboardOverview(from, to)));
     });
 
-    await page.route('**/api/v1/admin/ai-usage/summary', async route => {
+    await page.route('**/api/v1/admin/ai-usage/summary**', async route => {
         await route.fulfill(jsonResponse({ totalTokens: 12345, inputTokens: 7000, outputTokens: 5345 }));
     });
 

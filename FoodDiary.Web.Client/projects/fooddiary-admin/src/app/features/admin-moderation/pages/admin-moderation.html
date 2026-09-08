@@ -1,34 +1,62 @@
 <div class="admin-moderation">
-    <div class="toolbar fd-row fd-gap-sm">
-        <label for="admin-moderation-status">Report status</label>
-        <select id="admin-moderation-status" [value]="statusFilter()" (change)="onStatusChange(getSelectValue($event))">
-            <option value="">All</option>
-            <option value="Pending">Pending</option>
-            <option value="Reviewed">Reviewed</option>
-            <option value="Dismissed">Dismissed</option>
-        </select>
+    <fd-admin-period />
+    <div class="toolbar fd-row fd-wrap fd-gap-sm">
+        <fd-ui-select
+            [label]="'ADMIN_MODERATION.STATUS' | translate"
+            [value]="statusFilter()"
+            [options]="[
+                { value: '', label: 'ADMIN_COMMON.ALL' | translate },
+                { value: 'Pending', label: 'ADMIN_MODERATION.PENDING' | translate },
+                { value: 'Reviewed', label: 'ADMIN_MODERATION.REVIEWED' | translate },
+                { value: 'Dismissed', label: 'ADMIN_MODERATION.DISMISSED' | translate },
+            ]"
+            (valueChange)="statusFilter.set($event?.toString() ?? '')"
+        />
+        <fd-ui-select
+            [label]="'ADMIN_MODERATION.TYPE' | translate"
+            [value]="targetType()"
+            [options]="[
+                { value: '', label: 'ADMIN_COMMON.ALL' | translate },
+                { value: 'Recipe', label: 'ADMIN_MODERATION.RECIPE' | translate },
+                { value: 'Comment', label: 'ADMIN_MODERATION.COMMENT' | translate },
+            ]"
+            (valueChange)="targetType.set($event?.toString() ?? '')"
+        />
+        <fd-ui-input
+            [label]="'ADMIN_MODERATION.REPORTER_ID' | translate"
+            [value]="reporterId()"
+            (valueChange)="reporterId.set($event?.toString() ?? '')"
+        />
+        <fd-ui-input
+            [label]="'ADMIN_MODERATION.TARGET_ID' | translate"
+            [value]="targetId()"
+            (valueChange)="targetId.set($event?.toString() ?? '')"
+        />
+        <fd-ui-button (click)="applyFilters()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
     </div>
 
     @if (isLoading()) {
-        <p>Loading reports...</p>
+        <p>{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+    } @else if (loadFailed()) {
+        <fd-admin-load-error (retry)="loadReports()" />
     } @else {
-        <div class="summary">Total reports: {{ totalItems() }}</div>
+        <div class="summary">{{ 'ADMIN_MODERATION.TOTAL' | translate }} {{ totalItems() }}</div>
 
         <table class="reports-table" aria-label="Moderation reports">
             <thead>
                 <tr>
-                    <th>Target</th>
-                    <th>Reason</th>
-                    <th>Status</th>
-                    <th>Created</th>
-                    <th>Reviewed</th>
+                    <th>{{ 'ADMIN_MODERATION.TARGET' | translate }}</th>
+                    <th>{{ 'ADMIN_MODERATION.REASON' | translate }}</th>
+                    <th>{{ 'ADMIN_MODERATION.STATUS' | translate }}</th>
+                    <th>{{ 'ADMIN_MODERATION.CREATED' | translate }}</th>
+                    <th>{{ 'ADMIN_MODERATION.REVIEWED' | translate }}</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 @for (report of reportItems(); track report.id) {
                     <tr>
-                        <td>{{ report.targetType }} ({{ report.targetIdShort }})</td>
+                        <td><fd-admin-moderation-context [report]="report" /></td>
                         <td class="reason-cell">{{ report.reason }}</td>
                         <td>
                             <span [class]="`status-badge status-badge--${(report.status | lowercase)}`"> {{ report.status }} </span>
@@ -39,10 +67,10 @@
                             @if (report.status === 'Pending') {
                                 <div class="action-buttons fd-row fd-gap-control">
                                     <fd-ui-button type="button" variant="primary" size="sm" (click)="openAction(report, 'review')">
-                                        Review
+                                        {{ 'ADMIN_MODERATION.REVIEW' | translate }}
                                     </fd-ui-button>
                                     <fd-ui-button type="button" variant="secondary" size="sm" (click)="openAction(report, 'dismiss')">
-                                        Dismiss
+                                        {{ 'ADMIN_MODERATION.DISMISS' | translate }}
                                     </fd-ui-button>
                                 </div>
                             }
@@ -50,7 +78,7 @@
                     </tr>
                 } @empty {
                     <tr>
-                        <td colspan="6">No reports found.</td>
+                        <td colspan="6">{{ 'ADMIN_COMMON.EMPTY' | translate }}</td>
                     </tr>
                 }
             </tbody>

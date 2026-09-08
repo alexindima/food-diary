@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -52,7 +53,13 @@ describe('AdminUsersComponent', () => {
     });
 
     it('should load users on init', () => {
-        expect(usersService.getUsers).toHaveBeenCalledWith(FIRST_PAGE, PAGE_SIZE, null, 'active');
+        expect(usersService.getUsers).toHaveBeenCalledWith(FIRST_PAGE, PAGE_SIZE, null, {
+            status: 'active',
+            role: '',
+            emailConfirmed: '',
+            lastLoginFrom: '',
+            lastLoginTo: '',
+        });
         expect(component['users']()).toEqual(pagedUsers.items);
         expect(component['totalPages']()).toBe(SECOND_PAGE);
         expect(component['totalItems']()).toBe(USER_TOTAL_ITEMS);
@@ -62,7 +69,7 @@ describe('AdminUsersComponent', () => {
     it('exposes persistent names for the user filters', () => {
         const element = fixture.nativeElement as HTMLElement;
         const searchInput = element.querySelector<HTMLInputElement>('fd-ui-input input');
-        const statusButton = element.querySelector<HTMLButtonElement>('fd-ui-select button');
+        const statusButton = element.querySelector<HTMLButtonElement>('.toolbar fd-ui-select button');
         if (searchInput === null || statusButton === null) {
             throw new Error('Expected user filter controls to render.');
         }
@@ -75,30 +82,53 @@ describe('AdminUsersComponent', () => {
         expect(statusButton.labels.item(0).textContent).toContain('User status');
     });
 
-    it('should update search and reload from page 1', () => {
+    it('should update search and reload from page 1', async () => {
         component['onSearchChange']('john');
+        await fixture.whenStable();
 
         expect(component['search']()).toBe('john');
         expect(component['page']()).toBe(FIRST_PAGE);
-        expect(usersService.getUsers).toHaveBeenLastCalledWith(FIRST_PAGE, PAGE_SIZE, 'john', 'active');
+        expect(usersService.getUsers).toHaveBeenLastCalledWith(FIRST_PAGE, PAGE_SIZE, 'john', {
+            status: 'active',
+            role: '',
+            emailConfirmed: '',
+            lastLoginFrom: '',
+            lastLoginTo: '',
+        });
     });
 
-    it('should update status and reload', () => {
+    it('should update status and reload', async () => {
         component['onStatusChange']('inactive');
+        await fixture.whenStable();
 
         expect(component['status']()).toBe('inactive');
         expect(component['page']()).toBe(FIRST_PAGE);
-        expect(usersService.getUsers).toHaveBeenLastCalledWith(FIRST_PAGE, PAGE_SIZE, null, 'inactive');
+        expect(usersService.getUsers).toHaveBeenLastCalledWith(FIRST_PAGE, PAGE_SIZE, null, {
+            status: 'inactive',
+            role: '',
+            emailConfirmed: '',
+            lastLoginFrom: '',
+            lastLoginTo: '',
+        });
     });
 
-    it('should change page only within valid bounds', () => {
+    it('should change page only within valid bounds', async () => {
         component['goToPage'](SECOND_PAGE);
+        await fixture.whenStable();
         expect(component['page']()).toBe(SECOND_PAGE);
-        expect(usersService.getUsers).toHaveBeenLastCalledWith(SECOND_PAGE, PAGE_SIZE, null, 'active');
+        expect(usersService.getUsers).toHaveBeenLastCalledWith(SECOND_PAGE, PAGE_SIZE, null, {
+            status: 'active',
+            role: '',
+            emailConfirmed: '',
+            lastLoginFrom: '',
+            lastLoginTo: '',
+        });
 
         const callCount = usersService.getUsers.mock.calls.length;
         component['goToPage'](0);
+        await fixture.whenStable();
         component['goToPage'](OUT_OF_RANGE_PAGE);
+        await fixture.whenStable();
         expect(usersService.getUsers.mock.calls.length).toBe(callCount);
     });
 });
@@ -178,6 +208,7 @@ async function setupComponentAsync(): Promise<void> {
     await TestBed.configureTestingModule({
         imports: [AdminUsersComponent],
         providers: [
+            provideRouter([]),
             provideTranslateTesting(),
             { provide: AdminUsersFacade, useValue: usersService },
             { provide: FdUiDialogService, useValue: dialogService },

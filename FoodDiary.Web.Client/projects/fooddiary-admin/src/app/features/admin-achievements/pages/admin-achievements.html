@@ -1,3 +1,4 @@
+<fd-admin-catalog-filter [categories]="categories()" [showLocale]="false" [showState]="true" />
 <div class="achievements-layout">
     <section class="definition-list fd-grid fd-gap-sm" [attr.aria-label]="'ADMIN_ACHIEVEMENTS.DEFINITIONS' | translate">
         <div class="fd-row fd-justify-between fd-align-center">
@@ -10,6 +11,7 @@
             @for (definition of pageItems(); track definition.id) {
                 <button class="definition-card" type="button" (click)="edit(definition)">
                     <span class="definition-icon" aria-hidden="true">{{ definition.icon }}</span>
+                    <small>{{ 'ADMIN_ACHIEVEMENTS.AWARDED_USERS' | translate }}: {{ definition.awardedUsers ?? 0 }}</small>
                     <span
                         ><strong>{{ definition.titleEn }}</strong
                         ><small>{{ definition.key }} · {{ definition.metric }} ≥ {{ definition.threshold }}</small></span
@@ -23,13 +25,13 @@
             }
         }
         <p class="fd-ui-body-xs">
-            {{ 'ADMIN_PAGINATION.RANGE' | translate: { start: rangeStart(), end: rangeEnd(), total: definitions().length } }}
+            {{ 'ADMIN_PAGINATION.RANGE' | translate: { start: rangeStart(), end: rangeEnd(), total: filteredItems().length } }}
         </p>
         <fd-ui-pagination
-            [length]="definitions().length"
+            [length]="filteredItems().length"
             [pageSize]="pageSize"
             [pageIndex]="pageIndex()"
-            (pageIndexChange)="requestedPage.set($event)"
+            (pageIndexChange)="goToPage($event)"
         />
     </section>
 

@@ -20,6 +20,7 @@ public sealed class PersistenceTransactionGuardrailTests {
     public void PersistenceSaveChangesAsyncUsage_StaysInsideCurrentExplicitAllowlist() {
         string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
         string[] allowedFiles = [
+            ArchitectureTestPaths.FromRoot("Modules", "Admin", "Infrastructure", "Integrations", "MailInbox", "BugAcknowledgementReceipts.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Ai", "Infrastructure", "Persistence", "Ai", "AiQuotaRepository.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Billing", "Infrastructure", "Persistence", "EfBillingTransactionRunner.cs"),
             ArchitectureTestPaths.FromRoot("Modules", "Images", "Infrastructure", "Persistence", "Images", "ImageAssetCleanupBatch.cs"),

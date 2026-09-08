@@ -1,0 +1,17 @@
+.mail-scroll {
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th,
+td {
+    padding: var(--fd-space-sm);
+    border-bottom: var(--fd-border-default);
+    text-align: left;
+}
+
+.mail-filters fd-ui-select {
+    flex: 1;
+}

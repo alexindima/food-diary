@@ -18,6 +18,7 @@ public static class MailRelayDependencyInjection {
             options.Timeout = TimeSpan.FromSeconds(15);
             options.AllowInsecureHttp = section.GetValue<bool>("AllowInsecureHttp");
         });
+        services.AddScoped<IOutgoingEmailJournal, RelayEmailJournal>();
         services.AddScoped<RelayEmailTransport>();
         services.AddScoped<IEmailTransport>(static provider => provider.GetRequiredService<RelayEmailTransport>());
         return services;

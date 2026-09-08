@@ -1,15 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
+import type { Subscription } from 'rxjs';
 
-import { AdminAcquisitionFacade, DEFAULT_ADMIN_ACQUISITION_WINDOW_HOURS } from '../lib/admin-acquisition.facade';
+import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
+import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
+import { ADMIN_DATE_TEXT_LENGTH, adminPage } from '../../../shared/period/admin-query';
+import { AdminAcquisitionComparisonComponent } from '../components/admin-acquisition-comparison';
+import { AdminAcquisitionFacade } from '../lib/admin-acquisition.facade';
 import type {
     MarketingAttributionBreakdown,
     MarketingAttributionRecentEvent,
     MarketingAttributionSummary,
 } from '../models/admin-acquisition.data';
+import type { MarketingAttributionRange } from '../models/admin-acquisition-range';
 
 const PERCENT_SCALE = 100;
 const HOURS_PER_DAY = 24;
@@ -28,7 +37,15 @@ type CampaignUrlBuilderModel = {
 
 @Component({
     selector: 'fd-admin-acquisition',
-    imports: [CommonModule, FdUiButtonComponent, FdUiCardComponent],
+    imports: [
+        AdminPeriodControlComponent,
+        AdminLoadErrorComponent,
+        AdminAcquisitionComparisonComponent,
+        TranslatePipe,
+        CommonModule,
+        FdUiButtonComponent,
+        FdUiCardComponent,
+    ],
     templateUrl: './admin-acquisition.html',
     styleUrl: './admin-acquisition.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +56,14 @@ export class AdminAcquisitionComponent {
 
     protected readonly summary = signal<MarketingAttributionSummary | null>(null);
     protected readonly isLoading = signal(false);
-    protected readonly selectedWindowHours = signal(DEFAULT_ADMIN_ACQUISITION_WINDOW_HOURS);
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
+    private request?: Subscription;
+    protected readonly failed = signal(false);
+    protected readonly report = signal<MarketingAttributionRange | null>(null);
+    protected readonly page = signal(1);
+    protected readonly eventSearch = signal('');
+    protected readonly eventPageSize = 50;
     protected readonly eventTypeFilter = signal<AttributionEventFilter>('all');
     protected readonly channelFilter = signal<AttributionChannelFilter>('all');
     protected readonly builderModel = signal<CampaignUrlBuilderModel>({
@@ -58,37 +82,53 @@ export class AdminAcquisitionComponent {
 
         return ((data.attributedVisits / data.visits) * PERCENT_SCALE).toFixed(1);
     });
-    protected readonly filteredRecentEvents = computed(() => {
-        const data = this.summary();
-        if (data === null) {
-            return [];
-        }
-
-        const eventType = this.eventTypeFilter();
-        const channel = this.channelFilter();
-        return data.recentEvents.filter(event => {
-            const matchesType = eventType === 'all' || event.eventType === eventType;
-            const isTracked = this.isTrackedEvent(event);
-            const matchesChannel = channel === 'all' || (channel === 'tracked' ? isTracked : !isTracked);
-            return matchesType && matchesChannel;
-        });
-    });
+    protected readonly filteredRecentEvents = computed(() => this.summary()?.recentEvents ?? []);
 
     public constructor() {
-        this.loadSummary();
+        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
+            const eventType = params.get('eventType') ?? 'all';
+            const channel = params.get('channel') ?? 'all';
+            this.eventTypeFilter.set(this.isEventFilter(eventType) ? eventType : 'all');
+            this.channelFilter.set(this.isChannelFilter(channel) ? channel : 'all');
+            this.eventSearch.set(params.get('search') ?? '');
+            this.page.set(adminPage(params.get('page')));
+            this.loadSummary();
+        });
     }
 
     protected loadSummary(): void {
+        this.request?.unsubscribe();
+        this.failed.set(false);
+        this.summary.set(null);
+        this.report.set(null);
+        const range = adminPeriod(this.route.snapshot.queryParamMap, '30d');
+        if (range === null) {
+            this.isLoading.set(false);
+            return;
+        }
+        const dates = adminUtcPeriod({
+            from: range.from ?? '1970-01-01',
+            to: range.to ?? new Date().toISOString().slice(0, ADMIN_DATE_TEXT_LENGTH),
+        });
         this.isLoading.set(true);
-        this.acquisitionFacade
-            .getSummary(this.selectedWindowHours())
+        this.request = this.acquisitionFacade
+            .getRange({
+                ...dates,
+                page: this.page(),
+                limit: this.eventPageSize,
+                eventType: this.eventTypeFilter() === 'all' ? '' : this.eventTypeFilter(),
+                channel: this.channelFilter() === 'all' ? '' : this.channelFilter(),
+                search: this.eventSearch(),
+            })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
-                    this.summary.set(response);
+                    this.summary.set(response.current);
+                    this.report.set(response);
                     this.isLoading.set(false);
                 },
                 error: () => {
+                    this.failed.set(true);
                     this.summary.set(null);
                     this.isLoading.set(false);
                 },
@@ -102,20 +142,11 @@ export class AdminAcquisitionComponent {
         return `${source} / ${medium} / ${campaign}`;
     }
 
-    protected setWindow(event: Event): void {
-        const value = Number(this.getSelectValue(event));
-        if (!Number.isFinite(value) || value < 1) {
-            return;
-        }
-
-        this.selectedWindowHours.set(value);
-        this.loadSummary();
-    }
-
     protected setEventTypeFilter(event: Event): void {
         const value = this.getSelectValue(event);
         if (this.isEventFilter(value)) {
             this.eventTypeFilter.set(value);
+            this.applyEventFilters();
         }
     }
 
@@ -123,6 +154,26 @@ export class AdminAcquisitionComponent {
         const value = this.getSelectValue(event);
         if (this.isChannelFilter(value)) {
             this.channelFilter.set(value);
+            this.applyEventFilters();
+        }
+    }
+
+    protected applyEventFilters(): void {
+        void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParamsHandling: 'merge',
+            queryParams: { eventType: this.eventTypeFilter(), channel: this.channelFilter(), search: this.eventSearch(), page: 1 },
+        });
+    }
+
+    protected goToPage(page: number): void {
+        void this.router.navigate([], { relativeTo: this.route, queryParamsHandling: 'merge', queryParams: { page } });
+    }
+
+    protected setEventSearch(event: Event): void {
+        const target = event.target;
+        if (target !== null && 'value' in target && typeof target.value === 'string') {
+            this.eventSearch.set(target.value);
         }
     }
 

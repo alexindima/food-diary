@@ -4,6 +4,9 @@ namespace FoodDiary.MailRelay.Application.Emails.Commands.EnqueueMailRelayEmail;
 
 public sealed class EnqueueMailRelayEmailCommandValidator : AbstractValidator<EnqueueMailRelayEmailCommand> {
     public EnqueueMailRelayEmailCommandValidator() {
+        RuleFor(x => x.Request.Purpose).NotEmpty().MaximumLength(64).Matches("^[a-z0-9_]+$");
+        RuleFor(x => x.Request.ReplyTo).EmailAddress().MaximumLength(320).Must(x => x is null || (!x.Contains('\r', StringComparison.Ordinal) && !x.Contains('\n', StringComparison.Ordinal)));
+        RuleFor(x => x.Request.InReplyTo).MaximumLength(998).Must(x => x is null || (!x.Contains('\r', StringComparison.Ordinal) && !x.Contains('\n', StringComparison.Ordinal)));
         RuleFor(static command => command.Request.FromAddress)
             .NotEmpty().WithErrorCode("Validation.Required")
             .EmailAddress().WithErrorCode("Validation.Invalid");

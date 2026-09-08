@@ -8,5 +8,5 @@ namespace FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
 public sealed record GetAdminImpersonationSessionsQuery(
     int Page,
     int Limit,
-    string? Search)
+    string? Search, DateTimeOffset? FromUtc = null, DateTimeOffset? ToUtc = null, Guid? ActorId = null, Guid? TargetId = null)
     : IQuery<Result<PagedResponse<AdminImpersonationSessionReadModel>>>;

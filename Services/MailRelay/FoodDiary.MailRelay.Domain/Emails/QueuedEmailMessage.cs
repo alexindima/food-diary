@@ -12,4 +12,8 @@ public sealed record QueuedEmailMessage(
     int AttemptCount,
     int MaxAttempts,
     DateTimeOffset? CreatedAtUtc = null,
-    DateTimeOffset? ModifiedAtUtc = null);
+    DateTimeOffset? ModifiedAtUtc = null,
+    string Purpose = "other",
+    string? ReplyTo = null,
+    string? InReplyTo = null,
+    bool AutoSubmitted = false);

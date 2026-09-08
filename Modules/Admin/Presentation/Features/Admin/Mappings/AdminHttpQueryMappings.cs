@@ -26,7 +26,7 @@ namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
 public static class AdminHttpQueryMappings {
     extension(GetAdminMailInboxMessagePageHttpQuery query) {
         public GetAdminMailInboxMessagePageQuery ToQuery() {
-            return new GetAdminMailInboxMessagePageQuery(query.Page, query.Limit, query.Recipient, query.Category, query.Unread);
+            return new GetAdminMailInboxMessagePageQuery(query.Page, query.Limit, query.Recipient, query.Category, query.Unread, query.FromUtc, query.ToUtc, query.Search, query.FromAddress, query.Id);
         }
     }
 
@@ -75,7 +75,11 @@ public static class AdminHttpQueryMappings {
 
     extension(GetAdminUsersHttpQuery query) {
         public GetAdminUsersQuery ToQuery() {
-            return new GetAdminUsersQuery(query.Page, query.Limit, query.Search, ResolveUserStatus(query));
+            UserAdministrationFilter? filter = query.From.HasValue || query.To.HasValue || query.Role is not null ||
+                query.EmailConfirmed.HasValue || query.LastLoginFrom.HasValue || query.LastLoginTo.HasValue
+                ? new UserAdministrationFilter(query.From, query.To, query.Role, query.EmailConfirmed, query.LastLoginFrom, query.LastLoginTo)
+                : null;
+            return new GetAdminUsersQuery(query.Page, query.Limit, query.Search, ResolveUserStatus(query), filter);
         }
     }
 
@@ -105,7 +109,7 @@ public static class AdminHttpQueryMappings {
 
     extension(GetAdminUserLoginEventsHttpQuery query) {
         public GetAdminUserLoginEventsQuery ToQuery() {
-            return new GetAdminUserLoginEventsQuery(query.Page, query.Limit, query.UserId, query.Search);
+            return new GetAdminUserLoginEventsQuery(query.Page, query.Limit, query.UserId, query.Search, query.FromUtc, query.ToUtc, query.Provider, query.Device);
         }
     }
 
@@ -123,13 +127,13 @@ public static class AdminHttpQueryMappings {
 
     extension(GetAdminAiUsageSummaryHttpQuery query) {
         public GetAdminAiUsageSummaryQuery ToQuery() {
-            return new GetAdminAiUsageSummaryQuery(query.From, query.To);
+            return new GetAdminAiUsageSummaryQuery(query.From, query.To, query.UserId);
         }
     }
 
     extension(GetAdminContentReportsHttpQuery query) {
         public GetAdminContentReportsQuery ToQuery() {
-            return new GetAdminContentReportsQuery(query.Status, query.Page, query.Limit);
+            return new GetAdminContentReportsQuery(query.Status, query.Page, query.Limit, query.FromUtc, query.ToUtc, query.TargetType, query.ReporterId, query.TargetId);
         }
     }
 

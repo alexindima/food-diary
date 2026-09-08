@@ -17,7 +17,7 @@ public static class AdminLessonMappings {
             lesson.EstimatedReadMinutes,
             lesson.SortOrder,
             lesson.CreatedOnUtc,
-            lesson.ModifiedOnUtc);
+            lesson.ModifiedOnUtc, lesson.IsPublished);
 
     public static AdminLessonModel ToAdminModel(this LessonAdminReadModel lesson) =>
         new(
@@ -31,5 +31,5 @@ public static class AdminLessonMappings {
             lesson.EstimatedReadMinutes,
             lesson.SortOrder,
             lesson.CreatedOnUtc,
-            lesson.ModifiedOnUtc);
+            lesson.ModifiedOnUtc, lesson.IsPublished, lesson.CompletedCount);
 }

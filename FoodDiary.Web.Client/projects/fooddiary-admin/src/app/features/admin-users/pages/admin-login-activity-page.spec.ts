@@ -1,7 +1,9 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import { AdminLoginActivityPageComponent } from './admin-login-activity-page';
 
@@ -30,7 +32,7 @@ describe('AdminLoginActivityPageComponent', () => {
 
         await TestBed.configureTestingModule({
             imports: [AdminLoginActivityPageComponent],
-            providers: [{ provide: AdminUsersFacade, useValue: usersService }],
+            providers: [...provideTranslateTesting(), provideRouter([]), { provide: AdminUsersFacade, useValue: usersService }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AdminLoginActivityPageComponent);
@@ -40,6 +42,6 @@ describe('AdminLoginActivityPageComponent', () => {
 
     it('should create and load login activity', () => {
         expect(component).toBeTruthy();
-        expect(usersService.getLoginEvents).toHaveBeenCalledWith(FIRST_PAGE, PAGE_SIZE, null);
+        expect(usersService.getLoginEvents).toHaveBeenCalledWith(FIRST_PAGE, PAGE_SIZE, null, { userId: '', provider: '', device: '' });
     });
 });

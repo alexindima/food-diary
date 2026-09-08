@@ -10,7 +10,7 @@ export class AdminAiUsageService {
     private readonly http = inject(HttpClient);
     private readonly aiUsageUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/ai-usage/summary`;
 
-    public getSummary(): Observable<AdminAiUsageSummary> {
-        return this.http.get<AdminAiUsageSummary>(this.aiUsageUrl);
+    public getSummary(range: { from?: string; to?: string; userId?: string } = {}): Observable<AdminAiUsageSummary> {
+        return this.http.get<AdminAiUsageSummary>(this.aiUsageUrl, { params: { ...range } });
     }
 }

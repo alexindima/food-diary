@@ -6,9 +6,9 @@ using FoodDiary.MailInbox.Client.Models;
 namespace FoodDiary.Infrastructure.Integrations.MailInbox;
 
 internal sealed class MailInboxClientAdminMailInboxReader(IMailInboxClient mailInboxClient) : IAdminMailInboxReader {
-    public async Task<AdminMailInboxMessagePageModel> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken) {
-        InboundMailMessagePageResponse result = await mailInboxClient.GetMessagePageAsync(page, limit, recipient, category, unread, cancellationToken).ConfigureAwait(false);
-        return new AdminMailInboxMessagePageModel(result.Items.Select(static message => message.ToModel()).ToList(), result.TotalItems);
+    public async Task<AdminMailInboxMessagePageModel> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null) {
+        InboundMailMessagePageResponse result = await mailInboxClient.GetMessagePageAsync(page, limit, recipient, category, unread, cancellationToken, fromUtc, toUtc, search, fromAddress, id).ConfigureAwait(false);
+        return new AdminMailInboxMessagePageModel(result.Items.Select(static message => message.ToModel()).ToList(), result.TotalItems, result.UnreadCount, result.ReadCount);
     }
 
     public Task<IReadOnlyList<AdminMailInboxMessageSummaryModel>> GetMessagesAsync(int limit, CancellationToken cancellationToken) =>

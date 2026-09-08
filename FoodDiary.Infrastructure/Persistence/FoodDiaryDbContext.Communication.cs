@@ -18,6 +18,7 @@ public sealed partial class FoodDiaryDbContext {
     public DbSet<RecommendationTemplate> RecommendationTemplates => Set<RecommendationTemplate>();
     public DbSet<RecommendationBulkDispatch> RecommendationBulkDispatches => Set<RecommendationBulkDispatch>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<BugAcknowledgementReceipt> BugAcknowledgementReceipts => Set<BugAcknowledgementReceipt>();
     public DbSet<EmailOutboxMessage> EmailOutbox => Set<EmailOutboxMessage>();
     public DbSet<NotificationWebPushOutboxMessage> NotificationWebPushOutbox => Set<NotificationWebPushOutboxMessage>();
     internal DbSet<OutboxReplayAudit> OutboxReplayAudits => Set<OutboxReplayAudit>();

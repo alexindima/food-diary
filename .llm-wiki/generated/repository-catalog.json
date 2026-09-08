@@ -20,9 +20,9 @@
     "extractedApplicationModules": 33,
     "backendBusinessModules": 34,
     "controllers": 10,
-    "endpoints": 22,
+    "endpoints": 23,
     "agentGuides": 251,
-    "documentationPages": 169
+    "documentationPages": 172
   },
   "dotnet": {
     "projects": [
@@ -760,6 +760,7 @@
           "Modules/Admin/Infrastructure/Model/FoodDiary.Modules.Admin.PersistenceModel.csproj",
           "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj",
           "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj",
+          "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
           "Modules/Users/Contracts/FoodDiary.Modules.Users.Contracts.csproj",
           "Modules/Users/Domain.Contracts/FoodDiary.Modules.Users.Domain.Contracts.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
@@ -768,6 +769,10 @@
           "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj"
         ],
         "packageReferences": [
+          {
+            "name": "MailKit",
+            "version": null
+          },
           {
             "name": "Microsoft.EntityFrameworkCore",
             "version": null
@@ -778,6 +783,10 @@
           },
           {
             "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": null
+          },
+          {
+            "name": "Microsoft.Extensions.Hosting",
             "version": null
           },
           {
@@ -829,7 +838,8 @@
           "Modules/Fasting/Contracts/FoodDiary.Modules.Fasting.Contracts.csproj",
           "Modules/Gamification/Contracts/FoodDiary.Modules.Gamification.Contracts.csproj",
           "Modules/Marketing/Contracts/FoodDiary.Modules.Marketing.Contracts.csproj",
-          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj"
+          "Shared/FoodDiary.Authentication.Contracts/FoodDiary.Authentication.Contracts.csproj",
+          "Shared/FoodDiary.Email.Contracts/FoodDiary.Email.Contracts.csproj"
         ],
         "packageReferences": [
           {
@@ -935,6 +945,7 @@
           "Modules/Admin/Infrastructure/FoodDiary.Modules.Admin.Infrastructure.csproj",
           "Modules/Ai/Domain/FoodDiary.Modules.Ai.Domain.csproj",
           "Modules/Billing/Domain/FoodDiary.Modules.Billing.Domain.csproj",
+          "Modules/Meals/Domain/FoodDiary.Modules.Meals.Domain.csproj",
           "Modules/Users/Domain/FoodDiary.Modules.Users.Domain.csproj",
           "tests/FoodDiary.Testing/FoodDiary.Testing.csproj"
         ],
@@ -13788,17 +13799,17 @@
           {
             "verb": "GET",
             "route": "/api/mail-inbox/messages",
-            "line": 33
+            "line": 34
           },
           {
             "verb": "GET",
             "route": "/api/mail-inbox/messages/{id:guid}",
-            "line": 46
+            "line": 47
           },
           {
             "verb": "POST",
             "route": "/api/mail-inbox/messages/{id:guid}/read",
-            "line": 60
+            "line": 61
           }
         ]
       },
@@ -13826,8 +13837,13 @@
         "endpoints": [
           {
             "verb": "GET",
+            "route": "/api/email/messages",
+            "line": 13
+          },
+          {
+            "verb": "GET",
             "route": "/api/email/messages/{id:guid}",
-            "line": 12
+            "line": 19
           }
         ]
       },
@@ -14287,6 +14303,7 @@
       "docs/architecture/architecture-improvements-20260905.md",
       "docs/architecture/infrastructure-boundary-audit.md",
       "docs/backend/ADMIN_DASHBOARD.md",
+      "docs/backend/ADMIN_REPORTING.md",
       "docs/backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md",
       "docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md",
       "docs/backend/BACKEND_CRITICAL_FLOW_MATRIX.md",
@@ -14304,6 +14321,7 @@
       "docs/backend/MAILINBOX_DATA_LIFECYCLE.md",
       "docs/backend/MARKETING_ATTRIBUTION_RUNBOOK.md",
       "docs/backend/MODULE_EXTRACTION_READINESS.md",
+      "docs/backend/OUTGOING_MAIL.md",
       "docs/backend/PADDLE_PRODUCTION_RUNBOOK.md",
       "docs/backend/PERSONAL_DATA_LIFECYCLE.md",
       "docs/experiments/content-reports-wiki-first-extraction.md",
@@ -14315,6 +14333,7 @@
       "docs/frontend/TEMPLATE_LINTING.md",
       "docs/frontend/angular-22-tech-debt.md",
       "docs/plans/ADAPTIVE_COACH_MVP_PLAN.md",
+      "docs/plans/ADMIN_EXPANSION.md",
       "docs/plans/README.md",
       "docs/plans/accessibility-hardening-plan.md",
       "docs/plans/dietologist-collaboration-completion-plan.md",

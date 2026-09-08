@@ -124,7 +124,7 @@ public static class AdminHttpMappings {
             return new GetAdminImpersonationSessionsQuery(
                 Page: query.Page,
                 Limit: query.Limit,
-                Search: query.Search);
+                Search: query.Search, query.FromUtc, query.ToUtc, query.ActorId, query.TargetId);
         }
     }
 
@@ -148,7 +148,7 @@ public static class AdminHttpMappings {
                 Category: request.Category,
                 Difficulty: request.Difficulty,
                 EstimatedReadMinutes: request.EstimatedReadMinutes,
-                SortOrder: request.SortOrder);
+                SortOrder: request.SortOrder, IsPublished: request.IsPublished);
         }
     }
 
@@ -163,7 +163,7 @@ public static class AdminHttpMappings {
                 Category: request.Category,
                 Difficulty: request.Difficulty,
                 EstimatedReadMinutes: request.EstimatedReadMinutes,
-                SortOrder: request.SortOrder);
+                SortOrder: request.SortOrder, IsPublished: request.IsPublished);
         }
     }
 
@@ -179,7 +179,7 @@ public static class AdminHttpMappings {
                     Category: lesson.Category,
                     Difficulty: lesson.Difficulty,
                     EstimatedReadMinutes: lesson.EstimatedReadMinutes,
-                    SortOrder: lesson.SortOrder)).ToList());
+                    SortOrder: lesson.SortOrder, IsPublished: lesson.IsPublished)).ToList());
         }
     }
 

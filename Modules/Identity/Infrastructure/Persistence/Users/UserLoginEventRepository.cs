@@ -19,7 +19,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
         int limit,
         Guid? userId,
         string? search,
-        CancellationToken cancellationToken = default) {
+        CancellationToken cancellationToken = default, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? provider = null, string? device = null) {
         int pageNumber = PaginationPolicy.NormalizePage(page);
         int pageSize = PaginationPolicy.NormalizePageSize(limit, defaultPageSize: 1);
 
@@ -44,9 +44,14 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
                 EF.Functions.ILike(item.loginEvent.DeviceType ?? string.Empty, term, LikeEscapeCharacter));
         }
 
+        if (fromUtc.HasValue) { DateTime start = fromUtc.Value.UtcDateTime; query = query.Where(item => item.loginEvent.LoggedInAtUtc >= start); }
+        if (toUtc.HasValue) { DateTime end = toUtc.Value.UtcDateTime; query = query.Where(item => item.loginEvent.LoggedInAtUtc < end); }
+        if (!string.IsNullOrWhiteSpace(provider)) { query = query.Where(item => item.loginEvent.AuthProvider == provider); }
+        if (!string.IsNullOrWhiteSpace(device)) { query = query.Where(item => item.loginEvent.DeviceType == device); }
         int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
         List<UserLoginEventReadModel> items = await query
             .OrderByDescending(item => item.loginEvent.LoggedInAtUtc)
+            .ThenBy(item => item.loginEvent.Id)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(item => new UserLoginEventReadModel(

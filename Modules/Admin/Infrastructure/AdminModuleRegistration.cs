@@ -15,6 +15,7 @@ public static class AdminModuleRegistration {
 
     public static IServiceCollection AddAdminPersistence(this IServiceCollection services) {
         services.AddScoped<IAdminDashboardMetricsReader, AdminDashboardMetricsReader>();
+        services.AddScoped<IAdminRetentionReader, AdminRetentionReader>();
         services.TryAddEnumerable(ServiceDescriptor.Scoped<IUserDataPurgeParticipant, AdminUserDataPurgeParticipant>());
         services.AddScoped<IAdminUserRoleAuditRepository, AdminUserRoleAuditRepository>();
         services.AddScoped<IAdminUserRoleAuditReadRepository>(static provider => provider.GetRequiredService<IAdminUserRoleAuditRepository>());

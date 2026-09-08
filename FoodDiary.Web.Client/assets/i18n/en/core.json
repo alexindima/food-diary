@@ -1,5 +1,48 @@
 {
-    "ADMIN_PAGINATION": { "RANGE": "{{start}}–{{end}} of {{total}}" },
+    "ADMIN_MODERATION": {
+        "STATUS": "Status",
+        "TYPE": "Content type",
+        "PENDING": "Pending",
+        "REVIEWED": "Reviewed",
+        "DISMISSED": "Dismissed",
+        "RECIPE": "Recipe",
+        "COMMENT": "Comment",
+        "REPORTER_ID": "Reporter ID",
+        "TARGET_ID": "Content ID",
+        "TOTAL": "Total reports:",
+        "TARGET": "Content and history",
+        "REASON": "Reason",
+        "CREATED": "Created",
+        "REVIEW": "Review",
+        "DISMISS": "Dismiss",
+        "CONTEXT_UNAVAILABLE": "Content is unavailable or has been deleted.",
+        "REPORTED_BY": "Reported by",
+        "REVIEWED_BY": "Resolved by",
+        "AGE": "Waiting for review: {{days}} full days",
+        "TARGET_HISTORY": "All reports for this content"
+    },
+    "ADMIN_TEMPLATE_HISTORY": {
+        "TITLE": "Revision history",
+        "HELP": "The 50 most recent previous revisions. History starts when a template is changed after this feature is enabled. Restoring fills the editor; save to apply it as a new revision.",
+        "RESTORE": "Restore into editor",
+        "EMPTY": "No previous revisions recorded."
+    },
+    "ADMIN_TEMPLATES": {
+        "VARIABLES_HELP": "Variables supported by the current sender are listed below. Use the exact spelling without spaces. Preview values are examples; custom template keys need a matching sender in the application."
+    },
+    "ADMIN_LESSONS": {
+        "PUBLISHED": "Published",
+        "PUBLICATION_TITLE": "Publication",
+        "PUBLICATION_HELP": "Published lessons appear in the app. Drafts remain available only in administration.",
+        "COMPLETED": "Completions (retained history)",
+        "PUBLICATION": {
+            "true": "Published",
+            "false": "Draft"
+        }
+    },
+    "ADMIN_PAGINATION": {
+        "RANGE": "{{start}}–{{end}} of {{total}}"
+    },
     "ADMIN_OVERVIEW": {
         "REGISTRATIONS_HINT": "Accounts created in this period",
         "PAYING_HINT": "Unique users with a positive successful payment",
@@ -604,6 +647,14 @@
         "SAVE_ARIA": "Save meal draft"
     },
     "ADMIN_BILLING": {
+        "SUMMARY_ERROR": "Unable to load the billing summary. Refresh to retry.",
+        "RENEWAL_RECORDS": "Payments explicitly marked as renewals",
+        "SCHEDULED_CANCELLATIONS": "Scheduled cancellations with period end in this range",
+        "OPERATIONS_DEFINITION": "Summary covers all providers; table filters do not affect it. Renewal records are not necessarily successful payments and may not cover every provider. Cancellations reflect current subscription flags and period-end dates, not historical cancellation events.",
+        "RECORD_LINK": "Link to record",
+        "SUBSCRIPTION_LINK": "Subscription",
+        "PAYMENTS_LINK": "Related payments",
+        "WEBHOOK_LINK": "Provider event",
         "REVENUE": {
             "TITLE": "Revenue for selected period",
             "EMPTY": "No completed payments in this period.",
@@ -675,6 +726,11 @@
         }
     },
     "ADMIN_MAIL_INBOX": {
+        "ALL_MESSAGES": "All messages",
+        "SUBJECT_FILTER": "Subject contains",
+        "SENDER_FILTER": "Sender address",
+        "PERMALINK": "Link to message",
+        "RELATED_OUTGOING": "Related outgoing messages",
         "ALL": "All",
         "MAIL": "Mail",
         "UNREAD": "Unread",
@@ -695,6 +751,7 @@
         "NO_SUBJECT": "No subject"
     },
     "ADMIN_ACHIEVEMENTS": {
+        "AWARDED_USERS": "Recipients (retained history)",
         "TITLE": "Achievements",
         "SUBTITLE": "Create rewards and manage safe progress conditions.",
         "NEW": "New achievement",
@@ -730,5 +787,207 @@
             "LOAD": "Failed to load achievement definitions.",
             "SAVE": "Check the fields and ensure the key is unique, then try again."
         }
+    },
+    "ADMIN_OUTGOING": {
+        "STATUS_COUNTS_HELP": "Counts for the selected period and other filters, across all statuses. Select a status to open its messages.",
+        "MAIL": "Mail",
+        "INCOMING": "Incoming",
+        "OUTGOING": "Outgoing",
+        "RECIPIENT": "Recipient",
+        "PURPOSE": "Purpose",
+        "STATUS": "Status",
+        "REFRESH": "Search / refresh",
+        "SENT_NOTE": "Sent means accepted by the mail server; it does not confirm delivery to the recipient.",
+        "LOADING": "Loading emails…",
+        "ERROR": "Could not load outgoing emails. Try again.",
+        "DATE": "Created",
+        "DETAILS": "Email details",
+        "OPEN": "View",
+        "EMPTY": "No emails match these filters.",
+        "FROM": "From",
+        "ATTEMPTS": "Delivery attempts",
+        "SENT_AT": "Sent at",
+        "REFERENCE": "Reference / incoming message ID",
+        "HIDDEN": "Subject and content are hidden for credentials, invitations and unclassified mail to protect private links and passwords.",
+        "CLOSE": "Close",
+        "ALL": "All",
+        "PURPOSES": {
+            "other": "Other / historical",
+            "email_verification": "Registration confirmation",
+            "account_created": "Account credentials",
+            "password_reset": "Password reset",
+            "bug_report_received": "Bug acknowledgement",
+            "dietologist_invitation": "Dietologist invitation",
+            "template_test": "Template test"
+        },
+        "STATUSES": {
+            "pending": "Queued",
+            "processing": "Sending",
+            "retry": "Retry scheduled",
+            "sent": "Sent",
+            "failed": "Failed",
+            "suppressed": "Suppressed"
+        }
+    },
+    "ADMIN_AI": {
+        "TOTAL": "Total tokens",
+        "INPUT": "Input tokens",
+        "MEASUREMENT_HINT": "Recorded token usage. Cost, failed requests and response time are not included in these counters.",
+        "OUTPUT": "Output tokens",
+        "MODELS": "Usage by model",
+        "USERS": "Usage by user",
+        "DAILY": "Daily token usage",
+        "OPERATIONS": "Usage by operation"
+    },
+    "ADMIN_COMMON": {
+        "NAME": "Name",
+        "PERIOD_7d": "Last 7 days",
+        "SEARCH": "Search",
+        "USER": "User",
+        "PERIOD_today": "Today",
+        "INVALID_PERIOD": "Choose a valid period ending no later than today (up to 10 years).",
+        "EMPTY": "No matching records.",
+        "ALL": "All",
+        "PERIOD_30d": "Last 30 days",
+        "RETRY": "Retry",
+        "APPLY": "Apply",
+        "PERIOD_month": "This month",
+        "PERIOD": "Reporting period",
+        "PERIOD_all": "All time",
+        "UTC": "Calendar dates use UTC.",
+        "PERIOD_custom": "Custom range",
+        "BACK": "Back to accounts",
+        "LOAD_ERROR": "Could not load data. Please try again.",
+        "OPEN": "Open",
+        "REGISTERED": "Registered",
+        "LOADING": "Loading…",
+        "PREVIOUS": "Previous",
+        "NEXT": "Next",
+        "FIRST_PAGE": "This is the first page.",
+        "LAST_PAGE": "This is the last page.",
+        "REQUIRED_FIELDS": "Complete the required fields."
+    },
+    "ADMIN_NAV": {
+        "DASHBOARD": "Dashboard",
+        "ACCOUNTS": "Accounts",
+        "LOGINS": "Login activity",
+        "SESSIONS": "Impersonation sessions",
+        "AI": "AI usage",
+        "ACQUISITION": "Acquisition",
+        "BILLING": "Billing",
+        "TEMPLATES": "Email templates",
+        "MAIL": "Mail",
+        "LESSONS": "Lessons",
+        "ACHIEVEMENTS": "Achievements",
+        "MODERATION": "Moderation",
+        "USERS": "Users",
+        "PROMPTS": "AI prompts",
+        "SECTIONS": "Admin sections",
+        "BUGS": "Bugs",
+        "AUDIT": "Audit",
+        "RETENTION": "Retention"
+    },
+    "ADMIN_USER": {
+        "ROLES": "Role",
+        "LAST_LOGIN": "Last login",
+        "PROFILE": "Full profile",
+        "EDIT": "Edit account",
+        "RELATED": "Related records",
+        "REGISTRATION_PERIOD": "Registration period",
+        "CONFIRMED": "Email confirmed",
+        "YES": "Yes",
+        "NO": "No",
+        "LOGIN_FROM": "Last login from",
+        "LOGIN_TO": "Last login to"
+    },
+    "ADMIN_PROMPTS": {
+        "UNSAVED_TITLE": "Unsaved changes",
+        "UNSAVED_MESSAGE": "Discard the changes in this prompt editor?",
+        "DISCARD": "Discard changes",
+        "NEW": "New prompt",
+        "ACTIVE": "Active",
+        "INACTIVE": "Inactive",
+        "KEY": "Key",
+        "LOCALE": "Language",
+        "TEXT": "Prompt text",
+        "SAVE": "Save",
+        "SAVED": "Prompt saved.",
+        "SAVE_ERROR": "Could not save the prompt. Your edits are preserved.",
+        "SUBTITLE": "Manage localized AI instructions."
+    },
+    "ADMIN_ACTIVITY": {
+        "provider": "Authentication provider",
+        "device": "Device type",
+        "actorId": "Admin user ID",
+        "targetId": "Target user ID"
+    },
+    "ADMIN_CATALOG": {
+        "CATEGORY": "Category / purpose",
+        "STATE": "State",
+        "APPLY": "Apply"
+    },
+    "ADMIN_BUGS": {
+        "SEARCH": "Email subject",
+        "STATUS": "Status",
+        "BACK": "All bugs",
+        "NOT_CONFIGURED": "The BugTriage journal connection has not been configured yet.",
+        "EMPTY": "No bugs match these filters.",
+        "TOTAL": "Total",
+        "ATTEMPTS": "Attempts",
+        "EXPIRED": "Content retention has expired. Only the receipt metadata remains.",
+        "PR": "Open PR",
+        "SOURCE": "Source message ID",
+        "SUBTITLE": "Bug report processing and investigation results."
+    },
+    "ADMIN_AUDIT": {
+        "COVERAGE": "This journal shows persisted dietologist collaboration events. Role changes are available in user profiles and impersonation has a separate journal. Actions recorded only in technical logs are not included.",
+        "ACTOR": "Actor ID",
+        "SUBJECT": "Client ID",
+        "ACTION": "Action",
+        "TYPE": "Target type",
+        "TARGET": "Target ID",
+        "DETAILS": "Details",
+        "TOTAL": "Total events",
+        "EMPTY": "No events match these filters.",
+        "SUBTITLE": "Persisted action history and related users."
+    },
+    "ADMIN_SUBTITLE": {
+        "DASHBOARD": "Product health and operational activity.",
+        "ACCOUNTS": "Manage user access, status and profile data.",
+        "LOGINS": "Review successful authentication events and clients.",
+        "SESSIONS": "Audit administrative access performed on behalf of users.",
+        "AI": "Monitor token usage and AI-assisted operations.",
+        "ACQUISITION": "Track campaign attribution and conversion activity.",
+        "BILLING": "Review subscriptions, payments and webhook events.",
+        "TEMPLATES": "Create and maintain transactional email content.",
+        "MAIL": "Inspect inbound messages and DMARC reports.",
+        "LESSONS": "Publish and maintain nutrition academy content.",
+        "ACHIEVEMENTS": "Create rewards and manage safe progress conditions.",
+        "MODERATION": "Review reports and resolve content issues."
+    },
+    "ADMIN_ACQUISITION": {
+        "COMPARE": "Compared with the preceding period",
+        "EXCLUSIVE_END": "exclusive end",
+        "PREVIOUS": "Previous",
+        "visits": "Visits",
+        "signups": "Signups",
+        "premiumStarts": "Premium starts",
+        "EVENT_TOTAL": "Matching events",
+        "RETENTION_NOTE": "Only retained events are shown. Historical cleanup can make the preceding period incomplete. Conversion rates are event ratios within the period, not cohort metrics."
+    },
+    "ADMIN_RETENTION": {
+        "COHORT_PERIOD": "Cohort registration period",
+        "DEFINITION": "Activity means creating a meal entry. Cohorts use the UTC registration day. Activation is an entry on D0–D6; D1, D7 and D30 require an entry on that exact calendar day after registration. The denominator is every retained account in the cohort. Incomplete windows are not treated as zero.",
+        "ACTIVE": "Users creating entries in the period",
+        "AS_OF": "As of",
+        "COHORT": "Registration date",
+        "REGISTERED": "Accounts",
+        "ACTIVATION": "7-day activation",
+        "IMMATURE": "Window not complete",
+        "EMPTY": "No registrations in this period.",
+        "ACTIVITY_DAYS": "Days with new entries",
+        "DAY": "UTC day",
+        "HISTORY_NOTE": "Calculated from retained accounts and meal entries. Deletion changes historical values. A backdated meal date does not count as the return date; a login without an entry does not count as activity.",
+        "SUBTITLE": "Activation and return to diary use."
     }
 }

@@ -10,8 +10,8 @@ public sealed class AuthenticationLoginEventReadService(IUserLoginEventReadRepos
         int limit,
         Guid? userId,
         string? search,
-        CancellationToken cancellationToken) =>
-        repository.GetPagedAsync(page, limit, userId, search, cancellationToken);
+        CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? provider = null, string? device = null) =>
+        repository.GetPagedAsync(page, limit, userId, search, cancellationToken, fromUtc, toUtc, provider, device);
 
     public Task<IReadOnlyList<UserLoginDeviceSummaryModel>> GetDeviceSummaryAsync(
         DateTime? fromUtc,

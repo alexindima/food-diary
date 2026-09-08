@@ -23,7 +23,11 @@ public static class MailRelayQueueRowMapper {
             reader.GetInt32(8),
             reader.GetInt32(9),
             reader.FieldCount > 10 && !reader.IsDBNull(10) ? GetDateTimeOffset(reader, 10) : null,
-            reader.FieldCount > 11 && !reader.IsDBNull(11) ? GetDateTimeOffset(reader, 11) : null);
+            reader.FieldCount > 11 && !reader.IsDBNull(11) ? GetDateTimeOffset(reader, 11) : null,
+            reader.FieldCount > 12 ? reader.GetString(12) : "other",
+            reader.FieldCount > 13 && !reader.IsDBNull(13) ? reader.GetString(13) : null,
+            reader.FieldCount > 14 && !reader.IsDBNull(14) ? reader.GetString(14) : null,
+            reader.FieldCount > 15 && reader.GetBoolean(15));
     }
 
     public static MailRelayOutboxMessage ReadOutboxMessage(NpgsqlDataReader reader) =>

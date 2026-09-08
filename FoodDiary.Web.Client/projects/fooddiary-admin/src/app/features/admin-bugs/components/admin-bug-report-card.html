@@ -1,0 +1,21 @@
+<article>
+    <h2>
+        <a [routerLink]="['/bugs', report().id]">{{ report().subject || report().id }}</a>
+    </h2>
+    <p>
+        {{ report().receivedAtUtc | date: 'medium' }} · {{ report().status }} · {{ 'ADMIN_BUGS.ATTEMPTS' | translate }}:
+        {{ report().attempt }}
+    </p>
+    @if (report().contentExpired) {
+        <p>{{ 'ADMIN_BUGS.EXPIRED' | translate }}</p>
+    } @else {
+        <p>{{ report().summary }}</p>
+        @if (pullRequestUrl(); as url) {
+            <a target="_blank" rel="noopener noreferrer" [href]="url">{{ 'ADMIN_BUGS.PR' | translate }}</a>
+        }
+    }
+    <p>
+        {{ 'ADMIN_BUGS.SOURCE' | translate }}:
+        <a routerLink="/mail-inbox" [queryParams]="{ id: report().sourceMessageId }">{{ report().sourceMessageId }}</a>
+    </p>
+</article>

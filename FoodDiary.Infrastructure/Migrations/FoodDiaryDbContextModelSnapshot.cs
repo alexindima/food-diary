@@ -686,6 +686,11 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Property<int>("EstimatedReadMinutes")
                     .HasColumnType("integer");
 
+                b.Property<bool>("IsPublished")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("boolean")
+                    .HasDefaultValue(true);
+
                 b.Property<string>("Locale")
                     .IsRequired()
                     .HasMaxLength(10)
@@ -3025,8 +3030,8 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasDatabaseName("IX_HydrationEntries_User_Timestamp");
 
                 b.ToTable("HydrationEntries", t => {
-                    t.HasCheckConstraint("CK_HydrationEntries_AmountMl", "\"AmountMl\" > 0 AND \"AmountMl\" <= 10000");
-                });
+                        t.HasCheckConstraint("CK_HydrationEntries_AmountMl", "\"AmountMl\" > 0 AND \"AmountMl\" <= 10000");
+                    });
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.MarketingAttributionEvent", b => {
@@ -4056,7 +4061,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("character varying(2048)");
 
                 b.Property<string>("LockedBy")
-                        .IsConcurrencyToken()
+                    .IsConcurrencyToken()
                     .HasMaxLength(128)
                     .HasColumnType("character varying(128)");
 
@@ -4070,7 +4075,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("timestamp with time zone");
 
                 b.Property<long>("Revision")
-                        .IsConcurrencyToken()
+                    .IsConcurrencyToken()
                     .HasColumnType("bigint");
 
                 b.Property<Guid>("UserId")
@@ -4112,14 +4117,14 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.HasKey("UserId", "PeriodStartUtc");
 
                 b.ToTable("AiQuotaPeriods", t => {
-                    t.HasCheckConstraint("CK_AiQuotaPeriods_ConsumedInputTokens", "\"ConsumedInputTokens\" >= 0");
+                        t.HasCheckConstraint("CK_AiQuotaPeriods_ConsumedInputTokens", "\"ConsumedInputTokens\" >= 0");
 
-                    t.HasCheckConstraint("CK_AiQuotaPeriods_ConsumedOutputTokens", "\"ConsumedOutputTokens\" >= 0");
+                        t.HasCheckConstraint("CK_AiQuotaPeriods_ConsumedOutputTokens", "\"ConsumedOutputTokens\" >= 0");
 
-                    t.HasCheckConstraint("CK_AiQuotaPeriods_ReservedInputTokens", "\"ReservedInputTokens\" >= 0");
+                        t.HasCheckConstraint("CK_AiQuotaPeriods_ReservedInputTokens", "\"ReservedInputTokens\" >= 0");
 
-                    t.HasCheckConstraint("CK_AiQuotaPeriods_ReservedOutputTokens", "\"ReservedOutputTokens\" >= 0");
-                });
+                        t.HasCheckConstraint("CK_AiQuotaPeriods_ReservedOutputTokens", "\"ReservedOutputTokens\" >= 0");
+                    });
             });
 
             modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Ai.AiQuotaReservation", b => {
@@ -4169,10 +4174,10 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.HasIndex("UserId", "PeriodStartUtc", "State", "ExpiresOnUtc");
 
                 b.ToTable("AiQuotaReservations", t => {
-                    t.HasCheckConstraint("CK_AiQuotaReservations_ReservedInputTokens", "\"ReservedInputTokens\" >= 0");
+                        t.HasCheckConstraint("CK_AiQuotaReservations_ReservedInputTokens", "\"ReservedInputTokens\" >= 0");
 
-                    t.HasCheckConstraint("CK_AiQuotaReservations_ReservedOutputTokens", "\"ReservedOutputTokens\" >= 0");
-                });
+                        t.HasCheckConstraint("CK_AiQuotaReservations_ReservedOutputTokens", "\"ReservedOutputTokens\" >= 0");
+                    });
             });
 
             modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Audit.AuditEntry", b => {
@@ -4231,6 +4236,16 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.ToTable("ConsumedTelegramAssertions", (string)null);
             });
 
+            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.BugAcknowledgementReceipt", b => {
+                b.Property<Guid>("InboxId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uuid");
+
+                b.HasKey("InboxId");
+
+                b.ToTable("BugAcknowledgementReceipts", (string)null);
+            });
+
             modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Email.EmailOutboxMessage", b => {
                 b.Property<Guid>("Id")
                     .ValueGeneratedOnAdd()
@@ -4238,6 +4253,13 @@ namespace FoodDiary.Infrastructure.Migrations {
 
                 b.Property<int>("AttemptCount")
                     .HasColumnType("integer");
+
+                b.Property<bool>("AutoSubmitted")
+                    .HasColumnType("boolean");
+
+                b.Property<string>("CorrelationId")
+                    .HasMaxLength(128)
+                    .HasColumnType("character varying(128)");
 
                 b.Property<DateTime>("CreatedOnUtc")
                     .HasColumnType("timestamp with time zone");
@@ -4259,12 +4281,16 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired()
                     .HasColumnType("text");
 
+                b.Property<string>("InReplyTo")
+                    .HasMaxLength(998)
+                    .HasColumnType("character varying(998)");
+
                 b.Property<string>("LastError")
                     .HasMaxLength(2048)
                     .HasColumnType("character varying(2048)");
 
                 b.Property<string>("LockedBy")
-                        .IsConcurrencyToken()
+                    .IsConcurrencyToken()
                     .HasMaxLength(128)
                     .HasColumnType("character varying(128)");
 
@@ -4276,6 +4302,17 @@ namespace FoodDiary.Infrastructure.Migrations {
 
                 b.Property<DateTime?>("ProcessedOnUtc")
                     .HasColumnType("timestamp with time zone");
+
+                b.Property<string>("Purpose")
+                    .IsRequired()
+                    .ValueGeneratedOnAdd()
+                    .HasMaxLength(64)
+                    .HasColumnType("character varying(64)")
+                    .HasDefaultValue("other");
+
+                b.Property<string>("ReplyTo")
+                    .HasMaxLength(320)
+                    .HasColumnType("character varying(320)");
 
                 b.Property<string>("Subject")
                     .IsRequired()
@@ -4319,7 +4356,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("character varying(2048)");
 
                 b.Property<string>("LockedBy")
-                        .IsConcurrencyToken()
+                    .IsConcurrencyToken()
                     .HasMaxLength(128)
                     .HasColumnType("character varying(128)");
 
@@ -4364,7 +4401,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasColumnType("character varying(2048)");
 
                 b.Property<string>("LockedBy")
-                        .IsConcurrencyToken()
+                    .IsConcurrencyToken()
                     .HasMaxLength(128)
                     .HasColumnType("character varying(128)");
 
@@ -4452,6 +4489,44 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .IsRequired();
             });
 
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Ai.AiPromptTemplate", b => {
+                b.OwnsMany("FoodDiary.Domain.Entities.Ai.AiPromptRevision", "Revisions", b1 => {
+                        b1.Property<Guid>("Id")
+                            .HasColumnType("uuid");
+
+                        b1.Property<DateTime>("ArchivedOnUtc")
+                            .HasColumnType("timestamp with time zone");
+
+                        b1.Property<bool>("IsActive")
+                            .HasColumnType("boolean");
+
+                        b1.Property<string>("PromptText")
+                            .IsRequired()
+                            .HasMaxLength(4096)
+                            .HasColumnType("character varying(4096)");
+
+                        b1.Property<DateTime>("SavedOnUtc")
+                            .HasColumnType("timestamp with time zone");
+
+                        b1.Property<Guid>("TemplateId")
+                            .HasColumnType("uuid");
+
+                        b1.Property<int>("Version")
+                            .HasColumnType("integer");
+
+                        b1.HasKey("Id");
+
+                        b1.HasIndex("TemplateId", "ArchivedOnUtc");
+
+                        b1.ToTable("AiPromptRevisions", (string)null);
+
+                        b1.WithOwner()
+                            .HasForeignKey("TemplateId");
+                    });
+
+                b.Navigation("Revisions");
+            });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Ai.AiUsage", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                     .WithMany()
@@ -4487,6 +4562,49 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
+            });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Content.EmailTemplate", b => {
+                b.OwnsMany("FoodDiary.Domain.Entities.Content.EmailTemplateRevision", "Revisions", b1 => {
+                        b1.Property<Guid>("Id")
+                            .HasColumnType("uuid");
+
+                        b1.Property<DateTime>("ArchivedOnUtc")
+                            .HasColumnType("timestamp with time zone");
+
+                        b1.Property<string>("HtmlBody")
+                            .IsRequired()
+                            .HasColumnType("text");
+
+                        b1.Property<bool>("IsActive")
+                            .HasColumnType("boolean");
+
+                        b1.Property<DateTime>("SavedOnUtc")
+                            .HasColumnType("timestamp with time zone");
+
+                        b1.Property<string>("Subject")
+                            .IsRequired()
+                            .HasMaxLength(256)
+                            .HasColumnType("character varying(256)");
+
+                        b1.Property<Guid>("TemplateId")
+                            .HasColumnType("uuid");
+
+                        b1.Property<string>("TextBody")
+                            .IsRequired()
+                            .HasColumnType("text");
+
+                        b1.HasKey("Id");
+
+                        b1.HasIndex("TemplateId", "ArchivedOnUtc");
+
+                        b1.ToTable("EmailTemplateRevisions", (string)null);
+
+                        b1.WithOwner()
+                            .HasForeignKey("TemplateId");
+                    });
+
+                b.Navigation("Revisions");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Content.UserLessonProgress", b => {
@@ -4672,7 +4790,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .OnDelete(DeleteBehavior.ClientNoAction);
 
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
-                    .WithMany("Meals")
+                    .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
@@ -4710,19 +4828,15 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("FoodDiary.Domain.Entities.Products.Product", "Product")
-                    .WithMany("MealItems")
+                b.HasOne("FoodDiary.Domain.Entities.Products.Product", null)
+                    .WithMany()
                     .HasForeignKey("ProductId");
 
-                b.HasOne("FoodDiary.Domain.Entities.Recipes.Recipe", "Recipe")
-                    .WithMany("MealItems")
+                b.HasOne("FoodDiary.Domain.Entities.Recipes.Recipe", null)
+                    .WithMany()
                     .HasForeignKey("RecipeId");
 
                 b.Navigation("Meal");
-
-                b.Navigation("Product");
-
-                b.Navigation("Recipe");
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Notifications.Notification", b => {
@@ -4753,11 +4867,10 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .OnDelete(DeleteBehavior.SetNull);
 
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
-                    .WithMany("Products")
+                    .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Recents.RecentItem", b => {
@@ -4775,11 +4888,10 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .OnDelete(DeleteBehavior.ClientNoAction);
 
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
-                    .WithMany("Recipes")
+                    .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Recipes.RecipeComment", b => {
@@ -4803,7 +4915,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .OnDelete(DeleteBehavior.Restrict);
 
                 b.HasOne("FoodDiary.Domain.Entities.Products.Product", null)
-                    .WithMany("RecipeIngredients")
+                    .WithMany()
                     .HasForeignKey("ProductId");
 
                 b.HasOne("FoodDiary.Domain.Entities.Recipes.RecipeStep", "RecipeStep")
@@ -4834,7 +4946,7 @@ namespace FoodDiary.Infrastructure.Migrations {
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Shopping.ShoppingList", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
-                    .WithMany("ShoppingLists")
+                    .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
@@ -4923,7 +5035,7 @@ namespace FoodDiary.Infrastructure.Migrations {
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleProfile", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
-                    .WithMany("Cycles")
+                    .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
@@ -5011,7 +5123,6 @@ namespace FoodDiary.Infrastructure.Migrations {
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
-
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.MenstrualEpisode", b => {
@@ -5026,7 +5137,7 @@ namespace FoodDiary.Infrastructure.Migrations {
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.WaistEntry", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
-                    .WithMany("WaistEntries")
+                    .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
@@ -5042,7 +5153,7 @@ namespace FoodDiary.Infrastructure.Migrations {
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.WeightEntry", b => {
                 b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
-                    .WithMany("WeightEntries")
+                    .WithMany()
                     .HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
@@ -5216,15 +5327,7 @@ namespace FoodDiary.Infrastructure.Migrations {
                 b.Navigation("Items");
             });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Products.Product", b => {
-                b.Navigation("MealItems");
-
-                b.Navigation("RecipeIngredients");
-            });
-
             modelBuilder.Entity("FoodDiary.Domain.Entities.Recipes.Recipe", b => {
-                b.Navigation("MealItems");
-
                 b.Navigation("NestedRecipeUsages");
 
                 b.Navigation("Steps");
@@ -5269,24 +5372,9 @@ namespace FoodDiary.Infrastructure.Migrations {
             });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Users.User", b => {
-                b.Navigation("Cycles");
-
-
-                b.Navigation("Meals");
-
-                b.Navigation("Products");
-
-                b.Navigation("Recipes");
-
-                b.Navigation("ShoppingLists");
-
                 b.Navigation("UserRoles");
 
-                b.Navigation("WaistEntries");
-
                 b.Navigation("WaistGoals");
-
-                b.Navigation("WeightEntries");
 
                 b.Navigation("WeightGoals");
             });

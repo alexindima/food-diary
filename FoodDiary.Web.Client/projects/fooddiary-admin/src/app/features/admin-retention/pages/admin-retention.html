@@ -1,0 +1,66 @@
+<fd-admin-period defaultPeriod="30d" label="ADMIN_RETENTION.COHORT_PERIOD" />
+<p>{{ 'ADMIN_RETENTION.DEFINITION' | translate }}</p>
+@if (loading()) {
+    <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+} @else if (failed()) {
+    <fd-admin-load-error (retry)="retry()" />
+} @else if (report(); as data) {
+    <fd-ui-card>
+        <p>
+            {{ 'ADMIN_RETENTION.ACTIVE' | translate }}: <strong>{{ data.activeUsersInPeriod }}</strong>
+        </p>
+        <p>{{ 'ADMIN_RETENTION.AS_OF' | translate }}: {{ data.asOfUtc | date: 'medium' : 'UTC' }} UTC</p>
+    </fd-ui-card>
+    <div class="retention-table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>{{ 'ADMIN_RETENTION.COHORT' | translate }}</th>
+                    <th>{{ 'ADMIN_RETENTION.REGISTERED' | translate }}</th>
+                    <th>{{ 'ADMIN_RETENTION.ACTIVATION' | translate }}</th>
+                    <th>D1</th>
+                    <th>D7</th>
+                    <th>D30</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (cohort of data.cohorts; track cohort.date) {
+                    <tr>
+                        <td>{{ `${cohort.date}T00:00:00Z` | date: 'mediumDate' : 'UTC' }}</td>
+                        <td>{{ cohort.registered }}</td>
+                        <td>{{ ratio(cohort.activatedWithinSevenDays, cohort.registered) }}</td>
+                        <td>{{ ratio(cohort.day1, cohort.registered) }}</td>
+                        <td>{{ ratio(cohort.day7, cohort.registered) }}</td>
+                        <td>{{ ratio(cohort.day30, cohort.registered) }}</td>
+                    </tr>
+                } @empty {
+                    <tr>
+                        <td colspan="6">{{ 'ADMIN_RETENTION.EMPTY' | translate }}</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <details>
+        <summary>{{ 'ADMIN_RETENTION.ACTIVITY_DAYS' | translate }}</summary>
+        <div class="retention-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ 'ADMIN_RETENTION.DAY' | translate }}</th>
+                        <th>{{ 'ADMIN_RETENTION.ACTIVE' | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (day of data.activityByDay; track day.date) {
+                        <tr>
+                            <td>{{ `${day.date}T00:00:00Z` | date: 'mediumDate' : 'UTC' }}</td>
+                            <td>{{ day.activeUsers }}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </details>
+    <p>{{ 'ADMIN_RETENTION.HISTORY_NOTE' | translate }}</p>
+}

@@ -1,6 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import type { AdminBillingSubscriptionViewModel } from './admin-billing.types';
 import { AdminBillingSubscriptionsTableComponent } from './admin-billing-subscriptions-table';
 
@@ -47,6 +49,7 @@ describe('AdminBillingSubscriptionsTableComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [AdminBillingSubscriptionsTableComponent],
+            providers: [provideRouter([]), provideTranslateTesting()],
         }).compileComponents();
     });
 

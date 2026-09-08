@@ -12,4 +12,5 @@ public sealed record ContentReportAdminReadModel(
     string Status,
     string? AdminNote,
     DateTime CreatedOnUtc,
-    DateTime? ReviewedAtUtc);
+    DateTime? ReviewedAtUtc,
+    Guid? ReviewedByUserId = null, string? TargetTitle = null, string? TargetExcerpt = null);

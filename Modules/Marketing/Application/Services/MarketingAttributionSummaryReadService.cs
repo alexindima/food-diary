@@ -15,7 +15,11 @@ public sealed class MarketingAttributionSummaryReadService(
         DateTime windowStartUtc = nowUtc.AddHours(-normalizedWindowHours);
         MarketingAttributionSummaryRecord summary = await repository.GetSummaryAsync(windowStartUtc, cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(new MarketingAttributionSummaryModel(
+        return Result.Success(ToSummaryModel(summary, normalizedWindowHours, nowUtc));
+    }
+
+    internal static MarketingAttributionSummaryModel ToSummaryModel(MarketingAttributionSummaryRecord summary, int normalizedWindowHours, DateTime nowUtc) {
+        return new MarketingAttributionSummaryModel(
             normalizedWindowHours,
             nowUtc,
             summary.Events,
@@ -45,7 +49,7 @@ public sealed class MarketingAttributionSummaryReadService(
                     x.UtmCampaign,
                     x.UtmContent,
                     x.UtmTerm,
-                    x.BuildVersion))]));
+                    x.BuildVersion))]);
     }
 
     private static MarketingAttributionBreakdownModel ToModel(MarketingAttributionBreakdownRecord value) =>

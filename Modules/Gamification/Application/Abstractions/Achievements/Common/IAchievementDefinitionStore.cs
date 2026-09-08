@@ -4,6 +4,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Abstractions.Achievements.Common;
 
 public interface IAchievementDefinitionStore {
+    Task<IReadOnlyDictionary<string, int>> GetAwardCountsAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyList<AchievementDefinition>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyList<AchievementDefinition>> GetActiveAsync(CancellationToken cancellationToken = default);
     Task<AchievementDefinition?> GetByIdTrackingAsync(AchievementDefinitionId id, CancellationToken cancellationToken = default);

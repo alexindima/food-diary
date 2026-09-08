@@ -15,7 +15,7 @@ public static class AdminContentReportMappings {
             report.Status.ToString(),
             report.AdminNote,
             report.CreatedOnUtc,
-            report.ReviewedAtUtc);
+            report.ReviewedAtUtc, report.ReviewedByUserId?.Value);
 
     public static AdminContentReportModel ToAdminModel(this ContentReportAdminReadModel report) =>
         new(
@@ -27,5 +27,5 @@ public static class AdminContentReportMappings {
             report.Status,
             report.AdminNote,
             report.CreatedOnUtc,
-            report.ReviewedAtUtc);
+            report.ReviewedAtUtc, report.ReviewedByUserId, report.TargetTitle, report.TargetExcerpt);
 }

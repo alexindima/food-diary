@@ -28,6 +28,6 @@ public static class AdminAchievementDefinitionsHttpMappings {
     extension(AchievementDefinitionAdminModel model) {
         public AdminAchievementDefinitionHttpResponse ToHttpResponse() =>
             new(model.Id, model.Key, model.Category, model.Metric, model.Threshold, model.TitleRu, model.TitleEn,
-                model.DescriptionRu, model.DescriptionEn, model.Icon, model.SortOrder, model.IsActive, model.Version);
+                model.DescriptionRu, model.DescriptionEn, model.Icon, model.SortOrder, model.IsActive, model.Version, model.AwardedUsers);
     }
 }

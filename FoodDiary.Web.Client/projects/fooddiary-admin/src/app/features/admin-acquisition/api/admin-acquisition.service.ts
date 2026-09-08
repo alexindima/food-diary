@@ -5,6 +5,7 @@ import { map } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import type { MarketingAttributionSummary } from '../models/admin-acquisition.data';
+import type { MarketingAttributionRange } from '../models/admin-acquisition-range';
 
 export const DEFAULT_ACQUISITION_WINDOW_HOURS = 720;
 
@@ -15,6 +16,10 @@ type CompatibleMarketingAttributionSummary = Omit<MarketingAttributionSummary, '
 export class AdminAcquisitionService {
     private readonly http = inject(HttpClient);
     private readonly summaryUrl = `${environment.apiUrls.auth.replace(/\/auth$/, '')}/admin/acquisition/summary`;
+
+    public getRange(params: Record<string, string | number>): Observable<MarketingAttributionRange> {
+        return this.http.get<MarketingAttributionRange>(this.summaryUrl.replace(/\/summary$/, '/range'), { params });
+    }
 
     public getSummary(hours: number = DEFAULT_ACQUISITION_WINDOW_HOURS): Observable<MarketingAttributionSummary> {
         return this.http.get<CompatibleMarketingAttributionSummary>(this.summaryUrl, { params: { hours } }).pipe(

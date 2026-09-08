@@ -9,4 +9,4 @@ public sealed record GetAdminUserLoginEventsQuery(
     int Page,
     int Limit,
     Guid? UserId,
-    string? Search) : IQuery<Result<PagedResponse<AdminUserLoginEventModel>>>;
+    string? Search, DateTimeOffset? FromUtc = null, DateTimeOffset? ToUtc = null, string? Provider = null, string? Device = null) : IQuery<Result<PagedResponse<AdminUserLoginEventModel>>>;

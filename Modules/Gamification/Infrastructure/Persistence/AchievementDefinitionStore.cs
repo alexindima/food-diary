@@ -6,6 +6,11 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Modules.Gamification.Infrastructure.Persistence;
 
 public sealed class AchievementDefinitionStore(FoodDiaryDbContext context) : IAchievementDefinitionStore {
+    public async Task<IReadOnlyDictionary<string, int>> GetAwardCountsAsync(CancellationToken cancellationToken = default) =>
+        await context.UserAchievements.AsNoTracking().GroupBy(item => item.AchievementKey)
+            .Select(group => new { group.Key, Count = group.Select(item => item.UserId).Distinct().Count() })
+            .ToDictionaryAsync(item => item.Key, item => item.Count, StringComparer.Ordinal, cancellationToken).ConfigureAwait(false);
+
     public async Task<IReadOnlyList<AchievementDefinition>> GetAllAsync(CancellationToken cancellationToken = default) =>
         await context.AchievementDefinitions.AsNoTracking().OrderBy(item => item.SortOrder).ThenBy(item => item.Key)
             .ToListAsync(cancellationToken).ConfigureAwait(false);

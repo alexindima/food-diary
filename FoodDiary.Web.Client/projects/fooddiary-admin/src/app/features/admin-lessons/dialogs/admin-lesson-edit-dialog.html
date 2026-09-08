@@ -1,4 +1,6 @@
 <div class="lesson-edit-dialog fd-grid fd-gap-md">
+    <fd-ui-checkbox [formField]="form.isPublished">{{ 'ADMIN_LESSONS.PUBLISHED' | translate }}</fd-ui-checkbox>
+    <p>{{ 'ADMIN_LESSONS.PUBLICATION_HELP' | translate }}</p>
     <div class="form-row">
         <fd-ui-input label="Title" [formField]="form.title" />
     </div>

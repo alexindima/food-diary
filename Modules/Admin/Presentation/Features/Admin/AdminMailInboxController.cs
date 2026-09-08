@@ -20,7 +20,7 @@ public sealed class AdminMailInboxController(ISender mediator) : BaseApiControll
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> GetPage([FromQuery] GetAdminMailInboxMessagePageHttpQuery query) =>
         HandleOk(query.ToQuery(),
-            static value => new AdminMailInboxMessagePageHttpResponse(value.Items.Select(item => item.ToHttpResponse()).ToList(), value.TotalItems));
+            static value => new AdminMailInboxMessagePageHttpResponse(value.Items.Select(item => item.ToHttpResponse()).ToList(), value.TotalItems, value.UnreadCount, value.ReadCount));
 
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<AdminMailInboxMessageSummaryHttpResponse>>(StatusCodes.Status200OK)]

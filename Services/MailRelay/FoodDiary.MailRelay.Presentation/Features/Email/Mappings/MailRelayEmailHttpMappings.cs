@@ -57,7 +57,8 @@ public static class MailRelayEmailHttpMappings {
             request.HtmlBody,
             request.TextBody,
             request.CorrelationId,
-            request.IdempotencyKey);
+            request.IdempotencyKey,
+            Purpose: request.Purpose, ReplyTo: request.ReplyTo, InReplyTo: request.InReplyTo, AutoSubmitted: request.AutoSubmitted);
 
     public static IngestMailEventRequest ToApplicationRequest(this IngestMailRelayDeliveryEventHttpRequest request) =>
         new(

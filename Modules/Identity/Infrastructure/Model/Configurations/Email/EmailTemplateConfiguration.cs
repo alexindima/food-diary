@@ -6,6 +6,17 @@ namespace FoodDiary.Infrastructure.Persistence.Configurations.Email;
 
 internal sealed class EmailTemplateConfiguration : IEntityTypeConfiguration<EmailTemplate> {
     public void Configure(EntityTypeBuilder<EmailTemplate> builder) {
+        builder.OwnsMany(e => e.Revisions, revisions => {
+            revisions.ToTable("EmailTemplateRevisions");
+            revisions.WithOwner().HasForeignKey("TemplateId");
+            revisions.HasKey(e => e.Id);
+            revisions.Property(e => e.Id).ValueGeneratedNever();
+            revisions.Property(e => e.Subject).HasMaxLength(256).IsRequired();
+            revisions.Property(e => e.HtmlBody).IsRequired();
+            revisions.Property(e => e.TextBody).IsRequired();
+            revisions.HasIndex("TemplateId", nameof(EmailTemplateRevision.ArchivedOnUtc));
+        });
+        builder.Navigation(e => e.Revisions).AutoInclude(autoInclude: false);
         builder.Property(e => e.Key)
             .IsRequired()
             .HasMaxLength(64);

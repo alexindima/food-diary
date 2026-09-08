@@ -1,0 +1,12 @@
+<div class="fd-row fd-wrap fd-gap-sm fd-align-end">
+    <fd-ui-select [label]="label() | translate" [value]="preset()" [options]="presets()" (valueChange)="select($event)" />
+    @if (preset() === 'custom') {
+        <fd-ui-date-input [label]="'ADMIN_OVERVIEW.FROM' | translate" [max]="today" [(value)]="from" />
+        <fd-ui-date-input [label]="'ADMIN_OVERVIEW.TO' | translate" [max]="today" [(value)]="to" />
+        <fd-ui-button (click)="apply()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
+    }
+</div>
+<p class="fd-ui-body-xs">{{ 'ADMIN_COMMON.UTC' | translate }}</p>
+@if (invalid()) {
+    <p role="alert">{{ 'ADMIN_COMMON.INVALID_PERIOD' | translate }}</p>
+}

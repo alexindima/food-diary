@@ -9,6 +9,14 @@ namespace FoodDiary.Application.Admin.Services;
 
 internal sealed class AdminUserReadService(
     IUserAdministrationReadService userAdministrationReadService) : IAdminUserReadService {
+    public async Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> GetFilteredPagedAsync(
+        string? search, int page, int limit, UserAccountStatusFilter status,
+        UserAdministrationFilter filter, CancellationToken cancellationToken) {
+        (IReadOnlyList<UserAdminReadModel> items, int totalItems) = await userAdministrationReadService
+            .GetFilteredPagedAsync(search, page, limit, status, filter, cancellationToken).ConfigureAwait(false);
+        return ([.. items.Select(AdminUserMappings.ToAdminModel)], totalItems);
+    }
+
     public async Task<AdminUserModel?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) {
         UserAdminReadModel? user = await userAdministrationReadService
             .GetByIdIncludingDeletedAsync(userId, cancellationToken)

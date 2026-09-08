@@ -14,7 +14,7 @@ public sealed class AdminAiUsageReadService(
     public async Task<Result<AdminAiUsageSummaryModel>> GetSummaryAsync(
         DateOnly? from,
         DateOnly? to,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken, Guid? userId = null) {
         var today = DateOnly.FromDateTime(dateTimeProvider.GetUtcNow().UtcDateTime);
         DateOnly periodFrom = from ?? today.AddDays(-29);
         DateOnly periodTo = to ?? today.AddDays(1);
@@ -26,7 +26,9 @@ public sealed class AdminAiUsageReadService(
         var fromUtc = periodFrom.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
         var toUtc = periodTo.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
 
-        AiUsageSummary summary = await aiReadService.GetUsageSummaryAsync(fromUtc, toUtc, cancellationToken).ConfigureAwait(false);
+        AiUsageSummary summary = userId.HasValue
+            ? await aiReadService.GetUsageSummaryForUserAsync(fromUtc, toUtc, userId.Value, cancellationToken).ConfigureAwait(false)
+            : await aiReadService.GetUsageSummaryAsync(fromUtc, toUtc, cancellationToken).ConfigureAwait(false);
 
         var response = new AdminAiUsageSummaryModel(
             summary.TotalTokens,

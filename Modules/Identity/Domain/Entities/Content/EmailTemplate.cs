@@ -5,6 +5,8 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Domain.Entities.Content;
 
 public sealed class EmailTemplate : Entity<Guid> {
+    private readonly List<EmailTemplateRevision> _revisions = [];
+    public IReadOnlyCollection<EmailTemplateRevision> Revisions => _revisions;
     private const int KeyMaxLength = 64;
     private const int LocaleMaxLength = 8;
     private const int SubjectMaxLength = 256;
@@ -61,6 +63,7 @@ public sealed class EmailTemplate : Entity<Guid> {
             return;
         }
 
+        _revisions.Add(EmailTemplateRevision.Capture(this));
         Subject = normalizedSubject;
         HtmlBody = normalizedHtmlBody;
         TextBody = normalizedTextBody;

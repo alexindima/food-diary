@@ -4,6 +4,10 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Abstractions.Users.Common;
 
 public interface IUserAdminReadModelRepository {
+    Task<(IReadOnlyList<UserAdminReadModel> Items, int TotalItems)> GetFilteredPagedReadModelsAsync(
+        string? search, int page, int limit, UserAccountStatusFilter status,
+        UserAdministrationFilter filter, CancellationToken cancellationToken);
+
     Task<UserAdminReadModel?> GetByIdIncludingDeletedReadModelAsync(
         UserId id,
         CancellationToken cancellationToken = default);

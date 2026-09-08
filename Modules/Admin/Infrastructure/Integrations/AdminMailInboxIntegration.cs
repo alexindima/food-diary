@@ -30,6 +30,18 @@ public static class AdminMailInboxIntegration {
                 options.AllowInsecureLoopback = section.GetValue<bool>("AllowInsecureLoopback");
             });
             services.AddScoped<IAdminMailInboxReader, MailInboxClientAdminMailInboxReader>();
+            services.AddHttpClient<FoodDiary.MailInbox.Client.Export.IMailInboxExportClient, FoodDiary.MailInbox.Client.Export.MailInboxExportClient>((provider, client) => {
+                MailInboxClientOptions options = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<MailInboxClientOptions>>().Value;
+                client.BaseAddress = new Uri(options.BaseUrl);
+                client.Timeout = options.Timeout;
+            }).ConfigurePrimaryHttpMessageHandler(static () => new HttpClientHandler { AllowAutoRedirect = false });
+            services.AddScoped<FoodDiary.Application.Admin.Services.BugAcknowledgementService>();
+            services.AddScoped<IBugAcknowledgementReceipts, BugAcknowledgementReceipts>();
+            services.AddScoped<FoodDiary.Application.Abstractions.Admin.Common.IBugAcknowledgementSource, BugAcknowledgementSource>();
+            services.AddOptions<BugAcknowledgementOptions>().Bind(configuration.GetSection("BugAcknowledgement"))
+                .Validate(x => x.PollInterval >= TimeSpan.FromSeconds(10) && x.PollInterval <= TimeSpan.FromDays(1), "Invalid acknowledgement poll interval.")
+                .ValidateOnStart();
+            services.AddHostedService<BugAcknowledgementWorker>();
         }
 
         return services;

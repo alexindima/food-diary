@@ -4,5 +4,5 @@ using FoodDiary.Application.Admin.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 
-public sealed record GetAdminAiUsageSummaryQuery(DateOnly? From, DateOnly? To)
+public sealed record GetAdminAiUsageSummaryQuery(DateOnly? From, DateOnly? To, Guid? UserId = null)
     : IQuery<Result<AdminAiUsageSummaryModel>>;

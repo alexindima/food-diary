@@ -144,7 +144,7 @@ public sealed class DietologistEmailSender(
             [toEmail],
             subject,
             htmlBody,
-            string.IsNullOrWhiteSpace(textBody) ? null : textBody);
+            string.IsNullOrWhiteSpace(textBody) ? null : textBody, Purpose: "dietologist_invitation");
 
         await emailOutbox.EnqueueAsync(message, cancellationToken).ConfigureAwait(false);
     }

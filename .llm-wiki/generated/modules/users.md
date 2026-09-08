@@ -38,13 +38,13 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: project-reference-matrix-and-module-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent, WeightGoal, WaistGoal
-- Public contract files: 71
+- Public contract files: 72
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 71
+- Public contract types: 72
 - Interfaces: 33
 - DTO/read-model/projection types: 33
 - Enums: 2
@@ -80,7 +80,7 @@ No literal attribute-routed controller was associated with this module.
 - `interface IUserLookupRepository`
 - `interface IUserNotificationProfileService`
 - `interface IUserProfileImageService`
-- ... 41 more type(s)
+- ... 42 more type(s)
 
 ## Extraction Readiness
 

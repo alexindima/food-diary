@@ -46,17 +46,21 @@
     {
       "pageId": "module.mail-services",
       "pagePath": ".llm-wiki/modules/mail-services.md",
-      "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
+      "pageSha256": "7fecb99ca5086b27f1ca730504147cf60fc560b3b8c7a7716845cd996b83d607",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "32996547dd548b39c14d1e2a9d7159fd7fcb89a9cdef8f6e5b536ec0fb55c0eb"
+          "path": "docs/backend/BUG_TRIAGE.md",
+          "sha256": "7ecf66f99bd1de95fd22b84044f7e80df370bd5603da1f13ace253cf9b3b6b90"
+        },
+        {
+          "path": "docs/backend/OUTGOING_MAIL.md",
+          "sha256": "90b69d106926c662916478310562d2459b3e3710b980b6ca8149652e8e718c63"
         }
       ],
-      "reason": "Reviewed module boundary refactor against owner contracts, PostgreSQL concurrency tests, runtime provider inventory and ADR 0035; no API or schema change.",
+      "reason": "Updated OUTGOING_MAIL rollout: StartAtUtc is optional; missing date scans retained historical mail from UnixEpoch. Internal sender suppression and receipt/relay deduplication remain unchanged; 11 focused tests pass.",
       "baseRef": "HEAD",
-      "gitHead": "0916bb021b20fa57dac7a98c9fac2bf8f0c24a88",
-      "reviewedAtUtc": "2026-09-06T14:57:39.4121333Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T18:00:56.8042906Z"
     },
     {
       "pageId": "module.primary-backend",
@@ -79,18 +83,14 @@
       "pageSha256": "392102fa284f635352d7abba0f8f998cc678c5678a2cf8c72054ab8e4365ee89",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "ea1fe5a5840b8e60766310ff0864cd5213f423559671988c6be84521c3a6b885"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "69a4bd947e2e2dd9ba2194eb343aef18c0b33c08f9b3014d90eeb2d7f1450b0f"
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "c15fde43bfc38ef678702614ee792b6c2d76d852bc0ed51cd4e3dd2c4ec64c55"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:04.6551276Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:32.9176549Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -193,13 +193,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "b087eee0754ece1e801b8259b0b1166a0d1507dc310f2c2027954bb6a497b997"
+          "sha256": "3be835c24a3906cb9a1ddd8526a74ae5b2fd5a1340a1e797858da9c812367802"
         }
       ],
-      "reason": "Reviewed additive mail page endpoint and items/totalItems response; old endpoint preserved. Three OpenAPI snapshots passed after rebuild.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
-      "reviewedAtUtc": "2026-09-08T06:37:36.4098733Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:33.7483207Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -208,13 +208,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "cb362ab4166f6d79f8ba6b5bd0215f5d3c8433ac2766a86894fed755b12c4b63"
+          "sha256": "30323bb162b0dd301483649bd22ed675a46d97f27fa4877a675f601961089ca5"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "c15fde43bfc38ef678702614ee792b6c2d76d852bc0ed51cd4e3dd2c4ec64c55"
         }
       ],
-      "reason": "No new project references or ownership changes; 1202 architecture tests pass. New page types stay in their owning layers.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
-      "reviewedAtUtc": "2026-09-08T06:37:37.5505520Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:34.5375003Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -223,13 +227,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "6f8f4324449410dc1cbddf5d8702d4b8bbcc5d0018e78739bb1864feec7715d1"
+          "sha256": "676e695207c36df243b1e3f50701e81e1b3eadf3870b05ac1281c19a556d2c28"
         }
       ],
-      "reason": "Reviewed page models across MailInbox store, client and Admin reader. All mappings preserve metadata fields; deploy MailInbox before API and frontend. Existing list contracts retained.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
-      "reviewedAtUtc": "2026-09-08T06:37:39.0070954Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:35.6977359Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -520,17 +524,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/configuration-index.json",
-          "sha256": "ac78b4e98684d9dd772255d0cb24fc88fbf84e51cb0f0f9372bf5829677bed0b"
-        },
-        {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
+          "sha256": "af591c69a74cc7e7bb30891fbb176eea3e539906ebf13185f847d7a575c9c78c"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:14.4797546Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:36.3618800Z"
     },
     {
       "pageId": "workflow-developer-experience",
@@ -558,13 +558,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "cacac0c7d0e180b31f847b486f3cab3169c185efea67576154a461269fb5ac20"
+          "sha256": "477860b938c23d778ca6977a42c95af79238cc3891f3f6b3dab658ce7c6f5e78"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:15.3620269Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:37.0561976Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -844,17 +844,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "b36d5edb9f003f124f721e5796f6870b847b348d8ec33c03fa2fa4d43b1dd518"
-        },
-        {
-          "path": "docs/privacy/PRIVACY_RELEASE_CHECKLIST.md",
-          "sha256": "1fb94f920ed3b394d8e752ce264e68a081ce51802bea97d8c70db0fa1fc0428c"
+          "sha256": "55cbaa9fb45f2c6703bfc99216d1d2b12dddd770c24e8af3da2249069fa270e4"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T05:38:26.6309123Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:38.7216407Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -893,13 +889,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2dc08527fb41db7edc4e3b6657045b65e8d829fb7095f19726b4f0f22a1c6984"
+          "sha256": "1fa7e5d2f77e1dc7b130180785b25a61e4515ac572fdadc9bd8b907035deacc7"
         }
       ],
-      "reason": "Added regression tests for PostgreSQL filtered totals and stable pages, validation bounds, client page parameters and frontend pagination; focused suites pass.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
-      "reviewedAtUtc": "2026-09-08T06:37:33.7383571Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:39.7671382Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -976,13 +972,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3e2419c4b1c2f4b882c16f5578ae289badfd2d5b47f7be4a03ce876d9886a2e3"
+          "sha256": "3b92edba57400930902da65b968d0e153b040e5066d00db4c7acbc0392b67084"
         }
       ],
-      "reason": "Read-only metadata page operation retains metadata permission, concurrency filter, timeout and cancellation. No workers, credentials or ingestion changes.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
-      "reviewedAtUtc": "2026-09-08T06:37:32.1652518Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:41.1162596Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -991,17 +987,21 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2dc08527fb41db7edc4e3b6657045b65e8d829fb7095f19726b4f0f22a1c6984"
+          "sha256": "1fa7e5d2f77e1dc7b130180785b25a61e4515ac572fdadc9bd8b907035deacc7"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3e2419c4b1c2f4b882c16f5578ae289badfd2d5b47f7be4a03ce876d9886a2e3"
+          "sha256": "3b92edba57400930902da65b968d0e153b040e5066d00db4c7acbc0392b67084"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "55cbaa9fb45f2c6703bfc99216d1d2b12dddd770c24e8af3da2249069fa270e4"
         }
       ],
-      "reason": "Reviewed new page operation: Admin role and MailInbox metadata permission remain enforced; parameterized filters, bounded page size, no message bodies in page payload.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
-      "reviewedAtUtc": "2026-09-08T06:37:41.4263228Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:41.9394072Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
@@ -1142,17 +1142,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "91f57a06c332b8fd9fd7464dd27aea280c13ce129a0266979812d2e08ccc3797"
+          "sha256": "f9fe028170da3f8d060dcfdf36a90d2d82acd3737d190028d90fe7763dff9625"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "167cb2708c802674486d36a7865022887679f29c143210976207bc0836bb9bb8"
+          "sha256": "23e49fa38f5ca20a3fbf3b11a673ef48f6ac5b0c42a689f9efd0580bd6a68ac0"
         }
       ],
-      "reason": "New mail page API chain and catalog component pagination are reflected in regenerated indexes; trace tooling and public component bindings remain unchanged.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
-      "reviewedAtUtc": "2026-09-08T06:37:42.7608598Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:42.6564007Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1244,13 +1244,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "91f57a06c332b8fd9fd7464dd27aea280c13ce129a0266979812d2e08ccc3797"
+          "sha256": "f9fe028170da3f8d060dcfdf36a90d2d82acd3737d190028d90fe7763dff9625"
         }
       ],
-      "reason": "Four lists use existing pagination primitive. Mail requests server pages; catalog lists slice full data. Browser checks cover page six, filter reset, full lesson export and Russian mobile rendering.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
-      "reviewedAtUtc": "2026-09-08T06:37:40.1720615Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:37.9560626Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1259,13 +1259,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "af025cb6ae8007ff658b6e95795bc64cc5f781a3c98db0fee28b19796b21c61f"
+          "sha256": "59084971011fe827718dad07a35851d593fca8f54ec706a3179dd09381af8af1"
         }
       ],
-      "reason": "Catalog adds the literal MailInbox page route; discovery commands and guidance remain valid, no scanner behavior changed.",
+      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
       "baseRef": "HEAD",
-      "gitHead": "8a735f6550a83bda95427c0dcd980d90bffa48b2",
-      "reviewedAtUtc": "2026-09-08T06:37:35.2474102Z"
+      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
+      "reviewedAtUtc": "2026-09-08T21:31:40.4472979Z"
     },
     {
       "pageId": "workflow.review-diff",

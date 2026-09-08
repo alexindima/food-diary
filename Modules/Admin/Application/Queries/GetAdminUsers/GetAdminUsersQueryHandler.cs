@@ -15,7 +15,9 @@ public sealed class GetAdminUsersQueryHandler(IAdminUserReadService userReadServ
         int page = PaginationPolicy.NormalizePage(query.Page);
         int limit = PaginationPolicy.NormalizePageSizeOrDefault(query.Limit);
 
-        (IReadOnlyList<AdminUserModel> items, int totalItems) = await userReadService.GetPagedAsync(query.Search, page, limit, query.Status, cancellationToken).ConfigureAwait(false);
+        (IReadOnlyList<AdminUserModel> items, int totalItems) = query.Filter is null
+            ? await userReadService.GetPagedAsync(query.Search, page, limit, query.Status, cancellationToken).ConfigureAwait(false)
+            : await userReadService.GetFilteredPagedAsync(query.Search, page, limit, query.Status, query.Filter, cancellationToken).ConfigureAwait(false);
         int totalPages = (int)Math.Ceiling(totalItems / (double)limit);
         var response = new PagedResponse<AdminUserModel>(items, page, limit, totalPages, totalItems);
         return Result.Success(response);

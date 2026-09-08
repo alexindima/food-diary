@@ -1,7 +1,9 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { form, FormField, maxLength, min, required } from '@angular/forms/signals';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
@@ -20,6 +22,7 @@ type LessonFormModel = {
     difficulty: string;
     estimatedReadMinutes: number;
     sortOrder: number;
+    isPublished: boolean;
 };
 
 const TITLE_MAX_LENGTH = 256;
@@ -32,7 +35,16 @@ const DEFAULT_SORT_ORDER = 0;
 
 @Component({
     selector: 'fd-admin-lesson-edit-dialog',
-    imports: [DecimalPipe, FormField, FdUiInputComponent, FdUiTextareaComponent, FdUiButtonComponent, FdUiSelectComponent],
+    imports: [
+        TranslatePipe,
+        FdUiCheckboxComponent,
+        DecimalPipe,
+        FormField,
+        FdUiInputComponent,
+        FdUiTextareaComponent,
+        FdUiButtonComponent,
+        FdUiSelectComponent,
+    ],
     templateUrl: './admin-lesson-edit-dialog.html',
     styleUrl: './admin-lesson-edit-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,6 +76,7 @@ export class AdminLessonEditDialogComponent {
         estimatedReadMinutes:
             this.data.estimatedReadMinutes > DEFAULT_SORT_ORDER ? this.data.estimatedReadMinutes : DEFAULT_ESTIMATED_READ_MINUTES,
         sortOrder: this.data.sortOrder,
+        isPublished: this.data.isPublished ?? !this.isNew,
     });
     protected readonly form = form(this.formModel, path => {
         required(path.title);
@@ -99,6 +112,7 @@ export class AdminLessonEditDialogComponent {
             difficulty: value.difficulty,
             estimatedReadMinutes: value.estimatedReadMinutes,
             sortOrder: value.sortOrder,
+            isPublished: value.isPublished,
         };
 
         const operation = this.isNew ? this.lessonsFacade.create(request) : this.lessonsFacade.update(this.data.id, request);

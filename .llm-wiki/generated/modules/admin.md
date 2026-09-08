@@ -43,14 +43,14 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: module-root
 - Architecture guardrails: assembly-isolated
 - Declared owned entities: AdminImpersonationSession
-- Public contract files: 28
+- Public contract files: 39
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 28
-- Interfaces: 10
+- Public contract types: 39
+- Interfaces: 14
 - DTO/read-model/projection types: 12
 - Enums: 0
 - Exported repository-shaped contracts: 7
@@ -58,31 +58,34 @@ No literal attribute-routed controller was associated with this module.
 - `class AdminMailInboxErrors`
 - `interface IAdminBillingReadRepository`
 - `interface IAdminBillingRepository`
+- `interface IAdminBugReportReader`
 - `interface IAdminDashboardMetricsReader`
 - `interface IAdminImpersonationHandoffService`
 - `interface IAdminImpersonationSessionReadRepository`
 - `interface IAdminImpersonationSessionRepository`
 - `interface IAdminImpersonationSessionWriteRepository`
 - `interface IAdminMailInboxReader`
+- `interface IAdminRetentionReader`
 - `interface IAdminUserRoleAuditReadRepository`
 - `interface IAdminUserRoleAuditRepository`
+- `interface IBugAcknowledgementReceipts`
+- `interface IBugAcknowledgementSource`
 - `record AdminBillingListFilter`
 - `record AdminBillingPaymentReadModel`
 - `record AdminBillingRevenueCurrencyReadModel`
 - `record AdminBillingRevenueSummaryReadModel`
 - `record AdminBillingSubscriptionReadModel`
 - `record AdminBillingWebhookEventReadModel`
+- `record AdminBugReportEntry`
+- `record AdminBugReportFilter`
+- `record AdminBugReportPage`
 - `record AdminDashboardMetrics`
 - `record AdminDashboardRevenuePoint`
 - `record AdminDashboardTrend`
 - `record AdminImpersonationSessionReadModel`
 - `record AdminMailInboxDmarcRecordModel`
 - `record AdminMailInboxDmarcReportModel`
-- `record AdminMailInboxMessageDetailsModel`
-- `record AdminMailInboxMessagePageModel`
-- `record AdminMailInboxMessageSummaryModel`
-- `record AdminUserRoleAuditEventReadModel`
-- `record ExchangeAdminImpersonationCommand`
+- ... 9 more type(s)
 
 ## Focused Tests
 
@@ -105,19 +108,19 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/GetCollaborationAuditQueryHandlerTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/UserLoginActivityFeatureTests.cs`
+- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/BugAcknowledgementServiceTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/FeatureErrorContractTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Support/ResultAssert.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Domain.Tests/Domain/AdminInvariantTests.cs`
 - [integration] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminDashboardMetricsIntegrationTests.cs`
+- [integration] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminRetentionIntegrationTests.cs`
 - [integration] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/AdminUserRoleAuditRepositoryIntegrationTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/AdminPersistenceRegistrationTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Authentication/AdminImpersonationHandoffServiceTests.cs`
+- [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementSourceTests.cs`
 - [behavioral-or-text-match] `Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/MailInboxAdminReaderTests.cs`
 - [presentation] `Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminAchievementDefinitionsControllerTests.cs`
 - [presentation] `Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs`
-- [presentation] `Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminDashboardOverviewTests.cs`
-- [presentation] `Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminHttpMappingsTests.cs`
-- [behavioral-or-text-match] `Modules/Identity/tests/FoodDiary.Modules.Identity.Infrastructure.Tests/Authentication/AdminSsoProtocolTests.cs`
 
 ## Working Rule
 

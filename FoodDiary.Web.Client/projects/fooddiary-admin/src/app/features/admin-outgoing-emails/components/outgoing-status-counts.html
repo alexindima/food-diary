@@ -1,0 +1,10 @@
+@if (counts() !== null) {
+    <p>{{ 'ADMIN_OUTGOING.STATUS_COUNTS_HELP' | translate }}</p>
+    <div class="fd-row fd-wrap fd-gap-sm">
+        @for (entry of entries(); track entry.status) {
+            <fd-ui-button type="button" variant="secondary" (click)="selected.emit(entry.status)"
+                >{{ `ADMIN_OUTGOING.STATUSES.${entry.status}` | translate }}: {{ entry.count }}</fd-ui-button
+            >
+        }
+    </div>
+}

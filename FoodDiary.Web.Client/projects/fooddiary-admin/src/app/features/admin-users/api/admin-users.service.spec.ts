@@ -59,7 +59,7 @@ describe('AdminUsersService', () => {
             totalItems: number;
         };
 
-        service.getUsers(USERS_PAGE, USERS_LIMIT, 'alex', 'inactive').subscribe(result => {
+        service.getUsers(USERS_PAGE, USERS_LIMIT, 'alex', { status: 'inactive' }).subscribe(result => {
             expect(result.items).toEqual(response.data);
             expect(result.page).toBe(USERS_PAGE);
             expect(result.limit).toBe(USERS_LIMIT);
@@ -135,7 +135,7 @@ describe('AdminUsersService', () => {
     });
 
     it('should filter login events by user id', () => {
-        service.getLoginEvents(LOGIN_EVENTS_PAGE, LOGIN_EVENTS_LIMIT, null, 'u1').subscribe(result => {
+        service.getLoginEvents(LOGIN_EVENTS_PAGE, LOGIN_EVENTS_LIMIT, null, { userId: 'u1' }).subscribe(result => {
             expect(result.items).toEqual([]);
         });
 

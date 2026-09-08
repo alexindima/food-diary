@@ -169,7 +169,7 @@ export class AdminUserDetailsDialogComponent {
 
     private loadActivity(userId: string): void {
         forkJoin({
-            loginEvents: this.usersService.getLoginEvents(1, ACTIVITY_PREVIEW_LIMIT, null, userId),
+            loginEvents: this.usersService.getLoginEvents(1, ACTIVITY_PREVIEW_LIMIT, null, { userId }),
             roleAuditEvents: this.usersService.getUserRoleAudit(userId),
         })
             .pipe(takeUntilDestroyed(this.destroyRef))

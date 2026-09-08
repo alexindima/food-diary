@@ -112,6 +112,8 @@ public sealed class AchievementAwardServiceTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryAchievementDefinitionStore : IAchievementDefinitionStore {
+        public Task<IReadOnlyDictionary<string, int>> GetAwardCountsAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<string, int>>(new Dictionary<string, int>(StringComparer.Ordinal));
         public IReadOnlyList<AchievementDefinition> Definitions { get; } = [
             AchievementDefinition.Create("streak_3", "streak", AchievementMetric.LongestStreak, 3, "Streak 3 RU", "Streak 3", "Description RU", "Description", "fire", 1),
             AchievementDefinition.Create("meals_10", "meals", AchievementMetric.TotalMeals, 10, "10 meals RU", "10 meals", "Description RU", "Description", "restaurant", 2),

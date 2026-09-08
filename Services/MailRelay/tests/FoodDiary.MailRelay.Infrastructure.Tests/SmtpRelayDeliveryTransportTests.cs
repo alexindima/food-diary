@@ -33,9 +33,12 @@ public sealed class SmtpRelayDeliveryTransportTests {
             "Subject",
             "<p>Hello <strong>world</strong></p>",
             TextBody: null,
-            MessageId: "queued-message@example.com"), CancellationToken.None);
+            MessageId: "queued-message@example.com", ReplyTo: "bugs@example.com", InReplyTo: "report@example.com", AutoSubmitted: true), CancellationToken.None);
 
         string data = await server.WaitForMessageDataAsync();
+        Assert.Contains("Reply-To: bugs@example.com", data, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("In-Reply-To: <report@example.com>", data, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Auto-Submitted: auto-replied", data, StringComparison.OrdinalIgnoreCase);
         Assert.True(server.Authenticated);
         Assert.Contains("From: Sender <sender@example.com>", data, StringComparison.Ordinal);
         Assert.Contains("To: recipient@example.com", data, StringComparison.Ordinal);

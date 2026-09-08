@@ -17,4 +17,9 @@ export const adminUsersRoutes: Routes = [
         loadComponent: async () => import('./pages/admin-impersonation-sessions-page').then(m => m.AdminImpersonationSessionsPageComponent),
         canActivate: [adminAuthGuard],
     },
+    {
+        path: ':id',
+        loadComponent: async () => import('./pages/admin-user-page').then(m => m.AdminUserPageComponent),
+        canActivate: [adminAuthGuard],
+    },
 ];

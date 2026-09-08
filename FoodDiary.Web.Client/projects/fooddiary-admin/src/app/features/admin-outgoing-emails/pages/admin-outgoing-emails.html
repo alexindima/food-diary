@@ -1,0 +1,67 @@
+<div class="fd-grid fd-gap-md">
+    <fd-admin-period />
+    <fd-outgoing-status-counts [counts]="statusCounts()" (selected)="status.set($event); load(true)" />
+    <div class="mail-filters fd-row fd-gap-sm fd-wrap">
+        <fd-ui-input
+            [label]="'ADMIN_OUTGOING.RECIPIENT' | translate"
+            [value]="recipient()"
+            (valueChange)="recipient.set($event?.toString() || '')"
+        />
+        <fd-ui-select
+            [label]="'ADMIN_OUTGOING.PURPOSE' | translate"
+            [value]="purpose()"
+            [options]="purposeOptions()"
+            (valueChange)="purpose.set($event?.toString() || ''); load(true)"
+        />
+        <fd-ui-select
+            [label]="'ADMIN_OUTGOING.STATUS' | translate"
+            [value]="status()"
+            [options]="statusOptions()"
+            (valueChange)="status.set($event?.toString() || ''); load(true)"
+        />
+        <fd-ui-button (click)="load(true)">{{ 'ADMIN_OUTGOING.REFRESH' | translate }}</fd-ui-button>
+    </div>
+    <p class="fd-ui-body-sm">{{ 'ADMIN_OUTGOING.SENT_NOTE' | translate }}</p>
+    @if (loading()) {
+        <p role="status">{{ 'ADMIN_OUTGOING.LOADING' | translate }}</p>
+    } @else if (failed()) {
+        <p role="alert">{{ 'ADMIN_OUTGOING.ERROR' | translate }}</p>
+    } @else {
+        <div class="mail-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ 'ADMIN_OUTGOING.DATE' | translate }}</th>
+                        <th>{{ 'ADMIN_OUTGOING.RECIPIENT' | translate }}</th>
+                        <th>{{ 'ADMIN_OUTGOING.PURPOSE' | translate }}</th>
+                        <th>{{ 'ADMIN_OUTGOING.STATUS' | translate }}</th>
+                        <th>{{ 'ADMIN_OUTGOING.DETAILS' | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (mail of messages(); track mail.id) {
+                        <tr>
+                            <td>{{ mail.createdAtUtc | date: 'short' }}</td>
+                            <td>{{ mail.to.join(', ') }}</td>
+                            <td>{{ `ADMIN_OUTGOING.PURPOSES.${mail.purpose}` | translate }}</td>
+                            <td>{{ `ADMIN_OUTGOING.STATUSES.${mail.status}` | translate }}</td>
+                            <td>
+                                <a routerLink="." queryParamsHandling="merge" [queryParams]="{ id: mail.id, page: 1 }">{{
+                                    'ADMIN_OUTGOING.OPEN' | translate
+                                }}</a>
+                            </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="5">{{ 'ADMIN_OUTGOING.EMPTY' | translate }}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <fd-ui-pagination [length]="total()" [pageSize]="50" [pageIndex]="page() - 1" (pageIndexChange)="goToPage($event)" />
+    }
+    @if (selected(); as mail) {
+        <fd-outgoing-email-details [mail]="mail" (closed)="closeDetails()" />
+    }
+</div>

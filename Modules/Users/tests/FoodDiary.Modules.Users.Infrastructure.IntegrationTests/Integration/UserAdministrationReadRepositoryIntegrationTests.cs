@@ -14,6 +14,31 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task GetFilteredPagedReadModelsAsync_CombinesRegistrationConfirmationAndRoleBeforePaging() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var first = User.Create("first-period@example.com", "hash");
+        var second = User.Create("second-period@example.com", "hash");
+        var outside = User.Create("outside-period@example.com", "hash");
+        Role premium = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
+        first.ReplaceRoles([premium]);
+        second.ReplaceRoles([premium]);
+        outside.ReplaceRoles([premium]);
+        context.Users.AddRange(first, second, outside);
+        var start = new DateTime(2026, 8, 1, 0, 0, 0, DateTimeKind.Utc);
+        context.Entry(first).Property(user => user.CreatedOnUtc).CurrentValue = start;
+        context.Entry(second).Property(user => user.CreatedOnUtc).CurrentValue = start.AddHours(1);
+        context.Entry(outside).Property(user => user.CreatedOnUtc).CurrentValue = start.AddDays(1);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new UserAdministrationReadRepository(context);
+        var filter = new UserAdministrationFilter(new DateOnly(2026, 8, 1), new DateOnly(2026, 8, 1), RoleNames.Premium, EmailConfirmed: false);
+        (IReadOnlyList<UserAdminReadModel> items, int total) = await repository.GetFilteredPagedReadModelsAsync(search: null, page: 2, limit: 1, UserAccountStatusFilter.Active, filter, CancellationToken.None);
+        Assert.Equal(2, total);
+        Assert.Equal(first.Id.Value, Assert.Single(items).Id);
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+
+    [RequiresDockerFact]
     public async Task GetPagedReadModelsAsync_PreservesStatusOrderingPagingAndDetachedRoles() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var oldest = User.Create("oldest@example.com", "hash");

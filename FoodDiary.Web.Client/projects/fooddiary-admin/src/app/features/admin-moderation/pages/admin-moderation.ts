@@ -1,10 +1,19 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, LOCALE_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FdUiInputComponent, FdUiSelectComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
+import type { Subscription } from 'rxjs';
 
+import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { adminPeriod, adminUtcPeriod } from '../../../shared/period/admin-period';
+import { AdminPeriodControlComponent } from '../../../shared/period/admin-period-control';
+import { adminPage, adminQueryValue } from '../../../shared/period/admin-query';
+import { AdminModerationContextComponent } from '../components/admin-moderation-context';
 import {
     AdminModerationActionDialogComponent,
     type AdminModerationActionDialogData,
@@ -24,12 +33,29 @@ const ADMIN_MODERATION_PAGE_SIZE = 20;
 
 @Component({
     selector: 'fd-admin-moderation',
-    imports: [CommonModule, FdUiButtonComponent, FdUiPaginationComponent],
+    imports: [
+        AdminPeriodControlComponent,
+        AdminModerationContextComponent,
+        TranslatePipe,
+        FdUiInputComponent,
+        FdUiSelectComponent,
+        AdminLoadErrorComponent,
+        CommonModule,
+        FdUiButtonComponent,
+        FdUiPaginationComponent,
+    ],
     templateUrl: './admin-moderation.html',
     styleUrl: './admin-moderation.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminModerationComponent {
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
+    private request?: Subscription;
+    protected readonly targetType = signal('');
+    protected readonly reporterId = signal('');
+    protected readonly targetId = signal('');
+    protected readonly loadFailed = signal(false);
     private readonly moderationFacade = inject(AdminModerationFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
@@ -52,13 +78,34 @@ export class AdminModerationComponent {
     protected readonly statusFilter = signal<string>('Pending');
 
     public constructor() {
-        this.loadReports();
+        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
+            this.statusFilter.set(params.get('status') ?? 'Pending');
+            this.targetType.set(params.get('targetType') ?? '');
+            this.reporterId.set(params.get('reporterId') ?? '');
+            this.targetId.set(params.get('targetId') ?? '');
+            this.page.set(adminPage(params.get('page')));
+            this.loadReports();
+        });
     }
 
     protected loadReports(): void {
+        this.request?.unsubscribe();
+        const range = adminPeriod(this.route.snapshot.queryParamMap);
+        if (range === null) {
+            this.reports.set([]);
+            this.totalItems.set(0);
+            this.isLoading.set(false);
+            return;
+        }
+        this.loadFailed.set(false);
         this.isLoading.set(true);
-        this.moderationFacade
-            .getReports(this.page(), this.limit, this.resolveStatusFilter())
+        this.request = this.moderationFacade
+            .getReports(this.page(), this.limit, this.resolveStatusFilter(), {
+                ...adminUtcPeriod(range),
+                targetType: this.targetType(),
+                reporterId: this.reporterId(),
+                targetId: this.targetId(),
+            })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: response => {
@@ -68,6 +115,7 @@ export class AdminModerationComponent {
                     this.isLoading.set(false);
                 },
                 error: () => {
+                    this.loadFailed.set(true);
                     this.reports.set([]);
                     this.totalPages.set(1);
                     this.totalItems.set(0);
@@ -78,8 +126,21 @@ export class AdminModerationComponent {
 
     protected onStatusChange(status: string): void {
         this.statusFilter.set(status);
-        this.page.set(1);
-        this.loadReports();
+        this.applyFilters();
+    }
+
+    protected applyFilters(): void {
+        void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParamsHandling: 'merge',
+            queryParams: {
+                page: 1,
+                status: this.statusFilter(),
+                targetType: adminQueryValue(this.targetType()),
+                reporterId: adminQueryValue(this.reporterId()),
+                targetId: adminQueryValue(this.targetId()),
+            },
+        });
     }
 
     protected getSelectValue(event: Event): string {
@@ -91,8 +152,7 @@ export class AdminModerationComponent {
             return;
         }
 
-        this.page.set(page);
-        this.loadReports();
+        void this.router.navigate([], { relativeTo: this.route, queryParamsHandling: 'merge', queryParams: { page } });
     }
 
     protected openAction(report: AdminContentReport, action: 'review' | 'dismiss'): void {

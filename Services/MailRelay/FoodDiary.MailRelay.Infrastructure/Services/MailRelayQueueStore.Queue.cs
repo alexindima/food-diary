@@ -16,7 +16,7 @@ public sealed partial class MailRelayQueueStore {
                                                   html_body,
                                                   text_body,
                                                   correlation_id,
-                                                  idempotency_key,
+                                                  idempotency_key, purpose, reply_to, in_reply_to, auto_submitted,
                                                   attempt_count,
                                                   max_attempts,
                                                   available_at_utc,
@@ -32,7 +32,7 @@ public sealed partial class MailRelayQueueStore {
                                                   @htmlBody,
                                                   @textBody,
                                                   @correlationId,
-                                                  @idempotencyKey,
+                                                  @idempotencyKey, @purpose, @replyTo, @inReplyTo, @autoSubmitted,
                                                   0,
                                                   @maxAttempts,
                                                   @availableAtUtc,
@@ -100,7 +100,7 @@ public sealed partial class MailRelayQueueStore {
                                                 queue.attempt_count,
                                                 queue.max_attempts,
                                                 queue.created_at_utc,
-                                                null::timestamp with time zone as modified_at_utc;
+                                                null::timestamp with time zone as modified_at_utc, purpose, reply_to, in_reply_to, auto_submitted;
                                             """;
 
     public async Task<Guid> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
@@ -162,6 +162,10 @@ public sealed partial class MailRelayQueueStore {
                 command.Parameters.AddWithValue("textBody", (object?)request.TextBody ?? DBNull.Value);
                 command.Parameters.AddWithValue("correlationId", (object?)request.CorrelationId ?? DBNull.Value);
                 command.Parameters.AddWithValue("idempotencyKey", (object?)request.IdempotencyKey ?? DBNull.Value);
+                command.Parameters.AddWithValue("purpose", request.Purpose);
+                command.Parameters.AddWithValue("replyTo", (object?)request.ReplyTo ?? DBNull.Value);
+                command.Parameters.AddWithValue("inReplyTo", (object?)request.InReplyTo ?? DBNull.Value);
+                command.Parameters.AddWithValue("autoSubmitted", request.AutoSubmitted);
                 command.Parameters.AddWithValue("maxAttempts", _queueOptions.MaxAttempts);
                 command.Parameters.AddWithValue("availableAtUtc", now);
                 command.Parameters.AddWithValue("createdAtUtc", now);
@@ -232,7 +236,7 @@ public sealed partial class MailRelayQueueStore {
                                attempt_count,
                                max_attempts,
                                created_at_utc,
-                               null::timestamp with time zone as modified_at_utc;
+                               null::timestamp with time zone as modified_at_utc, purpose, reply_to, in_reply_to, auto_submitted;
                            """;
 
         return await _executor.QueryAsync(

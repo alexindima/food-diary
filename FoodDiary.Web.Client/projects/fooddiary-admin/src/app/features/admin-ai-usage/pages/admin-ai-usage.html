@@ -1,28 +1,99 @@
+@if (userId(); as id) {
+    <p>
+        <a [routerLink]="['/users', id]">{{ 'ADMIN_COMMON.USER' | translate }}: {{ id }}</a> ·
+        <a routerLink="/ai-usage" queryParamsHandling="merge" [queryParams]="{ userId: null }">{{ 'ADMIN_COMMON.ALL' | translate }}</a>
+    </p>
+}
+<fd-admin-period />
 @if (isLoading()) {
-    <p>Loading AI usage...</p>
+    <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+} @else if (failed()) {
+    <p role="alert">{{ 'ADMIN_COMMON.LOAD_ERROR' | translate }}</p>
+    <fd-ui-button (click)="loadUsage()">{{ 'ADMIN_COMMON.RETRY' | translate }}</fd-ui-button>
 } @else if (usage(); as data) {
     <div class="admin-ai-usage fd-grid fd-gap-md">
-        <fd-ui-card>
-            <div class="stat fd-grid fd-gap-xxs">
-                <div class="fd-ui-body-xs fd-ui-text-muted">Total tokens</div>
-                <div class="stat__value fd-ui-metric-md">{{ data.totalTokens }}</div>
-            </div>
-        </fd-ui-card>
-
-        <fd-ui-card>
-            <div class="stat fd-grid fd-gap-xxs">
-                <div class="fd-ui-body-xs fd-ui-text-muted">Input tokens</div>
-                <div class="stat__value fd-ui-metric-md">{{ data.inputTokens }}</div>
-            </div>
-        </fd-ui-card>
-
-        <fd-ui-card>
-            <div class="stat fd-grid fd-gap-xxs">
-                <div class="fd-ui-body-xs fd-ui-text-muted">Output tokens</div>
-                <div class="stat__value fd-ui-metric-md">{{ data.outputTokens }}</div>
+        <fd-ui-card
+            ><span>{{ 'ADMIN_AI.TOTAL' | translate }}</span
+            ><strong class="fd-ui-metric-md">{{ data.totalTokens | number }}</strong></fd-ui-card
+        >
+        <fd-ui-card
+            ><span>{{ 'ADMIN_AI.INPUT' | translate }}</span
+            ><strong class="fd-ui-metric-md">{{ data.inputTokens | number }}</strong></fd-ui-card
+        >
+        <fd-ui-card
+            ><span>{{ 'ADMIN_AI.OUTPUT' | translate }}</span
+            ><strong class="fd-ui-metric-md">{{ data.outputTokens | number }}</strong></fd-ui-card
+        >
+    </div>
+    <fd-ui-card>
+        <h2>{{ 'ADMIN_AI.DAILY' | translate }}</h2>
+        <fd-ui-line-chart
+            [points]="points()"
+            [minValue]="0"
+            [showAxisLabels]="true"
+            [showGrid]="true"
+            [title]="'ADMIN_AI.TOTAL' | translate"
+        />
+    </fd-ui-card>
+    <div class="fd-grid fd-gap-md">
+        @for (group of breakdowns(); track group.title) {
+            <fd-ui-card
+                ><h2>{{ group.title | translate }}</h2>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>{{ 'ADMIN_COMMON.NAME' | translate }}</th>
+                                <th>{{ 'ADMIN_AI.INPUT' | translate }}</th>
+                                <th>{{ 'ADMIN_AI.OUTPUT' | translate }}</th>
+                                <th>{{ 'ADMIN_AI.TOTAL' | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (row of group.rows; track row.key) {
+                                <tr>
+                                    <td>{{ row.key }}</td>
+                                    <td>{{ row.inputTokens | number }}</td>
+                                    <td>{{ row.outputTokens | number }}</td>
+                                    <td>{{ row.totalTokens | number }}</td>
+                                </tr>
+                            } @empty {
+                                <tr>
+                                    <td colspan="4">{{ 'ADMIN_COMMON.EMPTY' | translate }}</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </fd-ui-card>
+        }
+        <fd-ui-card
+            ><h2>{{ 'ADMIN_AI.USERS' | translate }}</h2>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>{{ 'ADMIN_COMMON.USER' | translate }}</th>
+                            <th>{{ 'ADMIN_AI.TOTAL' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (user of data.byUser; track user.id) {
+                            <tr>
+                                <td>
+                                    <a queryParamsHandling="preserve" [routerLink]="['/users', user.id]">{{ user.email }}</a>
+                                </td>
+                                <td>{{ user.totalTokens | number }}</td>
+                            </tr>
+                        } @empty {
+                            <tr>
+                                <td colspan="2">{{ 'ADMIN_COMMON.EMPTY' | translate }}</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </fd-ui-card>
     </div>
-} @else {
-    <p>No AI usage data available.</p>
+    <p>{{ 'ADMIN_AI.MEASUREMENT_HINT' | translate }}</p>
 }

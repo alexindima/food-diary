@@ -13,4 +13,5 @@ public sealed record AchievementDefinitionAdminModel(
     string Icon,
     int SortOrder,
     bool IsActive,
-    int Version);
+    int Version,
+    int AwardedUsers = 0);

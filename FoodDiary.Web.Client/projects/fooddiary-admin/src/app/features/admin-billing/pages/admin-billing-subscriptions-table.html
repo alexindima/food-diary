@@ -15,7 +15,7 @@
         @for (subscription of items(); track subscription.id) {
             <tr>
                 <td>
-                    <strong>{{ subscription.userEmail }}</strong>
+                    <a [routerLink]="['/users', subscription.userId]">{{ subscription.userEmail }}</a>
                     <span>{{ subscription.userId }}</span>
                 </td>
                 <td>{{ subscription.provider }}</td>
@@ -34,6 +34,12 @@
                 <td>
                     <span>Customer: {{ subscription.externalCustomerIdText }}</span>
                     <span>Sub: {{ subscription.externalSubscriptionIdText }}</span>
+                    <a routerLink="/billing" [queryParams]="{ tab: 'subscriptions', search: subscription.id }">{{
+                        'ADMIN_BILLING.RECORD_LINK' | translate
+                    }}</a>
+                    <a routerLink="/billing" [queryParams]="{ tab: 'payments', search: subscription.id }">{{
+                        'ADMIN_BILLING.PAYMENTS_LINK' | translate
+                    }}</a>
                     <span>PM: {{ subscription.externalPaymentMethodIdText }}</span>
                 </td>
                 <td>{{ subscription.updatedText }}</td>

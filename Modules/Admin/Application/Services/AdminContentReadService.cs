@@ -20,6 +20,17 @@ public sealed class AdminContentReadService(
     IAiAdministrationReadService aiReadService,
     IContentReportAdministrationReadService contentReportReadService)
     : IAdminContentReadService {
+    public async Task<IReadOnlyList<AdminTemplateRevisionModel>> GetTemplateRevisionsAsync(string key, string locale, bool isAiPrompt, CancellationToken cancellationToken) {
+        if (isAiPrompt) {
+            IReadOnlyList<AiPromptRevisionReadModel> revisions = await aiReadService.GetPromptRevisionsAsync(key, locale, cancellationToken).ConfigureAwait(false);
+            return revisions.Select(item => new AdminTemplateRevisionModel(item.Id, Subject: null, HtmlBody: null, item.PromptText,
+                item.IsActive, item.Version, item.SavedOnUtc, item.ArchivedOnUtc)).ToList();
+        }
+        IReadOnlyList<EmailTemplateRevisionReadModel> emails = await emailTemplateReadService.GetRevisionsAsync(key, locale, cancellationToken).ConfigureAwait(false);
+        return emails.Select(item => new AdminTemplateRevisionModel(item.Id, item.Subject, item.HtmlBody, item.TextBody,
+            item.IsActive, Version: null, item.SavedOnUtc, item.ArchivedOnUtc)).ToList();
+    }
+
     public async Task<IReadOnlyList<AdminLessonModel>> GetLessonsAsync(CancellationToken cancellationToken) {
         IReadOnlyList<LessonAdminReadModel> lessons = await lessonReadService
             .GetLessonsAsync(cancellationToken)
@@ -45,9 +56,9 @@ public sealed class AdminContentReadService(
         ReportStatus? status,
         int page,
         int limit,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken, ContentReportAdminFilter? filter = null) {
         (IReadOnlyList<ContentReportAdminReadModel> items, int total) = await contentReportReadService
-            .GetReportsAsync(status, page, limit, cancellationToken)
+            .GetReportsAsync(status, page, limit, cancellationToken, filter)
             .ConfigureAwait(false);
 
         IReadOnlyList<AdminContentReportModel> models = [

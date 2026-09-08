@@ -8,8 +8,10 @@ export type AdminLesson = {
     difficulty: string;
     estimatedReadMinutes: number;
     sortOrder: number;
+    isPublished?: boolean;
     createdOnUtc: string;
     modifiedOnUtc: string | null;
+    completedCount?: number;
 };
 
 export type AdminLessonCreateRequest = {
@@ -21,6 +23,7 @@ export type AdminLessonCreateRequest = {
     difficulty: string;
     estimatedReadMinutes: number;
     sortOrder: number;
+    isPublished?: boolean;
 };
 
 export type AdminLessonUpdateRequest = {
@@ -32,6 +35,7 @@ export type AdminLessonUpdateRequest = {
     difficulty: string;
     estimatedReadMinutes: number;
     sortOrder: number;
+    isPublished?: boolean;
 };
 
 export type AdminLessonsImportRequest = {

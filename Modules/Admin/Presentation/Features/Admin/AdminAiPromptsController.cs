@@ -20,6 +20,14 @@ public sealed class AdminAiPromptsController(ISender mediator) : BaseApiControll
     public Task<IActionResult> GetAll() =>
         HandleOk(AdminHttpQueryMappings.ToAiPromptsQuery(), static value => value.Select(item => item.ToAiPromptHttpResponse()).ToList());
 
+    [HttpGet("{key:maxlength(64)}/{locale:maxlength(10)}/revisions")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    [ProducesResponseType<List<AdminTemplateRevisionHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetRevisions(string key, string locale) =>
+        HandleOk(AdminTemplateRevisionHttpMappings.ToTemplateRevisionsQuery(key, locale, isAiPrompt: true),
+            static value => value.Select(item => item.ToRevisionHttpResponse()).ToList());
+
     [HttpPut("{key:maxlength(64)}/{locale:maxlength(10)}")]
     [ProducesResponseType<AdminAiPromptHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

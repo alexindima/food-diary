@@ -9,4 +9,8 @@ public sealed record RelayEmailMessageRequest(
     string? TextBody,
     string? CorrelationId = null,
     string? IdempotencyKey = null,
-    string? MessageId = null);
+    string? MessageId = null,
+    string Purpose = "other",
+    string? ReplyTo = null,
+    string? InReplyTo = null,
+    bool AutoSubmitted = false);

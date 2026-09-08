@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -17,7 +18,7 @@ type AdminMailInboxMessageDetailsViewModel = AdminMailInboxMessageDetails & {
 export type AdminMailMessageDialogData = { id: string; subject?: string | null; onRead: (id: string, readAtUtc: string) => void };
 @Component({
     selector: 'fd-admin-mail-message-dialog',
-    imports: [CommonModule, TranslatePipe, FdUiButtonComponent, FdUiDialogComponent],
+    imports: [CommonModule, RouterLink, TranslatePipe, FdUiButtonComponent, FdUiDialogComponent],
     templateUrl: './admin-mail-message-dialog.html',
     styleUrl: './admin-mail-message-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

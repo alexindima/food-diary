@@ -22,7 +22,7 @@ public static class AdminBillingHttpResponseMappings {
                     currency.Tax,
                     currency.PaddleFees,
                     currency.PaddleEarnings,
-                    currency.EarningsTrackedPayments))]);
+                    currency.EarningsTrackedPayments))], model.RenewalPaymentRecords, model.ScheduledCancellations);
     }
 
     extension(AdminBillingSubscriptionReadModel model) {

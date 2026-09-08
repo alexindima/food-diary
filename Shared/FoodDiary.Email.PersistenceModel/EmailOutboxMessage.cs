@@ -9,6 +9,11 @@ public sealed class EmailOutboxMessage : IOutboxMessage {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     public Guid Id { get; private set; }
+    public string Purpose { get; private set; } = "other";
+    public string? ReplyTo { get; private set; }
+    public string? InReplyTo { get; private set; }
+    public bool AutoSubmitted { get; private set; }
+    public string? CorrelationId { get; private set; }
     public string FromAddress { get; private set; } = string.Empty;
     public string FromName { get; private set; } = string.Empty;
     public string ToAddressesJson { get; private set; } = "[]";
@@ -45,6 +50,11 @@ public sealed class EmailOutboxMessage : IOutboxMessage {
         DateTime normalizedCreatedOnUtc = NormalizeUtc(createdOnUtc);
         return new EmailOutboxMessage {
             Id = Guid.NewGuid(),
+            Purpose = message.Purpose,
+            ReplyTo = message.ReplyTo,
+            InReplyTo = message.InReplyTo,
+            AutoSubmitted = message.AutoSubmitted,
+            CorrelationId = message.CorrelationId,
             FromAddress = message.FromAddress.Trim(),
             FromName = message.FromName.Trim(),
             ToAddressesJson = JsonSerializer.Serialize(message.ToAddresses.Select(static value => value.Trim()).ToArray(), JsonOptions),
@@ -64,7 +74,8 @@ public sealed class EmailOutboxMessage : IOutboxMessage {
             Subject,
             HtmlBody,
             TextBody,
-            IdempotencyKey: $"fooddiary-email-outbox:{Id:N}");
+            IdempotencyKey: $"fooddiary-email-outbox:{Id:N}",
+            Purpose: Purpose, ReplyTo: ReplyTo, InReplyTo: InReplyTo, AutoSubmitted: AutoSubmitted, CorrelationId: CorrelationId);
 
     public void MarkClaimed(DateTime lockedUntilUtc, string lockedBy) {
         LockedUntilUtc = NormalizeUtc(lockedUntilUtc);
@@ -73,6 +84,9 @@ public sealed class EmailOutboxMessage : IOutboxMessage {
 
     public void MarkProcessed(DateTime processedOnUtc) {
         ProcessedOnUtc = NormalizeUtc(processedOnUtc);
+        ReplyTo = null;
+        InReplyTo = null;
+        CorrelationId = null;
         ToAddressesJson = "[]";
         Subject = string.Empty;
         HtmlBody = string.Empty;
@@ -85,6 +99,9 @@ public sealed class EmailOutboxMessage : IOutboxMessage {
     public void MarkDeadLettered(string error, DateTime deadLetteredOnUtc) {
         AttemptCount++;
         DeadLetteredOnUtc = NormalizeUtc(deadLetteredOnUtc);
+        ReplyTo = null;
+        InReplyTo = null;
+        CorrelationId = null;
         ToAddressesJson = "[]";
         Subject = string.Empty;
         HtmlBody = string.Empty;

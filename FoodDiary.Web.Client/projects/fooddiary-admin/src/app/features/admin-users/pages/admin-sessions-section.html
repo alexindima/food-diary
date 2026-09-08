@@ -32,8 +32,16 @@
                     @for (session of sessions(); track session.id) {
                         <tr>
                             <td>{{ session.startedAtUtc | date: 'medium' }}</td>
-                            <td>{{ session.actorEmail }}</td>
-                            <td>{{ session.targetEmail }}</td>
+                            <td>
+                                <a queryParamsHandling="preserve" [routerLink]="['/users', session.actorUserId]">{{
+                                    session.actorEmail
+                                }}</a>
+                            </td>
+                            <td>
+                                <a queryParamsHandling="preserve" [routerLink]="['/users', session.targetUserId]">{{
+                                    session.targetEmail
+                                }}</a>
+                            </td>
                             <td class="users-table__reason" [title]="session.reason">{{ session.reason }}</td>
                             <td>{{ session.actorIpAddress || '-' }}</td>
                         </tr>

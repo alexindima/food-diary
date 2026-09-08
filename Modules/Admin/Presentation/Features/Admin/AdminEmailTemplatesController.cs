@@ -23,6 +23,14 @@ public sealed class AdminEmailTemplatesController(ISender mediator) : BaseApiCon
     public Task<IActionResult> GetAll() =>
         HandleOk(AdminHttpQueryMappings.ToEmailTemplatesQuery(), static value => value.Select(item => item.ToHttpResponse()).ToList());
 
+    [HttpGet("{key:maxlength(64)}/{locale:maxlength(10)}/revisions")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    [ProducesResponseType<List<AdminTemplateRevisionHttpResponse>>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetRevisions(string key, string locale) =>
+        HandleOk(AdminTemplateRevisionHttpMappings.ToTemplateRevisionsQuery(key, locale, isAiPrompt: false),
+            static value => value.Select(item => item.ToRevisionHttpResponse()).ToList());
+
     [HttpPut("{key:maxlength(64)}/{locale:maxlength(10)}")]
     [ProducesResponseType<AdminEmailTemplateHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

@@ -11,6 +11,8 @@ internal sealed class NutritionLessonConfiguration : IEntityTypeConfiguration<Nu
             id => id.Value,
             value => new NutritionLessonId(value));
 
+        builder.Property(e => e.IsPublished).HasDefaultValue(value: true);
+
         builder.Property(e => e.Title).HasMaxLength(256);
         builder.Property(e => e.Content).HasMaxLength(65536);
         builder.Property(e => e.Summary).HasMaxLength(512);

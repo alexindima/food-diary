@@ -134,6 +134,7 @@ public sealed class MailRelayArchitectureTests {
             ],
             ["Services/MailRelay/FoodDiary.MailRelay.Client"] = [
                 "Extensions",
+                "Journal",
                 "Models",
                 "Options",
             ],
@@ -337,7 +338,8 @@ public sealed class MailRelayArchitectureTests {
                     $"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}",
                     StringComparison.Ordinal))
                 .Where(path => path.Contains($"{Path.DirectorySeparatorChar}{convention.Folder}{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
-                .Where(path => !path.EndsWith(convention.Suffix, StringComparison.Ordinal))
+                .Where(path => !path.EndsWith(convention.Suffix, StringComparison.Ordinal) &&
+                    !(string.Equals(convention.Folder, "Requests", StringComparison.Ordinal) && path.EndsWith("HttpQuery.cs", StringComparison.Ordinal)))
                 .Select(path => Path.GetRelativePath(root, path)))
             .Order(StringComparer.Ordinal)];
 

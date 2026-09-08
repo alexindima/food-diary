@@ -1,0 +1,67 @@
+- generic [ref=e3]:
+  - complementary [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]: FD
+        - generic [ref=e10]:
+          - generic [ref=e11]: FoodDiary
+          - generic [ref=e12]: Admin
+      - navigation [ref=e15]:
+        - link "Dashboard" [ref=e17] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e19]: dashboard
+      - generic [ref=e22]:
+        - button "Users" [expanded] [ref=e23] [cursor=pointer]:
+          - generic [ref=e26]: expand_more
+        - navigation [ref=e27]:
+          - link "Accounts" [ref=e29] [cursor=pointer]:
+            - /url: /users
+            - generic [ref=e31]: group
+          - link "Login activity" [ref=e34] [cursor=pointer]:
+            - /url: /users/login-activity
+            - generic [ref=e36]: login
+          - link "Impersonation sessions" [ref=e39] [cursor=pointer]:
+            - /url: /users/impersonation-sessions
+            - generic [ref=e41]: admin_panel_settings
+      - navigation [ref=e45]:
+        - link "AI usage" [ref=e47] [cursor=pointer]:
+          - /url: /ai-usage
+          - generic [ref=e49]: smart_toy
+        - link "Retention" [ref=e52] [cursor=pointer]:
+          - /url: /analytics/retention
+          - generic [ref=e54]: timeline
+        - link "Audit" [ref=e57] [cursor=pointer]:
+          - /url: /audit
+          - generic [ref=e59]: history
+        - link "Bugs" [ref=e62] [cursor=pointer]:
+          - /url: /bugs
+          - generic [ref=e64]: bug_report
+        - link "AI prompts" [ref=e67] [cursor=pointer]:
+          - /url: /ai-prompts
+          - generic [ref=e69]: edit_note
+        - link "Acquisition" [ref=e72] [cursor=pointer]:
+          - /url: /acquisition
+          - generic [ref=e74]: campaign
+        - link "Billing" [ref=e77] [cursor=pointer]:
+          - /url: /billing
+          - generic [ref=e79]: payments
+        - link "Email templates" [ref=e82] [cursor=pointer]:
+          - /url: /email-templates
+          - generic [ref=e84]: mail
+        - link "Mail" [ref=e87] [cursor=pointer]:
+          - /url: /mail-inbox
+          - generic [ref=e89]: inbox
+        - link "Lessons" [ref=e92] [cursor=pointer]:
+          - /url: /lessons
+          - generic [ref=e94]: school
+        - link "Achievements" [ref=e97] [cursor=pointer]:
+          - /url: /achievements
+          - generic [ref=e99]: emoji_events
+        - link "Moderation" [ref=e102] [cursor=pointer]:
+          - /url: /moderation
+          - generic [ref=e104]: gavel
+  - main [ref=e106]:
+    - generic [ref=e108]:
+      - heading "Access denied" [level=1] [ref=e109]
+      - paragraph [ref=e110]: Your admin session is missing or expired.
+      - button "Go to login" [ref=e112] [cursor=pointer]

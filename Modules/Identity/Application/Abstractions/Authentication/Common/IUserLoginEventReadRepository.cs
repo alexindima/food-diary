@@ -8,7 +8,7 @@ public interface IUserLoginEventReadRepository {
         int limit,
         Guid? userId,
         string? search,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? provider = null, string? device = null);
 
     Task<IReadOnlyList<UserLoginDeviceSummaryModel>> GetDeviceSummaryAsync(
         DateTime? fromUtc,

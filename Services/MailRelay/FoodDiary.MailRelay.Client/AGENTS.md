@@ -8,6 +8,7 @@ Typed client package for service-to-service calls into MailRelay.
 - Put public HTTP contract DTOs under `Models/`.
 - Keep DI wiring under `Extensions/`.
 - Keep configuration classes under `Options/`.
+- The `Journal/` folder owns the separate read-only journal client and interface; its DTOs remain under `Models/`.
 - Root files should stay limited to `IMailRelayClient.cs` and `MailRelayClient.cs`.
 - Do not add persistence, server-side transport implementation, ASP.NET server types, RabbitMQ, MailKit/MimeKit, DNS, or MediatR dependencies here.
 - Keep request/response DTOs stable; changes can affect service-to-service callers.

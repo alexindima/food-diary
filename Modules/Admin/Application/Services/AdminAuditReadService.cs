@@ -19,11 +19,11 @@ public sealed class AdminAuditReadService(
         int page,
         int limit,
         string? search,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, Guid? actorId = null, Guid? targetId = null) {
         int normalizedPage = PaginationPolicy.NormalizePage(page);
         int normalizedLimit = PaginationPolicy.NormalizePageSizeOrDefault(limit);
         (IReadOnlyList<AdminImpersonationSessionReadModel> items, int totalItems) =
-            await impersonationSessionRepository.GetPagedAsync(normalizedPage, normalizedLimit, search, cancellationToken).ConfigureAwait(false);
+            await impersonationSessionRepository.GetPagedAsync(normalizedPage, normalizedLimit, search, cancellationToken, fromUtc, toUtc, actorId, targetId).ConfigureAwait(false);
         int totalPages = (int)Math.Ceiling(totalItems / (double)normalizedLimit);
 
         return Result.Success(new PagedResponse<AdminImpersonationSessionReadModel>(

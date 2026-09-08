@@ -10,4 +10,5 @@ public sealed record LessonAdministrationItem(
     LessonCategory Category,
     LessonDifficulty Difficulty,
     int EstimatedReadMinutes,
-    int SortOrder);
+    int SortOrder,
+    bool IsPublished = true);

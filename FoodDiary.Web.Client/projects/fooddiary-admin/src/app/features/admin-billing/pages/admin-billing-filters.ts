@@ -17,21 +17,13 @@ export class AdminBillingFiltersComponent {
     public readonly provider = input.required<string>();
     public readonly status = input.required<string>();
     public readonly kind = input.required<string>();
-    public readonly fromDate = input.required<string>();
-    public readonly toDate = input.required<string>();
 
     public readonly searchChange = output<string>();
     public readonly providerChange = output<string>();
     public readonly statusChange = output<string>();
     public readonly kindChange = output<string>();
-    public readonly fromDateChange = output<string>();
-    public readonly toDateChange = output<string>();
     public readonly filtersApply = output();
     public readonly filtersReset = output();
-
-    protected getInputValue(event: Event): string {
-        return event.target instanceof HTMLInputElement ? event.target.value : '';
-    }
 
     protected getControlTextValue(value: FdUiInputValue): string {
         return fdUiCoerceInputTextValue(value);

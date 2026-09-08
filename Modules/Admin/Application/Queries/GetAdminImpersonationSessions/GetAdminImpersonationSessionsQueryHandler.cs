@@ -15,6 +15,6 @@ public sealed class GetAdminImpersonationSessionsQueryHandler(IAdminAuditReadSer
             query.Page,
             query.Limit,
             query.Search,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken, query.FromUtc, query.ToUtc, query.ActorId, query.TargetId).ConfigureAwait(false);
     }
 }

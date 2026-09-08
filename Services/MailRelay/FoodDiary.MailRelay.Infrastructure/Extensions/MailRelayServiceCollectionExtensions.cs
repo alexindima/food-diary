@@ -61,6 +61,7 @@ public static class MailRelayServiceCollectionExtensions {
                 return new NpgsqlDataSourceBuilder(connectionString).Build();
             });
 
+            services.AddSingleton<IMailRelayJournalReader, MailRelayJournalReader>();
             services.AddSingleton<MailRelayQueueStore>();
             services.AddSingleton(TimeProvider.System);
             services.AddSingleton<IMailRelayQueueStore>(sp => sp.GetRequiredService<MailRelayQueueStore>());

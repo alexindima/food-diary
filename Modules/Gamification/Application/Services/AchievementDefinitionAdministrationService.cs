@@ -12,8 +12,11 @@ namespace FoodDiary.Application.Gamification.Services;
 
 public sealed class AchievementDefinitionAdministrationService(IAchievementDefinitionStore store)
     : IAchievementDefinitionAdministrationService {
-    public async Task<IReadOnlyList<AchievementDefinitionAdminModel>> GetAllAsync(CancellationToken cancellationToken) =>
-        (await store.GetAllAsync(cancellationToken).ConfigureAwait(false)).Select(ToModel).ToList();
+    public async Task<IReadOnlyList<AchievementDefinitionAdminModel>> GetAllAsync(CancellationToken cancellationToken) {
+        IReadOnlyDictionary<string, int> counts = await store.GetAwardCountsAsync(cancellationToken).ConfigureAwait(false);
+        return (await store.GetAllAsync(cancellationToken).ConfigureAwait(false))
+            .Select(item => ToModel(item) with { AwardedUsers = counts.GetValueOrDefault(item.Key) }).ToList();
+    }
 
     public async Task<Result<AchievementDefinitionAdminModel>> CreateAsync(
         AchievementDefinitionCreateInput input,

@@ -249,6 +249,35 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     [RequiresDockerFact]
+    public async Task NutritionLessonRepository_DraftsAreHiddenAndCompletionHistorySurvivesUnpublishing() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("lesson-publication@example.com", "hash");
+        var lesson = NutritionLesson.Create("Draft", "Content", summary: null, "en", LessonCategory.NutritionBasics,
+            LessonDifficulty.Beginner, estimatedReadMinutes: 1);
+        lesson.SetPublication(isPublished: false);
+        context.Users.Add(user);
+        var repository = new NutritionLessonRepository(context);
+        await repository.AddAsync(lesson);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        Assert.Empty(await repository.GetByLocaleAsync("en"));
+        Assert.Null(await repository.GetDetailReadModelByIdAsync(lesson.Id));
+        Assert.False(Assert.Single(await repository.GetAdminReadModelsAsync()).IsPublished);
+        NutritionLesson? tracked = await repository.GetByIdTrackingAsync(lesson.Id);
+        Assert.NotNull(tracked);
+        tracked.SetPublication(isPublished: true);
+        await repository.AddProgressAsync(UserLessonProgress.Create(user.Id, lesson.Id, DateTime.UtcNow));
+        await context.SaveChangesAsync();
+        Assert.Single(await repository.GetByLocaleAsync("en"));
+        Assert.Equal(1, Assert.Single(await repository.GetAdminReadModelsAsync()).CompletedCount);
+        tracked.SetPublication(isPublished: false);
+        await context.SaveChangesAsync();
+        Assert.Null(await repository.GetByIdAsync(lesson.Id));
+        Assert.Equal(1, Assert.Single(await repository.GetAdminReadModelsAsync()).CompletedCount);
+        Assert.Equal(0, await repository.CountReadLessonsByLocaleAsync(user.Id, "en"));
+    }
+
+    [RequiresDockerFact]
     public async Task NutritionLessonRepository_CoversFilteredTrackingProgressAndDeletePaths() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"lesson-{Guid.NewGuid():N}@example.com", "hash");
@@ -526,6 +555,19 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.True(hasReported);
         Assert.Equal(otherReport.Id.Value, Assert.Single(pendingReadModels).Id);
         Assert.Equal(1, pendingReadModelTotal);
+        Assert.Equal("Reported comment", Assert.Single(pendingReadModels).TargetExcerpt);
+        (IReadOnlyList<ContentReportAdminReadModel> filteredReports, int filteredTotal) = await repository.GetPagedAdminReadModelsAsync(
+            status: null, page: 1, limit: 1, CancellationToken.None,
+            new ContentReportAdminFilter(report.CreatedOnUtc, report.CreatedOnUtc.AddDays(1), "Recipe", user.Id.Value, targetId));
+        Assert.Equal(1, filteredTotal);
+        ContentReportAdminReadModel filteredReport = Assert.Single(filteredReports);
+        Assert.Equal("Reported recipe", filteredReport.TargetTitle);
+        Assert.Equal(tracked.ReviewedByUserId?.Value, filteredReport.ReviewedByUserId);
+        (IReadOnlyList<ContentReportAdminReadModel> outsidePeriod, int outsideTotal) = await repository.GetPagedAdminReadModelsAsync(
+            status: null, page: 1, limit: 1, CancellationToken.None,
+            new ContentReportAdminFilter(ToUtc: report.CreatedOnUtc, TargetId: targetId));
+        Assert.Empty(outsidePeriod);
+        Assert.Equal(0, outsideTotal);
         Assert.Single(allItems);
         Assert.Equal(2, allTotal);
         Assert.Equal(1, dismissedCount);

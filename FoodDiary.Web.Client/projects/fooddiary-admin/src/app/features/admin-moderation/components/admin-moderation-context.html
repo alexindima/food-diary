@@ -1,0 +1,23 @@
+<details>
+    <summary>{{ report().targetTitle || report().targetType }}</summary>
+    <p>{{ report().targetId }}</p>
+    <p>{{ report().targetExcerpt }}</p>
+    @if (!report().targetTitle && !report().targetExcerpt) {
+        <p>{{ 'ADMIN_MODERATION.CONTEXT_UNAVAILABLE' | translate }}</p>
+    }
+    <p>
+        {{ 'ADMIN_MODERATION.REPORTED_BY' | translate }}: <a [routerLink]="['/users', report().reporterId]">{{ report().reporterId }}</a>
+    </p>
+    @if (report().reviewedByUserId; as reviewer) {
+        <p>
+            {{ 'ADMIN_MODERATION.REVIEWED_BY' | translate }}: <a [routerLink]="['/users', reviewer]">{{ reviewer }}</a> ·
+            {{ report().reviewedAtUtc | date: 'medium' }}
+        </p>
+        <p>{{ report().adminNote }}</p>
+    } @else {
+        <p>{{ 'ADMIN_MODERATION.AGE' | translate: { days: ageDays() } }}</p>
+    }
+    <a routerLink="/moderation" [queryParams]="{ targetId: report().targetId, targetType: report().targetType, status: '' }">{{
+        'ADMIN_MODERATION.TARGET_HISTORY' | translate
+    }}</a>
+</details>

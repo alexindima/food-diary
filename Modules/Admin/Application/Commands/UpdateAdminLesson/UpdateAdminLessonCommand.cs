@@ -13,4 +13,5 @@ public sealed record UpdateAdminLessonCommand(
     string Category,
     string Difficulty,
     int EstimatedReadMinutes,
-    int SortOrder) : ICommand<Result<AdminLessonModel>>;
+    int SortOrder,
+    bool IsPublished = true) : ICommand<Result<AdminLessonModel>>;

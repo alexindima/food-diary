@@ -8,6 +8,10 @@ internal sealed class EmailOutboxMessageConfiguration : IEntityTypeConfiguration
         builder.ToTable("EmailOutbox");
 
         builder.HasKey(message => message.Id);
+        builder.Property(message => message.Purpose).HasMaxLength(64).HasDefaultValue("other");
+        builder.Property(message => message.ReplyTo).HasMaxLength(320);
+        builder.Property(message => message.InReplyTo).HasMaxLength(998);
+        builder.Property(message => message.CorrelationId).HasMaxLength(128);
 
         builder.Property(message => message.FromAddress)
             .HasMaxLength(320);

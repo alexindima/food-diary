@@ -103,6 +103,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddImagesInfrastructure()
                 .AddBillingIntegrations(configuration)
                 .AddAdminMailInboxIntegration(configuration)
+                .AddAdminBugTriageIntegration(configuration)
                 .AddMailRelayIntegration(configuration)
                 .AddIdentityProvider(configuration).AddImagesProvider(configuration).AddAiProvider(configuration).AddUsdaProvider(configuration).AddOpenFoodFactsProvider(configuration).AddWearablesProvider(configuration)
                 .AddNotificationResources()

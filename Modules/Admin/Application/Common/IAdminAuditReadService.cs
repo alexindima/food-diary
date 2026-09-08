@@ -9,7 +9,7 @@ public interface IAdminAuditReadService {
         int page,
         int limit,
         string? search,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, Guid? actorId = null, Guid? targetId = null);
 
     Task<Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>>> GetUserRoleAuditAsync(
         Guid userId,

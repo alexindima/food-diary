@@ -47,7 +47,7 @@
             [points]="revenuePoints()"
             [title]="'ADMIN_OVERVIEW.GROSS' | translate"
         />
-        <a routerLink="/billing">{{ 'ADMIN_OVERVIEW.OPEN_BILLING' | translate }}</a>
+        <a routerLink="/billing" [queryParams]="periodParams()">{{ 'ADMIN_OVERVIEW.OPEN_BILLING' | translate }}</a>
     </fd-ui-card>
     <fd-ui-card>
         <h2 class="fd-ui-title-sm">{{ 'ADMIN_OVERVIEW.REGISTRATIONS' | translate }}</h2>
@@ -61,7 +61,7 @@
             [points]="registrationPoints()"
             [title]="'ADMIN_OVERVIEW.REGISTRATIONS' | translate"
         />
-        <a routerLink="/users">{{ 'ADMIN_OVERVIEW.OPEN_USERS' | translate }}</a>
+        <a routerLink="/users" [queryParams]="periodParams()">{{ 'ADMIN_OVERVIEW.OPEN_USERS' | translate }}</a>
     </fd-ui-card>
 </div>
 <div class="admin-dashboard__charts fd-grid fd-gap-md">
@@ -77,7 +77,7 @@
             [points]="aiPoints()"
             [title]="'ADMIN_OVERVIEW.AI_TOKENS' | translate"
         />
-        <a routerLink="/ai-usage">{{ 'ADMIN_OVERVIEW.OPEN_AI' | translate }}</a>
+        <a routerLink="/ai-usage" [queryParams]="periodParams()">{{ 'ADMIN_OVERVIEW.OPEN_AI' | translate }}</a>
     </fd-ui-card>
     <fd-ui-card>
         <div class="fd-grid fd-gap-md">

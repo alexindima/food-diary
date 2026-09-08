@@ -8,40 +8,40 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3674,
-    "symbols": 3614,
-    "interfaceImplementationLinks": 244,
-    "dependencyInjectionRegistrations": 155,
+    "sourceFiles": 3787,
+    "symbols": 3727,
+    "interfaceImplementationLinks": 252,
+    "dependencyInjectionRegistrations": 158,
     "kinds": {
-      "class": 1880,
+      "class": 1928,
       "enum": 63,
-      "interface": 442,
-      "record": 1109,
+      "interface": 453,
+      "record": 1163,
       "record struct": 120
     },
     "roles": {
       "Command": 163,
       "CommandHandler": 159,
       "Configuration": 90,
-      "Controller": 94,
-      "Entity": 92,
+      "Controller": 99,
+      "Entity": 94,
       "Event": 19,
       "Factory": 11,
       "Handler": 9,
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
-      "Options": 66,
-      "Other": 1429,
-      "Query": 167,
-      "QueryHandler": 127,
+      "Options": 68,
+      "Other": 1487,
+      "Query": 181,
+      "QueryHandler": 134,
       "ReadModelRepository": 30,
-      "ReadRepository": 47,
-      "Repository": 103,
+      "ReadRepository": 48,
+      "Repository": 104,
       "Request": 138,
-      "Response": 191,
-      "Service": 296,
-      "Validator": 208,
+      "Response": 202,
+      "Service": 299,
+      "Validator": 217,
       "ValueObject": 114,
       "WriteRepository": 46
     }
@@ -1819,6 +1819,13 @@
       "line": 4
     },
     {
+      "name": "BugAcknowledgementCandidate",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/BugAcknowledgementCandidate.cs",
+      "line": 2
+    },
+    {
       "name": "IAdminBillingReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
@@ -1831,6 +1838,13 @@
       "role": "Repository",
       "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBillingRepository.cs",
       "line": 2
+    },
+    {
+      "name": "IAdminBugReportReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBugReportReader.cs",
+      "line": 4
     },
     {
       "name": "IAdminDashboardMetricsReader",
@@ -1875,6 +1889,13 @@
       "line": 4
     },
     {
+      "name": "IAdminRetentionReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs",
+      "line": 4
+    },
+    {
       "name": "IAdminUserRoleAuditReadRepository",
       "kind": "interface",
       "role": "ReadRepository",
@@ -1886,6 +1907,20 @@
       "kind": "interface",
       "role": "Repository",
       "path": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs",
+      "line": 2
+    },
+    {
+      "name": "IBugAcknowledgementReceipts",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs",
+      "line": 2
+    },
+    {
+      "name": "IBugAcknowledgementSource",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementSource.cs",
       "line": 2
     },
     {
@@ -1928,6 +1963,27 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBillingWebhookEventReadModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBugReportEntry",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBugReportEntry.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBugReportFilter",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBugReportFilter.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBugReportPage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminBugReportPage.cs",
       "line": 2
     },
     {
@@ -1991,6 +2047,27 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminMailInboxMessageSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminRetentionCohort",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminRetentionCohort.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminRetentionDay",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminRetentionDay.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminRetentionReport",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Abstractions/Admin/Models/AdminRetentionReport.cs",
       "line": 2
     },
     {
@@ -2369,7 +2446,7 @@
       "kind": "interface",
       "role": "Service",
       "path": "Modules/Admin/Application/Common/IAdminContentReadService.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "IAdminDashboardOverviewReadService",
@@ -2512,6 +2589,13 @@
       "line": 2
     },
     {
+      "name": "AdminAuditPage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminAuditPage.cs",
+      "line": 2
+    },
+    {
       "name": "AdminContentReportModel",
       "kind": "record",
       "role": "Other",
@@ -2565,6 +2649,13 @@
       "kind": "record",
       "role": "Other",
       "path": "Modules/Admin/Application/Models/AdminLessonsImportModel.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminTemplateRevisionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Admin/Application/Models/AdminTemplateRevisionModel.cs",
       "line": 2
     },
     {
@@ -2645,6 +2736,27 @@
       "line": 4
     },
     {
+      "name": "GetAdminAuditQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQuery.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminAuditQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetAdminAuditQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQueryValidator.cs",
+      "line": 4
+    },
+    {
       "name": "GetAdminBillingPaymentsQuery",
       "kind": "record",
       "role": "Query",
@@ -2701,6 +2813,27 @@
       "line": 8
     },
     {
+      "name": "GetAdminBugReportsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminBugReportsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminBugReportsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQueryValidator.cs",
+      "line": 4
+    },
+    {
       "name": "GetAdminContentReportsQuery",
       "kind": "record",
       "role": "Query",
@@ -2712,7 +2845,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryHandler.cs",
-      "line": 11
+      "line": 12
+    },
+    {
+      "name": "GetAdminContentReportsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryValidator.cs",
+      "line": 4
     },
     {
       "name": "GetAdminDashboardOverviewQuery",
@@ -2769,6 +2909,13 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQueryHandler.cs",
       "line": 8
+    },
+    {
+      "name": "GetAdminImpersonationSessionsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQueryValidator.cs",
+      "line": 4
     },
     {
       "name": "GetAdminLessonsQuery",
@@ -2848,6 +2995,62 @@
       "line": 4
     },
     {
+      "name": "GetAdminOutgoingEmailsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminOutgoingEmailsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQueryHandler.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminOutgoingEmailsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetAdminRetentionQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminRetention/GetAdminRetentionQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminRetentionQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminRetention/GetAdminRetentionQueryHandler.cs",
+      "line": 8
+    },
+    {
+      "name": "GetAdminTemplateRevisionsQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQuery.cs",
+      "line": 6
+    },
+    {
+      "name": "GetAdminTemplateRevisionsQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryHandler.cs",
+      "line": 7
+    },
+    {
+      "name": "GetAdminTemplateRevisionsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryValidator.cs",
+      "line": 4
+    },
+    {
       "name": "GetAdminUserQuery",
       "kind": "record",
       "role": "Query",
@@ -2874,6 +3077,13 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQueryHandler.cs",
       "line": 8
+    },
+    {
+      "name": "GetAdminUserLoginEventsQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQueryValidator.cs",
+      "line": 4
     },
     {
       "name": "GetAdminUserLoginSummaryQuery",
@@ -2916,6 +3126,13 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
       "line": 9
+    },
+    {
+      "name": "GetAdminUsersQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Modules/Admin/Application/Queries/GetAdminUsers/GetAdminUsersQueryValidator.cs",
+      "line": 4
     },
     {
       "name": "GetCollaborationAuditQuery",
@@ -2995,6 +3212,13 @@
       "line": 9
     },
     {
+      "name": "BugAcknowledgementService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Admin/Application/Services/BugAcknowledgementService.cs",
+      "line": 7
+    },
+    {
       "name": "ExchangeAdminImpersonationCommand",
       "kind": "record",
       "role": "Command",
@@ -3023,11 +3247,60 @@
       "line": 6
     },
     {
+      "name": "AdminBugTriageIntegration",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Integrations/AdminBugTriageIntegration.cs",
+      "line": 8
+    },
+    {
       "name": "AdminMailInboxIntegration",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/Integrations/AdminMailInboxIntegration.cs",
       "line": 9
+    },
+    {
+      "name": "AdminBugReportReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugReportReader.cs",
+      "line": 8
+    },
+    {
+      "name": "AdminBugTriageOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugTriageOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "BugAcknowledgementOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "BugAcknowledgementReceipts",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs",
+      "line": 6
+    },
+    {
+      "name": "BugAcknowledgementSource",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementSource.cs",
+      "line": 11
+    },
+    {
+      "name": "BugAcknowledgementWorker",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementWorker.cs",
+      "line": 8
     },
     {
       "name": "MailInboxClientAdminMailInboxReader",
@@ -3044,6 +3317,13 @@
       "line": 5
     },
     {
+      "name": "BugAcknowledgementReceipt",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Model/BugAcknowledgementReceipt.cs",
+      "line": 2
+    },
+    {
       "name": "AdminImpersonationSessionConfiguration",
       "kind": "class",
       "role": "Configuration",
@@ -3055,7 +3335,7 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminBillingRepository.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "AdminDashboardMetricsReader",
@@ -3069,6 +3349,13 @@
       "kind": "class",
       "role": "Repository",
       "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
+      "line": 8
+    },
+    {
+      "name": "AdminRetentionReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Infrastructure/Persistence/Admin/AdminRetentionReader.cs",
       "line": 8
     },
     {
@@ -3104,7 +3391,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Features/Admin/AdminAcquisitionController.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "AdminAiPromptsController",
@@ -3121,11 +3408,25 @@
       "line": 18
     },
     {
+      "name": "AdminAuditController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Features/Admin/AdminAuditController.cs",
+      "line": 18
+    },
+    {
       "name": "AdminBillingController",
       "kind": "class",
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Features/Admin/AdminBillingController.cs",
       "line": 17
+    },
+    {
+      "name": "AdminBugReportsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Features/Admin/AdminBugReportsController.cs",
+      "line": 18
     },
     {
       "name": "AdminCollaborationAuditController",
@@ -3170,6 +3471,20 @@
       "line": 17
     },
     {
+      "name": "AdminOutgoingEmailsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Features/Admin/AdminOutgoingEmailsController.cs",
+      "line": 18
+    },
+    {
+      "name": "AdminRetentionController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Modules/Admin/Presentation/Features/Admin/AdminRetentionController.cs",
+      "line": 18
+    },
+    {
       "name": "AdminTelemetryController",
       "kind": "class",
       "role": "Controller",
@@ -3212,10 +3527,24 @@
       "line": 6
     },
     {
+      "name": "AdminAuditJournalHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminAuditJournalHttpMappings.cs",
+      "line": 6
+    },
+    {
       "name": "AdminBillingHttpResponseMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminBillingHttpResponseMappings.cs",
+      "line": 7
+    },
+    {
+      "name": "AdminBugReportHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminBugReportHttpMappings.cs",
       "line": 7
     },
     {
@@ -3275,11 +3604,39 @@
       "line": 5
     },
     {
+      "name": "AdminMarketingRangeHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminMarketingRangeHttpMappings.cs",
+      "line": 7
+    },
+    {
+      "name": "AdminOutgoingEmailHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminOutgoingEmailHttpMappings.cs",
+      "line": 7
+    },
+    {
+      "name": "AdminRetentionHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminRetentionHttpMappings.cs",
+      "line": 7
+    },
+    {
       "name": "AdminTelemetryHttpResponseMappings",
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminTelemetryHttpResponseMappings.cs",
       "line": 5
+    },
+    {
+      "name": "AdminTemplateRevisionHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminTemplateRevisionHttpMappings.cs",
+      "line": 6
     },
     {
       "name": "AdminAiPromptUpsertHttpRequest",
@@ -3380,10 +3737,24 @@
       "line": 2
     },
     {
+      "name": "GetAdminAuditHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminAuditHttpQuery.cs",
+      "line": 5
+    },
+    {
       "name": "GetAdminBillingHttpQuery",
       "kind": "record",
       "role": "Query",
       "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminBillingHttpQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetAdminBugReportsHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminBugReportsHttpQuery.cs",
       "line": 5
     },
     {
@@ -3429,6 +3800,20 @@
       "line": 5
     },
     {
+      "name": "GetAdminOutgoingEmailsHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminOutgoingEmailsHttpQuery.cs",
+      "line": 5
+    },
+    {
+      "name": "GetAdminRetentionHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminRetentionHttpQuery.cs",
+      "line": 2
+    },
+    {
       "name": "GetAdminUserLoginEventsHttpQuery",
       "kind": "record",
       "role": "Query",
@@ -3469,6 +3854,13 @@
       "role": "Query",
       "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetFastingTelemetrySummaryHttpQuery.cs",
       "line": 4
+    },
+    {
+      "name": "GetMarketingAttributionRangeHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Admin/Presentation/Features/Admin/Requests/GetMarketingAttributionRangeHttpQuery.cs",
+      "line": 5
     },
     {
       "name": "GetMarketingAttributionSummaryHttpQuery",
@@ -3534,6 +3926,13 @@
       "line": 2
     },
     {
+      "name": "AdminAuditPageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminAuditPageHttpResponse.cs",
+      "line": 2
+    },
+    {
       "name": "AdminBillingPaymentHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -3566,6 +3965,20 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBillingWebhookEventHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBugReportHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBugReportHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminBugReportPageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminBugReportPageHttpResponse.cs",
       "line": 2
     },
     {
@@ -3688,6 +4101,48 @@
       "line": 2
     },
     {
+      "name": "AdminOutgoingEmailHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminOutgoingEmailHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminOutgoingEmailPageHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminOutgoingEmailPageHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminRetentionCohortHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminRetentionCohortHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminRetentionDayHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminRetentionDayHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminRetentionReportHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminRetentionReportHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "AdminTemplateRevisionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/AdminTemplateRevisionHttpResponse.cs",
+      "line": 2
+    },
+    {
       "name": "AdminUserCreationHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -3741,6 +4196,20 @@
       "kind": "record",
       "role": "Response",
       "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionBreakdownHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionDayHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionDayHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionRangeHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionRangeHttpResponse.cs",
       "line": 2
     },
     {
@@ -3933,6 +4402,13 @@
       "line": 2
     },
     {
+      "name": "AiPromptRevisionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Ai/Application/Abstractions/Ai/Models/AiPromptRevisionReadModel.cs",
+      "line": 2
+    },
+    {
       "name": "AiPromptTemplateReadModel",
       "kind": "record",
       "role": "Other",
@@ -4091,7 +4567,7 @@
       "kind": "class",
       "role": "Service",
       "path": "Modules/Ai/Application/Services/AiAdministrationReadService.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "AiPromptAdministrationService",
@@ -4127,6 +4603,13 @@
       "role": "Service",
       "path": "Modules/Ai/Application/Services/UserAiUsageSummaryReadService.cs",
       "line": 8
+    },
+    {
+      "name": "AiPromptRevision",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptRevision.cs",
+      "line": 2
     },
     {
       "name": "AiPromptTemplate",
@@ -5968,6 +6451,13 @@
       "role": "Service",
       "path": "Modules/ContentReports/Contracts/Common/IContentReportAdministrationService.cs",
       "line": 5
+    },
+    {
+      "name": "ContentReportAdminFilter",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/ContentReports/Contracts/Models/ContentReportAdminFilter.cs",
+      "line": 2
     },
     {
       "name": "ContentReportAdminReadModel",
@@ -12431,6 +12921,13 @@
       "line": 6
     },
     {
+      "name": "EmailTemplateRevisionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Identity/Application/Abstractions/Admin/Models/EmailTemplateRevisionReadModel.cs",
+      "line": 2
+    },
+    {
       "name": "AdminSsoCode",
       "kind": "record",
       "role": "Other",
@@ -13220,6 +13717,13 @@
       "role": "Entity",
       "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
       "line": 6
+    },
+    {
+      "name": "EmailTemplateRevision",
+      "kind": "class",
+      "role": "Entity",
+      "path": "Modules/Identity/Domain/Entities/Content/EmailTemplateRevision.cs",
+      "line": 2
     },
     {
       "name": "UserLoginEvent",
@@ -14426,6 +14930,13 @@
       "line": 2
     },
     {
+      "name": "IMarketingAttributionRangeReadRepository",
+      "kind": "interface",
+      "role": "ReadRepository",
+      "path": "Modules/Marketing/Application/Abstractions/Common/IMarketingAttributionRangeReadRepository.cs",
+      "line": 2
+    },
+    {
       "name": "MarketingAttributionBreakdownRecord",
       "kind": "record",
       "role": "Other",
@@ -14433,10 +14944,31 @@
       "line": 2
     },
     {
+      "name": "MarketingAttributionDayRecord",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Abstractions/Common/MarketingAttributionDayRecord.cs",
+      "line": 2
+    },
+    {
       "name": "MarketingAttributionEventRecord",
       "kind": "record",
       "role": "Other",
       "path": "Modules/Marketing/Application/Abstractions/Common/MarketingAttributionEventRecord.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionRangeFilter",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Abstractions/Common/MarketingAttributionRangeFilter.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionRangeRecord",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Application/Abstractions/Common/MarketingAttributionRangeRecord.cs",
       "line": 2
     },
     {
@@ -14468,6 +15000,13 @@
       "line": 2
     },
     {
+      "name": "IMarketingAttributionRangeReadService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "Modules/Marketing/Application/Common/IMarketingAttributionRangeReadService.cs",
+      "line": 6
+    },
+    {
       "name": "IMarketingAttributionSummaryReadService",
       "kind": "interface",
       "role": "Service",
@@ -14496,6 +15035,13 @@
       "line": 8
     },
     {
+      "name": "GetMarketingAttributionRangeQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionRange/GetMarketingAttributionRangeQueryHandler.cs",
+      "line": 7
+    },
+    {
       "name": "GetMarketingAttributionSummaryQueryHandler",
       "kind": "class",
       "role": "QueryHandler",
@@ -14508,6 +15054,13 @@
       "role": "Service",
       "path": "Modules/Marketing/Application/Services/MarketingAttributionCleanupService.cs",
       "line": 5
+    },
+    {
+      "name": "MarketingAttributionRangeReadService",
+      "kind": "class",
+      "role": "Service",
+      "path": "Modules/Marketing/Application/Services/MarketingAttributionRangeReadService.cs",
+      "line": 9
     },
     {
       "name": "MarketingAttributionSummaryReadService",
@@ -14531,6 +15084,20 @@
       "line": 2
     },
     {
+      "name": "MarketingAttributionDayModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Contracts/Models/MarketingAttributionDayModel.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionRangeModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Marketing/Contracts/Models/MarketingAttributionRangeModel.cs",
+      "line": 2
+    },
+    {
       "name": "MarketingAttributionRecentEventModel",
       "kind": "record",
       "role": "Other",
@@ -14543,6 +15110,13 @@
       "role": "Other",
       "path": "Modules/Marketing/Contracts/Models/MarketingAttributionSummaryModel.cs",
       "line": 2
+    },
+    {
+      "name": "GetMarketingAttributionRangeQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Modules/Marketing/Contracts/Queries/GetMarketingAttributionRange/GetMarketingAttributionRangeQuery.cs",
+      "line": 6
     },
     {
       "name": "GetMarketingAttributionSummaryQuery",
@@ -14592,6 +15166,13 @@
       "role": "Repository",
       "path": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs",
       "line": 8
+    },
+    {
+      "name": "MarketingAttributionEventRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.Reporting.cs",
+      "line": 6
     },
     {
       "name": "MarketingPresentationServiceCollectionExtensions",
@@ -20964,6 +21545,13 @@
       "line": 2
     },
     {
+      "name": "UserAdministrationFilter",
+      "kind": "record",
+      "role": "Other",
+      "path": "Modules/Users/Contracts/Users/Common/UserAdministrationFilter.cs",
+      "line": 2
+    },
+    {
       "name": "UserErrors",
       "kind": "class",
       "role": "Other",
@@ -22700,11 +23288,39 @@
       "line": 4
     },
     {
+      "name": "IBugReportJournal",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportJournal.cs",
+      "line": 4
+    },
+    {
       "name": "IBugReportStore",
       "kind": "interface",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Abstractions/IBugReportStore.cs",
       "line": 4
+    },
+    {
+      "name": "BugReportJournalEntry",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/BugReportJournalEntry.cs",
+      "line": 2
+    },
+    {
+      "name": "BugReportJournalFilter",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/BugReportJournalFilter.cs",
+      "line": 2
+    },
+    {
+      "name": "BugReportJournalPage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Application/Reports/BugReportJournalPage.cs",
+      "line": 2
     },
     {
       "name": "ImportBugReports",
@@ -22777,6 +23393,13 @@
       "line": 4
     },
     {
+      "name": "NpgsqlBugReportJournal",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Infrastructure/Persistence/NpgsqlBugReportJournal.cs",
+      "line": 7
+    },
+    {
       "name": "NpgsqlBugReportStore",
       "kind": "class",
       "role": "Other",
@@ -22796,6 +23419,20 @@
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Extensions/BugTriagePresentationExtensions.cs",
       "line": 10
+    },
+    {
+      "name": "BugReportJournalController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalController.cs",
+      "line": 14
+    },
+    {
+      "name": "BugReportJournalHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalHttpQuery.cs",
+      "line": 4
     },
     {
       "name": "BugReportsController",
@@ -22830,6 +23467,13 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Security/BugTriageAuthorizationFilter.cs",
+      "line": 9
+    },
+    {
+      "name": "BugTriageReadAuthorizationFilter",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Security/BugTriageReadAuthorizationFilter.cs",
       "line": 9
     },
     {
@@ -23659,6 +24303,13 @@
       "line": 2
     },
     {
+      "name": "IMailRelayJournalReader",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayJournalReader.cs",
+      "line": 2
+    },
+    {
       "name": "IMailRelayQueueStore",
       "kind": "interface",
       "role": "Other",
@@ -23841,6 +24492,20 @@
       "line": 2
     },
     {
+      "name": "OutgoingEmailJournalEntry",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Models/OutgoingEmailJournalEntry.cs",
+      "line": 2
+    },
+    {
+      "name": "OutgoingEmailJournalPage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Models/OutgoingEmailJournalPage.cs",
+      "line": 2
+    },
+    {
       "name": "GetMailRelayDeliveryEventsQuery",
       "kind": "record",
       "role": "Query",
@@ -23915,6 +24580,27 @@
       "kind": "class",
       "role": "Validator",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetMailRelaySuppressions/GetMailRelaySuppressionsQueryValidator.cs",
+      "line": 4
+    },
+    {
+      "name": "GetOutgoingEmailJournalQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQuery.cs",
+      "line": 4
+    },
+    {
+      "name": "GetOutgoingEmailJournalQueryHandler",
+      "kind": "class",
+      "role": "QueryHandler",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQueryHandler.cs",
+      "line": 4
+    },
+    {
+      "name": "GetOutgoingEmailJournalQueryValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQueryValidator.cs",
       "line": 4
     },
     {
@@ -24009,6 +24695,20 @@
       "line": 4
     },
     {
+      "name": "IMailRelayJournalClient",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Journal/IMailRelayJournalClient.cs",
+      "line": 4
+    },
+    {
+      "name": "MailRelayJournalClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Journal/MailRelayJournalClient.cs",
+      "line": 7
+    },
+    {
       "name": "MailRelayClient",
       "kind": "class",
       "role": "Other",
@@ -24027,6 +24727,20 @@
       "kind": "record",
       "role": "Response",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Models/EnqueueMailRelayEmailResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "OutgoingEmailJournalEntry",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Models/OutgoingEmailJournalEntry.cs",
+      "line": 2
+    },
+    {
+      "name": "OutgoingEmailJournalPage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Client/Models/OutgoingEmailJournalPage.cs",
       "line": 2
     },
     {
@@ -24289,6 +25003,13 @@
       "line": 2
     },
     {
+      "name": "MailRelayJournalReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayJournalReader.cs",
+      "line": 5
+    },
+    {
       "name": "MailRelayOutboxPublisherHostedService",
       "kind": "class",
       "role": "Service",
@@ -24371,6 +25092,13 @@
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayReadinessChecker.cs",
       "line": 5
+    },
+    {
+      "name": "MailRelayReplyHeaders",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayReplyHeaders.cs",
+      "line": 4
     },
     {
       "name": "MailRelaySchemaInitializerHostedService",
@@ -24510,7 +25238,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "MailRelayProviderEventsController",
@@ -24553,6 +25281,13 @@
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailRelayEmailHttpMappings.cs",
       "line": 7
+    },
+    {
+      "name": "OutgoingEmailJournalHttpMappings",
+      "kind": "class",
+      "role": "Other",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/OutgoingEmailJournalHttpMappings.cs",
+      "line": 5
     },
     {
       "name": "AwsSesBouncedRecipientHttpRequest",
@@ -24608,6 +25343,13 @@
       "kind": "record",
       "role": "Request",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/CreateMailRelaySuppressionHttpRequest.cs",
+      "line": 2
+    },
+    {
+      "name": "GetOutgoingEmailJournalHttpQuery",
+      "kind": "record",
+      "role": "Query",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/GetOutgoingEmailJournalHttpQuery.cs",
       "line": 2
     },
     {
@@ -24912,6 +25654,13 @@
       "line": 2
     },
     {
+      "name": "IAuditEntryJournal",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Audit.Contracts/Audit/Common/IAuditEntryJournal.cs",
+      "line": 4
+    },
+    {
       "name": "IAuditEntryReadService",
       "kind": "interface",
       "role": "Service",
@@ -24924,6 +25673,20 @@
       "role": "Other",
       "path": "Shared/FoodDiary.Audit.Contracts/Audit/Common/IAuditEntryWriter.cs",
       "line": 4
+    },
+    {
+      "name": "AuditEntryFilter",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Audit.Contracts/Audit/Models/AuditEntryFilter.cs",
+      "line": 2
+    },
+    {
+      "name": "AuditEntryPage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Audit.Contracts/Audit/Models/AuditEntryPage.cs",
+      "line": 2
     },
     {
       "name": "AuditEntryReadModel",
@@ -25094,11 +25857,39 @@
       "line": 2
     },
     {
+      "name": "IOutgoingEmailJournal",
+      "kind": "interface",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.Contracts/Email/Common/IOutgoingEmailJournal.cs",
+      "line": 2
+    },
+    {
+      "name": "OutgoingEmailJournalEntry",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.Contracts/Email/Common/OutgoingEmailJournalEntry.cs",
+      "line": 2
+    },
+    {
+      "name": "OutgoingEmailJournalPage",
+      "kind": "record",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.Contracts/Email/Common/OutgoingEmailJournalPage.cs",
+      "line": 2
+    },
+    {
       "name": "MailRelayDependencyInjection",
       "kind": "class",
       "role": "Other",
       "path": "Shared/FoodDiary.Email.MailRelay/MailRelayDependencyInjection.cs",
       "line": 9
+    },
+    {
+      "name": "RelayEmailJournal",
+      "kind": "class",
+      "role": "Other",
+      "path": "Shared/FoodDiary.Email.MailRelay/RelayEmailJournal.cs",
+      "line": 5
     },
     {
       "name": "RelayEmailTransport",
@@ -25425,6 +26216,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IAdminBugReportReader",
+      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBugReportReader.cs",
+      "implementation": "AdminBugReportReader",
+      "implementationPath": "Modules/Admin/Infrastructure/Integrations/BugTriage/AdminBugReportReader.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IAdminContentReadService",
       "interfacePath": "Modules/Admin/Application/Common/IAdminContentReadService.cs",
       "implementation": "AdminContentReadService",
@@ -25464,6 +26262,13 @@
       "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminImpersonationSessionRepository.cs",
       "implementation": "AdminImpersonationSessionRepository",
       "implementationPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminImpersonationSessionRepository.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IAdminRetentionReader",
+      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs",
+      "implementation": "AdminRetentionReader",
+      "implementationPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminRetentionReader.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25625,6 +26430,20 @@
       "interfacePath": "Modules/Billing/Application/Common/IBillingWebhookInboxService.cs",
       "implementation": "BillingWebhookInboxService",
       "implementationPath": "Modules/Billing/Application/Services/BillingWebhookInboxService.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IBugAcknowledgementReceipts",
+      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs",
+      "implementation": "BugAcknowledgementReceipts",
+      "implementationPath": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IBugAcknowledgementSource",
+      "interfacePath": "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementSource.cs",
+      "implementation": "BugAcknowledgementSource",
+      "implementationPath": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementSource.cs",
       "confidence": "naming-convention"
     },
     {
@@ -26244,6 +27063,20 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IMailRelayJournalClient",
+      "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Client/Journal/IMailRelayJournalClient.cs",
+      "implementation": "MailRelayJournalClient",
+      "implementationPath": "Services/MailRelay/FoodDiary.MailRelay.Client/Journal/MailRelayJournalClient.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IMailRelayJournalReader",
+      "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayJournalReader.cs",
+      "implementation": "MailRelayJournalReader",
+      "implementationPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayJournalReader.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IMailRelayQueueStore",
       "interfacePath": "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayQueueStore.cs",
       "implementation": "MailRelayQueueStore",
@@ -26304,6 +27137,20 @@
       "interfacePath": "Modules/Marketing/Application/Abstractions/Common/IMarketingAttributionEventRepository.cs",
       "implementation": "MarketingAttributionEventRepository",
       "implementationPath": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IMarketingAttributionEventRepository",
+      "interfacePath": "Modules/Marketing/Application/Abstractions/Common/IMarketingAttributionEventRepository.cs",
+      "implementation": "MarketingAttributionEventRepository",
+      "implementationPath": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.Reporting.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IMarketingAttributionRangeReadService",
+      "interfacePath": "Modules/Marketing/Application/Common/IMarketingAttributionRangeReadService.cs",
+      "implementation": "MarketingAttributionRangeReadService",
+      "implementationPath": "Modules/Marketing/Application/Services/MarketingAttributionRangeReadService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -27216,7 +28063,7 @@
       "implementation": "RedisIdempotencyStore",
       "lifetime": "Singleton",
       "path": "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-      "line": 176
+      "line": 177
     },
     {
       "service": "IAdminAiUsageReadService",
@@ -27772,6 +28619,13 @@
       "line": 19
     },
     {
+      "service": "IMarketingAttributionRangeReadService",
+      "implementation": "MarketingAttributionRangeReadService",
+      "lifetime": "Scoped",
+      "path": "Modules/Marketing/Application/DependencyInjection.cs",
+      "line": 21
+    },
+    {
       "service": "IMealPlanReadService",
       "implementation": "MealPlanReadService",
       "lifetime": "Scoped",
@@ -28101,39 +28955,53 @@
       "line": 22
     },
     {
+      "service": "IMailRelayJournalReader",
+      "implementation": "MailRelayJournalReader",
+      "lifetime": "Singleton",
+      "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
+      "line": 64
+    },
+    {
       "service": "IMailRelayReadinessChecker",
       "implementation": "MailRelayReadinessChecker",
       "lifetime": "Singleton",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
-      "line": 68
+      "line": 69
     },
     {
       "service": "IMailRelayDeliveryPolicy",
       "implementation": "ConfiguredMailRelayDeliveryPolicy",
       "lifetime": "Singleton",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
-      "line": 72
+      "line": 73
     },
     {
       "service": "IMxResolver",
       "implementation": "DnsClientMxResolver",
       "lifetime": "Singleton",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
-      "line": 73
+      "line": 74
     },
     {
       "service": "IRelayDeliveryTransport",
       "implementation": "ConfigurableRelayDeliveryTransport",
       "lifetime": "Singleton",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
-      "line": 74
+      "line": 75
     },
     {
       "service": "IMailRelayDispatchNotifier",
       "implementation": "RabbitMqMailRelayDispatchNotifier",
       "lifetime": "Singleton",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayServiceCollectionExtensions.cs",
-      "line": 76
+      "line": 77
+    },
+    {
+      "service": "IOutgoingEmailJournal",
+      "implementation": "RelayEmailJournal",
+      "lifetime": "Scoped",
+      "path": "Shared/FoodDiary.Email.MailRelay/MailRelayDependencyInjection.cs",
+      "line": 21
     },
     {
       "service": "IMediator",

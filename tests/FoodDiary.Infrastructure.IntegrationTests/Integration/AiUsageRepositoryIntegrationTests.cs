@@ -13,6 +13,28 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task GetSummaryForUserAsync_ExcludesOtherUsersFromEveryBreakdown() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var included = User.Create("ai-filter-included@example.com", "hash");
+        var excluded = User.Create("ai-filter-excluded@example.com", "hash");
+        context.Users.AddRange(included, excluded);
+        var first = AiUsage.Create(included.Id, "nutrition", "included-model", 2, 3, 5);
+        var second = AiUsage.Create(excluded.Id, "vision", "excluded-model", 10, 20, 30);
+        DateTime from = new(2026, 3, 28, 0, 0, 0, DateTimeKind.Utc);
+        SetCreatedOnUtc(first, from);
+        SetCreatedOnUtc(second, from);
+        context.AiUsages.AddRange(first, second);
+        await context.SaveChangesAsync();
+        var repository = new AiUsageRepository(context);
+        AiUsageSummary result = await repository.GetSummaryForUserAsync(from, from.AddDays(1), included.Id, CancellationToken.None);
+        Assert.Equal(5, result.TotalTokens);
+        Assert.Equal(5, Assert.Single(result.ByDay).TotalTokens);
+        Assert.Single(result.ByModel);
+        Assert.Single(result.ByOperation);
+        Assert.Equal(included.Id, Assert.Single(result.ByUser).UserId);
+    }
+
+    [RequiresDockerFact]
     public async Task GetSummaryAsync_AggregatesTotalsAndBreakdownsAgainstPostgres() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("ai-summary@example.com", "hash");
@@ -97,6 +119,16 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         Assert.Equal(nutrition.Id, byKey?.Id);
         Assert.Equal(2, updated?.Version);
         Assert.False(updated?.IsActive);
+        AiPromptRevisionReadModel revision = Assert.Single(await repository.GetRevisionsAsync("nutrition", "en", CancellationToken.None));
+        Assert.Equal("Estimate nutrients", revision.PromptText);
+        Assert.Equal(1, revision.Version);
+        context.ChangeTracker.Clear();
+        AiPromptTemplate? restored = await repository.GetByIdAsync(nutrition.Id, asTracking: true);
+        Assert.NotNull(restored);
+        restored.Update(revision.PromptText, revision.IsActive);
+        await context.SaveChangesAsync();
+        Assert.Equal(3, restored.Version);
+        Assert.Equal(2, (await repository.GetRevisionsAsync("nutrition", "en", CancellationToken.None)).Count);
     }
 
     private static void SetCreatedOnUtc(AiUsage usage, DateTime createdOnUtc) {

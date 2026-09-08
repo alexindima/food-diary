@@ -46,20 +46,12 @@
                     </div>
                 </div>
 
-                <dl class="token-list fd-grid fd-gap-xs">
-                    <div class="fd-grid fd-gap-sm fd-align-baseline">
-                        <dt>{{ '{{brand}}' }}</dt>
-                        <dd>{{ previewBrand() }}</dd>
-                    </div>
-                    <div class="fd-grid fd-gap-sm fd-align-baseline">
-                        <dt>{{ '{{clientName}}' }}</dt>
-                        <dd>{{ previewClientName() }}</dd>
-                    </div>
-                    <div class="fd-grid fd-gap-sm fd-align-baseline">
-                        <dt>{{ '{{link}}' }}</dt>
-                        <dd>{{ previewLink() }}</dd>
-                    </div>
-                </dl>
+                <p>{{ 'ADMIN_TEMPLATES.VARIABLES_HELP' | translate }}</p>
+                <div class="token-list fd-row fd-wrap fd-gap-sm">
+                    @for (name of supportedVariables(); track name) {
+                        <code>{{ `{{${name}}}` }}</code>
+                    }
+                </div>
 
                 <div class="test-send fd-grid fd-gap-sm fd-align-center">
                     <fd-ui-input label="Send test to" [formField]="testEmailForm.email" />
@@ -87,6 +79,12 @@
             </aside>
         </div>
 
+        <fd-admin-template-history
+            kind="email-templates"
+            [templateKey]="data.key"
+            [locale]="data.locale"
+            (restored)="restoreRevision($event)"
+        />
         <div fdUiDialogFooter class="actions fd-row fd-gap-sm fd-justify-end">
             <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
             <fd-ui-button

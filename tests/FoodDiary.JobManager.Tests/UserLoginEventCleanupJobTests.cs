@@ -116,7 +116,7 @@ public sealed class UserLoginEventCleanupJobTests : IDisposable {
             int limit,
             Guid? userId,
             string? search,
-            CancellationToken cancellationToken = default) =>
+            CancellationToken cancellationToken = default, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? provider = null, string? device = null) =>
             throw new NotSupportedException();
 
         public Task<IReadOnlyList<UserLoginDeviceSummaryModel>> GetDeviceSummaryAsync(

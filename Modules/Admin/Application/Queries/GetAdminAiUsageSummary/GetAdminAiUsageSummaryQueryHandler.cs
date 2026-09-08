@@ -10,6 +10,6 @@ public sealed class GetAdminAiUsageSummaryQueryHandler(IAdminAiUsageReadService 
     public async Task<Result<AdminAiUsageSummaryModel>> Handle(
         GetAdminAiUsageSummaryQuery query,
         CancellationToken cancellationToken) {
-        return await readService.GetSummaryAsync(query.From, query.To, cancellationToken).ConfigureAwait(false);
+        return await readService.GetSummaryAsync(query.From, query.To, cancellationToken, query.UserId).ConfigureAwait(false);
     }
 }

@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, form, FormField, FormRoot, min, pattern, required } from '@angular/forms/signals';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
@@ -8,6 +10,8 @@ import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
+import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
+import { adminPage } from '../../../shared/period/admin-query';
 import { AdminAchievementsFacade } from '../lib/admin-achievements.facade';
 import type {
     AchievementMetric,
@@ -32,6 +36,7 @@ const EMPTY_MODEL: CreateAdminAchievementDefinitionRequest = {
 @Component({
     selector: 'fd-admin-achievements',
     imports: [
+        AdminCatalogFilterComponent,
         FdUiPaginationComponent,
         FormField,
         FormRoot,
@@ -79,18 +84,39 @@ export class AdminAchievementsComponent {
         min(path.sortOrder, 0);
     });
 
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
+    private readonly params = toSignal(this.route.queryParamMap, { initialValue: this.route.snapshot.queryParamMap });
+    protected readonly categories = computed(() => [...new Set(this.definitions().map(item => item.category))].sort());
+    protected readonly filteredItems = computed(() =>
+        this.definitions().filter(item =>
+            matchesAdminCatalog(this.params(), {
+                text: `${item.key} ${item.titleEn} ${item.titleRu}`,
+                category: item.category,
+                isActive: item.isActive,
+            }),
+        ),
+    );
     protected readonly pageSize = 20;
     protected readonly requestedPage = signal(0);
     protected readonly pageIndex = computed(() =>
-        Math.min(this.requestedPage(), Math.max(0, Math.ceil(this.definitions().length / this.pageSize) - 1)),
+        Math.min(this.requestedPage(), Math.max(0, Math.ceil(this.filteredItems().length / this.pageSize) - 1)),
     );
     protected readonly pageItems = computed(() =>
-        this.definitions().slice(this.pageIndex() * this.pageSize, (this.pageIndex() + 1) * this.pageSize),
+        this.filteredItems().slice(this.pageIndex() * this.pageSize, (this.pageIndex() + 1) * this.pageSize),
     );
-    protected readonly rangeStart = computed(() => (this.definitions().length === 0 ? 0 : this.pageIndex() * this.pageSize + 1));
-    protected readonly rangeEnd = computed(() => Math.min((this.pageIndex() + 1) * this.pageSize, this.definitions().length));
+    protected readonly rangeStart = computed(() => (this.filteredItems().length === 0 ? 0 : this.pageIndex() * this.pageSize + 1));
+    protected readonly rangeEnd = computed(() => Math.min((this.pageIndex() + 1) * this.pageSize, this.filteredItems().length));
+
+    protected goToPage(pageIndex: number): void {
+        this.requestedPage.set(pageIndex);
+        void this.router.navigate([], { relativeTo: this.route, queryParams: { page: pageIndex + 1 }, queryParamsHandling: 'merge' });
+    }
 
     public constructor() {
+        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
+            this.requestedPage.set(adminPage(params.get('page')) - 1);
+        });
         this.load();
     }
 

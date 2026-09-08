@@ -4,22 +4,32 @@ import { describe, expect, it } from 'vitest';
 import { routes } from './app.routes';
 import { adminAchievementsRoutes } from './features/admin-achievements/admin-achievements.routes';
 import { adminAcquisitionRoutes } from './features/admin-acquisition/admin-acquisition.routes';
+import { adminAiPromptsRoutes } from './features/admin-ai-prompts/admin-ai-prompts.routes';
 import { adminAiUsageRoutes } from './features/admin-ai-usage/admin-ai-usage.routes';
+import { adminAuditRoutes } from './features/admin-audit/admin-audit.routes';
 import { adminBillingRoutes } from './features/admin-billing/admin-billing.routes';
+import { adminBugsRoutes } from './features/admin-bugs/admin-bugs.routes';
 import { adminDashboardRoutes } from './features/admin-dashboard/admin-dashboard.routes';
 import { adminEmailTemplatesRoutes } from './features/admin-email-templates/admin-email-templates.routes';
 import { adminLessonsRoutes } from './features/admin-lessons/admin-lessons.routes';
 import { adminMailInboxRoutes } from './features/admin-mail-inbox/admin-mail-inbox.routes';
 import { adminModerationRoutes } from './features/admin-moderation/admin-moderation.routes';
+import { adminOutgoingEmailsRoutes } from './features/admin-outgoing-emails/admin-outgoing-emails.routes';
+import { adminRetentionRoutes } from './features/admin-retention/admin-retention.routes';
 import { adminUsersRoutes } from './features/admin-users/admin-users.routes';
 
 const protectedFeatureRoutes: Routes[] = [
+    adminRetentionRoutes,
+    adminAuditRoutes,
+    adminBugsRoutes,
     adminDashboardRoutes,
     adminUsersRoutes,
     adminAiUsageRoutes,
     adminAcquisitionRoutes,
+    adminAiPromptsRoutes,
     adminBillingRoutes,
     adminEmailTemplatesRoutes,
+    adminOutgoingEmailsRoutes,
     adminMailInboxRoutes,
     adminLessonsRoutes,
     adminAchievementsRoutes,

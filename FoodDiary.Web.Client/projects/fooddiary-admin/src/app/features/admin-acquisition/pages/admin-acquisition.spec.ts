@@ -1,27 +1,41 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../src/testing/translate-testing.module';
 import { AdminAcquisitionFacade } from '../lib/admin-acquisition.facade';
 import type { MarketingAttributionSummary } from '../models/admin-acquisition.data';
 import { AdminAcquisitionComponent } from './admin-acquisition';
 
 describe('AdminAcquisitionComponent', () => {
     const EXPECTED_TABLE_COUNT = 3;
-    const DEFAULT_WINDOW_HOURS = 720;
-    const SELECTED_WINDOW_HOURS = 168;
+    const SEVEN_DAYS_MS = 604_800_000;
+
     let fixture: ComponentFixture<AdminAcquisitionComponent>;
     const summary = createSummary();
     const facade = {
-        getSummary: vi.fn(() => of(summary)),
+        getRange: vi.fn((params: Record<string, string | number>) => {
+            const events =
+                params['channel'] === 'tracked' ? summary.recentEvents.filter(item => item.utmSource !== null) : summary.recentEvents;
+            return of({
+                fromUtc: String(params['fromUtc']),
+                toUtc: String(params['toUtc']),
+                previousFromUtc: '2026-06-01T00:00:00Z',
+                current: { ...summary, recentEvents: events },
+                previous: summary,
+                byDay: [],
+                eventTotal: events.length,
+            });
+        }),
     };
 
     beforeEach(async () => {
-        facade.getSummary.mockClear();
+        facade.getRange.mockClear();
         await TestBed.configureTestingModule({
             imports: [AdminAcquisitionComponent],
-            providers: [{ provide: AdminAcquisitionFacade, useValue: facade }],
+            providers: [provideRouter([]), ...provideTranslateTesting(), { provide: AdminAcquisitionFacade, useValue: facade }],
         }).compileComponents();
 
         fixture = TestBed.createComponent(AdminAcquisitionComponent);
@@ -38,29 +52,26 @@ describe('AdminAcquisitionComponent', () => {
         expect(element.textContent).toContain('Campaign performance');
         expect(element.textContent).toContain('Channel performance');
         expect(element.querySelectorAll('table')).toHaveLength(EXPECTED_TABLE_COUNT);
-        expect(facade.getSummary).toHaveBeenCalledWith(DEFAULT_WINDOW_HOURS);
+        expect(facade.getRange).toHaveBeenCalledWith(expect.objectContaining({ page: 1, limit: 50 }));
     });
 
-    it('reloads data when the reporting period changes', () => {
-        const element = fixture.nativeElement as HTMLElement;
-        const select = getRequiredSelect(element, '#admin-acquisition-window');
-
-        select.value = SELECTED_WINDOW_HOURS.toString();
-        select.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-
-        expect(facade.getSummary).toHaveBeenLastCalledWith(SELECTED_WINDOW_HOURS);
+    it('reloads data when the reporting period changes', async () => {
+        await TestBed.inject(Router).navigate([], { queryParams: { period: '7d' } });
+        await fixture.whenStable();
+        const params = facade.getRange.mock.lastCall?.[0];
+        expect(Date.parse(String(params?.['toUtc'])) - Date.parse(String(params?.['fromUtc']))).toBe(SEVEN_DAYS_MS);
     });
 
-    it('filters the event log by attribution state', () => {
+    it('filters the event log by attribution state', async () => {
         const element = fixture.nativeElement as HTMLElement;
         const select = getRequiredSelect(element, '#admin-acquisition-channel');
 
         select.value = 'tracked';
         select.dispatchEvent(new Event('change'));
+        await fixture.whenStable();
         fixture.detectChanges();
 
-        expect(element.textContent).toContain('Showing 1 of 2 recent events');
+        expect(facade.getRange).toHaveBeenLastCalledWith(expect.objectContaining({ channel: 'tracked', page: 1 }));
         expect(element.textContent).toContain('telegram / social / launch');
         expect(element.textContent).not.toContain('/direct-only');
     });

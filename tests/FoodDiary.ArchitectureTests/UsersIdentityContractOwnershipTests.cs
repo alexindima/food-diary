@@ -6,9 +6,9 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class UsersIdentityContractOwnershipTests {
     [Theory]
-    [InlineData("Modules/Users/Contracts", 64)]
+    [InlineData("Modules/Users/Contracts", 65)]
     [InlineData("Modules/Users/Application/Abstractions", 7)]
-    [InlineData("Modules/Identity/Application/Abstractions", 45)]
+    [InlineData("Modules/Identity/Application/Abstractions", 46)]
     public void ContractSources_AreOwnedByTheDeclaredProject(string relativeRoot, int count) {
         Assert.Equal(count, SourceScanner.SourceFiles(ArchitectureTestPaths.FromRoot(relativeRoot)).Count());
     }

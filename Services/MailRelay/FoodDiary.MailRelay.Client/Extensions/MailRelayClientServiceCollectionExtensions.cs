@@ -25,6 +25,12 @@ public static class MailRelayClientServiceCollectionExtensions {
             client.Timeout = options.Timeout;
         });
 
+        services.AddHttpClient<FoodDiary.MailRelay.Client.Journal.IMailRelayJournalClient, FoodDiary.MailRelay.Client.Journal.MailRelayJournalClient>((sp, client) => {
+            MailRelayClientOptions options = sp.GetRequiredService<IOptions<MailRelayClientOptions>>().Value;
+            client.BaseAddress = new Uri(options.BaseUrl, UriKind.Absolute);
+            client.Timeout = options.Timeout;
+        });
+
         return services;
     }
 }

@@ -1,13 +1,31 @@
-<div class="admin-users fd-grid fd-gap-md">
-    <fd-admin-sessions-section
-        [search]="sessionsSearch()"
-        [isLoading]="isSessionsLoading()"
-        [totalItems]="sessionsTotalItems()"
-        [sessions]="sessions()"
-        [page]="sessionsPage()"
-        [pageSize]="pageSize"
-        [totalPages]="sessionsTotalPages()"
-        (searchChange)="onSessionsSearchChange($event)"
-        (pageChange)="goToSessionsPage($event)"
+<fd-admin-period />
+<div class="fd-row fd-gap-sm fd-wrap fd-align-end">
+    <fd-ui-input
+        [label]="'ADMIN_ACTIVITY.actorId' | translate"
+        [value]="firstFilter()"
+        (valueChange)="firstFilter.set($event?.toString() || '')"
     />
+    <fd-ui-input
+        [label]="'ADMIN_ACTIVITY.targetId' | translate"
+        [value]="secondFilter()"
+        (valueChange)="secondFilter.set($event?.toString() || '')"
+    />
+    <fd-ui-button (click)="sessionsPage.set(1); applyFilters()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
 </div>
+@if (loadFailed()) {
+    <fd-admin-load-error (retry)="loadSessions()" />
+} @else {
+    <div class="admin-users fd-grid fd-gap-md">
+        <fd-admin-sessions-section
+            [search]="sessionsSearch()"
+            [isLoading]="isSessionsLoading()"
+            [totalItems]="sessionsTotalItems()"
+            [sessions]="sessions()"
+            [page]="sessionsPage()"
+            [pageSize]="pageSize"
+            [totalPages]="sessionsTotalPages()"
+            (searchChange)="onSessionsSearchChange($event)"
+            (pageChange)="goToSessionsPage($event)"
+        />
+    </div>
+}

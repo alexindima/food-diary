@@ -10,7 +10,7 @@ public interface IAdminUserLoginReadService {
         int limit,
         Guid? userId,
         string? search,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? provider = null, string? device = null);
 
     Task<Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>> GetSummaryAsync(
         DateTime? fromUtc,

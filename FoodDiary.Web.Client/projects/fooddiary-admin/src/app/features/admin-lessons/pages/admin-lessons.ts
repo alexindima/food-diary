@@ -1,6 +1,8 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
@@ -8,6 +10,9 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { filter, switchMap } from 'rxjs';
 
+import { AdminCatalogFilterComponent, matchesAdminCatalog } from '../../../shared/catalog/admin-catalog-filter';
+import { AdminLoadErrorComponent } from '../../../shared/feedback/admin-load-error';
+import { adminPage } from '../../../shared/period/admin-query';
 import { AdminLessonEditDialogComponent } from '../dialogs/admin-lesson-edit-dialog';
 import { AdminLessonsFacade } from '../lib/admin-lessons.facade';
 import type { AdminLesson, AdminLessonCreateRequest, AdminLessonsImportRequest } from '../models/admin-lesson.data';
@@ -17,12 +22,20 @@ const EXPORT_DATE_LENGTH = 10;
 
 @Component({
     selector: 'fd-admin-lessons',
-    imports: [FdUiPaginationComponent, TranslatePipe, CommonModule, FdUiButtonComponent],
+    imports: [
+        AdminCatalogFilterComponent,
+        AdminLoadErrorComponent,
+        FdUiPaginationComponent,
+        TranslatePipe,
+        CommonModule,
+        FdUiButtonComponent,
+    ],
     templateUrl: './admin-lessons.html',
     styleUrl: './admin-lessons.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLessonsComponent {
+    protected readonly loadFailed = signal(false);
     private readonly lessonsFacade = inject(AdminLessonsFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
@@ -33,22 +46,45 @@ export class AdminLessonsComponent {
     protected readonly isImporting = signal(false);
     protected readonly importMessage = signal<string | null>(null);
 
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
+    private readonly params = toSignal(this.route.queryParamMap, { initialValue: this.route.snapshot.queryParamMap });
+    protected readonly categories = computed(() => [...new Set(this.lessons().map(item => item.category))].sort());
+    protected readonly filteredItems = computed(() =>
+        this.lessons().filter(item =>
+            matchesAdminCatalog(this.params(), {
+                text: `${item.title} ${item.summary ?? ''}`,
+                locale: item.locale,
+                category: item.category,
+                isActive: item.isPublished ?? true,
+            }),
+        ),
+    );
     protected readonly pageSize = 20;
     protected readonly requestedPage = signal(0);
     protected readonly pageIndex = computed(() =>
-        Math.min(this.requestedPage(), Math.max(0, Math.ceil(this.lessons().length / this.pageSize) - 1)),
+        Math.min(this.requestedPage(), Math.max(0, Math.ceil(this.filteredItems().length / this.pageSize) - 1)),
     );
     protected readonly pageItems = computed(() =>
-        this.lessons().slice(this.pageIndex() * this.pageSize, (this.pageIndex() + 1) * this.pageSize),
+        this.filteredItems().slice(this.pageIndex() * this.pageSize, (this.pageIndex() + 1) * this.pageSize),
     );
-    protected readonly rangeStart = computed(() => (this.lessons().length === 0 ? 0 : this.pageIndex() * this.pageSize + 1));
-    protected readonly rangeEnd = computed(() => Math.min((this.pageIndex() + 1) * this.pageSize, this.lessons().length));
+    protected readonly rangeStart = computed(() => (this.filteredItems().length === 0 ? 0 : this.pageIndex() * this.pageSize + 1));
+    protected readonly rangeEnd = computed(() => Math.min((this.pageIndex() + 1) * this.pageSize, this.filteredItems().length));
+
+    protected goToPage(pageIndex: number): void {
+        this.requestedPage.set(pageIndex);
+        void this.router.navigate([], { relativeTo: this.route, queryParams: { page: pageIndex + 1 }, queryParamsHandling: 'merge' });
+    }
 
     public constructor() {
+        this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe(params => {
+            this.requestedPage.set(adminPage(params.get('page')) - 1);
+        });
         this.loadLessons();
     }
 
     protected loadLessons(): void {
+        this.loadFailed.set(false);
         this.isLoading.set(true);
         this.lessonsFacade
             .getAll()
@@ -59,6 +95,7 @@ export class AdminLessonsComponent {
                     this.isLoading.set(false);
                 },
                 error: () => {
+                    this.loadFailed.set(true);
                     this.lessons.set([]);
                     this.isLoading.set(false);
                 },
@@ -76,6 +113,7 @@ export class AdminLessonsComponent {
             difficulty: 'Beginner',
             estimatedReadMinutes: DEFAULT_ESTIMATED_READ_MINUTES,
             sortOrder: 0,
+            isPublished: false,
             createdOnUtc: new Date().toISOString(),
             modifiedOnUtc: null,
             isNew: true,
@@ -137,7 +175,7 @@ export class AdminLessonsComponent {
     protected exportLessons(): void {
         const payload: AdminLessonsImportRequest = {
             version: 1,
-            lessons: this.lessons().map(lesson => this.toImportLesson(lesson)),
+            lessons: this.filteredItems().map(lesson => this.toImportLesson(lesson)),
         };
         const fileName = `fooddiary-lessons-${new Date().toISOString().slice(0, EXPORT_DATE_LENGTH)}.json`;
         const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
@@ -204,6 +242,7 @@ export class AdminLessonsComponent {
             difficulty: lesson.difficulty,
             estimatedReadMinutes: lesson.estimatedReadMinutes,
             sortOrder: lesson.sortOrder,
+            isPublished: lesson.isPublished ?? true,
         };
     }
 

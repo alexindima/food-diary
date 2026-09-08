@@ -1,3 +1,4 @@
+using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
@@ -20,7 +21,7 @@ public sealed class GetAdminContentReportsQueryHandler(IAdminContentReadService 
         ReportStatus? status = EnumFilterParser.ParseOptional<ReportStatus>(query.Status);
 
         PagedResponse<AdminContentReportModel> reports = await adminContentReadService
-            .GetContentReportsAsync(status, pageNumber, pageSize, cancellationToken)
+            .GetContentReportsAsync(status, pageNumber, pageSize, cancellationToken, new ContentReportAdminFilter(query.FromUtc, query.ToUtc, query.TargetType, query.ReporterId, query.TargetId))
             .ConfigureAwait(false);
         return Result.Success(reports);
     }

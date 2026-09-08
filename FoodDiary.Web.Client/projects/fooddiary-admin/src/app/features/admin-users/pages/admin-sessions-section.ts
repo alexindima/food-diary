@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { fdUiCoerceInputTextValue, FdUiInputComponent, type FdUiInputValue } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 
@@ -7,7 +8,7 @@ import type { AdminImpersonationSession } from '../models/admin-user.models';
 
 @Component({
     selector: 'fd-admin-sessions-section',
-    imports: [DatePipe, FdUiInputComponent, FdUiPaginationComponent],
+    imports: [RouterLink, DatePipe, FdUiInputComponent, FdUiPaginationComponent],
     templateUrl: './admin-sessions-section.html',
     styleUrl: './admin-users.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

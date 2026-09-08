@@ -8,4 +8,4 @@ namespace FoodDiary.Application.Admin.Queries.GetAdminContentReports;
 public sealed record GetAdminContentReportsQuery(
     string? Status,
     int Page,
-    int Limit) : IQuery<Result<PagedResponse<AdminContentReportModel>>>;
+    int Limit, DateTime? FromUtc = null, DateTime? ToUtc = null, string? TargetType = null, Guid? ReporterId = null, Guid? TargetId = null) : IQuery<Result<PagedResponse<AdminContentReportModel>>>;

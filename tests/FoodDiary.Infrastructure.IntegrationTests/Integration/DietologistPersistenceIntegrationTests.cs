@@ -28,6 +28,31 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();
 
     [RequiresDockerFact]
+    public async Task AuditJournal_FiltersBeforePaginationAndUsesExclusiveEnd() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var actor = Guid.NewGuid();
+        var client = Guid.NewGuid();
+        DateTime start = UtcNow.Date;
+        var expectedId = Guid.NewGuid();
+        context.AuditEntries.AddRange(
+            new AuditEntry { Id = expectedId, ActorUserId = actor, SubjectClientUserId = client, Action = "test.action", TargetType = "Test", CreatedAtUtc = start },
+            new AuditEntry { Id = Guid.NewGuid(), ActorUserId = actor, SubjectClientUserId = client, Action = "test.action", TargetType = "Test", CreatedAtUtc = start.AddHours(1) },
+            new AuditEntry { Id = Guid.NewGuid(), ActorUserId = actor, SubjectClientUserId = client, Action = "test.action", TargetType = "Test", CreatedAtUtc = start.AddDays(1) },
+            new AuditEntry { Id = Guid.NewGuid(), ActorUserId = Guid.NewGuid(), SubjectClientUserId = client, Action = "test.action", TargetType = "Test", CreatedAtUtc = start });
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var service = new AuditEntryService(context, FixedTime);
+        var filter = new AuditEntryFilter(Page: 2, Limit: 1, FromUtc: new DateTimeOffset(start), ToUtc: new DateTimeOffset(start.AddDays(1)),
+            ActorUserId: actor, SubjectClientUserId: client, Action: "test.action", TargetType: "Test", TargetId: null);
+
+        AuditEntryPage result = await service.GetPageAsync(filter, CancellationToken.None);
+
+        Assert.Equal(2, result.TotalItems);
+        Assert.Equal(expectedId, Assert.Single(result.Items).Id);
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+
+    [RequiresDockerFact]
     public async Task ModuleAudit_ComposesAfterDomainEvents_AndSharesCommitAndRollback() {
         await using FoodDiaryDbContext database = await databaseFixture.CreateDbContextAsync();
         var dietologist = User.Create($"audit-diet-{Guid.NewGuid():N}@example.com", "hash");

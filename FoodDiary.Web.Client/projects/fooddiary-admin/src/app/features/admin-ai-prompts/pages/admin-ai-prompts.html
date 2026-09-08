@@ -1,0 +1,55 @@
+<div class="fd-row fd-wrap fd-gap-sm">
+    <fd-ui-input [label]="'ADMIN_COMMON.SEARCH' | translate" [value]="search()" (valueChange)="search.set($event?.toString() || '')" />
+    <fd-ui-button (click)="edit(null)">{{ 'ADMIN_PROMPTS.NEW' | translate }}</fd-ui-button>
+</div>
+@if (loading()) {
+    <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+} @else if (failed()) {
+    <fd-admin-load-error (retry)="load()" />
+} @else {
+    <div class="prompt-layout">
+        <div class="fd-grid fd-gap-sm">
+            @for (item of filtered(); track item.id) {
+                <button type="button" [attr.aria-pressed]="selected()?.id === item.id" (click)="edit(item)">
+                    {{ item.key }} · {{ item.locale }} · v{{ item.version }} ·
+                    {{ (item.isActive ? 'ADMIN_PROMPTS.ACTIVE' : 'ADMIN_PROMPTS.INACTIVE') | translate }}
+                </button>
+            } @empty {
+                <p>{{ 'ADMIN_COMMON.EMPTY' | translate }}</p>
+            }
+        </div>
+        <form class="fd-grid fd-gap-sm" [formRoot]="form">
+            <label for="admin-ai-prompts-field-1">{{ 'ADMIN_PROMPTS.KEY' | translate }}</label
+            ><input id="admin-ai-prompts-field-1" [formField]="form.key" [readOnly]="selected() !== null" />
+            <label for="admin-ai-prompts-field-2">{{ 'ADMIN_PROMPTS.LOCALE' | translate }}</label
+            ><select id="admin-ai-prompts-field-2" [formField]="form.locale">
+                <option value="en">English</option>
+                <option value="ru">Русский</option>
+            </select>
+            <label for="admin-ai-prompts-field-3">{{ 'ADMIN_PROMPTS.TEXT' | translate }}</label
+            ><textarea id="admin-ai-prompts-field-3" rows="18" [formField]="form.promptText"></textarea>
+            <label for="admin-ai-prompts-field-4">{{ 'ADMIN_PROMPTS.ACTIVE' | translate }}</label
+            ><input id="admin-ai-prompts-field-4" type="checkbox" [formField]="form.isActive" />
+            @if (saveFailed()) {
+                <p role="alert">{{ 'ADMIN_PROMPTS.SAVE_ERROR' | translate }}</p>
+            }
+            @if (saved()) {
+                <p role="status">{{ 'ADMIN_PROMPTS.SAVED' | translate }}</p>
+            }
+            <fd-ui-button
+                type="submit"
+                [disabled]="form().invalid()"
+                [disabledReason]="'ADMIN_COMMON.REQUIRED_FIELDS' | translate"
+                [loading]="saving()"
+                >{{ 'ADMIN_PROMPTS.SAVE' | translate }}</fd-ui-button
+            >
+        </form>
+        <fd-admin-template-history
+            kind="ai-prompts"
+            [templateKey]="selected()?.key ?? ''"
+            [locale]="selected()?.locale ?? ''"
+            [refreshToken]="selected()?.updatedOnUtc"
+            (restored)="restoreRevision($event)"
+        />
+    </div>
+}

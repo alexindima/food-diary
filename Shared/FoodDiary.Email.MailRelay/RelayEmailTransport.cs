@@ -21,7 +21,8 @@ internal sealed class RelayEmailTransport(IMailRelayClient mailRelayClient) : IE
             message.Subject,
             message.HtmlBody,
             message.TextBody,
-            CorrelationId: message.IdempotencyKey ?? Guid.NewGuid().ToString("N"),
-            IdempotencyKey: message.IdempotencyKey);
+            CorrelationId: message.CorrelationId ?? message.IdempotencyKey ?? Guid.NewGuid().ToString("N"),
+            IdempotencyKey: message.IdempotencyKey,
+            Purpose: message.Purpose, ReplyTo: message.ReplyTo, InReplyTo: message.InReplyTo, AutoSubmitted: message.AutoSubmitted);
     }
 }

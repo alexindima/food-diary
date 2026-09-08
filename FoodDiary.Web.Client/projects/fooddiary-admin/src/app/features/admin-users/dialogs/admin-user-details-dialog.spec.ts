@@ -156,7 +156,7 @@ describe('AdminUserDetailsDialogComponent', () => {
 
         expect(component).toBeTruthy();
         expect(usersFacade.getUser).toHaveBeenCalledWith(baseUser.id);
-        expect(usersFacade.getLoginEvents).toHaveBeenCalledWith(1, ACTIVITY_PREVIEW_LIMIT, null, baseUser.id);
+        expect(usersFacade.getLoginEvents).toHaveBeenCalledWith(1, ACTIVITY_PREVIEW_LIMIT, null, { userId: baseUser.id });
         expect(usersFacade.getUserRoleAudit).toHaveBeenCalledWith(baseUser.id);
         expect(component['isLoading']()).toBe(false);
         expect(component['hasError']()).toBe(false);

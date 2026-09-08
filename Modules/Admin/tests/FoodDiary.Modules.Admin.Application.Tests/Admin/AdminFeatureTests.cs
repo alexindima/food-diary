@@ -318,6 +318,21 @@ public partial class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task SendAdminEmailTemplateTestHandler_UsesDemoAccountVariablesWithoutCreatingCredentials() {
+        var transport = new RecordingEmailTransport();
+        var handler = new SendAdminEmailTemplateTestCommandHandler(new EmailOptions {
+            FromAddress = "noreply@example.com",
+            FromName = "FoodDiary",
+        }, transport);
+        Result result = await handler.Handle(new SendAdminEmailTemplateTestCommand(
+            "admin@example.com", "account_created", "{{brand}} account",
+            "{{email}} {{temporaryPassword}} {{loginLink}} {{link}}", "{{email}}"), CancellationToken.None);
+        ResultAssert.Success(result);
+        Assert.Equal("demo@example.com Demo-only-password https://fooddiary.club/login https://fooddiary.club/login", transport.Body);
+        Assert.Equal("FoodDiary account", transport.Subject);
+    }
+
+    [Fact]
     public async Task UpsertAdminAiPromptHandler_WhenPromptMissing_CreatesTemplate() {
         var repository = new InMemoryAiPromptTemplateRepository();
         var handler = new UpsertAdminAiPromptCommandHandler(new AiPromptAdministrationService(repository));
@@ -581,6 +596,8 @@ public partial class AdminFeatureTests {
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
+        public Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> GetFilteredPagedAsync(string? search, int page, int limit, UserAccountStatusFilter status, UserAdministrationFilter filter, CancellationToken cancellationToken) => throw new NotSupportedException();
+
         Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> IAdminUserReadService.GetPagedAsync(
             string? search,
             int page,
@@ -677,7 +694,7 @@ public partial class AdminFeatureTests {
             int page,
             int limit,
             string? search,
-            CancellationToken cancellationToken = default) {
+            CancellationToken cancellationToken = default, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, Guid? actorId = null, Guid? targetId = null) {
             LastPage = page;
             LastLimit = limit;
             LastSearch = search;
@@ -702,6 +719,9 @@ public partial class AdminFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingAiUsageRepository(
         FoodDiary.Application.Abstractions.Admin.Models.AiUsageSummary? response = null) : IAiUsageRepository {
+        public Task<FoodDiary.Application.Abstractions.Admin.Models.AiUsageSummary> GetSummaryForUserAsync(
+            DateTime fromUtc, DateTime toUtc, UserId userId, CancellationToken cancellationToken) => GetSummaryAsync(fromUtc, toUtc, cancellationToken);
+
         public DateTime LastFromUtc { get; private set; }
         public DateTime LastToUtc { get; private set; }
 
@@ -782,6 +802,8 @@ public partial class AdminFeatureTests {
             UserAccountStatusFilter status,
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+        public Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> GetFilteredPagedAsync(string? search, int page, int limit, UserAccountStatusFilter status, UserAdministrationFilter filter, CancellationToken cancellationToken) => throw new NotSupportedException();
+
         Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> IAdminUserReadService.GetPagedAsync(
             string? search,
             int page,
@@ -822,7 +844,7 @@ public partial class AdminFeatureTests {
             ReportStatus? status,
             int page,
             int limit,
-            CancellationToken cancellationToken = default) {
+            CancellationToken cancellationToken = default, ContentReportAdminFilter? filter = null) {
             LastStatus = status;
             LastPage = page;
             LastLimit = limit;
@@ -884,6 +906,8 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryAiPromptTemplateRepository(params AiPromptTemplate[] templates) : IAiPromptTemplateRepository {
+        public Task<IReadOnlyList<AiPromptRevisionReadModel>> GetRevisionsAsync(string key, string locale, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<AiPromptRevisionReadModel>>([]);
         private readonly List<AiPromptTemplate> _templates = [.. templates];
 
         public IReadOnlyList<AiPromptTemplate> Templates => _templates;
@@ -974,6 +998,8 @@ public partial class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryEmailTemplateRepository(params EmailTemplate[] templates) : IEmailTemplateRepository {
+        public Task<IReadOnlyList<EmailTemplateRevisionReadModel>> GetRevisionsAsync(string key, string locale, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<EmailTemplateRevisionReadModel>>([]);
         public Task<EmailTemplate> UpsertAsync(
             string key,
             string locale,

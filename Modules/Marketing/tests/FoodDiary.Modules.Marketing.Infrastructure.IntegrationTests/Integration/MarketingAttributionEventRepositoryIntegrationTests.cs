@@ -9,6 +9,32 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class MarketingAttributionEventRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task GetRangeAsync_SeparatesSummaryFromPagedJournalAndPreviousPeriod() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var start = new DateTime(2030, 7, 9, 0, 0, 0, DateTimeKind.Utc);
+        var repository = new MarketingAttributionEventRepository(context);
+        await repository.AddAsync(CreateRecord("page_landing", start.AddDays(-1), "previous"));
+        await repository.AddAsync(CreateRecord("page_landing", start, "first") with { UtmCampaign = "literal_%" });
+        await repository.AddAsync(CreateRecord("page_landing", start.AddHours(1), "second") with { UtmCampaign = "literal_%" });
+        await repository.AddAsync(CreateRecord("signup_completed", start.AddHours(2), "signup"));
+        await repository.AddAsync(CreateRecord("page_landing", start.AddDays(1), "exclusive-end"));
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var filter = new MarketingAttributionRangeFilter(start, start.AddDays(1), Page: 2, Limit: 1, EventType: "page_landing", Channel: "tracked", Search: "_%");
+
+        MarketingAttributionRangeRecord result = await repository.GetRangeAsync(filter, CancellationToken.None);
+
+        Assert.Equal(3, result.Current.Events);
+        Assert.Equal(2, result.Current.Visits);
+        Assert.Equal(1, result.Current.Signups);
+        Assert.Equal(1, result.Previous.Visits);
+        Assert.Equal(2, result.EventTotal);
+        Assert.Equal("first", Assert.Single(result.Current.RecentEvents).SessionId);
+        Assert.Equal(new MarketingAttributionDayRecord(start, Visits: 2, Signups: 1, PremiumStarts: 0), Assert.Single(result.ByDay));
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+
+    [RequiresDockerFact]
     public async Task AddAsync_UsesProvidedEventIdAsDurableDeduplicationKey() {
         var eventId = Guid.NewGuid();
         var occurredAtUtc = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);

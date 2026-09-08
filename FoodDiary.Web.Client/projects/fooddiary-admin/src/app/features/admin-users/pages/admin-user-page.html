@@ -1,0 +1,42 @@
+<a routerLink="/users" queryParamsHandling="preserve">{{ 'ADMIN_COMMON.BACK' | translate }}</a>
+@if (failed()) {
+    <fd-admin-load-error (retry)="reload()" />
+} @else if (user(); as account) {
+    <h1>{{ account.email }}</h1>
+    <fd-ui-card>
+        <dl>
+            <dt>{{ 'ADMIN_COMMON.USER' | translate }}</dt>
+            <dd>{{ account.id }}</dd>
+            <dt>{{ 'ADMIN_COMMON.REGISTERED' | translate }}</dt>
+            <dd>{{ account.createdOnUtc | date: 'medium' }}</dd>
+            <dt>{{ 'ADMIN_USER.ROLES' | translate }}</dt>
+            <dd>{{ account.roles.join(', ') }}</dd>
+            <dt>{{ 'ADMIN_USER.LAST_LOGIN' | translate }}</dt>
+            <dd>{{ account.lastLoginAtUtc | date: 'medium' }}</dd>
+        </dl>
+        <div class="fd-row fd-wrap fd-gap-sm">
+            <fd-ui-button (click)="details(account)">{{ 'ADMIN_USER.PROFILE' | translate }}</fd-ui-button>
+            <fd-ui-button variant="secondary" (click)="edit(account)">{{ 'ADMIN_USER.EDIT' | translate }}</fd-ui-button>
+        </div>
+    </fd-ui-card>
+    <nav class="fd-row fd-wrap fd-gap-md" [attr.aria-label]="'ADMIN_USER.RELATED' | translate">
+        <a routerLink="/billing" queryParamsHandling="merge" [queryParams]="{ search: account.email }">{{
+            'ADMIN_NAV.BILLING' | translate
+        }}</a>
+        <a routerLink="/outgoing-emails" queryParamsHandling="merge" [queryParams]="{ recipient: account.email }">{{
+            'ADMIN_OUTGOING.OUTGOING' | translate
+        }}</a>
+        <a routerLink="/users/login-activity" queryParamsHandling="merge" [queryParams]="{ userId: account.id, search: account.email }">{{
+            'ADMIN_NAV.LOGINS' | translate
+        }}</a>
+        <a routerLink="/users/impersonation-sessions" queryParamsHandling="merge" [queryParams]="{ targetId: account.id, search: null }">{{
+            'ADMIN_NAV.SESSIONS' | translate
+        }}</a>
+        <a routerLink="/ai-usage" queryParamsHandling="merge" [queryParams]="{ userId: account.id }">{{ 'ADMIN_NAV.AI' | translate }}</a>
+        <a routerLink="/audit" queryParamsHandling="merge" [queryParams]="{ subjectClientUserId: account.id, actorUserId: null }">{{
+            'ADMIN_NAV.AUDIT' | translate
+        }}</a>
+    </nav>
+} @else {
+    <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+}

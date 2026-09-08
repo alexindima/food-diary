@@ -1,0 +1,26 @@
+<section class="fd-grid fd-gap-sm">
+    <h3>{{ 'ADMIN_TEMPLATE_HISTORY.TITLE' | translate }}</h3>
+    <p>{{ 'ADMIN_TEMPLATE_HISTORY.HELP' | translate }}</p>
+    @if (loading()) {
+        <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+    } @else if (failed()) {
+        <fd-admin-load-error (retry)="retry()" />
+    } @else {
+        @for (revision of revisions(); track revision.id) {
+            <details>
+                <summary>{{ revision.savedOnUtc | date: 'medium' }} · {{ revision.version ?? '—' }}</summary>
+                <p>{{ revision.subject }}</p>
+                <pre class="fd-ui-body-sm">{{ revision.textBody }}</pre>
+                <details>
+                    <summary>HTML</summary>
+                    <pre>{{ revision.htmlBody }}</pre>
+                </details>
+                <fd-ui-button type="button" variant="secondary" (click)="restored.emit(revision)">{{
+                    'ADMIN_TEMPLATE_HISTORY.RESTORE' | translate
+                }}</fd-ui-button>
+            </details>
+        } @empty {
+            <p>{{ 'ADMIN_TEMPLATE_HISTORY.EMPTY' | translate }}</p>
+        }
+    }
+</section>

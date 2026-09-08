@@ -1,0 +1,40 @@
+<fd-admin-period />
+<form [formRoot]="form">
+    <fd-ui-input [label]="'ADMIN_BUGS.SEARCH' | translate" [formField]="form.search" />
+    <fd-ui-input [label]="'ADMIN_BUGS.STATUS' | translate" [formField]="form.status" />
+    <fd-ui-button type="submit">{{ 'ADMIN_CATALOG.APPLY' | translate }}</fd-ui-button>
+</form>
+@if (detailId()) {
+    <a routerLink="/bugs" queryParamsHandling="merge" [queryParams]="{ page: 1 }">{{ 'ADMIN_BUGS.BACK' | translate }}</a>
+}
+@if (loading()) {
+    <p role="status">{{ 'ADMIN_COMMON.LOADING' | translate }}</p>
+} @else if (failed()) {
+    <fd-admin-load-error (retry)="retry()" />
+} @else if (result(); as data) {
+    @if (!data.isConfigured) {
+        <p role="status">{{ 'ADMIN_BUGS.NOT_CONFIGURED' | translate }}</p>
+    } @else if (data.items.length === 0) {
+        <p>{{ 'ADMIN_BUGS.EMPTY' | translate }}</p>
+    } @else {
+        <p>{{ 'ADMIN_BUGS.TOTAL' | translate }}: {{ data.totalItems }}</p>
+        @for (report of data.items; track report.id) {
+            <fd-admin-bug-report-card [report]="report" [pullRequestUrl]="safePullRequestUrl(report.mergeRequestUrl)" />
+        }
+        @if (!detailId()) {
+            <fd-ui-button
+                [disabled]="page() <= 1"
+                [disabledReason]="'ADMIN_COMMON.FIRST_PAGE' | translate"
+                (click)="goToPage(page() - 1)"
+                >{{ 'ADMIN_COMMON.PREVIOUS' | translate }}</fd-ui-button
+            >
+            <span>{{ page() }}</span>
+            <fd-ui-button
+                [disabled]="page() * 25 >= data.totalItems"
+                [disabledReason]="'ADMIN_COMMON.LAST_PAGE' | translate"
+                (click)="goToPage(page() + 1)"
+                >{{ 'ADMIN_COMMON.NEXT' | translate }}</fd-ui-button
+            >
+        }
+    }
+}

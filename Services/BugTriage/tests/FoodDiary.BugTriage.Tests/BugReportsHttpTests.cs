@@ -17,6 +17,28 @@ namespace FoodDiary.BugTriage.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class BugReportsHttpTests {
     [Fact]
+    public async Task Journal_UsesSeparateReadCredentialAndRejectsWorkerOperations() {
+        await using var factory = new Factory();
+        factory.Journal.GetPageAsync(Arg.Any<BugReportJournalFilter>(), Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>())
+            .Returns(new BugReportJournalPage([], 0));
+        using HttpClient client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add("X-BugTriage-Read-Key", Factory.ReadKey);
+        using HttpResponseMessage journal = await client.GetAsync("/api/report-journal?page=2&limit=10&status=not_confirmed");
+        Assert.Equal(HttpStatusCode.OK, journal.StatusCode);
+        Assert.True(journal.Headers.CacheControl?.NoStore);
+        await factory.Journal.Received(1).GetPageAsync(Arg.Is<BugReportJournalFilter>(filter =>
+            filter.Page == 2 && filter.Limit == 10 && filter.Status == "not_confirmed"), Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>());
+
+        client.DefaultRequestHeaders.Add("X-BugTriage-Key", Factory.ReadKey);
+        using HttpResponseMessage claim = await client.PostAsync("/api/bug-reports/claim", content: null);
+        Assert.Equal(HttpStatusCode.Unauthorized, claim.StatusCode);
+        client.DefaultRequestHeaders.Remove("X-BugTriage-Read-Key");
+        client.DefaultRequestHeaders.Add("X-BugTriage-Read-Key", Factory.Key);
+        using HttpResponseMessage wrongKey = await client.GetAsync("/api/report-journal");
+        Assert.Equal(HttpStatusCode.Unauthorized, wrongKey.StatusCode);
+    }
+
+    [Fact]
     public async Task ClientCancellation_AbortsPendingRequestWithoutServiceErrorResponse() {
         await using var factory = new Factory();
         var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -112,11 +134,14 @@ public sealed class BugReportsHttpTests {
     [ExcludeFromCodeCoverage]
     private sealed class Factory : WebApplicationFactory<Program> {
         public const string Key = "test-only-bugtriage-key-with-32-characters";
+        public const string ReadKey = "test-only-read-journal-key-with-32-characters";
         public IBugReportStore Store { get; } = Substitute.For<IBugReportStore>();
+        public IBugReportJournal Journal { get; } = Substitute.For<IBugReportJournal>();
 
         protected override void ConfigureWebHost(IWebHostBuilder builder) {
             builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["BugTriageHttp:ApiKey"] = Key,
+                ["BugTriageHttp:ReadApiKey"] = ReadKey,
                 ["MailInboxClient:BaseUrl"] = "https://mail.example.invalid",
                 ["MailInboxClient:MetadataApiKey"] = new string('m', 32),
                 ["MailInboxClient:ContentApiKey"] = new string('c', 32),
@@ -124,6 +149,8 @@ public sealed class BugReportsHttpTests {
             builder.ConfigureTestServices(services => {
                 services.RemoveAll<IBugReportStore>();
                 services.AddSingleton(Store);
+                services.RemoveAll<IBugReportJournal>();
+                services.AddSingleton(Journal);
                 ServiceDescriptor? worker = services.SingleOrDefault(d => d.ServiceType == typeof(IHostedService) && d.ImplementationType == typeof(BugMailImportWorker));
                 if (worker is not null) {
                     services.Remove(worker);

@@ -7,27 +7,22 @@
             </div>
         </div>
         <div class="admin-acquisition__toolbar-actions">
-            <div class="admin-acquisition__field admin-acquisition__field--compact">
-                <label for="admin-acquisition-window">Reporting period</label>
-                <select id="admin-acquisition-window" [value]="selectedWindowHours()" (change)="setWindow($event)">
-                    <option value="24">Last 24 hours</option>
-                    <option value="168">Last 7 days</option>
-                    <option value="720">Last 30 days</option>
-                    <option value="2160">Last 90 days</option>
-                </select>
-            </div>
+            <fd-admin-period defaultPeriod="30d" />
             <fd-ui-button type="button" variant="secondary" [loading]="isLoading()" (click)="loadSummary()"> Refresh </fd-ui-button>
         </div>
     </div>
 
     @if (isLoading() && summary() === null) {
         <p>Loading acquisition data...</p>
+    } @else if (failed()) {
+        <fd-admin-load-error (retry)="loadSummary()" />
     } @else if (summary(); as data) {
         <div class="admin-acquisition__meta fd-ui-body-xs fd-ui-text-muted">
             {{ formatWindow(data.windowHours) }} · updated {{ formatRelativeDate(data.generatedAtUtc) }} · last event
             {{ formatRelativeDate(data.lastEventAtUtc) }}
         </div>
 
+        <fd-admin-acquisition-comparison [report]="report()" />
         <div class="admin-acquisition__kpis">
             <fd-ui-card>
                 <div class="admin-acquisition__stat fd-grid fd-gap-xxs">
@@ -168,10 +163,17 @@
                     <div>
                         <div class="fd-ui-title-sm">Attribution event log</div>
                         <div class="fd-ui-body-xs fd-ui-text-muted">
-                            Showing {{ filteredRecentEvents().length }} of {{ data.recentEvents.length }} recent events.
+                            {{ 'ADMIN_ACQUISITION.EVENT_TOTAL' | translate }}: {{ report()?.eventTotal }}
                         </div>
                     </div>
                     <div class="admin-acquisition__filters">
+                        <div>
+                            <label for="acquisition-event-search">{{ 'ADMIN_COMMON.SEARCH' | translate }}</label
+                            ><input id="acquisition-event-search" [value]="eventSearch()" (input)="setEventSearch($event)" /><fd-ui-button
+                                (click)="applyEventFilters()"
+                                >{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button
+                            >
+                        </div>
                         <div class="admin-acquisition__field admin-acquisition__field--compact">
                             <label for="admin-acquisition-event-type">Event</label>
                             <select id="admin-acquisition-event-type" [value]="eventTypeFilter()" (change)="setEventTypeFilter($event)">
@@ -192,6 +194,21 @@
                     </div>
                 </div>
 
+                <div class="fd-row fd-gap-sm">
+                    <fd-ui-button
+                        [disabled]="page() <= 1"
+                        [disabledReason]="'ADMIN_COMMON.FIRST_PAGE' | translate"
+                        (click)="goToPage(page() - 1)"
+                        >{{ 'ADMIN_COMMON.PREVIOUS' | translate }}</fd-ui-button
+                    >
+                    <span>{{ page() }}</span>
+                    <fd-ui-button
+                        [disabled]="page() * eventPageSize >= (report()?.eventTotal ?? 0)"
+                        [disabledReason]="'ADMIN_COMMON.LAST_PAGE' | translate"
+                        (click)="goToPage(page() + 1)"
+                        >{{ 'ADMIN_COMMON.NEXT' | translate }}</fd-ui-button
+                    >
+                </div>
                 <div class="admin-acquisition__table-scroll">
                     <table class="admin-acquisition__table admin-acquisition__table--events">
                         <thead>

@@ -19,6 +19,7 @@ public sealed class SmtpRelayDeliveryTransport(
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress(request.FromName, request.FromAddress));
         message.Subject = request.Subject;
+        MailRelayReplyHeaders.Apply(message, request);
 
         foreach (string recipient in request.To) {
             message.To.Add(MailboxAddress.Parse(recipient));

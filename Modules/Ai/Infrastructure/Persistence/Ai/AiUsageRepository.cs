@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Ai;
 
 public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepository {
+    public Task<AiUsageSummary> GetSummaryForUserAsync(DateTime fromUtc, DateTime toUtc, UserId userId, CancellationToken cancellationToken) =>
+        ReadSummaryAsync(CreateSummaryQuery(fromUtc, toUtc).Where(item => item.UserId == userId), cancellationToken);
+
     public async Task AddAsync(AiUsage usage, CancellationToken cancellationToken = default) {
         await context.AiUsages.AddAsync(usage, cancellationToken).ConfigureAwait(false);
     }
@@ -16,6 +19,11 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
         DateTime toUtc,
         CancellationToken cancellationToken = default) {
         IQueryable<AiUsage> query = CreateSummaryQuery(fromUtc, toUtc);
+
+        return await ReadSummaryAsync(query, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<AiUsageSummary> ReadSummaryAsync(IQueryable<AiUsage> query, CancellationToken cancellationToken) {
 
         AiUsageTotalsRow? totals = await GetSummaryTotalsAsync(query, cancellationToken).ConfigureAwait(false);
         IReadOnlyList<AiUsageDailySummary> daily = await GetDailySummaryAsync(query, cancellationToken).ConfigureAwait(false);

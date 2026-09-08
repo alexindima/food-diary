@@ -10,6 +10,28 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task GetPagedAsync_AppliesPeriodAndDeviceBeforeCountingAndPaging() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create("period@example.com", "hash");
+        var start = new DateTime(2030, 3, 28, 0, 0, 0, DateTimeKind.Utc);
+        UserLoginEvent first = CreateLoginEvent(user, start, "Safari", "iOS", "Mobile");
+        UserLoginEvent second = CreateLoginEvent(user, start.AddHours(1), "Safari", "iOS", "Mobile");
+        context.Users.Add(user);
+        context.UserLoginEvents.AddRange(first, second,
+            CreateLoginEvent(user, start.AddSeconds(-1), "Safari", "iOS", "Mobile"),
+            CreateLoginEvent(user, start.AddDays(1), "Safari", "iOS", "Mobile"),
+            CreateLoginEvent(user, start.AddHours(2), "Chrome", "Linux", "Desktop"));
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new UserLoginEventRepository(context);
+        (IReadOnlyList<UserLoginEventReadModel> items, int total) = await repository.GetPagedAsync(
+            page: 2, limit: 1, user.Id.Value, search: null, CancellationToken.None, new DateTimeOffset(start), new DateTimeOffset(start.AddDays(1)), "password", "Mobile");
+        Assert.Equal(2, total);
+        Assert.Equal(first.Id, Assert.Single(items).Id);
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+
+    [RequiresDockerFact]
     public async Task DeleteOlderThanAsync_DeletesOnlyExpiredEventsWithinBatch() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"login-delete-{Guid.NewGuid():N}@example.com", "hash");

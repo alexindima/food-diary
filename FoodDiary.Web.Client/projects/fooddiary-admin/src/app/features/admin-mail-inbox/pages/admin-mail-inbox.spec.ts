@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
@@ -16,6 +17,7 @@ describe('AdminMailInboxComponent row activation', () => {
             imports: [AdminMailInboxComponent],
             providers: [
                 ...provideTranslateTesting(),
+                provideRouter([]),
                 { provide: FdUiDialogService, useValue: { open } },
                 {
                     provide: AdminMailInboxFacade,

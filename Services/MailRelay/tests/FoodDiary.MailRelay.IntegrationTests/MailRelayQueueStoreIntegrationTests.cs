@@ -49,6 +49,38 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     }
 
     [Fact]
+    public async Task JournalFiltersAndRedactsWhileQueuePreservesReplyMetadata() {
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        MailRelayQueueStore store = CreateStore(dataSource);
+        var request = new RelayEmailMessageRequest("no-reply@example.com", "FoodDiary", ["reporter@example.com"], "Received", "<p>Received</p>", "Received",
+            IdempotencyKey: "ack-test", Purpose: "bug_report_received", ReplyTo: "bugs@example.com", InReplyTo: "original@example.com", AutoSubmitted: true);
+        Guid id = await store.EnqueueAsync(request, CancellationToken.None);
+        Assert.Equal(id, await store.EnqueueAsync(request, CancellationToken.None));
+        await store.EnqueueAsync(request with { IdempotencyKey = "reset-test", Purpose = "password_reset", Subject = "secret-token", TextBody = "secret-password", HtmlBody = "<p>secret-password</p>" }, CancellationToken.None);
+        var journal = new MailRelayJournalReader(dataSource);
+        OutgoingEmailJournalPage reset = await journal.GetPageAsync(1, 50, "password_reset", status: null, "reporter@example.com", CancellationToken.None);
+        Assert.Equal(1, reset.TotalItems);
+        Assert.True(reset.Items[0].ContentHidden);
+        Assert.Null(reset.Items[0].TextBody);
+        Assert.Empty(reset.Items[0].Subject);
+        OutgoingEmailJournalPage acknowledgements = await journal.GetPageAsync(1, 50, "bug_report_received", "pending", recipient: null, CancellationToken.None);
+        Assert.Single(acknowledgements.Items);
+        Assert.Equal("Received", acknowledgements.Items[0].TextBody);
+        QueuedEmailMessage? queued = await store.TryClaimMessageByIdAsync(id, CancellationToken.None);
+        Assert.NotNull(queued);
+        RelayEmailMessageRequest delivery = QueuedEmail.FromPersistence(queued).ToSubmissionRequest();
+        Assert.Equal("bugs@example.com", delivery.ReplyTo);
+        Assert.Equal("original@example.com", delivery.InReplyTo);
+        Assert.True(delivery.AutoSubmitted);
+        Assert.Equal("bug_report_received", delivery.Purpose);
+        OutgoingEmailJournalPage sent = await journal.GetPageAsync(1, 1, purpose: null, "sent", "reporter@example.com", CancellationToken.None);
+        Assert.Empty(sent.Items);
+        Assert.Equal(0, sent.TotalItems);
+        Assert.NotNull(sent.StatusCounts);
+        Assert.Equal(2, sent.StatusCounts.Values.Sum());
+    }
+
+    [Fact]
     public void QueueRowMapper_ConvertsTimestampsAndNormalizesEmail() {
         var dateTimeOffset = new DateTimeOffset(2026, 1, 2, 3, 4, 5, TimeSpan.FromHours(1));
         var dateTime = new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Unspecified);
@@ -227,7 +259,7 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
 
-        Assert.Equal(3, await CountRowsAsync(dataSource, "mailrelay_schema_versions"));
+        Assert.Equal(4, await CountRowsAsync(dataSource, "mailrelay_schema_versions"));
     }
 
     [RequiresDockerFact]

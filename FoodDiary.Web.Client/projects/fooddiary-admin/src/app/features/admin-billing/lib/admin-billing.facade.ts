@@ -1,7 +1,11 @@
 import { formatDate } from '@angular/common';
 import { computed, DestroyRef, inject, Injectable, LOCALE_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+import type { Subscription } from 'rxjs';
 
+import { adminExclusiveDatePeriod } from '../../../shared/period/admin-period';
+import { adminQueryValue } from '../../../shared/period/admin-query';
 import { AdminBillingService } from '../api/admin-billing.service';
 import type {
     AdminBillingFilters,
@@ -28,7 +32,11 @@ export class AdminBillingFacade {
     private readonly billingService = inject(AdminBillingService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly locale = inject(LOCALE_ID);
+    private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
     private loadRequestId = 0;
+    private revenueRequest?: Subscription;
+    public readonly revenueFailed = signal(false);
 
     public readonly activeTab = signal<AdminBillingTab>('subscriptions');
     public readonly subscriptions = signal<AdminBillingSubscription[]>([]);
@@ -83,13 +91,13 @@ export class AdminBillingFacade {
         this.activeTab.set(tab);
         this.page.set(1);
         this.selectedMetadata.set(null);
-        this.load();
+        this.syncUrl();
     }
 
     public applyFilters(): void {
         this.page.set(1);
         this.selectedMetadata.set(null);
-        this.load();
+        this.syncUrl();
     }
 
     public resetFilters(): void {
@@ -108,7 +116,25 @@ export class AdminBillingFacade {
         }
 
         this.page.set(page);
-        this.load();
+        this.syncUrl();
+    }
+
+    private syncUrl(): void {
+        void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParamsHandling: 'merge',
+            queryParams: {
+                tab: this.activeTab(),
+                page: this.page(),
+                search: adminQueryValue(this.search()),
+                provider: adminQueryValue(this.provider()),
+                status: adminQueryValue(this.status()),
+                kind: adminQueryValue(this.kind()),
+                period: this.fromDate().length > 0 && this.toDate().length > 0 ? 'custom' : 'all',
+                from: adminQueryValue(this.fromDate()),
+                to: adminQueryValue(this.toDate()),
+            },
+        });
     }
 
     public showMetadata(value?: string | null): void {
@@ -121,7 +147,7 @@ export class AdminBillingFacade {
         this.isLoading.set(true);
         this.errorMessage.set(null);
         const filters = this.buildFilters();
-        this.loadRevenueSummary(filters);
+        this.loadRevenueSummary();
 
         if (tab === 'subscriptions') {
             this.billingService
@@ -173,9 +199,16 @@ export class AdminBillingFacade {
         }
     }
 
-    private loadRevenueSummary(filters: AdminBillingFilters): void {
-        this.billingService
-            .getRevenueSummary(filters)
+    private loadRevenueSummary(): void {
+        this.revenueRequest?.unsubscribe();
+        this.revenueSummary.set(null);
+        this.revenueFailed.set(false);
+        const range = adminExclusiveDatePeriod({
+            from: this.fromDate().length > 0 ? this.fromDate() : undefined,
+            to: this.toDate().length > 0 ? this.toDate() : undefined,
+        });
+        this.revenueRequest = this.billingService
+            .getRevenueSummary({ fromUtc: `${range.from}T00:00:00Z`, toUtc: `${range.to}T00:00:00Z` })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: summary => {
@@ -183,8 +216,22 @@ export class AdminBillingFacade {
                 },
                 error: () => {
                     this.revenueSummary.set(null);
+                    this.revenueFailed.set(true);
                 },
             });
+    }
+
+    public clearInvalidPeriod(): void {
+        this.loadRequestId++;
+        this.revenueRequest?.unsubscribe();
+        this.revenueSummary.set(null);
+        this.revenueFailed.set(false);
+        this.subscriptions.set([]);
+        this.payments.set([]);
+        this.webhookEvents.set([]);
+        this.totalItems.set(0);
+        this.isLoading.set(false);
+        this.selectedMetadata.set(null);
     }
 
     private applyPayments(response: PagedResponse<AdminBillingPayment>, requestId: number, tab: AdminBillingTab): void {

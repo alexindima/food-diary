@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "domainTypes": 241,
-    "entities": 81,
+    "domainTypes": 243,
+    "entities": 83,
     "valueObjects": 98,
     "invariants": 504,
     "persistenceMappings": 86,
-    "indexes": 155,
+    "indexes": 157,
     "relationships": 98
   },
   "domainTypes": [
@@ -121,6 +121,13 @@
       "role": "entity",
       "path": "Modules/Admin/Domain/Entities/Admin/AdminImpersonationSession.cs",
       "line": 5
+    },
+    {
+      "area": "FoodDiary",
+      "name": "AiPromptRevision",
+      "role": "entity",
+      "path": "Modules/Ai/Domain/Entities/Ai/AiPromptRevision.cs",
+      "line": 2
     },
     {
       "area": "FoodDiary",
@@ -247,6 +254,13 @@
       "role": "entity",
       "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
       "line": 6
+    },
+    {
+      "area": "FoodDiary",
+      "name": "EmailTemplateRevision",
+      "role": "entity",
+      "path": "Modules/Identity/Domain/Entities/Content/EmailTemplateRevision.cs",
+      "line": 2
     },
     {
       "area": "FoodDiary",
@@ -1739,21 +1753,21 @@
       "type": "InvalidOperationException",
       "message": "throw new InvalidOperationException(\"Prompt template version limit has been reached.\")",
       "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
-      "line": 61
+      "line": 55
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{paramName} is required.\", paramName)",
       "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
-      "line": 67
+      "line": 61
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Must be at most {maxLength} characters.\"))",
       "path": "Modules/Ai/Domain/Entities/Ai/AiPromptTemplate.cs",
-      "line": 72
+      "line": 66
     },
     {
       "area": "FoodDiary",
@@ -3258,21 +3272,21 @@
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), $\"Value must be at most {LocaleMaxLength} characters.\")",
       "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
-      "line": 78
+      "line": 81
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Value is required.\", paramName)",
       "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
-      "line": 84
+      "line": 87
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength.Value} characters.\"))",
       "path": "Modules/Identity/Domain/Entities/Content/EmailTemplate.cs",
-      "line": 89
+      "line": 92
     },
     {
       "area": "FoodDiary",
@@ -3377,21 +3391,21 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException($\"{paramName} is required.\", paramName)",
       "path": "Modules/Lessons/Domain/Entities/Content/NutritionLesson.cs",
-      "line": 98
+      "line": 105
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Must be at most {maxLength} characters.\"))",
       "path": "Modules/Lessons/Domain/Entities/Content/NutritionLesson.cs",
-      "line": 103
+      "line": 110
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"Must be at most {maxLength} characters.\"))",
       "path": "Modules/Lessons/Domain/Entities/Content/NutritionLesson.cs",
-      "line": 114
+      "line": 121
     },
     {
       "area": "FoodDiary",
@@ -5225,7 +5239,7 @@
       "type": "ArgumentException.ThrowIfNullOrWhiteSpace",
       "message": "ArgumentException.ThrowIfNullOrWhiteSpace(error)",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs",
-      "line": 84
+      "line": 93
     }
   ],
   "persistenceMappings": [
@@ -5277,8 +5291,9 @@
     {
       "area": "FoodDiary",
       "entity": "AiPromptTemplate",
-      "table": null,
+      "table": "AiPromptRevisions",
       "indexes": [
+        "\"TemplateId\", nameof(AiPromptRevision.ArchivedOnUtc))",
         "e => new { e.Key, e.IsActive })",
         "e => new { e.Key, e.Locale }).IsUnique()"
       ],
@@ -5614,8 +5629,9 @@
     {
       "area": "FoodDiary",
       "entity": "EmailTemplate",
-      "table": null,
+      "table": "EmailTemplateRevisions",
       "indexes": [
+        "\"TemplateId\", nameof(EmailTemplateRevision.ArchivedOnUtc))",
         "e => new { e.Key, e.Locale })"
       ],
       "relationships": [],

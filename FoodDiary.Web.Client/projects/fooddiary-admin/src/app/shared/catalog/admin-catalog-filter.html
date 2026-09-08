@@ -1,0 +1,29 @@
+<div class="fd-row fd-wrap fd-gap-sm fd-align-end">
+    <fd-ui-input [label]="'ADMIN_COMMON.SEARCH' | translate" [value]="search()" (valueChange)="search.set($event?.toString() || '')" />
+    @if (showLocale()) {
+        <label for="admin-catalog-filter-field-1">{{ 'ADMIN_PROMPTS.LOCALE' | translate }}</label
+        ><select id="admin-catalog-filter-field-1" [value]="locale()" (change)="locale.set(value($event))">
+            <option value="">{{ 'ADMIN_COMMON.ALL' | translate }}</option>
+            <option value="ru">Русский</option>
+            <option value="en">English</option>
+        </select>
+    }
+    @if (categories().length > 0) {
+        <label for="admin-catalog-filter-field-2">{{ 'ADMIN_CATALOG.CATEGORY' | translate }}</label
+        ><select id="admin-catalog-filter-field-2" [value]="category()" (change)="category.set(value($event))">
+            <option value="">{{ 'ADMIN_COMMON.ALL' | translate }}</option>
+            @for (item of categories(); track item) {
+                <option [value]="item">{{ item }}</option>
+            }
+        </select>
+    }
+    @if (showState()) {
+        <label for="admin-catalog-filter-field-3">{{ 'ADMIN_CATALOG.STATE' | translate }}</label
+        ><select id="admin-catalog-filter-field-3" [value]="state()" (change)="state.set(value($event))">
+            <option value="">{{ 'ADMIN_COMMON.ALL' | translate }}</option>
+            <option value="active">{{ activeLabel() | translate }}</option>
+            <option value="inactive">{{ inactiveLabel() | translate }}</option>
+        </select>
+    }
+    <fd-ui-button (click)="apply()">{{ 'ADMIN_COMMON.APPLY' | translate }}</fd-ui-button>
+</div>

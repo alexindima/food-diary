@@ -1,0 +1,96 @@
+- generic [ref=f6e3]:
+  - complementary [ref=f6e5]:
+    - generic [ref=f6e6]:
+      - generic [ref=f6e7]:
+        - generic [ref=f6e8]: FD
+        - generic [ref=f6e10]:
+          - generic [ref=f6e11]: FoodDiary
+          - generic [ref=f6e12]: Admin
+      - navigation [ref=f6e15]:
+        - link "Dashboard" [ref=f6e204] [cursor=pointer]:
+          - /url: /
+          - generic [ref=f6e19]: dashboard
+      - generic [ref=f6e22]:
+        - button "Users" [expanded] [ref=f6e205] [cursor=pointer]:
+          - generic [ref=f6e26]: expand_more
+        - navigation [ref=f6e27]:
+          - link "Accounts" [ref=f6e206] [cursor=pointer]:
+            - /url: /users
+            - generic [ref=f6e31]: group
+          - link "Login activity" [ref=f6e207] [cursor=pointer]:
+            - /url: /users/login-activity
+            - generic [ref=f6e36]: login
+          - link "Impersonation sessions" [ref=f6e208] [cursor=pointer]:
+            - /url: /users/impersonation-sessions
+            - generic [ref=f6e41]: admin_panel_settings
+      - navigation [ref=f6e45]:
+        - link "AI usage" [ref=f6e209] [cursor=pointer]:
+          - /url: /ai-usage
+          - generic [ref=f6e49]: smart_toy
+        - link "Retention" [active] [ref=f6e210] [cursor=pointer]:
+          - /url: /analytics/retention
+          - generic [ref=f6e54]: timeline
+        - link "Audit" [ref=f6e211] [cursor=pointer]:
+          - /url: /audit
+          - generic [ref=f6e59]: history
+        - link "Bugs" [ref=f6e212] [cursor=pointer]:
+          - /url: /bugs
+          - generic [ref=f6e64]: bug_report
+        - link "AI prompts" [ref=f6e213] [cursor=pointer]:
+          - /url: /ai-prompts
+          - generic [ref=f6e69]: edit_note
+        - link "Acquisition" [ref=f6e214] [cursor=pointer]:
+          - /url: /acquisition
+          - generic [ref=f6e74]: campaign
+        - link "Billing" [ref=f6e215] [cursor=pointer]:
+          - /url: /billing
+          - generic [ref=f6e79]: payments
+        - link "Email templates" [ref=f6e216] [cursor=pointer]:
+          - /url: /email-templates
+          - generic [ref=f6e84]: mail
+        - link "Mail" [ref=f6e217] [cursor=pointer]:
+          - /url: /mail-inbox
+          - generic [ref=f6e89]: inbox
+        - link "Lessons" [ref=f6e218] [cursor=pointer]:
+          - /url: /lessons
+          - generic [ref=f6e94]: school
+        - link "Achievements" [ref=f6e219] [cursor=pointer]:
+          - /url: /achievements
+          - generic [ref=f6e99]: emoji_events
+        - link "Moderation" [ref=f6e220] [cursor=pointer]:
+          - /url: /moderation
+          - generic [ref=f6e104]: gavel
+  - main [ref=f6e106]:
+    - generic [ref=f6e107]:
+      - heading "AI prompts" [level=1] [ref=f6e221]
+      - paragraph [ref=f6e109]: Manage localized AI instructions.
+    - generic [ref=f6e110]:
+      - generic [ref=f6e111]:
+        - generic [ref=f6e113]:
+          - generic: Search
+          - textbox "Search" [ref=f6e222]
+        - button "New prompt" [ref=f6e223] [cursor=pointer]
+      - generic [ref=f6e119]:
+        - button "meal_summary · en · v2 · Active" [pressed] [ref=f6e224]
+        - generic [ref=f6e122]:
+          - generic [ref=f6e123]: Key
+          - textbox "Key" [ref=f6e225]: meal_summary
+          - generic [ref=f6e125]: Language
+          - combobox "Language" [ref=f6e226]:
+            - option "English" [selected]
+            - option "Русский"
+          - generic [ref=f6e127]: Prompt text
+          - textbox "Prompt text" [ref=f6e227]: Previous prompt text
+          - generic [ref=f6e129]: Active
+          - checkbox "Active" [checked] [ref=f6e228]
+          - button "Save" [ref=f6e229] [cursor=pointer]
+        - generic [ref=f6e136]:
+          - heading "Revision history" [level=3] [ref=f6e230]
+          - paragraph [ref=f6e138]: The 50 most recent previous revisions. History starts when a template is changed after this feature is enabled. Restoring fills the editor; save to apply it as a new revision.
+          - group [ref=f6e141]:
+            - generic "Sep 1, 2026, 4:00:00 AM · 1" [ref=f6e231]
+            - paragraph [ref=f6e143]: Previous subject
+            - generic [ref=f6e144]: Previous prompt text
+            - group [ref=f6e145]:
+              - generic "HTML" [ref=f6e232]
+            - button "Restore into editor" [ref=f6e233] [cursor=pointer]

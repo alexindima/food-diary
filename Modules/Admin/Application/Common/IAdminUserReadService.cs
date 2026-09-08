@@ -5,6 +5,10 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Admin.Common;
 
 public interface IAdminUserReadService {
+    Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> GetFilteredPagedAsync(
+        string? search, int page, int limit, UserAccountStatusFilter status,
+        UserAdministrationFilter filter, CancellationToken cancellationToken);
+
     Task<AdminUserModel?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default);
 
     Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> GetPagedAsync(

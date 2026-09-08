@@ -22,7 +22,8 @@ public sealed class LessonAdministrationService(
         LessonDifficulty difficulty,
         int estimatedReadMinutes,
         int sortOrder,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        bool isPublished = true) {
         var lesson = NutritionLesson.Create(
             title,
             content,
@@ -33,6 +34,7 @@ public sealed class LessonAdministrationService(
             estimatedReadMinutes,
             sortOrder);
 
+        lesson.SetPublication(isPublished);
         await repository.AddAsync(lesson, cancellationToken).ConfigureAwait(false);
         return Result.Success(lesson);
     }
@@ -47,13 +49,15 @@ public sealed class LessonAdministrationService(
         LessonDifficulty difficulty,
         int estimatedReadMinutes,
         int sortOrder,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        bool isPublished = true) {
         NutritionLesson? lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return Result.Failure<NutritionLesson>(LessonErrors.NotFound(lessonId.Value));
         }
 
         lesson.Update(title, content, summary, locale, category, difficulty, estimatedReadMinutes, sortOrder);
+        lesson.SetPublication(isPublished);
         await repository.UpdateAsync(lesson, cancellationToken).ConfigureAwait(false);
         return Result.Success(lesson);
     }
@@ -75,7 +79,7 @@ public sealed class LessonAdministrationService(
         for (int index = 0; index < items.Count; index++) {
             LessonAdministrationItem item = items[index];
             try {
-                parsedLessons.Add(NutritionLesson.Create(
+                var parsed = NutritionLesson.Create(
                     item.Title,
                     item.Content,
                     item.Summary,
@@ -83,7 +87,9 @@ public sealed class LessonAdministrationService(
                     item.Category,
                     item.Difficulty,
                     item.EstimatedReadMinutes,
-                    item.SortOrder));
+                    item.SortOrder);
+                parsed.SetPublication(item.IsPublished);
+                parsedLessons.Add(parsed);
             } catch (ArgumentException exception) {
                 return Result.Failure<IReadOnlyList<NutritionLesson>>(
                     Errors.Validation.Invalid($"lessons[{index.ToString(CultureInfo.InvariantCulture)}]", exception.Message));
@@ -128,7 +134,7 @@ public sealed class LessonAdministrationService(
             lesson.Category,
             lesson.Difficulty,
             lesson.EstimatedReadMinutes,
-            lesson.SortOrder);
+            lesson.SortOrder, lesson.IsPublished);
 
     private sealed record LessonContentIdentity(
         string Title,
@@ -138,5 +144,5 @@ public sealed class LessonAdministrationService(
         LessonCategory Category,
         LessonDifficulty Difficulty,
         int EstimatedReadMinutes,
-        int SortOrder);
+        int SortOrder, bool IsPublished);
 }

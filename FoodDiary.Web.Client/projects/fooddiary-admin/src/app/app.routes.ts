@@ -2,6 +2,18 @@ import type { Routes } from '@angular/router';
 
 export const routes: Routes = [
     {
+        path: 'analytics/retention',
+        loadChildren: async () => import('./features/admin-retention/admin-retention.routes').then(module => module.adminRetentionRoutes),
+    },
+    {
+        path: 'audit',
+        loadChildren: async () => import('./features/admin-audit/admin-audit.routes').then(module => module.adminAuditRoutes),
+    },
+    {
+        path: 'bugs',
+        loadChildren: async () => import('./features/admin-bugs/admin-bugs.routes').then(module => module.adminBugsRoutes),
+    },
+    {
         path: '',
         loadChildren: async () => import('./features/admin-dashboard/admin-dashboard.routes').then(m => m.adminDashboardRoutes),
     },
@@ -18,6 +30,10 @@ export const routes: Routes = [
         loadChildren: async () => import('./features/admin-acquisition/admin-acquisition.routes').then(m => m.adminAcquisitionRoutes),
     },
     {
+        path: 'ai-prompts',
+        loadChildren: async () => import('./features/admin-ai-prompts/admin-ai-prompts.routes').then(module => module.adminAiPromptsRoutes),
+    },
+    {
         path: 'billing',
         loadChildren: async () => import('./features/admin-billing/admin-billing.routes').then(m => m.adminBillingRoutes),
     },
@@ -25,6 +41,11 @@ export const routes: Routes = [
         path: 'email-templates',
         loadChildren: async () =>
             import('./features/admin-email-templates/admin-email-templates.routes').then(m => m.adminEmailTemplatesRoutes),
+    },
+    {
+        path: 'outgoing-emails',
+        loadChildren: async () =>
+            import('./features/admin-outgoing-emails/admin-outgoing-emails.routes').then(m => m.adminOutgoingEmailsRoutes),
     },
     {
         path: 'mail-inbox',
