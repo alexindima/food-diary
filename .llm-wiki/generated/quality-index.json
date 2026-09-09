@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 5060,
+    "productionFiles": 5062,
     "wikiToolFiles": 204,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 813,
@@ -2537,6 +2537,14 @@
       "structuralRiskScore": 5.56
     },
     {
+      "path": "FoodDiary.Application.Runtime/Common/Behaviors/ModuleTelemetryBehavior.cs",
+      "nonBlankLines": 29,
+      "decisionPoints": 1,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.08
+    },
+    {
       "path": "FoodDiary.Application.Runtime/Common/Behaviors/ValidationBehavior.cs",
       "nonBlankLines": 63,
       "decisionPoints": 7,
@@ -2553,6 +2561,14 @@
       "structuralRiskScore": 2.18
     },
     {
+      "path": "FoodDiary.Application.Runtime/Common/Services/ModuleOperationTelemetry.cs",
+      "nonBlankLines": 35,
+      "decisionPoints": 4,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 6.7
+    },
+    {
       "path": "FoodDiary.Application.Runtime/Common/Services/PostCommitActionQueue.cs",
       "nonBlankLines": 126,
       "decisionPoints": 11,
@@ -2562,11 +2578,11 @@
     },
     {
       "path": "FoodDiary.Application.Runtime/DependencyInjection.cs",
-      "nonBlankLines": 18,
+      "nonBlankLines": 19,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.36
+      "structuralRiskScore": 0.38
     },
     {
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshot.cs",

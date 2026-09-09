@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3787,
-    "symbols": 3727,
+    "sourceFiles": 3789,
+    "symbols": 3729,
     "interfaceImplementationLinks": 252,
     "dependencyInjectionRegistrations": 158,
     "kinds": {
-      "class": 1928,
+      "class": 1930,
       "enum": 63,
       "interface": 453,
       "record": 1163,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 68,
-      "Other": 1487,
+      "Other": 1489,
       "Query": 181,
       "QueryHandler": 134,
       "ReadModelRepository": 30,
@@ -118,6 +118,13 @@
       "line": 8
     },
     {
+      "name": "ModuleTelemetryBehavior",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Runtime/Common/Behaviors/ModuleTelemetryBehavior.cs",
+      "line": 7
+    },
+    {
       "name": "ValidationBehavior",
       "kind": "class",
       "role": "Other",
@@ -130,6 +137,13 @@
       "role": "Other",
       "path": "FoodDiary.Application.Runtime/Common/Services/ApplicationRuntimeTelemetry.cs",
       "line": 4
+    },
+    {
+      "name": "ModuleOperationTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Runtime/Common/Services/ModuleOperationTelemetry.cs",
+      "line": 5
     },
     {
       "name": "PostCommitActionQueue",
@@ -27909,7 +27923,7 @@
       "implementation": "PostCommitActionQueue",
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Runtime/DependencyInjection.cs",
-      "line": 17
+      "line": 18
     },
     {
       "service": "IWikiContextSearch",

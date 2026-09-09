@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1142,
     "ambiguousContracts": 0,
-    "consumerEdges": 8141,
-    "productionConsumerEdges": 4823,
-    "testConsumerEdges": 3318,
+    "consumerEdges": 8145,
+    "productionConsumerEdges": 4825,
+    "testConsumerEdges": 3320,
     "consumedContracts": 1142,
     "unconsumedContracts": 0
   },
@@ -42858,6 +42858,19 @@
       "referenceCount": 3
     },
     {
+      "contract": "GetProductsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Products/Application/Queries/GetProducts/GetProductsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Behaviors/ModuleTelemetryBehaviorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetProfileOverviewQuery",
       "roles": [
         "Query"
@@ -81969,6 +81982,19 @@
         "Shared/FoodDiary.Mediator/IPipelineBehavior.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Runtime/Common/Behaviors/ModuleTelemetryBehavior.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IPipelineBehavior",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IPipelineBehavior.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Runtime/Common/Behaviors/ValidationBehavior.cs",
       "isTest": false,
       "referenceCount": 1
@@ -90770,6 +90796,19 @@
         "Shared/FoodDiary.Mediator/IRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Runtime/Common/Behaviors/ModuleTelemetryBehavior.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Runtime/Common/Behaviors/ValidationBehavior.cs",
       "isTest": false,
       "referenceCount": 1
@@ -91876,6 +91915,19 @@
       ],
       "consumerArea": "Shared",
       "consumerPath": "Shared/tests/FoodDiary.Mediator.Tests/MediatorTests.Requests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/IRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Behaviors/ModuleTelemetryBehaviorTests.cs",
       "isTest": true,
       "referenceCount": 1
     },

@@ -33,6 +33,7 @@ public sealed class ApplicationDependencyInjectionTests {
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IRecentRecipeReadService));
         Assert.DoesNotContain(services, d => d.ServiceType.IsGenericType && string.Equals(d.ServiceType.GetGenericTypeDefinition().FullName, "FluentValidation.IValidator`1", StringComparison.Ordinal));
         Assert.Contains(services, d => d.ImplementationType == typeof(LoggingBehavior<,>));
+        Assert.Contains(services, d => d.ImplementationType == typeof(ModuleTelemetryBehavior<,>));
         Assert.Contains(services, d => d.ImplementationType == typeof(ValidationBehavior<,>));
         Assert.Contains(services, d => d.ImplementationType == typeof(CommandTransactionBehavior<,>));
     }
