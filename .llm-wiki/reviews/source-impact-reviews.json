@@ -226,14 +226,14 @@
       "pageSha256": "c89b4c5cb13fefe0a1c6171804cc91b5f6c9ce69753e8d4de9fda0bb2514b052",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "c707aaa6b5c7325332f322df3857ab653cd5053448d632e015fc4706f9976284"
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "bdb93ce6207c6b96c397ba5437a0b0684f1856ce5439e3bd6f642b27a368e309"
         }
       ],
-      "reason": "Reviewed the current source changes: bounded search recall, synchronized Node/.NET morphology, scheduler priority and core timing. Specialized contract, impact, privacy and topology SQL projections retain their shapes and authority/freshness rules; generated metrics were refreshed. No additional guidance change is required for this page.",
+      "reason": "Reviewed the generated index diff for ModuleTelemetryBehavior and ModuleOperationTelemetry: only runtime measurement symbols and test consumers were added; no HTTP, message or application DTO contracts changed. The contract review workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
-      "reviewedAtUtc": "2026-09-09T04:59:42.2260338Z"
+      "gitHead": "f9325bd5f5d5e56a6cb673796b59b0818971a50a",
+      "reviewedAtUtc": "2026-09-09T06:16:51.5389616Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -885,13 +885,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d2b2c6d165c0d337053086acaf03bc6b465b1386ac82e8fde3bc40b5da1f7bcc"
+          "sha256": "86ec428d75db5790c2a5060146c77b83312bf40ea637b8dfab186dc7623e0384"
         }
       ],
-      "reason": "Reviewed the current source changes: bounded search recall, synchronized Node/.NET morphology, scheduler priority and core timing. Specialized contract, impact, privacy and topology SQL projections retain their shapes and authority/freshness rules; generated metrics were refreshed. No additional guidance change is required for this page.",
+      "reason": "Reviewed quality-index changes from the new module telemetry behavior, metric helper and focused outcome/concurrency tests. Hotspot statistics and direct-reference counts changed, but the documented distinction between static references and executed coverage remains correct.",
       "baseRef": "HEAD",
-      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
-      "reviewedAtUtc": "2026-09-09T04:59:44.2740249Z"
+      "gitHead": "f9325bd5f5d5e56a6cb673796b59b0818971a50a",
+      "reviewedAtUtc": "2026-09-09T06:17:13.0355151Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -968,13 +968,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3fb30c711cad742cb9a8a70acd8a92f7bfd402b93ee010f54bfe1b032dea248f"
+          "sha256": "570711eae2f9fd78eaa30980606d5948a12cfc890b8721db2468c482d32d435b"
         }
       ],
-      "reason": "Reviewed the current source changes: bounded search recall, synchronized Node/.NET morphology, scheduler priority and core timing. Specialized contract, impact, privacy and topology SQL projections retain their shapes and authority/freshness rules; generated metrics were refreshed. No additional guidance change is required for this page.",
+      "reason": "Runtime topology changed only its source fingerprint and source file count for two runtime telemetry files. The existing meter/exporter and deployment units are reused; no new worker, client, endpoint or retry behavior was introduced. Runtime impact guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
-      "reviewedAtUtc": "2026-09-09T04:59:45.0033007Z"
+      "gitHead": "f9325bd5f5d5e56a6cb673796b59b0818971a50a",
+      "reviewedAtUtc": "2026-09-09T06:17:15.1348697Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -983,17 +983,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d2b2c6d165c0d337053086acaf03bc6b465b1386ac82e8fde3bc40b5da1f7bcc"
+          "sha256": "86ec428d75db5790c2a5060146c77b83312bf40ea637b8dfab186dc7623e0384"
         },
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3fb30c711cad742cb9a8a70acd8a92f7bfd402b93ee010f54bfe1b032dea248f"
+          "sha256": "570711eae2f9fd78eaa30980606d5948a12cfc890b8721db2468c482d32d435b"
         }
       ],
-      "reason": "Reviewed the current source changes: bounded search recall, synchronized Node/.NET morphology, scheduler priority and core timing. Specialized contract, impact, privacy and topology SQL projections retain their shapes and authority/freshness rules; generated metrics were refreshed. No additional guidance change is required for this page.",
+      "reason": "Reviewed telemetry labels and outcome tests: labels contain only assembly module, CLR request name and fixed outcomes, excluding request payloads and error messages. Generated quality counts and runtime fingerprints changed without adding providers or trust boundaries; the security evidence workflow remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
-      "reviewedAtUtc": "2026-09-09T04:59:45.8625325Z"
+      "gitHead": "f9325bd5f5d5e56a6cb673796b59b0818971a50a",
+      "reviewedAtUtc": "2026-09-09T06:17:18.9432933Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

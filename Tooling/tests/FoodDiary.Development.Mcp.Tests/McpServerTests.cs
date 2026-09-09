@@ -165,9 +165,11 @@ public sealed class McpServerTests {
             StringComparison.OrdinalIgnoreCase);
         Assert.True(stopwatch.Elapsed < TimeSpan.FromSeconds(60), $"Aggregate context took {stopwatch.Elapsed}.");
 
+        // CI restores into an isolated artifacts path; this normal-output rebuild
+        // must restore its own assets while still honoring the package lock files.
         ProcessResult build = await RunProcessAsync(
             "dotnet",
-            ["build", "FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj", "--no-restore"],
+            ["build", "FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj", "-p:RestoreLockedMode=true"],
             repositoryRoot,
             timeout.Token);
         Assert.True(build.ExitCode == 0, build.Output);
