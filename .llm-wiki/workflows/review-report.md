@@ -54,5 +54,7 @@ The CI Wiki focused job runs the complete focused regression catalog and index
 checks alongside the backend, PostgreSQL, dependency-audit, and frontend jobs.
 It then checks API compatibility and dependencies before publishing this report
 in a separately timed step. Pushes, scheduled runs, and manual runs also execute
-the monolithic Full audit in an independent job. The stable `LLM Wiki verification`
-gate requires both applicable workers to succeed; only pull requests skip Full.
+the Full audit in independent Core and Governed matrix jobs. Each job owns its
+checkout and caches; the matrix keeps `fail-fast` disabled. The stable
+`LLM Wiki verification` gate requires the focused job and the aggregate audit
+matrix result to succeed; only pull requests skip Full.

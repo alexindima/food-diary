@@ -2,18 +2,21 @@
 param(
     [ValidateSet('Focused', 'Core', 'Full')]
     [string]$Profile = 'Focused',
+    [ValidateSet('All', 'Core', 'Governed')]
+    [string]$AuditShard = 'All',
     [ValidateRange(1, 8)]
     [int]$MaxConcurrency = 4
 )
 
 $ErrorActionPreference = 'Stop'
+if ($AuditShard -ne 'All' -and $Profile -ne 'Full') { throw 'AuditShard requires the Full profile.' }
 $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = Split-Path -Parent $wikiRoot
 if ($Profile -in @('Core', 'Full') -and [string]::IsNullOrWhiteSpace([string]$env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT)) {
     & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
         -ToolPath $PSCommandPath `
-        -ToolArguments @{ Profile = $Profile; MaxConcurrency = $MaxConcurrency } `
+        -ToolArguments @{ Profile = $Profile; AuditShard = $AuditShard; MaxConcurrency = $MaxConcurrency } `
         -PrepareCodeGraph
     if (-not $? -or ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0)) { exit 1 }
     return
@@ -85,6 +88,7 @@ function Get-WikiObjectFingerprint([object]$Value) {
 
 . (Join-Path $toolsRoot 'LlmWikiJson.ps1')
 Enable-LlmWikiStringDateJsonParsing
+if ($AuditShard -ne 'Governed') {
 $crossPlatformFixtureRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/cross-platform-fixtures'
 $jsonFixturePath = Join-Path $crossPlatformFixtureRoot 'actual.json'
 $textFixturePath = Join-Path $crossPlatformFixtureRoot 'actual.md'
@@ -1115,7 +1119,14 @@ Assert-Wiki (-not (@($reviewJson.modules) -contains ',')) 'Review report emitted
 
 Write-CoreBlockTiming 'recovery visual QA and environment'
 Write-Host "LLM Wiki monolithic core phase completed in $([Math]::Round($totalStopwatch.Elapsed.TotalSeconds, 2))s."
-if ($Profile -eq 'Full') {
+} else {
+    # Governed scenarios own their inputs and do not depend on Core execution.
+    $workspacePolicyValidation = & (Join-Path $toolsRoot 'Get-LlmWikiWorkspacePolicy.ps1') validate -FailOnInvalid -Format Json | ConvertFrom-Json
+    $workspacePolicy = & (Join-Path $toolsRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -Format Json | ConvertFrom-Json
+    $contractPath = 'Modules/Fasting/Application/Commands/StartFasting/StartFastingCommand.cs'
+    $contractPacket = & (Join-Path $toolsRoot 'Get-LlmWikiChangePacket.ps1') -ChangedPath $contractPath -Objective 'Safely evolve the fasting command.' -Format Json | ConvertFrom-Json
+}
+if ($Profile -eq 'Full' -and $AuditShard -ne 'Core') {
     $governedStopwatch = [Diagnostics.Stopwatch]::StartNew()
     $governedBlockStopwatch = [Diagnostics.Stopwatch]::StartNew()
     function Write-GovernedBlockTiming([string]$Name) {
@@ -5111,9 +5122,10 @@ try {
     $governedStopwatch.Stop()
     Write-Host "Governed task-workspace and orchestration smoke coverage passed in $([Math]::Round($governedStopwatch.Elapsed.TotalSeconds, 2))s."
 } else {
-    Write-Host 'Skipped governed task-workspace and orchestration smoke coverage for the Core profile.'
+    Write-Host 'Skipped governed task-workspace and orchestration smoke coverage for the Core profile/shard.'
 }
 
+if ($AuditShard -ne 'Governed') {
 $manifestPath = '.artifacts/llm-wiki/tool-smoke-change-manifest.json'
 $absoluteManifestPath = Join-Path (Split-Path -Parent $wikiRoot) $manifestPath
 try {
@@ -5252,6 +5264,7 @@ try {
     }
 }
 
+}
 $canonicalMemoryRegistryHashAfter = (Get-FileHash -LiteralPath $canonicalMemoryRegistryPath -Algorithm SHA256).Hash
 Assert-Wiki ($canonicalMemoryRegistryHashAfter -ceq $canonicalMemoryRegistryHash) `
     'Tool smoke tests modified the canonical durable-memory registry.'
@@ -5289,4 +5302,5 @@ if ($errors.Count -gt 0) {
 }
 
 $totalStopwatch.Stop()
+Write-Host "LLM Wiki audit shard '$AuditShard' passed in $([Math]::Round($totalStopwatch.Elapsed.TotalSeconds, 2))s."
 Write-Host "LLM Wiki tool smoke tests passed in $([Math]::Round($totalStopwatch.Elapsed.TotalSeconds, 2))s: context, diff, brief, test plan, decisions, ownership, trace, runtime/privacy topology, API/dependency/configuration/rollout checks, indexes, acceptance, evidence, and release readiness."

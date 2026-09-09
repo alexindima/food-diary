@@ -893,13 +893,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6828f648bb6fc2e0bd47a823e755f63832ac61c9c3e9ab73a7758f72fb3a121f"
+          "sha256": "35f4f5f82e7865d3a16087dfe218f20ae06332de778946f3ab90ca2ff42aa8d6"
         }
       ],
-      "reason": "Reviewed final quality-index delta after neighbor lookup change and removal of rejected symbol matcher experiments: only current tooling structural metrics and ordering changed; risk and security interpretation remain unchanged.",
+      "reason": "Reviewed quality-index regeneration after audit routing guards and assertion-inventory regression: only Wiki test/tool structural metrics change; risk interpretation and security obligations remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
-      "reviewedAtUtc": "2026-09-09T22:24:18.1619688Z"
+      "gitHead": "45e8de30ea8f28e625258cfcd963c4dba72a8ddc",
+      "reviewedAtUtc": "2026-09-09T23:10:04.9891675Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -934,17 +934,17 @@
     {
       "pageId": "workflow-review-report",
       "pagePath": ".llm-wiki/workflows/review-report.md",
-      "pageSha256": "5e6a677aea63de29735a1273138f3aaab35e410cb1f930a49d44d9270d162480",
+      "pageSha256": "c1403fa47db2923eed0f5d2e634060bf032feb9769817b408efd38c151554fc1",
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "bddc82ef48df159b7e05fff9679337634a0c328fc728819bfe84004d0583d06e"
+          "sha256": "548bd99fc68a578edf17eac6f1638b666afd974b8869caf0c4fb8f909ec3352a"
         }
       ],
-      "reason": "The CI Wiki job still renders and appends the same review report. Backend test grouping and aggregated failure logs do not change the Wiki report contract, source collection or job-summary publication.",
+      "reason": "Reviewed CI audit matrix: focused report publication is unchanged; the stable gate still requires focused success and the aggregate audit result, now covering isolated Core and Governed jobs with fail-fast disabled and unique diagnostics.",
       "baseRef": "HEAD",
-      "gitHead": "3a1a80890782713d5179e2423534756f3104b511",
-      "reviewedAtUtc": "2026-09-09T04:04:18.2620679Z"
+      "gitHead": "45e8de30ea8f28e625258cfcd963c4dba72a8ddc",
+      "reviewedAtUtc": "2026-09-09T23:10:06.7257828Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -983,13 +983,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6828f648bb6fc2e0bd47a823e755f63832ac61c9c3e9ab73a7758f72fb3a121f"
+          "sha256": "35f4f5f82e7865d3a16087dfe218f20ae06332de778946f3ab90ca2ff42aa8d6"
         }
       ],
-      "reason": "Reviewed final quality-index delta after neighbor lookup change and removal of rejected symbol matcher experiments: only current tooling structural metrics and ordering changed; risk and security interpretation remain unchanged.",
+      "reason": "Reviewed quality-index regeneration after audit routing guards and assertion-inventory regression: only Wiki test/tool structural metrics change; risk interpretation and security obligations remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
-      "reviewedAtUtc": "2026-09-09T22:24:18.9979161Z"
+      "gitHead": "45e8de30ea8f28e625258cfcd963c4dba72a8ddc",
+      "reviewedAtUtc": "2026-09-09T23:10:05.7568931Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

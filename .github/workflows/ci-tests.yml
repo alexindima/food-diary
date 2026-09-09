@@ -89,10 +89,14 @@ jobs:
           retention-days: 7
 
   llm-wiki-audit:
-    name: LLM Wiki monolithic Full audit
+    name: LLM Wiki Full audit (${{ matrix.shard }})
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [Core, Governed]
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -110,16 +114,18 @@ jobs:
         working-directory: FoodDiary.Web.Client
         run: npm ci --ignore-scripts
 
-      - name: Run isolated monolithic Full audit
+      - name: Run isolated Full audit shard
         shell: pwsh
+        env:
+          WIKI_AUDIT_SHARD: ${{ matrix.shard }}
         run: |
           $logRoot = Join-Path $PWD '.artifacts/llm-wiki/ci-audit'
           New-Item -ItemType Directory -Path $logRoot -Force | Out-Null
           Start-Transcript -LiteralPath (Join-Path $logRoot 'full-audit.log') | Out-Null
           try {
             $global:LASTEXITCODE = 0
-            ./.llm-wiki/tools/Test-LlmWikiTools.ps1 -Profile Full
-            if (-not $? -or $LASTEXITCODE -ne 0) { throw 'Monolithic Wiki audit failed.' }
+            ./.llm-wiki/tools/Test-LlmWikiTools.ps1 -Profile Full -AuditShard $env:WIKI_AUDIT_SHARD
+            if (-not $? -or $LASTEXITCODE -ne 0) { throw "Wiki audit shard '$env:WIKI_AUDIT_SHARD' failed." }
           } finally {
             Stop-Transcript | Out-Null
           }
@@ -128,7 +134,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: llm-wiki-audit-failure-logs
+          name: llm-wiki-audit-${{ matrix.shard }}-failure-logs
           include-hidden-files: true
           path: |
             .artifacts/llm-wiki/**/*.log

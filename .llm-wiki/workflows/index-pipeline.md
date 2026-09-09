@@ -14,6 +14,7 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiLint.ps1
   - .llm-wiki/tools/Test-LlmWikiPortable.ps1
   - .llm-wiki/tools/Test-LlmWikiTools.ps1
+  - .llm-wiki/tools/Test-LlmWikiFullAuditShards.ps1
   - .llm-wiki/tools/Test-LlmWikiLinux.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
   - .llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1
@@ -100,7 +101,7 @@ native command length and unions the path results. Large generated or imported
 change sets therefore preserve semantic test ranking on Windows without exceeding
 the process command-line limit.
 
-Ordinary `wiki verify` is always affected and resumable. `wiki verify-full` keeps the explicit full-repository gate but defaults to independently maintained `Focused` regressions; `-VerificationProfile Core|Full` opts into legacy monolithic audits. CI always runs the complete Focused catalog. Pushes, weekly scheduled CI, and manual CI additionally run the monolithic Full audit in a parallel job with its own checkout and SQLite cache. The stable `LLM Wiki verification` gate waits for both jobs and rejects failures, cancellations, and unexpected skips; only pull requests expect the Full audit to be skipped. API compatibility, dependency inspection, and review reporting remain required steps in the focused job and expose separate CI timings. Worker failure artifacts have distinct names. Successful stage receipts survive a later timeout, so rerunning `verify` continues from unchanged green stages rather than replaying them. Every verify run owns `.artifacts/llm-wiki/verify-runs/<run-id>/progress.json` and its own stage logs; the legacy `verify-progress.json` is only the latest-run pointer. Inspect an exact run with `wiki.ps1 verify-status -VerifyRunId <run-id>`; tests and automation may also reserve a unique ID through the same parameter. The affected-smoke stage reserves a 360-second expected duration and a 600-second hard timeout so the promoted 490-case context-search suite and diagnostic corpora can complete alongside graph prewarm and other selected smoke groups on slower CI runners.
+Ordinary `wiki verify` is always affected and resumable. `wiki verify-full` keeps the explicit full-repository gate but defaults to independently maintained `Focused` regressions; `-VerificationProfile Core|Full` opts into legacy monolithic audits. CI always runs the complete Focused catalog. Pushes, weekly scheduled CI, and manual CI additionally run the Full audit as parallel Core and Governed matrix jobs, each with its own checkout and SQLite cache. The stable `LLM Wiki verification` gate waits for the focused job and the aggregate result of both audit shards and rejects failures, cancellations, and unexpected skips; only pull requests expect the Full audit to be skipped. API compatibility, dependency inspection, and review reporting remain required steps in the focused job and expose separate CI timings. Worker failure artifacts have distinct names. Successful stage receipts survive a later timeout, so rerunning `verify` continues from unchanged green stages rather than replaying them. Every verify run owns `.artifacts/llm-wiki/verify-runs/<run-id>/progress.json` and its own stage logs; the legacy `verify-progress.json` is only the latest-run pointer. Inspect an exact run with `wiki.ps1 verify-status -VerifyRunId <run-id>`; tests and automation may also reserve a unique ID through the same parameter. The affected-smoke stage reserves a 360-second expected duration and a 600-second hard timeout so the promoted 490-case context-search suite and diagnostic corpora can complete alongside graph prewarm and other selected smoke groups on slower CI runners.
 
 When concurrent unfinished frontend work makes frontend indexes stale, use
 `wiki verify -Area Backend` to verify only backend generators and receive an
@@ -162,6 +163,17 @@ code-graph lane starts in the first worker batch to reduce idle tail time.
 The monolithic Core/Full audit reports timings for context/diff, planning,
 compatibility/index contracts, topology/privacy, and its individual nested
 regression suites. These measurements do not change assertions or SLA limits.
+
+The Full audit accepts `-AuditShard Core|Governed` when invoked directly through
+`Test-LlmWikiTools.ps1 -Profile Full`. Core owns baseline and standalone evidence
+checks; Governed prepares its own policy and contract packet before running all
+workspace and orchestration scenarios. A frozen assertion inventory verifies
+333 Core assertions, 376 Governed assertions and one common memory-isolation
+assertion (run by both shards). CI uses separate checkout/cache roots and
+`fail-fast: false`; the final gate requires the aggregate matrix result. Local
+`-AuditShard All` remains the default complete sequential audit. Run individual
+shards sequentially in a shared checkout to avoid contending on the snapshot
+lock; independent CI jobs provide their parallel isolation.
 
 Other groups run serially after that batch. Shared-checkout mutation fixtures and performance-sensitive
 SLA fixtures stay serial, so the context-cache cold-start budget is measured
