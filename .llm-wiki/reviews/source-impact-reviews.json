@@ -885,17 +885,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9dd775a2ad38fc11f79cb6a1ff06a26b5ac3bee737eee3fdc82a7d5bfa839f3a"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-          "sha256": "eac37599f5e80a871c5fae3c75ffa2488e75a8480f294b83dff8636d5aea972b"
+          "sha256": "d1c79790a50467fbed11ed5725f25eb8035ba98316e529eec690cab3c07c5ff0"
         }
       ],
-      "reason": "Reviewed final quality-index diff for Wiki dependency baseline reading and code-graph transport. The dependency reader uses the existing process helper so expected missing blobs cannot leak native failure status. SQLite quality queries and static-evidence limitations are unchanged.",
+      "reason": "Reviewed generated quality metrics for the bounded process-local workspace-policy cache and added focused group. Product risk/test-reference semantics and SQLite quality query behavior are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "47bb318212c751c1e3f3591541ad3bf1402b973e",
-      "reviewedAtUtc": "2026-09-09T20:39:42.8900266Z"
+      "gitHead": "e0d2efa28333595371735a12dd8519f26074f245",
+      "reviewedAtUtc": "2026-09-09T20:58:02.3267267Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -987,13 +983,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "9dd775a2ad38fc11f79cb6a1ff06a26b5ac3bee737eee3fdc82a7d5bfa839f3a"
+          "sha256": "d1c79790a50467fbed11ed5725f25eb8035ba98316e529eec690cab3c07c5ff0"
         }
       ],
-      "reason": "Reviewed final generated metrics changes confined to Wiki dependency and graph tools. Security classification, runtime boundaries and the navigation-only evidence contract are unchanged.",
+      "reason": "Reviewed Wiki-only complexity metrics after adding immutable policy JSON reuse with content and validator invalidation. Security evidence classification and production controls are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "47bb318212c751c1e3f3591541ad3bf1402b973e",
-      "reviewedAtUtc": "2026-09-09T20:39:43.8857491Z"
+      "gitHead": "e0d2efa28333595371735a12dd8519f26074f245",
+      "reviewedAtUtc": "2026-09-09T20:58:03.2404319Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

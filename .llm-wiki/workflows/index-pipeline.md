@@ -479,6 +479,12 @@ ordinary per-group validation path. A group publishes its receipt atomically
 only when its starting and completed fingerprints match; the aggregate gate
 also rejects input changes during the run.
 
+The `workspace-policy` focused group checks process-local policy reuse against
+full validation, including same-size edits with restored timestamps, malformed
+or missing files, alternate policy paths, caller mutation, and validator changes.
+It runs in the complete focused catalog and for changes to its validator,
+regression, or policy source.
+
 SQL search batches read their document count once inside a read transaction.
 Concurrent writers can commit while every query in that batch observes one
 snapshot; the next batch reads fresh metadata. Compiler subprocess failures

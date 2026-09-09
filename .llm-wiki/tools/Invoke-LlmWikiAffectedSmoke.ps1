@@ -149,6 +149,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1')
             if (-not $?) { exit 1 }
         }
+        'workspace-policy' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiWorkspacePolicyCache.ps1')
+            if (-not $?) { exit 1 }
+        }
         'dependency-analysis' {
             & (Join-Path $toolsRoot 'Test-LlmWikiDependencyManifest.ps1')
             if (-not $?) { exit 1 }

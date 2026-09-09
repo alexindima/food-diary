@@ -1,6 +1,7 @@
 @{
     SchemaVersion = 1
     Groups = @(
+        @{ Id = 'workspace-policy'; IncludeInAll = $true; ParallelSafe = $true; Priority = 0; GraphDependent = $false; Patterns = @('^\.llm-wiki/(tools/(Get-LlmWikiWorkspacePolicy|Test-LlmWikiWorkspacePolicyCache)\.ps1|policies/workspace-policies\.json)$') }
         @{ Id = 'adaptive-routing'; IncludeInAll = $false; ParallelSafe = $true; Priority = 0; GraphDependent = $false; Patterns = @('^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Get-LlmWikiWorkflowMetrics|Write-LlmWikiWorkflowMetric|Test-LlmWikiAdaptiveWorkflow|Test-LlmWikiWorkflowMetrics)|policies/experience-policies\.json|workflows/developer-experience\.md)') }
         @{ Id = 'adaptive-evals'; IncludeInAll = $true; ParallelSafe = $true; Priority = 100; GraphDependent = $true; Patterns = @('^\.llm-wiki/(tools/(Invoke-LlmWikiAdaptiveVerification|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan|Invoke-LlmWikiEvals)|evals/|workflows/(integration-scan|evals|learned-regression-evals)\.md)') }
         @{ Id = 'change-policy'; IncludeInAll = $true; ParallelSafe = $true; Priority = 0; GraphDependent = $false; Patterns = @('^\.llm-wiki/(policies/change-policies\.json|tools/(Get-LlmWikiChangePolicy|Test-LlmWikiChangePolicy)\.ps1)$') }

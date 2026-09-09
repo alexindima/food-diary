@@ -21,11 +21,27 @@ if ($normalizedPath -notmatch '^\.llm-wiki/policies/[^/]+\.json$|^\.artifacts/ll
 $absolutePath = Join-Path $repositoryRoot $normalizedPath
 $issues = [System.Collections.Generic.List[string]]::new()
 $policy = $null
+$policyText = $null
+$cacheKey = 'FoodDiary.Wiki.WorkspacePolicy.ValidatedJson.v1'
+$cacheable = $Action -eq 'get' -and $Format -eq 'Json'
+$validatorText = if ($cacheable) { $MyInvocation.MyCommand.ScriptBlock.ToString() } else { $null }
 if (-not (Test-Path -LiteralPath $absolutePath -PathType Leaf)) {
     $issues.Add('Workspace policy file is absent.')
 } else {
     try {
-        $policy = Get-Content -LiteralPath $absolutePath -Raw | ConvertFrom-Json
+        $policyText = Get-Content -LiteralPath $absolutePath -Raw
+        if ($cacheable) {
+            $cached = [AppDomain]::CurrentDomain.GetData($cacheKey)
+            # Always reread content, including same-size edits with restored timestamps.
+            # One immutable entry bounds memory and cannot share mutable policy objects.
+            if ($null -ne $cached -and [string]::Equals($cached.path, $absolutePath, [StringComparison]::Ordinal) -and
+                [string]::Equals($cached.validator, $validatorText, [StringComparison]::Ordinal) -and
+                [string]::Equals($cached.input, $policyText, [StringComparison]::Ordinal)) {
+                if ($WithFingerprint) { $cached.snapshotJson } else { $cached.policyJson }
+                return
+            }
+        }
+        $policy = $policyText | ConvertFrom-Json
     } catch {
         $issues.Add("Workspace policy is invalid JSON: $($_.Exception.Message)")
     }
@@ -516,7 +532,21 @@ if ($Action -eq 'get') {
     } else {
         $policy
     }
-    if ($Format -eq 'Json') { $getResult | ConvertTo-Json -Depth 20 } else { $getResult }
+    if ($Format -eq 'Json') {
+        $policyJson = $policy | ConvertTo-Json -Depth 20
+        $snapshotJson = [pscustomobject][ordered]@{
+            policy = $policy
+            fingerprint = $result.fingerprint
+        } | ConvertTo-Json -Depth 20
+        [AppDomain]::CurrentDomain.SetData($cacheKey, [pscustomobject]@{
+            path = $absolutePath
+            validator = $validatorText
+            input = $policyText
+            policyJson = $policyJson
+            snapshotJson = $snapshotJson
+        })
+        if ($WithFingerprint) { $snapshotJson } else { $policyJson }
+    } else { $getResult }
 } elseif ($Format -eq 'Json') {
     $result | ConvertTo-Json -Depth 8
 } else {

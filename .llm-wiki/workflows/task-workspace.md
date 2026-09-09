@@ -27,6 +27,7 @@ sources:
   - .llm-wiki/tools/LlmWikiJson.ps1
   - .llm-wiki/tools/Import-LlmWikiTaskWorkspace.ps1
   - .llm-wiki/tools/Get-LlmWikiWorkspacePolicy.ps1
+  - .llm-wiki/tools/Test-LlmWikiWorkspacePolicyCache.ps1
   - .llm-wiki/tools/Compare-LlmWikiTaskPolicy.ps1
   - .llm-wiki/tools/Sync-LlmWikiTaskPolicy.ps1
   - .llm-wiki/policies/workspace-policies.json
@@ -49,6 +50,14 @@ sources:
 ---
 
 # Start a Governed AI Task Workspace
+
+Repeated `workspace-policy get -Format Json` calls reuse one process-local
+validated JSON entry. Every call rereads the policy and compares its complete
+text, absolute path, and executing validator text using ordinal equality.
+Edits, missing files, alternate paths, and validator changes cannot reuse a
+different input's validation. Cached strings cannot expose mutable policy
+objects to callers. Explicit `validate` and object-returning calls still run
+the full validator. The focused `workspace-policy` group tests these boundaries.
 
 Create the complete task workspace with one command:
 
