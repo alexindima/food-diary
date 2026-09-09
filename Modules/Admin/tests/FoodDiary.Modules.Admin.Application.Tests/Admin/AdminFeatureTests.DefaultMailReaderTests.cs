@@ -3,6 +3,12 @@ using FoodDiary.Application.Abstractions.Admin.Common;
 namespace FoodDiary.Application.Tests.Admin;
 
 public partial class AdminFeatureTests {
+    [Fact]
+    public async Task DefaultMailReader_RejectsUnsupportedPaging() {
+        IAdminMailInboxReader reader = new RecordingAdminMailInboxReader();
+        await Assert.ThrowsAsync<NotSupportedException>(() => reader.GetMessagePageAsync(1, 10, recipient: null, category: null, unread: null, CancellationToken.None));
+    }
+
     [Theory]
     [InlineData(null, null, null)]
     [InlineData("recipient", null, null)]

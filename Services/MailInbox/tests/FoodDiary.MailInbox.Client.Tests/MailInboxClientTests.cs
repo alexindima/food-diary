@@ -11,6 +11,39 @@ namespace FoodDiary.MailInbox.Client.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxClientTests {
     [Fact]
+    public async Task LegacyClient_RejectsUnsupportedPaging() {
+        IMailInboxClient client = new LegacyClient();
+        await Assert.ThrowsAsync<NotSupportedException>(() => client.GetMessagePageAsync(1, 10, recipient: null, category: null, unread: null, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task GetMessagePageAsync_EncodesExtendedFilters() {
+        var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = JsonContent.Create(new InboundMailMessagePageResponse([], 0, 0, 0)),
+        });
+        using var http = new HttpClient(handler) { BaseAddress = new Uri("https://inbox.example.test") };
+        var client = new MailInboxClient(http, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
+        var id = Guid.NewGuid();
+        await client.GetMessagePageAsync(1, 20, recipient: null, category: null, unread: null, CancellationToken.None,
+            DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), " subject & details ", " from+tag@example.com ", id);
+        string query = handler.Request!.RequestUri!.Query;
+        Assert.Multiple(
+            () => Assert.Contains("fromUtc=1970-01-01", query, StringComparison.Ordinal),
+            () => Assert.Contains("toUtc=1970-01-02", query, StringComparison.Ordinal),
+            () => Assert.Contains("search=subject%20%26%20details", query, StringComparison.Ordinal),
+            () => Assert.Contains("fromAddress=from%2Btag%40example.com", query, StringComparison.Ordinal),
+            () => Assert.Contains($"id={id}", query, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task GetMessagePageAsync_RejectsNullResponse() {
+        var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("null", System.Text.Encoding.UTF8, "application/json") });
+        using var http = new HttpClient(handler) { BaseAddress = new Uri("https://inbox.example.test") };
+        var client = new MailInboxClient(http, Microsoft.Extensions.Options.Options.Create(new MailInboxClientOptions { MetadataApiKey = "test-metadata" }));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => client.GetMessagePageAsync(1, 20, recipient: null, category: null, unread: null, CancellationToken.None));
+    }
+
+    [Fact]
     public async Task GetMessagePageAsync_ForwardsPaginationFiltersAndMetadataKey() {
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent.Create(new InboundMailMessagePageResponse([], 123)),

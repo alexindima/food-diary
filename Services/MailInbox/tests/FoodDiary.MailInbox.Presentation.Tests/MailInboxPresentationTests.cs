@@ -32,7 +32,7 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.MailInbox.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
-public sealed class MailInboxPresentationTests {
+public sealed partial class MailInboxPresentationTests {
     [Fact]
     public void InboundMailHttpMappings_ToQuery_DefaultsLimitToFifty() {
         int? limit = null;

@@ -5,6 +5,22 @@ namespace FoodDiary.Domain.Tests;
 [ExcludeFromCodeCoverage]
 public class EmailTemplateInvariantTests {
     [Fact]
+    public void Update_PreservesPreviousContentInRevisionHistory() {
+        var template = EmailTemplate.Create("welcome", "en", "subject", "html", "text", isActive: true);
+        Assert.Empty(template.Revisions);
+        template.Update("new subject", "new html", "new text", isActive: false);
+        EmailTemplateRevision revision = Assert.Single(template.Revisions);
+        Assert.Multiple(
+            () => Assert.Equal("subject", revision.Subject),
+            () => Assert.Equal("html", revision.HtmlBody),
+            () => Assert.Equal("text", revision.TextBody),
+            () => Assert.True(revision.IsActive),
+            () => Assert.Equal(template.CreatedOnUtc, revision.SavedOnUtc));
+        template.Update("new subject", "new html", "new text", isActive: false);
+        Assert.Single(template.Revisions);
+    }
+
+    [Fact]
     public void Create_NormalizesKeyLocaleAndFields() {
         var template = EmailTemplate.Create(
             key: "  EMAIL_VERIFICATION  ",

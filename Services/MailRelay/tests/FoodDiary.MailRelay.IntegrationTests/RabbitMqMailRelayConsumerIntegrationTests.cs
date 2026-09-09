@@ -78,6 +78,7 @@ public sealed class RabbitMqMailRelayConsumerIntegrationTests(MailRelayEnvironme
         await consumer.StartAsync(CancellationToken.None);
         try {
             await PublishRawMessageAsync(options, id.ToString("D"));
+            await WaitUntilQueueMessageCountAsync(options, options.DeadLetterQueueName, 1u);
             await WaitUntilQueueIsEmptyAsync(options);
 
             Assert.Equal(1u, await GetQueueMessageCountAsync(options, options.DeadLetterQueueName));
@@ -153,17 +154,20 @@ public sealed class RabbitMqMailRelayConsumerIntegrationTests(MailRelayEnvironme
         }
     }
 
-    private static async Task WaitUntilQueueIsEmptyAsync(MailRelayBrokerOptions options) {
+    private static Task WaitUntilQueueIsEmptyAsync(MailRelayBrokerOptions options) =>
+        WaitUntilQueueMessageCountAsync(options, options.QueueName, 0u);
+
+    private static async Task WaitUntilQueueMessageCountAsync(MailRelayBrokerOptions options, string queueName, uint expectedCount) {
         DateTime deadline = DateTime.UtcNow.AddSeconds(10);
         while (DateTime.UtcNow < deadline) {
-            if (await GetQueueMessageCountAsync(options, options.QueueName).ConfigureAwait(false) == 0) {
+            if (await GetQueueMessageCountAsync(options, queueName).ConfigureAwait(false) == expectedCount) {
                 return;
             }
 
             await Task.Delay(100).ConfigureAwait(false);
         }
 
-        throw new TimeoutException($"RabbitMQ queue '{options.QueueName}' was not drained.");
+        throw new TimeoutException($"RabbitMQ queue '{queueName}' did not reach the expected message count.");
     }
 
     private static async Task<uint> GetQueueMessageCountAsync(MailRelayBrokerOptions options, string queueName) {

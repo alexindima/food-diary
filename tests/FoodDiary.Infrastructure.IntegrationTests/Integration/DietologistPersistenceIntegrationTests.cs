@@ -35,7 +35,7 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
         DateTime start = UtcNow.Date;
         var expectedId = Guid.NewGuid();
         context.AuditEntries.AddRange(
-            new AuditEntry { Id = expectedId, ActorUserId = actor, SubjectClientUserId = client, Action = "test.action", TargetType = "Test", CreatedAtUtc = start },
+            new AuditEntry { Id = expectedId, ActorUserId = actor, SubjectClientUserId = client, Action = "test.action", TargetType = "Test", TargetId = "specific", CreatedAtUtc = start },
             new AuditEntry { Id = Guid.NewGuid(), ActorUserId = actor, SubjectClientUserId = client, Action = "test.action", TargetType = "Test", CreatedAtUtc = start.AddHours(1) },
             new AuditEntry { Id = Guid.NewGuid(), ActorUserId = actor, SubjectClientUserId = client, Action = "test.action", TargetType = "Test", CreatedAtUtc = start.AddDays(1) },
             new AuditEntry { Id = Guid.NewGuid(), ActorUserId = Guid.NewGuid(), SubjectClientUserId = client, Action = "test.action", TargetType = "Test", CreatedAtUtc = start });
@@ -49,6 +49,9 @@ public sealed class DietologistPersistenceIntegrationTests(PostgresDatabaseFixtu
 
         Assert.Equal(2, result.TotalItems);
         Assert.Equal(expectedId, Assert.Single(result.Items).Id);
+        AuditEntryPage targeted = await service.GetPageAsync(filter with { Page = 1, TargetId = "specific" }, CancellationToken.None);
+        Assert.Equal(1, targeted.TotalItems);
+        Assert.Equal(expectedId, Assert.Single(targeted.Items).Id);
         Assert.Empty(context.ChangeTracker.Entries());
     }
 

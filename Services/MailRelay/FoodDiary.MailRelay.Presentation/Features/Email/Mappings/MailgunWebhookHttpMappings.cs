@@ -1,5 +1,4 @@
 using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
-using System.Diagnostics;
 
 namespace FoodDiary.MailRelay.Presentation.Features.Email.Mappings;
 
@@ -23,25 +22,23 @@ public static class MailgunWebhookHttpMappings {
         }
 
         string? providerMessageId = request.EventData.Message?.Headers?.MessageId;
-        deliveryEvent = eventType switch {
-            "complained" => new IngestMailEventRequest(
+        deliveryEvent = string.Equals(eventType, "complained", StringComparison.Ordinal)
+            ? new IngestMailEventRequest(
                 "complaint",
                 request.EventData.Recipient,
                 "mailgun-webhook",
                 Classification: null,
                 providerMessageId,
                 request.EventData.Reason ?? "complaint",
-                ProviderEventId: request.EventData.Id),
-            "failed" or "bounced" => new IngestMailEventRequest(
+                ProviderEventId: request.EventData.Id)
+            : new IngestMailEventRequest(
                 "bounce",
                 request.EventData.Recipient,
                 "mailgun-webhook",
                 string.Equals(request.EventData.Severity, "permanent", StringComparison.OrdinalIgnoreCase) ? "hard" : "soft",
                 providerMessageId,
                 request.EventData.Reason,
-                ProviderEventId: request.EventData.Id),
-            _ => throw new UnreachableException(),
-        };
+                ProviderEventId: request.EventData.Id);
         return true;
     }
 }

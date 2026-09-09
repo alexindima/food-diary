@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.ExceptionServices;
 
 namespace FoodDiary.Infrastructure.Integrations.MailInbox;
 
@@ -13,11 +14,12 @@ internal sealed class BugAcknowledgementReceipts(FoodDiaryDbContext context) : I
         context.Set<BugAcknowledgementReceipt>().Add(receipt);
         try {
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        } catch (DbUpdateException) {
+        } catch (DbUpdateException exception) {
             context.Entry(receipt).State = EntityState.Detached;
-            if (!await ContainsAsync(inboxId, cancellationToken).ConfigureAwait(false)) {
-                throw;
-            }
+            ExceptionDispatchInfo? unexpectedFailure = await ContainsAsync(inboxId, cancellationToken).ConfigureAwait(false)
+                ? null
+                : ExceptionDispatchInfo.Capture(exception);
+            unexpectedFailure?.Throw();
         }
     }
 }

@@ -231,6 +231,9 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
             () => Assert.Equal(earnedAtUtc, persisted.EarnedAtUtc),
             () => Assert.Equal(3, persisted.EarnedValue),
             () => Assert.Equal(1, persisted.DefinitionVersion));
+        IReadOnlyDictionary<string, int> counts = await new AchievementDefinitionStore(assertionContext).GetAwardCountsAsync();
+        Assert.Equal(1, counts["streak-3"]);
+        Assert.Single(counts);
     }
 
     private static AchievementDefinition CreateDefinition(string key) => AchievementDefinition.Create(

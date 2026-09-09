@@ -321,22 +321,6 @@ public sealed class WikiQueryService(
         }
     }
 
-    private async Task<WikiCommandResult?> ExecuteComponentUncachedAsync(
-        string command,
-        IReadOnlyList<string> arguments,
-        List<DevelopmentContextComponentError> errors,
-        CancellationToken cancellationToken) {
-        try {
-            return await executor.ExecuteAsync(command, arguments, cancellationToken)
-                .ConfigureAwait(false);
-        } catch (DevelopmentMcpException exception) {
-            lock (errors) {
-                errors.Add(new DevelopmentContextComponentError(command, exception.ErrorCode, exception.Message));
-            }
-            return null;
-        }
-    }
-
     private async Task<WikiCommandResult> ExecuteCachedAsync(
         string command,
         IReadOnlyList<string> arguments,

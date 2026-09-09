@@ -769,6 +769,7 @@ public sealed class DependencyInjectionTests {
             [
                 "FoodDiary.Application.Abstractions.Audit.Common.IAuditEntryReadService",
                 "FoodDiary.Application.Abstractions.Audit.Common.IAuditEntryWriter",
+                "FoodDiary.Application.Abstractions.Audit.Common.IAuditEntryJournal",
             ]
         },
         {

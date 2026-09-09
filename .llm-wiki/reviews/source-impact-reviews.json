@@ -208,17 +208,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "30323bb162b0dd301483649bd22ed675a46d97f27fa4877a675f601961089ca5"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "c15fde43bfc38ef678702614ee792b6c2d76d852bc0ed51cd4e3dd2c4ec64c55"
+          "sha256": "af22f8093006c98f33554a125a31c3b6141bc098f854d1f98b82130b7b301cb6"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Reviewed final implementation diff: private dead code removal, method-local Billing constant, equivalent image compensation in finally, and receipt exception preservation add no project edges or ownership changes. All 1202 architecture tests passed on the updated sources.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:34.5375003Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T01:00:07.6636213Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -227,13 +223,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "676e695207c36df243b1e3f50701e81e1b3eadf3870b05ac1281c19a556d2c28"
+          "sha256": "140f0f725466f23ffc2f118985e939692f68d22d22d663ece7c99fa6527478e3"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Final Meals validator tests exercise existing optional ManualAlcohol boundaries (null, zero, maximum, negative, above maximum) for create and update. All 174 Meals application tests passed. No public contracts, routes, payloads or API snapshots changed; existing backend contract review guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:35.6977359Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T01:22:55.8309962Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -558,13 +554,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "477860b938c23d778ca6977a42c95af79238cc3891f3f6b3dab658ce7c6f5e78"
+          "sha256": "78309dfceb061cf494a3b4d5397ff137e9b1900b0117a973e9bd6ec5761adc4e"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Reviewed method-local numeric(18,2) constant and unchanged limit expression; all 42 Billing domain tests passed. No EF schema or mapping changed. Receipt PostgreSQL tests verify duplicate handling, detachment, original exception identity and stack.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:37.0561976Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T01:00:10.6313038Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -618,13 +614,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "788e0ef3cb5b657b656c5fec1c560c87259618c67cb7f6c019116aa2b9674ea5"
+          "sha256": "bc6dfd549d0557afe9ca8ba085aea4d9b87ae97c005bdaf48112f659d8fc82da"
         }
       ],
-      "reason": "Reviewed the physical Services relocation and regenerated source indexes. Solution and project references resolve; 128 focused architecture checks and the regenerated catalog guardrails passed. Docker build inputs and deployment bind paths preserve existing service behavior and data volumes. Frontend fixes retain Angular ESLint 22.2, replace template casts with typed references and uppercase calls with pipes, and cap 27 pre-existing complex templates at their measured counts while retaining the default limit of five. The real-rule sanity fixture and full ESLint pass; production build generated 18 routes plus Russian variants. Technology Radar source evidence and inventory were updated and its build passed.",
+      "reason": "Reviewed committed package.json change c6133896f: only hono and js-yaml override versions changed; Playwright scripts and frontend AGENTS visual guidance are unchanged. Browser, interaction and screenshot instructions remain accurate; no UI changed in this backend coverage task.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T06:03:30.0429029Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T00:06:35.8395264Z"
     },
     {
       "pageId": "workflow-governed-context-strategy-application",
@@ -836,13 +832,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "55cbaa9fb45f2c6703bfc99216d1d2b12dddd770c24e8af3da2249069fa270e4"
+          "sha256": "d6eccbc95cc442325e2beeb3ba060a017a0fd21bf6ed490e5479572e512ba49c"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Reviewed refreshed sensitive-data index and coverage changes. Tests use synthetic identities and keys; production collection, persistence, logging and transfer contracts are unchanged. Candidate classification and lifecycle guidance remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:38.7216407Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T00:06:23.4548395Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -881,13 +877,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "1fa7e5d2f77e1dc7b130180785b25a61e4515ac572fdadc9bd8b907035deacc7"
+          "sha256": "c9344ac87cf6c6efc93fa7ba82e466c1567d6e5b8bf73a69ac2cde32e84ab2ab"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Reviewed updated test and source references. Native dotCover 2025.1.5 verifies ConfirmImageUploadCommandHandler 49/49, BugAcknowledgementReceipts 15/15, worker 25/25 and BillingDomainGuard 20/20 statements. Static references remain navigation, consistent with the workflow.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:39.7671382Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T01:00:12.1753424Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -964,13 +960,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "3b92edba57400930902da65b968d0e153b040e5066d00db4c7acbc0392b67084"
+          "sha256": "54044423c9290560efba0700b2140d94be9384f8f977488a21ba9ec1f1f1f6cf"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Reviewed image finally compensation: deletion still runs only after failed confirmation persistence and preserves the original exception even when cleanup fails. Receipt existence lookup still suppresses only confirmed duplicates and preserves unexpected failures; repeated successful worker polling and PostgreSQL tests passed.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:41.1162596Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T01:00:13.3796222Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -978,14 +974,22 @@
       "pageSha256": "86a869a74d85d1ce68b49939febef296d1f31c08c620e71fa39e5e239849fc02",
       "sources": [
         {
-          "path": ".llm-wiki/policies/context-search-ranking.json",
-          "sha256": "6a3165956f5c0fc614f125a45d513aafb658920bf7b0c700cb2f80c44be0ab43"
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "c9344ac87cf6c6efc93fa7ba82e466c1567d6e5b8bf73a69ac2cde32e84ab2ab"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "54044423c9290560efba0700b2140d94be9384f8f977488a21ba9ec1f1f1f6cf"
+        },
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "d6eccbc95cc442325e2beeb3ba060a017a0fd21bf6ed490e5479572e512ba49c"
         }
       ],
-      "reason": "Reviewed the unchanged security evidence compiler contract: the ranking policy now recognizes explicit DKIM signing identity; no security finding semantics, source trust, or scanner claims changed. Full context evaluation and runtime parity passed.",
+      "reason": "Reviewed refreshed evidence projections and final persistence change. Admin keeps the same receipt-only capabilities, no raw SQL or foreign writes, and the reviewed technical source fingerprints agree with the passing architecture checks. No authentication, authorization, secret handling or destination change; workflow remains evidence navigation.",
       "baseRef": "HEAD",
-      "gitHead": "7e53cd70f4006f7a3307173c5c90e96fbcfce055",
-      "reviewedAtUtc": "2026-09-08T22:54:44.1522104Z"
+      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
+      "reviewedAtUtc": "2026-09-09T01:00:14.6364375Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

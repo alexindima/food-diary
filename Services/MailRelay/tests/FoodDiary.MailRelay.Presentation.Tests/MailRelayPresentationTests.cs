@@ -45,7 +45,7 @@ using Microsoft.Extensions.Options;
 namespace FoodDiary.MailRelay.Presentation.Tests;
 
 [ExcludeFromCodeCoverage]
-public sealed class MailRelayPresentationTests {
+public sealed partial class MailRelayPresentationTests {
     [Theory]
     [InlineData(ErrorKind.Validation, StatusCodes.Status400BadRequest)]
     [InlineData(ErrorKind.Unauthorized, StatusCodes.Status401Unauthorized)]
@@ -982,6 +982,7 @@ public sealed class MailRelayPresentationTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingSender : ISender {
+        public Result<FoodDiary.MailRelay.Application.Emails.Models.OutgoingEmailJournalPage> JournalResult { get; init; } = Result.Success(new FoodDiary.MailRelay.Application.Emails.Models.OutgoingEmailJournalPage([], 0));
         public object? LastRequest { get; private set; }
         public Result<MailRelayDeliveryEventEntry> DeliveryEventResult { get; init; } = Result.Success(CreateDeliveryEvent());
         public Result<IReadOnlyList<MailRelayDeliveryEventEntry>> DeliveryEventsResult { get; init; } =
@@ -1002,6 +1003,7 @@ public sealed class MailRelayPresentationTests {
                 IngestManyMailRelayDeliveryEventsCommand => DeliveryEventsResult,
                 CheckMailRelayReadinessQuery => ReadinessResult,
                 GetMailRelayQueueStatsQuery => QueueStatsResult,
+                FoodDiary.MailRelay.Application.Emails.Queries.GetOutgoingEmailJournal.GetOutgoingEmailJournalQuery => JournalResult,
                 EnqueueMailRelayEmailCommand => EnqueueResult,
                 GetMailRelaySuppressionsQuery => SuppressionsResult,
                 CreateMailRelaySuppressionCommand => SuppressionCreateResult,

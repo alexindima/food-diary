@@ -8,6 +8,20 @@ namespace FoodDiary.Modules.Admin.Infrastructure.Tests.Integrations;
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxAdminReaderTests {
     [Fact]
+    public async Task GetMessagePageAsync_ForwardsFiltersAndPreservesCounters() {
+        using var cancellation = new CancellationTokenSource();
+        var id = Guid.NewGuid();
+        var message = new InboundMailMessageSummaryResponse(id, "from@example.com", ["to@example.com"], "subject", "general", "received", ReadAtUtc: null, DateTimeOffset.UnixEpoch);
+        var page = new InboundMailMessagePageResponse([message], 31, 11, 20);
+        IMailInboxClient client = Substitute.For<IMailInboxClient>();
+        client.GetMessagePageAsync(2, 10, "to@example.com", "general", unread: true, cancellation.Token, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), "subject", "from@example.com", id).Returns(page);
+        var reader = new MailInboxClientAdminMailInboxReader(client);
+        AdminMailInboxMessagePageModel actual = await reader.GetMessagePageAsync(2, 10, "to@example.com", "general", unread: true, cancellation.Token, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), "subject", "from@example.com", id);
+        Assert.Equivalent(page, actual, strict: true);
+        await client.Received(1).GetMessagePageAsync(2, 10, "to@example.com", "general", unread: true, cancellation.Token, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), "subject", "from@example.com", id);
+    }
+
+    [Fact]
     public async Task GetMessagesAsync_MapsClientSummaries() {
         var id = Guid.NewGuid();
         DateTimeOffset receivedAtUtc = DateTimeOffset.UtcNow;

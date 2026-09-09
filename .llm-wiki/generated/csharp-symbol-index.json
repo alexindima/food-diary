@@ -3286,7 +3286,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "BugAcknowledgementSource",
@@ -25273,7 +25273,7 @@
       "kind": "class",
       "role": "Other",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs",
-      "line": 5
+      "line": 4
     },
     {
       "name": "MailRelayEmailHttpMappings",

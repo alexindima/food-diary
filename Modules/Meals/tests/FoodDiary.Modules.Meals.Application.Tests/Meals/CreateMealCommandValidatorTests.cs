@@ -202,6 +202,27 @@ public class CreateMealCommandValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.ManualCalories);
     }
 
+    [Theory]
+    [InlineData(null, true)]
+    [InlineData(0d, true)]
+    [InlineData(ManualNutritionLimits.MaxNutrient, true)]
+    [InlineData(-1d, false)]
+    [InlineData(ManualNutritionLimits.MaxNutrient + 1, false)]
+    public async Task Validate_ManualAlcoholIsOptionalAndBounded(double? alcohol, bool valid) {
+        CreateMealCommand command = CreateCommand(
+            isAutoCalculated: false,
+            manualCalories: 100, manualProteins: 10, manualFats: 5, manualCarbs: 20, manualFiber: 3)
+            with { ManualAlcohol = alcohol, };
+
+        TestValidationResult<CreateMealCommand> result = await _validator.TestValidateAsync(command);
+
+        if (valid) {
+            result.ShouldNotHaveAnyValidationErrors();
+        } else {
+            result.ShouldHaveValidationErrorFor(c => c.ManualAlcohol).WithErrorCode("Validation.Invalid");
+        }
+    }
+
     [Fact]
     public async Task Validate_WhenManualNutritionExceedsMaximum_HasError() {
         CreateMealCommand command = CreateCommand(

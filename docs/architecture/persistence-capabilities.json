@@ -1133,7 +1133,7 @@
         "write:BugAcknowledgementReceipt"
       ],
       "reason": "Admin-owned acknowledgement receipts contain only an opaque MailInbox ID. The dedicated background scope saves its receipt after durable MailRelay enqueue; duplicate inserts are detached and verified by existence lookup, other failures propagate. No foreign aggregate writes, raw SQL or message content persistence.",
-      "technicalSourceSha256": "9490110b75e80148b7f3e052f2de14b2239ce9c7d902ad174a9f77dce058479a"
+      "technicalSourceSha256": "20a70ada7ca020b25d12483ec41c4e179991db61d39d2a171672ef0d11573cb9"
     },
     "Modules/Admin/Infrastructure/Persistence/Admin/AdminRetentionReader.cs": {
       "module": "Admin",

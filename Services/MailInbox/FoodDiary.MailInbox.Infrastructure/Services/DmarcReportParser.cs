@@ -336,10 +336,6 @@ public sealed class DmarcReportParser : IMailInboxDmarcReportParser {
         }
 
         public string CompleteXmlDocument(string xml) {
-            if (xml.Length > MaxDmarcXmlCharacters) {
-                throw new InvalidDataException("DMARC XML payload exceeds the maximum allowed size.");
-            }
-
             _xmlCharacters = checked(_xmlCharacters + xml.Length);
             if (_xmlCharacters > MaxDmarcTotalXmlCharacters) {
                 throw new InvalidDataException("DMARC XML payloads exceed the total allowed size.");

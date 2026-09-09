@@ -169,15 +169,19 @@ public class ImagesFeatureTests {
         var asset = ImageAsset.Create(owner, "images/cancel.jpg", "https://cdn.example/cancel.jpg");
         await repository.AddAsync(asset, CancellationToken.None);
         using var source = new CancellationTokenSource();
-        await source.CancelAsync();
         IImageStorageService storage = Substitute.For<IImageStorageService>();
         storage.ConfirmUploadedObjectAsync(asset.ObjectKey, source.Token)
-            .Returns(Task.FromCanceled<ImageObjectValidationResult>(source.Token));
+            .Returns(async _ => {
+                await source.CancelAsync();
+                return await Task.FromCanceled<ImageObjectValidationResult>(source.Token);
+            });
         var handler = new ConfirmImageUploadCommandHandler(
             repository, storage, new FakeImageObjectDeletionOutbox(), CreateUnitOfWork());
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() => handler.Handle(
             new ConfirmImageUploadCommand(owner.Value, asset.Id.Value), source.Token));
+        await storage.Received(1).ConfirmUploadedObjectAsync(asset.ObjectKey, source.Token);
+        Assert.False(asset.IsConfirmed);
     }
 
     [Fact]

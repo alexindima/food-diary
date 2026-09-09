@@ -54,21 +54,23 @@ public sealed class ConfirmImageUploadCommandHandler(
                     validation.Message ?? "Image upload has not completed or is invalid."));
             }
 
+            bool confirmationSaved = false;
             try {
                 asset.Confirm();
                 await deletionOutbox.EnqueueAsync(asset.ObjectKey, isConfirmed: false, cancellationToken).ConfigureAwait(false);
                 await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            } catch {
-                try {
-                    await imageStorageService.DeleteAsync(
-                        asset.ObjectKey,
-                        isConfirmed: true,
-                        CancellationToken.None).ConfigureAwait(false);
-                } catch {
-                    // A later orphan/user cleanup also targets both buckets for pending assets.
+                confirmationSaved = true;
+            } finally {
+                if (!confirmationSaved) {
+                    try {
+                        await imageStorageService.DeleteAsync(
+                            asset.ObjectKey,
+                            isConfirmed: true,
+                            CancellationToken.None).ConfigureAwait(false);
+                    } catch {
+                        // A later orphan/user cleanup also targets both buckets for pending assets.
+                    }
                 }
-
-                throw;
             }
         }
 

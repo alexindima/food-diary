@@ -38,6 +38,22 @@ namespace FoodDiary.Application.Tests.Admin;
 public partial class AdminFeatureTests {
 
     [Fact]
+    public async Task FilteredUsers_ForwardsCriteriaAndMapsModels() {
+        using var cancellation = new CancellationTokenSource();
+        IUserAdminReadModelRepository repository = Substitute.For<IUserAdminReadModelRepository>();
+        User user = CreateUserWithRoles("filtered@example.com", []);
+        var filter = new UserAdministrationFilter(Role: "Admin", EmailConfirmed: true);
+        repository.GetFilteredPagedReadModelsAsync("filtered", 2, 10, UserAccountStatusFilter.All, filter, cancellation.Token)
+            .Returns((new[] { user.ToAdminReadModel() }, 31));
+        var service = new AdminUserReadService(new UserAdministrationReadService(repository));
+        (IReadOnlyList<AdminUserModel> items, int total) = await service.GetFilteredPagedAsync("filtered", 2, 10, UserAccountStatusFilter.All, filter, cancellation.Token);
+        AdminUserModel actual = Assert.Single(items);
+        Assert.Equal(user.Id.Value, actual.Id);
+        Assert.Equal(31, total);
+        await repository.Received(1).GetFilteredPagedReadModelsAsync("filtered", 2, 10, UserAccountStatusFilter.All, filter, cancellation.Token);
+    }
+
+    [Fact]
     public async Task GetAdminBillingRevenueSummaryHandler_UsesExplicitUtcRange() {
         var repository = new RecordingAdminBillingRepository();
         var from = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Local);

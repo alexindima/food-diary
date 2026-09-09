@@ -3,15 +3,14 @@ using FoodDiary.Domain.Primitives;
 namespace FoodDiary.Domain.Entities.Billing;
 
 internal static class BillingDomainGuard {
-    private const decimal MaxNumeric18Scale2 = 9_999_999_999_999_999.99m;
-
     public static decimal? OptionalNumeric18Scale2(decimal? value, string paramName) {
+        const decimal maxNumeric18Scale2 = 9_999_999_999_999_999.99m;
         if (!value.HasValue) {
             return null;
         }
 
         decimal normalized = value.Value;
-        if (normalized is < -MaxNumeric18Scale2 or > MaxNumeric18Scale2) {
+        if (normalized is < -maxNumeric18Scale2 or > maxNumeric18Scale2) {
             throw new ArgumentOutOfRangeException(paramName, "Value exceeds numeric(18,2) storage limits.");
         }
 

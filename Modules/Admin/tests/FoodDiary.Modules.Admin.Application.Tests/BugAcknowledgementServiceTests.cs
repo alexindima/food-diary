@@ -38,6 +38,30 @@ public sealed class BugAcknowledgementServiceTests {
         await receipts.DidNotReceive().RecordAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public async Task MissingLocale_FallsBackToEnglishOnlyWhenActive(bool templateExists, bool active) {
+        var candidate = new BugAcknowledgementCandidate(Guid.NewGuid(), "reporter@example.com", MessageId: null, "bug-ack:123", "ru");
+        IBugAcknowledgementSource source = Substitute.For<IBugAcknowledgementSource>();
+        source.ReadAsync(Arg.Any<DateTimeOffset>(), Arg.Any<CancellationToken>()).Returns(Candidates(candidate));
+        IEmailTemplateAdministrationReadService templates = Substitute.For<IEmailTemplateAdministrationReadService>();
+        templates.GetTemplatesAsync(Arg.Any<CancellationToken>()).Returns(templateExists
+            ? [new EmailTemplateReadModel(Guid.NewGuid(), "bug_report_received", "en", "Subject", "Html", "Text", active, DateTime.UnixEpoch, ModifiedOnUtc: null)]
+            : []);
+        IEmailTransport transport = Substitute.For<IEmailTransport>();
+        IBugAcknowledgementReceipts receipts = Substitute.For<IBugAcknowledgementReceipts>();
+        await new BugAcknowledgementService(source, templates, transport, receipts).RunAsync(DateTimeOffset.UnixEpoch, CancellationToken.None);
+        if (templateExists && active) {
+            await transport.Received(1).SendAsync(Arg.Is<EmailMessage>(x => x.Subject == "Subject"), CancellationToken.None);
+            await receipts.Received(1).RecordAsync(candidate.InboxId, CancellationToken.None);
+        } else {
+            Assert.Empty(transport.ReceivedCalls());
+            Assert.Empty(receipts.ReceivedCalls());
+        }
+    }
+
     private static async IAsyncEnumerable<BugAcknowledgementCandidate> Candidates(BugAcknowledgementCandidate candidate, [EnumeratorCancellation] CancellationToken cancellationToken = default) {
         cancellationToken.ThrowIfCancellationRequested();
         await Task.CompletedTask;

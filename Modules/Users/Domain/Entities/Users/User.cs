@@ -117,10 +117,6 @@ public sealed partial class User : AggregateRoot<UserId> {
         return string.IsNullOrWhiteSpace(value) ? throw new ArgumentException("Password hash is required.", nameof(value)) : value;
     }
 
-    private static string? NormalizeOptionalToken(string? value) {
-        return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
-    }
-
     private static string NormalizeRequiredTokenHash(string value, string paramName) {
         return string.IsNullOrWhiteSpace(value)
             ? throw new ArgumentException("Token hash is required.", paramName)

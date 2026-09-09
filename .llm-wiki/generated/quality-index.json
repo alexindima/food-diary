@@ -9,8 +9,8 @@
     "wikiToolFiles": 203,
     "wikiToolsWithoutTestReferences": 4,
     "criticalSymbols": 812,
-    "criticalSymbolsWithTestReferences": 771,
-    "criticalSymbolsWithoutTestReferences": 41,
+    "criticalSymbolsWithTestReferences": 794,
+    "criticalSymbolsWithoutTestReferences": 18,
     "debtMarkers": 11
   },
   "hotspots": [
@@ -423,14 +423,6 @@
       "structuralRiskScore": 107.76
     },
     {
-      "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
-      "nonBlankLines": 467,
-      "decisionPoints": 65,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 106.84
-    },
-    {
       "path": ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
       "nonBlankLines": 329,
       "decisionPoints": 65,
@@ -445,6 +437,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 105.42
+    },
+    {
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
+      "nonBlankLines": 452,
+      "decisionPoints": 64,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 105.04
     },
     {
       "path": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
@@ -656,11 +656,11 @@
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
-      "nonBlankLines": 295,
-      "decisionPoints": 52,
+      "nonBlankLines": 292,
+      "decisionPoints": 51,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 83.9
+      "structuralRiskScore": 82.34
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
@@ -2898,11 +2898,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
-      "nonBlankLines": 467,
-      "decisionPoints": 65,
+      "nonBlankLines": 452,
+      "decisionPoints": 64,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 106.84
+      "structuralRiskScore": 105.04
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeMetrics.cs",
@@ -14101,16 +14101,16 @@
       "nonBlankLines": 14,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.28
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.28
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQueryValidator.cs",
       "nonBlankLines": 13,
       "decisionPoints": 2,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 10.26
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.26
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminBillingPayments/GetAdminBillingPaymentsQuery.cs",
@@ -14189,16 +14189,16 @@
       "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.18
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.18
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQueryValidator.cs",
       "nonBlankLines": 12,
       "decisionPoints": 2,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 10.24
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.24
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQuery.cs",
@@ -14221,8 +14221,8 @@
       "nonBlankLines": 10,
       "decisionPoints": 1,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 8.7
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.7
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminDashboardOverview/GetAdminDashboardOverviewQuery.cs",
@@ -14293,8 +14293,8 @@
       "nonBlankLines": 8,
       "decisionPoints": 2,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 10.16
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.16
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminLessons/GetAdminLessonsQuery.cs",
@@ -14349,16 +14349,16 @@
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.24
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.24
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryValidator.cs",
       "nonBlankLines": 14,
       "decisionPoints": 2,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 10.28
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.28
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessages/GetAdminMailInboxMessagesQuery.cs",
@@ -14397,16 +14397,16 @@
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.16
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.16
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQueryValidator.cs",
       "nonBlankLines": 13,
       "decisionPoints": 2,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 10.26
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.26
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminRetention/GetAdminRetentionQuery.cs",
@@ -14421,8 +14421,8 @@
       "nonBlankLines": 20,
       "decisionPoints": 5,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 14.9
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 9.9
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQuery.cs",
@@ -14437,16 +14437,16 @@
       "nonBlankLines": 11,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.22
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.22
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryValidator.cs",
       "nonBlankLines": 8,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.16
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.16
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminUser/GetAdminUserQuery.cs",
@@ -14485,8 +14485,8 @@
       "nonBlankLines": 10,
       "decisionPoints": 2,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 10.2
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.2
     },
     {
       "path": "Modules/Admin/Application/Queries/GetAdminUserLoginSummary/GetAdminUserLoginSummaryQuery.cs",
@@ -14714,11 +14714,11 @@
     },
     {
       "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementReceipts.cs",
-      "nonBlankLines": 20,
-      "decisionPoints": 2,
+      "nonBlankLines": 22,
+      "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.4
+      "structuralRiskScore": 1.94
     },
     {
       "path": "Modules/Admin/Infrastructure/Integrations/MailInbox/BugAcknowledgementSource.cs",
@@ -14869,8 +14869,8 @@
       "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.44
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.44
     },
     {
       "path": "Modules/Admin/Presentation/Features/Admin/AdminBillingController.cs",
@@ -14885,8 +14885,8 @@
       "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.44
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.44
     },
     {
       "path": "Modules/Admin/Presentation/Features/Admin/AdminCollaborationAuditController.cs",
@@ -14941,16 +14941,16 @@
       "nonBlankLines": 22,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.44
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.44
     },
     {
       "path": "Modules/Admin/Presentation/Features/Admin/AdminRetentionController.cs",
       "nonBlankLines": 21,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.42
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.42
     },
     {
       "path": "Modules/Admin/Presentation/Features/Admin/AdminTelemetryController.cs",
@@ -27466,11 +27466,11 @@
     },
     {
       "path": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadCommandHandler.cs",
-      "nonBlankLines": 68,
+      "nonBlankLines": 71,
       "decisionPoints": 11,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.86
+      "structuralRiskScore": 19.92
     },
     {
       "path": "Modules/Images/Application/Commands/ConfirmUpload/ConfirmImageUploadResult.cs",
@@ -28365,8 +28365,8 @@
       "nonBlankLines": 10,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.2
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.2
     },
     {
       "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionSummary/GetMarketingAttributionSummaryQueryHandler.cs",
@@ -30010,11 +30010,11 @@
     },
     {
       "path": "Modules/Meals/Application/Services/MealManualItemAppender.cs",
-      "nonBlankLines": 81,
-      "decisionPoints": 14,
+      "nonBlankLines": 77,
+      "decisionPoints": 13,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 22.62
+      "structuralRiskScore": 21.04
     },
     {
       "path": "Modules/Meals/Application/Services/MealNutritionApplier.cs",
@@ -36378,11 +36378,11 @@
     },
     {
       "path": "Modules/Users/Domain/Entities/Users/User.cs",
-      "nonBlankLines": 520,
+      "nonBlankLines": 517,
       "decisionPoints": 38,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 67.4
+      "structuralRiskScore": 67.34
     },
     {
       "path": "Modules/Users/Domain/Entities/Users/UserRole.cs",
@@ -38189,8 +38189,8 @@
       "nonBlankLines": 45,
       "decisionPoints": 2,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 10.9
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.9
     },
     {
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/CompleteReportHttpRequest.cs",
@@ -38453,8 +38453,8 @@
       "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.24
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.24
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryValidator.cs",
@@ -38706,11 +38706,11 @@
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/DmarcReportParser.cs",
-      "nonBlankLines": 295,
-      "decisionPoints": 52,
+      "nonBlankLines": 292,
+      "decisionPoints": 51,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 83.9
+      "structuralRiskScore": 82.34
     },
     {
       "path": "Services/MailInbox/FoodDiary.MailInbox.Infrastructure/Services/IMailInboxDmarcReportParser.cs",
@@ -39509,16 +39509,16 @@
       "nonBlankLines": 6,
       "decisionPoints": 0,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 7.12
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.12
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQueryValidator.cs",
       "nonBlankLines": 13,
       "decisionPoints": 2,
       "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 1,
-      "structuralRiskScore": 10.26
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 5.26
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Services/MailRelayEmailUseCases.cs",
@@ -40290,11 +40290,11 @@
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/MailgunWebhookHttpMappings.cs",
-      "nonBlankLines": 42,
-      "decisionPoints": 5,
+      "nonBlankLines": 39,
+      "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 8.34
+      "structuralRiskScore": 6.78
     },
     {
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/OutgoingEmailJournalHttpMappings.cs",
@@ -42700,9 +42700,10 @@
       "role": "CommandHandler",
       "path": "Modules/Admin/Application/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommandHandler.cs",
       "line": 6,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43313,8 +43314,9 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Features/Admin/AdminAcquisitionController.cs",
       "line": 17,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/MarketingAttributionTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43325,9 +43327,10 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Features/Admin/AdminAiPromptsController.cs",
       "line": 17,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43349,9 +43352,11 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Features/Admin/AdminAuditController.cs",
       "line": 18,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -43371,9 +43376,11 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Features/Admin/AdminBugReportsController.cs",
       "line": 18,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -43407,9 +43414,10 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Features/Admin/AdminEmailTemplatesController.cs",
       "line": 20,
-      "testReferenceCount": 2,
+      "testReferenceCount": 3,
       "testReferences": [
         "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -43433,9 +43441,10 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Features/Admin/AdminMailInboxController.cs",
       "line": 17,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs"
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -43457,9 +43466,11 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Features/Admin/AdminOutgoingEmailsController.cs",
       "line": 18,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -43467,9 +43478,11 @@
       "role": "Controller",
       "path": "Modules/Admin/Presentation/Features/Admin/AdminRetentionController.cs",
       "line": 18,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -43716,9 +43729,11 @@
       "role": "Controller",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
       "line": 17,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -44078,11 +44093,12 @@
       "role": "Controller",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
       "line": 19,
-      "testReferenceCount": 4,
+      "testReferenceCount": 5,
       "testReferences": [
         "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxMessageDetailConcurrencyTests.cs",
         "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxMessageMetadataConcurrencyTests.cs",
         "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationSecurityTests.cs",
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.Journal.cs",
         "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.cs"
       ],
       "coverageKind": "direct-symbol-reference",
@@ -44117,9 +44133,10 @@
       "role": "Controller",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
       "line": 12,
-      "testReferenceCount": 1,
+      "testReferenceCount": 2,
       "testReferences": [
-        "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayControllerSurfaceTests.cs"
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayControllerSurfaceTests.cs",
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.Journal.cs"
       ],
       "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
@@ -44748,9 +44765,11 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQueryHandler.cs",
       "line": 8,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -44806,9 +44825,11 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQueryHandler.cs",
       "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -44900,9 +44921,11 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryHandler.cs",
       "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -44922,9 +44945,11 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQueryHandler.cs",
       "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -44932,9 +44957,11 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminRetention/GetAdminRetentionQueryHandler.cs",
       "line": 8,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -44942,9 +44969,11 @@
       "role": "QueryHandler",
       "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryHandler.cs",
       "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -45368,9 +45397,11 @@
       "role": "QueryHandler",
       "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryHandler.cs",
       "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -45518,9 +45549,11 @@
       "role": "QueryHandler",
       "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionRange/GetMarketingAttributionRangeQueryHandler.cs",
       "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingAttributionRangeTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -45709,9 +45742,11 @@
       "role": "QueryHandler",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQueryHandler.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/OutgoingEmailJournalQueryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -47050,9 +47085,11 @@
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQueryValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -47060,9 +47097,11 @@
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQueryValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -47070,9 +47109,11 @@
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -47080,9 +47121,11 @@
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQueryValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -47102,9 +47145,11 @@
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -47124,9 +47169,11 @@
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQueryValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -47134,9 +47181,11 @@
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -47144,9 +47193,11 @@
       "role": "Validator",
       "path": "Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQueryValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {
@@ -47486,9 +47537,11 @@
       "role": "Validator",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQueryValidator.cs",
       "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
+      "testReferenceCount": 1,
+      "testReferences": [
+        "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/OutgoingEmailJournalQueryTests.cs"
+      ],
+      "coverageKind": "direct-symbol-reference",
       "coveredThrough": []
     },
     {

@@ -14,6 +14,25 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class UserAdministrationReadRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task FilteredPage_RestrictsLastLoginToInclusiveCalendarDates() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var inside = User.Create("login-inside@example.com", "hash");
+        var outside = User.Create("login-outside@example.com", "hash");
+        context.Users.AddRange(inside, outside);
+        var date = new DateTime(2030, 1, 2, 0, 0, 0, DateTimeKind.Utc);
+        context.Entry(inside).Property(x => x.LastLoginAtUtc).CurrentValue = date.AddHours(23);
+        context.Entry(outside).Property(x => x.LastLoginAtUtc).CurrentValue = date.AddDays(1);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new UserAdministrationReadRepository(context);
+        var filter = new UserAdministrationFilter(LastLoginFrom: new DateOnly(2030, 1, 2), LastLoginTo: new DateOnly(2030, 1, 2));
+        (IReadOnlyList<UserAdminReadModel> items, int total) = await repository.GetFilteredPagedReadModelsAsync(search: null, 1, 10, UserAccountStatusFilter.All, filter, CancellationToken.None);
+        Assert.Equal(inside.Id.Value, Assert.Single(items).Id);
+        Assert.Equal(1, total);
+        Assert.Empty(context.ChangeTracker.Entries());
+    }
+
+    [RequiresDockerFact]
     public async Task GetFilteredPagedReadModelsAsync_CombinesRegistrationConfirmationAndRoleBeforePaging() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var first = User.Create("first-period@example.com", "hash");

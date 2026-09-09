@@ -74,11 +74,7 @@ internal static class MealManualItemAppender {
                     "Manual meal items cannot declare AI provenance; AI source links are assigned by the server."));
         }
 
-        try {
-            mealItem.ApplySource(sourceAiItemIdResult.Value, origin);
-        } catch (ArgumentException ex) {
-            return Result.Failure(Errors.Validation.Invalid("Items", ex.Message));
-        }
+        mealItem.ApplySource(sourceAiItemIdResult.Value, origin);
 
         return Result.Success();
     }

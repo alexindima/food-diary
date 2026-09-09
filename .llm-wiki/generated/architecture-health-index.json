@@ -13,7 +13,7 @@
     "selectorUnreferencedComponents": 97,
     "routedStandaloneComponents": 61,
     "componentsWithoutDirectSpecs": 140,
-    "criticalSymbolsWithoutTestReferences": 41,
+    "criticalSymbolsWithoutTestReferences": 18,
     "explicitDebtMarkers": 11
   },
   "projectDependencyViolations": [],
@@ -5012,60 +5012,10 @@
   ],
   "criticalSymbolsWithoutTestReferences": [
     {
-      "name": "AdminAuditController",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminAuditController.cs",
-      "line": 18,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "AdminBugReportsController",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminBugReportsController.cs",
-      "line": 18,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "AdminOutgoingEmailsController",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminOutgoingEmailsController.cs",
-      "line": 18,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "AdminRetentionController",
-      "role": "Controller",
-      "path": "Modules/Admin/Presentation/Features/Admin/AdminRetentionController.cs",
-      "line": 18,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "BugReportJournalController",
       "role": "Controller",
       "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalController.cs",
       "line": 14,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "BugReportsController",
-      "role": "Controller",
-      "path": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportsController.cs",
-      "line": 17,
       "testReferenceCount": 0,
       "testReferences": [],
       "coverageKind": "none",
@@ -5082,179 +5032,9 @@
       "coveredThrough": []
     },
     {
-      "name": "GetAdminAuditQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQueryHandler.cs",
-      "line": 8,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminBugReportsQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQueryHandler.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminMailInboxMessagePageQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryHandler.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminOutgoingEmailsQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQueryHandler.cs",
-      "line": 6,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminRetentionQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Admin/Application/Queries/GetAdminRetention/GetAdminRetentionQueryHandler.cs",
-      "line": 8,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminTemplateRevisionsQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryHandler.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetInboundMailMessagePageQueryHandler",
-      "role": "QueryHandler",
-      "path": "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQueryHandler.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetMarketingAttributionRangeQueryHandler",
-      "role": "QueryHandler",
-      "path": "Modules/Marketing/Application/Queries/GetMarketingAttributionRange/GetMarketingAttributionRangeQueryHandler.cs",
-      "line": 7,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetOutgoingEmailJournalQueryHandler",
-      "role": "QueryHandler",
-      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQueryHandler.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
       "name": "EnqueueMailRelayEmailCommandValidator",
       "role": "Validator",
       "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmail/EnqueueMailRelayEmailCommandValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminAuditQueryValidator",
-      "role": "Validator",
-      "path": "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQueryValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminBugReportsQueryValidator",
-      "role": "Validator",
-      "path": "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQueryValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminContentReportsQueryValidator",
-      "role": "Validator",
-      "path": "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQueryValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminImpersonationSessionsQueryValidator",
-      "role": "Validator",
-      "path": "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQueryValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminMailInboxMessagePageQueryValidator",
-      "role": "Validator",
-      "path": "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQueryValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminOutgoingEmailsQueryValidator",
-      "role": "Validator",
-      "path": "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQueryValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminTemplateRevisionsQueryValidator",
-      "role": "Validator",
-      "path": "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQueryValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetAdminUserLoginEventsQueryValidator",
-      "role": "Validator",
-      "path": "Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],
@@ -5305,16 +5085,6 @@
       "name": "GetNotificationPreferencesQueryValidator",
       "role": "Validator",
       "path": "Modules/Notifications/Application/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
-      "line": 4,
-      "testReferenceCount": 0,
-      "testReferences": [],
-      "coverageKind": "none",
-      "coveredThrough": []
-    },
-    {
-      "name": "GetOutgoingEmailJournalQueryValidator",
-      "role": "Validator",
-      "path": "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQueryValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": [],

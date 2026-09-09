@@ -5,6 +5,21 @@ namespace FoodDiary.Domain.Tests.Domain;
 [ExcludeFromCodeCoverage]
 public class AiPromptTemplateInvariantTests {
     [Fact]
+    public void Update_PreservesPreviousVersionInRevisionHistory() {
+        var template = AiPromptTemplate.Create("meal_scan", "en", "original");
+        Assert.Empty(template.Revisions);
+        template.Update("updated", isActive: false);
+        AiPromptRevision revision = Assert.Single(template.Revisions);
+        Assert.Multiple(
+            () => Assert.Equal("original", revision.PromptText),
+            () => Assert.Equal(1, revision.Version),
+            () => Assert.True(revision.IsActive),
+            () => Assert.Equal(template.CreatedOnUtc, revision.SavedOnUtc));
+        template.Update("updated", isActive: false);
+        Assert.Single(template.Revisions);
+    }
+
+    [Fact]
     public void Create_WithBlankKey_Throws() {
         Assert.Throws<ArgumentException>(() =>
             AiPromptTemplate.Create("   ", "en", "Prompt text"));

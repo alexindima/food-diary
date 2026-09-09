@@ -21,6 +21,38 @@ namespace FoodDiary.MailInbox.Application.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailInboxApplicationTests {
+    [Fact]
+    public async Task DefaultStore_RejectsUnsupportedPaging() {
+        IInboundMailStore store = new RecordingInboundMailStore();
+        await Assert.ThrowsAsync<NotSupportedException>(() => store.GetMessagePageAsync(1, 10, recipient: null, category: null, unread: null, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task PageHandler_ForwardsAllFiltersAndCancellation() {
+        using var cancellation = new CancellationTokenSource();
+        var store = new RecordingPagedStore();
+        var query = new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage.GetInboundMailMessagePageQuery(
+            2, 10, "to@example.com", "general", Unread: true, DateTimeOffset.UnixEpoch, DateTimeOffset.UnixEpoch.AddDays(1), "subject", "from@example.com", Guid.NewGuid());
+        var handler = new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage.GetInboundMailMessagePageQueryHandler(store);
+        Result<InboundMailMessagePage> result = await handler.Handle(query, cancellation.Token);
+        Assert.True(result.IsSuccess);
+        Assert.Same(store.Page, result.Value);
+        Assert.Equal(query, store.Query);
+        Assert.Equal(cancellation.Token, store.Token);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingPagedStore : RecordingInboundMailStore, IInboundMailStore {
+        public InboundMailMessagePage Page { get; } = new([], 31, 11, 20);
+        public FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage.GetInboundMailMessagePageQuery? Query { get; private set; }
+        public CancellationToken Token { get; private set; }
+        public Task<InboundMailMessagePage> GetMessagePageAsync(int page, int limit, string? recipient, string? category, bool? unread, CancellationToken cancellationToken, DateTimeOffset? fromUtc = null, DateTimeOffset? toUtc = null, string? search = null, string? fromAddress = null, Guid? id = null) {
+            Query = new FoodDiary.MailInbox.Application.Messages.Queries.GetInboundMailMessagePage.GetInboundMailMessagePageQuery(page, limit, recipient, category, unread, fromUtc, toUtc, search, fromAddress, id);
+            Token = cancellationToken;
+            return Task.FromResult(Page);
+        }
+    }
+
     [Theory]
     [InlineData(null, null, null)]
     [InlineData("recipient", null, null)]
@@ -477,7 +509,7 @@ public sealed class MailInboxApplicationTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingInboundMailStore : IInboundMailStore {
+    private class RecordingInboundMailStore : IInboundMailStore {
         public IReadOnlyList<InboundMailMessageSummary> MessageSummaries { get; init; } = [];
         public InboundMailMessageDetails? Details { get; init; }
         public int LastMessagesLimit { get; private set; }

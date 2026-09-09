@@ -11,6 +11,15 @@ namespace FoodDiary.MailInbox.Infrastructure.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class DmarcReportParserTests {
     [Fact]
+    public void TryParse_RejectsValidReportAfterCumulativeXmlBudgetIsExhausted() {
+        const int documentLength = (2 * 1024 * 1024) - 100;
+        string nonReport = "<unrelated />".PadRight(documentLength);
+        string validReport = CreateDmarcXml().PadRight(documentLength);
+        string rawMime = CreateRawMessage(CreateGzipAttachment(nonReport), CreateGzipAttachment(nonReport), CreateGzipAttachment(nonReport), CreateGzipAttachment(validReport));
+        Assert.Null(new DmarcReportParser().TryParse(rawMime));
+    }
+
+    [Fact]
     public void TryParse_WhenXmlAttachmentUsesUtf16Bom_ReturnsPreview() {
         string xml = CreateDmarcXml().Replace("UTF-8", "UTF-16", StringComparison.Ordinal);
         byte[] bytes = [.. Encoding.Unicode.GetPreamble(), .. Encoding.Unicode.GetBytes(xml)];

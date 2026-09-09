@@ -9,6 +9,24 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class MarketingAttributionEventRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task Range_DirectChannelExcludesEveryAttributionSignal() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var repository = new MarketingAttributionEventRepository(context);
+        DateTime start = new(2030, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        MarketingAttributionEventRecord direct = CreateRecord("page_landing", start, "direct") with {
+            UtmSource = null, UtmMedium = null, UtmCampaign = null, UtmContent = null, UtmTerm = null, ReferrerHost = null,
+        };
+        await repository.AddAsync(direct);
+        await repository.AddAsync(direct with { EventId = Guid.NewGuid(), SessionId = "tracked", UtmSource = "source" });
+        await context.SaveChangesAsync();
+        var filter = new MarketingAttributionRangeFilter(start, start.AddDays(1), 1, 50, EventType: null, Channel: "direct", Search: null);
+        MarketingAttributionRangeRecord result = await repository.GetRangeAsync(filter, CancellationToken.None);
+        Assert.Equal(1, result.EventTotal);
+        Assert.Equal("direct", Assert.Single(result.Current.RecentEvents).SessionId);
+        Assert.Equal(2, result.Current.Events);
+    }
+
+    [RequiresDockerFact]
     public async Task GetRangeAsync_SeparatesSummaryFromPagedJournalAndPreviousPeriod() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var start = new DateTime(2030, 7, 9, 0, 0, 0, DateTimeKind.Utc);

@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1142,
     "ambiguousContracts": 0,
-    "consumerEdges": 8063,
+    "consumerEdges": 8141,
     "productionConsumerEdges": 4823,
-    "testConsumerEdges": 3240,
+    "testConsumerEdges": 3318,
     "consumedContracts": 1142,
     "unconsumedContracts": 0
   },
@@ -20602,6 +20602,19 @@
       "referenceCount": 2
     },
     {
+      "contract": "AdminAuditPageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Responses/AdminAuditPageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "AdminBillingPaymentHttpResponse",
       "roles": [
         "Response"
@@ -20938,6 +20951,19 @@
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminBugReportHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "AdminBugReportPageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Responses/AdminBugReportPageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "AdminContentReportHttpResponse",
@@ -21967,6 +21993,19 @@
       "referenceCount": 2
     },
     {
+      "contract": "AdminMailInboxMessagePageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Responses/AdminMailInboxMessagePageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "AdminMailInboxMessageSummaryHttpResponse",
       "roles": [
         "Response"
@@ -22082,6 +22121,19 @@
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminOutgoingEmailHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "AdminOutgoingEmailPageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Responses/AdminOutgoingEmailPageHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "AdminReportActionHttpRequest",
@@ -22212,6 +22264,19 @@
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminRetentionHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "AdminRetentionReportHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Responses/AdminRetentionReportHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "AdminSsoExchangeCommand",
@@ -22550,6 +22615,19 @@
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminTemplateRevisionHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "AdminTemplateRevisionHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Responses/AdminTemplateRevisionHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "AdminUserCreateHttpRequest",
@@ -24564,6 +24642,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalController.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "BugReportJournalHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/BugTriage/FoodDiary.BugTriage.Presentation/Features/Reports/BugReportJournalHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/BugReportJournalValidationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -27606,7 +27697,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/CreateMealCommandValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 52
+      "referenceCount": 54
     },
     {
       "contract": "CreateMealCommand",
@@ -35331,6 +35422,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetAdminAuditHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminAuditHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetAdminAuditQuery",
       "roles": [
         "Query"
@@ -35368,6 +35472,45 @@
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminAuditJournalHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminAuditQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminAuditQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "GetAdminAuditQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "GetAdminBillingHttpQuery",
@@ -35708,6 +35851,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetAdminBugReportsHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminBugReportsHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetAdminBugReportsQuery",
       "roles": [
         "Query"
@@ -35745,6 +35901,45 @@
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminBugReportHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminBugReportsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminBugReportsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "GetAdminBugReportsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminBugReports/GetAdminBugReportsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "GetAdminContentReportsHttpQuery",
@@ -35862,6 +36057,19 @@
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
       "isTest": true,
       "referenceCount": 2
+    },
+    {
+      "contract": "GetAdminContentReportsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminContentReports/GetAdminContentReportsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "GetAdminContentReportsQuery",
@@ -36223,6 +36431,19 @@
         "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQuery.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminImpersonationSessionsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminImpersonationSessions/GetAdminImpersonationSessionsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminControllersCoverageTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -36397,6 +36618,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetAdminMailInboxMessagePageHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminMailInboxMessagePageHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetAdminMailInboxMessagePageQuery",
       "roles": [
         "Query"
@@ -36433,6 +36667,45 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
       "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetAdminMailInboxMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminMailInboxMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "GetAdminMailInboxMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminMailInboxMessagePage/GetAdminMailInboxMessagePageQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
       "referenceCount": 2
     },
     {
@@ -36592,6 +36865,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetAdminOutgoingEmailsHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminOutgoingEmailsHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetAdminOutgoingEmailsQuery",
       "roles": [
         "Query"
@@ -36631,6 +36917,45 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetAdminOutgoingEmailsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminOutgoingEmailsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "GetAdminOutgoingEmailsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminOutgoingEmails/GetAdminOutgoingEmailsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "GetAdminRetentionHttpQuery",
       "roles": [
         "Query"
@@ -36654,6 +36979,19 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminRetentionHttpMappings.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminRetentionHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Requests/GetAdminRetentionHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -36681,6 +37019,32 @@
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminRetentionHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminRetentionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminRetention/GetAdminRetentionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetAdminRetentionQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminRetention/GetAdminRetentionQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "GetAdminTemplateRevisionsQuery",
@@ -36720,6 +37084,45 @@
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminTemplateRevisionHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminTemplateRevisionsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetAdminTemplateRevisionsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "GetAdminTemplateRevisionsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminTemplateRevisions/GetAdminTemplateRevisionsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "GetAdminUserLoginEventsHttpQuery",
@@ -36811,6 +37214,19 @@
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminHttpQueryMappings.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "GetAdminUserLoginEventsQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Queries/GetAdminUserLoginEvents/GetAdminUserLoginEventsQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalValidatorTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "GetAdminUserLoginEventsQuery",
@@ -39954,7 +40370,33 @@
         "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQuery.cs"
       ],
       "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs",
+      "isTest": true,
+      "referenceCount": 3
+    },
+    {
+      "contract": "GetInboundMailMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQuery.cs"
+      ],
+      "consumerArea": "MailInbox",
       "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MessagePageValidationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetInboundMailMessagePageQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Application/Messages/Queries/GetInboundMailMessagePage/GetInboundMailMessagePageQuery.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.Journal.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -40856,6 +41298,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetMarketingAttributionRangeHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Requests/GetMarketingAttributionRangeHttpQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetMarketingAttributionRangeQuery",
       "roles": [
         "Query"
@@ -40906,6 +41361,32 @@
       "consumerPath": "Modules/Marketing/Application/Services/MarketingAttributionRangeReadService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "GetMarketingAttributionRangeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Marketing/Contracts/Queries/GetMarketingAttributionRange/GetMarketingAttributionRangeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "GetMarketingAttributionRangeQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Modules/Marketing/Contracts/Queries/GetMarketingAttributionRange/GetMarketingAttributionRangeQuery.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingAttributionRangeTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "GetMarketingAttributionSummaryHttpQuery",
@@ -41961,6 +42442,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "GetOutgoingEmailJournalHttpQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Requests/GetOutgoingEmailJournalHttpQuery.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.Journal.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "GetOutgoingEmailJournalQuery",
       "roles": [
         "Query"
@@ -41998,6 +42492,45 @@
       "consumerPath": "Services/MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/Mappings/OutgoingEmailJournalHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "GetOutgoingEmailJournalQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQuery.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/OutgoingEmailJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "GetOutgoingEmailJournalQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQuery.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "GetOutgoingEmailJournalQuery",
+      "roles": [
+        "Query"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Application/Emails/Queries/GetOutgoingEmailJournal/GetOutgoingEmailJournalQuery.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayPresentationTests.Journal.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "GetProductByIdQuery",
@@ -46784,6 +47317,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "IAdminBugReportReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBugReportReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IAdminBugReportReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminBugReportReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/AdminBugReportReaderTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
       "contract": "IAdminContentReadService",
       "roles": [
         "Service"
@@ -46886,6 +47445,19 @@
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IAdminContentReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Common/IAdminContentReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IAdminContentReadService",
@@ -47431,6 +48003,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.DefaultMailReaderTests.cs",
       "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IAdminMailInboxReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IAdminMailInboxReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminMailInboxReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/AdminMailInboxRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -47484,6 +48082,19 @@
       "consumerPath": "Modules/Admin/Infrastructure/Persistence/Admin/AdminRetentionReader.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IAdminRetentionReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IAdminRetentionReader.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IAdminSsoCodeStore",
@@ -48162,6 +48773,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "IAiAdministrationReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiAdministrationReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IAiPromptAdministrationService",
       "roles": [
         "Service"
@@ -48342,6 +48966,19 @@
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IAiPromptTemplateReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "IAiPromptTemplateReadModelRepository",
@@ -48784,6 +49421,19 @@
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IAiUsageReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Ai/Application/Abstractions/Ai/Common/IAiUsageReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IAiUsageReadRepository",
@@ -49264,6 +49914,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/Application/Queries/GetAdminAudit/GetAdminAuditQueryHandler.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IAuditEntryJournal",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Audit.Contracts/Audit/Common/IAuditEntryJournal.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IAuditEntryJournal",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Audit.Contracts/Audit/Common/IAuditEntryJournal.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -51890,7 +52566,46 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/BugAcknowledgementServiceTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
+    },
+    {
+      "contract": "IBugAcknowledgementReceipts",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.IntegrationTests/Integration/BugAcknowledgementReceiptIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "IBugAcknowledgementReceipts",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementPagingTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "IBugAcknowledgementReceipts",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementReceipts.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementWorkerTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IBugAcknowledgementSource",
@@ -51942,7 +52657,20 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/BugAcknowledgementServiceTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
+    },
+    {
+      "contract": "IBugAcknowledgementSource",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Abstractions/Admin/Common/IBugAcknowledgementSource.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementWorkerTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "IBugMailSource",
@@ -56454,6 +57182,19 @@
       "consumerPath": "Modules/ContentReports/Application/Services/ContentReportAdministrationReadService.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IContentReportAdministrationReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/ContentReports/Contracts/Common/IContentReportAdministrationReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IContentReportAdministrationService",
@@ -63705,9 +64446,35 @@
         "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IEmailTemplateAdministrationReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/BugAcknowledgementServiceTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
+    },
+    {
+      "contract": "IEmailTemplateAdministrationReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementWorkerTests.cs",
+      "isTest": true,
+      "referenceCount": 5
     },
     {
       "contract": "IEmailTemplateAdministrationService",
@@ -63916,6 +64683,19 @@
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminLessonFeatureTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IEmailTemplateReadModelRepository",
+      "roles": [
+        "ReadModelRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Identity/Application/Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 4
     },
     {
       "contract": "IEmailTemplateReadModelRepository",
@@ -64251,9 +65031,35 @@
         "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailTransport.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "IEmailTransport",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailTransport.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/BugAcknowledgementServiceTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 6
+    },
+    {
+      "contract": "IEmailTransport",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Email.Contracts/Email/Common/IEmailTransport.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementWorkerTests.cs",
+      "isTest": true,
+      "referenceCount": 3
     },
     {
       "contract": "IEmailTransport",
@@ -71507,7 +72313,7 @@
       "consumerArea": "MailInbox",
       "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Application.Tests/MailInboxApplicationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IInboundMailStore",
@@ -71926,6 +72732,19 @@
       "referenceCount": 1
     },
     {
+      "contract": "ILessonAdministrationReadService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "Modules/Lessons/Contracts/Common/ILessonAdministrationReadService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "ILessonAdministrationService",
       "roles": [
         "Service"
@@ -72129,9 +72948,22 @@
         "Services/MailInbox/FoodDiary.MailInbox.Client/IMailInboxClient.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementPagingTests.cs",
+      "isTest": true,
+      "referenceCount": 5
+    },
+    {
+      "contract": "IMailInboxClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Client/IMailInboxClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/MailInboxAdminReaderTests.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 10
     },
     {
       "contract": "IMailInboxClient",
@@ -72144,7 +72976,7 @@
       "consumerArea": "MailInbox",
       "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Client.Tests/MailInboxClientTests.cs",
       "isTest": true,
-      "referenceCount": 3
+      "referenceCount": 4
     },
     {
       "contract": "IMailInboxClient",
@@ -72314,6 +73146,32 @@
       "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Client/Export/MailInboxExportClient.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IMailInboxExportClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/AdminMailInboxRegistrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMailInboxExportClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Client/Export/IMailInboxExportClient.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementPagingTests.cs",
+      "isTest": true,
+      "referenceCount": 6
     },
     {
       "contract": "IMailInboxExportClient",
@@ -72810,6 +73668,32 @@
       "referenceCount": 1
     },
     {
+      "contract": "IMailRelayJournalClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Client/Journal/IMailRelayJournalClient.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Client.Tests/MailRelayJournalClientTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMailRelayJournalClient",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Client/Journal/IMailRelayJournalClient.cs"
+      ],
+      "consumerArea": "Shared",
+      "consumerPath": "Shared/tests/FoodDiary.Email.MailRelay.Tests/RelayEmailJournalTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
       "contract": "IMailRelayJournalReader",
       "roles": [
         "Other"
@@ -72846,6 +73730,19 @@
       "consumerArea": "MailRelay",
       "consumerPath": "Services/MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayJournalReader.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMailRelayJournalReader",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Services/MailRelay/FoodDiary.MailRelay.Application/Abstractions/IMailRelayJournalReader.cs"
+      ],
+      "consumerArea": "MailRelay",
+      "consumerPath": "Services/MailRelay/tests/FoodDiary.MailRelay.Application.Tests/OutgoingEmailJournalQueryTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -73392,7 +74289,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/MarketingModuleRegistrationTests.cs",
       "isTest": true,
-      "referenceCount": 4
+      "referenceCount": 2
     },
     {
       "contract": "IMarketingAttributionEventRepository",
@@ -73561,6 +74458,32 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Marketing/Infrastructure/Persistence/MarketingAttributionEventRepository.cs",
       "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IMarketingAttributionRangeReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Marketing/Application/Abstractions/Common/IMarketingAttributionRangeReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Application.Tests/Marketing/MarketingAttributionRangeTests.cs",
+      "isTest": true,
+      "referenceCount": 4
+    },
+    {
+      "contract": "IMarketingAttributionRangeReadRepository",
+      "roles": [
+        "ReadRepository"
+      ],
+      "definitionPaths": [
+        "Modules/Marketing/Application/Abstractions/Common/IMarketingAttributionRangeReadRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Marketing/tests/FoodDiary.Modules.Marketing.Infrastructure.IntegrationTests/MarketingModuleRegistrationTests.cs",
+      "isTest": true,
       "referenceCount": 1
     },
     {
@@ -75808,6 +76731,19 @@
         "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageDetailsResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementPagingTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "InboundMailMessageDetailsResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessageDetailsResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/MailInboxAdminReaderTests.cs",
       "isTest": true,
       "referenceCount": 3
@@ -75836,6 +76772,19 @@
       "consumerArea": "MailInbox",
       "consumerPath": "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/MailInboxMessagesController.cs",
       "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "InboundMailMessagePageHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Presentation/Features/Messages/Responses/InboundMailMessagePageHttpResponse.cs"
+      ],
+      "consumerArea": "MailInbox",
+      "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Presentation.Tests/MailInboxPresentationTests.Journal.cs",
+      "isTest": true,
       "referenceCount": 2
     },
     {
@@ -75885,10 +76834,23 @@
       "definitionPaths": [
         "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessagePageResponse.cs"
       ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/MailInboxAdminReaderTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "InboundMailMessagePageResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Client/Models/InboundMailMessagePageResponse.cs"
+      ],
       "consumerArea": "MailInbox",
       "consumerPath": "Services/MailInbox/tests/FoodDiary.MailInbox.Client.Tests/MailInboxClientTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "InboundMailMessageReceivedDomainEvent",
@@ -76031,7 +76993,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/MailInboxAdminReaderTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "InboundMailMessageSummaryResponse",
@@ -80594,6 +81556,19 @@
       "consumerPath": "Shared/FoodDiary.Email.MailRelay/RelayEmailJournal.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "IOutgoingEmailJournal",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Email.Contracts/Email/Common/IOutgoingEmailJournal.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminJournalQueryTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IPasswordHasher",
@@ -96531,7 +97506,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "IUserAdminReadModelRepository",
@@ -107384,6 +108359,19 @@
         "Services/MailInbox/FoodDiary.MailInbox.Client/Models/MailInboxExportEntryResponse.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Infrastructure.Tests/Integrations/BugAcknowledgementPagingTests.cs",
+      "isTest": true,
+      "referenceCount": 6
+    },
+    {
+      "contract": "MailInboxExportEntryResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Services/MailInbox/FoodDiary.MailInbox.Client/Models/MailInboxExportEntryResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Services/BugTriage/tests/FoodDiary.BugTriage.Tests/ContractSnapshotTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -108258,6 +109246,19 @@
       "consumerPath": "Modules/Admin/Presentation/Features/Admin/Mappings/AdminMarketingRangeHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
+    },
+    {
+      "contract": "MarketingAttributionRangeHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Presentation/Features/Admin/Responses/MarketingAttributionRangeHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Presentation.Tests/AdminJournalControllerTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "MarketingAttributionRecentEventHttpResponse",
@@ -115613,6 +116614,19 @@
         "Modules/Admin/Application/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminTemplateHistoryTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "SendAdminEmailTemplateTestCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "Modules/Admin/Application/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Admin/tests/FoodDiary.Modules.Admin.Application.Tests/Admin/AdminValidatorTests.cs",
       "isTest": true,
       "referenceCount": 6
@@ -119710,7 +120724,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "Modules/Meals/tests/FoodDiary.Modules.Meals.Application.Tests/Meals/UpdateMealCommandValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 16
+      "referenceCount": 18
     },
     {
       "contract": "UpdateMealCommand",
