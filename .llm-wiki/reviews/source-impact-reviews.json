@@ -713,17 +713,17 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "ca4122ad45c7918953e4e7acf1974a72586f53a72a9d3f06fe574edb9a5f8533",
+      "pageSha256": "338b830d991e0bfb5822fcb8dd1d310037ffceb80185920c44fd634892950c04",
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "3dbe392e30a9c010ed253935d21e953792c7f5abad0eaa93a3b8963ddaf5b7c7"
+          "sha256": "bddc82ef48df159b7e05fff9679337634a0c328fc728819bfe84004d0583d06e"
         }
       ],
-      "reason": "Reviewed the CI change against pipeline documentation: verification commands, ordering, profiles, and failure gates remain unchanged. The new failure-only artifact step preserves existing stage logs and new per-case search diagnostics.",
+      "reason": "The CI Wiki job and its verification profile are unchanged. Backend work now runs as independent formatting, fast, and gated slow jobs; Wiki index verification remains concurrent with them. No Wiki pipeline command or ordering changed.",
       "baseRef": "HEAD",
-      "gitHead": "7e53cd70f4006f7a3307173c5c90e96fbcfce055",
-      "reviewedAtUtc": "2026-09-08T23:06:19.0429384Z"
+      "gitHead": "3a1a80890782713d5179e2423534756f3104b511",
+      "reviewedAtUtc": "2026-09-09T04:04:17.1764165Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -958,13 +958,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "3dbe392e30a9c010ed253935d21e953792c7f5abad0eaa93a3b8963ddaf5b7c7"
+          "sha256": "bddc82ef48df159b7e05fff9679337634a0c328fc728819bfe84004d0583d06e"
         }
       ],
-      "reason": "Reviewed CI report publication: the report command and job summary contract remain unchanged. A failure-only upload now retains Wiki diagnostic logs and evaluation JSON; it does not replace or weaken the change review report.",
+      "reason": "The CI Wiki job still renders and appends the same review report. Backend test grouping and aggregated failure logs do not change the Wiki report contract, source collection or job-summary publication.",
       "baseRef": "HEAD",
-      "gitHead": "7e53cd70f4006f7a3307173c5c90e96fbcfce055",
-      "reviewedAtUtc": "2026-09-08T23:06:19.3132673Z"
+      "gitHead": "3a1a80890782713d5179e2423534756f3104b511",
+      "reviewedAtUtc": "2026-09-09T04:04:18.2620679Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -1123,25 +1123,17 @@
     {
       "pageId": "workflow-test-plan",
       "pagePath": ".llm-wiki/workflows/test-plan.md",
-      "pageSha256": "fbad4475bf490cec00599b47d28beddd83436d11f9fba47b7eadfc0f03b528f5",
+      "pageSha256": "1428b1470e1ce9b297a02be8e34ce141a720915fa104e191ae808358443edbd1",
       "sources": [
         {
-          "path": ".llm-wiki/policies/change-policies.json",
-          "sha256": "16ee9c03fcd8d89dedbfbca2c44735f095e246894042358a0d71aa5141dcbe43"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "8864d52acc5546c317334dd4fb207e1a4684c08c2164b66605b3e633d767625b"
-        },
-        {
           "path": "docs/TESTING_STRATEGY.md",
-          "sha256": "112a8962aa33be3e32a22bb45ac95fde340f6ce057c36a5b304598437a3eb255"
+          "sha256": "edbafe65b40be8235bdbeb88410399630bbcbc7e6f7b71d43c171f444caad1c0"
         }
       ],
-      "reason": "Integrated the reviewed Job Manager registration fix from 45b58f5: AddMealsModule supplies the application reader required by achievement reconciliation; its registration guard is updated, without changing schedules or retry policy. Also repaired intent-only PostgreSQL test selection so unrelated UI consumers cannot displace provider-backed tests; the complete precision/session-routing regression passes, including a synthetic unrelated UI diff. Service relocation, existing API contracts, private SSH access and dependency versions remain as previously reviewed.",
+      "reason": "Testing strategy now documents the exhaustive 157-project CI partition and reproduction commands. Focused local test planning and full-regression obligations remain unchanged; partition completeness and full-project execution preserve integration coverage.",
       "baseRef": "HEAD",
-      "gitHead": "0d2139964be2aaa5c7b7d1c0199ab9b5466864d1",
-      "reviewedAtUtc": "2026-09-07T06:50:37.1744566Z"
+      "gitHead": "3a1a80890782713d5179e2423534756f3104b511",
+      "reviewedAtUtc": "2026-09-09T04:04:19.2278686Z"
     },
     {
       "pageId": "workflow-trace-feature",

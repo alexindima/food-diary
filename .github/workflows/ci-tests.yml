@@ -113,42 +113,25 @@ jobs:
           file: FoodDiary.TechRadar/Dockerfile
           push: false
 
-  dotnet-tests:
-    name: Backend .NET tests and formatting
+  backend-format:
+    name: Backend formatting and full solution build
     runs-on: ubuntu-latest
-
+    timeout-minutes: 25
     steps:
-      - name: Initialize test diagnostics
-        run: |
-          mkdir -p "${RUNNER_TEMP}/ci-test-logs"
-          : > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
-
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          fetch-depth: 0
-
       - name: Setup .NET
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
         with:
           dotnet-version: 10.0.102
-
-      - name: Setup Node.js for development MCP tests
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: FoodDiary.Web.Client/package-lock.json
-
-      - name: Install development MCP compiler dependencies
-        working-directory: FoodDiary.Web.Client
-        run: npm ci --ignore-scripts
+      - name: Initialize diagnostics
+        run: mkdir -p "${RUNNER_TEMP}/backend-format-logs"
 
       - name: Restore
         shell: bash
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/ci-test-logs/restore.log"
+          log_file="${RUNNER_TEMP}/backend-format-logs/restore.log"
           set +e
           dotnet restore FoodDiary.slnx --locked-mode 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -158,7 +141,7 @@ jobs:
               echo "FAILED_AREA=dotnet"
               echo "FAILED_TARGET=Restore"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
+            } > "${RUNNER_TEMP}/backend-format-logs/failure-meta.env"
             exit "$status"
           fi
 
@@ -166,7 +149,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/ci-test-logs/dotnet-format.log"
+          log_file="${RUNNER_TEMP}/backend-format-logs/dotnet-format.log"
           set +e
           dotnet format FoodDiary.slnx --verify-no-changes --no-restore 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -176,7 +159,7 @@ jobs:
               echo "FAILED_AREA=dotnet"
               echo "FAILED_TARGET=Check formatting"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
+            } > "${RUNNER_TEMP}/backend-format-logs/failure-meta.env"
             exit "$status"
           fi
 
@@ -184,7 +167,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          log_file="${RUNNER_TEMP}/ci-test-logs/build.log"
+          log_file="${RUNNER_TEMP}/backend-format-logs/build.log"
           set +e
           dotnet build FoodDiary.slnx --configuration Release --no-restore 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
@@ -194,260 +177,171 @@ jobs:
               echo "FAILED_AREA=dotnet"
               echo "FAILED_TARGET=Build"
               echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
+            } > "${RUNNER_TEMP}/backend-format-logs/failure-meta.env"
             exit "$status"
           fi
 
-      - name: Run all backend tests
-        shell: bash
+      - name: Prefix formatting diagnostics for aggregation
+        if: failure()
+        shell: pwsh
         run: |
-          set -euo pipefail
-          log_file="${RUNNER_TEMP}/ci-test-logs/solution-tests.log"
-          set +e
-          dotnet test FoodDiary.slnx --configuration Release --no-restore --no-build --maxcpucount:1 2>&1 | tee "$log_file"
-          status=${PIPESTATUS[0]}
-          set -e
-          if [ "$status" -ne 0 ]; then
-            {
-              echo "FAILED_AREA=dotnet"
-              echo "FAILED_TARGET=Backend solution tests"
-              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
-            exit "$status"
-          fi
+          $logs = Join-Path $env:RUNNER_TEMP 'backend-format-logs'
+          $metadata = Join-Path $logs 'failure-meta.env'
+          if (Test-Path $metadata) {
+            (Get-Content $metadata) -replace 'FAILED_LOG_FILE_NAME=', 'FAILED_LOG_FILE_NAME=format-' |
+              Set-Content (Join-Path $logs 'format-failure-meta.env')
+            Remove-Item -LiteralPath $metadata
+          }
+          Get-ChildItem $logs -Filter '*.log' | Rename-Item -NewName { 'format-' + $_.Name }
+      - name: Upload formatting failure logs
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: ci-failure-logs-backend-format
+          path: ${{ runner.temp }}/backend-format-logs/
+          retention-days: 7
 
-      - name: Append backend .NET summary
+  backend-fast:
+    name: Backend fast tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          dotnet-version: 10.0.102
+      - name: Verify backend test partition
+        shell: pwsh
+        run: ./scripts/ci/Test-BackendTestGroups.ps1
+      - name: Build and run fast tests
+        shell: pwsh
+        run: ./scripts/ci/Invoke-BackendTests.ps1 -Group fast
+      - name: Upload test results and timings
         if: always()
-        shell: bash
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: backend-test-results-fast
+          path: |
+            .artifacts/backend-ci/fast/results/*.trx
+            .artifacts/backend-ci/fast/logs/*-durations.json
+            .artifacts/backend-ci/fast/logs/*-summary.md
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Upload fast test failure logs
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: ci-failure-logs-backend-fast
+          path: .artifacts/backend-ci/fast/logs/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
+
+  backend-slow:
+    name: Backend slow tests (${{ matrix.group }})
+    needs: backend-fast
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        group: [integration-1, integration-2, integration-3, mcp]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          dotnet-version: 10.0.102
+      - name: Setup Node.js for development MCP tests
+        if: matrix.group == 'mcp'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: FoodDiary.Web.Client/package-lock.json
+      - name: Install development MCP compiler dependencies
+        if: matrix.group == 'mcp'
+        working-directory: FoodDiary.Web.Client
+        run: npm ci --ignore-scripts
+      - name: Verify Docker availability
+        if: matrix.group != 'mcp'
+        run: docker version
+      - name: Build and run slow test group
+        shell: pwsh
+        run: ./scripts/ci/Invoke-BackendTests.ps1 -Group '${{ matrix.group }}'
+      - name: Upload test results and timings
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: backend-test-results-${{ matrix.group }}
+          path: |
+            .artifacts/backend-ci/${{ matrix.group }}/results/*.trx
+            .artifacts/backend-ci/${{ matrix.group }}/logs/*-durations.json
+            .artifacts/backend-ci/${{ matrix.group }}/logs/*-summary.md
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Upload slow test failure logs
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: ci-failure-logs-backend-${{ matrix.group }}
+          path: .artifacts/backend-ci/${{ matrix.group }}/logs/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
+
+  # Preserve the required status name. Success requires every backend lane;
+  # a skipped/cancelled matrix must never allow a deployment or merge.
+  dotnet-tests:
+    name: Backend .NET tests and formatting
+    if: always()
+    needs: [backend-format, backend-fast, backend-slow]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download backend failure diagnostics
+        if: needs.backend-format.result != 'success' || needs.backend-fast.result != 'success' || needs.backend-slow.result != 'success'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          pattern: ci-failure-logs-backend-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/ci-test-logs
+        continue-on-error: true
+      - name: Require all backend checks
+        shell: pwsh
+        env:
+          BACKEND_RESULTS: ${{ toJSON(needs) }}
         run: |
-          set -euo pipefail
-
-          logs_dir="${RUNNER_TEMP}/ci-test-logs"
-          failed_log_name=""
-          if [ -f "${logs_dir}/failure-meta.env" ]; then
-            failed_log_name=$(grep '^FAILED_LOG_FILE_NAME=' "${logs_dir}/failure-meta.env" | head -n 1 | cut -d= -f2- || true)
-          fi
-
-          status_for_log() {
-            local log_file="$1"
-            if [ ! -f "$log_file" ]; then
-              printf 'Not run'
-              return
-            fi
-
-            if [ -n "$failed_log_name" ] && [ "$(basename "$log_file")" = "$failed_log_name" ]; then
-              printf 'Failed'
-              return
-            fi
-
-            printf 'Passed'
+          $results = $env:BACKEND_RESULTS | ConvertFrom-Json -AsHashtable
+          $failed = @($results.Keys | Where-Object { $results[$_].result -ne 'success' })
+          if ($failed.Count -eq 0) { exit 0 }
+          $logs = Join-Path $env:RUNNER_TEMP 'ci-test-logs'
+          New-Item -ItemType Directory -Force $logs | Out-Null
+          $metadata = Get-ChildItem $logs -Filter '*-failure-meta.env' | Sort-Object Name | Select-Object -First 1
+          if ($metadata) {
+            Copy-Item $metadata.FullName (Join-Path $logs 'failure-meta.env')
+          } else {
+            @('FAILED_AREA=dotnet', "FAILED_TARGET=Backend gate: $($failed -join ', ')", 'FAILED_LOG_FILE_NAME=backend-gate.log') |
+              Set-Content (Join-Path $logs 'failure-meta.env')
           }
-
-          test_details_for_log() {
-            local log_file="$1"
-            if [ ! -f "$log_file" ]; then
-              printf 'Not run'
-              return
-            fi
-
-            local summaries
-            summaries=$(grep -E 'Passed!|Failed!' "$log_file" || true)
-            if [ -z "$summaries" ]; then
-              printf 'dotnet test'
-              return
-            fi
-
-            local projects failed passed skipped total
-            projects=$(printf '%s\n' "$summaries" | wc -l | xargs)
-            failed=$(printf '%s\n' "$summaries" | sed -E 's/.*Failed:[[:space:]]*([0-9]+).*/\1/' | awk '{ sum += $1 } END { print sum + 0 }')
-            passed=$(printf '%s\n' "$summaries" | sed -E 's/.*Passed:[[:space:]]*([0-9]+).*/\1/' | awk '{ sum += $1 } END { print sum + 0 }')
-            skipped=$(printf '%s\n' "$summaries" | sed -E 's/.*Skipped:[[:space:]]*([0-9]+).*/\1/' | awk '{ sum += $1 } END { print sum + 0 }')
-            total=$(printf '%s\n' "$summaries" | sed -E 's/.*Total:[[:space:]]*([0-9]+).*/\1/' | awk '{ sum += $1 } END { print sum + 0 }')
-            printf '%s projects; Failed: %s, Passed: %s, Skipped: %s, Total: %s' \
-              "$projects" "$failed" "$passed" "$skipped" "$total"
-          }
-
-          {
-            echo "## Backend .NET checks"
-            echo
-            echo "| Area | Check | Status | Details |"
-            echo "| --- | --- | --- | --- |"
-            echo "| Setup | Restore solution | $(status_for_log "${logs_dir}/restore.log") | dotnet restore FoodDiary.slnx --locked-mode |"
-            echo "| Quality | Formatting | $(status_for_log "${logs_dir}/dotnet-format.log") | dotnet format --verify-no-changes |"
-            echo "| Build | Solution build | $(status_for_log "${logs_dir}/build.log") | dotnet build Release |"
-
-            log_file="${logs_dir}/solution-tests.log"
-            echo "| Tests | Backend solution | $(status_for_log "$log_file") | $(test_details_for_log "$log_file") |"
-          } >> "$GITHUB_STEP_SUMMARY"
-
+          $env:BACKEND_RESULTS | Set-Content (Join-Path $logs 'backend-gate.log')
+          throw "Backend checks did not all pass: $($failed -join ', ')"
       - name: Upload CI failure logs
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: ci-failure-logs-dotnet
           path: ${{ runner.temp }}/ci-test-logs/
-          if-no-files-found: ignore
-
-  backend-postgres-critical-flows:
-    name: Backend PostgreSQL critical flows
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Initialize PostgreSQL critical-flow diagnostics
-        shell: bash
-        run: |
-          mkdir -p "${RUNNER_TEMP}/postgres-critical-flow-logs"
-          : > "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
-
-      - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
-        with:
-          dotnet-version: 10.0.102
-
-      - name: Verify Docker availability
-        shell: bash
-        run: |
-          set -euo pipefail
-          log_file="${RUNNER_TEMP}/postgres-critical-flow-logs/docker-version.log"
-          set +e
-          docker version 2>&1 | tee "$log_file"
-          status=${PIPESTATUS[0]}
-          set -e
-          if [ "$status" -ne 0 ]; then
-            {
-              echo "FAILED_AREA=dotnet"
-              echo "FAILED_TARGET=Verify Docker availability for PostgreSQL critical flows"
-              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
-            exit "$status"
-          fi
-
-      - name: Restore
-        shell: bash
-        run: |
-          set -euo pipefail
-          log_file="${RUNNER_TEMP}/postgres-critical-flow-logs/restore.log"
-          set +e
-          dotnet restore FoodDiary.slnx --locked-mode 2>&1 | tee "$log_file"
-          status=${PIPESTATUS[0]}
-          set -e
-          if [ "$status" -ne 0 ]; then
-            {
-              echo "FAILED_AREA=dotnet"
-              echo "FAILED_TARGET=Restore PostgreSQL critical flows"
-              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
-            exit "$status"
-          fi
-
-      - name: Run PostgreSQL API critical flows
-        shell: bash
-        run: |
-          set -euo pipefail
-          log_file="${RUNNER_TEMP}/postgres-critical-flow-logs/web-api-critical-flows.log"
-          set +e
-          dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj \
-            --configuration Release \
-            --no-restore \
-            --filter "FullyQualifiedName~PostgresCriticalApiFlowTests|FullyQualifiedName~PostgresUserFlowTests" \
-            2>&1 | tee "$log_file"
-          status=${PIPESTATUS[0]}
-          set -e
-          if [ "$status" -ne 0 ]; then
-            {
-              echo "FAILED_AREA=dotnet"
-              echo "FAILED_TARGET=Run PostgreSQL API critical flows"
-              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
-            exit "$status"
-          fi
-
-      - name: Run PostgreSQL infrastructure critical flows
-        shell: bash
-        run: |
-          set -euo pipefail
-          log_file="${RUNNER_TEMP}/postgres-critical-flow-logs/infrastructure-critical-flows.log"
-          set +e
-          dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj \
-            --configuration Release \
-            --no-restore \
-            --filter "FullyQualifiedName~UserRepositoryIntegrationTests|FullyQualifiedName~UserCleanupServiceIntegrationTests" \
-            2>&1 | tee "$log_file"
-          status=${PIPESTATUS[0]}
-          set -e
-          if [ "$status" -ne 0 ]; then
-            {
-              echo "FAILED_AREA=dotnet"
-              echo "FAILED_TARGET=Run PostgreSQL infrastructure critical flows"
-              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-            } > "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
-            exit "$status"
-          fi
-
-      - name: Append PostgreSQL critical-flow summary
-        if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          logs_dir="${RUNNER_TEMP}/postgres-critical-flow-logs"
-          failed_log_name=""
-          if [ -f "${logs_dir}/failure-meta.env" ]; then
-            failed_log_name=$(grep '^FAILED_LOG_FILE_NAME=' "${logs_dir}/failure-meta.env" | head -n 1 | cut -d= -f2- || true)
-          fi
-
-          status_for_log() {
-            local log_file="$1"
-            if [ ! -f "$log_file" ]; then
-              printf 'Not run'
-              return
-            fi
-
-            if [ -n "$failed_log_name" ] && [ "$(basename "$log_file")" = "$failed_log_name" ]; then
-              printf 'Failed'
-              return
-            fi
-
-            printf 'Passed'
-          }
-
-          test_details_for_log() {
-            local log_file="$1"
-            if [ ! -f "$log_file" ]; then
-              printf 'Not run'
-              return
-            fi
-
-            local summary
-            summary=$(grep -E 'Passed!|Failed!' "$log_file" | tail -n 1 | xargs || true)
-            if [ -n "$summary" ]; then
-              printf '%s' "$summary"
-            else
-              printf 'dotnet test'
-            fi
-          }
-
-          {
-            echo "## Backend PostgreSQL critical flows"
-            echo
-            echo "| Area | Check | Status | Details |"
-            echo "| --- | --- | --- | --- |"
-            echo "| Setup | Docker availability | $(status_for_log "${logs_dir}/docker-version.log") | docker version |"
-            echo "| Setup | Restore solution | $(status_for_log "${logs_dir}/restore.log") | dotnet restore FoodDiary.slnx --locked-mode |"
-            echo "| Tests | API critical flows | $(status_for_log "${logs_dir}/web-api-critical-flows.log") | $(test_details_for_log "${logs_dir}/web-api-critical-flows.log") |"
-            echo "| Tests | Infrastructure critical flows | $(status_for_log "${logs_dir}/infrastructure-critical-flows.log") | $(test_details_for_log "${logs_dir}/infrastructure-critical-flows.log") |"
-          } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Upload PostgreSQL critical-flow failure logs
-        if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-        with:
-          name: ci-failure-logs-postgres-critical-flows
-          path: ${{ runner.temp }}/postgres-critical-flow-logs/
-          if-no-files-found: ignore
+          retention-days: 7
 
   backend-dependency-audit:
     name: Backend dependency audit
@@ -1117,11 +1011,10 @@ jobs:
           if-no-files-found: ignore
 
   notify-ci-failure:
-    if: always() && (needs.llm-wiki.result == 'failure' || needs.dotnet-tests.result == 'failure' || needs.backend-postgres-critical-flows.result == 'failure' || needs.backend-dependency-audit.result == 'failure' || needs.frontend-checks.result == 'failure')
+    if: always() && (needs.llm-wiki.result == 'failure' || needs.dotnet-tests.result == 'failure' || needs.backend-dependency-audit.result == 'failure' || needs.frontend-checks.result == 'failure')
     needs:
       - llm-wiki
       - dotnet-tests
-      - backend-postgres-critical-flows
       - backend-dependency-audit
       - frontend-checks
     runs-on: ubuntu-latest
@@ -1154,14 +1047,6 @@ jobs:
         with:
           name: ci-failure-logs-dotnet
           path: ${{ runner.temp }}/ci-test-logs
-        continue-on-error: true
-
-      - name: Download PostgreSQL critical-flow failure logs
-        if: needs.backend-postgres-critical-flows.result == 'failure'
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
-        with:
-          name: ci-failure-logs-postgres-critical-flows
-          path: ${{ runner.temp }}/postgres-critical-flow-logs
         continue-on-error: true
 
       - name: Download dependency audit failure logs
@@ -1235,9 +1120,6 @@ jobs:
             META_FILE="${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
           fi
 
-          if [ -z "${META_FILE}" ] && [ "${{ needs.backend-postgres-critical-flows.result }}" = "failure" ] && [ -f "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env" ]; then
-            META_FILE="${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
-          fi
 
           if [ -z "${META_FILE}" ] && [ "${{ needs.backend-dependency-audit.result }}" = "failure" ] && [ -f "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env" ]; then
             META_FILE="${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
@@ -1264,13 +1146,10 @@ jobs:
 
           if [ -n "${FAILED_LOG_FILE_NAME}" ]; then
             dotnet_candidate="${RUNNER_TEMP}/ci-test-logs/${FAILED_LOG_FILE_NAME}"
-            postgres_candidate="${RUNNER_TEMP}/postgres-critical-flow-logs/${FAILED_LOG_FILE_NAME}"
             dependency_audit_candidate="${RUNNER_TEMP}/dependency-audit-logs/${FAILED_LOG_FILE_NAME}"
             frontend_candidate="${RUNNER_TEMP}/frontend-checks-logs/${FAILED_LOG_FILE_NAME}"
             if [ -f "${dotnet_candidate}" ]; then
               FAILED_LOG_FILE="${dotnet_candidate}"
-            elif [ -f "${postgres_candidate}" ]; then
-              FAILED_LOG_FILE="${postgres_candidate}"
             elif [ -f "${dependency_audit_candidate}" ]; then
               FAILED_LOG_FILE="${dependency_audit_candidate}"
             elif [ -f "${frontend_candidate}" ]; then
@@ -1282,7 +1161,7 @@ jobs:
             if [ "${FAILED_AREA}" = "frontend" ]; then
               FAILED_LOG_FILE=$(find "${RUNNER_TEMP}/frontend-checks-logs" -maxdepth 1 -type f -name '*.log' | sort | tail -n 1 || true)
             elif [ "${FAILED_AREA}" = "dotnet" ]; then
-              FAILED_LOG_FILE=$(find "${RUNNER_TEMP}/ci-test-logs" "${RUNNER_TEMP}/postgres-critical-flow-logs" "${RUNNER_TEMP}/dependency-audit-logs" -maxdepth 1 -type f -name '*.log' | sort | tail -n 1 || true)
+              FAILED_LOG_FILE=$(find "${RUNNER_TEMP}/ci-test-logs" "${RUNNER_TEMP}/dependency-audit-logs" -maxdepth 1 -type f -name '*.log' | sort | tail -n 1 || true)
             else
               FAILED_LOG_FILE=$(find "${RUNNER_TEMP}" -maxdepth 2 -type f -name '*.log' | sort | tail -n 1 || true)
             fi

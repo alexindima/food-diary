@@ -10,6 +10,7 @@ Rules for `tests/FoodDiary.ArchitectureTests/`.
 - Treat these tests as a source of truth for dependency direction, feature structure, source conventions, and service boundaries.
 
 ## Current Guardrails
+- `BuildWorkflowGuardrailTests` requires a complete, disjoint backend CI project partition, fast-before-slow ordering, bounded slow-group parallelism, and a final gate over all backend groups. `ContainerSupplyChainGuardrailTests` checks locked restore for both the full solution and generated group solutions.
 - ProviderAdapterOwnershipTests protects moved provider sources, one-way shared helper dependencies and explicit API/JobManager composition without adding providers to Initializer. Identity's Google/Telegram providers need no Integrations dependency; Images shares only existing URI/telemetry helpers. ExternalHttpClientGuardrailTests scans all six module provider roots; relocation must not remove response-bound/cancellation guard coverage.
 - `ProjectDependencyMatrixTests` owns the production project reference matrix. Add every new production `.csproj` there.
 - `LayeringTests` protects primary FoodDiary layer direction.

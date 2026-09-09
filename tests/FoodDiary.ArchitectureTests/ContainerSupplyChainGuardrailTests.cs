@@ -257,8 +257,10 @@ public sealed class ContainerSupplyChainGuardrailTests {
                 .Where(line => line.StartsWith("dotnet restore FoodDiary.slnx", StringComparison.Ordinal)),
         ];
 
-        Assert.Equal(3, restoreCommands.Length);
+        string groupRunner = File.ReadAllText(ArchitectureTestPaths.FromRoot("scripts", "ci", "Invoke-BackendTests.ps1"));
+        Assert.Equal(2, restoreCommands.Length);
         Assert.All(restoreCommands, command => Assert.Contains("--locked-mode", command, StringComparison.Ordinal));
+        Assert.Contains("@('restore', $groupSolution, '--locked-mode'", groupRunner, StringComparison.Ordinal);
 
         foreach (string project in ExpectedProductionProjects) {
             Assert.Contains($"\"{project}\"", workflow, StringComparison.Ordinal);

@@ -26,8 +26,9 @@ dedicated integration namespaces and repository integration classes in mixed
 unit-test projects. New integration tests should follow that convention or carry
 the explicit category.
 
-`.github/workflows/ci-tests.yml` runs the full backend solution without this
-filter, plus PostgreSQL critical-flow and frontend/E2E jobs. Local builds and
+`.github/workflows/ci-tests.yml` runs every backend test project without this
+filter, split into an early fast job and subsequent parallel slow jobs, plus
+frontend/E2E jobs. Local builds and
 remaining tests still take time; removing integration execution does not remove
 the solution build. When changing an integration boundary, run the affected test
 project manually before publishing. To run the complete backend suite locally:
@@ -35,6 +36,56 @@ project manually before publishing. To run the complete backend suite locally:
 ```bash
 dotnet test FoodDiary.slnx --maxcpucount:1
 ```
+
+### Backend CI order and completeness
+
+`backend-fast` builds and runs the fast test projects first (architecture,
+domain, application, presentation, clients and other unit-only projects).
+After it succeeds, `backend-slow` runs a matrix with at most four concurrent
+jobs: `integration-1`, `integration-2`, `integration-3`, and `mcp`. Each job has
+its own runner, builds its selected projects and transitive dependencies once,
+and executes its projects sequentially. This bounds Docker resource pressure;
+existing xUnit collection isolation remains in effect. Mixed infrastructure
+projects run wholly in a slow group, including their unit tests.
+
+The three integration groups were balanced using observed CI project durations,
+not project counts. `scripts/ci/backend-test-groups.json` is the explicit
+partition. `Test-BackendTestGroups.ps1` checks that every solution project with
+`Microsoft.NET.Test.Sdk` belongs to exactly one nonempty group and tests rejection
+of incomplete/duplicate plans. It also rejects known Docker/PowerShell/slow-test
+markers in the fast group. Adding or moving a test project requires updating this
+manifest. No category or name filters remove tests from CI. The former PostgreSQL
+critical-flow job is superseded by the complete integration projects: both the
+Users-owned repository tests and central cleanup tests now run at their actual
+paths, without the old empty filter or a duplicate API smoke run.
+
+`backend-format` checks formatting and builds the complete solution independently
+of the early tests. The existing `Backend .NET tests and formatting` status is a
+final gate over formatting, fast tests, and the entire slow matrix. Failed,
+cancelled, or skipped required groups cannot pass it. Deployment still waits for
+the successful `CI Tests` workflow; the Wiki job is independent and unchanged by
+this test split. Matrix `fail-fast: false` preserves diagnostics from sibling
+groups; a failed fast job prevents all slow groups from starting.
+
+Reproduce a group from the repository root with PowerShell 7:
+
+```powershell
+./scripts/ci/Test-BackendTestGroups.ps1
+./scripts/ci/Invoke-BackendTests.ps1 -Group fast -PlanOnly
+./scripts/ci/Invoke-BackendTests.ps1 -Group fast
+./scripts/ci/Invoke-BackendTests.ps1 -Group integration-1
+./scripts/ci/Invoke-BackendTests.ps1 -Group mcp
+```
+
+Use `integration-2` and `integration-3` for the other database/service groups.
+Slow integration groups need Docker; MCP needs Node, PowerShell and the frontend
+compiler dependencies installed. Group outputs stay under
+`.artifacts/backend-ci/<group>/`. Each test project produces a unique TRX file;
+zero-test results fail the group. CI uploads TRX, per-project durations and
+summaries for seven days, including successful runs. Compare these durations
+before rebalancing groups. Test binaries are not transferred between runners,
+so each group has some restore/build overhead in exchange for independent paths
+and dependencies. Do not run the same group concurrently in one checkout.
 
 ## Backend Test Projects
 

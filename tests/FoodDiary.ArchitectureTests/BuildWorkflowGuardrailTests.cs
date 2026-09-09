@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Xml.Linq;
 
 namespace FoodDiary.ArchitectureTests;
@@ -5,16 +6,49 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class BuildWorkflowGuardrailTests {
     [Fact]
-    public void CiAndPrePush_RunAllBackendTestsThroughSolution() {
+    public void CiAndPrePush_RunCompleteBackendSuitesWithBoundedParallelism() {
         string ciWorkflow = File.ReadAllText(ArchitectureTestPaths.FromRoot(".github", "workflows", "ci-tests.yml"));
         string prePush = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.Web.Client", ".husky", "pre-push"));
+        string groupRunner = File.ReadAllText(ArchitectureTestPaths.FromRoot("scripts", "ci", "Invoke-BackendTests.ps1"));
 
         Assert.Multiple(
-            () => Assert.Contains("dotnet test FoodDiary.slnx", ciWorkflow, StringComparison.Ordinal),
+            () => Assert.Contains("Invoke-BackendTests.ps1 -Group fast", ciWorkflow, StringComparison.Ordinal),
+            () => Assert.Contains("Invoke-BackendTests.ps1 -Group '${{ matrix.group }}'", ciWorkflow, StringComparison.Ordinal),
+            () => Assert.Contains("Test-BackendTestGroups.ps1", ciWorkflow, StringComparison.Ordinal),
             () => Assert.DoesNotContain("tests/*/*.csproj", ciWorkflow, StringComparison.Ordinal),
-            () => Assert.Contains("--maxcpucount:1", ciWorkflow, StringComparison.Ordinal),
+            () => Assert.Contains("needs: backend-fast", ciWorkflow, StringComparison.Ordinal),
+            () => Assert.Contains("max-parallel: 4", ciWorkflow, StringComparison.Ordinal),
+            () => Assert.Contains("needs: [backend-format, backend-fast, backend-slow]", ciWorkflow, StringComparison.Ordinal),
+            () => Assert.Contains(".result -ne 'success'", ciWorkflow, StringComparison.Ordinal),
+            () => Assert.Contains("foreach ($path in $selected)", groupRunner, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("--filter", groupRunner, StringComparison.Ordinal),
             () => Assert.Contains("dotnet test FoodDiary.slnx", prePush, StringComparison.Ordinal),
             () => Assert.Contains("--maxcpucount:1", prePush, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void CiTestGroups_AssignEveryRunnableProjectExactlyOnce() {
+        using var plan = JsonDocument.Parse(File.ReadAllText(
+            ArchitectureTestPaths.FromRoot("scripts", "ci", "backend-test-groups.json")));
+        JsonElement[] groups = [.. plan.RootElement.GetProperty("groups").EnumerateArray()];
+        string[] actualPaths = [.. groups.SelectMany(group => group.GetProperty("projects").EnumerateArray())
+            .Select(project => project.GetString()!)];
+        var solution = XDocument.Load(ArchitectureTestPaths.FromRoot("FoodDiary.slnx"));
+        var runnableNames = ProjectReferenceReader.ReadTestProjectNames()
+            .Where(name => !string.Equals(name, "FoodDiary.Testing", StringComparison.Ordinal))
+            .ToHashSet(StringComparer.Ordinal);
+        string[] expectedPaths = [.. solution.Descendants("Project")
+            .Select(project => project.Attribute("Path")!.Value)
+            .Where(path => runnableNames.Contains(Path.GetFileNameWithoutExtension(path)))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Multiple(
+            () => Assert.Equal(1, plan.RootElement.GetProperty("schemaVersion").GetInt32()),
+            () => Assert.Equal(
+                new[] { "fast", "integration-1", "integration-2", "integration-3", "mcp" },
+                groups.Select(group => group.GetProperty("name").GetString()), StringComparer.Ordinal),
+            () => Assert.All(groups, group => Assert.NotEmpty(group.GetProperty("projects").EnumerateArray())),
+            () => Assert.Equal(expectedPaths, actualPaths.Order(StringComparer.Ordinal), StringComparer.Ordinal));
     }
 
     [Fact]
