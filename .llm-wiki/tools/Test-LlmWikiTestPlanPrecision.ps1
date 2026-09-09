@@ -3,6 +3,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 & (Join-Path $PSScriptRoot 'Test-LlmWikiModuleTestRoots.ps1')
+& (Join-Path $PSScriptRoot 'Test-LlmWikiProjectLookup.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $tool = Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1'
 $changedPaths = @(

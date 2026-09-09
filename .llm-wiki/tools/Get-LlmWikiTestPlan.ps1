@@ -25,6 +25,7 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $toolsRoot 'LlmWikiQueryCache.ps1')
 . (Join-Path $toolsRoot 'LlmWikiVerificationReceipts.ps1')
 . (Join-Path $toolsRoot 'LlmWikiModuleTestRoots.ps1')
+. (Join-Path $toolsRoot 'LlmWikiProjectLookup.ps1')
 $moduleTestRoots = @(Get-LlmWikiModuleTestRoots -RepositoryRoot $repositoryRoot)
 $verificationReceipts = @(Get-LlmWikiVerificationReceipts $repositoryRoot)
 $validReceiptFingerprint = Get-LlmWikiSha256 (@(
@@ -287,20 +288,14 @@ if ($changedTypeNames.Count -gt 0) {
         }
     }
     $trackedCSharpFiles = @($trackedCSharpFileSet | Sort-Object)
+    $projectByDirectory = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::Ordinal)
     foreach ($relativeSource in $trackedCSharpFiles) {
         $normalizedSource = $relativeSource.Replace('\', '/')
         if ($normalizedSource -in @($diff.changedPaths) -or $normalizedSource -match '(?i)(^|/)(tests?|__tests__)/|\.Tests?/') { continue }
         $absoluteSource = Join-Path $repositoryRoot $relativeSource
         $directory = Split-Path -Parent $absoluteSource
-        while ($directory.StartsWith($repositoryRoot, [StringComparison]::OrdinalIgnoreCase)) {
-            $project = Get-ChildItem -LiteralPath $directory -Filter '*.csproj' -File -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($project) {
-                $null = $directConsumerProjects.Add($project.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/'))
-                break
-            }
-            if ($directory -eq $repositoryRoot) { break }
-            $directory = Split-Path -Parent $directory
-        }
+        $project = Find-LlmWikiNearestProject -RepositoryRoot $repositoryRoot -Directory $directory -Cache $projectByDirectory
+        if ($project) { $null = $directConsumerProjects.Add($project) }
     }
 }
 if (-not [string]::IsNullOrWhiteSpace($Intent) -and $Intent -match '(?i)idempoten|duplicate|retry|replay|deduplic') {
@@ -345,10 +340,14 @@ if ($repositoryAssessment) {
         }
     }
 }
+$neighborsByDirectory = [Collections.Generic.Dictionary[string,object]]::new([StringComparer]::Ordinal)
 foreach ($directTest in @($directTests)) {
     $directory = Split-Path -Parent (Join-Path $repositoryRoot $directTest)
     if (-not (Test-Path -LiteralPath $directory -PathType Container)) { continue }
-    foreach ($neighbor in Get-ChildItem -LiteralPath $directory -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -eq '.cs' -or $_.Name -match '\.(?:spec|test)\.ts$' } | Select-Object -First 4) {
+    if (-not $neighborsByDirectory.ContainsKey($directory)) {
+        $neighborsByDirectory[$directory] = @(Get-ChildItem -LiteralPath $directory -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -eq '.cs' -or $_.Name -match '\.(?:spec|test)\.ts$' } | Select-Object -First 4)
+    }
+    foreach ($neighbor in $neighborsByDirectory[$directory]) {
         $relative = $neighbor.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
         if ($relative -cne $directTest) { $null = $neighborTests.Add($relative) }
     }

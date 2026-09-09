@@ -378,6 +378,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'governed-delivery' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiAcceptancePacketReuse.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiCollections.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiChangePacketMetadata.ps1')

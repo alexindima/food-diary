@@ -38,6 +38,7 @@ sources:
   - .llm-wiki/tools/Manage-LlmWikiTaskContract.ps1
   - .llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1
   - .llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1
+  - .llm-wiki/tools/Test-LlmWikiAcceptancePacketReuse.ps1
   - .llm-wiki/tools/Manage-LlmWikiEvidence.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1
   - .llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1
@@ -84,6 +85,12 @@ The command creates:
 
 Initialization is staged in a temporary sibling directory and moved into place
 only after every artifact succeeds. Existing workspaces are never overwritten.
+With explicit nonempty `-ChangedPath`, no planned paths, and no explicit
+`-HeadRef`, acceptance initialization reuses the packet compiled earlier in the
+same invocation. It validates the objective, resolved base, and exact path scope.
+Before publication, initialization compares repository content snapshots and
+removes staged artifacts if inputs changed. Planned-path and historical-head
+initialization retain independent acceptance packet compilation.
 When no changed paths exist yet, provide `-PlannedPath` for the concrete future
 files plus one or more `-AllowedPath` regular expressions for the wider intended
 scope. Task initialization forwards planned paths into initial packet

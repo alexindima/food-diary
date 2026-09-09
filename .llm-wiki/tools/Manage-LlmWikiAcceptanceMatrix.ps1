@@ -20,6 +20,7 @@ param(
     [string]$CompiledIndexSource = 'Sqlite',
     [string]$HeadRef,
     [string[]]$ChangedPath,
+    [object]$PacketInput,
     [string]$EvidencePath = '.artifacts/llm-wiki/evidence.json',
     [switch]$RequireEvidence,
     [switch]$FailOnInvalid,
@@ -32,6 +33,7 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiRequirementCriteria.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitRenames.ps1')
+if ($null -ne $PacketInput -and $Action -ne 'init') { throw 'PacketInput is supported only for acceptance init.' }
 $requirementPolicy = (Get-Content -LiteralPath (Join-Path $wikiRoot 'policies/workspace-policies.json') -Raw | ConvertFrom-Json).requirementModel
 $absolutePath = if ([System.IO.Path]::IsPathRooted($Path)) { $Path } else { Join-Path $repositoryRoot $Path }
 $absoluteEvidencePath = if ([System.IO.Path]::IsPathRooted($EvidencePath)) { $EvidencePath } else { Join-Path $repositoryRoot $EvidencePath }
@@ -105,7 +107,23 @@ switch ($Action) {
         $packetArguments = @{ BaseRef = $BaseRef; Objective = $Objective; CompiledIndexSource = $CompiledIndexSource; Format = 'Json' }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $packetArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $packetArguments.ChangedPath = $ChangedPath }
-        $packet = & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') @packetArguments | ConvertFrom-Json
+        if ($null -ne $PacketInput) {
+            # In-process composition only: the caller owns a fresh packet and
+            # supplies its exact resolved base and explicit workspace scope.
+            $expectedPaths = @($ChangedPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/') } | Sort-Object -Unique)
+            if (-not $PSBoundParameters.ContainsKey('ChangedPath') -or $expectedPaths.Count -eq 0 -or
+                $PSBoundParameters.ContainsKey('HeadRef') -or $PacketInput.schemaVersion -ne 1 -or
+                -not [string]::Equals([string]$PacketInput.inputs.baseRef, $BaseRef, [StringComparison]::Ordinal) -or
+                -not [string]::Equals([string]$PacketInput.inputs.objective, $Objective, [StringComparison]::Ordinal) -or
+                -not [string]::IsNullOrEmpty([string]$PacketInput.inputs.headRef) -or
+                -not [string]::Equals((@($PacketInput.inputs.changedPaths) -join [char]0), ($expectedPaths -join [char]0), [StringComparison]::Ordinal) -or
+                -not [string]::Equals((@($PacketInput.diff.changedPaths | Sort-Object -Unique) -join [char]0), ($expectedPaths -join [char]0), [StringComparison]::Ordinal)) {
+                throw 'PacketInput does not match the explicit acceptance initialization scope.'
+            }
+            $packet = $PacketInput
+        } else {
+            $packet = & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') @packetArguments | ConvertFrom-Json
+        }
         $criteria = [System.Collections.Generic.List[object]]::new()
         $testOnlyPacket = Test-TestOnlyPacket $packet
         $automaticChangedPaths = @(if ($testOnlyPacket) {

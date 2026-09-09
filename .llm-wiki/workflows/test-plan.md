@@ -12,6 +12,8 @@ sources:
   - docs/TESTING_STRATEGY.md
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
   - .llm-wiki/tools/LlmWikiModuleTestRoots.ps1
+  - .llm-wiki/tools/LlmWikiProjectLookup.ps1
+  - .llm-wiki/tools/Test-LlmWikiProjectLookup.ps1
   - .llm-wiki/tools/Test-LlmWikiToolStartup.ps1
   - .llm-wiki/tools/Get-LlmWikiCoveragePlan.ps1
   - .llm-wiki/tools/LlmWikiVerificationReceipts.ps1
@@ -85,6 +87,13 @@ tests, commands, and scenarios while reducing context volume.
 Consumer discovery batches large changed-symbol sets into bounded Git grep
 patterns. Large refactors therefore keep the same direct-consumer evidence
 without exceeding the Windows process command-line limit.
+Nearest-project lookup memoizes visited directories within that discovery pass,
+including directories with no owning project. Nested projects still take
+precedence; every new invocation starts with an empty lookup so project creation
+and removal are observed without relying on persisted cache invalidation.
+Neighbor-test discovery also reads each directory's first four candidate files
+once per invocation. Each direct test still applies its own self-exclusion to
+that list, preserving the candidate order and the final union of neighbors.
 
 When a changed or planned Wiki tool uses a known repository antipattern, the
 planner searches the whole tool family and returns every match in

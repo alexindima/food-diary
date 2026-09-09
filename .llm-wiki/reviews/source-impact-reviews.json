@@ -159,17 +159,17 @@
     {
       "pageId": "workflow-acceptance-evidence-matrix",
       "pagePath": ".llm-wiki/workflows/acceptance-evidence-matrix.md",
-      "pageSha256": "f4691a43e74d56c26c124777bce5410057a2b88ff04d9449eab0ce93e58e8acf",
+      "pageSha256": "5db5136dcfed34126b99bbc6a9d7ed273c28eeb6bf84c8dd7ce48f0fa39f1569",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "e376094eb6b3a27464d6c3d72ec59c254d02de2332afc029a860845a278b881b"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "7ff6d34cf2950aedfbb902d388002d83f13c35e6531d1e6f186b325289aaaf47"
         }
       ],
-      "reason": "Reviewed billing webhook idempotency fix, EF rollback tracker cleanup, provider-backed regression coverage, cold JSON facade propagation, migration-warning precision, billing journey routing, and updated runtime/test-plan documentation against current source and tests.",
+      "reason": "Reviewed acceptance init composition: packet reuse requires matching objective, resolved base and explicit paths; full matrix parity and mismatch rejection pass. Mapping, evidence resolution, proof and readiness behavior remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "65986b2e5b910612847ce6227367f883d3ba57b6",
-      "reviewedAtUtc": "2026-08-28T20:48:24.9489641Z"
+      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
+      "reviewedAtUtc": "2026-09-09T22:02:26.6892662Z"
     },
     {
       "pageId": "workflow-adaptive-development",
@@ -697,17 +697,25 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "338b830d991e0bfb5822fcb8dd1d310037ffceb80185920c44fd634892950c04",
+      "pageSha256": "5aeae95bb74667022e36b205f944a8f6f559ddab52dea7047f12456f08e63583",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "bddc82ef48df159b7e05fff9679337634a0c328fc728819bfe84004d0583d06e"
+          "path": ".llm-wiki/policies/affected-smoke-catalog.psd1",
+          "sha256": "b399b2b606fcd28b4578d2c3b21b7eb4118847287f2f20a401b1b806d9c9fe86"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "89ab91db595439bab0f38841a0aa51cc683673edba159537cc2214cbf707e4d1"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "a5dbbd324aa29ffb482be2bd3b70dda5b67893691f60624577c3d152347d901c"
         }
       ],
-      "reason": "The CI Wiki job and its verification profile are unchanged. Backend work now runs as independent formatting, fast, and gated slow jobs; Wiki index verification remains concurrent with them. No Wiki pipeline command or ordering changed.",
+      "reason": "Reviewed neighbor discovery memoization within one test-plan invocation: original first-four ordering, file predicates and per-test self-exclusion preserved. Complete plan JSON matches baseline in eight runs; affected smoke routing remains unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "3a1a80890782713d5179e2423534756f3104b511",
-      "reviewedAtUtc": "2026-09-09T04:04:17.1764165Z"
+      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
+      "reviewedAtUtc": "2026-09-09T22:24:17.2446223Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -869,14 +877,14 @@
       "pageSha256": "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "7ff6d34cf2950aedfbb902d388002d83f13c35e6531d1e6f186b325289aaaf47"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:41.6052352Z"
+      "reason": "Reviewed acceptance init composition: packet reuse requires matching objective, resolved base and explicit paths; full matrix parity and mismatch rejection pass. Mapping, evidence resolution, proof and readiness behavior remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
+      "reviewedAtUtc": "2026-09-09T22:02:27.4617751Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -885,13 +893,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d1c79790a50467fbed11ed5725f25eb8035ba98316e529eec690cab3c07c5ff0"
+          "sha256": "6828f648bb6fc2e0bd47a823e755f63832ac61c9c3e9ab73a7758f72fb3a121f"
         }
       ],
-      "reason": "Reviewed generated quality metrics for the bounded process-local workspace-policy cache and added focused group. Product risk/test-reference semantics and SQLite quality query behavior are unchanged.",
+      "reason": "Reviewed final quality-index delta after neighbor lookup change and removal of rejected symbol matcher experiments: only current tooling structural metrics and ordering changed; risk and security interpretation remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "e0d2efa28333595371735a12dd8519f26074f245",
-      "reviewedAtUtc": "2026-09-09T20:58:02.3267267Z"
+      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
+      "reviewedAtUtc": "2026-09-09T22:24:18.1619688Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -900,21 +908,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "51c1fa76def0a2f635f54e613e1dc70d21907b2615aed02183ba25bc8fede3a5"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-          "sha256": "50b93d6bbb311b68637edffdc19b0347250856038350a6fdc9b6b925b0c44b64"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "9bf38ef74635cf6f8e984da17ad3e9b116070edb5614839a165ac061fc9bbf86"
+          "sha256": "7ff6d34cf2950aedfbb902d388002d83f13c35e6531d1e6f186b325289aaaf47"
         }
       ],
-      "reason": "Reviewed the governed-workspace source propagation, generated quality delta, and downstream workflow contracts; the selected source is now documented and no additional release or quality semantics changed.",
+      "reason": "Reviewed acceptance init composition: packet reuse requires matching objective, resolved base and explicit paths; full matrix parity and mismatch rejection pass. Mapping, evidence resolution, proof and readiness behavior remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "1ac000dd7b092e43383cc9f7ab7ab1f9845c960c",
-      "reviewedAtUtc": "2026-08-29T22:35:38.3268713Z"
+      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
+      "reviewedAtUtc": "2026-09-09T22:02:28.1568152Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -922,14 +922,14 @@
       "pageSha256": "d6032fccda979d114e265f30e4f14d9593ded53c6b79d85a2dfc467b07fa3a61",
       "sources": [
         {
-          "path": ".llm-wiki/policies/workspace-policies.json",
-          "sha256": "22acd16ce8ab68d265d3579ebbb02ed7ebd0288da6ce72846da26748f963302d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "7ff6d34cf2950aedfbb902d388002d83f13c35e6531d1e6f186b325289aaaf47"
         }
       ],
-      "reason": "Reviewed both extraction inventories, preserved central seams and integration provenance. Source evidence archives are SHA-verified; generated pages reflect272 combined project paths. Historical failed receipts and original corpus files remain available; report distinguishes runtime from Wiki quality.",
-      "baseRef": "4c1b1c2c31a0886cf7e01d8bba7ec00231e6b149",
-      "gitHead": "7bd83153cb134c8d5a6cf0ddabd8edcb481d1716",
-      "reviewedAtUtc": "2026-08-31T13:06:42.5371767Z"
+      "reason": "Reviewed acceptance init composition: packet reuse requires matching objective, resolved base and explicit paths; full matrix parity and mismatch rejection pass. Mapping, evidence resolution, proof and readiness behavior remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
+      "reviewedAtUtc": "2026-09-09T22:02:28.8736176Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -983,13 +983,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "d1c79790a50467fbed11ed5725f25eb8035ba98316e529eec690cab3c07c5ff0"
+          "sha256": "6828f648bb6fc2e0bd47a823e755f63832ac61c9c3e9ab73a7758f72fb3a121f"
         }
       ],
-      "reason": "Reviewed Wiki-only complexity metrics after adding immutable policy JSON reuse with content and validator invalidation. Security evidence classification and production controls are unchanged.",
+      "reason": "Reviewed final quality-index delta after neighbor lookup change and removal of rejected symbol matcher experiments: only current tooling structural metrics and ordering changed; risk and security interpretation remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "e0d2efa28333595371735a12dd8519f26074f245",
-      "reviewedAtUtc": "2026-09-09T20:58:03.2404319Z"
+      "gitHead": "aeb5847fb77070baf9a676aa773ba77ae09e3ce3",
+      "reviewedAtUtc": "2026-09-09T22:24:18.9979161Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

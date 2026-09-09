@@ -18,6 +18,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiChangeSetSnapshot.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $workspacePolicySnapshot = & (Join-Path $PSScriptRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -WithFingerprint -Format Json | ConvertFrom-Json
@@ -43,6 +44,9 @@ if ($baseRefResult.ExitCode -ne 0 -or $resolvedBaseRef -notmatch '^[a-f0-9]{40}$
     throw "Unable to resolve task base '$BaseRef' to a commit SHA."
 }
 $BaseRef = $resolvedBaseRef
+$reuseAcceptancePacket = $PSBoundParameters.ContainsKey('ChangedPath') -and $ChangedPath.Count -gt 0 -and
+    $PlannedPath.Count -eq 0 -and -not $PSBoundParameters.ContainsKey('HeadRef')
+$initialSnapshot = if ($reuseAcceptancePacket) { Get-LlmWikiChangeSetSnapshot -RepositoryRoot $repositoryRoot } else { $null }
 
 $absoluteWorkspacePath = Join-Path $repositoryRoot $normalizedWorkspacePath
 if (Test-Path -LiteralPath $absoluteWorkspacePath) {
@@ -110,8 +114,11 @@ try {
         -ExcludedPath $ExcludedPath `
         -EvidencePath "$normalizedWorkspacePath/evidence.json" | Out-Null
 
+    $acceptanceArguments = @{}
+    if ($reuseAcceptancePacket) { $acceptanceArguments.PacketInput = $packet }
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiAcceptanceMatrix.ps1') init `
         @changeArguments `
+        @acceptanceArguments `
         -Path (Get-TemporaryArtifactPath 'acceptance-matrix.json') `
         -CompiledIndexSource $CompiledIndexSource `
         -Criterion $criteria `
@@ -228,6 +235,12 @@ try {
     $finalParent = Split-Path -Parent $absoluteWorkspacePath
     if (-not (Test-Path -LiteralPath $finalParent)) {
         New-Item -ItemType Directory -Path $finalParent -Force | Out-Null
+    }
+    if ($reuseAcceptancePacket) {
+        $currentSnapshot = Get-LlmWikiChangeSetSnapshot -RepositoryRoot $repositoryRoot
+        if ($currentSnapshot.fingerprint -cne $initialSnapshot.fingerprint) {
+            throw 'Repository inputs changed during task initialization. Retry from the current workspace.'
+        }
     }
     Move-Item -LiteralPath $temporaryAbsolutePath -Destination $absoluteWorkspacePath
     Write-Host "Initialized LLM Wiki task workspace: $normalizedWorkspacePath"
