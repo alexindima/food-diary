@@ -4,11 +4,14 @@ namespace FoodDiary.Development.Mcp.Tests;
 [Collection("PowerShell Wiki process")]
 public sealed class PowerShellWikiCommandExecutorTests {
     [Theory]
-    [InlineData(0)]
-    [InlineData(8192)]
-    [InlineData(9000)]
-    public async Task ReadBoundedAsync_ReturnsCompleteOutputAtOrBelowLimit(int length) {
-        var executor = new PowerShellWikiCommandExecutor(maxConcurrentCommands: 1, maxOutputCharacters: 9000);
+    [InlineData(0, false)]
+    [InlineData(8192, false)]
+    [InlineData(9000, false)]
+    [InlineData(9000, true)]
+    public async Task ReadBoundedAsync_ReturnsCompleteOutputAtOrBelowLimit(int length, bool useDefaultLimits) {
+        PowerShellWikiCommandExecutor executor = useDefaultLimits
+            ? new()
+            : new(maxConcurrentCommands: 1, maxOutputCharacters: 9000);
         System.Reflection.MethodInfo method = typeof(PowerShellWikiCommandExecutor).GetMethod(
             "ReadBoundedAsync", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
         string expected = new('я', length);
@@ -16,6 +19,66 @@ public sealed class PowerShellWikiCommandExecutorTests {
         var operation = (Task<string>)method.Invoke(executor, [reader, "standard output", CancellationToken.None])!;
 
         Assert.Equal(expected, await operation);
+    }
+
+    [Fact]
+    public async Task WriteRequestAsync_PreservesGroupedArgumentsAndLongUnicodeValues() {
+        string objective = new('я', 12_000);
+        string[] arguments = [
+            "-Format", "Json",
+            "-Fast",
+            "-Objective", objective,
+            "-ChangedPath", "каталог/первый файл.cs",
+            "-changedpath", "каталог/второй.cs",
+            "-Compact",
+        ];
+        string requestPath = await WriteRequestAsync(arguments);
+        try {
+            using var document = System.Text.Json.JsonDocument.Parse(
+                await File.ReadAllTextAsync(requestPath));
+            System.Text.Json.JsonElement root = document.RootElement;
+            System.Text.Json.JsonElement values = root.GetProperty("arguments");
+
+            Assert.Multiple(
+                () => Assert.Equal(1, root.GetProperty("schemaVersion").GetInt32()),
+                () => Assert.Equal(5, values.EnumerateObject().Count()),
+                () => Assert.Equal("Json", values.GetProperty("Format").GetString()),
+                () => Assert.True(values.GetProperty("Fast").GetBoolean()),
+                () => Assert.True(values.GetProperty("Compact").GetBoolean()),
+                () => Assert.Equal(objective, values.GetProperty("Objective").GetString()),
+                () => Assert.Equal(
+                    new[] { "каталог/первый файл.cs", "каталог/второй.cs" },
+                    values.GetProperty("ChangedPath").EnumerateArray().Select(value => value.GetString()), StringComparer.Ordinal));
+        } finally {
+            File.Delete(requestPath);
+        }
+    }
+
+    [Fact]
+    public async Task WriteRequestAsync_EmptyArgumentsCreatesDistinctValidRequestFiles() {
+        string firstPath = await WriteRequestAsync([]);
+        try {
+            string secondPath = await WriteRequestAsync([]);
+            try {
+                using var document = System.Text.Json.JsonDocument.Parse(
+                    await File.ReadAllTextAsync(secondPath));
+                Assert.Multiple(
+                    () => Assert.NotEqual(firstPath, secondPath, StringComparer.Ordinal),
+                    () => Assert.True(File.Exists(firstPath)),
+                    () => Assert.Equal(1, document.RootElement.GetProperty("schemaVersion").GetInt32()),
+                    () => Assert.Empty(document.RootElement.GetProperty("arguments").EnumerateObject()));
+            } finally {
+                File.Delete(secondPath);
+            }
+        } finally {
+            File.Delete(firstPath);
+        }
+    }
+
+    private static Task<string> WriteRequestAsync(IReadOnlyList<string> arguments) {
+        System.Reflection.MethodInfo method = typeof(PowerShellWikiCommandExecutor).GetMethod(
+            "WriteRequestAsync", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+        return (Task<string>)method.Invoke(null, [arguments, CancellationToken.None])!;
     }
 
     [PowerShellFact]
