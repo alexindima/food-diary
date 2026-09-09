@@ -30,13 +30,15 @@ $moduleGraph = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/archite
 $boundaryManifest = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/architecture/backend-modules.json') -Raw | ConvertFrom-Json
 
 $projects = @($catalog.dotnet.projects)
-$projectByPath = @{}
-foreach ($project in $projects) { $projectByPath[$project.path] = $project.name }
+$projectByPath = [Collections.Generic.Dictionary[string, object]]::new([StringComparer]::InvariantCultureIgnoreCase)
+foreach ($project in $projects) {
+    if (-not $projectByPath.ContainsKey($project.path)) { $projectByPath[$project.path] = $project }
+}
 $actualEdges = [System.Collections.Generic.List[object]]::new()
 foreach ($project in $projects) {
     $isTestProject = [bool]$project.isTestProject -or $project.path -match '^tests/'
     foreach ($reference in @($project.projectReferences)) {
-        $targetProject = $projects | Where-Object path -eq $reference | Select-Object -First 1
+        $targetProject = $projectByPath[$reference]
         $actualEdges.Add([pscustomobject]@{
             source = $project.name
             target = if ($null -ne $targetProject) { $targetProject.name } else { [System.IO.Path]::GetFileNameWithoutExtension($reference) }
@@ -84,10 +86,18 @@ $violations = @(
         }
 )
 $unusedAllowances = [System.Collections.Generic.List[object]]::new()
+$targetsBySource = [Collections.Generic.Dictionary[string, Collections.Generic.HashSet[string]]]::new([StringComparer]::InvariantCultureIgnoreCase)
+foreach ($edge in $actualEdges) {
+    if ($edge.isTest) { continue }
+    if (-not $targetsBySource.ContainsKey($edge.source)) {
+        $targetsBySource[$edge.source] = [Collections.Generic.HashSet[string]]::new([StringComparer]::InvariantCultureIgnoreCase)
+    }
+    $null = $targetsBySource[$edge.source].Add($edge.target)
+}
 foreach ($source in @($allowed.Keys | Sort-Object)) {
-    $actualTargets = @($actualEdges | Where-Object { -not $_.isTest -and $_.source -eq $source } | Select-Object -ExpandProperty target)
+    $actualTargets = $targetsBySource[$source]
     foreach ($target in @($allowed[$source] | Sort-Object)) {
-        if ($target -notin $actualTargets) {
+        if ($null -eq $actualTargets -or -not $actualTargets.Contains($target)) {
             $unusedAllowances.Add([pscustomobject]@{ source = $source; target = $target })
         }
     }
@@ -154,6 +164,9 @@ $selectorUnreferenced = @(
         Where-Object { $_.class -notin $referencedFrontendComponents } |
         Select-Object class, selector, feature, path, templatePath, specPath
 )
+$consumedContractNames = [Collections.Generic.HashSet[string]]::new([StringComparer]::InvariantCultureIgnoreCase)
+foreach ($edge in $backendContracts.consumerEdges) { $null = $consumedContractNames.Add($edge.contract) }
+$unconsumedBackendContracts = @($backendContracts.contracts | Where-Object { -not $consumedContractNames.Contains($_.name) })
 $result = [ordered]@{
     schemaVersion = 1
     summary = [ordered]@{
@@ -165,7 +178,7 @@ $result = [ordered]@{
         backendBusinessModules = [int]$boundaryManifest.inventory.totalModules
         moduleHotspotReviewCandidates = @($moduleHotspots | Where-Object level -eq 'review-candidate').Count
         ambiguousBackendContracts = @($backendContracts.contracts | Where-Object ambiguous).Count
-        unconsumedBackendContracts = @($backendContracts.contracts | Where-Object { $_.name -notin @($backendContracts.consumerEdges.contract) }).Count
+        unconsumedBackendContracts = $unconsumedBackendContracts.Count
         selectorUnreferencedComponents = $selectorUnreferenced.Count
         routedStandaloneComponents = $routedFrontendComponents.Count
         componentsWithoutDirectSpecs = @($frontendContracts.components | Where-Object { $null -eq $_.specPath }).Count
@@ -178,7 +191,7 @@ $result = [ordered]@{
     moduleCycleNodes = $moduleCycleNodes
     moduleHotspots = @($moduleHotspots | Sort-Object @{ Expression = { $_.fanIn + $_.fanOut }; Descending = $true }, module)
     ambiguousBackendContracts = @($backendContracts.contracts | Where-Object ambiguous)
-    unconsumedBackendContracts = @($backendContracts.contracts | Where-Object { $_.name -notin @($backendContracts.consumerEdges.contract) })
+    unconsumedBackendContracts = $unconsumedBackendContracts
     selectorUnreferencedComponents = $selectorUnreferenced
     componentsWithoutDirectSpecs = @($frontendContracts.components | Where-Object { $null -eq $_.specPath })
     criticalSymbolsWithoutTestReferences = @($quality.criticalSymbols | Where-Object testReferenceCount -eq 0)

@@ -4,6 +4,31 @@ namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class SqliteWikiContextSearchTests : IDisposable {
+    [Fact]
+    public async Task SearchAsync_RecallsLongIndexPageWithBoundedIdentityPoolAsync() {
+        string policyPath = Path.Combine(_fixtureRoot, ".llm-wiki", "policies", "context-search-ranking.json");
+        System.Text.Json.Nodes.JsonNode policy = System.Text.Json.Nodes.JsonNode.Parse(await File.ReadAllTextAsync(policyPath))!;
+        policy["candidatePoolLimit"] = 1;
+        policy["identityCandidatePoolLimit"] = 1;
+        await File.WriteAllTextAsync(policyPath, policy.ToJsonString());
+        await using SqliteConnection connection = new($"Data Source={_databasePath}");
+        await connection.OpenAsync();
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = """
+            INSERT INTO context_search VALUES
+                ('wiki-page', 'long-index', '.llm-wiki/workflows/index.md', 'long-index', 'markdown', 'Index', $body),
+                ('wiki-page', 'noise', '.llm-wiki/workflows/noise.md', 'noise', 'markdown', 'Noise', 'indexes indexes');
+            INSERT INTO context_search_identity(rowid, path, title)
+                SELECT rowid, path, title FROM context_search WHERE record_key IN ('long-index', 'noise');
+            """;
+        command.Parameters.AddWithValue("$body", string.Concat(Enumerable.Repeat("unrelated detail ", 10000)));
+        await command.ExecuteNonQueryAsync();
+        SqliteWikiContextSearch search = new(_fixtureRoot, new WikiRuntimeTelemetry());
+        WikiContextSearchResult result = await search.SearchAsync("indexes", 10, "Any", module: null, scopePaths: null, CancellationToken.None,
+            expectedChangeSetFingerprint: "fixture-change-set");
+        Assert.Contains(result.Candidates, candidate => string.Equals(candidate.Path, ".llm-wiki/workflows/index.md", StringComparison.Ordinal));
+    }
+
     [Theory]
     [InlineData("stock mcp tests xx", false, false)]
     [InlineData("stock excluded tests xx", false, false)]
@@ -1138,6 +1163,8 @@ public sealed class SqliteWikiContextSearchTests : IDisposable {
                 ('code', 'program-host-two', 'HostTwo/Program.cs', 'program-host-two', 'csharp', 'Program', 'program host startup'),
                 ('code', 'coverage-duplicate-one', 'Shared/duplicate-coveragebranch.cs', 'coverage-duplicate-one', 'csharp', 'DuplicateCoverageBranch', 'coveragebranch'),
                 ('code', 'coverage-duplicate-two', 'Shared/duplicate-coveragebranch.cs', 'coverage-duplicate-two', 'csharp', 'DuplicateCoverageBranch', 'coveragebranch');
+            CREATE VIRTUAL TABLE context_search_identity USING fts5(path, title, tokenize = 'unicode61 remove_diacritics 2');
+            INSERT INTO context_search_identity(rowid, path, title) SELECT rowid, path, title FROM context_search;
             """;
         command.ExecuteNonQuery();
     }

@@ -177,22 +177,18 @@
       "pageSha256": "c2e5e0aaf44c829b7d0ec32bd7ae6dc24cf2d5b5f5aa0edd3e102c65783488df",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "181517d94f48f213992d60678d48b80859aee07a18709fe8cc1404eaba9e6a4b"
         },
         {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "d4b762fd09a631ed5d2bef2a4086ba2dfb6876c7c1f58e19a2e7b5a343d7e928"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiVerificationCache.ps1",
-          "sha256": "0b2faca55869d32d49e7694753ad98b0b88757d2ab0f8a06c3af158b07707ee2"
+          "path": ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+          "sha256": "69e4c7994185697bffed97c16f1c4f44dc000371a9cb29a7a9ad161ce4e8a469"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated. Wiki optimization review: Reviewed affected source contracts: helper lookup and empty-path/receipt startup work are reduced; active-snapshot dependency routing preserves explicit JSON and cold-checkout fallback. Test selection, cache invalidation, dispatch payloads, privacy boundaries and assertions remain intact. Concurrent index writers now use an isolated fixture.",
+      "reason": "Read-only regression scheduling now expands the legacy group into the same four tests across three concrete groups. Mutation fixtures and their temporary files run inside a private clone with bounded cleanup; the cold checkout overlaps safely, while retrieval stays serial behind shared graph writers. The parallel uncached run passed all groups with unchanged source fingerprints. Existing output contracts, failure checks and safety assertions remain intact.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T01:36:05.1622364Z"
+      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
+      "reviewedAtUtc": "2026-09-09T03:24:53.2191205Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -216,13 +212,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "3e86e6479b70223950bed53ef60df79156e68c681d5c5966e76a3a5d187cc9c0"
+          "sha256": "43ffe8d47fbae29333716275d8609ac3bc531e8382a6f5dbc38da62b7ceb96fe"
         }
       ],
-      "reason": "Reviewed integration onto master: preserved backend coverage changes and regenerated combined Wiki indexes. Wiki tooling is unchanged from the passing full verification; batching, cache invalidation, test selection and privacy contracts remain covered by existing reviews and regression tests.",
+      "reason": "Reviewed invocation-local architecture lookup optimization and UTF-8 path ordering; architecture old/new full outputs are byte-identical and dependency enforcement/removal-candidate semantics are unchanged. Read-only guard regression now covers fresh warm-cache processes, stale native status and actual exit code 7, while preserving mutation rejection and source isolation. Full content hashing and snapshot reuse boundaries remain intact.",
       "baseRef": "HEAD",
-      "gitHead": "5f19657ae3ba7c1a995245b84871fa84122bed24",
-      "reviewedAtUtc": "2026-09-09T02:28:05.4933227Z"
+      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
+      "reviewedAtUtc": "2026-09-09T02:57:51.0447199Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -230,18 +226,14 @@
       "pageSha256": "c89b4c5cb13fefe0a1c6171804cc91b5f6c9ce69753e8d4de9fda0bb2514b052",
       "sources": [
         {
-          "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "140f0f725466f23ffc2f118985e939692f68d22d22d663ece7c99fa6527478e3"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "fbb04ee73afeea2f546658514b523525b888707a6ef50022c4667b0d063eae80"
+          "sha256": "c707aaa6b5c7325332f322df3857ab653cd5053448d632e015fc4706f9976284"
         }
       ],
-      "reason": "Final Meals validator tests exercise existing optional ManualAlcohol boundaries (null, zero, maximum, negative, above maximum) for create and update. All 174 Meals application tests passed. No public contracts, routes, payloads or API snapshots changed; existing backend contract review guidance remains accurate. Wiki optimization review: Reviewed Wiki-only performance and cache changes: query results, thresholds, generator coverage and public commands are unchanged; index-pipeline documents transactional batches and receipt invalidation. Full Focused passed, and final Full-resume, Unicode, concurrent-input and review-gate fixtures passed.",
+      "reason": "Reviewed the current source changes: bounded search recall, synchronized Node/.NET morphology, scheduler priority and core timing. Specialized contract, impact, privacy and topology SQL projections retain their shapes and authority/freshness rules; generated metrics were refreshed. No additional guidance change is required for this page.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T00:26:50.9101112Z"
+      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
+      "reviewedAtUtc": "2026-09-09T04:59:42.2260338Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -664,21 +656,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "fbb04ee73afeea2f546658514b523525b888707a6ef50022c4667b0d063eae80"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "eb8144f0da12331c50940d8ea50897b92a7c227cc4fd03750ad25f94181c46c5"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "0a44fce63286d450cbc4f4f7dfd43ae45432a5977947d3d68aba8aa6fa912be6"
+          "sha256": "c707aaa6b5c7325332f322df3857ab653cd5053448d632e015fc4706f9976284"
         }
       ],
-      "reason": "Reviewed physical relocation of the three independent services under Services: solution entries, relative project references, Docker build inputs, deployment bind paths, source discovery roots and documentation links now match the filesystem. Existing API payloads, module ownership, privacy rules and runtime behavior are unchanged by this relocation. Regenerated indexes successfully; 128 focused architecture checks passed and the refreshed repository catalog matches all solution projects. Public Technology Radar evidence was updated and its build validated. Wiki optimization review: Reviewed Wiki-only performance and cache changes: query results, thresholds, generator coverage and public commands are unchanged; index-pipeline documents transactional batches and receipt invalidation. Full Focused passed, and final Full-resume, Unicode, concurrent-input and review-gate fixtures passed.",
+      "reason": "Reviewed the current source changes: bounded search recall, synchronized Node/.NET morphology, scheduler priority and core timing. Specialized contract, impact, privacy and topology SQL projections retain their shapes and authority/freshness rules; generated metrics were refreshed. No additional guidance change is required for this page.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T00:26:53.4296559Z"
+      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
+      "reviewedAtUtc": "2026-09-09T04:59:42.8739154Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -855,18 +839,14 @@
       "pageSha256": "78aa14b84fb0cb0d89ccb14af14b45659440ebc5989802a96986908f26653657",
       "sources": [
         {
-          "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d6eccbc95cc442325e2beeb3ba060a017a0fd21bf6ed490e5479572e512ba49c"
-        },
-        {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "fbb04ee73afeea2f546658514b523525b888707a6ef50022c4667b0d063eae80"
+          "sha256": "c707aaa6b5c7325332f322df3857ab653cd5053448d632e015fc4706f9976284"
         }
       ],
-      "reason": "Reviewed refreshed sensitive-data index and coverage changes. Tests use synthetic identities and keys; production collection, persistence, logging and transfer contracts are unchanged. Candidate classification and lifecycle guidance remain accurate. Wiki optimization review: Reviewed Wiki-only performance and cache changes: query results, thresholds, generator coverage and public commands are unchanged; index-pipeline documents transactional batches and receipt invalidation. Full Focused passed, and final Full-resume, Unicode, concurrent-input and review-gate fixtures passed.",
+      "reason": "Reviewed the current source changes: bounded search recall, synchronized Node/.NET morphology, scheduler priority and core timing. Specialized contract, impact, privacy and topology SQL projections retain their shapes and authority/freshness rules; generated metrics were refreshed. No additional guidance change is required for this page.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T00:26:54.2916651Z"
+      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
+      "reviewedAtUtc": "2026-09-09T04:59:43.4781045Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -905,13 +885,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5c30edd276ff4f055a4cbf620e2575d8732c35aac0bdc30e9473c1abcc51c33f"
+          "sha256": "d2b2c6d165c0d337053086acaf03bc6b465b1386ac82e8fde3bc40b5da1f7bcc"
         }
       ],
-      "reason": "Reviewed integration onto master: preserved backend coverage changes and regenerated combined Wiki indexes. Wiki tooling is unchanged from the passing full verification; batching, cache invalidation, test selection and privacy contracts remain covered by existing reviews and regression tests.",
+      "reason": "Reviewed the current source changes: bounded search recall, synchronized Node/.NET morphology, scheduler priority and core timing. Specialized contract, impact, privacy and topology SQL projections retain their shapes and authority/freshness rules; generated metrics were refreshed. No additional guidance change is required for this page.",
       "baseRef": "HEAD",
-      "gitHead": "5f19657ae3ba7c1a995245b84871fa84122bed24",
-      "reviewedAtUtc": "2026-09-09T02:28:06.1687672Z"
+      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
+      "reviewedAtUtc": "2026-09-09T04:59:44.2740249Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -988,13 +968,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "54044423c9290560efba0700b2140d94be9384f8f977488a21ba9ec1f1f1f6cf"
+          "sha256": "3fb30c711cad742cb9a8a70acd8a92f7bfd402b93ee010f54bfe1b032dea248f"
         }
       ],
-      "reason": "Reviewed image finally compensation: deletion still runs only after failed confirmation persistence and preserves the original exception even when cleanup fails. Receipt existence lookup still suppresses only confirmed duplicates and preserves unexpected failures; repeated successful worker polling and PostgreSQL tests passed.",
+      "reason": "Reviewed the current source changes: bounded search recall, synchronized Node/.NET morphology, scheduler priority and core timing. Specialized contract, impact, privacy and topology SQL projections retain their shapes and authority/freshness rules; generated metrics were refreshed. No additional guidance change is required for this page.",
       "baseRef": "HEAD",
-      "gitHead": "c6133896fe27c9c15aef5c7ec658646ea2227b99",
-      "reviewedAtUtc": "2026-09-09T01:00:13.3796222Z"
+      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
+      "reviewedAtUtc": "2026-09-09T04:59:45.0033007Z"
     },
     {
       "pageId": "workflow-security-review",
@@ -1003,13 +983,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "5c30edd276ff4f055a4cbf620e2575d8732c35aac0bdc30e9473c1abcc51c33f"
+          "sha256": "d2b2c6d165c0d337053086acaf03bc6b465b1386ac82e8fde3bc40b5da1f7bcc"
+        },
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "3fb30c711cad742cb9a8a70acd8a92f7bfd402b93ee010f54bfe1b032dea248f"
         }
       ],
-      "reason": "Reviewed integration onto master: preserved backend coverage changes and regenerated combined Wiki indexes. Wiki tooling is unchanged from the passing full verification; batching, cache invalidation, test selection and privacy contracts remain covered by existing reviews and regression tests.",
+      "reason": "Reviewed the current source changes: bounded search recall, synchronized Node/.NET morphology, scheduler priority and core timing. Specialized contract, impact, privacy and topology SQL projections retain their shapes and authority/freshness rules; generated metrics were refreshed. No additional guidance change is required for this page.",
       "baseRef": "HEAD",
-      "gitHead": "5f19657ae3ba7c1a995245b84871fa84122bed24",
-      "reviewedAtUtc": "2026-09-09T02:28:06.8211928Z"
+      "gitHead": "0a4943ef26579a5e326e688503e7c0af83205f96",
+      "reviewedAtUtc": "2026-09-09T04:59:45.8625325Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

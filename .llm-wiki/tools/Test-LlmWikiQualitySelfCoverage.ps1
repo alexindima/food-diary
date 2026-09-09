@@ -2,6 +2,34 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiQualityText.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
+$unorderedPaths = [string[]]@('z.ps1', 'A.cs', 'a.cs', 'A.cs', 'путь.ts', "$([char]0xe000).cs", "$([char]::ConvertFromUtf32(0x1f600)).cs")
+$expectedPaths = @($unorderedPaths | Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique)
+if (([LlmWiki.QualityText]::OrderPaths($unorderedPaths) | ConvertTo-Json -Compress) -cne ($expectedPaths | ConvertTo-Json -Compress)) {
+    throw 'Compiled path ordering differs from UTF-8 sort keys or duplicate handling.'
+}
+$names = [string[]]@('Handler', 'QueryHandler', 'handler', 'Имя', 'a.b', 'Missing')
+$paths = [string[]]@('first.cs', 'second.cs', 'empty.cs')
+$contents = [string[]]@('QueryHandler QueryHandler Имя a.b', 'handler Handler', '')
+$references = [LlmWiki.QualityText]::FindReferences($names, $paths, $contents)
+foreach ($name in $names) {
+    $expected = @(for ($i = 0; $i -lt $paths.Count; $i++) {
+        if ($contents[$i].IndexOf($name, [StringComparison]::Ordinal) -ge 0) { $paths[$i] }
+    })
+    if (($references[$name] | ConvertTo-Json -Compress) -cne ($expected | ConvertTo-Json -Compress)) {
+        throw "Compiled quality references differ for '$name'."
+    }
+}
+if ([LlmWiki.QualityText]::FindReferences([string[]]@(), [string[]]@(), [string[]]@()).Count -ne 0) {
+    throw 'Empty quality input produced references.'
+}
+foreach ($content in @('', "`n", "`r`n", "a`r`nb`n", "a`rb", " `t`r`n", "a`n`n b", ([string][char]0x00a0), "x$([char]0x2028)y")) {
+    $expected = @($content -split '\r?\n' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }).Count
+    if ([LlmWiki.QualityText]::CountNonBlankLines($content) -ne $expected) {
+        throw 'Compiled nonblank line count differs from the original whitespace semantics.'
+    }
+}
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $qualityPath = Join-Path $repositoryRoot '.llm-wiki/generated/quality-index.json'
 if (-not (Test-Path -LiteralPath $qualityPath -PathType Leaf)) {

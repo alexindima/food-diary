@@ -6,6 +6,43 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { searchContextBatch } from './code-graph-batch.mjs';
 import { runGraphProcess } from './code-graph-process.mjs';
+import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
+import { findIdentityCandidates } from './code-graph-identity.mjs';
+
+test('English plural recall preserves previous alternatives and recognizes es plurals', () => {
+  for (const [plural, singular] of [['indexes', 'index'], ['boxes', 'box'], ['classes', 'class'], ['watches', 'watch'], ['brushes', 'brush'], ['buzzes', 'buzz']]) {
+    assert.ok(englishMorphologicalVariants(plural).includes(singular));
+    assert.ok(englishMorphologicalVariants(plural).includes(plural.slice(0, -1)));
+  }
+  assert.deepEqual(englishMorphologicalVariants('policies'), ['policy']);
+  assert.deepEqual(englishMorphologicalVariants('users'), ['user']);
+  assert.deepEqual(englishMorphologicalVariants('class'), []);
+  assert.deepEqual(englishMorphologicalVariants('индексы'), []);
+  assert.ok(englishMorphologicalVariants('running').includes('run'));
+});
+
+test('bounded identity recall is independent of body length and uses stable ties', () => {
+  const db = new DatabaseSync(':memory:');
+  try {
+    db.exec(`
+      CREATE TABLE context_search(record_type, record_key, path, source_path, category, title, body);
+      CREATE VIRTUAL TABLE context_search_identity USING fts5(path, title);
+      CREATE TABLE context_search_features(context_rowid, layer, module, role, is_test, extension);
+    `);
+    for (const [id, path] of [[1, 'b/index.md'], [2, 'a/index.md']]) {
+      db.prepare('INSERT INTO context_search(rowid, record_type, record_key, path, source_path, category, title, body) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
+        .run(id, 'wiki-page', path, path, path, 'wiki-page', 'Index', 'unrelated detail '.repeat(id * 10000));
+      db.prepare('INSERT INTO context_search_identity(rowid, path, title) VALUES (?, ?, ?)').run(id, path, 'Index');
+      db.prepare('INSERT INTO context_search_features VALUES (?, ?, ?, ?, ?, ?)').run(id, '', '', 'workflow', 0, '.md');
+    }
+    const before = findIdentityCandidates(db, 'title : "index"*', 1);
+    assert.equal(before.length, 1);
+    assert.equal(before[0].path, 'a/index.md');
+    db.exec("UPDATE context_search SET body = 'short'");
+    assert.deepEqual(findIdentityCandidates(db, 'title : "index"*', 1), before);
+    assert.deepEqual(findIdentityCandidates(db, 'title : "absent"*', 1), []);
+  } finally { db.close(); }
+});
 
 test('batch metadata and rows share one snapshot; next batch sees committed changes', () => {
   const root = mkdtempSync(join(tmpdir(), 'wiki-batch-'));

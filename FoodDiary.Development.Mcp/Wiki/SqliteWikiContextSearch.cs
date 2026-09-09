@@ -321,6 +321,34 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
                 }
             }
         }
+        {
+            SqliteCommand command = connection.CreateCommand();
+            await using ConfiguredAsyncDisposable commandDisposal = command.ConfigureAwait(false);
+            command.CommandTimeout = 2;
+            command.CommandText = """
+                SELECT search.record_type, search.record_key, search.path, search.source_path,
+                    COALESCE(search.category, ''), COALESCE(search.title, ''),
+                    bm25(context_search_identity, 6.0, 4.0) lexical_rank
+                FROM context_search_identity
+                JOIN context_search search ON search.rowid = context_search_identity.rowid
+                WHERE context_search_identity MATCH $match
+                ORDER BY lexical_rank, search.path, search.rowid
+                LIMIT $limit;
+                """;
+            command.Parameters.AddWithValue("$match", identityMatch);
+            command.Parameters.AddWithValue("$limit", identityCandidateLimit);
+            SqliteDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+            await using ConfiguredAsyncDisposable readerDisposal = reader.ConfigureAwait(false);
+            var candidateKeys = candidates.Select(CandidateKey).ToHashSet(StringComparer.Ordinal);
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
+                RawCandidate candidate = new(
+                    reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3),
+                    reader.GetString(4), reader.GetString(5), reader.GetDouble(6));
+                if (candidateKeys.Add(CandidateKey(candidate))) {
+                    candidates.Add(candidate);
+                }
+            }
+        }
         string[] runtimeSuffixes = [];
         if (directQueryTerms.Any(term => term is "node" or "javascript" or "mjs")) {
             runtimeSuffixes = [".mjs", ".js", ".cjs"];
@@ -1027,6 +1055,10 @@ public sealed class SqliteWikiContextSearch : IWikiContextSearch {
             variants.Add($"{term[..^3]}y");
         } else if (term.Length > 3 && term.EndsWith('s') && !term.EndsWith("ss", StringComparison.Ordinal)) {
             variants.Add(term[..^1]);
+        }
+        if (term.Length > 4 && new[] { "xes", "ches", "shes", "sses", "zes" }
+            .Any(suffix => term.EndsWith(suffix, StringComparison.Ordinal))) {
+            variants.Add(term[..^2]);
         }
         if (term.Length > 5 && term.EndsWith("ing", StringComparison.Ordinal)) {
             string stem = term[..^3];

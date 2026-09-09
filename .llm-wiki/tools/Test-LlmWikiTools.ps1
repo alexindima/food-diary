@@ -48,6 +48,11 @@ $env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH = $verificationTelemetryPath
 & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -Format Json | Out-Null
 $schedulerMemoryId = "smoke-scheduler-context-$([guid]::NewGuid().ToString('N'))"
 $totalStopwatch = [Diagnostics.Stopwatch]::StartNew()
+$coreBlockStopwatch = [Diagnostics.Stopwatch]::StartNew()
+function Write-CoreBlockTiming([string]$Name) {
+    Write-Host "LLM Wiki core block '$Name' completed in $([Math]::Round($coreBlockStopwatch.Elapsed.TotalSeconds, 2))s."
+    $coreBlockStopwatch.Restart()
+}
 Write-Host "LLM Wiki monolithic audit profile: $Profile. Use the default Focused profile for daily verification."
 
 function Assert-Wiki {
@@ -135,6 +140,7 @@ try {
     }
 }
 
+Write-CoreBlockTiming 'portable fixtures'
 $workspacePolicyValidation = & (Join-Path $toolsRoot 'Get-LlmWikiWorkspacePolicy.ps1') validate -Format Json | ConvertFrom-Json
 Assert-Wiki ($workspacePolicyValidation.valid -and $workspacePolicyValidation.fingerprint -match '^[a-f0-9]{64}$') 'Canonical workspace policy did not validate with a SHA-256 fingerprint.'
 $workspacePolicy = & (Join-Path $toolsRoot 'Get-LlmWikiWorkspacePolicy.ps1') get -Format Json | ConvertFrom-Json
@@ -228,6 +234,7 @@ $persistenceOnlyDiff = & (Join-Path $toolsRoot 'Get-LlmWikiDiffContext.ps1') `
 Assert-Wiki (@($persistenceOnlyDiff.scopes) -contains 'Database') 'Persistence-only diff did not retain database scope.'
 Assert-Wiki (@($persistenceOnlyDiff.warnings | Where-Object { $_ -match 'migration' }).Count -eq 0) 'Persistence-only diff emitted a false migration-pair warning.'
 
+Write-CoreBlockTiming 'workspace context and diff'
 $usersPacketJson = & (Join-Path $toolsRoot 'Get-LlmWikiChangePacket.ps1') `
     -ChangedPath @('Modules/Users/Application/Commands/UpdateUser/UpdateUserCommandHandler.cs') `
     -Objective 'Smoke-test a Users application change.' `
@@ -367,6 +374,7 @@ Assert-Wiki (@($runtimeBrief.runtimeImpact.hostedServices).Count -eq 1) 'Task br
 Assert-Wiki (@($runtimeBrief.testScenarios.id) -contains 'runtime-resilience') 'Task brief did not include runtime resilience scenarios.'
 Assert-Wiki (@($runtimeBrief.generatedActions) -contains './.llm-wiki/tools/Build-LlmWikiRuntimeTopology.ps1') 'Task brief did not request runtime-topology regeneration.'
 
+Write-CoreBlockTiming 'packets briefs and test plans'
 $decisionJson = & (Join-Path $toolsRoot 'Get-LlmWikiDecisionContext.ps1') `
     -ChangedPath @('docs/architecture/module-dependencies.json') `
     -Format Json
@@ -632,6 +640,7 @@ Assert-Wiki ($quality.summary.criticalSymbols -gt 0) 'Quality index did not extr
 Assert-Wiki (@($quality.files).Count -eq $quality.summary.productionFiles) 'Quality file metrics do not match the summary.'
 Assert-Wiki (@($quality.hotspots).Count -gt 0) 'Quality index did not rank structural hotspots.'
 
+Write-CoreBlockTiming 'compatibility and index contracts'
 $hotspotJson = & (Join-Path $toolsRoot 'Find-LlmWikiQualityRisk.ps1') -View hotspots -Limit 3 -Format Json
 $hotspotView = $hotspotJson | ConvertFrom-Json
 Assert-Wiki ($hotspotView.count -le 3 -and $hotspotView.count -eq @($hotspotView.items).Count) 'Hotspot query exceeded its result limit or reported an inconsistent count.'
@@ -756,6 +765,7 @@ $impactHelp = & (Join-Path $toolsRoot 'Get-LlmWikiImpact.ps1') `
 Assert-Wiki (@($impactHelp.impacts).Count -gt 0) 'Source-impact JSON omitted the affected page.'
 Assert-Wiki (@($impactHelp.impacts.id) -contains 'workflow-impact-simulation') 'Source-impact JSON omitted the copyable internal page ID.'
 
+Write-CoreBlockTiming 'quality topology and privacy'
 $dependencyJson = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -Format Json
 $dependencyChanges = $dependencyJson | ConvertFrom-Json
 Assert-Wiki ($dependencyChanges.changeCount -eq 0) 'Unchanged dependency manifests produced dependency changes.'
@@ -918,9 +928,13 @@ $sharedJsonPlanText = (& (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1'
 $sharedJsonToolCount = [regex]::Matches($sharedJsonPlanText, 'Build-LlmWiki').Count
 Assert-Wiki ($sharedJsonToolCount -eq 12) 'Shared JSON helper change did not select every compiled index.'
 & (Join-Path $toolsRoot 'Test-LlmWikiIndexSelection.ps1')
+Write-CoreBlockTiming 'dependency rollout planning and index-selection regression'
 & (Join-Path $toolsRoot 'Test-LlmWikiUiContinuation.ps1')
+Write-CoreBlockTiming 'UI continuation regression'
 & (Join-Path $toolsRoot 'Test-LlmWikiReviewReport.ps1')
+Write-CoreBlockTiming 'review report regression'
 & (Join-Path $toolsRoot 'Test-LlmWikiResearchContracts.ps1')
+Write-CoreBlockTiming 'research contracts regression'
 
 $deferredStale = & (Join-Path $toolsRoot 'Get-LlmWikiStaleDisposition.ps1') `
     -FailedTool @('Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiQualityIndex.ps1') `
@@ -1099,6 +1113,7 @@ Assert-Wiki ($reviewJson.engineeringReadiness.verdict -eq 'conditional' -and $re
 Assert-Wiki (@($reviewJson.dimensions).Count -eq 9) 'Review report did not include every readiness dimension.'
 Assert-Wiki (-not (@($reviewJson.modules) -contains ',')) 'Review report emitted a malformed module placeholder.'
 
+Write-CoreBlockTiming 'recovery visual QA and environment'
 Write-Host "LLM Wiki monolithic core phase completed in $([Math]::Round($totalStopwatch.Elapsed.TotalSeconds, 2))s."
 if ($Profile -eq 'Full') {
     $governedStopwatch = [Diagnostics.Stopwatch]::StartNew()

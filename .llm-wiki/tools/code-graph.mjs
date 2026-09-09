@@ -6,6 +6,8 @@ import { basename, dirname, extname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
 import { searchContextBatch } from './code-graph-batch.mjs';
+import { englishMorphologicalVariants } from './code-graph-query-terms.mjs';
+import { findIdentityCandidates } from './code-graph-identity.mjs';
 import { runGraphProcess } from './code-graph-process.mjs';
 import { traceCandidateMatchesScope } from './code-graph-trace-scope.mjs';
 import { directIdentifierTermMatchesMinimum, hyphenatedIdentifierTerms, implicitImplementationIntent, isModuleEntryPointQuery, rankingModuleIdentity, rankingPathIdentities, testIdentityWeights } from './code-graph-path-layout.mjs';
@@ -13,7 +15,7 @@ import { directIdentifierTermMatchesMinimum, hyphenatedIdentifierTerms, implicit
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
 const parserVersion = '14-backend-only-bootstrap-v1';
-const contextSearchSchemaVersion = '7';
+const contextSearchSchemaVersion = '8';
 const compiledIndexSchemaVersion = '4';
 const queryDocumentSchemaVersion = '9';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
@@ -40,7 +42,9 @@ function publishGraphDependencyFingerprint(databasePath, result) {
     contextSearchRankingFingerprint: sha256(contextSearchRankingText),
     rankingImplementationFingerprint: sha256(
       readFileSync(resolve(import.meta.dirname, 'code-graph.mjs'), 'utf8')
-      + readFileSync(resolve(import.meta.dirname, 'code-graph-path-layout.mjs'), 'utf8')),
+      + readFileSync(resolve(import.meta.dirname, 'code-graph-path-layout.mjs'), 'utf8')
+      + readFileSync(resolve(import.meta.dirname, 'code-graph-query-terms.mjs'), 'utf8')
+      + readFileSync(resolve(import.meta.dirname, 'code-graph-identity.mjs'), 'utf8')),
     changeSetFingerprint: result.changeSetFingerprint ?? null,
   }));
   writeFileSync(graphDependencyFingerprintPath(databasePath), `${fingerprint}\n`, 'utf8');
@@ -413,6 +417,7 @@ function openDatabase(databasePath) {
     if (storedSearchSchemaVersion !== contextSearchSchemaVersion) {
       database.exec('DROP TABLE IF EXISTS context_search');
       database.exec('DROP TABLE IF EXISTS context_search_features');
+      database.exec('DROP TABLE IF EXISTS context_search_identity');
     }
     database.exec(`
     CREATE VIRTUAL TABLE IF NOT EXISTS context_search USING fts5(
@@ -424,6 +429,9 @@ function openDatabase(databasePath) {
       title,
       body,
       tokenize = 'unicode61 remove_diacritics 2'
+    );
+    CREATE VIRTUAL TABLE IF NOT EXISTS context_search_identity USING fts5(
+      path, title, tokenize = 'unicode61 remove_diacritics 2'
     );
     CREATE TABLE IF NOT EXISTS context_search_features(
       context_rowid INTEGER PRIMARY KEY,
@@ -990,7 +998,8 @@ function refreshContextSearch(database) {
     tokensByPath.get(row.path).push(row.token);
   }
 
-  database.exec('DELETE FROM context_search_features; DELETE FROM context_search');
+  database.exec('DELETE FROM context_search_features; DELETE FROM context_search_identity; DELETE FROM context_search');
+  const insertIdentity = database.prepare('INSERT INTO context_search_identity(rowid, path, title) VALUES (?, ?, ?)');
   const insert = database.prepare(`
     INSERT INTO context_search(record_type, record_key, path, source_path, category, title, body)
     VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -1001,6 +1010,7 @@ function refreshContextSearch(database) {
   `);
   const insertContextRecord = (recordType, recordKey, path, sourcePath, category, title, body) => {
     const result = insert.run(recordType, recordKey, path, sourcePath, category, title, body);
+    insertIdentity.run(result.lastInsertRowid, path, title);
     const features = contextSearchFeatures(path, recordType);
     insertFeatures.run(result.lastInsertRowid, recordType, path, features.layer, features.module,
       features.role, features.isTest, features.extension);
@@ -2145,20 +2155,6 @@ function negatedRoleAlternatives(negativeRoleGroups) {
     .flatMap((term) => configured[term] ?? []))];
 }
 
-function englishMorphologicalVariants(term) {
-  if (!/^[a-z]+$/.test(term)) return [];
-  const variants = [];
-  if (term.length > 4 && term.endsWith('ies')) variants.push(`${term.slice(0, -3)}y`);
-  else if (term.length > 3 && term.endsWith('s') && !term.endsWith('ss')) variants.push(term.slice(0, -1));
-  if (term.length > 5 && term.endsWith('ing')) {
-    const stem = term.slice(0, -3);
-    variants.push(stem, `${stem}e`);
-    if (stem.length > 2 && stem.at(-1) === stem.at(-2)) variants.push(stem.slice(0, -1));
-  }
-  if (term.length > 4 && term.endsWith('ed')) variants.push(term.slice(0, -2), term.slice(0, -1));
-  return variants;
-}
-
 function searchContext(database, query, limit, filters = {}, batchState) {
   const started = performance.now();
   const negativeRoleGroups = negatedRoleTermGroups(query);
@@ -2220,7 +2216,8 @@ function searchContext(database, query, limit, filters = {}, batchState) {
     `${item.recordType}\0${item.recordKey}\0${item.path}`,
     index,
   ]));
-  for (const identityCandidate of identityCandidates) {
+  const compactIdentityCandidates = findIdentityCandidates(database, identityMatch, identityLimit);
+  for (const identityCandidate of [...identityCandidates, ...compactIdentityCandidates]) {
     const key = `${identityCandidate.recordType}\0${identityCandidate.recordKey}\0${identityCandidate.path}`;
     const existingIndex = candidateIndexes.get(key);
     if (existingIndex === undefined) {

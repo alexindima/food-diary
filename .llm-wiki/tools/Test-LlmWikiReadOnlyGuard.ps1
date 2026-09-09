@@ -1,9 +1,45 @@
 [CmdletBinding()]
-param()
+param([switch]$Isolated)
 
 $ErrorActionPreference = 'Stop'
-& (Join-Path $PSScriptRoot 'Test-LlmWikiReadOnlyOverlayPaths.ps1')
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+if (-not $Isolated) {
+    $cloneParent = Join-Path $repositoryRoot '.artifacts/llm-wiki/read-only-guard-fixtures'
+    $cloneRoot = Join-Path $cloneParent ([guid]::NewGuid().ToString('N'))
+    $previousSnapshot = $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT
+    $previousSource = $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT
+    $previousSandbox = $env:LLM_WIKI_SMOKE_SANDBOX
+    $hashAlgorithm = [Security.Cryptography.SHA256]::Create()
+    try { $rootHash = ([BitConverter]::ToString($hashAlgorithm.ComputeHash([Text.Encoding]::UTF8.GetBytes(([IO.Path]::GetFullPath($cloneRoot)).ToLowerInvariant()))) -replace '-', '').ToLowerInvariant().Substring(0, 16) }
+    finally { $hashAlgorithm.Dispose() }
+    $snapshotTemp = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) { Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) 'Temp' } else { [IO.Path]::GetTempPath() }
+    $snapshotParent = Join-Path $snapshotTemp 'fooddiary-llm-wiki-read-only'
+    $cloneSnapshots = Join-Path $snapshotParent $rootHash
+    try {
+        $null = New-Item -ItemType Directory -Path $cloneParent -Force
+        & git clone --shared --quiet $repositoryRoot $cloneRoot
+        if ($LASTEXITCODE -ne 0) { throw 'Unable to clone the read-only mutation regression fixture.' }
+        Get-ChildItem -LiteralPath (Join-Path $repositoryRoot '.llm-wiki') -Force |
+            Copy-Item -Destination (Join-Path $cloneRoot '.llm-wiki') -Recurse -Force
+        $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT = $null
+        $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT = $null
+        $env:LLM_WIKI_SMOKE_SANDBOX = Join-Path $cloneRoot '.artifacts/llm-wiki/smoke-private'
+        & (Get-Process -Id $PID).Path -NoProfile -File (Join-Path $cloneRoot '.llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1') -Isolated
+        if ($LASTEXITCODE -ne 0) { throw 'Private read-only mutation regression failed.' }
+    } finally {
+        $env:LLM_WIKI_READ_ONLY_SNAPSHOT_ROOT = $previousSnapshot
+        $env:LLM_WIKI_READ_ONLY_SOURCE_ROOT = $previousSource
+        $env:LLM_WIKI_SMOKE_SANDBOX = $previousSandbox
+        foreach ($ownedPath in @(@{ Path = $cloneSnapshots; Parent = $snapshotParent }, @{ Path = $cloneRoot; Parent = $cloneParent })) {
+            $resolved = [IO.Path]::GetFullPath($ownedPath.Path)
+            $prefix = [IO.Path]::GetFullPath($ownedPath.Parent).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
+            if (-not $resolved.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe read-only regression cleanup path.' }
+            if (Test-Path -LiteralPath $resolved) { Remove-Item -LiteralPath $resolved -Recurse -Force }
+        }
+    }
+    return
+}
+& (Join-Path $PSScriptRoot 'Test-LlmWikiReadOnlyOverlayPaths.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiSmokeSandbox.ps1')
 $fixtureRoot = New-LlmWikiSmokeFixtureDirectory -RepositoryRoot $repositoryRoot -Name 'read-only-guard'
 $mutationTool = Join-Path $fixtureRoot 'read-only-guard-mutation.ps1'
@@ -80,7 +116,7 @@ Start-Sleep -Milliseconds 750
         "param([string]`$Action,[string]`$Format)`n`$marker=Join-Path (Resolve-Path (Join-Path `$PSScriptRoot '../..')).Path '.artifacts/llm-wiki/code-graph/prepared.marker'`n`$null=New-Item -ItemType Directory -Path (Split-Path -Parent `$marker) -Force`n[IO.File]::WriteAllText(`$marker,'prepared',[Text.Encoding]::ASCII)`n",
         [Text.UTF8Encoding]::new($false))
     $cleanSafeTool = Join-Path $cleanToolsRoot 'clean-safe.ps1'
-    [IO.File]::WriteAllText($cleanSafeTool, "Write-Output 'read-only-clean-control'", [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText($cleanSafeTool, "param([switch]`$Fail)`nif (`$Fail) { exit 7 }`nWrite-Output 'read-only-clean-control'", [Text.UTF8Encoding]::new($false))
     & git -C $cleanRepositoryRoot init --quiet
     & git -C $cleanRepositoryRoot config user.email 'wiki-smoke@example.invalid'
     & git -C $cleanRepositoryRoot config user.name 'Wiki Smoke'
@@ -93,6 +129,29 @@ Start-Sleep -Milliseconds 750
         -ToolArguments @{ ProposedPath = @('CleanScope') })
     if ('read-only-clean-control' -notin $cleanOutput) {
         throw 'Read-only guard did not preserve output when the scoped workspace overlay was empty.'
+    }
+
+    $freshRunner = Join-Path $fixtureRoot 'fresh-guard.ps1'
+    [IO.File]::WriteAllText($freshRunner, @'
+param([string]$Guard, [string]$Tool, [switch]$StaleExitCode)
+if ($StaleExitCode) { $global:LASTEXITCODE = 17 }
+& $Guard -ToolPath $Tool -ToolArguments @{ ProposedPath = @('CleanScope') }
+'@, [Text.UTF8Encoding]::new($false))
+    $freshShell = (Get-Process -Id $PID).Path
+    foreach ($staleExitCode in @($false, $true)) {
+        $freshArguments = @('-NoProfile', '-File', $freshRunner, '-Guard', (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1'), '-Tool', $cleanSafeTool)
+        if ($staleExitCode) { $freshArguments += '-StaleExitCode' }
+        $freshOutput = @(& $freshShell @freshArguments)
+        if ($LASTEXITCODE -ne 0 -or 'read-only-clean-control' -notin $freshOutput) {
+            throw 'Warm read-only snapshot inherited an absent or stale native exit code in a fresh process.'
+        }
+    }
+    $exitFailure = $null
+    try {
+        & (Join-Path $cleanToolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $cleanSafeTool -ToolArguments @{ ProposedPath = @('CleanScope'); Fail = $true }
+    } catch { $exitFailure = $_.Exception.Message }
+    if ($exitFailure -notlike '*failed with exit code 7*') {
+        throw "Read-only guard lost the actual tool exit code: '$exitFailure'."
     }
 
     $cleanRepositoryPathHasher = [Security.Cryptography.SHA256]::Create()

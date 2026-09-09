@@ -289,8 +289,9 @@ function Invoke-ToolInsideSnapshot {
         $toolFailure = $null
         Push-Location $RepositoryRoot
         try {
+            $global:LASTEXITCODE = 0
             & $SnapshotToolPath @Arguments
-            if (-not $? -or ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0)) { throw "Read-only Wiki tool failed with exit code $LASTEXITCODE." }
+            if (-not $? -or $global:LASTEXITCODE -ne 0) { throw "Read-only Wiki tool failed with exit code $global:LASTEXITCODE." }
         } catch {
             $toolFailure = $_
         } finally {

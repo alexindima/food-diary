@@ -13,8 +13,13 @@ sources:
   - .llm-wiki/tools/Test-LlmWiki.ps1
   - .llm-wiki/tools/Test-LlmWikiLint.ps1
   - .llm-wiki/tools/Test-LlmWikiPortable.ps1
+  - .llm-wiki/tools/Test-LlmWikiTools.ps1
   - .llm-wiki/tools/Test-LlmWikiLinux.ps1
   - .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1
+  - .llm-wiki/tools/Build-LlmWikiArchitectureHealthIndex.ps1
+  - .llm-wiki/tools/Test-LlmWikiArchitectureHealthToolExclusion.ps1
+  - .llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1
+  - .llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1
   - .llm-wiki/tools/Test-LlmWikiConcurrentIndexUpdate.ps1
   - scripts/Clean-NestedDotnetArtifacts.ps1
   - FoodDiary.Web.Client/.husky/pre-commit
@@ -29,6 +34,8 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiKnowledgeIsolation.ps1
   - .llm-wiki/tools/Test-LlmWikiFormattingReady.ps1
   - .llm-wiki/tools/Build-LlmWikiQualityIndex.ps1
+  - .llm-wiki/tools/LlmWikiQualityText.ps1
+  - .llm-wiki/tools/Test-LlmWikiQualitySelfCoverage.ps1
   - .llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1
   - .llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
@@ -137,10 +144,24 @@ Focused smoke routing is declared in
 `.llm-wiki/policies/affected-smoke-catalog.psd1`. The catalog owns path patterns,
 priorities, parallel-safety, graph dependencies, and dominance rules. Its
 regression verifies that every tracked Wiki tool maps to a smoke group and that
-every non-fallback group has an execution handler.
+every concrete non-fallback group has an execution handler. Catalog aliases expand
+to validated concrete groups before requested-group filtering.
 
-Groups marked `ParallelSafe` run concurrently in priority order; the remaining
-groups run serially after that batch. Mutation fixtures and performance-sensitive
+`read-only-guard` remains a compatibility alias for all four original regression
+scripts. Its `read-only-isolation` child runs the destructive test fixtures in a
+private Git clone and cleans up that clone and its snapshot cache. The already
+private `json-cold-checkout` child can overlap with it in the parallel batch.
+`read-only-retrieval` retains retrieval and ownership assertions and remains
+serial behind shared code-graph writers. `-MaxConcurrency 1` runs the same child
+groups sequentially for diagnosis; no assertions or receipt checks are skipped.
+
+Groups marked `ParallelSafe` run concurrently in priority order. The long
+code-graph lane starts in the first worker batch to reduce idle tail time.
+The monolithic Core/Full audit reports timings for context/diff, planning,
+compatibility/index contracts, topology/privacy, and its individual nested
+regression suites. These measurements do not change assertions or SLA limits.
+
+Other groups run serially after that batch. Shared-checkout mutation fixtures and performance-sensitive
 SLA fixtures stay serial, so the context-cache cold-start budget is measured
 without contention from other smoke workers. The serial `context-bundle` group
 owns query-context compiled-index SQLite/JSON parity, payload-reduction,
@@ -342,6 +363,22 @@ uses dictionaries for test references and per-file critical symbols, and avoids
 repeated `FileInfo` materialization. The backend-contract generator consumes the
 same Git-declared input list instead of recursively traversing the repository;
 both retain semantic `-Check` comparison against the committed canonical JSON.
+Quality text processing uses an in-process compiled helper for ordinal substring
+references, UTF-8 path sort keys and nonblank line counts. It preserves overlapping symbol names,
+test-file order, case sensitivity, LF/CRLF handling, and Unicode whitespace;
+it does not substitute token matching or measured execution coverage. The helper
+source participates in the generator fingerprint and its edge cases run in the
+existing self-quality regression.
+Architecture health builds lookup tables for project paths, production reference
+targets and consumed contract names once per invocation. Case-insensitive
+invariant-culture comparisons retain PowerShell membership semantics, while
+output ordering still follows the original source arrays and sorted allowances.
+These lookups are invocation-local; content hashes are still recomputed and no
+timestamp-only cache is used to decide whether sources changed.
+Read-only snapshot execution resets the native exit status before each tool:
+pure PowerShell commands must work in a reused snapshot even when a fresh process
+has no native exit variable, or a prior command left a failure status. Actual
+tool failures and source mutation still fail the guard.
 Backend contract references are found by a content-addressed .NET helper under
 ignored `.artifacts/llm-wiki/contract-reference-extractor`. Its Aho-Corasick
 automaton scans each source once, applies the same ASCII identifier boundaries

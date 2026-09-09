@@ -36,6 +36,7 @@ $cacheInputs += @(
     '.llm-wiki/tools/Build-LlmWikiQualityIndex.ps1'
     '.llm-wiki/tools/LlmWikiJson.ps1'
     '.llm-wiki/tools/LlmWikiIndexCache.ps1'
+    '.llm-wiki/tools/LlmWikiQualityText.ps1'
 )
 $inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
 if ($ReuseUnchangedCheck -and
@@ -55,14 +56,13 @@ if ($ReuseUnchangedCheck -and
     }
 }
 
+. (Join-Path $PSScriptRoot 'LlmWikiQualityText.ps1')
 $symbols = (Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json).symbols
 $criticalRoles = @('CommandHandler', 'QueryHandler', 'Handler', 'Controller', 'Validator')
 $criticalSymbols = @($symbols | Where-Object { $_.role -in $criticalRoles -and $_.kind -ne 'interface' })
 
 $repositoryFiles = @(
-    $cacheInputs |
-        Where-Object { $_ -match '\.(?:cs|ts|ps1)$' } |
-        Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique |
+    [LlmWiki.QualityText]::OrderPaths([string[]]@($cacheInputs | Where-Object { $_ -match '\.(?:cs|ts|ps1)$' })) |
         ForEach-Object {
             $relativePath = ([string]$_).TrimStart([char]0xFEFF).Replace('\', '/')
             $fullPath = [IO.Path]::Combine($repositoryRoot, $relativePath)
@@ -100,21 +100,11 @@ $wikiTestFiles = @(
 )
 
 $symbolCoverage = [System.Collections.Generic.List[object]]::new()
-$testReferencesBySymbolName = [System.Collections.Generic.Dictionary[string, System.Collections.Generic.List[string]]]::new(
-    [System.StringComparer]::Ordinal)
-foreach ($symbolName in @($criticalSymbols.name | Sort-Object -Unique)) {
-    $testReferencesBySymbolName[$symbolName] = [System.Collections.Generic.List[string]]::new()
-}
-
-# Keep the intentionally conservative substring semantics while avoiding a
-# PowerShell pipeline over every test file for every critical symbol.
-foreach ($testFile in $testFiles) {
-    foreach ($symbolName in $testReferencesBySymbolName.Keys) {
-        if ($testFile.content.IndexOf($symbolName, [System.StringComparison]::Ordinal) -ge 0) {
-            $testReferencesBySymbolName[$symbolName].Add($testFile.path)
-        }
-    }
-}
+# Preserve ordinal substring matching and test-file order in a compiled loop.
+$testReferencesBySymbolName = [LlmWiki.QualityText]::FindReferences(
+    [string[]]@($criticalSymbols.name | Sort-Object -Unique),
+    [string[]]@($testFiles.path),
+    [string[]]@($testFiles.content))
 
 foreach ($symbol in $criticalSymbols) {
     $references = @($testReferencesBySymbolName[$symbol.name])
@@ -216,7 +206,7 @@ $debtMarkers = [System.Collections.Generic.List[object]]::new()
 foreach ($file in $productionFiles) {
     $content = [System.IO.File]::ReadAllText($file.fullPath)
     $path = $file.path
-    $lineCount = @($content -split '\r?\n' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }).Count
+    $lineCount = [LlmWiki.QualityText]::CountNonBlankLines($content)
     $decisionCount = [regex]::Matches(
         $content,
         '\b(if|else\s+if|for|foreach|while|switch|case|catch)\b|&&|\|\||\?\?').Count

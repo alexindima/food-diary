@@ -9,6 +9,12 @@ $index = Get-Content -LiteralPath $indexPath -Raw | ConvertFrom-Json
 $catalog = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/repository-catalog.json') -Raw | ConvertFrom-Json
 $symbols = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/csharp-symbol-index.json') -Raw | ConvertFrom-Json
 $backendContracts = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/backend-contract-index.json') -Raw | ConvertFrom-Json
+$consumerNames = @($backendContracts.consumerEdges.contract)
+$expectedUnconsumed = @($backendContracts.contracts | Where-Object { $_.name -notin $consumerNames })
+if (($index.unconsumedBackendContracts | ConvertTo-Json -Depth 10 -Compress) -cne ($expectedUnconsumed | ConvertTo-Json -Depth 10 -Compress) -or
+    [int]$index.summary.unconsumedBackendContracts -ne $expectedUnconsumed.Count) {
+    throw 'Architecture contract lookup changed membership, order or summary counts.'
+}
 $catalogToolProjects = @(@($catalog.dotnet.projects) | Where-Object { [string]$_.path -match '^\.llm-wiki/tools/' })
 $toolSymbols = @(@($symbols.symbols) | Where-Object { [string]$_.path -match '^\.llm-wiki/tools/' })
 $toolContractDefinitions = @(@($backendContracts.contracts) | Where-Object { @($_.definitionPaths | Where-Object { [string]$_ -match '^\.llm-wiki/tools/' }).Count -gt 0 })

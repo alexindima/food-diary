@@ -6,6 +6,9 @@ status: current
 summary: Query an incremental SQLite symbol and consumer graph as the primary Development MCP code-context route without replacing governed Wiki evidence or committed project knowledge.
 sources:
   - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/code-graph-identity.mjs
+  - .llm-wiki/tools/code-graph-query-terms.mjs
+  - .llm-wiki/tools/code-graph-performance.test.mjs
   - .llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1
   - .llm-wiki/tools/Get-LlmWikiGraphResearch.ps1
   - .llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1

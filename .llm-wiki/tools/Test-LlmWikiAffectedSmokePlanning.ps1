@@ -69,7 +69,7 @@ $unmappedTools = @(
 if ($unmappedTools.Count -gt 0) {
     throw "Affected-smoke catalog leaves Wiki tools without a test group: $($unmappedTools -join ', ')."
 }
-foreach ($catalogGroup in @($catalog.Groups | Where-Object { -not ($_.ContainsKey('Fallback') -and [bool]$_.Fallback) })) {
+foreach ($catalogGroup in @($catalog.Groups | Where-Object { -not $_.ContainsKey('ExpandTo') -and -not ($_.ContainsKey('Fallback') -and [bool]$_.Fallback) })) {
     if ($plannerText -notmatch "'$([regex]::Escape([string]$catalogGroup.Id))'\s*\{") {
         throw "Affected-smoke catalog group '$($catalogGroup.Id)' has no execution handler."
     }
@@ -93,8 +93,14 @@ if (@($fullFocusedPlan.groups) -contains 'full-tools' -or @($fullFocusedPlan.gro
 if ([string]$fullFocusedPlan.parallelGroups[0] -ne 'adaptive-evals') {
     throw 'The focused scheduler must start the longest adaptive eval lane first.'
 }
-if (@($fullFocusedPlan.serialGroups) -notcontains 'read-only-guard') {
-    throw 'The read-only guard mutation fixture must remain isolated from parallel smoke groups.'
+if ([string]$fullFocusedPlan.parallelGroups[1] -ne 'code-graph') {
+    throw 'The long code-graph lane must start in the first worker batch.'
+}
+foreach ($group in @('read-only-isolation', 'json-cold-checkout')) {
+    if (@($fullFocusedPlan.parallelGroups) -notcontains $group) { throw "Private fixture group is not parallel: $group" }
+}
+if (@($fullFocusedPlan.serialGroups) -notcontains 'read-only-retrieval' -or @($fullFocusedPlan.groups) -contains 'read-only-guard') {
+    throw 'Read-only retrieval must stay behind shared graph writers, without replaying the legacy aggregate.'
 }
 if (@($fullFocusedPlan.serialGroups) -notcontains 'context-bundle') {
     throw 'The context-cache SLA fixture must remain isolated from parallel smoke groups.'
@@ -111,6 +117,16 @@ if ($productGroups.Count -ne 0) { throw 'Product-only changes unexpectedly selec
 $forcedPlan = & $planner -ChangedPath @() -RequestedGroup strict-shapes -Plan -Format Json | ConvertFrom-Json
 if (@($forcedPlan.groups) -notcontains 'strict-shapes') {
     throw 'An explicitly requested focused group was lost when the changed-path collection was empty.'
+}
+
+$readOnlyGroups = @('json-cold-checkout', 'read-only-isolation', 'read-only-retrieval')
+foreach ($scope in @(@{ ChangedPath = @() }, @{ ChangedPath = @('.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1') })) {
+    $legacyPlan = & $planner @scope -RequestedGroup read-only-guard -Plan -Format Json | ConvertFrom-Json
+    if (($legacyPlan.groups -join ',') -cne ($readOnlyGroups -join ',')) { throw 'Legacy read-only group no longer selects all four regression scripts.' }
+    foreach ($group in $readOnlyGroups) {
+        $childPlan = & $planner @scope -RequestedGroup $group -Plan -Format Json | ConvertFrom-Json
+        if (@($childPlan.groups).Count -ne 1 -or $childPlan.groups[0] -ne $group) { throw "Requested child group was dropped: $group" }
+    }
 }
 
 Write-Host 'LLM Wiki affected-smoke planning regression passed: local routing never falls back to full-tools.'

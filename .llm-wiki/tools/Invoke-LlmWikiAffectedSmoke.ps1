@@ -48,6 +48,19 @@ $smokeCatalog = Import-PowerShellDataFile -LiteralPath $catalogPath
 if ([int]$smokeCatalog.SchemaVersion -ne 1) { throw "Unsupported affected-smoke catalog schema: $($smokeCatalog.SchemaVersion)." }
 $catalogGroups = @($smokeCatalog.Groups)
 
+function Expand-SmokeGroups([string[]]$Names) {
+    foreach ($name in $Names) {
+        $entry = @($catalogGroups | Where-Object Id -eq $name)
+        if ($entry.Count -eq 1 -and $entry[0].ContainsKey('ExpandTo')) {
+            foreach ($child in $entry[0].ExpandTo) {
+                $target = @($catalogGroups | Where-Object Id -eq $child)
+                if ($target.Count -ne 1 -or $target[0].ContainsKey('ExpandTo')) { throw "Invalid smoke alias target: $name -> $child" }
+                [string]$child
+            }
+        } else { $name }
+    }
+}
+
 $hasUnknownToolChange = $false
 $wikiRelevantPathCount = 0
 if ($forcedGroups.Count -gt 0 -and -not $hasExplicitChangedPaths) {
@@ -82,8 +95,11 @@ foreach ($suppression in @($smokeCatalog.Suppressions)) {
     if (-not $smokeGroups.Contains([string]$suppression.When)) { continue }
     foreach ($removedGroup in @($suppression.Remove)) { $null = $smokeGroups.Remove([string]$removedGroup) }
 }
+$expandedGroups = @(Expand-SmokeGroups @($smokeGroups))
+$smokeGroups = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+foreach ($expandedGroup in $expandedGroups) { $null = $smokeGroups.Add($expandedGroup) }
 if ($forcedGroups.Count -gt 0) {
-    $requestedGroups = $forcedGroups
+    $requestedGroups = @(Expand-SmokeGroups $forcedGroups)
     $selectedGroups = @($smokeGroups | Where-Object { $_ -in $requestedGroups })
     $smokeGroups = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
     foreach ($selectedGroup in $selectedGroups) { $null = $smokeGroups.Add($selectedGroup) }
@@ -159,13 +175,17 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiConcurrentVerify.ps1')
             if (-not $?) { exit 1 }
         }
-        'read-only-guard' {
+        'read-only-isolation' {
             & (Join-Path $toolsRoot 'Test-LlmWikiReadOnlyGuard.ps1')
             if (-not $?) { exit 1 }
+        }
+        'read-only-retrieval' {
             & (Join-Path $toolsRoot 'Test-LlmWikiReadOnlyRetrievalContracts.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiIntentOwnership.ps1')
             if (-not $?) { exit 1 }
+        }
+        'json-cold-checkout' {
             & (Join-Path $toolsRoot 'Test-LlmWikiJsonColdCheckout.ps1')
             if (-not $?) { exit 1 }
         }

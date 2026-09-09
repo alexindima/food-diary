@@ -7,6 +7,8 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
   - .llm-wiki/tools/code-graph.mjs
+  - .llm-wiki/tools/code-graph-identity.mjs
+  - .llm-wiki/tools/code-graph-query-terms.mjs
   - .llm-wiki/tools/Ensure-LlmWikiSqliteProjection.ps1
   - .llm-wiki/tools/Test-LlmWikiCompiledIndexSqlParity.ps1
   - .llm-wiki/tools/Test-LlmWikiDiffContextSqlParity.ps1
@@ -19,6 +21,14 @@ sources:
 ---
 
 # Query Repository Context
+
+Search supplements the existing lexical and identity candidate pools with at
+most `identityCandidatePoolLimit` candidates from a compact path/title FTS index.
+This index excludes document bodies so long pages retain title-based recall.
+The Node writer rebuilds it with the search projection after a schema change;
+the .NET reader remains read-only. Both runtimes recognize English `-es` plurals
+such as `indexes` while retaining previous query alternatives. Pool limits,
+ranking policy, and frozen evaluation thresholds remain unchanged.
 
 Use the context resolver before exploring a cross-cutting change. It returns a
 compact packet built around one unified ranked candidate list, plus derived
