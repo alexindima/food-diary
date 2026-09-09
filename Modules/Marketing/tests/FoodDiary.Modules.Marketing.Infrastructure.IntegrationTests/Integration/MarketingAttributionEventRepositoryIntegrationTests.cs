@@ -14,7 +14,12 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
         var repository = new MarketingAttributionEventRepository(context);
         DateTime start = new(2030, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         MarketingAttributionEventRecord direct = CreateRecord("page_landing", start, "direct") with {
-            UtmSource = null, UtmMedium = null, UtmCampaign = null, UtmContent = null, UtmTerm = null, ReferrerHost = null,
+            UtmSource = null,
+            UtmMedium = null,
+            UtmCampaign = null,
+            UtmContent = null,
+            UtmTerm = null,
+            ReferrerHost = null,
         };
         await repository.AddAsync(direct);
         await repository.AddAsync(direct with { EventId = Guid.NewGuid(), SessionId = "tracked", UtmSource = "source" });
