@@ -8,10 +8,15 @@ namespace FoodDiary.Development.Mcp.Tests;
 [ExcludeFromCodeCoverage]
 [Collection("PowerShell Wiki process")]
 public sealed class McpServerTests {
-    [Fact]
-    public async Task ConfiguredServer_ListsAndCallsExpectedReadOnlyTools() {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task ConfiguredServer_ListsAndCallsExpectedReadOnlyTools(bool usePortableLauncher) {
         string repositoryRoot = FindRepositoryRoot();
-        var configuration = CodexMcpTestConfiguration.Load(repositoryRoot);
+        var configuration = CodexMcpTestConfiguration.Load(repositoryRoot, usePortableLauncher);
+        if (usePortableLauncher) {
+            Assert.False(configuration.UsesConfiguredLauncher);
+        }
 
         var transport = new StdioClientTransport(configuration.CreateTransportOptions("FoodDiary Development MCP test"));
         using CancellationTokenSource connectionTimeout = new(TimeSpan.FromSeconds(30));

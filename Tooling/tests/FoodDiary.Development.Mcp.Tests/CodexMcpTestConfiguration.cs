@@ -12,7 +12,7 @@ internal sealed record CodexMcpTestConfiguration(
     string[] EnabledTools,
     bool Required,
     bool UsesConfiguredLauncher) {
-    public static CodexMcpTestConfiguration Load(string repositoryRoot) {
+    public static CodexMcpTestConfiguration Load(string repositoryRoot, bool usePortableLauncher = false) {
         string configPath = Path.Combine(repositoryRoot, ".codex", "config.toml");
         string[] lines = File.ReadAllLines(configPath);
         const string section = "[mcp_servers.fooddiary_development]";
@@ -52,15 +52,8 @@ internal sealed record CodexMcpTestConfiguration(
         bool requiresPortableFallback = !OperatingSystem.IsWindows() &&
                                         (command.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase) ||
                                          string.Equals(command, "powershell.exe", StringComparison.OrdinalIgnoreCase));
-        if (requiresPortableFallback) {
-            string configuration = new DirectoryInfo(AppContext.BaseDirectory).Parent?.Name ?? "Debug";
-            string serverAssembly = Path.Combine(
-                repositoryRoot,
-                "FoodDiary.Development.Mcp",
-                "bin",
-                configuration,
-                "net10.0",
-                "FoodDiary.Development.Mcp.dll");
+        if (requiresPortableFallback || usePortableLauncher) {
+            string serverAssembly = typeof(Wiki.WikiRuntimeTelemetry).Assembly.Location;
             command = "dotnet";
             arguments = [serverAssembly];
             usesConfiguredLauncher = false;
