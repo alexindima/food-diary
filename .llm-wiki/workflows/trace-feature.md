@@ -35,6 +35,11 @@ indexed frontend symbol and otherwise falls back to the backend request trace.
 Use `-TraceView Frontend` or `-TraceView Backend` to force a view. Use
 `-Format Json` when another tool or agent will consume the result.
 
+The backend source scan prunes `obj`, `bin`, `.artifacts`, `TestResults`, and
+`Migrations` directories before descending into them. It retains visible,
+untracked C# sources and the prior generated-file exclusions, without following
+directory symlinks. The candidate ranking and trace output are unchanged.
+
 Backend-oriented natural-language queries automatically use the SQLite graph
 when they contain terms such as SMTP, persistence, readiness, outbox, hosted
 service, or telemetry. Narrow ambiguous searches explicitly with `-Layer

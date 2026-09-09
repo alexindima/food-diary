@@ -16,6 +16,10 @@ sources:
 
 # Review API compatibility
 
+JSON property lookups use direct named-property access instead of enumerating
+every property through a pipeline. Compatibility rules and missing-property
+handling remain unchanged.
+
 After regenerating API contract snapshots, compare them with the intended base:
 
 ```powershell

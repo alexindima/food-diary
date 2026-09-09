@@ -150,6 +150,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'dependency-analysis' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiDependencyManifest.ps1')
+            if (-not $?) { exit 1 }
             $rootResult = & (Join-Path $toolsRoot 'Get-LlmWikiDependencyChanges.ps1') -BaseRef HEAD -Format Json | ConvertFrom-Json
             Push-Location (Join-Path $repositoryRoot 'FoodDiary.Web.Client')
             try {
@@ -343,12 +345,14 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiMemoryIsolation.ps1')
             if (-not $?) { exit 1 }
         }
-        'context-bundle' {
+        'context-search-evals' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiSqlContextEvaluation.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'context-retrieval' {
             & (Join-Path $toolsRoot 'Test-LlmWikiCompiledIndexSqlParity.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiSqlContextShadow.ps1')
-            if (-not $?) { exit 1 }
-            & (Join-Path $toolsRoot 'Test-LlmWikiSqlContextEvaluation.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiContextCache.ps1')
             if (-not $?) { exit 1 }

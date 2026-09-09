@@ -10,6 +10,7 @@ tags:
   - deployment
 sources:
   - .llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1
+  - .llm-wiki/tools/Test-LlmWikiDependencyManifest.ps1
   - .llm-wiki/tools/Get-LlmWikiRolloutPlan.ps1
   - .llm-wiki/generated/configuration-index.json
   - .llm-wiki/policies/change-policies.json
@@ -30,6 +31,10 @@ Dependency review reports added, removed, and version-changed direct NuGet/npm
 references and changed npm lockfile graphs. Manifest discovery and Git baseline
 reads are anchored to the repository root, so invoking the command from
 `FoodDiary.Web.Client` produces the same result as invoking it from the root.
+One Git diff identifies changed paths, including staged and working-tree edits;
+untracked manifests are added explicitly. Only changed manifests need historical
+blob reads. Unchanged files still appear in repository-wide inventories, while
+changed/deleted manifests and lockfiles retain their baseline comparison.
 `-RepositoryWide` switches from diff-only output to a local manifest inventory:
 manifest and lockfile counts, NuGet/npm package-reference counts, unique packages,
 and per-manifest versions. The inventory does not contact advisory services and

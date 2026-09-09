@@ -69,12 +69,23 @@ if ($querySegments.Count -eq 0) { $querySegments = @($Query.Trim()) }
 $queryTerms = @(Get-SearchTerms ($querySegments -join ' '))
 
 $sourceFiles = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
-        Where-Object {
-            $_.FullName -notmatch '[\\/](obj|bin|\.artifacts|TestResults|Migrations)[\\/]' -and
-            $_.Name -notmatch '\.(Designer|g)\.cs$'
-        } |
-        Sort-Object FullName
+    # Prune excluded trees before enumeration, preserving the original visible
+    # source set (including untracked files) and default no-symlink traversal.
+    $directories = [Collections.Generic.Stack[IO.DirectoryInfo]]::new()
+    $directories.Push([IO.DirectoryInfo]::new($repositoryRoot))
+    $files = while ($directories.Count -gt 0) {
+        $directory = $directories.Pop()
+        if (($directory.FullName + '/') -match '[\\/](obj|bin|\.artifacts|TestResults|Migrations)[\\/]') { continue }
+        foreach ($child in $directory.EnumerateDirectories()) {
+            if (($child.Attributes -band ([IO.FileAttributes]::Hidden -bor [IO.FileAttributes]::ReparsePoint)) -eq 0) {
+                $directories.Push($child)
+            }
+        }
+        foreach ($file in $directory.EnumerateFiles('*.cs')) {
+            if (($file.Attributes -band [IO.FileAttributes]::Hidden) -eq 0 -and $file.Name -notmatch '\.(Designer|g)\.cs$') { $file }
+        }
+    }
+    $files | Sort-Object FullName
 )
 $sourceDocuments = @(
     foreach ($file in $sourceFiles) {

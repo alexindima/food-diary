@@ -2,6 +2,11 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+$phaseTimer = [Diagnostics.Stopwatch]::StartNew()
+function Write-CodeGraphRegressionTiming([string]$Phase) {
+    Write-Host "Code graph regression '$Phase': $([Math]::Round($phaseTimer.Elapsed.TotalSeconds, 2))s."
+    $phaseTimer.Restart()
+}
 & node --test (Join-Path $PSScriptRoot 'code-graph-performance.test.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Code graph snapshot/process regression tests failed.' }
 & node (Join-Path $PSScriptRoot 'Test-LlmWikiRankingPathLayout.mjs')
@@ -34,6 +39,7 @@ $recipesSourcePrefix = if (Test-Path -LiteralPath (Join-Path $repositoryRoot $fl
     throw 'Unable to locate RecipeNutritionUpdater for the code-graph regression.'
 }
 $russianServerQuery = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('0L/QvtC00LrQu9GO0YfQuNGB0Ywg0YHQtdGA0LLQtdGA0YM='))
+Write-CodeGraphRegressionTiming 'process and ranking fixtures'
 $build = & $manager build -Format Json | ConvertFrom-Json
 & (Join-Path $PSScriptRoot 'Test-LlmWikiCodeGraphPathTransport.ps1')
 if ([int]$build.files -lt 100 -or [int]$build.symbols -lt 100) { throw 'Code graph build produced an implausibly small repository graph.' }
@@ -123,6 +129,7 @@ $warm = & $manager build -Format Json | ConvertFrom-Json
 if ([int]$warm.updated -ne 0 -or [int]$warm.scanned -ne 0) { throw 'Unchanged code graph build was not incremental.' }
 if ([int]$warm.compiledIndexes.refreshed -ne 0) { throw 'Unchanged compiled-index projection was not incremental.' }
 if ([int]$warm.contextSearch.documents -lt 1000) { throw 'Code graph FTS projection contains too few repository documents.' }
+Write-CodeGraphRegressionTiming 'build, projections and incremental no-op'
 $fts = & $manager search -Query 'Recipe nutrition updater' -Limit 20 -SkipRefresh -Format Json | ConvertFrom-Json
 if (-not $fts.ready -or
     @($fts.records | Where-Object path -eq "$recipesSourcePrefix/Services/RecipeNutritionUpdater.cs").Count -ne 1 -or
@@ -179,14 +186,17 @@ $symbol = & $manager symbol -Query RecipeNutritionUpdater -Format Json | Convert
 if (@($symbol.symbols | Where-Object path -eq "$recipesSourcePrefix/Services/RecipeNutritionUpdater.cs").Count -ne 1) {
     throw 'Code graph symbol query did not locate RecipeNutritionUpdater.'
 }
-$consumers = & $manager consumers -Query IRecipeOverviewReadService -Limit 100 -Format Json | ConvertFrom-Json
+# The symbol call above retains coverage of automatic refresh. The explicit
+# builds already verified freshness and no-op behavior; these read-only queries
+# share those unchanged inputs and need no additional full repository refresh.
+$consumers = & $manager consumers -Query IRecipeOverviewReadService -Limit 100 -SkipRefresh -Format Json | ConvertFrom-Json
 foreach ($requiredConsumer in @(
     "$recipesSourcePrefix/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs"
     'Modules/Recipes/Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs'
 )) {
     if ($requiredConsumer -notin @($consumers.consumers.path)) { throw "Code graph omitted expected consumer: $requiredConsumer" }
 }
-$impact = & $manager impact -ChangedPath $recipesBoundary -Limit 500 -Format Json | ConvertFrom-Json
+$impact = & $manager impact -ChangedPath $recipesBoundary -Limit 500 -SkipRefresh -Format Json | ConvertFrom-Json
 if (@($impact.paths).Count -lt 20 -or @($impact.references).Count -eq 0 -or @($impact.consumers).Count -eq 0) {
     throw 'Code graph module impact did not expose the expected Recipes boundary.'
 }
@@ -197,7 +207,7 @@ if (@(Compare-Object @($scanConsumers.consumers.path) @($graphConsumers.consumer
     $graphConsumers.declarationPath -ne $scanConsumers.declarationPath) {
     throw 'Graph-prefiltered contract consumers differ from the authoritative repository scan.'
 }
-$coverage = & $manager coverage -Format Json | ConvertFrom-Json
+$coverage = & $manager coverage -SkipRefresh -Format Json | ConvertFrom-Json
 $powerShellCoverage = @($coverage.languages | Where-Object language -eq 'powershell')
 if ($powerShellCoverage.Count -ne 1 -or [int]$powerShellCoverage[0].files -lt 100) {
     throw 'Code graph coverage omitted the repository PowerShell tool surface.'
@@ -208,13 +218,13 @@ foreach ($requiredKind in @('di-service','mediator-handler','method-call','type-
 foreach ($shadow in @($coverage.legacySymbolCoverage)) {
     if ([int]$shadow.missing -ne 0) { throw "Graph shadow coverage is incomplete for $($shadow.index): $($shadow.missing) symbol(s) missing." }
 }
-$recipeRelations = & $manager relations -ChangedPath $recipesBoundary -RelationKind mediator-handler -Limit 100 -Format Json | ConvertFrom-Json
+$recipeRelations = & $manager relations -ChangedPath $recipesBoundary -RelationKind mediator-handler -Limit 100 -SkipRefresh -Format Json | ConvertFrom-Json
 if (@($recipeRelations.relations | Where-Object { $_.target -eq 'CreateRecipeCommand' -and $_.path -match 'CreateRecipeCommandHandler.cs$' }).Count -ne 1) {
     throw 'Typed graph did not preserve mediator handler provenance for CreateRecipeCommand.'
 }
-$migrationRelations = & $manager relations -ChangedPath 'FoodDiary.Infrastructure/Migrations/20251108210736_InitialCreate.cs' -RelationKind migration-table -Limit 100 -Format Json | ConvertFrom-Json
+$migrationRelations = & $manager relations -ChangedPath 'FoodDiary.Infrastructure/Migrations/20251108210736_InitialCreate.cs' -RelationKind migration-table -Limit 100 -SkipRefresh -Format Json | ConvertFrom-Json
 if (@($migrationRelations.relations).Count -eq 0) { throw 'Typed graph did not preserve migration table provenance.' }
-$namespaceTrace = & $manager trace -Query 'FoodDiary.Presentation.Api.Features.Auth' -Limit 100 -Format Json | ConvertFrom-Json
+$namespaceTrace = & $manager trace -Query 'FoodDiary.Presentation.Api.Features.Auth' -Limit 100 -SkipRefresh -Format Json | ConvertFrom-Json
 if (@($namespaceTrace.consumers | Where-Object { $_.relationKind -eq 'namespace-filter' -and $_.path -match 'ControllerConventionsTests.cs$' }).Count -eq 0 -or
     @($namespaceTrace.namespaceFilters | Where-Object { [int]$_.matchedDeclarations -gt 0 }).Count -eq 0) {
     throw 'Code graph did not connect a namespace convention literal to matching production declarations.'
@@ -224,7 +234,7 @@ if (@($graphTestPlan.recommended | Where-Object { $_ -match 'RecipesFeatureTests
     @($graphTestPlan.required | Where-Object { $_ -match 'RecipesFeatureTests\.cs$' }).Count -ne 0) {
     throw 'Graph-only test plan did not classify a transitive Recipes test consumer as recommended.'
 }
-$cyclePredictionImpact = & $manager impact -ChangedPath 'Modules/Cycles/Application/Services/CyclePredictionService.cs' -Limit 100 -Format Json | ConvertFrom-Json
+$cyclePredictionImpact = & $manager impact -ChangedPath 'Modules/Cycles/Application/Services/CyclePredictionService.cs' -Limit 100 -SkipRefresh -Format Json | ConvertFrom-Json
 if (@($cyclePredictionImpact.consumers | Where-Object { $_.language -ne 'csharp' }).Count -gt 0 -or
     @($cyclePredictionImpact.references | Where-Object { $_.declarationPath -match '^FoodDiary\.Web\.Client/' }).Count -gt 0) {
     throw 'C# cycle prediction impact retained an unexplained cross-language token link.'
@@ -255,6 +265,7 @@ foreach ($case in $auditRankingCases) {
     $matches = if ($case.ExpectedPrefix) { $topPath.StartsWith($case.ExpectedPrefix, [StringComparison]::Ordinal) } else { $topPath -match $case.ExpectedPattern }
     if (-not $matches) { throw "Audit ranking regression for '$($case.Query)': top path was '$topPath'." }
 }
+Write-CodeGraphRegressionTiming 'search, graph queries and test plans'
 $graphArtifactDirectory = Join-Path $repositoryRoot '.artifacts/llm-wiki/code-graph'
 $corruptDatabaseName = "corruption-recovery-$([Guid]::NewGuid().ToString('N')).sqlite"
 $corruptDatabasePath = Join-Path $graphArtifactDirectory $corruptDatabaseName
@@ -306,4 +317,5 @@ try {
     }
     Remove-Item -LiteralPath $resolvedFixturePath -Recurse -Force -ErrorAction SilentlyContinue
 }
+Write-CodeGraphRegressionTiming 'corruption recovery and missing dependencies'
 Write-Host "LLM Wiki code graph regression passed: $($warm.files) files, $($warm.symbols) symbols, incremental no-op and Recipes queries are valid."

@@ -29,7 +29,7 @@ function Get-Properties {
 function Get-PropertyValue {
     param($Object, [string]$Name)
     if ($null -eq $Object) { return $null }
-    $property = $Object.PSObject.Properties | Where-Object Name -eq $Name | Select-Object -First 1
+    $property = $Object.PSObject.Properties[$Name]
     if ($null -eq $property) { return $null }
     $property.Value
 }

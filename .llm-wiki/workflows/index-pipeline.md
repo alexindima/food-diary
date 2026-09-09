@@ -165,7 +165,11 @@ regression suites. These measurements do not change assertions or SLA limits.
 
 Other groups run serially after that batch. Shared-checkout mutation fixtures and performance-sensitive
 SLA fixtures stay serial, so the context-cache cold-start budget is measured
-without contention from other smoke workers. The serial `context-bundle` group
+without contention from other smoke workers. The legacy `context-bundle` name
+expands to `context-search-evals` (parallel search-quality and Node/.NET parity)
+and `context-retrieval` (serial latency-sensitive checks). Both are included in
+the full catalog; no corpus, assertion or latency threshold is removed.
+The serial `context-retrieval` group
 owns query-context compiled-index SQLite/JSON parity, payload-reduction,
 source-hash, and transport-envelope checks. The graph-dependent `task-baseline`
 and query-cache groups separately guard exact diff-context and task-brief parity

@@ -11,6 +11,17 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $changes = [System.Collections.Generic.List[object]]::new()
 . (Join-Path $PSScriptRoot 'LlmWikiDependencyManifest.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+
+# Ask Git once which tracked paths differ; unchanged manifests do not need a
+# separate git-show process. Untracked manifests remain new.
+$changedPaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+foreach ($path in @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', '--no-renames', $BaseRef, '--'))) {
+    $null = $changedPaths.Add($path)
+}
+foreach ($path in @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard', '--'))) {
+    $null = $changedPaths.Add($path)
+}
 
 function Get-BaseText {
     param([string]$Path)
@@ -42,16 +53,17 @@ function Convert-ToComparableText([string]$Value) {
 
 $manifestPaths = @(
     @(
-        git -C $repositoryRoot ls-files -- '*.csproj' 'Directory.Build.props' ':(glob)**/package.json'
-        git -C $repositoryRoot ls-files --others --exclude-standard -- '*.csproj' 'Directory.Build.props' ':(glob)**/package.json'
+        Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--', '*.csproj', 'Directory.Build.props', ':(glob)**/package.json')
+        Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard', '--', '*.csproj', 'Directory.Build.props', ':(glob)**/package.json')
     ) | Where-Object { $_ } | Sort-Object -Unique
 )
 $inventory = [System.Collections.Generic.List[object]]::new()
 foreach ($path in $manifestPaths) {
+    if (-not $RepositoryWide -and -not $changedPaths.Contains($path)) { continue }
     $absolutePath = Join-Path $repositoryRoot $path
     $exists = Test-Path -LiteralPath $absolutePath -PathType Leaf
     $extension = [IO.Path]::GetExtension($path)
-    $beforeText = Get-BaseText $path
+    $beforeText = if ($changedPaths.Contains($path)) { Get-BaseText $path } else { $null }
     if ($null -eq $beforeText) {
         $beforeText = if ($extension -in @('.csproj', '.props')) { '<Project />' } else { '{}' }
     }
@@ -63,6 +75,7 @@ foreach ($path in $manifestPaths) {
         '{}'
     }
 
+    if (-not $changedPaths.Contains($path)) { $beforeText = $afterText }
     $beforePackages = @{}
     $afterPackages = @{}
     if ($extension -in @('.csproj', '.props')) {
@@ -112,8 +125,9 @@ foreach ($path in $manifestPaths) {
     }
 }
 
-$lockfilePaths = @(git -C $repositoryRoot ls-files -- 'package-lock.json' ':(glob)**/package-lock.json' | Where-Object { $_ } | Sort-Object -Unique)
+$lockfilePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--', 'package-lock.json', ':(glob)**/package-lock.json') | Where-Object { $_ } | Sort-Object -Unique)
 foreach ($path in $lockfilePaths) {
+    if (-not $changedPaths.Contains($path)) { continue }
     $beforeText = Get-BaseText $path
     $absolutePath = Join-Path $repositoryRoot $path
     if ($null -eq $beforeText -or -not (Test-Path -LiteralPath $absolutePath)) { continue }

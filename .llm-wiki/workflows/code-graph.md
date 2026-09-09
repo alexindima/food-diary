@@ -613,6 +613,13 @@ Run the regression and benchmark with:
 ./.llm-wiki/tools/Measure-LlmWikiCodeGraph.ps1
 ```
 
+The regression reports separate timings for process/ranking fixtures, build and
+projection checks, graph queries, and corruption recovery. It verifies explicit
+builds and an incremental no-op, then retains an automatic-refresh symbol query.
+Seven later read-only manager queries use `-SkipRefresh` against those unchanged
+inputs. All result assertions and isolated corruption/dependency fixtures remain
+enabled; ordinary caller refresh behavior is unchanged.
+
 The benchmark uses Recipes as a stable cross-layer scenario. Compare exact
 symbol trace and contract consumers directly; module impact is broader than the
 specialized extraction-readiness analyzer and should be assessed for relevance

@@ -82,7 +82,11 @@ Compact module research scopes discovery to current module sources, prints
 phase progress, reuses the content-addressed research cache, and defers Git
 history. Extraction readiness scans core Application namespace and public-type
 references, static helpers, mediator types, DI registrations, the executable
-module dependency graph, and available extracted project references. The
+module dependency graph, and available extracted project references. Each
+uncached analysis reads each C# source once and reuses that invocation-local
+text for dependency, contract, and consumer scans. The text snapshot is rebuilt
+on the next call, including dependency fixtures; it adds no persistent cache.
+The
 physical source set is authoritative for ownership: multiple logical feature
 namespaces compiled into the same target project are reported as internal
 features, not external module dependencies. References to namespaces that are

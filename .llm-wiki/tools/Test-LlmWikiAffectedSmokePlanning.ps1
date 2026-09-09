@@ -26,11 +26,11 @@ if ($evalGroups -notcontains 'adaptive-evals' -or $evalGroups -contains 'adaptiv
     throw 'Adaptive eval orchestration must not replay the workflow-routing regression group.'
 }
 $contextEvalGroups = @(Get-Groups '.llm-wiki/evals/context-search-unseen-20260826.json')
-if ($contextEvalGroups -notcontains 'adaptive-evals' -or $contextEvalGroups -notcontains 'context-bundle') {
+if ($contextEvalGroups -notcontains 'adaptive-evals' -or $contextEvalGroups -notcontains 'context-search-evals' -or $contextEvalGroups -notcontains 'context-retrieval') {
     throw 'Context-search corpora must run both adaptive evals and the SQL context regression suite.'
 }
 $contextRankingGroups = @(Get-Groups '.llm-wiki/policies/context-search-ranking.json')
-if ($contextRankingGroups -notcontains 'context-bundle') {
+if ($contextRankingGroups -notcontains 'context-search-evals' -or $contextRankingGroups -notcontains 'context-retrieval') {
     throw 'Context-search ranking policy changes must invalidate the SQL context regression suite.'
 }
 $combinedAdaptiveGroups = @(Get-Groups @(
@@ -102,7 +102,7 @@ foreach ($group in @('read-only-isolation', 'json-cold-checkout')) {
 if (@($fullFocusedPlan.serialGroups) -notcontains 'read-only-retrieval' -or @($fullFocusedPlan.groups) -contains 'read-only-guard') {
     throw 'Read-only retrieval must stay behind shared graph writers, without replaying the legacy aggregate.'
 }
-if (@($fullFocusedPlan.serialGroups) -notcontains 'context-bundle') {
+if (@($fullFocusedPlan.serialGroups) -notcontains 'context-retrieval' -or @($fullFocusedPlan.parallelGroups) -notcontains 'context-search-evals' -or @($fullFocusedPlan.groups) -contains 'context-bundle') {
     throw 'The context-cache SLA fixture must remain isolated from parallel smoke groups.'
 }
 if (@($fullFocusedPlan.serialGroups) -notcontains 'trace-output') {
@@ -119,6 +119,10 @@ if (@($forcedPlan.groups) -notcontains 'strict-shapes') {
     throw 'An explicitly requested focused group was lost when the changed-path collection was empty.'
 }
 
+$contextAlias = & $planner -ChangedPath @() -RequestedGroup context-bundle -Plan -Format Json | ConvertFrom-Json
+if (($contextAlias.groups -join ',') -cne 'context-retrieval,context-search-evals') {
+    throw 'Legacy context-bundle alias must retain both quality and isolated retrieval checks.'
+}
 $readOnlyGroups = @('json-cold-checkout', 'read-only-isolation', 'read-only-retrieval')
 foreach ($scope in @(@{ ChangedPath = @() }, @{ ChangedPath = @('.llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1') })) {
     $legacyPlan = & $planner @scope -RequestedGroup read-only-guard -Plan -Format Json | ConvertFrom-Json

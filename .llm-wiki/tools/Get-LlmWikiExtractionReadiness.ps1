@@ -53,6 +53,16 @@ $moduleSourcePaths = @($sourcePaths | Where-Object {
 $moduleSourcePaths += @($DependencyFixturePath | Where-Object { $_ } | ForEach-Object { ConvertTo-LlmWikiRepositoryPath $_ })
 $moduleSourcePaths = @($moduleSourcePaths | Sort-Object -Unique)
 
+# Keep one invocation-local source snapshot. Contract consumers revisit the same
+# files for every leaking interface; do not repeat filesystem reads in that loop.
+# Rebuild on each invocation so edits and dependency fixtures are never stale.
+$sourceText = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::Ordinal)
+foreach ($path in @($sourcePaths) + @($moduleSourcePaths)) {
+    if (-not $sourceText.ContainsKey($path)) {
+        $sourceText[$path] = [IO.File]::ReadAllText((Join-Path $repositoryRoot $path))
+    }
+}
+
 $dependencyConfigPath = Join-Path $repositoryRoot 'docs/architecture/module-dependencies.json'
 $dependencyConfig = if (Test-Path -LiteralPath $dependencyConfigPath -PathType Leaf) {
     Get-Content -LiteralPath $dependencyConfigPath -Raw | ConvertFrom-Json
@@ -64,7 +74,7 @@ $declaredDependencies = @(
 )
 $internalFeatureNamespaces = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 foreach ($path in $moduleSourcePaths) {
-    $text = [IO.File]::ReadAllText((Join-Path $repositoryRoot $path))
+    $text = $sourceText[$path]
     $scanText = [regex]::Replace($text, '(?s)"(?:\\.|[^"\\])*"|//[^\r\n]*|/\*.*?\*/', { param($match) ' ' * $match.Length })
     foreach ($match in [regex]::Matches($scanText, '(?m)^\s*namespace\s+FoodDiary\.Application\.(?<feature>[A-Z][A-Za-z0-9_]+)(?:\.(?<subfeature>[A-Z][A-Za-z0-9_]+))?(?:\.|\s*[;{])')) {
         $feature = $match.Groups['feature'].Value
@@ -76,7 +86,7 @@ foreach ($path in $moduleSourcePaths) {
 }
 $sourceDependencies = [Collections.Generic.List[object]]::new()
 foreach ($path in $moduleSourcePaths) {
-    $text = [IO.File]::ReadAllText((Join-Path $repositoryRoot $path))
+    $text = $sourceText[$path]
     $scanText = [regex]::Replace($text, '(?s)"(?:\\.|[^"\\])*"|//[^\r\n]*|/\*.*?\*/', { param($match) ' ' * $match.Length })
     foreach ($match in [regex]::Matches($scanText, '\bFoodDiary\.Application\.(?<module>[A-Z][A-Za-z0-9_]+)(?:\.[A-Za-z0-9_]+)*')) {
         $dependencyModule = $match.Groups['module'].Value
@@ -105,7 +115,7 @@ $diRegistrations = @(
     $sourcePaths |
         ForEach-Object {
             $path = $_
-            $text = [IO.File]::ReadAllText((Join-Path $repositoryRoot $path))
+            $text = $sourceText[$path]
             $moduleRegistration = "Add$($Module)Module"
             $moduleOwnedPath = $path.StartsWith("Modules/$Module/", [StringComparison]::OrdinalIgnoreCase)
             $callsExtractedModule = -not $moduleOwnedPath -and $path -notin $moduleSourcePaths -and $text -match "\b$([regex]::Escape($moduleRegistration))\s*\("
@@ -124,9 +134,7 @@ $diRegistrations = @(
 
 $contracts = [Collections.Generic.List[object]]::new()
 foreach ($path in $sourcePaths) {
-    $absolutePath = Join-Path $repositoryRoot $path
-    if (-not (Test-Path -LiteralPath $absolutePath -PathType Leaf)) { continue }
-    $text = [IO.File]::ReadAllText($absolutePath)
+    $text = $sourceText[$path]
     foreach ($match in [regex]::Matches($text, '(?ms)public\s+interface\s+(?<name>I[A-Za-z0-9_]+)(?:\s*:\s*(?<base>[^\{]+))?\s*\{(?<body>.*?)\}')) {
         $body = $match.Groups['body'].Value
         $aggregateMethods = @([regex]::Matches($body, "(?m)^\s*(?<return>[^;\r\n]*\b$([regex]::Escape($aggregateName))\??(?:[>, ])[^;\r\n]*)\s+(?<method>[A-Za-z_]\w*)\s*\(") | ForEach-Object { [pscustomobject]@{ name = $_.Groups['method'].Value; returns = $_.Groups['return'].Value.Trim() } })
@@ -164,7 +172,7 @@ foreach ($contract in $contracts | Where-Object { $leakingNames.Contains($_.name
     $escaped = [regex]::Escape($contract.name)
     foreach ($consumerPath in $sourcePaths) {
         if ($consumerPath -eq $contract.path) { continue }
-        $consumerText = [IO.File]::ReadAllText((Join-Path $repositoryRoot $consumerPath))
+        $consumerText = $sourceText[$consumerPath]
         if ($consumerText -notmatch "\b$escaped\b") { continue }
         $composition = $consumerPath -match 'DependencyInjection|Initializer|Program\.cs$'
         $properties = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)

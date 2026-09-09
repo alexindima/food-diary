@@ -885,13 +885,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "86ec428d75db5790c2a5060146c77b83312bf40ea637b8dfab186dc7623e0384"
+          "sha256": "bb23d98717f22effe1dc74a3a6a2555d088fe94442b29fdb8f7809ae74ceab20"
         }
       ],
-      "reason": "Reviewed quality-index changes from the new module telemetry behavior, metric helper and focused outcome/concurrency tests. Hotspot statistics and direct-reference counts changed, but the documented distinction between static references and executed coverage remains correct.",
+      "reason": "Reviewed updated structural metrics and hotspot ordering for trace traversal, dependency diff selection, extraction source reuse and smoke routing. Quality query behavior and test-reference limitations remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "f9325bd5f5d5e56a6cb673796b59b0818971a50a",
-      "reviewedAtUtc": "2026-09-09T06:17:13.0355151Z"
+      "gitHead": "21907089d4eb8525d860915a91efe8c3d5523e42",
+      "reviewedAtUtc": "2026-09-09T12:13:08.9193524Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -983,17 +983,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "86ec428d75db5790c2a5060146c77b83312bf40ea637b8dfab186dc7623e0384"
-        },
-        {
-          "path": ".llm-wiki/generated/runtime-topology.json",
-          "sha256": "570711eae2f9fd78eaa30980606d5948a12cfc890b8721db2468c482d32d435b"
+          "sha256": "bb23d98717f22effe1dc74a3a6a2555d088fe94442b29fdb8f7809ae74ceab20"
         }
       ],
-      "reason": "Reviewed telemetry labels and outcome tests: labels contain only assembly module, CLR request name and fixed outcomes, excluding request payloads and error messages. Generated quality counts and runtime fingerprints changed without adding providers or trust boundaries; the security evidence workflow remains accurate.",
+      "reason": "Reviewed quality-index metric and hotspot changes for the Wiki performance edits. Security evidence classification, boundaries and documented limitations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "f9325bd5f5d5e56a6cb673796b59b0818971a50a",
-      "reviewedAtUtc": "2026-09-09T06:17:18.9432933Z"
+      "gitHead": "21907089d4eb8525d860915a91efe8c3d5523e42",
+      "reviewedAtUtc": "2026-09-09T12:13:10.6901763Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",
