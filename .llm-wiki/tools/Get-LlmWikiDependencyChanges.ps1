@@ -25,13 +25,12 @@ foreach ($path in @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -A
 
 function Get-BaseText {
     param([string]$Path)
-    $previousErrorActionPreference = $ErrorActionPreference
-    $ErrorActionPreference = 'SilentlyContinue'
-    $text = git -C $repositoryRoot show "${BaseRef}:$Path" 2>$null
-    $exitCode = $LASTEXITCODE
-    $ErrorActionPreference = $previousErrorActionPreference
-    if ($exitCode -ne 0) { return $null }
-    return ($text -join [Environment]::NewLine)
+    # Missing baseline blobs are expected for additions; keep that exit status
+    # inside the result instead of poisoning the caller's native exit status.
+    $result = Invoke-LlmWikiGitCommand -RepositoryRoot $repositoryRoot `
+        -Arguments @('show', "${BaseRef}:$Path") -AllowedExitCode @(0, 128)
+    if ($result.ExitCode -ne 0) { return $null }
+    return $result.StandardOutput
 }
 
 function Add-ManifestChange {
@@ -55,6 +54,8 @@ $manifestPaths = @(
     @(
         Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--', '*.csproj', 'Directory.Build.props', ':(glob)**/package.json')
         Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard', '--', '*.csproj', 'Directory.Build.props', ':(glob)**/package.json')
+        # Committed deletions are absent from ls-files but still carry baseline dependencies.
+        $changedPaths | Where-Object { $_ -cmatch '(\.csproj$|(^|/)Directory\.Build\.props$|(^|/)package\.json$)' }
     ) | Where-Object { $_ } | Sort-Object -Unique
 )
 $inventory = [System.Collections.Generic.List[object]]::new()
@@ -125,13 +126,15 @@ foreach ($path in $manifestPaths) {
     }
 }
 
-$lockfilePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--', 'package-lock.json', ':(glob)**/package-lock.json') | Where-Object { $_ } | Sort-Object -Unique)
+$lockfilePaths = @(@(
+    Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--', 'package-lock.json', ':(glob)**/package-lock.json')
+    $changedPaths | Where-Object { $_ -cmatch '(^|/)package-lock\.json$' }
+) | Where-Object { $_ } | Sort-Object -Unique)
 foreach ($path in $lockfilePaths) {
     if (-not $changedPaths.Contains($path)) { continue }
     $beforeText = Get-BaseText $path
     $absolutePath = Join-Path $repositoryRoot $path
-    if ($null -eq $beforeText -or -not (Test-Path -LiteralPath $absolutePath)) { continue }
-    $afterText = Get-Content -LiteralPath $absolutePath -Raw
+    $afterText = if (Test-Path -LiteralPath $absolutePath -PathType Leaf) { Get-Content -LiteralPath $absolutePath -Raw } else { $null }
     if ((Convert-ToComparableText $beforeText) -cne (Convert-ToComparableText $afterText)) {
         Add-ManifestChange 'npm' $path '(lockfile graph)' $null $null 'lockfile-changed'
     }
@@ -150,7 +153,7 @@ $result = [pscustomobject][ordered]@{
             npmManifestCount = @($inventory | Where-Object ecosystem -eq 'npm').Count
             packageReferenceCount = [int](($inventory | Measure-Object packageCount -Sum).Sum)
             uniquePackageCount = $uniqueInventoryPackages.Count
-            lockfileCount = $lockfilePaths.Count
+            lockfileCount = @($lockfilePaths | Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) -PathType Leaf }).Count
             manifests = @($inventory)
         }
     } else { $null })

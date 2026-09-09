@@ -40,6 +40,7 @@ try {
     & git -C $fixture add .
     & git -C $fixture -c user.name=WikiRegression -c user.email=wiki@example.invalid commit --quiet -m baseline
     if ($LASTEXITCODE -ne 0) { throw 'Unable to commit dependency fixture baseline.' }
+    $baseline = & git -C $fixture rev-parse HEAD
     Write-FixtureProject 'changed project.csproj' 'Changed' '2.0'
     Remove-Item -LiteralPath (Join-Path $fixture 'removed.csproj')
     Write-FixtureProject 'staged.csproj' 'Staged' '1.0'
@@ -57,6 +58,28 @@ try {
     foreach ($expected in @('Changed:version-changed', 'Removed:removed', 'Staged:added', 'Untracked:added', '(lockfile graph):lockfile-changed')) {
         if ($expected -notin @($diff.changes | ForEach-Object { "$($_.package):$($_.kind)" })) { throw "Missing dependency change: $expected" }
     }
+    & git -C $fixture add .
+    & git -C $fixture -c user.name=WikiRegression -c user.email=wiki@example.invalid commit --quiet -m changes
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to commit dependency fixture changes.' }
+    $committed = & $tool -BaseRef $baseline -RepositoryWide -Format Json | ConvertFrom-Json
+    if (($committed.changes | ConvertTo-Json -Depth 7 -Compress) -cne ($diff.changes | ConvertTo-Json -Depth 7 -Compress) -or
+        $committed.inventory.manifestCount -ne 4) { throw 'Committed dependency deletion differs from workspace deletion.' }
+
+    & git -C $fixture mv stable.csproj renamed.csproj
+    & git -C $fixture rm --quiet package-lock.json
+    & git -C $fixture -c user.name=WikiRegression -c user.email=wiki@example.invalid commit --quiet -m rename
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to commit dependency fixture rename.' }
+    $renamed = & $tool -BaseRef 'HEAD^' -RepositoryWide -Format Json | ConvertFrom-Json
+    if ($renamed.changeCount -ne 3 -or $renamed.inventory.lockfileCount -ne 0 -or
+        @($renamed.changes | Where-Object { $_.manifest -eq 'stable.csproj' -and $_.kind -eq 'removed' }).Count -ne 1 -or
+        @($renamed.changes | Where-Object { $_.manifest -eq 'renamed.csproj' -and $_.kind -eq 'added' }).Count -ne 1) {
+        throw 'Committed rename or lockfile deletion lost dependency evidence.'
+    }
+    [IO.File]::WriteAllText((Join-Path $fixture 'package-lock.json'), '{"lockfileVersion":3}')
+    $addedLock = & $tool -RepositoryWide -Format Json | ConvertFrom-Json
+    if ($LASTEXITCODE -ne 0) { throw 'An absent baseline lockfile leaked a failing native exit code.' }
+    if ($addedLock.changeCount -ne 1 -or $addedLock.changes[0].kind -ne 'lockfile-changed' -or
+        $addedLock.inventory.lockfileCount -ne 1) { throw 'Untracked lockfile addition was not reported.' }
     Write-FixtureProject 'changed project.csproj' 'Changed' '3.0'
     $edited = & $tool -Format Json | ConvertFrom-Json
     if (@($edited.changes | Where-Object package -eq 'Changed')[0].after -ne '3.0') { throw 'Dependency diff reused stale workspace text.' }

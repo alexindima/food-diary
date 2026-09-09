@@ -616,11 +616,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-      "nonBlankLines": 170,
-      "decisionPoints": 55,
+      "nonBlankLines": 179,
+      "decisionPoints": 56,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 87.9
+      "structuralRiskScore": 89.58
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
@@ -1194,11 +1194,11 @@
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1",
-      "nonBlankLines": 158,
-      "decisionPoints": 39,
+      "nonBlankLines": 161,
+      "decisionPoints": 40,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 63.66
+      "structuralRiskScore": 65.22
     },
     {
       "path": ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
@@ -1858,11 +1858,11 @@
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-      "nonBlankLines": 170,
-      "decisionPoints": 55,
+      "nonBlankLines": 179,
+      "decisionPoints": 56,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 87.9
+      "structuralRiskScore": 89.58
     },
     {
       "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",

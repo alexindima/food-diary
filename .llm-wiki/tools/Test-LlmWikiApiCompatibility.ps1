@@ -26,6 +26,13 @@ function Get-Properties {
     if ($null -eq $Object) { return @() }
     return @($Object.PSObject.Properties)
 }
+function Get-NamedProperty {
+    param($Object, [string]$Name)
+    if ($null -eq $Object) { return }
+    $property = $Object.PSObject.Properties[$Name]
+    # Emit nothing for absence; a present JSON null still has a property object.
+    if ($null -ne $property) { $property }
+}
 function Get-PropertyValue {
     param($Object, [string]$Name)
     if ($null -eq $Object) { return $null }
@@ -103,7 +110,7 @@ function Convert-CompactSchemaShape {
 function ConvertTo-ComparableOpenApi {
     param($Snapshot)
 
-    $snapshotEndpointsProperty = Get-Properties $Snapshot | Where-Object Name -eq 'Endpoints' | Select-Object -First 1
+    $snapshotEndpointsProperty = Get-NamedProperty $Snapshot 'Endpoints'
     if ($null -ne $snapshotEndpointsProperty) {
         $snapshotEndpoints = @($snapshotEndpointsProperty.Value)
         $paths = [ordered]@{}
@@ -249,7 +256,7 @@ function Compare-ContentContracts {
     )
 
     foreach ($beforeMedia in Get-Properties $BeforeContent) {
-        $afterMedia = Get-Properties $AfterContent | Where-Object Name -eq $beforeMedia.Name | Select-Object -First 1
+        $afterMedia = Get-NamedProperty $AfterContent $beforeMedia.Name
         $mediaLocation = "${Location}::$($beforeMedia.Name)"
         if ($null -eq $afterMedia) {
             Add-Change $Changes 'breaking' "removed-$ContractKind-media-type" $mediaLocation 'Documented media type was removed.'
@@ -262,7 +269,7 @@ function Compare-ContentContracts {
         }
     }
     foreach ($afterMedia in Get-Properties $AfterContent) {
-        if (@(Get-Properties $BeforeContent | Where-Object Name -eq $afterMedia.Name).Count -eq 0) {
+        if (@(Get-NamedProperty $BeforeContent $afterMedia.Name).Count -eq 0) {
             Add-Change $Changes 'additive' "added-$ContractKind-media-type" "${Location}::$($afterMedia.Name)" 'Documented media type was added.'
         }
     }
@@ -277,7 +284,7 @@ function Compare-HeaderContracts {
     )
 
     foreach ($beforeHeader in Get-Properties $BeforeHeaders) {
-        $afterHeader = Get-Properties $AfterHeaders | Where-Object Name -eq $beforeHeader.Name | Select-Object -First 1
+        $afterHeader = Get-NamedProperty $AfterHeaders $beforeHeader.Name
         $headerLocation = "${Location}::header.$($beforeHeader.Name)"
         if ($null -eq $afterHeader) {
             Add-Change $Changes 'breaking' 'removed-response-header' $headerLocation 'Documented response header was removed.'
@@ -290,7 +297,7 @@ function Compare-HeaderContracts {
         }
     }
     foreach ($afterHeader in Get-Properties $AfterHeaders) {
-        if (@(Get-Properties $BeforeHeaders | Where-Object Name -eq $afterHeader.Name).Count -eq 0) {
+        if (@(Get-NamedProperty $BeforeHeaders $afterHeader.Name).Count -eq 0) {
             Add-Change $Changes 'additive' 'added-response-header' "${Location}::header.$($afterHeader.Name)" 'Documented response header was added.'
         }
     }
@@ -306,9 +313,7 @@ function Compare-PayloadKeySets {
 
     if ($null -eq $BeforeNode -or $null -eq $AfterNode) { return }
     foreach ($beforeProperty in Get-Properties $BeforeNode) {
-        $afterProperty = Get-Properties $AfterNode |
-            Where-Object Name -eq $beforeProperty.Name |
-            Select-Object -First 1
+        $afterProperty = Get-NamedProperty $AfterNode $beforeProperty.Name
         if ($null -eq $afterProperty) { continue }
         $propertyLocation = if ([string]::IsNullOrWhiteSpace($Location)) {
             $beforeProperty.Name
@@ -369,13 +374,13 @@ function Compare-HttpDtoContent {
     $beforeRecords = Get-HttpDtoProperties $BeforeContent $Path
     $afterRecords = Get-HttpDtoProperties $AfterContent $Path
     foreach ($beforeRecord in Get-Properties $beforeRecords) {
-        $afterRecord = Get-Properties $afterRecords | Where-Object Name -eq $beforeRecord.Name | Select-Object -First 1
+        $afterRecord = Get-NamedProperty $afterRecords $beforeRecord.Name
         if ($null -eq $afterRecord) {
             Add-Change $Changes 'breaking' 'removed-http-dto' "${Path}::$($beforeRecord.Name)" 'Public HTTP DTO was removed.'
             continue
         }
         foreach ($beforeProperty in Get-Properties $beforeRecord.Value) {
-            $afterProperty = Get-Properties $afterRecord.Value | Where-Object Name -eq $beforeProperty.Name | Select-Object -First 1
+            $afterProperty = Get-NamedProperty $afterRecord.Value $beforeProperty.Name
             $location = "${Path}::$($beforeRecord.Name).$($beforeProperty.Name)"
             if ($null -eq $afterProperty) {
                 Add-Change $Changes 'breaking' 'removed-http-dto-property' $location 'Serialized HTTP DTO property was removed.'
@@ -386,7 +391,7 @@ function Compare-HttpDtoContent {
             }
         }
         foreach ($afterProperty in Get-Properties $afterRecord.Value) {
-            if (@(Get-Properties $beforeRecord.Value | Where-Object Name -eq $afterProperty.Name).Count -gt 0) { continue }
+            if (@(Get-NamedProperty $beforeRecord.Value $afterProperty.Name).Count -gt 0) { continue }
             $location = "${Path}::$($beforeRecord.Name).$($afterProperty.Name)"
             if ($afterProperty.Value.optional) {
                 Add-Change $Changes 'additive' 'added-http-dto-property' $location 'Optional serialized HTTP DTO property was added.'
@@ -396,7 +401,7 @@ function Compare-HttpDtoContent {
         }
     }
     foreach ($afterRecord in Get-Properties $afterRecords) {
-        if (@(Get-Properties $beforeRecords | Where-Object Name -eq $afterRecord.Name).Count -eq 0) {
+        if (@(Get-NamedProperty $beforeRecords $afterRecord.Name).Count -eq 0) {
             Add-Change $Changes 'additive' 'added-http-dto' "${Path}::$($afterRecord.Name)" 'Public HTTP DTO was added.'
         }
     }
@@ -423,8 +428,8 @@ $baseText = if ($PSBoundParameters.ContainsKey('BaseSnapshotContent')) {
 
 $beforeSource = $baseText | ConvertFrom-Json
 $afterSource = $currentText | ConvertFrom-Json
-$beforeHasEndpoints = $null -ne (Get-Properties $beforeSource | Where-Object Name -eq 'Endpoints' | Select-Object -First 1)
-$afterHasEndpoints = $null -ne (Get-Properties $afterSource | Where-Object Name -eq 'Endpoints' | Select-Object -First 1)
+$beforeHasEndpoints = $null -ne (Get-NamedProperty $beforeSource 'Endpoints')
+$afterHasEndpoints = $null -ne (Get-NamedProperty $afterSource 'Endpoints')
 $snapshotFormat = if ($beforeHasEndpoints -or $afterHasEndpoints) {
     'endpoint-contract'
 } else {
@@ -437,7 +442,7 @@ $httpMethods = @('get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'tr
 
 foreach ($pathProperty in Get-Properties $before.paths) {
     $path = $pathProperty.Name
-    $afterPathProperty = Get-Properties $after.paths | Where-Object Name -eq $path | Select-Object -First 1
+    $afterPathProperty = Get-NamedProperty $after.paths $path
     if ($null -eq $afterPathProperty) {
         Add-Change $changes 'breaking' 'removed-path' $path 'Public API path was removed.'
         continue
@@ -445,9 +450,7 @@ foreach ($pathProperty in Get-Properties $before.paths) {
     foreach ($methodProperty in Get-Properties $pathProperty.Value) {
         if ($methodProperty.Name -notin $httpMethods) { continue }
         $method = $methodProperty.Name
-        $afterMethodProperty = Get-Properties $afterPathProperty.Value |
-            Where-Object Name -eq $method |
-            Select-Object -First 1
+        $afterMethodProperty = Get-NamedProperty $afterPathProperty.Value $method
         if ($null -eq $afterMethodProperty) {
             Add-Change $changes 'breaking' 'removed-operation' "$($method.ToUpperInvariant()) $path" 'Public API operation was removed.'
             continue
@@ -513,9 +516,7 @@ foreach ($pathProperty in Get-Properties $before.paths) {
         }
 
         foreach ($responseProperty in Get-Properties $methodProperty.Value.responses) {
-            $afterResponseProperty = Get-Properties $afterMethodProperty.Value.responses |
-                Where-Object Name -eq $responseProperty.Name |
-                Select-Object -First 1
+            $afterResponseProperty = Get-NamedProperty $afterMethodProperty.Value.responses $responseProperty.Name
             $stillPresent = @(
                 $afterResponseProperty
             ).Count -gt 0
@@ -538,8 +539,7 @@ foreach ($pathProperty in Get-Properties $before.paths) {
         }
         foreach ($responseProperty in Get-Properties $afterMethodProperty.Value.responses) {
             $wasPresent = @(
-                Get-Properties $methodProperty.Value.responses |
-                    Where-Object Name -eq $responseProperty.Name
+                Get-NamedProperty $methodProperty.Value.responses $responseProperty.Name
             ).Count -gt 0
             if (-not $wasPresent) {
                 if ([string]$responseProperty.Name -eq '413') {
@@ -554,15 +554,15 @@ foreach ($pathProperty in Get-Properties $before.paths) {
 
 foreach ($pathProperty in Get-Properties $after.paths) {
     $path = $pathProperty.Name
-    $existed = @(Get-Properties $before.paths | Where-Object Name -eq $path).Count -gt 0
+    $existed = @(Get-NamedProperty $before.paths $path).Count -gt 0
     if (-not $existed) {
         Add-Change $changes 'additive' 'added-path' $path 'Public API path was added.'
         continue
     }
-    $beforePath = (Get-Properties $before.paths | Where-Object Name -eq $path | Select-Object -First 1).Value
+    $beforePath = (Get-NamedProperty $before.paths $path).Value
     foreach ($methodProperty in Get-Properties $pathProperty.Value) {
         if ($methodProperty.Name -notin $httpMethods) { continue }
-        if (@(Get-Properties $beforePath | Where-Object Name -eq $methodProperty.Name).Count -eq 0) {
+        if (@(Get-NamedProperty $beforePath $methodProperty.Name).Count -eq 0) {
             Add-Change $changes 'additive' 'added-operation' "$($methodProperty.Name.ToUpperInvariant()) $path" 'Public API operation was added.'
         }
     }
@@ -572,7 +572,7 @@ $beforeSchemas = $before.components.schemas
 $afterSchemas = $after.components.schemas
 foreach ($schemaProperty in Get-Properties $beforeSchemas) {
     $schemaName = $schemaProperty.Name
-    $afterSchemaProperty = Get-Properties $afterSchemas | Where-Object Name -eq $schemaName | Select-Object -First 1
+    $afterSchemaProperty = Get-NamedProperty $afterSchemas $schemaName
     if ($null -eq $afterSchemaProperty) {
         Add-Change $changes 'breaking' 'removed-schema' $schemaName 'Public component schema was removed.'
         continue
@@ -580,7 +580,7 @@ foreach ($schemaProperty in Get-Properties $beforeSchemas) {
     $beforeSchema = $schemaProperty.Value
     $afterSchema = $afterSchemaProperty.Value
     foreach ($property in Get-Properties $beforeSchema.properties) {
-        $afterProperty = Get-Properties $afterSchema.properties | Where-Object Name -eq $property.Name | Select-Object -First 1
+        $afterProperty = Get-NamedProperty $afterSchema.properties $property.Name
         if ($null -eq $afterProperty) {
             Add-Change $changes 'breaking' 'removed-schema-property' "$schemaName.$($property.Name)" 'Schema property was removed.'
             continue
@@ -596,7 +596,7 @@ foreach ($schemaProperty in Get-Properties $beforeSchemas) {
     $beforeRequired = @($beforeSchema.required)
     $afterRequired = @($afterSchema.required)
     foreach ($property in Get-Properties $afterSchema.properties) {
-        $existed = @(Get-Properties $beforeSchema.properties | Where-Object Name -eq $property.Name).Count -gt 0
+        $existed = @(Get-NamedProperty $beforeSchema.properties $property.Name).Count -gt 0
         if (-not $existed -and $property.Name -notin $afterRequired) {
             Add-Change $changes 'additive' 'added-schema-property' "$schemaName.$($property.Name)" 'Optional schema property was added.'
         }
@@ -608,7 +608,7 @@ foreach ($schemaProperty in Get-Properties $beforeSchemas) {
     }
 }
 foreach ($schemaProperty in Get-Properties $afterSchemas) {
-    if (@(Get-Properties $beforeSchemas | Where-Object Name -eq $schemaProperty.Name).Count -eq 0) {
+    if (@(Get-NamedProperty $beforeSchemas $schemaProperty.Name).Count -eq 0) {
         Add-Change $changes 'additive' 'added-schema' $schemaProperty.Name 'Public component schema was added.'
     }
 }

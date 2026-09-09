@@ -193,17 +193,17 @@
     {
       "pageId": "workflow-api-compatibility",
       "pagePath": ".llm-wiki/workflows/api-compatibility.md",
-      "pageSha256": "0d6adba3c4d6595ca442a79350bfcadafa1ea8364a359782139747dcf9a11608",
+      "pageSha256": "45f240d45bcf663e9be82c91096f8f6328b896356cc41475ef898b25b39ca7e8",
       "sources": [
         {
-          "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "3be835c24a3906cb9a1ddd8526a74ae5b2fd5a1340a1e797858da9c812367802"
+          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
+          "sha256": "674b02ef489d32a01407ddabf0b30d3838fcbe56cee5175e570e10e6d2b4c0c4"
         }
       ],
-      "reason": "Reviewed affected architecture and workflow pages against the refreshed Admin reporting, template revision and lesson publication sources. These pages describe unchanged boundary and review workflows; changes are additive owner contracts and generated indexes, not tooling semantics. 1202 architecture tests, regenerated API snapshots, PostgreSQL behavior tests and complete frontend verification pass. Release and data limitations are captured in docs/backend/ADMIN_REPORTING.md.",
+      "reason": "Reviewed direct named-property lookups against the existing compatibility rules. Real snapshot JSON is identical before and after; request, response, parameter, DTO and behavioral regressions pass, including manual absence/null/false/empty-array checks.",
       "baseRef": "HEAD",
-      "gitHead": "7f87154635a44205126c2fea2c19f87c98dc8217",
-      "reviewedAtUtc": "2026-09-08T21:31:33.7483207Z"
+      "gitHead": "47bb318212c751c1e3f3591541ad3bf1402b973e",
+      "reviewedAtUtc": "2026-09-09T20:35:51.6407311Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -885,13 +885,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bb23d98717f22effe1dc74a3a6a2555d088fe94442b29fdb8f7809ae74ceab20"
+          "sha256": "9dd775a2ad38fc11f79cb6a1ff06a26b5ac3bee737eee3fdc82a7d5bfa839f3a"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
+          "sha256": "eac37599f5e80a871c5fae3c75ffa2488e75a8480f294b83dff8636d5aea972b"
         }
       ],
-      "reason": "Reviewed updated structural metrics and hotspot ordering for trace traversal, dependency diff selection, extraction source reuse and smoke routing. Quality query behavior and test-reference limitations remain accurate.",
+      "reason": "Reviewed final quality-index diff for Wiki dependency baseline reading and code-graph transport. The dependency reader uses the existing process helper so expected missing blobs cannot leak native failure status. SQLite quality queries and static-evidence limitations are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "21907089d4eb8525d860915a91efe8c3d5523e42",
-      "reviewedAtUtc": "2026-09-09T12:13:08.9193524Z"
+      "gitHead": "47bb318212c751c1e3f3591541ad3bf1402b973e",
+      "reviewedAtUtc": "2026-09-09T20:39:42.8900266Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -983,13 +987,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bb23d98717f22effe1dc74a3a6a2555d088fe94442b29fdb8f7809ae74ceab20"
+          "sha256": "9dd775a2ad38fc11f79cb6a1ff06a26b5ac3bee737eee3fdc82a7d5bfa839f3a"
         }
       ],
-      "reason": "Reviewed quality-index metric and hotspot changes for the Wiki performance edits. Security evidence classification, boundaries and documented limitations are unchanged.",
+      "reason": "Reviewed final generated metrics changes confined to Wiki dependency and graph tools. Security classification, runtime boundaries and the navigation-only evidence contract are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "21907089d4eb8525d860915a91efe8c3d5523e42",
-      "reviewedAtUtc": "2026-09-09T12:13:10.6901763Z"
+      "gitHead": "47bb318212c751c1e3f3591541ad3bf1402b973e",
+      "reviewedAtUtc": "2026-09-09T20:39:43.8857491Z"
     },
     {
       "pageId": "workflow-similar-task-plan-reuse",

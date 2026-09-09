@@ -35,6 +35,10 @@ One Git diff identifies changed paths, including staged and working-tree edits;
 untracked manifests are added explicitly. Only changed manifests need historical
 blob reads. Unchanged files still appear in repository-wide inventories, while
 changed/deleted manifests and lockfiles retain their baseline comparison.
+This includes deletions already committed after `BaseRef`: a renamed manifest
+reports removed references at the old path and added references at the new path.
+Added and removed lockfiles both report `lockfile-changed`; inventory counts
+include only files present in the workspace.
 `-RepositoryWide` switches from diff-only output to a local manifest inventory:
 manifest and lockfile counts, NuGet/npm package-reference counts, unique packages,
 and per-manifest versions. The inventory does not contact advisory services and

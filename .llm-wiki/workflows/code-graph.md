@@ -80,6 +80,9 @@ The same database contains a versioned FTS5 projection named
 and quality records, Wiki and current documentation, and scoped `AGENTS.md`
 files. `Manage-LlmWikiCodeGraph.ps1 search` queries this projection with
 deterministic path, module, task-type, and source-kind ranking.
+For `search-batch -Format Json`, the PowerShell facade validates and forwards
+the native JSON directly, avoiding an intermediate PowerShell object tree and
+reserialization. The caller still parses the same result schema and rankings.
 PowerShell tools are indexed as code with function symbols and raw source text,
 so operational Wiki commands participate in natural-language retrieval.
 The companion `context_search_features` table stores indexed layer, module,

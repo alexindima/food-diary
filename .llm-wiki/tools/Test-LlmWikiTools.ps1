@@ -1117,6 +1117,11 @@ Write-CoreBlockTiming 'recovery visual QA and environment'
 Write-Host "LLM Wiki monolithic core phase completed in $([Math]::Round($totalStopwatch.Elapsed.TotalSeconds, 2))s."
 if ($Profile -eq 'Full') {
     $governedStopwatch = [Diagnostics.Stopwatch]::StartNew()
+    $governedBlockStopwatch = [Diagnostics.Stopwatch]::StartNew()
+    function Write-GovernedBlockTiming([string]$Name) {
+        Write-Host "LLM Wiki governed block '$Name' completed in $([Math]::Round($governedBlockStopwatch.Elapsed.TotalSeconds, 2))s."
+        $governedBlockStopwatch.Restart()
+    }
     Write-Host 'Starting governed task-workspace and orchestration smoke coverage.'
 $taskWorkspacePath = '.artifacts/llm-wiki/tasks/tool-smoke-workspace'
 $absoluteTaskWorkspacePath = Join-Path (Split-Path -Parent $wikiRoot) $taskWorkspacePath
@@ -1474,6 +1479,7 @@ try {
         [IO.File]::WriteAllText($impactPacketPath, $impactPacketRaw, [Text.UTF8Encoding]::new($false))
         if (Test-Path -LiteralPath $impactPath) { [IO.File]::Delete($impactPath) }
     }
+    Write-GovernedBlockTiming 'workspace invariants and impact'
     $repairEvidencePath = Join-Path $absoluteTaskWorkspacePath 'evidence.json'
     $repairRegistryPath = Join-Path $absoluteTaskWorkspacePath 'repair-loop.json'
     $failurePredictionPath = Join-Path $absoluteTaskWorkspacePath 'failure-prediction.json'
@@ -2332,6 +2338,7 @@ try {
         @($tamperedTelemetryCheck.issues) -contains 'Verification telemetry registry hash is invalid.'
     ) 'Verification telemetry accepted a tampered history event.'
     [IO.File]::WriteAllText($verificationTelemetryPath, $telemetryRecordedRaw, [Text.UTF8Encoding]::new($false))
+    Write-GovernedBlockTiming 'repair learning and telemetry'
     $verificationPlan = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationPlan.ps1') create `
         -WorkspacePath $taskWorkspacePath `
         -AsOfUtc ([DateTime]'2026-01-01T00:00:00Z') `
@@ -2471,6 +2478,7 @@ try {
     [IO.File]::Delete($riskCalibrationPath)
     [IO.File]::WriteAllText($verificationTelemetryPath, $verificationTelemetryRaw, [Text.UTF8Encoding]::new($false))
     [IO.File]::Delete($planConformancePath)
+    Write-GovernedBlockTiming 'verification plans and routing'
     $contextSecurityPath = Join-Path $absoluteTaskWorkspacePath 'context-security.json'
     $contextBundlePath = Join-Path $absoluteTaskWorkspacePath 'context-bundle.json'
     $contractAbsolutePath = Join-Path $repositoryRoot $contractPath
@@ -2724,6 +2732,7 @@ try {
         -WorkspacePath $taskWorkspacePath `
         -Format Json | ConvertFrom-Json
     Assert-Wiki $strategyRollbackCheck.valid 'Rolled-back context strategy failed integrity validation.'
+    Write-GovernedBlockTiming 'context security and strategy'
     $contextOutcomeRegistryPath = Join-Path $wikiRoot 'knowledge/context-strategy-outcomes.json'
     $contextOutcomeRegistryRaw = Get-Content -LiteralPath $contextOutcomeRegistryPath -Raw
     $modelOutcomeRegistryPath = Join-Path $wikiRoot 'knowledge/model-routing-outcomes.json'
@@ -3167,6 +3176,7 @@ try {
     [IO.File]::Delete($contextBudgetPath)
     [IO.File]::Delete($contextBundlePath)
     [IO.File]::Delete($contextSecurityPath)
+    Write-GovernedBlockTiming 'learning outcomes and context tampering'
     $workspaceDescriptorPath = Join-Path $absoluteTaskWorkspacePath 'workspace.json'
     $originalWorkspaceDescriptor = Get-Content -LiteralPath $workspaceDescriptorPath -Raw
     $tamperedWorkspaceDescriptor = $originalWorkspaceDescriptor | ConvertFrom-Json
@@ -3531,6 +3541,7 @@ try {
         [IO.File]::WriteAllText($memoryRegistryPath, $memoryRegistryRaw, [Text.UTF8Encoding]::new($false))
         [IO.File]::WriteAllText($evidencePathForAudit, $memoryCandidateEvidenceRaw, [Text.UTF8Encoding]::new($false))
     }
+    Write-GovernedBlockTiming 'migration policy and audit'
     $taskExport = & (Join-Path $toolsRoot 'Export-LlmWikiTaskWorkspace.ps1') export `
         -WorkspacePath $taskWorkspacePath `
         -Path $taskExportPath `
@@ -3834,6 +3845,7 @@ try {
         [IO.File]::WriteAllText((Join-Path $absoluteTaskWorkspacePath 'journal.json'), $similarityJournalRaw, [Text.UTF8Encoding]::new($false))
     }
     Remove-Item -LiteralPath (Join-Path $absoluteCacheSourceWorkspacePath 'completion.json') -Force
+    Write-GovernedBlockTiming 'export import and evidence reuse'
     $conflictGraph = & (Join-Path $toolsRoot 'Get-LlmWikiTaskGraph.ps1') -Format Json | ConvertFrom-Json
     $cacheConflictEdge = @($conflictGraph.edges | Where-Object {
         $_.type -eq 'write-conflict' -and $_.left -in @('tool-smoke-workspace', 'tool-smoke-cache-source') -and $_.right -in @('tool-smoke-workspace', 'tool-smoke-cache-source')
@@ -3909,6 +3921,7 @@ try {
         }
     }
     if ($Profile -eq 'Full') {
+        Write-GovernedBlockTiming 'conflicts and orchestration preparation'
         $extendedStopwatch = [Diagnostics.Stopwatch]::StartNew()
         Write-Host 'Starting extended orchestration smoke coverage.'
         $blockedSchedule = & (Join-Path $toolsRoot 'Get-LlmWikiTaskSchedule.ps1') -MaxConcurrency 2 -Format Json | ConvertFrom-Json
@@ -4932,6 +4945,7 @@ try {
             }
         }
         }
+        Write-GovernedBlockTiming 'extended orchestration'
         $extendedStopwatch.Stop()
         Write-Host "Extended orchestration smoke coverage passed in $([Math]::Round($extendedStopwatch.Elapsed.TotalSeconds, 2))s."
     } else {
@@ -5093,6 +5107,7 @@ try {
         Remove-Item -LiteralPath $absoluteTaskWorkspacePath -Recurse -Force
     }
 }
+    Write-GovernedBlockTiming 'lineage handoff and refresh'
     $governedStopwatch.Stop()
     Write-Host "Governed task-workspace and orchestration smoke coverage passed in $([Math]::Round($governedStopwatch.Elapsed.TotalSeconds, 2))s."
 } else {

@@ -495,6 +495,11 @@ parallel focused catalog; `-MaxConcurrency` controls its worker count. Pass
 `-Profile Core` or `-Profile Full` explicitly to run legacy monolithic coverage;
 those profiles print phase timings, and `Full` includes the exhaustive
 orchestration audit.
+`Full` also prints ten sequential governed block durations for workspace
+invariants, repair learning, verification planning, context strategy, learning
+outcomes, migration/audit, evidence reuse, conflict preparation, extended
+orchestration, and final handoff. Their sum is the governed phase; the extended
+orchestration summary repeats one block and is not an additional phase.
 Full verification completes the index freshness checks before starting the stateful
 tools. This prevents tool-smoke readers from observing generated files while
 index workers are replacing them. Index workers remain concurrent within their

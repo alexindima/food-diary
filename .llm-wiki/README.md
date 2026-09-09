@@ -307,6 +307,9 @@ The unified developer entrypoint is:
 API compatibility reports schema-breaking/additive changes separately from
 behavioral restrictions such as a newly introduced `413` request-size limit.
 HTTP DTO fallback analysis is Roslyn-based rather than regex-based.
+Dependency changes include committed manifest deletions and renames, plus
+added or removed npm lockfiles. Repository inventory counts only files that
+still exist in the current workspace.
 
 `lint` is the fast deterministic page gate. It enforces the front matter
 contract, unique ids, normalized and existing sources, generated-page
@@ -329,6 +332,10 @@ requests use `Focused`, while pushes, the weekly schedule, and manual CI runs us
 `Full`. The Wiki gate is a separate job, so it does not block backend restore,
 build, and tests. Each verification group records its phase, profile, duration,
 run id, and failure category in local workflow telemetry.
+The monolithic `Full` audit also prints elapsed times for ten governed blocks,
+including repair learning, context strategy, evidence reuse, and orchestration.
+These sequential block times partition the governed phase; the extended
+orchestration total is nested within it and must not be added again.
 
 Verify the wiki from the repository root:
 

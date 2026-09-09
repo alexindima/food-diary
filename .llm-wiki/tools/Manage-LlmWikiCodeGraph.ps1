@@ -91,6 +91,15 @@ try {
     $OutputEncoding = $previousOutputEncoding
 }
 if ($LASTEXITCODE -ne 0) { throw "Code graph action '$Action' failed with exit code $LASTEXITCODE." }
+if ($Action -eq 'search-batch' -and $Format -eq 'Json') {
+    # Validate transport without materializing thousands of PowerShell objects
+    # and serializing them again; the evaluation caller consumes this JSON once.
+    $rawJson = $json -join [Environment]::NewLine
+    $document = [System.Text.Json.JsonDocument]::Parse($rawJson)
+    $document.Dispose()
+    $rawJson
+    return
+}
 $result = $json | ConvertFrom-Json
 if ($Action -eq 'build') {
     $readerBuild = & (Join-Path $PSScriptRoot 'Build-LlmWikiInProcessSqliteReader.ps1') -Format Json | ConvertFrom-Json
