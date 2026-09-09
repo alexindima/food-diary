@@ -44,6 +44,7 @@ services:
       MailInboxClient__MetadataApiKey: ${MAIL_INBOX_METADATA_API_KEY:?Required}
       MailInboxClient__ContentApiKey: ${MAIL_INBOX_CONTENT_API_KEY:?Required}
       BugTriageHttp__ApiKey: ${BUGTRIAGE_API_KEY:?Required}
+      BugTriageHttp__ReadApiKey: ${BUGTRIAGE_READ_API_KEY:-}
     networks:
       - database
       - mail
